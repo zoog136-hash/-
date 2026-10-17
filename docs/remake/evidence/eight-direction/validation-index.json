@@ -1,0 +1,26 @@
+{
+  "runtime_sha": "fe0cef3106442b4369852b08ba82e5e790fa7ecb",
+  "final_pass_logs": [
+    "packed-unit.log",
+    "actor_motion_test.log",
+    "authored_state_motion_test.log",
+    "monster_motion_test.log",
+    "animation_catalog_test-full.log",
+    "animation_restore_test-full.log",
+    "combat-timeline-final.log",
+    "authored_frames_test-final.log",
+    "full_visual_manifest_test-final.log",
+    "animation_presentation_test-profile-death.log",
+    "final-play.log",
+    "clean-import.log",
+    "clean-boot.log",
+    "clean-native-frames.log",
+    "clean-restore.log",
+    "integrity-final.log"
+  ],
+  "historical_failed_checks": {
+    "merged-unit-results.json": "Initial legacy attack/frame expectation failure. Resolved by data-driven test fixture; combat-timeline-final.log has 158 passing checks.",
+    "extra-results.json": "Initial fixed 0.8-second fade expectation failure, recorded in animation_presentation_test-final.log. Resolved by checking after the configured death duration; animation_presentation_test-profile-death.log has 76,231 passing checks."
+  },
+  "scope": "Runtime-path checks across IDs do not imply dedicated motion or visual verification across all IDs."
+}

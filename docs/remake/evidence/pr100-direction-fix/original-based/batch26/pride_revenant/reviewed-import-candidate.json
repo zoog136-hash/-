@@ -1,0 +1,577 @@
+{
+  "key": "monster:교만의 레버넌트",
+  "prompt": "{\n  \"prompt-idle-walk.txt\": \"Create NEW independently articulated hand-painted 2D isometric RPG animation for ONLY the pale gray-blue HOODED GHOST in the attached original project-art context. Target normalmonster \\\"교만의 레버넌트\\\" (Proud Revenant). Exact source identity is authoritative; this is new reference-based drawing, NOT recovered original animation. Ignore tiny unrelated source fleck/toes at topedge.\\nPreserve source thin PALE BLUE-GRAY ragged hood/long flowing torn robe, dark hollow hood interior with small pale skeletal face, TWO very thin pale skeletal arms/hands with long connected bony fingers, long attached curling ribbon-like torn lower robe/wispy tail and sleeves. Spectral gray-white fabric with muted blue shadows, not a dark solid black robe, not red-eyed demon, not a broad armored skeleton. No weapon, scythe, sword, staff, armor, crown, wings, boots, human legs or new equipment. Source fallback metadata says melee but art carries NO sword; use the actual skeletal arms for a directional melee slash. Exactly two arms/hands attached to shoulders; every finger and cloth ribbon stays connected, no detached particles or shreds.\\nEIGHT column compass directions exact LEFT-RIGHT: E trueRIGHT profile, SE frontRIGHT3/4, S directFRONT towardviewer/screenDOWN, SW frontLEFT3/4, W trueLEFT profile, NW rearLEFT3/4, N fullBACK away/screenUP, NE rearRIGHT3/4. E/W show genuine hood/face sideperspective; S shows frontdarkhood opening and pale face; N shows back of hood/head/robe and rear shoulders, NO frontface/skull or front hood opening visible through back. NW/NE are actual rear3/4 not merely frontface erased. Maintain same compass through every phase, not simple flips/mirrors.\\nFloating=true source ghost: travel by actual articulated robe/tail/sleeve/arm flex; do NOT invent legs, feet, hoofgait or translate an unchanged still. Body/hood anchor stays stable while appendages and fabric bend.\\nTRUE TRANSPARENT RGBA background with CLEAN completely empty gutters. No floor, shadow, aura, glow, fog, ghostcloud, beam, detached effect, particles, text, labels or grid. Paint real visible detailed grayblue cloth/body interiors with narrow soft antialiasing, not near-invisible full-framehaze. Every WHOLE ghost including completehood, bothhands, fingers, allattachedlongrobe/tailtips must fit verySMALL within its own equalcell, at most45percent cellwidth/50percent cellheight, with enormous clean transparent gutters around all sides. No cropped wisps or pieces in neighboring frame rectangle. Same anatomy, bodydimensions and reference detail in all poses; no repeated/scaled/shifted stills.\\nFIRST ATLAS EXACTLY8COLUMNS by5ROWS =40 complete genuineposes on landscape1536x1024. Canonical E SE S SW W NW N NE columnsfixed. Eachwholeghost about80pxwide x100pxhigh centered in192x205cell; full trailingrobe/tail/sleeves included.\\nROW1 IDLE A: source relaxed floatinghood/body, arms gently outfront, robe/tail trailing insoftconnectedcurves.\\nROW2 IDLE B: distinct breathing/relaxedmovement: shoulder/elbow bendsdifferent, sleevescurlinward, lowerrobe/tailunfurls intoopposite S-curves, hood slightlyflexes. Actualfabric/jointpose change,not verticalbob.\\nROW3 TRAVEL A: leadingarm/sleeve extends gentlyforward and lowerrobe/tail bendsbehindpropulsiondirection; sourcehood stayspointingsamecompass.\\nROW4 TRAVEL PASSING: elbowsfoldclosertobody, robe/tailcompressundertorso and thenbeginscountercurl, changed sleeve/tailoverlap, no duplicatedneutral.\\nROW5 TRAVEL B: oppositearm/sleeve nowleadswhile firstretracts and lowerrobe/tailuncurls opposite tophaseA. Threeclear organicfloatingpropulsionphases in connected cloth/limbs, not samefigure movedaround.\\nFortywholebodyarticulatedposes, noattack/hit/death yet. Allfront/backanatomy correct and everyvisiblefragmentattached.\\n\",\n  \"prompt-attack-A.txt\": \"Create NEW independently articulated hand-painted 2D isometric RPG animation for ONLY the pale gray-blue HOODED GHOST in the attached original project-art context. Target normalmonster \\\"교만의 레버넌트\\\" (Proud Revenant). Exact source identity is authoritative; this is new reference-based drawing, NOT recovered original animation. Ignore tiny unrelated source fleck/toes at topedge.\\nPreserve source thin PALE BLUE-GRAY ragged hood/long flowing torn robe, dark hollow hood interior with small pale skeletal face, TWO very thin pale skeletal arms/hands with long connected bony fingers, long attached curling ribbon-like torn lower robe/wispy tail and sleeves. Spectral gray-white fabric with muted blue shadows, not a dark solid black robe, not red-eyed demon, not a broad armored skeleton. No weapon, scythe, sword, staff, armor, crown, wings, boots, human legs or new equipment. Source fallback metadata says melee but art carries NO sword; use the actual skeletal arms for a directional melee slash. Exactly two arms/hands attached to shoulders; every finger and cloth ribbon stays connected, no detached particles or shreds.\\n\\nSPACIOUS MELEEATTACK SUBSET: EXACTLYFOURCOLUMNS byTHREEROWS =12completeghostposes, landscape1536x1024 canvas. COLUMNS LEFT-RIGHT E trueRIGHTprofile, SEfrontRIGHT3/4, SdirectFRONT, SWfrontLEFT3/4. SWhoodopening/clawdirectionLEFT/downLEFT, notRIGHT; Sfacefront.\\nFloating=true source ghost: travel by actual articulated robe/tail/sleeve/arm flex; do NOT invent legs, feet, hoofgait or translate an unchanged still. Body/hood anchor stays stable while appendages and fabric bend.\\nTRUE TRANSPARENT RGBA background with CLEAN completely empty gutters. No floor, shadow, aura, glow, fog, ghostcloud, beam, detached effect, particles, text, labels or grid. Paint real visible detailed grayblue cloth/body interiors with narrow soft antialiasing, not near-invisible full-framehaze. Every WHOLE ghost including completehood, bothhands, fingers, allattachedlongrobe/tailtips must fit verySMALL within its own equalcell, at most45percent cellwidth/50percent cellheight, with enormous clean transparent gutters around all sides. No cropped wisps or pieces in neighboring frame rectangle. Same anatomy, bodydimensions and reference detail in all poses; no repeated/scaled/shifted stills.\\nEverycompletehood/robe/tail/hands fitsSMALLwithinits384x341cell withenormous transparentgutters. Do notextendclaws orrobes intoanothercell. Use originalsourcefordesign and acceptedidle/travelsheetforcoherentbody/palette/detail.\\nThree rows topbottom:1 WINDUP arm/elbowpullsbacktoside, wrist/bonyclawscoil towardbody,oppositearmbraces, sleevesandattachedtailtwist;2 CONTACT MELEESLASH leadingarm reaches/swipesFORWARD towardexactfacingcompassdirection, shoulder/elbow/wristclearlyextendandclawsreachthetargetpoint, trailingarmcounterbends, robe/tailflexoppositely;3 RECOVERY leadingelbowandwristretractintodifferentcurl,clawsrelaxdown, shouldersuntwist andconnectedrobe/tailsettle. Actual three distinct skeletaljoint+clothposes, notcopiedneutral.\\nThis is directionalMELEE, no genericmagiccast, projectile, weapon or effect. EhandreachRIGHT, SEdownRIGHT,Sdown/viewer,SWdownLEFT,WLEFT,NWupLEFT,NUP/AWAY,NEupRIGHT. N/backsidesKEEP hoodbackandNOfrontalface evenwhenhandsreachupaway; showbacks of skeletalhandsorocclusionnaturally, neverturnwholeghostfronttocast.\\nTwelvefullyconnectedcompletefigures,noextra/missingpose, nohumanlegs orboots.\\n\",\n  \"prompt-attack-B.txt\": \"Create NEW independently articulated hand-painted 2D isometric RPG animation for ONLY the pale gray-blue HOODED GHOST in the attached original project-art context. Target normalmonster \\\"교만의 레버넌트\\\" (Proud Revenant). Exact source identity is authoritative; this is new reference-based drawing, NOT recovered original animation. Ignore tiny unrelated source fleck/toes at topedge.\\nPreserve source thin PALE BLUE-GRAY ragged hood/long flowing torn robe, dark hollow hood interior with small pale skeletal face, TWO very thin pale skeletal arms/hands with long connected bony fingers, long attached curling ribbon-like torn lower robe/wispy tail and sleeves. Spectral gray-white fabric with muted blue shadows, not a dark solid black robe, not red-eyed demon, not a broad armored skeleton. No weapon, scythe, sword, staff, armor, crown, wings, boots, human legs or new equipment. Source fallback metadata says melee but art carries NO sword; use the actual skeletal arms for a directional melee slash. Exactly two arms/hands attached to shoulders; every finger and cloth ribbon stays connected, no detached particles or shreds.\\n\\nSPACIOUS MELEEATTACK SUBSET: EXACTLYFOURCOLUMNS byTHREEROWS =12completeghostposes, landscape1536x1024 canvas. COLUMNS LEFT-RIGHT W trueLEFTprofile, NWrearLEFT3/4, NfullBACKfacingaway/up, NErearRIGHT3/4. NhasNOfrontskull/face/hoodopening; NW/NEareactualrearshoulders/hood.\\nFloating=true source ghost: travel by actual articulated robe/tail/sleeve/arm flex; do NOT invent legs, feet, hoofgait or translate an unchanged still. Body/hood anchor stays stable while appendages and fabric bend.\\nTRUE TRANSPARENT RGBA background with CLEAN completely empty gutters. No floor, shadow, aura, glow, fog, ghostcloud, beam, detached effect, particles, text, labels or grid. Paint real visible detailed grayblue cloth/body interiors with narrow soft antialiasing, not near-invisible full-framehaze. Every WHOLE ghost including completehood, bothhands, fingers, allattachedlongrobe/tailtips must fit verySMALL within its own equalcell, at most45percent cellwidth/50percent cellheight, with enormous clean transparent gutters around all sides. No cropped wisps or pieces in neighboring frame rectangle. Same anatomy, bodydimensions and reference detail in all poses; no repeated/scaled/shifted stills.\\nEverycompletehood/robe/tail/hands fitsSMALLwithinits384x341cell withenormous transparentgutters. Do notextendclaws orrobes intoanothercell. Use originalsourcefordesign and acceptedidle/travelsheetforcoherentbody/palette/detail.\\nThree rows topbottom:1 WINDUP arm/elbowpullsbacktoside, wrist/bonyclawscoil towardbody,oppositearmbraces, sleevesandattachedtailtwist;2 CONTACT MELEESLASH leadingarm reaches/swipesFORWARD towardexactfacingcompassdirection, shoulder/elbow/wristclearlyextendandclawsreachthetargetpoint, trailingarmcounterbends, robe/tailflexoppositely;3 RECOVERY leadingelbowandwristretractintodifferentcurl,clawsrelaxdown, shouldersuntwist andconnectedrobe/tailsettle. Actual three distinct skeletaljoint+clothposes, notcopiedneutral.\\nThis is directionalMELEE, no genericmagiccast, projectile, weapon or effect. EhandreachRIGHT, SEdownRIGHT,Sdown/viewer,SWdownLEFT,WLEFT,NWupLEFT,NUP/AWAY,NEupRIGHT. N/backsidesKEEP hoodbackandNOfrontalface evenwhenhandsreachupaway; showbacks of skeletalhandsorocclusionnaturally, neverturnwholeghostfronttocast.\\nTwelvefullyconnectedcompletefigures,noextra/missingpose, nohumanlegs orboots.\\n\",\n  \"prompt-hit-death.txt\": \"Create NEW independently articulated hand-painted 2D isometric RPG animation for ONLY the pale gray-blue HOODED GHOST in the attached original project-art context. Target normalmonster \\\"교만의 레버넌트\\\" (Proud Revenant). Exact source identity is authoritative; this is new reference-based drawing, NOT recovered original animation. Ignore tiny unrelated source fleck/toes at topedge.\\nPreserve source thin PALE BLUE-GRAY ragged hood/long flowing torn robe, dark hollow hood interior with small pale skeletal face, TWO very thin pale skeletal arms/hands with long connected bony fingers, long attached curling ribbon-like torn lower robe/wispy tail and sleeves. Spectral gray-white fabric with muted blue shadows, not a dark solid black robe, not red-eyed demon, not a broad armored skeleton. No weapon, scythe, sword, staff, armor, crown, wings, boots, human legs or new equipment. Source fallback metadata says melee but art carries NO sword; use the actual skeletal arms for a directional melee slash. Exactly two arms/hands attached to shoulders; every finger and cloth ribbon stays connected, no detached particles or shreds.\\nEIGHT column compass directions exact LEFT-RIGHT: E trueRIGHT profile, SE frontRIGHT3/4, S directFRONT towardviewer/screenDOWN, SW frontLEFT3/4, W trueLEFT profile, NW rearLEFT3/4, N fullBACK away/screenUP, NE rearRIGHT3/4. E/W show genuine hood/face sideperspective; S shows frontdarkhood opening and pale face; N shows back of hood/head/robe and rear shoulders, NO frontface/skull or front hood opening visible through back. NW/NE are actual rear3/4 not merely frontface erased. Maintain same compass through every phase, not simple flips/mirrors.\\nFloating=true source ghost: travel by actual articulated robe/tail/sleeve/arm flex; do NOT invent legs, feet, hoofgait or translate an unchanged still. Body/hood anchor stays stable while appendages and fabric bend.\\nTRUE TRANSPARENT RGBA background with CLEAN completely empty gutters. No floor, shadow, aura, glow, fog, ghostcloud, beam, detached effect, particles, text, labels or grid. Paint real visible detailed grayblue cloth/body interiors with narrow soft antialiasing, not near-invisible full-framehaze. Every WHOLE ghost including completehood, bothhands, fingers, allattachedlongrobe/tailtips must fit verySMALL within its own equalcell, at most45percent cellwidth/50percent cellheight, with enormous clean transparent gutters around all sides. No cropped wisps or pieces in neighboring frame rectangle. Same anatomy, bodydimensions and reference detail in all poses; no repeated/scaled/shifted stills.\\nHIT/DEATH ATLAS EXACTLY8COLUMNS by5ROWS =40wholebodyposes, landscape1536x1024. Canonical E SE S SW W NW N NE, keepcorrectdirectioneveryrow. Completeghostbody/sleeves/hands/robe/tail remainsSMALLinsideeach192x205cell withgiantemptygutters; corpseclothfoldscompactlyratherthanextendtoneighbor.\\nROW1 HITRECOIL: hood/shouldersflinchaway, elbowsbend inward, sleeve/robe/tailjerkintotightasymmetricattachedcurves.\\nROW2 HITRECOVERY: shouldersuntwist,elbowsreachpartwayback,robe/tailcountercurl into differentactualpose; notsameidle.\\nROW3 DEATHSTART: spectralbodyweakens/sinks, hoodbows, elbows/handssag, lowerrobe/tailbucklesundertorso. Wholebodyconnected,notfadedorvanished.\\nROW4 DEATHCOLLAPSE: hood/shouldersandhandsfoldLOWsideways towardground, robe/sleeves/tailcrumpleanddrape ontheimpliedground. Distinctactualclothtwistsandarmjointcollapse, notscaled-downidle.\\nROW5 COMPLETE TERMINALCORPSE: wholehood, palehead, BOTHattachedskeletalarms/handsandALLrobe/tailmass lieLOWandcrumpledontheground. Robefoldsintocompactclothpuddle, handselbowsstillconnectedtofoldedsleeves/shoulders. Heightaboutone-thirdlivingheight, fullbodymassretainedthroughfoldingnotshrink. No uprightlevitatingghost, disappearingbody, emptyframe, severedhandsorfadetoalpha0. Keepfacingperspective: Ncorpsebackofhood/robestillhidesfrontface, allotherdirectionssuitablecollapse.\\nExactlyFIVErows, eachwithALL8directions, twodistincthit+threegenuinedeathstages =40. DoNOTomitmiddledeathroworcombinecollapseandterminal. No blood/gore/particles/effect/shadow/floor. Completeattachedtornfabricandboneidentitypreserved.\\n\",\n  \"prompt-attack-B-direction-correction.txt\": \"Correct the COMPASS DIRECTION of the attached12-pose grayhoodedghost meleeattack sheet. Preserve sourceidentity and all12 actual articulated windup/contact/recovery poses, detailedpalegray-blue raggedhood/robe/tail, thin skeletalarms/fingers, floatingno-legbody. Do not addweapon/props/magic/effects. EXACT4COLUMNS×3ROWS, landscape1536x1024, sameuniformbody scale withhugeclean transparentgutters.\\nCRITICAL EXISTINGERROR: COLUMN1 wrongly facesSCREENRIGHT anditscontactclawsreachRIGHT. COLUMN1 must be W: trueSCREENLEFT profile in ALL3ROWS. Turnanatomy tofaceLEFT; hoodopening/skullis onLEFTsideofhead, longrobe/tail trailsRIGHT, forwardclawsreachLEFT duringmiddlecontact. NoRIGHT-facingWpose inanyrow.\\nCOLUMN2 is NW REAR-LEFT: backofhood/shouldersvisible, head/leadinghandaimUP-LEFT, no frontalface. Its currentupRIGHT aim iswrong. MakecontactskeletalarmreachdiagonallyUP-LEFT, whilehoodBACKoccludesfrontface.\\nCOLUMN3 remains N FULLBACK: nofrontface, correctbackhood; contactarmreachesAWAY/UP. Keepitsbackanatomy.\\nCOLUMN4 is NE REAR-RIGHT: backofhood/shouldersvisible, head/leadinghandaimUP-RIGHT, nofrontalface. Its currentupLEFT aim iswrong. MakecontactarmreachdiagonallyUP-RIGHT.\\nPreserveactual3phaseMELEE attackrows: topwindup elbows/clawspulledback, middleleadingelbow/wristextendsforwardintoslash, bottomrecoveryelbow/wristretracts+clothcountercurl. All12 mustkeepassignedcompassduringall3phases. Independently redraw correctside/rearanatomy andclothfolds, NOTsimplepixelmirror/copy/translatedstill. BothskeletalhandsandallraggedclothremainATTACHED; no missingposes, detachedpieces orcroppedtips. Wholeghosttinyinsideeachcell, no neighboringboundingrectangle overlap. FullytransparentRGBA nofog/haze/matte/floor/shadow/text/grid.\\n\",\n  \"prompt-attack-B-contact-correction.txt\": \"Make ONLY TWO focused COMPASS/CONTACT corrections in this existing4column×3row12pose palegrayhoodedghost meleeatlas. Preserveexactsourcecreaturedesign, skeletalhands, attachedraggedrobe, bodydimensions, allposecounts, allother10poses andsparsealphalayout. OutputfullytransparentRGBA1536x1024, nofloor/shadow/effect/particle/text.\\nColumns stay W,NW,N,NE. Rows windup,contact,recovery.\\nFIX1 TOP-RIGHT (column4,row1) NE WINDUP currently points LEFT, unlike correctNEcontact/recovery. Re-author this ONE ghost as clear REAR-RIGHT facingAWAY/UP-RIGHT. Use BOTTOM-RIGHT recovery's rearRIGHT hood/back-shoulder orientation as itsdirectionguide, but give genuinewindupelbowscoilednearbody anddifferentclothfolds. Backofhooddominates; noleft-facinghoodopening/face. Frontface/skull is hidden on FAR UP-RIGHT side, do not turnheadLEFTtowardcamera. Wholeback/robeanatomy sameNEdirectionasotherrows.\\nFIX2 MIDDLE column3 N CONTACT: currentlyleadclawreachesfarUP-LEFT, visuallymatchingNW. KeepfullBACKbody N and makeleadingbonyhand reach morestraightAWAY/UP, approximatelyaligned ABOVE itsOWNhood/head Xcenter, with elbow/wristreallyextendingtowardNtarget. NoNW-onlysidewaysreach. Head/hood staysFULLBACK, nofrontalface. Complete connectedarmandfingers, no detachedhand/effect. Otherhandcanbraceaside.\\nAllother10existingposesretaincorrectfacingandarticulation: Wleftprofile contactLEFT; NWbackLEFT contactUP-LEFT; NEbackRIGHT contactUP-RIGHT; otherNwindup/recoveryfullback. Maintainthree genuinejoint/clothphases perdir, no mirror/copy/repeatedstills or replacingposedcounts. Makeallwholeghostboundsdisjointwithhugetransparentgutters; noeditingbysilhouettetrimming.\\n\",\n  \"prompt-attack-B-spacing-correction.txt\": \"SPACING-ONLY CORRECTION of this exact correct12-pose W/NW/N/NE ghostattack atlas. Preserve all12 existing articulated poses, compassdirections, skeletalhands, NstraightUPclawcontact, NErearRIGHTwindup, sourcecreatureanatomy, robe/tail folds anddetailedpaintedstyle. No newmotionpose, no droppedpart.\\nCurrent middleNraisedhand overlaps the boundingrectangle of theNghostABOVE. SHRINK EVERY WHOLEGHOST uniformly to about60percent ofitscurrentwidth ANDheight INSIDETHESAME4column×3row equalcells, thenCENTER eachtinywholefigure initscell. Eachcompletefigureincludinghighestclawandlowesttail MUST fit withinCENTRAL200pxwidth and190pxheight ofits384x341cell. Atleast80pixels fullytransparentverticalgap betweenALLwholebodyBOUNDINGRECTANGLES, and80pixelshorizontalgap. Wideouterborder. No rootpiecesorclawsinanyneighborrectangle. Do NOTfixbycropping/trimmingfingers/tail, deletingbodyparts, omittingafigureorchangingcompass.\\nCanvas1536x1024 landscape, EXACT4cols×3rows=12. Wleftprofilecolumn1,NWrearLEFTcolumn2,NfullBACKcolumn3,NErearRIGHTcolumn4. Winduprow1,contactrow2,recoveryrow3. NmiddlehandaboveitsOWNhoodcenter, NEtoprightretainscorrectrearRIGHT. Allskeletalarms/fingersandclothribbonsremainconnected.\\nUse trulytransparentRGBAemptyspace: alpha0background, narrowantialiasededgesonly; no mattepicture/fog/haze, glow/shadow/floor, particles, labels orgrid. Detailed palegraybluehoodedghostidentitysame. Keep exactsemanticposes, justmanylargeremptygutters andsmalleruniformfigures.\\n\"\n}\n\nIndependent focused source-palette correction:\nCorrect ONLY the palette and painted fabric treatment of the attached 4-column by 3-row ghost attack atlas, using the attached ORIGINAL gray hooded ghost and approved idle/travel atlas as exact color/style references. This is newly authored reference-based 2D animation, not recovered original frames. Target only monster 교만의 레버넌트.\nThe current rear attack sheet has excessive saturated COBALT BLUE shadows and bright YELLOW-IVORY STRIPES that make it look like different clothing. Replace those colors and hard banded texture with the original MUTED PALE GRAY-BLUE weathered torn fabric: cool neutral slate-gray shadows, pale gray highlights, tiny subtle ivory bones ONLY in the skull/hands. No golden or yellow cloth highlights, no electric blue edges, no scaled/armored surface. Preserve the thin tattered gray robe and flowing attached strips of original source exactly in identity and muted saturation. Keep all cloth opaque enough to read, with real transparent empty gutters.\nPRESERVE EXACTLY ALL 12 GENUINELY DISTINCT ARTICULATED POSES in the current attack sheet. Four columns LEFT TO RIGHT W, NW, N, NE. Three rows top to bottom WINDUP, CONTACT skeletal-hand melee slash, RECOVERY. Do not change the correct directions or attack trajectory. W is true LEFT profile with narrow hood opening on LEFT; NW is rear-UP-LEFT; N is full BACK with no face and middle contact hand reaching straight UP above the head center; NE is rear-UP-RIGHT in ALL THREE ROWS, including top windup. N shows only the rear hood, no front skull, and the full-back contact fingers aim straight away UP. NW/NE have true rear shoulder anatomy with face hidden on far side.\nMaintain two connected thin skeletal arms/hands, every finger connected to a wrist, both wrists connected via elbows/sleeves to shoulders. No weapons, magic beams, effects, legs, boots, accessories or armor. Every robe strip remains connected. Main body remains floating as source while arms, elbow/wrist bends and cloth curves genuinely change across the three phases; no duplicated or moved stills.\nOutput EXACTLY FOUR COLUMNS by THREE ROWS = TWELVE complete figures, landscape 1536x1024, fully transparent RGBA background. Preserve the current sparse layout, approximately 40% cell width and height. Generous clean empty gutters at least 60px between full visible pixels of adjacent complete figures; all claw fingertips and longest cloth strips must fit well within their own cell. No cropped pixels, merged bodies, detached flecks, text, labels, grid, shadow, floor, glow or fog. Keep all 12 whole-body poses and their distinct joint/cloth articulation, merely re-author their palette and fabric finish to match the muted gray source and idle/travel reference.",
+  "prompt_record_kind": "Seven exact issued prompts saved before each call; all earlier wrongdirection/crop outputs preserved unselected.",
+  "display_height_basis": "median_idle",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/pride_revenant/poses-0.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "canvas_size": 512,
+      "scale_review_note": "Independent fixed-scale hood/core review: S idle0 crown-to-chin approx48px and N rearhood width approx36px. Baseline512. Source floating state retained, no legs invented.",
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "source_anchors": [
+        [
+          108,
+          199
+        ],
+        [
+          302,
+          199
+        ],
+        [
+          484,
+          203
+        ],
+        [
+          669,
+          196
+        ],
+        [
+          874,
+          194
+        ],
+        [
+          1067,
+          197
+        ],
+        [
+          1237,
+          204
+        ],
+        [
+          1417,
+          197
+        ],
+        [
+          108,
+          388
+        ],
+        [
+          302,
+          392
+        ],
+        [
+          484,
+          397
+        ],
+        [
+          669,
+          390
+        ],
+        [
+          874,
+          389
+        ],
+        [
+          1067,
+          389
+        ],
+        [
+          1237,
+          398
+        ],
+        [
+          1417,
+          387
+        ],
+        [
+          108,
+          588
+        ],
+        [
+          302,
+          588
+        ],
+        [
+          484,
+          592
+        ],
+        [
+          669,
+          590
+        ],
+        [
+          874,
+          578
+        ],
+        [
+          1067,
+          582
+        ],
+        [
+          1237,
+          589
+        ],
+        [
+          1417,
+          581
+        ],
+        [
+          108,
+          774
+        ],
+        [
+          302,
+          779
+        ],
+        [
+          484,
+          785
+        ],
+        [
+          669,
+          776
+        ],
+        [
+          874,
+          771
+        ],
+        [
+          1067,
+          780
+        ],
+        [
+          1237,
+          786
+        ],
+        [
+          1417,
+          775
+        ],
+        [
+          108,
+          976
+        ],
+        [
+          302,
+          976
+        ],
+        [
+          484,
+          981
+        ],
+        [
+          669,
+          976
+        ],
+        [
+          874,
+          975
+        ],
+        [
+          1067,
+          971
+        ],
+        [
+          1237,
+          982
+        ],
+        [
+          1417,
+          970
+        ]
+      ],
+      "anchor_review_note": "Explicit per-pose actual alpha>100 lower-cloth support Y; fixed directional neutral whole-cloth torso projection X, not moving slash-hand/tail-tip midpoint. Source floating=true retained for living; terminal complete cloth corpse low on support line. Main must confirm float-disabled death/drop alignment."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/pride_revenant/poses-1.png",
+      "rows": 3,
+      "reference_rows": [
+        0,
+        2
+      ],
+      "directions_axis": "columns",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 728,
+      "scale_review_note": "Independent same-heading face/hood review: S windup crown-to-chin approx66px vs idle48px; 728canvas gives23.2 vs24.0 normalized pixels (manual±4). Full robe/deathheight not used as core landmark.",
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "source_anchors": [
+        [
+          222,
+          347
+        ],
+        [
+          585,
+          348
+        ],
+        [
+          943,
+          353
+        ],
+        [
+          1316,
+          344
+        ],
+        [
+          222,
+          629
+        ],
+        [
+          585,
+          644
+        ],
+        [
+          943,
+          648
+        ],
+        [
+          1316,
+          636
+        ],
+        [
+          222,
+          918
+        ],
+        [
+          585,
+          934
+        ],
+        [
+          943,
+          940
+        ],
+        [
+          1316,
+          923
+        ]
+      ],
+      "anchor_review_note": "Explicit per-pose actual alpha>100 lower-cloth support Y; fixed directional neutral whole-cloth torso projection X, not moving slash-hand/tail-tip midpoint. Source floating=true retained for living; terminal complete cloth corpse low on support line. Main must confirm float-disabled death/drop alignment."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/pride_revenant/poses-2.png",
+      "rows": 3,
+      "reference_rows": [
+        0,
+        2
+      ],
+      "directions_axis": "columns",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 768,
+      "scale_review_note": "New muted-source palette repair. Independent provisional hood comparison: W face-opening length approx49px vs idle33px; N hood-cap width approx52px vs idle36px. 768canvas gives16.3 vs16.5 normalized W face length,17.3 vs18.0 N hood-cap width (manual±4). Root must independently approve authored12 and Main.",
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "source_anchors": [
+        [
+          230,
+          323
+        ],
+        [
+          598,
+          327
+        ],
+        [
+          972,
+          336
+        ],
+        [
+          1344,
+          336
+        ],
+        [
+          230,
+          662
+        ],
+        [
+          598,
+          662
+        ],
+        [
+          972,
+          669
+        ],
+        [
+          1344,
+          658
+        ],
+        [
+          230,
+          957
+        ],
+        [
+          598,
+          954
+        ],
+        [
+          972,
+          974
+        ],
+        [
+          1344,
+          954
+        ]
+      ],
+      "anchor_review_note": "Explicit per-pose actual alpha>100 lower-cloth support Y; fixed directional neutral whole-cloth torso projection X, not moving slash-hand/tail-tip midpoint. Source floating=true retained for living; terminal complete cloth corpse low on support line. Main must confirm float-disabled death/drop alignment."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/pride_revenant/poses-3.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 520,
+      "scale_review_note": "Independent S recoil crown-to-chin approx48px vs idle48px; 520canvas gives23.6 vs24.0 normalized pixels. Collapse height not normalized; full corpse remains low and retains cloth/hood/hand mass.",
+      "source_anchors": [
+        [
+          110,
+          219
+        ],
+        [
+          299,
+          221
+        ],
+        [
+          481,
+          222
+        ],
+        [
+          664,
+          220
+        ],
+        [
+          864,
+          217
+        ],
+        [
+          1049,
+          213
+        ],
+        [
+          1233,
+          226
+        ],
+        [
+          1423,
+          217
+        ],
+        [
+          110,
+          417
+        ],
+        [
+          299,
+          418
+        ],
+        [
+          481,
+          424
+        ],
+        [
+          664,
+          420
+        ],
+        [
+          864,
+          413
+        ],
+        [
+          1049,
+          419
+        ],
+        [
+          1233,
+          426
+        ],
+        [
+          1423,
+          420
+        ],
+        [
+          110,
+          646
+        ],
+        [
+          299,
+          646
+        ],
+        [
+          481,
+          651
+        ],
+        [
+          664,
+          642
+        ],
+        [
+          864,
+          649
+        ],
+        [
+          1049,
+          641
+        ],
+        [
+          1233,
+          650
+        ],
+        [
+          1423,
+          651
+        ],
+        [
+          110,
+          811
+        ],
+        [
+          299,
+          815
+        ],
+        [
+          481,
+          812
+        ],
+        [
+          664,
+          811
+        ],
+        [
+          864,
+          810
+        ],
+        [
+          1049,
+          811
+        ],
+        [
+          1233,
+          821
+        ],
+        [
+          1423,
+          809
+        ],
+        [
+          110,
+          962
+        ],
+        [
+          299,
+          961
+        ],
+        [
+          481,
+          960
+        ],
+        [
+          664,
+          962
+        ],
+        [
+          864,
+          960
+        ],
+        [
+          1049,
+          963
+        ],
+        [
+          1233,
+          965
+        ],
+        [
+          1423,
+          963
+        ]
+      ],
+      "anchor_review_note": "Explicit per-pose actual alpha>100 lower-cloth support Y; fixed directional neutral whole-cloth torso projection X, not moving slash-hand/tail-tip midpoint. Source floating=true retained for living; terminal complete cloth corpse low on support line. Main must confirm float-disabled death/drop alignment."
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Author reviewed selected full104 on proper black/white/checker composites. Preserve pale grayblue hood/flowing ragged robe, small pale skeletal face and two connected skeletal arms/hands; no added sword, legs or magicbeam. All8 body headings are real views with N rearhood hidingfrontface. Travel changes actual robe/tail/sleeve/elbowcurves. Melee attack uses windup, leadingclaw forward slash and recovery; selected W/NW/N/NE sheet corrects wrongfacing initialoutput, NEwindup and straightaway Ncontact, with sufficient transparent gutters after retained geometryfailures. Hit/death transitions through sink, lowcollapse and fully crumpled completecloth/hood/handbody onground; no emptyframe/fadeout. Allselected104 pass original strictgeometry/complete-visible-regions and crosssheetraw+visibleunique104 without thresholdrelaxation. Explicit512/728/576 plusautomatic520 virtualcanvases normalize neutralheight near85; median_idle displaybasis keeps sourcebodyheight86 and allows hand/claw reach beyondcore. Default projected lower-robe groundline anchors are diagnostic and need actualMain grounddeath check. Selected rearattack has slightlyhigher blue/ivory contrast than baseline gray; independentQA should comparecolor/corelandmarks and finalMain scale. Alphaoutside completepose rectangles has onlyone25+ pixel inidle(alpha50) andoneinhitdeath(alpha31), withnone>100; pixels leftunchanged, no visible matte in proper composites. Preserve exact source slash/melee attack_hit_ratio0.44, floatingtrue, visual_height86 and all other presentation data. IndependentQA, actualMain8direction5roleplayback, melee targetcontact, death/drop/pickup and regression remainunrun; notcountedcomplete. This is newly authoredfromexistingproject art, not recoveredoriginal animation. ROOT independently viewed all104 fixed-scale poses plus anatomical head/core comparison and corrected12 muted rear attacks: original grayblue material, attached robe/arms, W/NW/N/NE headings and northward claw contact approved for actual Main trial. Earlier material rejection and exact correction prompts retained. Actual Main is required before completion."
+  },
+  "status": "STATIC_REVIEWED_92_REPAIRED12_PENDING_ROOT_INDEPENDENT_AND_MAIN",
+  "independent_qa_approved": false,
+  "actual_Main": "not_run",
+  "completed_added": 0,
+  "source_proof_path": "/workspace/scratch/pr100-continuation/revenant-authoring/source-proof.json",
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 0,
+      "cell": 8,
+      "body": "ghost",
+      "variant": 8,
+      "width": 0.946,
+      "weapon": "sword",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": true
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "source_claim": "Newly authored from exact existing project source and fullbody context, not recovered original animation.",
+  "png_sha256": {
+    "/workspace/scratch/pr100-continuation/revenant-authoring/idle-walk.png": "2d7d56ca4408865d21c2dcceecf38557b9548cd5841a5322eb63bc624b55a16c",
+    "/workspace/scratch/pr100-continuation/revenant-authoring/attack-A.png": "4650598669fa4b77189232513ad85e0288431ccf327b286297283f018a254ccd",
+    "/workspace/scratch/pr100-continuation/revenant-authoring/attack-B-independent-muted.png": "24f967e5bf39237c589ebea25027ffe9c17d2f69bb786d58e8f489c19721240c",
+    "/workspace/scratch/pr100-continuation/revenant-authoring/hit-death.png": "81a680b34869535cc9139e001c69b70e48af4dd05944416c540107b19c506b46"
+  },
+  "anchor_review_note": "Existing importer projection: fixed per-direction bodycenter and lowest connected robe/contactpart baseline, metadataonly. Livingfloattrue and terminalgroundedcorpse must be verified in Main.",
+  "independent_review_path": "/workspace/scratch/pr100-continuation/revenant-authoring/independent-review.json",
+  "root_static_review": {
+    "approved_for_Main_trial": true,
+    "completion_added": 0,
+    "reviewed": [
+      "independent/all104-fixed-scale-review.png",
+      "independent/same-normalized-head-core-review.png"
+    ],
+    "scope": "all104 static pose review; actual Main pending"
+  }
+}

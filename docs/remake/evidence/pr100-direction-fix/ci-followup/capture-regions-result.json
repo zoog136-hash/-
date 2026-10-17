@@ -1,0 +1,129 @@
+{
+  "source_head": "93df8ee87849ee2cc7b7ab7c8bdd2be5a5654d53",
+  "source_note": "This result uses the capture_regions.gd followup patch; its exact SHA-256 is recorded below. Source HEAD alone predates this uncommitted patch.",
+  "capture_script": "tests/capture_regions.gd",
+  "capture_script_sha256": "4f7e9b1fbafbf8c8ab84f3fc3700dfb0d3fc3c70aca29af513a9a1e7c29b1302",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "runtime": "Linux X11, DISPLAY=:99, software OpenGL Compatibility, isolated XDG data/config/cache",
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "returncode": 0,
+  "errors": 0,
+  "captures": 37,
+  "static_map_count": 14,
+  "static_map_ids": [
+    "oman_01",
+    "oman_10",
+    "domination_summit",
+    "escaros_01",
+    "escaros_02",
+    "escaros_03",
+    "escaros_04",
+    "escaros_05",
+    "albino_01",
+    "albino_02",
+    "albino_03",
+    "albino_04",
+    "faith_01",
+    "faith_04"
+  ],
+  "landmark_capture_count": 5,
+  "active_probe_count": 4,
+  "active_map_ids": [
+    "aden_world",
+    "oman_10",
+    "albino_04",
+    "faith_04"
+  ],
+  "unique_map_count": 15,
+  "visual_review": "Oman1 detail PNG shows the current stone stairs on the Oman1 map; HUD and minimap agree. Static travel is held and every saved frame validates map identity.",
+  "retained_artifacts": "One representative real PNG and the complete 56-line capture log; other 36 PNG files remain in the local audit directory.",
+  "performance": {
+    "active_play": [
+      {
+        "active_monsters": 6,
+        "auto_target_frames": 180,
+        "distance_world_pixels": 2613.1,
+        "frames": 180,
+        "map": "aden_world",
+        "median_ms": 51.684,
+        "mode": "active_auto_hunt",
+        "p95_ms": 110.96,
+        "peak_draw_calls": 982,
+        "physics_p95_ms": 4.497,
+        "player_landed_hits": 0,
+        "process_p95_ms": 307.68,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 38,
+        "auto_target_frames": 179,
+        "distance_world_pixels": 3695.3,
+        "frames": 180,
+        "map": "oman_10",
+        "median_ms": 36.757,
+        "mode": "active_auto_hunt",
+        "p95_ms": 57.719,
+        "peak_draw_calls": 1119,
+        "physics_p95_ms": 151.142,
+        "player_landed_hits": 7,
+        "process_p95_ms": 59.1,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 16,
+        "auto_target_frames": 180,
+        "distance_world_pixels": 0.0,
+        "frames": 180,
+        "map": "albino_04",
+        "median_ms": 41.253,
+        "mode": "active_auto_hunt",
+        "p95_ms": 55.861,
+        "peak_draw_calls": 1233,
+        "physics_p95_ms": 4.303,
+        "player_landed_hits": 15,
+        "process_p95_ms": 56.242,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 14,
+        "auto_target_frames": 180,
+        "distance_world_pixels": 0.0,
+        "frames": 180,
+        "map": "faith_04",
+        "median_ms": 48.583,
+        "mode": "active_auto_hunt",
+        "p95_ms": 58.702,
+        "peak_draw_calls": 775,
+        "physics_p95_ms": 7.646,
+        "player_landed_hits": 11,
+        "process_p95_ms": 139.909,
+        "xp_gained": 0
+      }
+    ],
+    "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "captures": 37,
+    "frame_cap": 60,
+    "note": "Desktop GL probe; not an Android device FPS guarantee.",
+    "os": "Linux",
+    "static_render": {
+      "median_ms": 94.599,
+      "p95_ms": 262.127
+    },
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "files": [
+    {
+      "path": "capture-regions.log",
+      "bytes": 4206,
+      "sha256": "03c31623fd8b441f82b3fde1e145362727fe0fa89ab634d61bafca7990a0585e"
+    },
+    {
+      "path": "oman_01-landmark.png",
+      "bytes": 298673,
+      "sha256": "b13788430f3faa986e68699c4b88d4024cb09dbc4d78cd7f674ee9d0a6fc3bb7"
+    }
+  ]
+}

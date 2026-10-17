@@ -1,0 +1,116 @@
+{
+  "decision": "RECOMMEND_ONE_SOURCE_RISK_TRIAL_AFTER_REFERENCE_ISOLATION",
+  "recommended_key": "monster:알비노 피쉬맨",
+  "source_claim": "Existing TWILIGHT generated project atlas, not verified original external game art",
+  "source_reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      318,
+      617,
+      319,
+      308
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 9,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+  },
+  "source_sha_matches": true,
+  "appearance": {
+    "visual": {
+      "atlas": 4,
+      "cell": 9,
+      "body": "fishman",
+      "variant": 6,
+      "width": 0.998,
+      "weapon": "sword",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "primary_bbox_relative_xywh": [
+    20,
+    15,
+    291,
+    250
+  ],
+  "primary_bbox_atlas_xywh": [
+    338,
+    632,
+    291,
+    250
+  ],
+  "primary_clipping": "No primary alpha>100 pixels touch any selected-region edge; complete head, dorsal fins, hands, spear point, net, both feet and clothing are visible",
+  "focus_bbox_relative_xywh": [
+    16,
+    11,
+    299,
+    256
+  ],
+  "focus_bbox_atlas_xywh": [
+    334,
+    628,
+    299,
+    256
+  ],
+  "all_primary_visible_pixels_retained": true,
+  "excluded_neighbor_components_inside_focus": [
+    {
+      "component_label": 10,
+      "component_area": 1759,
+      "visible_pixels_inside_focus": 1605,
+      "bbox_relative_xywh": [
+        285,
+        98,
+        34,
+        126
+      ],
+      "primary_visible_pixels_in_component_bbox": 0
+    }
+  ],
+  "reference_preparation_status": "HOLD until a separately documented guide excludes neighboring crab fragment without changing primary pixels or original atlas. Do not use raw crop as sole unqualified reference. No masking or editing done in this audit.",
+  "reason_for_preference": "Upright two-leg body is narrower/shorter than the failed canids. Source net and spear remain mandatory; spear tip still needs generous attack canvas. Choose fishman width0.998 rather than deep-sea-fish width1.076.",
+  "other_remaining_candidates": "Spider trio right-edge legs contact border; deer antlers/feet touch top/bottom; iguana top weapon is cut; crab left claw touches boundary. Keep these raw references HOLD until exact intact source can be verified; do not reconstruct missing anatomy as original facts.",
+  "image_generation": "PAUSED_NOT_STARTED",
+  "completion_increment": 0,
+  "retained_detached_micro_details": [
+    {
+      "component_label": 12,
+      "component_area": 7,
+      "visible_pixels_inside_focus": 7,
+      "bbox_relative_xywh": [
+        218,
+        151,
+        2,
+        5
+      ],
+      "primary_visible_pixels_in_component_bbox": 0
+    },
+    {
+      "component_label": 17,
+      "component_area": 6,
+      "visible_pixels_inside_focus": 6,
+      "bbox_relative_xywh": [
+        204,
+        172,
+        2,
+        4
+      ],
+      "primary_visible_pixels_in_component_bbox": 0
+    }
+  ],
+  "microdetail_policy": "The 7px and6px components near the net are retained as possible legitimate net detail; they are not classified or removed as neighbor artwork."
+}

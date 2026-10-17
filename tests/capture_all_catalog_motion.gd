@@ -103,7 +103,8 @@ func _run() -> void:
 		actor.motion.apply(actor.transform_sprite, actor.transform_sprite.get_meta("base_scale"))
 		var first_frame: int = actor.transform_sprite.frame
 		var first: Image = await _pixels()
-		actor.motion.gait = 2.0
+		# A two-frame walk wraps at gait=2; capture the adjacent pose.
+		actor.motion.gait = 1.0
 		actor.motion.apply_frames(actor.transform_sprite)
 		var second_frame: int = actor.transform_sprite.frame
 		var second: Image = await _pixels()
@@ -123,7 +124,7 @@ func _run() -> void:
 		follower.motion.apply_frames(doll)
 		var first_frame: int = doll.frame
 		var first: Image = await _pixels()
-		follower.motion.gait = 2.0
+		follower.motion.gait = 1.0
 		follower.motion.apply_frames(doll)
 		var second_frame: int = doll.frame
 		var second: Image = await _pixels()

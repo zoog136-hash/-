@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "prompt": "MAIN EXACT PROMPT:\nCreate a production game sprite atlas from the attached exact monster reference. The reference identity is LAMIA: a human adult woman upper body with long dark brown hair, pale skin, a small ivory/gold fitted top, and a single long green-teal serpent lower body bearing ornate gold oval markings with turquoise jewel centers. Preserve that exact silhouette, hair, face, skin, gold/teal palette, top and tail pattern. No legs, no wings, no horns, no weapon, no new armor. It is a small detailed painted 2D isometric RPG sprite, not a modern cartoon.\n\nDELIVER ONE SQUARE TRANSPARENT RGBA ATLAS: exactly 8 columns and 8 rows, 64 separate full-body poses. Every cell has one complete connected body with its full tail. Regular grid, equal cells, generous transparent gaps, no labels, no grid lines, no shadows, no glow or detached particles. Keep poses small inside each cell (at most 60% of cell width and height), with the body-tail belly ground contact in the same relative place. Both hands remain visibly joined to the arms; tail remains physically joined to torso. No clipping or overlap.\n\nCOLUMN COMPASS, left to right, locked across EVERY row: E (right-facing true side profile); SE (front and right-facing diagonal); S (front view facing directly toward viewer, symmetrical frontal chest); SW (front and left-facing diagonal); W (left-facing true side profile); NW (rear and left-facing diagonal); N (directly away, back of head/back/hair, no face and no frontal chest); NE (rear and right-facing diagonal). Draw eight actual distinct views; never substitute front for rear. A snake tail may curve naturally, but head, shoulders and attack always face their assigned compass.\n\nROW ACTIONS top to bottom: 1 idle neutral breathing; 2 idle second breathing pose, visibly different arms/torso/tail tension; 3 locomotion slither left tail bend while torso advances subtly; 4 locomotion center compression, visibly different lower-body curve; 5 locomotion right tail bend, visibly different from rows3 and4; 6 melee attack WINDUP with both arms pulled back and torso twisting only slightly while still facing own direction; 7 melee attack CONTACT with both arms lunging and claws striking forward EXACTLY along own compass (S foreshortens toward viewer, N foreshortens away, never sideways); 8 melee attack RECOVERY, returning arms and coiling tail. No projectiles, magic effects or weapons. Each of 64 sprites must have distinct articulated body pixels, not duplicates or translations of a still. Make walking convincingly snake slithering rather than human stepping. Every row uses the same scale, details, tail length, camera, lighting and direction order. Transparent background everywhere outside the separate connected sprites. This atlas will be sampled directly without repainting.\n\nREACTIONS EXACT ACCEPTED PROMPT:\nMake a nonsexual, age-neutral fantasy RPG monster animation sprite atlas. Use the FIRST attached original reference as authority and the SECOND attached sprite sheet solely as a style and directional-layout reference. This is the same lamia creature: dark brown hair, ordinary unexaggerated human upper-body proportions, opaque gold armor/top fully covering the chest, long green-teal serpent tail with gold oval and turquoise decorations. Preserve the exact original game design and clothing coverage. Do not emphasize any anatomy, do not make alluring poses, and do not add skin exposure. No nudity, no sexual context, no blood or wounds. Detailed painted isometric game sprite style.\n\nTransparent RGBA background. EXACTLY 8 columns x 5 rows, 40 small separate full-body sprites. Equal cells, wide clear transparent gaps, every entire tail fits well inside its cell. No text, grid, effects, shadows, props, or floating fragments. Torso, hands, hair and tail must remain visibly connected into one complete creature in each cell. Each sprite has distinct articulated pixels; no duplicated stills.\n\nColumns left to right always follow these actual views: E right side profile, SE front-right diagonal, S directly frontal, SW front-left diagonal, W left side profile, NW rear-left diagonal, N directly rear (only back and rear hair, no face), NE rear-right diagonal. Preserve these eight views through all five rows. Head and shoulders keep their assigned direction.\n\nRows: 1 brief combat damage recoil with arms raised protectively; 2 distinct recoil recovery with arms lowering and tail relaxing; 3 defeat begins with upper body hunched and hands supporting it near ground; 4 later defeat frame with clothed upper body falling down to ground and connected tail uncurling; 5 final defeated monster state with clothed body and head resting completely flat on ground, limp arms and flattened tail. Rows4/5 are ordinary tiny tactical-game defeat sprites, no dramatic posing, no anatomical emphasis. Last row is visibly down and motionless, never standing. Keep all parts attached and fully within cell, with 25% safe padding. Every facing is coherent: head at right for E, toward viewer for S, away for N. Consistent scale and lighting, matching the original source's costume and natural proportions. No detached pixels or loose particles.",
+  "prompt_record_kind": "exact accepted prompts; rejected reaction attempt retained separately in lamia-generation-record.json",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/lamia/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/lamia/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "display_height_basis": "max_living_frame",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Directly inspected original 1597.png and both generated atlases. Preserved dark brown hair, gold top, pale upper body and long teal serpent lower body with gold/turquoise oval markings; no weapon added. Checked 8 compass columns including distinct E/SE and W/SW, frontal S and rear N; NW/NE show back. Main rows have separate idle breathing, three visible tail-slither curves and windup/contact/recovery; S contact reaches forward and N reaches away. Reaction rows contain distinct recoil and recovery followed by crouched collapse, ground collapse and settled flat corpse; N death stays rear-facing. Full tail/arms/hair remain connected inside each pose. Strengthened analyze passed 64 main + 40 reaction unique frames with zero alpha>100 pixels omitted, no edge clipping and no inter-pose overlap. Reaction source canvas 320 normalizes to main 256 without changing image bytes. Generated animation based on existing portrait, not recovered original motion. Visual atlas review only; production Main gameplay validation remains pending."
+  }
+}

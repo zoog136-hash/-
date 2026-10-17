@@ -1,0 +1,52 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_registered_Godot_diagnostic_visual_qa",
+  "verdict": "PASS_REGISTRATION_DIAGNOSTIC_ONLY",
+  "animation_quality_verdict": "HOLD_PENDING_GAMEPLAY_SCALE_AND_FULL_DIRECTION_PILOT",
+  "evidence": {
+    "registered_images": [
+      "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-pose-0.png",
+      "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-pose-1.png",
+      "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-pose-2.png"
+    ],
+    "Godot_report": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/godot-preview.json",
+    "validation_report": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/validation.json",
+    "video": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-loop.mp4",
+    "gif": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-loop.gif",
+    "review_method": "Inspected the three rendered pose screenshots, preview script and recorded actual Godot pose/timing sequence. Continuous video playback was not directly viewed."
+  },
+  "registration": {
+    "status": "pass_diagnostic",
+    "observation": "The former large horizontal head drift is removed. Head, torso and hands remain nearly fixed; visible ear/head height varies only subtly across the registered poses. No gross head bob or body separation.",
+    "source_anchors": [[446,662],[1086,663],[1751,661]],
+    "source_pixels_modified": false
+  },
+  "floor_contact": {
+    "status": "pass_for_one_support_shoe_per_pose",
+    "observation": "The planted forward shoe in poses 1/3 and the under-hip shoe in pose 2 visibly reach the y440 ground guide. The rear raised-heel toe is slightly above that line in poses 1/3, so this preview does not prove a second simultaneous toe contact.",
+    "limitation": "In-place scratch playback does not establish world-space foot planting during actual movement or compatibility with Main map ground."
+  },
+  "gait": {
+    "opposite_stride_static_cue": "pass_with_prior_band_continuity_reservation",
+    "observation": "The banded rear leg/plain forward leg distinction in pose 3 survives Godot rendering, and pose 2 has a clearly raised bent knee. All legs remain attached. The middle high knee produces a pronounced pose change rather than a subtle ordinary passing stance.",
+    "recorded_sequence": "0 -> 1 -> 2 -> 0 at 6.25 poses/s, confirmed in actual Godot capture metadata.",
+    "unresolved": "The single passing pose and direct last-to-first transition require naturalness review at actual gameplay scale, including the previously noted stocking-band placement changes. Do not infer a fully verified alternating walk from the registration success."
+  },
+  "scope": {
+    "actual_Godot": true,
+    "engine": "4.7.2-stable",
+    "actual_Main": false,
+    "directions_reviewed": ["E"],
+    "roles_reviewed": ["three_pose_walk_risk_trial"],
+    "preview_scale": 0.65,
+    "preview_scale_approved_for_gameplay": false,
+    "full_eight_direction_animated_pilot": false,
+    "completed_added": 0
+  },
+  "required_next": [
+    "Compare the gait with an approved actor in actual Main at the intended gameplay scale.",
+    "Resolve band/accessory continuity and any high-knee popping observed during actual loop review.",
+    "Complete and inspect all eight directions and required roles before entity completion."
+  ],
+  "counts_as_completed_entity": false
+}

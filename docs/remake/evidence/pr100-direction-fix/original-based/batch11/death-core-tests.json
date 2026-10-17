@@ -1,0 +1,27 @@
+[
+  {
+    "test": "combat_vfx_test",
+    "exit_code": 0,
+    "runner_output": "{\"command\": [\"/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64\", \"--path\", \"/workspace/TWILIGHT\", \"--script\", \"res://tests/combat_vfx_test.gd\", \"--headless\"], \"subject\": null, \"exit_code\": 0, \"seconds\": 0.4976041489971976, \"log\": \"/workspace/pr100-authoring/batch11_final_combat_vfx_test-headless.log\"}\nGodot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nCOMBAT_VFX_OK stress=3000 pool=160 per_hit_nodes=0\n\n"
+  },
+  {
+    "test": "hit_feedback_test",
+    "exit_code": 0,
+    "runner_output": "{\"command\": [\"/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64\", \"--path\", \"/workspace/TWILIGHT\", \"--script\", \"res://tests/hit_feedback_test.gd\", \"--headless\"], \"subject\": null, \"exit_code\": 0, \"seconds\": 0.48622599499867647, \"log\": \"/workspace/pr100-authoring/batch11_final_hit_feedback_test-headless.log\"}\nGodot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nHIT_FEEDBACK_OK checks=3258 stress=3000 per_hit_nodes=0\n\n"
+  },
+  {
+    "test": "authored_state_motion_test",
+    "exit_code": 0,
+    "runner_output": "{\"command\": [\"/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64\", \"--path\", \"/workspace/TWILIGHT\", \"--script\", \"res://tests/authored_state_motion_test.gd\", \"--headless\"], \"subject\": null, \"exit_code\": 0, \"seconds\": 2.341125162998651, \"log\": \"/workspace/pr100-authoring/batch11_final_authored_state_motion_test-headless.log\"}\nGodot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nAUTHORED_STATE_MOTION_OK directions=8 assertions=102 monster_native=true relic_native=true\n\n"
+  },
+  {
+    "test": "combat_timeline_lifecycle_test",
+    "exit_code": 0,
+    "runner_output": "{\"command\": [\"/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64\", \"--path\", \"/workspace/TWILIGHT\", \"--script\", \"res://tests/combat_timeline_lifecycle_test.gd\", \"--headless\"], \"subject\": null, \"exit_code\": 0, \"seconds\": 1.7762842230004026, \"log\": \"/workspace/pr100-authoring/batch11_final_combat_timeline_lifecycle_test-headless.log\"}\nGodot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nCOMBAT_TIMELINE_LIFECYCLE_OK checks=158\n\n"
+  },
+  {
+    "test": "original_based_canvas_test",
+    "exit_code": 0,
+    "runner_output": "{\"command\": [\"/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64\", \"--path\", \"/workspace/TWILIGHT\", \"--script\", \"res://tests/original_based_canvas_test.gd\", \"--headless\"], \"subject\": null, \"exit_code\": 0, \"seconds\": 0.3571028629994544, \"log\": \"/workspace/pr100-authoring/batch11_final_original_based_canvas_test-headless.log\"}\nGodot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nORIGINAL_CANVAS_RESULT {\"checks\":640,\"failures\":[]}\nORIGINAL_CANVAS_OK\n\n"
+  }
+]

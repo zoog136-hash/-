@@ -1,0 +1,131 @@
+{
+  "status": "HOLD; preparation only; no PNG import, runtime binding, or Main execution performed",
+  "blocking_reason": "Death generation returned 20 of 24 required poses twice; awaiting a complete independently approved death sheet",
+  "completion": {
+    "new_completed": 0,
+    "existing_completed_preserved": 374
+  },
+  "target": "monster:알비노 피쉬맨",
+  "working_directory": "/workspace/twilight",
+  "runner": "res://tests/run_original_based_batch.gd",
+  "fixture_schema": {
+    "required_case_fields": [
+      "name",
+      "folder",
+      "slug"
+    ],
+    "optional_case_fields": [
+      "body_kind"
+    ],
+    "limits": "1 to 10 cases; a one-subject risk pilot is supported",
+    "safe_components": "folder/slug: lowercase ASCII a-z, digits, underscore or hyphen; no slash or dot"
+  },
+  "proposed_fixture_path": "res://tests/fixtures/pr100_batch22_fishman_pilot.json",
+  "proposed_fixture": {
+    "batch": "pr100-batch22-fishman-pilot",
+    "cases": [
+      {
+        "name": "알비노 피쉬맨",
+        "folder": "albino_fishman",
+        "slug": "albino-fishman"
+      }
+    ]
+  },
+  "fixture_notes": [
+    "The proposed folder must be replaced if the approved importer output uses a different name. No fixture was written to the repository.",
+    "body_kind is deliberately omitted until the exact production monster profile body has been reviewed; do not infer it from transform:350, a separate catalog entity."
+  ],
+  "execution_gate": [
+    "Complete 104 unique poses: idle16, walk24, attack24, hit16, death24; all independent static reviews must PASS.",
+    "Verify source SHA, silhouette, correct compass order, transparent alpha, proportional per-role canvas, and explicit ground anchors before import.",
+    "Root explicitly connects approved artwork and provenance to monster:알비노 피쉬맨. Keep unapproved death/WIP sheets disconnected.",
+    "Perform one project import after approved assets are connected; avoid a concurrent editor import during Main validation.",
+    "Use fresh, separate isolated XDG data/cache/config and report paths for headless and OpenGL."
+  ],
+  "common_environment": {
+    "TWILIGHT_PR100_BATCH_ISOLATED": "1",
+    "TWILIGHT_PR100_BATCH_CONFIG": "res://tests/fixtures/pr100_batch22_fishman_pilot.json"
+  },
+  "per_mode_environment": {
+    "headless": {
+      "XDG_DATA_HOME": "/workspace/twilight-run/recovery/fishman-main-headless/data",
+      "XDG_CACHE_HOME": "/workspace/twilight-run/recovery/fishman-main-headless/cache",
+      "XDG_CONFIG_HOME": "/workspace/twilight-run/recovery/fishman-main-headless/config",
+      "TWILIGHT_PR100_BATCH_REPORT": "/workspace/twilight-run/recovery/fishman-main-headless/report.json",
+      "TWILIGHT_PR100_BATCH_CAPTURE_DIR": ""
+    },
+    "opengl": {
+      "XDG_DATA_HOME": "/workspace/twilight-run/recovery/fishman-main-opengl/data",
+      "XDG_CACHE_HOME": "/workspace/twilight-run/recovery/fishman-main-opengl/cache",
+      "XDG_CONFIG_HOME": "/workspace/twilight-run/recovery/fishman-main-opengl/config",
+      "TWILIGHT_PR100_BATCH_REPORT": "/workspace/twilight-run/recovery/fishman-main-opengl/report.json",
+      "TWILIGHT_PR100_BATCH_CAPTURE_DIR": "/workspace/twilight-run/recovery/fishman-main-opengl/captures"
+    }
+  },
+  "commands_not_executed": {
+    "headless": [
+      "timeout",
+      "600",
+      "/workspace/twilight-tools/Godot_v4.7.2-stable_linux.x86_64",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      ".",
+      "--script",
+      "res://tests/run_original_based_batch.gd"
+    ],
+    "opengl": [
+      "timeout",
+      "600",
+      "/workspace/twilight-tools/run-with-xvfb",
+      "/workspace/twilight-tools/Godot_v4.7.2-stable_linux.x86_64",
+      "--rendering-driver",
+      "opengl3",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      ".",
+      "--script",
+      "res://tests/run_original_based_batch.gd"
+    ]
+  },
+  "tool_requirement": "Local Godot calls require exec_command additional_permissions.network.enabled=true in this environment.",
+  "logging": {
+    "stdout_stderr": "Redirect to the corresponding fishman-main-<mode>/run.log; never stream full Godot output into conversation.",
+    "error_markers": [
+      "SCRIPT ERROR:",
+      "ERROR:",
+      "PR100_GAMEPLAY_FAIL"
+    ],
+    "required_success_marker": "PR100_ORIGINAL_BATCH_OK",
+    "report_fields": [
+      "checks",
+      "failures",
+      "cases[].monster_directions",
+      "cases[].pose_samples",
+      "cases[].screenshots",
+      "cases[].preserved_saves"
+    ],
+    "case_report": "report-cases/albino-fishman.json contains setup, 8-direction AI evidence, lifecycle/drop/manual-pickup and individual pose samples."
+  },
+  "expected_scope": [
+    "Fresh production Main.tscn on unchanged aden_world, real class entry and production monster database record.",
+    "Exact approved original-based SpriteFrames path; no fallback counted; provenance target_keys and actual original atlas region binding verified.",
+    "Real AI approach, directional attack and contact in all 8 directions, upright sprite/no flip; original melee attack range and cadence retained.",
+    "Explicit authored idle/walk/attack/hit/death tracks for all eight directions, expected104 pose samples after the final death sheet passes; rendered capture only in OpenGL.",
+    "Existing DB HP1960/lv93/melee range58/speed99 are preserved. The inherited ogre lifecycle helper uses the existing 진명황의 집행검 for HP>=1500, with bounded200 real weapon attempts.",
+    "Real equipped-weapon kill, directional hit/death, one death callback, real probabilistic drop table, ground drop before award, and actual UI manual pickup.",
+    "Initial user saves cause refusal; generated QA saves are preserved beneath user://pr100-batch-preserved/albino-fishman, never mixed with existing user saves."
+  ],
+  "potential_qa_issues": [
+    "The monster runner uses the original skeleton-based Main clearing search; it does not inherit the transform runner wider QA search. Confirm actual results before changing it.",
+    "Rendered pose helper currently searches only0-320px for a clear body rectangle and a192px distance from other visible monsters. Dense spawns/foreground rocks may reject every candidate despite valid artwork.",
+    "If a later actual run reproduces only QA placement failure, expand real walkable-ground search as done for batch21; retain collisions, safe-zone checks, line of sight, foreground rectangles, other actors, combat stats, AI and loot assertions. Do not hide scenery or monsters.",
+    "Unlike the transform runner, existing monster save preservation validates/moves entries sequentially. Use a brand-new isolated data directory and stop on any preservation error."
+  ],
+  "performed_now": [
+    "Read current monster batch runner, batch20 fixture, inheritance helpers and fishman DB/reference metadata.",
+    "Prepared this JSON only. No importer, Main, Godot test, runtime connection, repository code edit, commit or push was performed."
+  ]
+}

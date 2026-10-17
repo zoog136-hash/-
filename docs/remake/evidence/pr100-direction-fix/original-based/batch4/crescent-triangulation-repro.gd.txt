@@ -1,0 +1,26 @@
+extends SceneTree
+func _initialize() -> void:
+ var failed_world := 0
+ var failed_local := 0
+ var total := 0
+ for direction: int in range(8):
+  var aim := Vector2.RIGHT.rotated(direction * PI / 4.)
+  for step: int in range(100):
+   var progress := float(step)/100.
+   for base_radius: float in [20.,29.]:
+    var radius := base_radius*(.72+progress*.7)
+    var start := aim.angle()-1.12+progress*.32
+    var points := PackedVector2Array()
+    for i: int in range(13):
+     var t := float(i)/12.
+     points.append(Vector2.from_angle(start+t*2.05)*radius)
+    for i: int in range(11,0,-1):
+     var t := float(i)/12.
+     points.append(Vector2.from_angle(start+t*2.05)*(radius-sin(t*PI)*radius*.22))
+    if Geometry2D.triangulate_polygon(points).is_empty(): failed_local += 1
+    var center := Vector2(29704,14648)-aim*radius*.65
+    for i: int in range(points.size()): points[i] += center
+    if Geometry2D.triangulate_polygon(points).is_empty(): failed_world += 1
+    total += 1
+ print('CRESCENT_REPRO total=%d old_world_failures=%d local_failures=%d' % [total,failed_world,failed_local])
+ quit()

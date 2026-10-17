@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "target_key": "transform:360",
+  "decision": "REVIEW_HOLD",
+  "scope": "Independent visual review of walk-v2 only, including explicit correction of an earlier reviewer claim about south-facing stride.",
+  "source": {
+    "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v2.png",
+    "sha256": "81331e76ae1504574639433d987f644ae10b97ca70230ba87beb212150993636",
+    "bytes": 2199719,
+    "source_unchanged": true
+  },
+  "geometry": {
+    "result": "pass",
+    "distinct_pixel_poses": 24,
+    "logical_phases": 3,
+    "direction_order": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "canvas_size_used_for_inspection": [
+      520,
+      520
+    ],
+    "guards_relaxed": false,
+    "opaque_crop_loss_pixels": 0
+  },
+  "definite_failures": [
+    {
+      "phase": 2,
+      "direction": "NE",
+      "finding": "The third NE pose turns to a front/right-facing view with gold front vest/face exposure instead of the required rear-right coat/head view. This reverses the view during one gait cycle.",
+      "comparison": "NE phase0/1 are rear-right; NE phase2 is front/right."
+    },
+    {
+      "phase": 2,
+      "directions": [
+        "NW",
+        "N"
+      ],
+      "finding": "The held card switches to the opposite arm. The rear-view guide and phase0/1 raise the viewer-left card arm, while phase2 raises the viewer-right arm and moves the free glove to the other hip.",
+      "claim_limit": "A handedness/occlusion violation is directly visible. This report does not claim the PNG was literally pixel-mirrored."
+    }
+  ],
+  "stride_assessment": {
+    "S": {
+      "finding": "Opposite-leg alternation is visibly present.",
+      "evidence": "S phase0 lifts the viewer-right knee while viewer-left leg supports. S phase2 lifts viewer-left knee while viewer-right leg supports. Phase1 passes narrowly beneath the hips.",
+      "correction": "The earlier blanket claim that E/S/W all repeat the same leading leg is unsupported for S and must not be reused as a verified failure fact."
+    },
+    "E_W": {
+      "finding": "Opposite anatomical near/far-leg alternation is not sufficiently established.",
+      "evidence": "Phase0/2 project similar forward-knee silhouettes; without reliable near/far thigh occlusion, a shared screen-space leading-foot position alone does not prove the same anatomical leg.",
+      "classification": "Unproven alternation, not a definitive same-leg identity claim."
+    }
+  },
+  "hold_reason": "The definite NE view reversal and NW/N card-hand switches independently prevent a valid stable8-direction walk, regardless of the positively observed S stride.",
+  "reference_guide_and_idle_status": "Previously approved8-view guide and16idle poses remain partial source work. No finished five-role actor or104pose approval is claimed.",
+  "inspection_paths": [
+    "/workspace/twilight-run/recovery/remote-three-contact/card-magician-walk-v2-independent.jpg",
+    "/workspace/twilight-run/recovery/remote-three-contact/card-magician-walk-v2-S-stride-detail.jpg"
+  ],
+  "actions": {
+    "additional_generation": "stopped by root/reviewer after two failed walking attempts",
+    "source_PNGs_modified": 0,
+    "production_changes": false,
+    "runtime_Main_executed": false,
+    "completed_count_increment": 0
+  }
+}

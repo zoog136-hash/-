@@ -1,0 +1,92 @@
+{
+  "target_key": "monster:검은숲 늑대",
+  "status": "HOLD_AFTER_TWO_ROLE_ATLAS_FAILURES",
+  "completion_increment": 0,
+  "production_changes": false,
+  "source_claim": "Generated artwork based on existing TWILIGHT project atlas; not recovered original game art/animation",
+  "source_reference_proof": "/workspace/twilight-artwork/batch22/wolf/reference-proof.json",
+  "source_sha_at_stop": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+  "source_unchanged": true,
+  "eight_view_guide": "rotation-v1 passed appearance and 8-body/edge tests; reference only",
+  "role_attempts": [
+    {
+      "file": "idle-v1.png",
+      "packing": "columns",
+      "geometry": "FAIL: foreign body inside crop rectangle"
+    },
+    {
+      "file": "idle-v2.png",
+      "packing": "blocks4x2",
+      "geometry": "FAIL: four crop rectangles include neighboring bodies (phase1 E/SE/W/NW)",
+      "geometry_details": "/workspace/twilight-artwork/batch22/wolf/idle-v2.geometry.json",
+      "padding_diagnostic": "/workspace/twilight-artwork/batch22/wolf/idle-v2-foreign-diagnostic.json",
+      "unpadded_overlap": "E contains11 foreign pixels, SE1, NW36 even with zero crop padding; this is real rectangle overlap, not only the 3px crop margin"
+    }
+  ],
+  "approved_roles": [],
+  "candidate_recipe": "NOT_CREATED; rejected/incomplete role sheets",
+  "Main_validation": "NOT_RUN",
+  "stop_reason": "Two idle-atlas attempts failed. Additional generation stopped as instructed; new grid support must preserve this failure.",
+  "files": [
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/authoring-reference.png",
+      "bytes": 114854,
+      "sha256": "021023fc22a4bbe69729fde0084e1e93ac61f0fa2a1e7a8983091b52b4e4d269"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v1.geometry.json",
+      "bytes": 268,
+      "sha256": "fded3ea6a2ac56d078ade0517fc9d2d7b6ecdb2a7942c2c3188d02340d2655c6"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v1.png",
+      "bytes": 1847608,
+      "sha256": "4e313e9be19abd01280129658af0576bee15d977980968657b08919201fa8634"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v1.prompt.txt",
+      "bytes": 2220,
+      "sha256": "dfe609e5a5977c12f69696d98d3e829d4938e7828eb924c6b0b94e950a326bab"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v2-foreign-diagnostic.json",
+      "bytes": 1749,
+      "sha256": "00209ab77df7ed0df42cf8fc61b5bbc9c8551fc1444af7c3612e38b3e93c566f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v2.geometry.json",
+      "bytes": 5385,
+      "sha256": "d0d18b10eccd9d35449d90c0ee9033e13465a37cd384d0d87041d1be2511c087"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v2.png",
+      "bytes": 2225097,
+      "sha256": "8b1ed57ff5deec538f6143702baa97108a300dc020224df37c68422abb32fc90"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/idle-v2.prompt.txt",
+      "bytes": 2270,
+      "sha256": "17cfce0b74bfa5cab86bedd318773e9cc15e3ee62ab0a57b14c896b75896091e"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/reference-proof.json",
+      "bytes": 3388,
+      "sha256": "e15862f8994f459417d2f400cbc73ef2c975ced0b3f94342f8d558a3c913c942"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/rotation-v1.png",
+      "bytes": 2215568,
+      "sha256": "6167ce91685f5634380972717c51a3e481e09d96de12e3b7dd9edf2bbef78506"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/rotation-v1.prompt.txt",
+      "bytes": 1918,
+      "sha256": "b1adccf610b572561dd485577a0e6967c552a55785655e1928fcc9a851d4aa92"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/wolf/rotation-v1.review.json",
+      "bytes": 506,
+      "sha256": "ef54e1ba1dfea593c26171cae7a6daf29fc625436465ce0bc6cf5f6527b3fa46"
+    }
+  ]
+}

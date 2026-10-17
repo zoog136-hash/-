@@ -134,7 +134,10 @@ func _run() -> void:
 		check(mob.sprite.texture != null, "monster resource " + record.name)
 		var source: String = str(MANIFEST.monster_binding(record).get("path", ""))
 		var reviewed: Dictionary = preload("res://scripts/animation/presentation_catalog.gd").data.monster_sources.get(source, {})
-		if not reviewed.is_empty(): check(mob.motion.profile.body_kind == reviewed.body, "installed art body overrides fallback family " + record.name)
+		var explicit: Dictionary = CATALOG.records.get("monster:"+str(record.name),{})
+		if str(explicit.get("frames_path","")).begins_with("res://assets/actors/eight_direction/expanded/"):
+			check(mob.motion.frame_source!=null and mob.motion.profile.body_kind==str(explicit.body_kind),"native body outranks the retained portrait fallback " + record.name)
+		elif not reviewed.is_empty(): check(mob.motion.profile.body_kind == reviewed.body, "installed art body overrides fallback family " + record.name)
 		var foot: Vector2 = mob.position
 		var shape: Transform2D = mob.get_node("CollisionShape2D").transform
 		var count: Array[int] = [0]
@@ -151,7 +154,9 @@ func _run() -> void:
 		check(count[0] == 8, "monster attack markers " + record.name)
 		check(mob.position == foot and mob.get_node("CollisionShape2D").transform == shape, "monster visual-only " + record.name)
 		mob.motion.die()
-		mob.motion.advance(.8, Vector2.ZERO)
+		# A native death can still be opaque at its final pose; inspect the
+		# fade after the configured sequence, not a fixed legacy deadline.
+		mob.motion.advance(maxf(.8, mob.motion.profile.death_duration + .1), Vector2.ZERO)
 		mob.motion.apply(mob.sprite, mob.animation_base_scale)
 		check(not mob.motion.active and mob.sprite.modulate.a < 1.0, "monster death " + record.name)
 		report.monsters.append({"name":record.name,"boss":mob.is_boss,"body":mob.motion.profile.body_kind,

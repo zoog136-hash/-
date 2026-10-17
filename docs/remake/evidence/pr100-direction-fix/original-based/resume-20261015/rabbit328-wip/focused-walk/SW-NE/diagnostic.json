@@ -1,0 +1,192 @@
+{
+  "candidate": "/workspace/scratch/pr100-resume/focused-walk/SW-NE/generated-walk-SW-NE.png",
+  "original_generated": "/workspace/generated_images/exec-b5028795-ad65-4f21-862f-17c93a1f5b77.png",
+  "sha256": "b3fff60b6b2259a7866378f85a1a3319070f5392cea566de9270174805345726",
+  "source_sha256": "b3fff60b6b2259a7866378f85a1a3319070f5392cea566de9270174805345726",
+  "pixels_untouched": true,
+  "image": {
+    "mode": "RGBA",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha_min": 0,
+    "alpha_max": 254,
+    "fully_transparent_pixels": 1165563
+  },
+  "parameters": {
+    "rows_count": 3,
+    "reference_rows": [
+      0,
+      1,
+      2
+    ],
+    "directions_axis": "rows",
+    "canvas_size": 1024,
+    "directions": [
+      "SW",
+      "NE"
+    ]
+  },
+  "canvas_note": "1024 is a diagnostic-only canvas accommodating authored pixels for strict geometry analysis; runtime scale and source anchors have not been reviewed.",
+  "strict_geometry": {
+    "status": "PASS",
+    "geometry": {
+      "image_size": [
+        1536,
+        1024
+      ],
+      "frames": [
+        {
+          "row": 0,
+          "direction": "SW",
+          "region": [
+            157,
+            25,
+            236,
+            480
+          ],
+          "margin": [
+            413,
+            164,
+            788,
+            544
+          ],
+          "source_anchor": [
+            256,
+            501
+          ],
+          "rgba_sha256": "60431604f1b90f5649e2e7cdce51c13932e925e1416b5037678850a2e87ab297"
+        },
+        {
+          "row": 0,
+          "direction": "NE",
+          "region": [
+            161,
+            516,
+            235,
+            471
+          ],
+          "margin": [
+            417,
+            173,
+            789,
+            553
+          ],
+          "source_anchor": [
+            256,
+            983
+          ],
+          "rgba_sha256": "9fc77fb72d4188e4e4903234b2cf2349672f375a63680f312e846c08e55316fc"
+        },
+        {
+          "row": 1,
+          "direction": "SW",
+          "region": [
+            640,
+            27,
+            232,
+            470
+          ],
+          "margin": [
+            384,
+            174,
+            792,
+            554
+          ],
+          "source_anchor": [
+            768,
+            493
+          ],
+          "rgba_sha256": "d3aa0986e3b4478b1026c0b2a600e91e3a86afeab008c2ae94b9b75b4fe592c4"
+        },
+        {
+          "row": 1,
+          "direction": "NE",
+          "region": [
+            642,
+            521,
+            234,
+            468
+          ],
+          "margin": [
+            386,
+            176,
+            790,
+            556
+          ],
+          "source_anchor": [
+            768,
+            985
+          ],
+          "rgba_sha256": "66984d5c767be627494fd82bb95b6a9e975bdb482fe70ae29cf73c1d253d182e"
+        },
+        {
+          "row": 2,
+          "direction": "SW",
+          "region": [
+            1147,
+            27,
+            231,
+            477
+          ],
+          "margin": [
+            379,
+            167,
+            793,
+            547
+          ],
+          "source_anchor": [
+            1280,
+            500
+          ],
+          "rgba_sha256": "2ad1fc2d01cda4c06443cbabc9c07f0a8ad938dae499f533e9d95a1e62fabc97"
+        },
+        {
+          "row": 2,
+          "direction": "NE",
+          "region": [
+            1155,
+            513,
+            229,
+            476
+          ],
+          "margin": [
+            387,
+            168,
+            795,
+            548
+          ],
+          "source_anchor": [
+            1280,
+            985
+          ],
+          "rgba_sha256": "80a00413f16c265fdc491a807b59e7791df87a41c513c47e4af83c7ef3d4dbc0"
+        }
+      ],
+      "distinct_pixel_frames": 6,
+      "neutral_height": 467.5,
+      "canvas_size": [
+        1024,
+        1024
+      ],
+      "foot": [
+        512,
+        640
+      ]
+    },
+    "require_complete_pose_regions": "PASS"
+  },
+  "visual_review": {
+    "status": "HOLD",
+    "front_back_direction": "Top SW face/chest down-left and bottom NE back-dominant up-right appear distinguishable.",
+    "leg_alternation": "FAIL: columns 1 and 3 in both rows visibly preserve the same near leg-forward/far leg-back stance; thigh/knee/ankle overlap does not reverse.",
+    "passing_phase": "Column 2 has a lifted bent knee distinct from contact stance, but does not establish an alternating cycle.",
+    "costume": "Recognizable silver bob, rabbit cap, dark bodice, purple sleeves, gold hem and rear bow; final original appearance match needs parent review.",
+    "spacing": "Top-row ear tips have much less than requested 15% breathing room; row gutter is narrow.",
+    "main_tscn": "NOT RUN",
+    "runtime_scale": "NOT REVIEWED",
+    "full_8_directions": "NOT PRESENT",
+    "complete": "NO"
+  }
+}

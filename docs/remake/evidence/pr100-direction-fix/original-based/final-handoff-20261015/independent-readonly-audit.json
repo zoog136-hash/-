@@ -1,0 +1,2034 @@
+{
+  "observed_utc": "2026-10-15T22:28:23.266443+00:00",
+  "scope": "READONLY canonical/count/source-archive audit; scratch JSON only. No production, tests, Godot, generation, repository edits, or git mutations. Does not redo visual review.",
+  "head_at_audit": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+  "counts": {
+    "target": 498,
+    "completed": 392,
+    "remaining": 106,
+    "percent": 78.7,
+    "individual_Main": 121,
+    "canonical_reports": 255,
+    "prior_HEAD_canonical_reports": 253,
+    "all_prior_SHA_preserved_in_index": true,
+    "all_current_report_files_SHA_verified": true
+  },
+  "canonical_reports": [
+    {
+      "path": "../../gameplay.json",
+      "sha256": "9a5fb8333c81d139dc7988fd9bdc195fe1afc0f4f106ad6fe870adb590de9da2",
+      "verified": true
+    },
+    {
+      "path": "../batch10/original_based_mummy_lord_gameplay_test-headless.json",
+      "sha256": "8c5cea25b23c54d0384a6a4bfdae3de0d49e81268cddecb849aa6a21320eb9b4",
+      "verified": true
+    },
+    {
+      "path": "../batch10/original_based_mummy_lord_gameplay_test-opengl.json",
+      "sha256": "9794fca3c9223d2ce7bcd18277f5d63d6eff7640b200dae05c19ef6c6325a384",
+      "verified": true
+    },
+    {
+      "path": "../batch10/original_based_salah_gameplay_test-headless.json",
+      "sha256": "306f204f8ef8095d67986ae623214086cb96fdc67f7f95956c7abb56fb8447d6",
+      "verified": true
+    },
+    {
+      "path": "../batch10/original_based_salah_gameplay_test-opengl.json",
+      "sha256": "537a7c451264ffbcc9bad1b189729d5de2afc37bc6e663ea001c21448e38a42e",
+      "verified": true
+    },
+    {
+      "path": "../batch10/original_based_seer_boss_gameplay_test-headless.json",
+      "sha256": "ae30f25344727f951cb7dbb9d970e71033bbbfa8e52a7170d7000c1cb941ce3a",
+      "verified": true
+    },
+    {
+      "path": "../batch10/original_based_seer_boss_gameplay_test-opengl.json",
+      "sha256": "86f6daf9af254bc64f721ee2aa7522ced3f92811236543de31d1ed8e4ea79dcd",
+      "verified": true
+    },
+    {
+      "path": "../batch11/batch11_reaper_timing-headless.json",
+      "sha256": "b35c323c7c618f01525458f7042bf15e6df8cb8ff47e964d446a2b54fa0d3bb9",
+      "verified": true
+    },
+    {
+      "path": "../batch11/batch11_spear_captain_timing-headless.json",
+      "sha256": "f218b885c9caa997be3c7c0a9dddb13c8d77e8d2ef4a529dc104341b430ff6f8",
+      "verified": true
+    },
+    {
+      "path": "../batch11/batch11_spear_captain_timing-opengl.json",
+      "sha256": "d6e0d95997795a30a9a5c2950a5ed92e1b065f5b5c355a1c7803c11cd321e25c",
+      "verified": true
+    },
+    {
+      "path": "../batch11/batch11_spear_red_timing-headless.json",
+      "sha256": "58593981ddd9bbae71aeda5b6c2394ef263c82fffc206e7e58f67987241f19e3",
+      "verified": true
+    },
+    {
+      "path": "../batch11/batch11_spear_red_timing-opengl.json",
+      "sha256": "bcffe640f9c811e66280e9e9fc17a59891ac190b170d5f03231628469fbb572b",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_gameplay_test-headless.json",
+      "sha256": "bcff3a1190e894aee57c84ef734672f48df00c73e467d6339fef3f5cb7eaf81f",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_gameplay_test-opengl.json",
+      "sha256": "75e6f6621b86b55d75431abd2850230ff2262a04d8b919c214f1206fff5293bc",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_hell-headless.json",
+      "sha256": "34b244f9714a76ecb866a73396c3d1d2b5aede9bd4f4ba66a8658af20d788a4a",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_hell-opengl.json",
+      "sha256": "65572668f9bdccf502876dcb63e48c8b717e2b29e3d454be2bb01e275d77a7df",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_immortal-headless.json",
+      "sha256": "4a3fa6f6d3be20c420230d9396201930c951e8b3087066b38c0d4413b133262a",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_immortal-opengl.json",
+      "sha256": "e3095607ab2a0654c3825f5fcbb4adc1229dab107f4fe7a7493aa4b8bec0d3d8",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_ettin_gameplay_test-headless.json",
+      "sha256": "d85481c3c4c53c000e692addef6df7a660048333c92c971f567b32e95015ebfe",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_ettin_gameplay_test-opengl.json",
+      "sha256": "54030031cc32b4bd48edb33003d8e38033da2a929a24878ab1c5a7e827429077",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_king_bugbear_gameplay_test-headless.json",
+      "sha256": "78c8598057fbc475849c3bdfdcd3bb7c8859b8dcbc58385b4043e4b105554380",
+      "verified": true
+    },
+    {
+      "path": "../batch11/original_based_king_bugbear_gameplay_test-opengl.json",
+      "sha256": "f99843e511308825257311bfc46d5dab030317ec9f62883846674a27203cb00b",
+      "verified": true
+    },
+    {
+      "path": "../batch12/batch12_pan_review-headless.json",
+      "sha256": "dd2f2e8717c38475202ec32dbc6b0d97d58e96bbb344784cc15120cc393d6d73",
+      "verified": true
+    },
+    {
+      "path": "../batch12/batch12_pan_review-opengl.json",
+      "sha256": "27e34f2d3ce410f7cc19c183a664e6844d3bd7fb25806e5ada31c15fb1af5986",
+      "verified": true
+    },
+    {
+      "path": "../batch12/original_based_albino_giant_crab_gameplay_test-headless.json",
+      "sha256": "c3f5b62a7342f9ff5a37e0ac1e6e2224ccf4ea8f5218752ce09eecd5f4fee95a",
+      "verified": true
+    },
+    {
+      "path": "../batch12/original_based_albino_giant_crab_gameplay_test-opengl.json",
+      "sha256": "0a60ed376b2319e485c5cb3dc5146c2818972a9134f4c2a26ce3ed28563e04f8",
+      "verified": true
+    },
+    {
+      "path": "../batch12/original_based_ancient_penguin_gameplay_test-headless.json",
+      "sha256": "b5aba5d08a2ea61ead657f766a8f6b824c20179dbce8e78d45456001586696d9",
+      "verified": true
+    },
+    {
+      "path": "../batch12/original_based_ancient_penguin_gameplay_test-opengl.json",
+      "sha256": "e8bfd1f34352f378558a0e3af6b72c0f7ab12a8f1d7b3e1dc5453864be20fc8c",
+      "verified": true
+    },
+    {
+      "path": "../batch12/original_based_kraken_transform_gameplay_test-headless.json",
+      "sha256": "d9241cbb0c0944c70863cf0efb4d566685c9a341f044a735eda686cd9d7aee72",
+      "verified": true
+    },
+    {
+      "path": "../batch12/original_based_kraken_transform_gameplay_test-opengl.json",
+      "sha256": "3b839845a3c18b349401aa56716be8bf4d2cb304672cbd94460a9b611f494ec1",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_ice_man_gameplay_test-headless.json",
+      "sha256": "ac2fb18ff68d6462ed1906d1ed2ae0e1ef49b8893bbabd27abaa4a03b2f1e3ca",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_ice_man_gameplay_test-opengl.json",
+      "sha256": "7db678bcd66e3228e385ac74545a5a6047765cc3b7cb51a45fc1162e837d84c7",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_scorpion_gameplay_test-headless.json",
+      "sha256": "040bf220eaf66edeb3992a5145e2f55691882ad5caf6fa421d3a7b16a54eb7a3",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_scorpion_gameplay_test-opengl.json",
+      "sha256": "601161c38206b40d325527b045bd608bd4ad37de6ede57c50c479afd6825a1ff",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_snowman_gameplay_test-headless.json",
+      "sha256": "056c3c5cb3955622f526423ae31165caa95c1cbdff4fe534ae14d5c739e22838",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_snowman_gameplay_test-opengl.json",
+      "sha256": "b2f4c3d76445c2353e978401cc5197ab9b68e3d02b185d976f7c182364e81f0b",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_yeti_gameplay_test-headless.json",
+      "sha256": "6215d63265d5cc3ac16a35d97a112d5583fb0b7813b1cb8a7e786fb2dd035fe3",
+      "verified": true
+    },
+    {
+      "path": "../batch13/original_based_yeti_gameplay_test-opengl.json",
+      "sha256": "ea3aa4e03dce7412450dae10d3d519d78c1a1a5339d33d715480ca053f321086",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/batch14_dire_wolf_render-opengl.json",
+      "sha256": "4895f61989e10c7687494c87e2a52e2ab3daa937a0e4f2a0791bbc4184c8f140",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/original_based_dire_wolf_gameplay_test-headless.json",
+      "sha256": "4ee1f73807731293174053e7595bd3e15e2cd54b06e37a68241dc55fb71569d9",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_basilisk-headless.json",
+      "sha256": "cad1740eece9ac23c4c43e59eeb67b985f3936590d9de71c9d80e965b570f0ab",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_basilisk-opengl.json",
+      "sha256": "668fb429771b7b71d383b94032401a664b179de424f0218e9bd834d1ba6ab8e5",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_saber_tiger-headless.json",
+      "sha256": "7917549b16820f1d7b7c01cdecbef206f3ed3edece64ece96f0174b1df9852c8",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_saber_tiger-opengl.json",
+      "sha256": "e4c6be67b941e18522d01ca838dce7590608bdf4b801ae11611f7ea6f45e81eb",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_saber_tiger_cruel-opengl.json",
+      "sha256": "f237d7dff646d3e2fb4d09efa21b89d8102e7c5d6a0bffa597cd9cd821faa1c4",
+      "verified": true
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_saber_tiger_cruel_reference_fixed-headless.json",
+      "sha256": "89f47a1166e6ec86b0dc25c3942e5822eb56aadfc1f074d4ee3a72cd3a19992a",
+      "verified": true
+    },
+    {
+      "path": "../batch15/final-headless-cases/asitagio-cruel.json",
+      "sha256": "cbfdf2700f800cb5f8c66f250a714ad117f9d6bae7838790ac135b27ed0c4157",
+      "verified": true
+    },
+    {
+      "path": "../batch15/final-headless-cases/lamia-distorted.json",
+      "sha256": "099129d36dd4da713d10f561714348066f8bcf431544ab706d7a2b9af3811b07",
+      "verified": true
+    },
+    {
+      "path": "../batch15/final-headless-cases/lamia.json",
+      "sha256": "89ad7d9d9ec258eef1a2a4561a1e8f4a551282e5f8bcbe60c9f105fba10bdacc",
+      "verified": true
+    },
+    {
+      "path": "../batch15/final-headless-cases/water-spirit-deep.json",
+      "sha256": "f40c06c2fb9f1c9dbe2ff4a248afceb17c4b9152ab1e8a587ae16e0e7aa9a3ca",
+      "verified": true
+    },
+    {
+      "path": "../batch15/final-headless-cases/water-spirit-eva.json",
+      "sha256": "7122db595ceeceab3533e243b566b296eb2b0e92b9aa75cd532c68e7c20ba1c1",
+      "verified": true
+    },
+    {
+      "path": "../batch15/recovery/main-gameplay.json",
+      "sha256": "3f069d4863e3d3b52a9311cad05423068ca8ca6e8ac0e45be15d0ff9cd40edc9",
+      "verified": true
+    },
+    {
+      "path": "../batch15/render-cases/asitagio-cruel.json",
+      "sha256": "121f88fc7e0d327999aeb689c5ec8631c4b6b12b00effb9e274e2c9c67c4c149",
+      "verified": true
+    },
+    {
+      "path": "../batch15/render-cases/lamia-distorted.json",
+      "sha256": "aa7962998a20558bb36bc645b5dbe9d6d6fe71c657380688b1185d9a609094ed",
+      "verified": true
+    },
+    {
+      "path": "../batch15/render-cases/lamia.json",
+      "sha256": "499d059ae517c0652a28f2f4b26853de45358995f46c565f1ffdd8222aacc574",
+      "verified": true
+    },
+    {
+      "path": "../batch15/render-cases/water-spirit-deep.json",
+      "sha256": "170e1e8735f96db5d55dde455c05d5ff007e1064b0299247757d80f6017dce8e",
+      "verified": true
+    },
+    {
+      "path": "../batch15/render-cases/water-spirit-eva.json",
+      "sha256": "eba9f6550746c35ca160d46c1434b2e5b46e952ebb26fe1657ac8dc7201cb2c5",
+      "verified": true
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/asitagio-arrogant.json",
+      "sha256": "ef87bdaf0995198ec4c26b617fc962d54289aa2015c845fa9d938fd53034f617",
+      "verified": true
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/asitagio.json",
+      "sha256": "d1fc70f3c0ffbb5bd9423c6b282c63e81e592643725bb6cf62f3245f3208a6a8",
+      "verified": true
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/harpy-wind-dragon.json",
+      "sha256": "9d312e2332b0def41e9d05e7db0a420914e731be794f01d1a4b24a07628cf63a",
+      "verified": true
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/harpy.json",
+      "sha256": "15c3876886d4bf44d13163d6ae1e5bd011e13e7c9564743964182022c80d9ab1",
+      "verified": true
+    },
+    {
+      "path": "../batch16/headless-cases/blue-harpy.json",
+      "sha256": "8dbc38378e420d7e7cb6f075640440680005d8976ecbb103d1d3b39f90e77e24",
+      "verified": true
+    },
+    {
+      "path": "../batch16/headless-cases/distrust-imp.json",
+      "sha256": "f109acba9cd61a543148ad49438fdc2973d5c7ea154d4fd757004424eab74d4a",
+      "verified": true
+    },
+    {
+      "path": "../batch16/headless-cases/jealousy-zombie-knight.json",
+      "sha256": "b1cbba53f69c1fcdb73b6ddd804f9a0925736e0f2e016c5ce724e19e1f25d7e3",
+      "verified": true
+    },
+    {
+      "path": "../batch16/headless-cases/jealousy-zombie-maid.json",
+      "sha256": "62a47830afa73da55b123d710cb6bd6637af6ebdf49c614626c981c064b78e1e",
+      "verified": true
+    },
+    {
+      "path": "../batch16/render-cases/blue-harpy.json",
+      "sha256": "8cfe0628bd5ce45d0ab556b73e31baed5188be188959a7e516af5bebf8f7c560",
+      "verified": true
+    },
+    {
+      "path": "../batch16/render-cases/distrust-imp.json",
+      "sha256": "443fb52cc9b46ec183216a280a15e644876a4fb29fb3571fd5d3e97d47357b70",
+      "verified": true
+    },
+    {
+      "path": "../batch16/render-cases/jealousy-zombie-knight.json",
+      "sha256": "0aa0882ca757813a2662700fa8ca36a79e8b99c8705c725b54d0a78bed06eaf5",
+      "verified": true
+    },
+    {
+      "path": "../batch16/render-cases/jealousy-zombie-maid.json",
+      "sha256": "33fa78ee2d2e000b301772adf5975bfd127d2dcedde4cc15389582dbc8740668",
+      "verified": true
+    },
+    {
+      "path": "../batch17/headless-cases/distrust-beholder.json",
+      "sha256": "7a2377d1e1611fbf1cb032b02d884d685a64e20254aa696887e9e4c30c1985d2",
+      "verified": true
+    },
+    {
+      "path": "../batch17/headless-cases/distrust-mimic.json",
+      "sha256": "0bd1a2150fb3d3005cad9583a7f45b7deb0ad691489a8b6d16cba8c3d24ea7fe",
+      "verified": true
+    },
+    {
+      "path": "../batch17/headless-cases/orc-mage.json",
+      "sha256": "a7f7ca07966b9f707a358ad2f1ea3d8fd9a5fcf5da3275dbada99267fb05fb7f",
+      "verified": true
+    },
+    {
+      "path": "../batch17/render-cases/distrust-beholder.json",
+      "sha256": "7dba28262204abca15099c2609e3f8d8ca505841df874b16f4d8304fd0af11ec",
+      "verified": true
+    },
+    {
+      "path": "../batch17/render-cases/distrust-mimic.json",
+      "sha256": "d3c8558711a53f4a90fd9a8757832a321c8453570111511bfc47e150a8a3b09a",
+      "verified": true
+    },
+    {
+      "path": "../batch17/render-cases/orc-mage.json",
+      "sha256": "2bd13e40b98910daf753a7d38c72f55fe08d1801109c55d2df02545da4bceaf0",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_ancient-headless.json",
+      "sha256": "3e62494eda60477dac364474b6d32794097aa95e14636f9773e24b6e02728bd1",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_ancient-opengl.json",
+      "sha256": "e5b72df593ee95201235073e59a8808f2b746d68ae2ae05075ef6b52b6c4cbc9",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_distorted-headless.json",
+      "sha256": "2ba7cbf6dd5baab773b9b6ded4ba0df95d19d499a78f7ec17b47b6be2bef8290",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_distorted-opengl.json",
+      "sha256": "ad0530824cb960011710812c955994f08ee9e776fce0e0439ff21f7a4a166f0c",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_gameplay_test-headless.json",
+      "sha256": "176afb57fbc763e11d15662fd37a1240e4735999b07a56579ce65558b40dc6fb",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_gameplay_test-opengl.json",
+      "sha256": "837c62032a4d0e42c83ce0fdbfc06d3f6f7d8238a353ab15faaa01d51176ea74",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_giran-headless.json",
+      "sha256": "03fd0a18e46e5c381c56ac6678eab21b48d19e29f9ca0a014ac24121f1b76c36",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_giran-opengl.json",
+      "sha256": "0d5315d505f9313f437617aac41b9667fb864d8a8cae0aa0dff9a6b90185dd6e",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cyclops_gameplay_test-headless.json",
+      "sha256": "8377e18b544c2c7e4c2d103a8bb467abaceadf7709d1ffcd1f21b938a70d1f1b",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_cyclops_gameplay_test-opengl.json",
+      "sha256": "dcece774802eba9ce7cf3725dadaf665a862249c4d9fbf67d6af087df385c3e5",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_ice_golem_gameplay_test-headless.json",
+      "sha256": "82e8db8c9a1c6c4d0515e7afc798fef5fd95975e3f6715b6fd951d226070c458",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_ice_golem_gameplay_test-opengl.json",
+      "sha256": "a301b989306fdb57a9e8342bd8833e0075ceccb87cb55cfa3f27c715f2ff7a8d",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_gameplay_test-headless.json",
+      "sha256": "16cb735b22131fcfd2bec77a2cfb8c7d40d24c3b248287573ce6584bcc68b5a6",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_gameplay_test-opengl.json",
+      "sha256": "a7361d88eb8f22141d59d0ad5490dd8ad091a9a2bebc8e3980672228c7a95b59",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_nest-headless.json",
+      "sha256": "c6a030398d6fd320eb4149ab3202a6ef96e95e9a9a83a0f78dd8cf21187cadd5",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_nest-opengl.json",
+      "sha256": "73b8391ff71b5112b299d4541d003d485731056a450e602bf2eccbc987c263b9",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_spear_captain_gameplay_test-headless.json",
+      "sha256": "903651984b51cc466dd3f54c9d703beca37d540eb842ac1b4c30dbc002a9d2ea",
+      "verified": true
+    },
+    {
+      "path": "../batch3/original_based_spear_captain_gameplay_test-opengl.json",
+      "sha256": "8af2a408d978e6aa4c4dd6aa8733660a844c9a0292ad4ed25d42cdbcf845485d",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_harpy_gameplay_test-headless.json",
+      "sha256": "1c571158e8c0eea86ea7e188e39fc11bfabbb0774c0b14611a04d16f7f884921",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_harpy_gameplay_test-opengl.json",
+      "sha256": "57d13ab72b7d70fbab9cd14ba14c86c639c388164530788abcfc36a273b7d0f1",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_harpy_nest-headless.json",
+      "sha256": "daa9c09711abafd870a2eda4feced14e4e9d495ea5b83200d044b4d408439f4a",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_harpy_nest-opengl.json",
+      "sha256": "d64c40ed5e4355af0433d760371a0df3b1c70c621b7daca45424a5c02164ca35",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_cruel-headless.json",
+      "sha256": "2d4ee1c330aaa57360234c1f6c8eed6d8cd41f5402f9093eace35d8fe01f995a",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_cruel-opengl.json",
+      "sha256": "7f4ca3fd4a53346858142459b9e7e41dfea7f414dbb393a39e58088be3d81395",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_gameplay_test-headless.json",
+      "sha256": "34e4c04925fd768ecd375f033812dbb7e1b9b4e068a70c07b89918fb916006b4",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_gameplay_test-opengl.json",
+      "sha256": "67c7ef9f41ef6286c74dc262973dc865becb58f77b4b75709fee67766f3f0538",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_disbelief-headless.json",
+      "sha256": "c8d06f4217e8cb5feae83369b20fc26d4de728cc3498bd56f1d95dde5d7c4fc3",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_disbelief-opengl.json",
+      "sha256": "9e436fc483c884ca8c0f26b89f5fd8aff32f40503ac5e959efbafce744c4ea57",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_gameplay_test-headless.json",
+      "sha256": "c2c8865eb9ea4d5f5007a3606246f6a1c9502aedfec7bbde75f33e4e383072a6",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_gameplay_test-opengl.json",
+      "sha256": "0f9410415e66e876e6fe852ea4caec37ec366f5884929ab5f7bd585ee9f491d9",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_nest-headless.json",
+      "sha256": "ef57321ed8e6a87029ed5fc3433cb30df768f2c6e4ba1cb0992a1f8d70a5d1e4",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_nest-opengl.json",
+      "sha256": "6012dce9783fb2638e99534f22825e9de6fa0ed7dfaf72d9d952e940359af88c",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_arrogant-headless.json",
+      "sha256": "dcccc3f0ecaa1ac3c42aceff55ebcc39b43668952d957ac5e85a28c205f6cc12",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_arrogant-opengl.json",
+      "sha256": "46110c5978325d9ab94241e198a96b07b124f9cb46297229ed299c52ae4d561f",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_dark-headless.json",
+      "sha256": "552b0d460bd1c4392ff9920f2120ee34eea072237deaaf4ec8a3a60a74c6a716",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_dark-opengl.json",
+      "sha256": "ed36d67071d9cde4e852430268b0ea1a3a3290487e543057fd76d8b7a95aeb38",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_earth-headless.json",
+      "sha256": "7620309f00290ef6d8cc0a529d5fdc2817461bc531eb3f619acceeda3773cfcc",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_earth-opengl.json",
+      "sha256": "dc5c463e6fc119489440fd194f609674b9d46f8ff8457d9885579df1dfbf5ce4",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_valley-headless.json",
+      "sha256": "cacf5d6a940f44c50995b4613dbb9611ba9d79afbeb7c7a14fc1efc47892ba34",
+      "verified": true
+    },
+    {
+      "path": "../batch4/original_based_succubus_valley-opengl.json",
+      "sha256": "cb7a325802fbaf0baa96d1613eeef3cf205b71120323c0d0d805d747f90151ce",
+      "verified": true
+    },
+    {
+      "path": "../batch5/original_based_bugbear_gameplay_test-headless.json",
+      "sha256": "613593e9c33e95118facd7a24ddd53f8cfd83c661238db67cbc4b4a8fc16132c",
+      "verified": true
+    },
+    {
+      "path": "../batch5/original_based_bugbear_gameplay_test-opengl.json",
+      "sha256": "067d4f5a20f3d3bb2ec940971a3cd2c710746264dc1481cf69b49dacb50882c9",
+      "verified": true
+    },
+    {
+      "path": "../batch5/original_based_reaper_male_gameplay_test-headless.json",
+      "sha256": "efe65343375c5e5366ccb0e840cf5a4325cf1c8313091921c5379a11cdc7944c",
+      "verified": true
+    },
+    {
+      "path": "../batch5/original_based_reaper_male_gameplay_test-opengl.json",
+      "sha256": "89f299551b94855f5030c9107303b53dbcecaa35a870160d1749fed8104cf6c2",
+      "verified": true
+    },
+    {
+      "path": "../batch5/original_based_sand_worm_gameplay_test-headless.json",
+      "sha256": "12db15c7bd5bdc26226d7c44fc8f91f8ce90d09119b580a2ac74efeb3ce2d348",
+      "verified": true
+    },
+    {
+      "path": "../batch5/original_based_sand_worm_gameplay_test-opengl.json",
+      "sha256": "7c0047638f4e25b9da90b4bb8e223c8598c8b304775c91fa722c26d22c056a2d",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_ghoul_clear_pose-opengl.json",
+      "sha256": "0271f05b16b36de709feb001949a6f98e5bec4de2eae23f9c9a65e89f1616cb3",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_ghoul_gameplay_test-headless.json",
+      "sha256": "2fe36f61ab8ad9540a0fe16ed03376507d03627fc124c628f20acbd47dc818a8",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_ghoul_undying-headless.json",
+      "sha256": "11c85fee3946e13e2cf99c85f492b752a3342444b6a46739afff7035bd87af9b",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_ghoul_undying-opengl.json",
+      "sha256": "fb8a9aa6775eaafdcc4baba8a0f038046c18236c859e6e50b7a7826f22b6a3bb",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_clear_pose-opengl.json",
+      "sha256": "e9cc47544763cd3338cbcb6037e163c3c522a72c2f0fc7b259245bdc2dd61d20",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_gameplay_test-headless.json",
+      "sha256": "1c90f47ef86c9f512ce8c4a589b8a2133324a59b90f03677638bf05d08fa4f3a",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_hell-headless.json",
+      "sha256": "06a0231a2a8dc48c0cf4cf8a57c8c387c4e3e1d1fe5976f54a0ba7989ae30608",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_hell-opengl.json",
+      "sha256": "dd78dd5ac71c25fd9ac68cd1643dfcd0713e1a383cae31cf074d6c6297b91769",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_lizard_albino_sized-headless.json",
+      "sha256": "aa0e6e5898ef121e809be2d318ba26b782d11d1bb49613b695acec572fc01ba8",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_lizard_albino_sized-opengl.json",
+      "sha256": "8aa8aa9f3652df046aa1d6b36a9e33b47c50dfbaa942ff6e3595bc2c974b3631",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_lizard_sized-headless.json",
+      "sha256": "251dd77bbb730c299999ea77e2961779c3f90862ded7537da2ab31666bcb7c40",
+      "verified": true
+    },
+    {
+      "path": "../batch6/original_based_lizard_sized-opengl.json",
+      "sha256": "2ed3eb6d9aef6511dcf91ae47264f96d9f4d01bce11e4a70c384c3674e314b25",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_asitagio_arrogant-headless.json",
+      "sha256": "9997cf362925371f91ca9ee832237d42579b51b5a93a01a8a84248afc9787c20",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_asitagio_arrogant-opengl.json",
+      "sha256": "b55be203273ace5c96a5b3870ac4812fbcce54ddb561fc1f23c2cfd798c7aa1c",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_asitagio_gameplay_test-headless.json",
+      "sha256": "798a7bfa471f4bdf2e691ccd3161a9a45cd83b7433828939d2e72dc7d796c696",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_asitagio_gameplay_test-opengl.json",
+      "sha256": "af93b615ccc007375a12eb9d66828758301c1c6cac6b7aa497269c42e6eda88a",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_crabman_eva-headless.json",
+      "sha256": "f919d4fc328127f24046c50474dc6fc201e32d99eb4af44809be41cdc2cab4a0",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_crabman_eva-opengl.json",
+      "sha256": "d85ccf28903aa956f8e998b153fbde6d34ea3c3513b38c32a596669fb8a6cbe7",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_crabman_gameplay_test-headless.json",
+      "sha256": "1193d801b215e547486fb136dbb14854859674518173413e419db666ccdce4c3",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_crabman_gameplay_test-opengl.json",
+      "sha256": "30d4f56995bbb6f2ef45cb77cf62be7c5aa6284eb5afc7db05c3772e85944bc7",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_spear_guard_green_gameplay_test-headless.json",
+      "sha256": "624f9e85cbe098500b526ad855f49ea8fbdd2ed088eb3772fa054158bdb96909",
+      "verified": true
+    },
+    {
+      "path": "../batch7/original_based_spear_guard_green_gameplay_test-opengl.json",
+      "sha256": "cf676c8dad912cfcb061711dabcfd873a3c9bfdf63d5dc9b95102631f39f0a22",
+      "verified": true
+    },
+    {
+      "path": "../batch8/batch8_green_regression-opengl.json",
+      "sha256": "e7b4f9a0a1499f6e3f820057d0f54c2359fd2794a3b81cb1f2ce069ba6b1b526",
+      "verified": true
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_gameplay_test-headless.json",
+      "sha256": "48f98531c86289a0455aaaa58c25a6f91370de414eadbd16f1be6176b69845bf",
+      "verified": true
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_gameplay_test-opengl.json",
+      "sha256": "1549e49626c36e6bee9eeed1ba47dd3be207ecb4a5a92ec08c58162b41ae9e78",
+      "verified": true
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_red_gameplay_test-headless.json",
+      "sha256": "d4abb41605ab5edca1dbec920b9f68d1395ea479c3a0a4b5381ac71be93c291a",
+      "verified": true
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_red_gameplay_test-opengl.json",
+      "sha256": "cef9ddefc552ee726f848abbf38e8f19356702903aab4c0bdd3008958f5aa7f9",
+      "verified": true
+    },
+    {
+      "path": "../batch9/batch9_succubus_regression-opengl.json",
+      "sha256": "67fe7efb71e49e91fe69730631ead1a5d77e95137757c5aeddda6babb7149249",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_albino_frog_gameplay_test-headless.json",
+      "sha256": "5cc57064ae2e860c139181fc67e601e03c21b3dc2641a119b7f98aa1d6589fa4",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_albino_frog_gameplay_test-opengl.json",
+      "sha256": "e3648effb4d6868a23c76eb863e5dcb15950fc9189e1fe4d674a1ac3dc215e09",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_albino_horned_frog-headless.json",
+      "sha256": "537b935bf94706012228f8f92d7a24c1a972a41a89a42f61ad60b39e12a80b2f",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_albino_horned_frog-opengl.json",
+      "sha256": "9f35e97ea491eaadf4346857294ca09338f7ebccd7704126506fe63b0c7a8431",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_fear-headless.json",
+      "sha256": "104b96c7c08aa984a5660fd698978db7f7e42c76d7d021a6989f3d560146e02d",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_fear-opengl.json",
+      "sha256": "f74684d7433af4f1d3da1e0f17af86fde0c963aa75569d3254b47f9a1e868f11",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_gameplay_test-headless.json",
+      "sha256": "041b4001f4112daa30975a425a07e4b2ca1cddbb17f5ac28f6613225181817e4",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_gameplay_test-opengl.json",
+      "sha256": "86afaaa4560ffa2beb89f36f13c44b99c82d426f6374770bfe571507b7f91d8e",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_cruel-headless.json",
+      "sha256": "f0959c50695bf4c39e69f50c9aac2603af798863a5cc7f7cef7a5ed8af22d370",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_cruel-opengl.json",
+      "sha256": "c040ae39d7e61f26bcde50dadad0af1da27945adbbdcd91ba8d49286df79029d",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_gameplay_test-headless.json",
+      "sha256": "15854c00fd0c79db752af97cce8dbcdcebfb084816b0f17c58e2ae21342c13b7",
+      "verified": true
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_gameplay_test-opengl.json",
+      "sha256": "ab98b79346672d65f3e999351ee9afe8a6970d06a8f10cf80710bf9ee9349bac",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ghost_gameplay_test-headless.json",
+      "sha256": "bac7dae0d983becb0957555d93fed22180b66de052f8cdb4425446bfaf632f86",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ghost_gameplay_test-opengl.json",
+      "sha256": "9f2a57cdb110bc60a1bee9c604e3d87f9a78f42794a15863bae6d8bb31643bdc",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ghost_gludio-headless.json",
+      "sha256": "379c0f30b3d2f01a3238c5d1da0dd6b7bf5a59036f568979837f88203fdbb172",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ghost_gludio-opengl.json",
+      "sha256": "62eecd380ec074765fc322886b131ba57022956adacde3233e55a24716f5b7af",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ghost_hell-headless.json",
+      "sha256": "cbc5ba9c46a7d75e577bb6a98506db3254b292d9474841d0966a74e6186dd8c8",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ghost_hell-opengl.json",
+      "sha256": "9971643afe0c5e77724b085b06b16e62d530d96c9ddf0107fffabcb9b9f0c4f5",
+      "verified": true
+    },
+    {
+      "path": "../original_based_monster_gameplay_test-headless.json",
+      "sha256": "8902f86cbae82c2b1e64cd0ed70381e3b49e184f2ded4df8bfc1ed44f41a7a32",
+      "verified": true
+    },
+    {
+      "path": "../original_based_monster_gameplay_test-opengl.json",
+      "sha256": "f814da3f58ae7ca2f74651c54fd5c4fb61274fc3dc74b2bbb56c6b37071549d9",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ogre_ancient-headless.json",
+      "sha256": "c849a323e81f2781254948ff61c575e5359e85fa2e20de0a2439ca39af22741a",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ogre_ancient-opengl.json",
+      "sha256": "0de1b61f09f502ca52823b0fbee48a398a558f2a14e99635825d3e5cb21d6d6f",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ogre_gameplay_test-headless.json",
+      "sha256": "ade07552c2abb565d5377d093ef26e2fb96fddf54bcced3ae9bf4ac9776bd88f",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ogre_gameplay_test-opengl.json",
+      "sha256": "5f1b3b12fcc155eb99b11204792bc6f00cb51868e29f50935cab4ffb9263ce57",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ogre_giran-headless.json",
+      "sha256": "ca44526052f9e9e59d6e5b752806f235383df5912a1af65857220c651529fb00",
+      "verified": true
+    },
+    {
+      "path": "../original_based_ogre_giran-opengl.json",
+      "sha256": "8b6bb6d8e9c720e5122d2eaad89ddb28741a32921e6a14cd6db2a78c88685069",
+      "verified": true
+    },
+    {
+      "path": "../original_based_reaper_gameplay_test-headless.json",
+      "sha256": "b22a9ab739754bf9a9419e946fbbedc5fcfdcb93bff692faba570e4b09e2ee21",
+      "verified": true
+    },
+    {
+      "path": "../original_based_reaper_gameplay_test-opengl.json",
+      "sha256": "0f417de7533f020fa4db3e38fb366dadcacf7f9b43924102a16065cfd1bd68f6",
+      "verified": true
+    },
+    {
+      "path": "../batch18/render-cases/fire-nest-spirit.json",
+      "sha256": "a810975805a9628e69c9fc9d25eebc0fb0971ed4e8334b0778398b6c2507eb21",
+      "verified": true
+    },
+    {
+      "path": "../batch18/render-cases/wind-nest-spirit.json",
+      "sha256": "2605b178b346b7f994c9fbf9077c45b482d68183bafdde1e16411bb0e78a72a6",
+      "verified": true
+    },
+    {
+      "path": "../batch18/render-cases/forest-tree-spirit.json",
+      "sha256": "9d4c2d981e8dac2bca07bd19af613c336d83f67d6b8034fe9d2958c0bc06a76a",
+      "verified": true
+    },
+    {
+      "path": "../batch18/headless-cases/fire-nest-spirit.json",
+      "sha256": "3b2d9066ba2bee8175a80eccd2d800b52139fb653ae01f517bea00cb68413da0",
+      "verified": true
+    },
+    {
+      "path": "../batch18/headless-cases/wind-nest-spirit.json",
+      "sha256": "0c657e88e84c5b4e0cefbed9c147ea978c22198477342ee79a158da8c3d880b4",
+      "verified": true
+    },
+    {
+      "path": "../batch18/headless-cases/forest-tree-spirit.json",
+      "sha256": "084dd1401ff6365a8b61c4804c7c6b9f9adb2cf8624cab49b788be03a4ad9266",
+      "verified": true
+    },
+    {
+      "path": "../batch19/headless-cases/distorted-ungoliant.json",
+      "sha256": "b86547f4ffda8f79ff4362b5fd190973977f9d66c6ae995408c204426154d117",
+      "verified": true
+    },
+    {
+      "path": "../batch19/headless-cases/evil-shelob.json",
+      "sha256": "54bb55b1870525aeab9a7e2ff5decf1e205ed5d540933277b8dbe9539f709453",
+      "verified": true
+    },
+    {
+      "path": "../batch19/headless-cases/fear-ifrit.json",
+      "sha256": "228bcb37e7f9e1262216d605c4ef0d321297dc64293e7548f20c52c096c586d8",
+      "verified": true
+    },
+    {
+      "path": "../batch19/headless-cases/giran-lizard-warrior.json",
+      "sha256": "2cdefaca8249d7df2e6b3193bf42a6dcb53e7eb243c3387848ab07deff3ffada",
+      "verified": true
+    },
+    {
+      "path": "../batch19/headless-cases/killer-bee.json",
+      "sha256": "2bcf3948f55de57448385ad661118745e78cf85ab58e008aa01d34aab70c8727",
+      "verified": true
+    },
+    {
+      "path": "../batch19/render-cases/distorted-ungoliant.json",
+      "sha256": "be2d31605e29bdfacc79d0777fbca1efe188a77ba9ec466b123950fb7d2e2d9d",
+      "verified": true
+    },
+    {
+      "path": "../batch19/render-cases/evil-shelob.json",
+      "sha256": "475c4febbb0cbc5dd9b2475028943a85c86f1f4424aac9b69c1d624ddde1779c",
+      "verified": true
+    },
+    {
+      "path": "../batch19/render-cases/giran-lizard-warrior.json",
+      "sha256": "e9f534803c7ef28fa40f03d1399b98eb760605a057721df5806ca90ea2dab249",
+      "verified": true
+    },
+    {
+      "path": "../batch19/render-cases/killer-bee.json",
+      "sha256": "f52f829e28912df84fe57ea90e89539c4cdf088c2197f4d9bafb3743a1aec1b5",
+      "verified": true
+    },
+    {
+      "path": "../batch19/ifrit-clear-render-cases/fear-ifrit.json",
+      "sha256": "cf2c3997c3b5d78176525c89daec08fe31ceef6c370a5e45dfa59d4e954069d2",
+      "verified": true
+    },
+    {
+      "path": "../batch20/headless-cases/albino-crocodile.json",
+      "sha256": "bb8f16c50f0954261af91b20ac775fe4ed8738c70bffc06972911f371f7e6848",
+      "verified": true
+    },
+    {
+      "path": "../batch20/headless-cases/arrogant-leviathan.json",
+      "sha256": "1c9d8a6758c3832d124e018f6cf140eeefa180b5bf6e7bf88ecd4f3e11ab3a1e",
+      "verified": true
+    },
+    {
+      "path": "../batch20/headless-cases/distorted-chimera.json",
+      "sha256": "ede823dd707ff91a843a77dad818078c1fa4665f65aebf4c32f6f0553e34dbff",
+      "verified": true
+    },
+    {
+      "path": "../batch20/headless-cases/fear-nightmare.json",
+      "sha256": "d6b1cf84eaaee8acc695209a814ec63fd7b169f654d8ddec5d847a25757a8800",
+      "verified": true
+    },
+    {
+      "path": "../batch20/headless-cases/jealous-skeleton-wing.json",
+      "sha256": "dca44437981ae65707bb723f5dfc3ca1d44b10bd4719213d5b93fb00856df4a6",
+      "verified": true
+    },
+    {
+      "path": "../batch20/render-cases/albino-crocodile.json",
+      "sha256": "fa000f5830be766f9479aa84aa1b0978ed94c683549da90a4dd8f13c26bbd839",
+      "verified": true
+    },
+    {
+      "path": "../batch20/render-cases/arrogant-leviathan.json",
+      "sha256": "bf8d3a005b3c0e876c0ffb3e82e137da97295a05c56a74c558e515e0f16767c5",
+      "verified": true
+    },
+    {
+      "path": "../batch20/render-cases/distorted-chimera.json",
+      "sha256": "7a0a4c923c803de7ccda6c47c2248a81aff9a7f38c173877ca21fa4cda0ec88a",
+      "verified": true
+    },
+    {
+      "path": "../batch20/render-cases/fear-nightmare.json",
+      "sha256": "bd57fc0397d1800ae93eb41ae24145c5142d071cc3b7fa677b83e8aaff5725a9",
+      "verified": true
+    },
+    {
+      "path": "../batch20/render-cases/jealous-skeleton-wing.json",
+      "sha256": "7a77fcb43e8f3bb0d869ae9b83f97eda3fa9d446370393627987cd3ce4c417a6",
+      "verified": true
+    },
+    {
+      "path": "../batch21-completed/headless-cases/albino-snapping-turtle-transform.json",
+      "sha256": "18ed085d1209e1546c9e6bf3aa8f2c7716ded433acddffb2525e82e4f5a0c53e",
+      "verified": true
+    },
+    {
+      "path": "../batch21-completed/headless-cases/doguri_transform.json",
+      "sha256": "651f5c7b1d1ef0c8f258c294d98801a316fbc885fba9b007882c5748b835d80e",
+      "verified": true
+    },
+    {
+      "path": "../batch21-completed/headless-cases/nightmare-jack-transform.json",
+      "sha256": "dae722d752ef5e7b3e03eb1d5f86e61e21d70d96340cab274f01f32fe6e5eb7f",
+      "verified": true
+    },
+    {
+      "path": "../batch21-completed/render-cases/albino-snapping-turtle-transform.json",
+      "sha256": "d4e92914ad25b46e1d744256a2411529ffbc54a53d0932fe797b1101f4616549",
+      "verified": true
+    },
+    {
+      "path": "../batch21-completed/render-cases/doguri_transform.json",
+      "sha256": "dcdea24a3628f50fbcd4e1cd852d29d2d089d831a09668349a8230fd0c84733e",
+      "verified": true
+    },
+    {
+      "path": "../batch21-completed/render-cases/nightmare-jack-transform.json",
+      "sha256": "c3f5160144f8270c0d162812cbd36e7237f9f1e8a4abf1c1c89abe0072c7d917",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/albino-giant-crab.json",
+      "sha256": "7b203f4f559891a757d95751477e44ede2d6a535046d483521e4c0e5b16d15d4",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/ancient-penguin.json",
+      "sha256": "8d4ad8b0fe25982fa3cdf1d00b63d007cb7d1f8d73ccd031ca95ef9aeb362df8",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/kraken-transform.json",
+      "sha256": "c17a337bd6cce52b392c782b5877e470da9b4d712f788c90264d718886f63461",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/pan.json",
+      "sha256": "e1f22964e5de40c96e941d7da3c417e9363465faba579828acf1a26682fc56aa",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/reaper-female.json",
+      "sha256": "03ba7efa6da3476cc8775f388574add99b563733b5ff99dba1fbec610b9dcd2f",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/reaper-male.json",
+      "sha256": "fb130e50e871ce26ab909b3e778ca4bd617c495f94775fb67915b3ce8e0df209",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/spear-captain.json",
+      "sha256": "859a1f84d60be19df05b13ea6d6080b7b4dca03448975522a8683e35cc815f47",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/spear-guard-green.json",
+      "sha256": "c0ce555113ca047a21e4d51a8bed80410310f6ba3a2cc97c0efba7dc9d3fee2c",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/spear-guard-red.json",
+      "sha256": "038441ef7364ed04365d3e8c226f2b833c76aca5a16028248afcfb97c1cdb3d3",
+      "verified": true
+    },
+    {
+      "path": "../recovery-20261015/local-full10-regression/report-cases/spear-guard.json",
+      "sha256": "03e46eca6424675784e44e55ae9887c452ba71bc02d99dc487b19b42dc086275",
+      "verified": true
+    },
+    {
+      "path": "../batch23/raziel_watcher/gameplay-headless.json",
+      "sha256": "ca2e766514d2eba9546fa844e739b63f34c3eb78f6cd0054bc41d20c807f7651",
+      "verified": true
+    },
+    {
+      "path": "../batch23/raziel_watcher/gameplay-opengl.json",
+      "sha256": "2ac89554515bda3dde506ebdd6448e69e28341bfc87d4fa4d5ab1903d3a833e1",
+      "verified": true
+    },
+    {
+      "path": "../batch23/jealous_watcher_albion/gameplay-headless.json",
+      "sha256": "2ddec6baf92719119ea33852a60d0dda988408f089e91fd48f438191afb4c74f",
+      "verified": true
+    },
+    {
+      "path": "../batch23/jealous_watcher_albion/gameplay-opengl.json",
+      "sha256": "ff0a3bfdfa47ca7bfaab6f7f7c4a9e1d61a7a091018c7579744202e9df009903",
+      "verified": true
+    },
+    {
+      "path": "../batch23/wind_lair_storm_guardian/gameplay-headless.json",
+      "sha256": "310564b6e602bfd84a836df3498ba7c8a8dd7fcda83c06a3ac09e812989a2bac",
+      "verified": true
+    },
+    {
+      "path": "../batch23/wind_lair_storm_guardian/gameplay-opengl.json",
+      "sha256": "945d0849cdd111d3ff92f8dcd650dbcfa0b29dbc1e570f855a07a54613ac493a",
+      "verified": true
+    },
+    {
+      "path": "../batch24/water_lair_wave_guardian/gameplay-headless.json",
+      "sha256": "e28c7ab8ca4dae8dcd687159a13399f26b6dcbb4c2edd281ab3915139674eafc",
+      "verified": true
+    },
+    {
+      "path": "../batch24/water_lair_wave_guardian/gameplay-opengl.json",
+      "sha256": "82d2c8b85b29ac20b1ae33357d24db3e36b3ba0705874e9171681ad5f401ad3d",
+      "verified": true
+    },
+    {
+      "path": "../batch24/seeker/gameplay-headless.json",
+      "sha256": "49018f50bc1074b7c3b14d7c9eca57d0f715ef9d4f15515d39a264e0293198bd",
+      "verified": true
+    },
+    {
+      "path": "../batch24/seeker/gameplay-opengl.json",
+      "sha256": "2d14c10f2c23aefd89d562e9e13b95309222154b126fe119d1bedc0a722b5822",
+      "verified": true
+    },
+    {
+      "path": "../batch24/fire_lair_flame_warrior/gameplay-headless.json",
+      "sha256": "829481f18ff2917a39c54e7c5b0107ed9d0c9447ec5c28ca9c574f28cc2521e2",
+      "verified": true
+    },
+    {
+      "path": "../batch24/fire_lair_flame_warrior/gameplay-opengl.json",
+      "sha256": "2622744a185e60bbecddc8758af1b60545e49931c09c29107846265dee4ee79e",
+      "verified": true
+    },
+    {
+      "path": "../batch25/greed_tentacle/gameplay-headless.json",
+      "sha256": "1294f74b246605d4c1403591d40323dbf5e7964e25c577e08656ead6981c91da",
+      "verified": true
+    },
+    {
+      "path": "../batch25/greed_tentacle/gameplay-opengl.json",
+      "sha256": "dff4857f182038760938652d1071f48525b13ae250f401165ce27a7e08871aef",
+      "verified": true
+    },
+    {
+      "path": "../batch25/albino_flower/gameplay-headless.json",
+      "sha256": "ba0b6fcb5c99e9bb35093effcd9404ac9ad938d075be0091a45b784b7f4b9014",
+      "verified": true
+    },
+    {
+      "path": "../batch25/albino_flower/gameplay-opengl.json",
+      "sha256": "63e872d02b1fa2f6cae84fe771b460c43d3cd4e9838c48c050785013e9cbade5",
+      "verified": true
+    },
+    {
+      "path": "../batch26/distrust_dancing_sword/gameplay-headless.json",
+      "sha256": "19c3691f6481d27bdc3bf0cdbaa8f43d12dc325e539e7c5175baec982d4fb34f",
+      "verified": true
+    },
+    {
+      "path": "../batch26/distrust_dancing_sword/gameplay-opengl.json",
+      "sha256": "02acbdbd2b9916fa705ad378e70a72d7bf345f131aee13b660df96b55a62bac9",
+      "verified": true
+    },
+    {
+      "path": "../batch26/albino_giant_crab_monster/gameplay-headless.json",
+      "sha256": "c3333cbe04f7baff295dc74a28ed6bf25f81618c763ee026fad3b910e8068a3c",
+      "verified": true
+    },
+    {
+      "path": "../batch26/albino_giant_crab_monster/gameplay-opengl.json",
+      "sha256": "e1e1295248b28bbd36c4d2d92f05d9f76d4a127bad3c61abfc571b82e11a6f82",
+      "verified": true
+    },
+    {
+      "path": "../batch26/pride_revenant/gameplay-headless.json",
+      "sha256": "b2add0192c84e8b3ef04cdffe835db5d06522733771f2c7fa3ab8b8c8551fdc9",
+      "verified": true
+    },
+    {
+      "path": "../batch26/pride_revenant/gameplay-opengl.json",
+      "sha256": "17e719280c1484679bf4fddb56c169f66d22e11cc2723fda8158af2ea6a456cb",
+      "verified": true
+    },
+    {
+      "path": "../batch27/phoenix_monster_boss/gameplay-headless.json",
+      "sha256": "518086b1344eed24c8887b992c4a85e161f9991c9fb8b7c34f69c6ad54c58075",
+      "verified": true
+    },
+    {
+      "path": "../batch27/phoenix_monster_boss/gameplay-opengl.json",
+      "sha256": "e53e764bc7325456bb9503a548785bc7c3b1edf251aa450ebe02278e33bec877",
+      "verified": true
+    },
+    {
+      "path": "../batch27/waring_monster_boss/gameplay-headless.json",
+      "sha256": "ca4db6cc2a7989aa47c3ce9d6851bf1298b1652f5e034894bb1da3885eab6945",
+      "verified": true
+    },
+    {
+      "path": "../batch27/waring_monster_boss/gameplay-opengl.json",
+      "sha256": "26f7625710c5d43ac54ddb46ab2f9ddfef66ea0a7bbd4694631ef971417d7652",
+      "verified": true
+    },
+    {
+      "path": "../batch28/ifrit_monster_authored/gameplay-headless.json",
+      "sha256": "c7b8616ae8fd1966469b3b7071167d83dcb111cde09808183826ff2e678c2047",
+      "verified": true
+    },
+    {
+      "path": "../batch28/ifrit_monster_authored/gameplay-opengl.json",
+      "sha256": "fb986412ced5fbc8c7ba39a6220e282f3cd968f54d0e9aad3563a91391e053f5",
+      "verified": true
+    },
+    {
+      "path": "../batch28/albino_crocodile_turtle_monster/gameplay-headless.json",
+      "sha256": "891f4def8ea51966624fb91a1110dcf7217c1837eac3dc0463e8fdfd40498049",
+      "verified": true
+    },
+    {
+      "path": "../batch28/albino_crocodile_turtle_monster/gameplay-opengl.json",
+      "sha256": "e9de39a1a3b53c3eb95877b465a848cbd0b498e346bb581bc65d2a477d266ccd",
+      "verified": true
+    },
+    {
+      "path": "../batch30/nungma_monster_authored/gameplay-headless.json",
+      "sha256": "d8c9345e2fb18deff7d493ef5a2a986664e347742aaf52bf49f7cec6590f228e",
+      "verified": true
+    },
+    {
+      "path": "../batch30/nungma_monster_authored/gameplay-opengl.json",
+      "sha256": "3c2bb30c47254d18031eccb66eaade365260fa9b651aead2bd6b43577e112059",
+      "verified": true
+    },
+    {
+      "path": "../batch31/base-main/headless/case.json",
+      "sha256": "12e4a0205401db8d23a4490adef5c598311fbb30c1e4fdb1c07e2db6f148dfc3",
+      "verified": true
+    },
+    {
+      "path": "../batch31/base-main/render/case.json",
+      "sha256": "6759dcb624a980417a6392bb0026e49fb103303ef9c0a5f92570f18ec55d3a94",
+      "verified": true
+    },
+    {
+      "path": "../batch29/hell_cougar_monster_boss_v3/gameplay-headless.json",
+      "sha256": "c3f58c4062534d472d076c382e16a8401f0cc01528d5a9c75d097cf8e8a53a82",
+      "verified": true
+    },
+    {
+      "path": "../batch29/hell_cougar_monster_boss_v3/gameplay-opengl.json",
+      "sha256": "3c56a0138f5a52086b0a918d5ac008881f26fdec9434554fe07695c7c1490868",
+      "verified": true
+    }
+  ],
+  "source_archive_inventory": {
+    "files": 55,
+    "bytes": 984260151,
+    "ZIP_parts": 23,
+    "all_listed_files_SHA_verified": true,
+    "directory_exactly_matches_inventory": true,
+    "total_ZIP_members_read_CRC_SHA": 2387,
+    "all_ZIPs_under_90million_bytes": true
+  },
+  "source_archive_files": [
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana-wilddog-source-only-WIP06-part06-STOPPED-delta.zip",
+      "bytes": 31269631,
+      "sha256": "4182a566ce058217893c0173da0d2f92f6257aaead7d42746b62a5b15c5a19eb",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP03-part01.zip",
+      "bytes": 73101669,
+      "sha256": "e93afa56396f41f7caaab7c71622d080cfa38ac3fd63c3955ea76d2e703b17bd",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP03-part02.zip",
+      "bytes": 47922714,
+      "sha256": "faf2acac6bedf2421d4603dd23b7da11aafbe0c36715ab6dac4262f9f7bed9ee",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP03-part03-diagnostics.zip",
+      "bytes": 28389085,
+      "sha256": "0fea56d6be7b46cdd8025fd3d81f8d5f74253a67d99fa03170dd322e21d0d6ac",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP04-part04-N-palette.zip",
+      "bytes": 25688797,
+      "sha256": "08c4d214a6af49b98316f56cf12dfcbd891a5107dd3eec57414e67b00f868aaa",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP05-part05-proportion-contact.zip",
+      "bytes": 70115877,
+      "sha256": "08d6414169727aa937d28f3f764ba5edf34b4a766643f7cb487262392f739bf3",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/index.json",
+      "bytes": 88671,
+      "sha256": "97d6b0eed0751bd0ea5f4463731e68f31affdd637f1f0b3fa31ead935eca8cf3",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/part05-verification.json",
+      "bytes": 343,
+      "sha256": "9c6059850db89b6f6d0137c6122af9234bb92bf9f81baab0204ff9a97dad6bf0",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/portable-verification.json",
+      "bytes": 312,
+      "sha256": "3734a7504eb433ef1c3f0d28c3a174193646f6bf36c10948fa399fe368e9d36a",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/source-only-delta06-full-member-sha256.json",
+      "bytes": 11878,
+      "sha256": "58c6b34b3ac2d32666b4e9032e4cfa8a7227c337b41cab5f047bcf16bea06725",
+      "verified": true
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/source-only-delta06-manifest.json",
+      "bytes": 18640,
+      "sha256": "ab754e1d6a070b2655e97556c284a3323c9c28dbebb6ccc1b369359ab039b96b",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/base05/unicorn-source-wip05-index.json",
+      "bytes": 106988,
+      "sha256": "8585a5e19edeb86ac110dc0a2502a659acb97d10c3d6374386ab0992b13906d5",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/base05/unicorn-source-wip05-part01.zip",
+      "bytes": 66627079,
+      "sha256": "28000be8821ddca1eeee864e6e8a05ef76b40ff78ecbdd7eb38d7736d6741e72",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/base05/unicorn-source-wip05-part02.zip",
+      "bytes": 46073529,
+      "sha256": "cf3256cffc65af21195fa88d15750c71a2032dff33ab2a4c68051378756e5e94",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-index.json",
+      "bytes": 110088,
+      "sha256": "3aa0d0473dd2e12094cea2fc0e3cc522840acca8a914d23d39b7ce544a1f889e",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-part01.zip",
+      "bytes": 62405598,
+      "sha256": "59752540d4390e3d8fa60ad568085759992588062ad1883724fe449b1c14b9f0",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-part02.zip",
+      "bytes": 18813483,
+      "sha256": "fc7b5cb001e61dea7bfec156f9c41a603f37fae5aeb395d9501335c787239e05",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "bytes": 36982,
+      "sha256": "4a8c0592d18a6231ae3824af81486e93e07a8566def086e8d9ff8c48439d13f4",
+      "verified": true
+    },
+    {
+      "path": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-part01.zip",
+      "bytes": 13510827,
+      "sha256": "c30fc4e3e5116e197cab5afbd139ec0a6adde88772df47b9e122f28c777d7e6b",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/PACKAGE_SHA256.json",
+      "bytes": 1311,
+      "sha256": "d0c7e9647f48007bb7efef107650d12306bf0fc59fc8dd235ca59964f6b05ade",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/RESTORE_README.md",
+      "bytes": 2138,
+      "sha256": "56633a43ece75df0db934a882e5cd6b7fbfd79a7c5ee440307304cecd06f093a",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/contents-manifest.json",
+      "bytes": 265778,
+      "sha256": "3fc3a37b15ba52d62b40baa89b22ca745cc9c62cea9d1a885310510b72bc6999",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/index.json",
+      "bytes": 1802,
+      "sha256": "3b1c21f6cc99bd10cc349cf00c0c854c1a9fc1525cd905b8aecf030c830cc6e4",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/restore-proof.json",
+      "bytes": 13793,
+      "sha256": "3957d82ff5c84871b1fc470a88a14fc1619ee401d795a62657313dba3fa0daf1",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/restore.py",
+      "bytes": 2051,
+      "sha256": "57bb27db2e05565e4cca903bf12d7fc06b6b3b8423f22dcccc871e33ab26b3a1",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part01.zip",
+      "bytes": 83795981,
+      "sha256": "4cd80f0708dedac3f15e59841af235319989625edfd491bf43781c4bd35ccb09",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part02.zip",
+      "bytes": 83092751,
+      "sha256": "3d10203ff788a515fd5a0e4272a4e8c7800a66b84d3f58fb232e47eb540c9ad3",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part03.zip",
+      "bytes": 83153865,
+      "sha256": "a7e1375471e8332d874ff47b1ec1dc635948bb82a0b62f5261e04d28cb3f3dcb",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part04.zip",
+      "bytes": 40480243,
+      "sha256": "4e1abe8d69f8251b1eb474a3c7d9e33b6bf6aef3d7f817d18f46e2f819bf0e85",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/PACKAGE_SHA256.json",
+      "bytes": 875,
+      "sha256": "8bbb70d01460b68a29e3790ee0c3cb738d7608cb74c65750cc2a50ee815bead3",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/RESTORE_README.md",
+      "bytes": 1539,
+      "sha256": "84eb4e64c3db6a271bc4108e85e80c609ecdf29daf28be1e2e5a2bc6dcf953b2",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/contents-manifest.json",
+      "bytes": 21735,
+      "sha256": "590f108576654611675a5994a936921d2c8541b32d192deac9dc637b945a795a",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/index.json",
+      "bytes": 1287,
+      "sha256": "c35872c106e57ddd81798e6a20afe9f55d2b45a41757c6843d5386acebdf978b",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/restore-final-delta.py",
+      "bytes": 2339,
+      "sha256": "d8afaef78d1776fd886a7e39a77865a0317e03866ea2ca46a6e63f33a5162fe8",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/restore-proof.json",
+      "bytes": 13786,
+      "sha256": "cab65c5e7be3dde4f2234b4a0fdd93ca6d0f88f854139e28f59716a491707e71",
+      "verified": true
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/tomb269-finaldelta-part01.zip",
+      "bytes": 9627381,
+      "sha256": "51dbaf21f1b03b6e66cb77e1c5392d2fec93d8913a4c68647427939bffb8147d",
+      "verified": true
+    },
+    {
+      "path": "source-archives/guardian/base/guardian-all-pilot-history-v01.zip",
+      "bytes": 30356366,
+      "sha256": "88a3b2b798fbaa3449f91efcbbe0ad6f59b9fca7b8bf7a6ab45ce1d33947a5db",
+      "verified": true
+    },
+    {
+      "path": "source-archives/guardian/base/index.json",
+      "bytes": 13533,
+      "sha256": "bd916beeeaef95f854e389fc5c6d6868c564dd9adf49e44a77528e6923b70eda",
+      "verified": true
+    },
+    {
+      "path": "source-archives/guardian/final-delta/guardian-final-user-stop-delta-v01.zip",
+      "bytes": 7797569,
+      "sha256": "cfb7cccdaae03af9a21f9fcd4b0e45f14079a7107b312004420dd131b19dc305",
+      "verified": true
+    },
+    {
+      "path": "source-archives/guardian/final-delta/index.json",
+      "bytes": 15106,
+      "sha256": "b31d0cb97094fc0f7635d3c414b17a1cd09aeff7192dc09b55b60255f9a1b127",
+      "verified": true
+    },
+    {
+      "path": "source-archives/agni-dryad-curseburn-stop/CURRENT-RESUME.json",
+      "bytes": 2834,
+      "sha256": "f844ce7b722e240fce53572fbceeac731edf13595a2711ff39cd2e1381d9127a",
+      "verified": true
+    },
+    {
+      "path": "source-archives/agni-dryad-curseburn-stop/portable-stop-delta.member-sha256.json",
+      "bytes": 41423,
+      "sha256": "56c22f6d3e670a671aa7682e464c778e5d7f2d9dfda782708a18c10a398e866b",
+      "verified": true
+    },
+    {
+      "path": "source-archives/agni-dryad-curseburn-stop/portable-stop-delta.zip",
+      "bytes": 83177759,
+      "sha256": "a898cece9c08e75f22204dfea2b1d10a0dcaba38507dfae6a8e50bfeffafa765",
+      "verified": true
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip01.zip",
+      "bytes": 3271514,
+      "sha256": "ca561ceb829c61ebd8a0d5ea95e0b046dcc61013bb27aca09e74396fe26357d5",
+      "verified": true
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip01-index.json",
+      "bytes": 4329,
+      "sha256": "9ea21673557d0ae03b314c29ba7fbdf4c2e1659557071d4efbc717dd8538448b",
+      "verified": true
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip02-delta.zip",
+      "bytes": 7771069,
+      "sha256": "bbe669864e3622a7f08daf4eb0a3a1262e7a087c6df1168a27211dcc08d463cc",
+      "verified": true
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip02-delta-index.json",
+      "bytes": 12157,
+      "sha256": "bf53885203c276ddcc16782c62c05e5f54db95e9c292bdb23891e0edb563ebe2",
+      "verified": true
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip03-final-delta.zip",
+      "bytes": 577909,
+      "sha256": "5d80eb9ae8dbdedb76e4cde8d3c39af9109a2c0a0cc2a7ee6f3ddb8a06d001a2",
+      "verified": true
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip03-final-delta-index.json",
+      "bytes": 6815,
+      "sha256": "d3bfe5b9d62d91efe75c23af0a619229a772e82eccb1974a8d9d2ab4bd3ac660",
+      "verified": true
+    },
+    {
+      "path": "source-archives/death-servant/portable-source-checkpoint.zip",
+      "bytes": 66290482,
+      "sha256": "9c5adff74a151dd5006d440994a7dfc60ba849ac909c23b5ddd206a48cbaba0f",
+      "verified": true
+    },
+    {
+      "path": "source-archives/death-servant/candidate-proposed-v2.json",
+      "bytes": 99994,
+      "sha256": "c1890b2031e22d4fe05b8a18c3011756abc04cb39b22b9897d91dd0144831cab",
+      "verified": true
+    },
+    {
+      "path": "source-archives/death-servant/full104-guard-report.json",
+      "bytes": 5160,
+      "sha256": "8ede87ebb18f1d72295b96e359d6b335a5e5c3401906ffc4dd67f7b0f003d8de",
+      "verified": true
+    },
+    {
+      "path": "source-archives/death-servant/portable-source-checkpoint.member-sha256.json",
+      "bytes": 26369,
+      "sha256": "dcb11b85623bcb68db3f43c6bc099843f493c629c98b514e40cf98c7a2e2029f",
+      "verified": true
+    },
+    {
+      "path": "source-archives/death-servant/delivery-manifest.json",
+      "bytes": 15871,
+      "sha256": "c730bab0a6e1f2f6733a6a001d091b7420d065dd6534f04cf514fbb72ab402ed",
+      "verified": true
+    },
+    {
+      "path": "source-archives/death-servant/author-static-model-root-review.json",
+      "bytes": 3046,
+      "sha256": "c78967b8681e2abc846f2117d7470fe302c4bef9cd2db830f61690bb37f36564",
+      "verified": true
+    }
+  ],
+  "ZIP_member_read_verification": [
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana-wilddog-source-only-WIP06-part06-STOPPED-delta.zip",
+      "members_read_and_CRC_verified": 54,
+      "bytes": 31269631,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP03-part01.zip",
+      "members_read_and_CRC_verified": 233,
+      "bytes": 73101669,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP03-part02.zip",
+      "members_read_and_CRC_verified": 172,
+      "bytes": 47922714,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP03-part03-diagnostics.zip",
+      "members_read_and_CRC_verified": 49,
+      "bytes": 28389085,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP04-part04-N-palette.zip",
+      "members_read_and_CRC_verified": 28,
+      "bytes": 25688797,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/iguana-and-wilddog/iguana112-source-WIP05-part05-proportion-contact.zip",
+      "members_read_and_CRC_verified": 122,
+      "bytes": 70115877,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/unicorn/base05/unicorn-source-wip05-part01.zip",
+      "members_read_and_CRC_verified": 153,
+      "bytes": 66627079,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/unicorn/base05/unicorn-source-wip05-part02.zip",
+      "members_read_and_CRC_verified": 107,
+      "bytes": 46073529,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-part01.zip",
+      "members_read_and_CRC_verified": 155,
+      "bytes": 62405598,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-part02.zip",
+      "members_read_and_CRC_verified": 40,
+      "bytes": 18813483,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-part01.zip",
+      "members_read_and_CRC_verified": 38,
+      "bytes": 13510827,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part01.zip",
+      "members_read_and_CRC_verified": 119,
+      "bytes": 83795981,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part02.zip",
+      "members_read_and_CRC_verified": 370,
+      "bytes": 83092751,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part03.zip",
+      "members_read_and_CRC_verified": 94,
+      "bytes": 83153865,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/tomb269/base/tomb269-wip-part04.zip",
+      "members_read_and_CRC_verified": 48,
+      "bytes": 40480243,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/tomb269/final-delta/tomb269-finaldelta-part01.zip",
+      "members_read_and_CRC_verified": 30,
+      "bytes": 9627381,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/guardian/base/guardian-all-pilot-history-v01.zip",
+      "members_read_and_CRC_verified": 82,
+      "bytes": 30356366,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/guardian/final-delta/guardian-final-user-stop-delta-v01.zip",
+      "members_read_and_CRC_verified": 32,
+      "bytes": 7797569,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/agni-dryad-curseburn-stop/portable-stop-delta.zip",
+      "members_read_and_CRC_verified": 225,
+      "bytes": 83177759,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip01.zip",
+      "members_read_and_CRC_verified": 21,
+      "bytes": 3271514,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip02-delta.zip",
+      "members_read_and_CRC_verified": 41,
+      "bytes": 7771069,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/anna276/maid-anna276-wip03-final-delta.zip",
+      "members_read_and_CRC_verified": 11,
+      "bytes": 577909,
+      "duplicate_names": []
+    },
+    {
+      "path": "source-archives/death-servant/portable-source-checkpoint.zip",
+      "members_read_and_CRC_verified": 163,
+      "bytes": 66290482,
+      "duplicate_names": []
+    }
+  ],
+  "member_index_checks": [
+    {
+      "index": "source-archives/anna276/maid-anna276-wip01-index.json",
+      "member_rows_verified": 21
+    },
+    {
+      "index": "source-archives/anna276/maid-anna276-wip02-delta-index.json",
+      "member_rows_verified": 41
+    },
+    {
+      "index": "source-archives/anna276/maid-anna276-wip03-final-delta-index.json",
+      "member_rows_verified": 11
+    },
+    {
+      "index": "source-archives/guardian/base/index.json",
+      "member_rows_verified": 82
+    },
+    {
+      "index": "source-archives/guardian/final-delta/index.json",
+      "member_rows_verified": 32
+    },
+    {
+      "index": "source-archives/death-servant/portable-source-checkpoint.member-sha256.json",
+      "member_rows_verified": 163
+    },
+    {
+      "index": "source-archives/agni-dryad-curseburn-stop/portable-stop-delta.member-sha256.json",
+      "member_rows_verified": 225
+    },
+    {
+      "index": "source-archives/iguana-and-wilddog/index.json",
+      "member_rows_verified": 460
+    },
+    {
+      "index": "source-archives/iguana-and-wilddog/source-only-delta06-full-member-sha256.json",
+      "member_rows_verified": 54
+    },
+    {
+      "index": "source-archives/unicorn/base05/unicorn-source-wip05-index.json",
+      "member_rows_verified": 260
+    },
+    {
+      "index": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-index.json",
+      "member_rows_verified": 195
+    },
+    {
+      "index": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "member_rows_verified": 38
+    },
+    {
+      "index": "source-archives/tomb269/base/contents-manifest.json",
+      "member_rows_verified": 631
+    },
+    {
+      "index": "source-archives/tomb269/final-delta/contents-manifest.json",
+      "member_rows_verified": 30
+    }
+  ],
+  "archive_restore_prerequisites": [
+    {
+      "index": "source-archives/anna276/maid-anna276-wip02-delta-index.json",
+      "dependency": "maid-anna276-wip01.zip",
+      "sha256": "ca561ceb829c61ebd8a0d5ea95e0b046dcc61013bb27aca09e74396fe26357d5",
+      "present_verified": true,
+      "paths": [
+        "source-archives/anna276/maid-anna276-wip01.zip"
+      ]
+    },
+    {
+      "index": "source-archives/anna276/maid-anna276-wip03-final-delta-index.json",
+      "dependency": "maid-anna276-wip01.zip",
+      "sha256": "ca561ceb829c61ebd8a0d5ea95e0b046dcc61013bb27aca09e74396fe26357d5",
+      "present_verified": true,
+      "paths": [
+        "source-archives/anna276/maid-anna276-wip01.zip"
+      ]
+    },
+    {
+      "index": "source-archives/anna276/maid-anna276-wip03-final-delta-index.json",
+      "dependency": "maid-anna276-wip02-delta.zip",
+      "sha256": "bbe669864e3622a7f08daf4eb0a3a1262e7a087c6df1168a27211dcc08d463cc",
+      "present_verified": true,
+      "paths": [
+        "source-archives/anna276/maid-anna276-wip02-delta.zip"
+      ]
+    },
+    {
+      "index": "source-archives/guardian/final-delta/index.json",
+      "dependency": "guardian-all-pilot-history-v01.zip",
+      "sha256": "88a3b2b798fbaa3449f91efcbbe0ad6f59b9fca7b8bf7a6ab45ce1d33947a5db",
+      "present_verified": true,
+      "paths": [
+        "source-archives/guardian/base/guardian-all-pilot-history-v01.zip"
+      ]
+    },
+    {
+      "index": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-index.json",
+      "dependency": "unicorn-source-wip05-part01.zip",
+      "sha256": "28000be8821ddca1eeee864e6e8a05ef76b40ff78ecbdd7eb38d7736d6741e72",
+      "present_verified": true,
+      "paths": [
+        "source-archives/unicorn/base05/unicorn-source-wip05-part01.zip"
+      ]
+    },
+    {
+      "index": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-index.json",
+      "dependency": "unicorn-source-wip05-part02.zip",
+      "sha256": "cf3256cffc65af21195fa88d15750c71a2032dff33ab2a4c68051378756e5e94",
+      "present_verified": true,
+      "paths": [
+        "source-archives/unicorn/base05/unicorn-source-wip05-part02.zip"
+      ]
+    },
+    {
+      "index": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "dependency": "unicorn-source-wip05-part01.zip",
+      "sha256": "28000be8821ddca1eeee864e6e8a05ef76b40ff78ecbdd7eb38d7736d6741e72",
+      "present_verified": true,
+      "paths": [
+        "source-archives/unicorn/base05/unicorn-source-wip05-part01.zip"
+      ]
+    },
+    {
+      "index": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "dependency": "unicorn-source-wip05-part02.zip",
+      "sha256": "cf3256cffc65af21195fa88d15750c71a2032dff33ab2a4c68051378756e5e94",
+      "present_verified": true,
+      "paths": [
+        "source-archives/unicorn/base05/unicorn-source-wip05-part02.zip"
+      ]
+    },
+    {
+      "index": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "dependency": "unicorn-wolf-source-delta06-part01.zip",
+      "sha256": "59752540d4390e3d8fa60ad568085759992588062ad1883724fe449b1c14b9f0",
+      "present_verified": true,
+      "paths": [
+        "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-part01.zip"
+      ]
+    },
+    {
+      "index": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "dependency": "unicorn-wolf-source-delta06-part02.zip",
+      "sha256": "fc7b5cb001e61dea7bfec156f9c41a603f37fae5aeb395d9501335c787239e05",
+      "present_verified": true,
+      "paths": [
+        "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-part02.zip"
+      ]
+    }
+  ],
+  "restore_order_notes": [
+    "Anna: WIP01 then WIP02 delta then WIP03 final delta; all16 raw PNGs retained; all review flags false, no Main or completion.",
+    "Unicorn/Wolf: base05 parts01/02 then delta06 parts01/02 then final07; all archives pinned and present. Root user stop supersedes historic run instructions.",
+    "Iguana/Wilddog: WIP03 parts01/02/03 then WIP04 part04 then WIP05 part05 then WIP06 part06 STOPPED delta; historical 31-source count is not final qualification.",
+    "Guardian: base then final delta, which pins original base ZIP and base index.",
+    "Tomb269: content-addressed base parts01..04 plus manifest then final delta using restore-final-delta.py after base; base manifest identity verified; read CURRENT_RESUME_STOP_FINAL.md.",
+    "DeathServant base source checkpoint plus agni-dryad-curseburn-stop delta at their documented roots; no automatic qualification.",
+    "All source-only archives are recoverability evidence, not Main qualification or completion evidence. Existing root paths require rebasing to the fresh workspace."
+  ],
+  "hell_v3": {
+    "qualification": [
+      {
+        "mode": "headless",
+        "case_checks": 2311,
+        "all8_AI_charge_actual_lifecycle_104poses_verified": true,
+        "sha256": "c3f58c4062534d472d076c382e16a8401f0cc01528d5a9c75d097cf8e8a53a82"
+      },
+      {
+        "mode": "opengl",
+        "case_checks": 2433,
+        "all8_AI_charge_actual_lifecycle_104poses_verified": true,
+        "sha256": "3c56a0138f5a52086b0a918d5ac008881f26fdec9434554fe07695c7c1490868"
+      }
+    ],
+    "root_and_independent_all8_104review_SHA_bound": true,
+    "selected18_production_source_SHA_verified": true,
+    "selected_source_recovery": [
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-0.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-1.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-2.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-3.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-4.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-5.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-6.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-7.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-8.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-9.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-10.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-11.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-12.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-13.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-14.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-15.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-16.png",
+        "verified": true
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-17.png",
+        "verified": true
+      }
+    ],
+    "temporal_stage_scope": "120Hz QA visual clock, distinct from ordinary real AI/charge/weapon/HP/death/drop/manual pickup assertions.",
+    "new_visual_review_performed_by_this_audit": false
+  },
+  "pending_parent_finalization": [
+    "FINAL_HANDOFF.md not yet reviewed; parent will request final review.",
+    "Parent runtime/Main32 archive snapshot and untracked-WIP parking are in progress and outside this source-inventory audit.",
+    "PR100_COMPLETION_REPORT.md still starts with prior391 snapshot at first read; parent owns final392 update."
+  ],
+  "errors": [],
+  "status": "PASS_BOUNDED_READONLY_AUDIT"
+}

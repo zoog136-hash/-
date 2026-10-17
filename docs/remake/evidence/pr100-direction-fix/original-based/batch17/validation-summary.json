@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "basis_commit": "1de5363b4fa006ff35ba22d11365c6ce3049264e",
+  "branch": "feature/twilight-animation-20261013",
+  "newly_validated": [
+    "monster:오크 마법사",
+    "monster:불신의 비홀더",
+    "monster:불신의 미믹"
+  ],
+  "new_designs": 3,
+  "new_distinct_poses": 312,
+  "validation": {
+    "headless": {
+      "checks": 3692,
+      "failures": [],
+      "engine_processes": 1
+    },
+    "render": {
+      "checks": 4004,
+      "failures": [],
+      "engine_processes": 1
+    }
+  },
+  "python_tests": 35,
+  "core_results": [
+    {
+      "test": "eight_direction_animation_test",
+      "exit_code": 0,
+      "error": false,
+      "result_lines": [
+        "EIGHT_DIRECTION_RESULT {\"assertions\":1362,\"failures\":[]}"
+      ]
+    },
+    {
+      "test": "native_animation_expansion_test",
+      "exit_code": 0,
+      "error": false,
+      "result_lines": [
+        "NATIVE_EXPANSION_RESULT {\"assertions\":35742,\"bindings\":{\"class\":3,\"monster\":149,\"transform\":126},\"distinct_rgba_frames_global\":7900,\"failures\":[],\"lookup_cache_bytes\":79347712,\"shared_outfits\":34}"
+      ]
+    },
+    {
+      "test": "original_based_canvas_test",
+      "exit_code": 0,
+      "error": false,
+      "result_lines": [
+        "ORIGINAL_CANVAS_RESULT {\"checks\":640,\"failures\":[]}",
+        "ORIGINAL_CANVAS_OK"
+      ]
+    },
+    {
+      "test": "combat_timeline_lifecycle_test",
+      "exit_code": 0,
+      "error": false,
+      "result_lines": [
+        "COMBAT_TIMELINE_LIFECYCLE_OK checks=158"
+      ]
+    }
+  ],
+  "preservation": {
+    "old_runtime_assets_and_scripts_unchanged": true,
+    "prior_bound_profiles_unchanged": 360,
+    "original_references_sha256_verified": 222,
+    "changed_profiles": [
+      "monster:오크 마법사",
+      "monster:불신의 비홀더",
+      "monster:불신의 미믹"
+    ]
+  },
+  "orc_root_cause": "Unbound source artwork repeated camera views and adjacent body rectangles; runtime compass was not changed. Reviewed isolated turnaround followed by separate role sheets resolves the source defects.",
+  "remaining_original_crocodile": "Existing preserved main-v2 still turns NE attack sideways; hit-v4 final NW corpse points SE. Unbound and not counted; archive unchanged.",
+  "draft_archive": {
+    "bytes": 11166456,
+    "sha256": "a0fb8a9931229e8e33bcc6e5ff5a68fcd57025cb2db21b0b2b68cb50808dbe22",
+    "crc_and_each_member_sha_verified": true
+  },
+  "android_and_ci": "Exact new commit verification pending push. Baseline 1de5363 Android and animation workflow succeeded; not used as new commit results.",
+  "android_device_execution": "not_run_no_device_attached",
+  "coverage": {
+    "counts": {
+      "hero_plus:registered": 180,
+      "hero_plus:native_connected": 136,
+      "other_transform:registered": 233,
+      "other_transform:native_connected": 1,
+      "normal_monster:registered": 258,
+      "normal_monster:native_connected": 187,
+      "boss:registered": 60,
+      "boss:native_connected": 35,
+      "class:registered": 4,
+      "class:native_connected": 4
+    },
+    "native_resources": 86,
+    "errors": [],
+    "main_reports": 177,
+    "direction_rows": 5880
+  }
+}

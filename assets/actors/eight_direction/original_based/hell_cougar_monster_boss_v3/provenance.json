@@ -1,0 +1,3457 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_0.png",
+    "region": [
+      634,
+      929,
+      317,
+      310
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 0,
+    "cell": 14,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+    "image_size": [
+      1269,
+      1239
+    ],
+    "region_rgba_sha256": "4bacceef8441bfe9d702f484f963d496670c945679c1f56bdb8dc50a07328788"
+  },
+  "target_keys": [
+    "monster:지옥의 쿠거"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 0,
+      "cell": 14,
+      "body": "cougar",
+      "variant": 4,
+      "width": 1.024,
+      "weapon": "claws",
+      "crest": 3,
+      "accent": "aa8aaf"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 128
+  },
+  "target_references": {
+    "monster:지옥의 쿠거": {
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "region": [
+        634,
+        929,
+        317,
+        310
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 0,
+      "cell": 14,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+      "image_size": [
+        1269,
+        1239
+      ],
+      "region_rgba_sha256": "4bacceef8441bfe9d702f484f963d496670c945679c1f56bdb8dc50a07328788"
+    }
+  },
+  "target_presentations": {
+    "monster:지옥의 쿠거": {
+      "visual": {
+        "atlas": 0,
+        "cell": 14,
+        "body": "cougar",
+        "variant": 4,
+        "width": 1.024,
+        "weapon": "claws",
+        "crest": 3,
+        "accent": "aa8aaf"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 128
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "{\"original84_baseline_authoring_record\": \"idle-walk-E-attempt7.prompt.txt EXACT PROMPT:\\nRe-render the attached five-pose transparent2D blackpanther atlas with generous BLANK GUTTERS, while preserving the exact five distinct leg poses and their corrected compact consistent skull proportions. This same Hell Cougar actor must remain exactlyfourlegged, charcoalblack muscularfeline, subtlebluegreyfur, smallpointedears/goldsideeye/shortfangs, longattachedcurledtail. No identity or camera changes. Preserve allproven physicallegpaths and A→B actualnear/far foreANDhind supportreversal. Do not reverse/mirror/repeat/swap contactposes.\\n\\nPORTRAIT1024x1536. Exactly ONE column byFIVE equal300px-tallcells. Make EVERY completecat uniformly about70% aslarge as currentreference: wholeconnectedfigure includingALLtail/claws mustbe no morethan560pxWIDE and200pxHIGH, with at least85px completelyemptyalphagutter between everytop/bottomfigure and at least50px blankoutermargin. Centers at around(512,150),(512,450),(512,750),(512,1050),(512,1350). Feet plant on same localbaseline within eachcell. The source reference figures are presently too big and rowcrop rectangles touchneighborbody; produce smaller separate figures surrounded byalpha0. No sprite may cross cellboundary and no fragments outsidebody.\\n\\nTOPtoBOTTOM fiveposes: 1idle neutral,2idle breath,3walkA,4walkpassing,5walkB, EXACTsameactualanatomy asreference. AllRIGHT-facing Eprofile and same compactskull/coremodelscale. Row3large NEARforeforwardRIGHT and NEARhindhockbackLEFT; FARforebackandFARhindforward. Row5NEARforefoldsBACKunderchest and NEARhindforwardunderbelly; FARforeforwardRIGHTandFARhindbackLEFT. BothfrontANDhind limbroot-to-paw overlaps reverse. Row4genuinepassingwithdifferentbends, notidle. Alllegsattached, eachphaseatleast2groundpaws, no floating/jumping. Keep head posterior-skullbase→muzzle and ear-to-chin dimensions identicalinallfive, notlargerwalkheads. No background/grayhalo/floor/shadow/text/grid/labels/coloredguides/effects. This is newlydrawn consistent2D spriteart, not anatomical assetwarp or duplicated/scaledstills. The necessarychange is muchsmaller fullfigures and widegaps, with actualarticulatedposes and correctedheadproportions preserved.\\n\\n\\nidle-SE-S-SW-attempt1.prompt.txt EXACT PROMPT:\\nCreate exactly SIX newly DRAWN complete black cougar IDLE sprites from FIRST exact original neutral source. SECOND same Hell Cougar's ownnewfrontwalk model gives frontal skull/bodyidentity only, no motion tocopy. New2Dgameanimation, not original extraction. Same lowmuscular BLACK/charcoal feline with bluegreyfur highlights, goldfront eyes, pointedears, darkmuzzle/fangs, strongshoulders/haunches, FOUR connected felinelegs/paws/claws and longattached BLACKtail curledtip. No mane/stripes/brownfur/horns/wings/armor/weapons/humanoidparts/props, no detachedpaws/tailtip or phantomleg. Continuous substantial ribcage/spine and anatomicallyrooted limbs.\\n\\nSPARSE1536x1024 atlas, THREE directionCOLUMNS byTWO phaseROWS. Each wholebody includingtail/paws max330pxwidth and330pxheight within512x512cell, centered with hugeclear transparentgutters andsafeoutermargins. Do notgrow tofillcells, no boundingrectanglesoverlap, no clipping. Sameidentical HEAD/CORE/SKELETON drawing scale across6, no posegrowth. Emptyspacealpha0; no floor/shadow/backgroundpaint/text/grid/labels/particles/aura/effects/blood.\\n\\nCOLUMNS lefttoright: SE FRONT-RIGHT towardLOWERRIGHT; S fullFRONT towardviewer/DOWN withcenteredskull/eyes/muzzle; SW FRONT-LEFT towardLOWERLEFT. Exactsamecamera/face/pawsheading helddownbothrows. Actual3quarterdepthinSE/SW, independentnewperspective notmirroredfront or sourceportraitstucksideways. All4limbs present, farlegsmaynaturallyocclude butnotmissing.\\n\\nROW1 IDLE NEUTRAL: lowrelaxed stalkingstance, FOUR paws firmlygrounded, headalert alongheading, tail looselycurled.\\nROW2 IDLE BREATHING: ribcage andshoulders flex subtly, headbob tiny, foreelbows/hindhocks changeangle slightly with realjointarticulation andtail curls into differentconnectedarc. Keep4pawsrootedandbodyproportionsstable. Six genuinelydistinct articulated drawings, not exactlyrepeated/resized/translated stances withmerelytailmoving. No bigwalk/lunge/rearup, thisisquietbodybreathing.\\n\\nGroundedfloatingFALSE throughout, same localcell supportplane andactualplantedpaws. Correctfelineanatomy, no body-leggap. Entire6wholeconnectedanimals safelyseparated, originalblackfurmaterial/detailidentitypreserved. No3D systemor3Drender, no pixelwarp or mirroring.\\n\\n\\nwalk-SE-attempt4.prompt.txt EXACT PROMPT:\\nRepack the THREE DIFFERENT already-authored black cougar WALK drawings in the attached image into a much SPARSER usable transparent sprite sheet. Preserve each existing pose's exact physical limb topology and camera: LEFT contactA has NEAR foreleg stretchedforward/right and nearhindback; MIDDLE is the passingpose with nearerforepaw curledback and farforepaw underneathbody; RIGHT contactB has NEARforeleg curledBACK underchest and FARforeleg stretchedFORWARD/right, nearhindforward and farhindback. Do NOT reset or duplicate leg poses. Keep all3 genuine distinct drawings, fixed SE front-right heading, blackfur/goldface/tail identity and samehead/core scale across all3.\\n\\nProblem to fix is PACKING ONLY: current figures' full crop rectangles overlap at neighbor tail tips. New canvas1536x1024 has THREE equalcolumns, one row. Put wholebody centers atx256,768,1280 andy512. Each COMPLETE CAT including tail tip/paws must now be only300pixels WIDE and300pixels TALL, about60% of its current pixel size, uniform reduction across allthree. This should leave over200pixels completely clear transparent horizontalgutter between every pair and more than200pixels safe outer top/bottom margins. Do NOT grow figures tofillcells. Preserve original compact anatomy/modelshape, no cropping or detachedtailtip. Full rectangular alpha bounds safely disjoint. Keep source poses rather than invent new poses or copies.\\n\\nTransparent RGBA alpha0 background. No backgroundpaint, floor/shadow, labels/text/grid, particles, aura or addedobjects. Exactly3 complete connected grounded FOUR-LEG blackpanthers with their original sameactor different motionposes and attached longtails. This is a corrected packing version of newly drawn2D animation, not extraction, no mirrored or warped asset.\\n\\n\\nwalk-S-attempt1.prompt.txt EXACT PROMPT:\\nCreate exactly THREE new fullbody BLACK COUGAR WALK frames, ALL full FRONT S towardviewer/screendown, one row/three equalcolumns on transparent1536x1024. FIRST originalsource character identity; SECOND provisional multi-angle walks, use ONLY itsMIDDLE ROW's fullFRONT S model and actualopposingcontactforepaws. Ignore SE/SWrows. NewlyDRAWN2Dmotion, not original extraction. Sameblack/charcoal lowmuscular feline withbluegreyfur, goldfront eyes, centered darkmuzzle/fangs, pointedears, FOUR connected legs/clawedpaws, longattachedblacktail curledtip, no mane/stripes/weapons/armor/wings/humanparts/props. Solidribcage/spine/hips/shoulders; all4legrootsconnected, no extra/phantomleg.\\n\\nSPARSE3equalcolumns, wholecat max280pxwidth and350pxheight, centeredatx256/768/1280 andy512 with hugeclear gutters andsafe outeredges. Same skull/ribcage/haunchscale acrossall3, no posegrowth. Alpha0empty; no groundpaint/shadow/text/grid/labels/particles/aura/blood.\\n\\nLEFT CONTACTA: viewerLEFT FOREPAW reaches FORWARD/DOWN and PLANTS ahead of chest; viewerRIGHT forepaw BACKunderchest, flexed/unweighted. ViewerRIGHT HINDPAW reachesforward while viewerLEFT hindpaw trailsback, actualDIAGONAL support, same-sidefore/hindmoveoppositely.\\nMIDDLE PASSING: previouslyleading forepaw draws UNDER shoulder tosupport, opposite foreleg bends/swingspast; hindpair transfers opposite. Forepaw support is UNDER chest (shortenedforelegprojection), not a repeated longfrontreach. Clear distinct elbow/knee/hockangles, two grounded supports.\\nRIGHT CONTACTB: viewerRIGHT FOREPAW now reachesFORWARD/DOWN and PLANTS, viewerLEFT forepaw BACKunderchest visiblyflexed/unweighted; viewerLEFT HINDPAWforward and viewerRIGHT hindpawback. Actualnear/far shoulder/hipto-pawidentity swaps fromLEFT, not just head/body translation or tailchange. Match secondimage middle-row rightfigure's oppositeforepaw contact, no samepawleadingagain.\\n\\nFixedFULLFRONT head/core with centered eyes/muzzle acrossall3, no sideyaw. Correctfeline foreleg/elbow/wrist and hindknee/hock/paw paths, 4connectedlimbs andattachedtail. Lowspine/body grounded floatingFALSE, at leasttwo supportpaws onsharedcellplane, no leap or hover. Three genuinely different articulated walkphases, no mirrored/repeated/translated/scaled stills, no detachedpaws/cropping. Keep originalsource characteridentity and quality.\\n\\n\\nwalk-SW-attempt2.prompt.txt EXACT PROMPT:\\nRepack exactly THREE existing DIFFERENT newly-authored BLACK COUGAR WALK drawings from attached image into a SPARSER transparent atlas. PACKING ONLY: current completecropbounds overlapneighbor tails. Preserve each distinct pose's actual four-leg root topology, same blackfur/head/core proportions and fixed SW FRONT-LEFT facingLOWERLEFT. LEFTcontactA nearforeforward+nearhindback, MIDDLEpassing withdifferentflex, RIGHTcontactB nearforecurledBACK+farforeforwardLEFT andnearhindforward+farhindback. Do not resetrightcat tosameleadingnearforearm. Do not duplicateorwarp/mirror bodies.\\n\\nNew1536x1024canvas has3equalcolumns/onerow. WholebodyBOUNDINGBOX centers atx256,768,1280 andy512 (include tail). Reduce ALL3 uniformly to60%currentpixel size, each completecat max300pixelswide and300pixelstall INCLUDING every tailtip/claw. Leave over200pixels cleartransparentgap between everycomplete silhouette and broadoutermargins. Mostly EMPTYcanvas, never enlargingtofillcells. No rectanglesoverlap or croppedparts, all4legs andtail remainphysicallyattached.\\n\\nEmptyRGBAbackgroundalpha0, no floor/shadow/backgroundpaint/text/labels/grid/particles/aura/blood/extraobjects. ExactlyTHREE complete groundedfour-leg sourceblackpanthers retaining their threeexisting genuine walkstates. New packingversion of newlydrawn2Danimation, not extraction. Preserve physicalpose differences andhead/core scaleconsistency.\\n\\n\\nidle-walk-W-attempt2.prompt.txt EXACT PROMPT:\\nEdit FIRST reference five-pose W-facing atlas into corrected new2D Hell Cougar sprites. The physical actualforeANDhind supportopposition is CORRECT; PRESERVE EACHROW'S fourlegroot→joint→paw anatomy. Heads currently GROW in walking rows (contactA skullabout30%widerthan topidle). CorrectALLheads to sameSMALLcompactskull MODEL as TOPIDLE, and repacksmallfigureswithwidegutters. SECOND sameactor correctedE atlas demonstrates consistentcompactskull/modelonly; drawWnewly, no mirroring E pixels. OriginalcharcoalBLACK lowmuscularcougar, subtlebluegreyfur, goldsideeye, pointedears, compactbroadmuzzle/shortfangs, heavysolidshoulders/haunches, FOURattachedfelinelegs andclawpaws, longattachedblackcurledtail. No mane/armor/weapon/browncolor/humanparts/props.\\n\\nPORTRAIT1024x1536 exactlyONEcolumn FIVEequalrows, fivecompletewholecats ALL trueWLEFTPROFILE. Everyhead/nose/pawheading LEFT withsamecamera/yaw. Maxcompletefigure includingtail/claws560pxwide200pxhigh, centresaround(512,150),(512,450),(512,750),(512,1050),(512,1350), at least85pxblankverticalguttersand50pxoutermargin. Muchsmallerallfigures thanFIRSTcurrentatlas, no crop/neighborbodyinrectangles. FixedCOMMONhead/skull/coremodel dimensions inall5, groundfloatingFALSE, commonlocalfloorineachrow.\\nHEADS: choosecompactTOPIDLEskull, reducewalkcontactA'sposterior-skullbase→muzzle byabout25% relativebody, otherwalkheadsalsofollowTOPIDLE. Atthiscanvasafternewsmallerfullbodyapprox80-85pxskullbase→muzzle, withinabout5%acrossallfive. Sameear-to-chinheight/model, eyesize andmuzzleprojection; no bigwalkhead/shortbody. Head/coreanatomyscalechangeisredrawn, nothidingviawholewalkrowresize. Torso shoulder-to-hipmodel sizealsoconstant.\\n\\nROWS TOPBOTTOM:\\n1IDLE neutral, all4pawsground, topidlecompacthead.\\n2IDLEbreath subtleactualcore/elbow/head/tailarticulation, compactheadsamemodel.\\n3WALKCONTACTA exactlyFIRSTrow3topology: nearestbigVISIBLEFOREshoulder→foreleg reachesFORWARDLEFT, farforelegBACKRIGHTunderchest. NearestbigVISIBLEHINDhaunch knee bendsnaturallyforward but LOWERHOCKextendsBACKRIGHT behindrump, farhindpawFORWARDLEFTunderbelly. NearforeFORWARD+nearhindBACK, farforeBACK+farhindFORWARD. Preserveactuallegpaths, shrinkheadproportiononly.\\n4WALKPASSING exactlyFIRSTrow4genuinebentnearforeunderchest/hindkneesexchange, atleast2groundpaws, actualjointarticulation distinctfrombothcontacts.\\n5WALKCONTACTB exactlyFIRSTrow5topology: nearestbigVISIBLEFOREshoulder→foreleg foldsBACKRIGHT underchest, farforelegFORWARDLEFT. NearestbigVISIBLEHINDhaunch→hindpawstepsFORWARDLEFTunderbelly, farhindlegtrailsBACKRIGHT. NearforeBACK+nearhindFORWARD, farforeFORWARD+farhindBACK. Preservephysicalnear/farrootconnectionandankleoverlap, doNOTresettoAnearforeforward. Skullcompactfixedsameasrow1.\\n\\nAll5wholebody/head/4legs/tailconnected, no phantom/detached/missingparts. BothphysicalforeANDhindpairsoppositionreversesrow3→5, no copiedtranslatedstill/tailswayonly/repeatedstance/mirror. Eachactualpose newlydrawn, originaldetailedpainted2Dfur andsamebodymass. TransparentRGBAalpha0, no floor/shadow/halo/background/text/grid/effects/particles. RequiredheadMODELconsistencyandguttercorrection mustNOTremoveprovenphysicalgait.\\n\\n\\nidle-NW-N-NE-attempt1.prompt.txt EXACT PROMPT:\\nCreate exactlySIX newlyDRAWN complete blackcougar IDLE gameposes, realREAR cameraangles, transparent1536x1024atlas THREE directioncolumns byTWO phaserows. FIRST exactoriginalblackpanther source fixesidentity, SECOND sameactor's genuineleftprofilemodel onlyformaterial/head/core, redraw realrear anatomy notmirrors. New2Danimation fromneutralportrait, notextraction. Sameblack/charcoal lowmuscular feline, bluegreyfur, pointedears, strongshoulders/hips, FOUR attached felinelegs/paws/claws, longattachedblacktail curledtip. Solidribcage/spine betweenhips/shoulders, correct4leganatomy, no extralimbs/bodygap. No mane/stripes/armor/weapons/wings/humanparts/newprops. Originalfront goldfaceexists ONLYONFRONT; theseREAR views HIDE it.\\n\\nDIRECTION COLUMNS LEFTTORIGHT: NW BACK-LEFT awaytowardUPPERLEFT; N FULL BACK directlyaway/UP; NE BACK-RIGHT awaytowardUPPERRIGHT. Viewer sees BACKofhead/ears, back/spine/shoulders, rumpandtail, rear-facinghaunches. AbsolutelyNOgoldenfronteyes, frontalnose/muzzle/mouth/fangs inANYof6figures; headlooksAWAYalongbodyheading andnever turnsback towardviewer. Nexactrear roughlysymmetricalhip/back/spine, frontfeet farawaypartlyoccludedbut anatomicallypresent. NW/NEactualrear3quartervolume, notfrontface turnedsideways or simplymirroredsource. Fourconnectedlegs naturallyoccludebutnotmissing.\\n\\nSPARSEPACKING: wholecat includingtail/paws max330pxwidth and330pxheight insideeach512x512cell, centered withhugecleartransparentgutters/safeoutermargins. Sixsmallfigures onmostlyEMPTYcanvas, doNOTgrowtofillcells. Sameidentical skull/core/skeleton drawing scale throughout, no posegrowth, no fullrectanglesoverlap or clipping. All emptyalpha0, no floor/shadow/text/grid/labels/backgroundpaint/particles/effects/blood.\\n\\nTOPROW IDLE0 lowrelaxedalertstance, all4paws grounded, tailsoftlycurled. BOTTOMROW IDLE1 realbreathing: ribs/back/shoulder flex subtly, elbows/hocks/rootjoints shift slightly andtailcurls anew, headstaysAWAY, all4paws grounded. Genuinequietbodybreathing, not6identicaltranslatedportraits or tail-onlyduplicate. Consistentlocalcellgroundplane, groundedfloatingFALSE, no leap/rearup/levitation. Entire6wholeblackcats connected/safeandrecognizablesource2Dfurquality, no3D.\\n\\n\\nwalk-NW-attempt2.prompt.txt EXACT PROMPT:\\nCreate a newly authored transparent RGBA2D GAME strip of exactly THREE fullbody BLACK panthers, TRUE NW REAR-LEFT direction throughout. Landscape1536x1024, THREE equal columns byONE row. Only ONE directionNW, only3 walkphases. Head/neck/feet always point UPPERLEFT, hindquarters nearest cameraLOWERRIGHT, visible BACK skull and backofears with frontgoldface hidden. Never NE/topright or Wfrontalprofile. Each completecat includinglongtail must occupy no more than350pxwidth and330pxheight of its512x1024cell, HUGEleft/rightgaps, at least70pxblankgutters beyond alltailtips. Commonbody/headmodelscale, common local groundcontactbaseline, exactlyfour attachedfelinelegs connected hip/shoulder→knee/elbow→hock/wrist→paw. No hovering, no croppedtails/claws, no background/shadow/text/grid/coloredjoints.\\n\\nREFERENCES: FIRST original neutral fixes true blackcougar identity and detail; SECOND is independently drawn correct NW rearbody idle for this same Hell Cougar; THIRD is this SAMEcat's NEW CORRECT NW CONTACT B. Use third's exact actual limbroot-to-paw topology for column3; do not default allthree to source's unchanged contactA. Originalcharcoalblack sleekmuscular feline, subtlebluegreyfur, pointedears, heavyhaunches/shoulder, longconnectedcurledtail; no armor/mane/weapons/newcolor. Allmotion newlyauthored, not extracted. Keep source compacthead/body and commoncamera.\\n\\nCOLUMN1 WALK CONTACT A: NEAR visibleforeleg reaches FORWARD UPPERLEFT and plants; FARforeleg bends BACK LOWERRIGHT underchest. NEAR heavyhaunch knee bends naturallyforward but lowerhockextends BACK LOWERRIGHT to rearpaw BEHINDRUMP; FARhindpaw steps FORWARD UPPERLEFT underbelly. So nearFOREforward+nearHINDback and farFOREback+farHINDforward. Eachpawdistinct attached, genuine diagonal support.\\nCOLUMN2 WALK PASSING: nearforeelbow draws towardunderchest, opposingfarfore swingspast; hindknees/hocks exchange rootsupports naturally, at least2plantedpaws. Actual jointbends differfrom both contacts, no translatedstill.\\nCOLUMN3 WALK CONTACT B MUSTFOLLOW THIRDreference exactpose: NEAR visibleforeleg FOLDS BACK LOWERRIGHT underneathchest, itsforepaw closeunderchest; FARforeleg reaches FORWARD UPPERLEFT. NEAR heavyhaunch→knee/hock steps FORWARD UPPERLEFT underhip/underbelly; FARhindleg trails BACK LOWERRIGHT to rearmostpaw. So nearFOREback+nearHINDforward and farFOREforward+farHINDback. Thirdreference actualfoldedbacknearfore and forwardnearhind mustremain, not sourceA.\\n\\nNear/Far PHYSICAL ROOT-to-paw identity and overlap MUST reverse fromcol1 tocol3 in BOTHfore ANDhindpairs. Tailchangealone doesnotcount. No repeatedstance/mirror/phantomfifthleg/bodyparts/particles. Place all3wholecats SMALLwithin cells with largeblankgutters and identicalcompactskull/torso scale; completegroundedblackbodies, NWback silhouette only.\\n\\n\\nwalk-N-attempt2.prompt.txt EXACT PROMPT:\\nNewly DRAWN transparent RGBA2D game walkingstrip of exactly3 FULLBODY BLACK COUGARS, landscape1536x1024 THREEequal columns ONErow, one direction throughout. Originalblack/charcoalmuscularfeline, subtleroughbluegreyfur, compactpointedears/heavyrump/shoulder, exactlyFOURconnectedfelinelegs/clawpaws andlongattachedblacktailcurledtip. No mane/armor/weapons/newcolor, no frontgoldface in truebackview. Same skull/coremodelscale/camera in all3, eachwholecatincludingtailmax350pxwide330pxhigh in512pxcell, no cellcrossing, wideblankgutters at least60px, completeears/tail/claws, consistentlocalgroundsupportplane, no hovering/jump. No background/shadow/halo/text/grid/guidecolors/effects/particles. Firstreference originalexactneutralidentity, secondreference thissame HellCougar backidlemodel; thirdreference thissamecat's genuineNWoppositecontactgait showingcorrectforeANDhindroot-to-paw reversal. Author thistargetdirection anew; do notpaste/mirror/duplicate NWpixels orcopyunchangedlegs. 3differentarticulatedposes A→passing→B. Eachlegtraceable shoulder/elbow/wrist/paw orhip/knee/hock/paw, exactly4legs. GroundedfloatingFALSE. The same physical shoulder/haunch must changeitsownknee andpawposition; tailchange/translation doesnotcount.\\nTARGET TRUE N REAR STRAIGHTAWAY, face/head/feet point UP awayfromcamera, backskull/backofears central; NO front eyes/nose/teeth and NO diagonal yaw. Rump closestcameraBOTTOM, spine recedesVERTICALLYUP tohead, symmetricbodycamera. Columns1and3 mustvisiblyexchange BOTH left/right foreANDhind support.\\nCOL1CONTACT A: viewerLEFTforelimb reachesFORWARDUP atleftofchest while viewerRIGHTforelimb foldsBACKDOWN underchest. ViewerLEFThindpaw trailsBACKDOWN behindrump, loweronthepage, while viewerRIGHThindknee/hock reachesFORWARDUP underbelly andrightpaw plantscloserunderhip. Actualleftforeforward+lefthindback, rightforeback+righthindforward diagonalpairing. Fourpawsdifferentpositions andconnected, farforemaypartiallyocclude naturally but no missingleg.\\nCOL2PASSING: hindknees drawunderthehips, supportingdiagonalpair flexes, swingingpair movespast; visible left/right hock/elbowangle differfromcontacts, atleast2groundedpaws. SameNcamera andheadmodel.\\nCOL3CONTACT B: viewerRIGHTforelimb reachesFORWARDUP atchest while viewerLEFTforelimb foldsBACKDOWN underchest. ViewerRIGHThindpaw trailsBACKDOWN behindrump, loweronthepage, while viewerLEFThindknee/hock reachesFORWARDUP underbelly andleftpaw plantscloserunderhip. Actualleftforeback+lefthindforward, rightforeforward+righthindback, REVERSEactualleft/rightpawdepthsovercol1. DoNOTkeep samehindpaw trailinginbothcontacts. Subtleconnectedtailchange butclearedfromlegsilhouette. AllthreeNbackview noface andgenuineoppositecontactposes.\\n\\n\\nwalk-NE-attempt5.prompt.txt EXACT PROMPT:\\nCreate3 genuinely articulated WALKPHASES of EXACT blackcougar inFIRST correct NErear-right sourcepose. This isour newlyauthored actor, notoriginalextraction. FIRST image is correctCONTACTB. SECOND abstractjointdiagram reinforces FIRST's exact nearforeback+nearhindforward physicalrootpaths, colorsareguidanceonly notspritecolors. DoNOTflipcompass ordefaulttoforwardnearforeinallposes.\\n\\nPORTRAIT1024x1536 exactlyONEcolumn byTHREEequalrows. All3wholecats onlyabout500pxwide320pxhigh, centers(512,256),(512,768),(512,1280), HUGE180pxverticalblankguttersand250pxleft/rightouterblank. Same3quarterNEcamera andsamecompacthead/shoulder/hip modelscale inallthree, originalcharcoalblackbluegreyfur pointedears/longattachedcurledtail/fourclawedlegs. HeadfeettravelAWAYUPPERRIGHT; backskull andbackears, NO frontface/goldeye/nose/fangs. No armor/mane/weapons/newcolor/effects/text/floor/shadow/halos/guidelinecolors. Fullintactbodybodyandfourattachedlegs/tail, no cropping/neighborbodyrectoverlap. GroundedfloatingFALSE, atleast2weightbearingpaws, nojumping.\\n\\nTOPROW CONTACT A is OPPOSITEofFIRSTsingleB: NEARlargeforeleg fromvisiblemainRIGHTshoulder reachesFORWARDUPPERRIGHT, FARforeleg foldsBACKDOWNLEFT underchest. NEARlargehindhaunch's lowerhockextendsBACKLOWERLEFT tothelowesttrailingpaw, FARhindleg reachesFORWARDUPPERRIGHT underbelly. Bothnearestforegroundlimbs moveopposites: nearforeFORWARDandnearhindBACK.\\nMIDDLEROW PASSING: supportingdiagonalpairdrawsunderbody andoppositepairknees/elbowsflexandswingpast, at least2groundedpaws. Trueintermediateelbow/knee/hockgeometry, sameNEcamera/model, notanothercontactortranslatedstill.\\nBOTTOMROW CONTACT B MUST BE FIRSTREFERENCE'S EXACTPOSE. MainnearestRIGHTforeleg FOLDSBACKDOWNLEFT underchest, nearestforepaw LEFT ofits shoulder underbelly. Farforeleg partlyoccludedbehindribcage reachesFORWARDUPPERRIGHT toforepaw. Mainnearestthickhaunch's knee/hock stepsFORWARDUPPERRIGHT withitsgroundpawunderhip/closerbelly. Farhindleg extendsBACKLOWERLEFT tothelowesttrailinghindpaw. FOUR root→elbow/knee→wrist/hock→pawconnections EXACTLYLIKEFIRSTsingleimage. UseFIRST'sACTUALphysicalarm/legocclusion forBOTTOMONLY. NearforeBACK+nearhindFORWARD, farforeFORWARD+farhindBACK. DoNOTconvertbottomnearforetoforwardreaching. DoNOTattachlowesttrailinghindpaw tobigforegroundhaunch. ThisbottomposealreadyexistscorrectlyinFIRSTreference, keepitsanatomy.\\n\\nTop→bottom BOTHFORE andHIND physicalnearestroot-to-paw identityandangleMUSTREVERSE, notonlytail/torso. All3newlydrawncoherentfullfelines, samehead/core size, commonlocalfloorwithinrow, no duplicated/resized/mirroredstills. Finalatlas clearblankguttersandtransparentalpha0.\\n\\n\\nattack-front-attempt1.prompt.txt EXACT PROMPT:\\nCreate a NEW transparent RGBA animation sprite sheet for the exact first-reference creature, Hell Cougar (monster:지옥의 쿠거). The first image is the original identity. The second image is a newly authored same-character proportion/style reference only; every output pose must be newly drawn, not copied, mirrored, repeated, transformed or composited from it. The source is a LOW, HEAVY muscular BLACK/CHARCOAL cougar/panther, subtle bluegrey fur glints, golden front-visible eyes, broad feline muzzle with fangs, small pointed ears, thick shoulders/haunches, FOUR connected feline legs with broad clawed paws, one long attached BLACK tail. Keep source head, core and limb proportions. No mane, brown or white fur, stripes, armor, weapons, wings, humanoid anatomy or added objects. Use source-style detailed 2D hand-painted RPG sprite art.\\n\\nOUTPUT LAYOUT: portrait 1024 x 1536 transparent PNG, EXACTLY TWELVE whole animals, three evenly spaced phase COLUMNS and four evenly spaced direction ROWS. Every animal is SMALL: at most 220 pixels wide and 180 pixels high including tail and all paws, centered well inside its cell. Huge transparent gutters between all animals, no contact between cells, no boundary contact. Cell centres x=171,512,853; row centres y=192,576,960,1344. These coordinates describe placement only and must NOT be drawn.\\n\\nRows top to bottom are true E facing right, true SE facing down-right, true S front facing down/toward viewer, true SW facing down-left. All are actual 8-view anatomy. E is a true right-facing profile with the right side of its muzzle pointing right. SE and SW have deliberate three-quarter skull/ribcage/pelvis rotation. S has a symmetrical front skull, chest, and far haunches behind; never substitute a side view. Distinct direction-specific foreleg/hindleg occlusion; do not mirror to obtain views.\\n\\nColumns left to right show THREE distinct articulated MELEE CLAW ATTACK phases, all grounded: (1) WINDUP: head lowered, chest twists, the striking FOREPAW bends back toward chest on a visibly attached upper arm and elbow; other three paws firmly support the body. (2) CONTACT: that foreleg extends FORWARD ALONG THE ROW'S HEADING, elbow/wrist/claws reach forward in a clear slash while shoulder remains attached; head and chest follow a small grounded lunge. Exactly three other connected support paws stay planted. (3) RECOVER: striking foreleg retracts and lowers to the floor, chest untwists, hind hocks flex and weight returns. Clearly different limb joint positions and body articulation in all three columns, never a repeated standing pose with tail variation. Maintain comparable head/core size through all 12 poses.\\n\\nEvery leg grows continuously from a shoulder or hip through elbow/knee and wrist/hock to its own paw; no detached paw, doubled paw, fifth limb, floating arm or disappearing rear leg. Tail attaches to rump in all phases. No leap, no hovering; floatingFALSE. Keep complete tail, ears and paws inside each cell. All visible pixels belong to the one complete animal in that cell. NO ground, shadow, cast shadow, glow, slash effects, motion lines, particles, blood, smoke, background wash, checkerboard, border, text, labels, numbers or grid lines. Empty space must have real alpha zero, not black paint.\\n\\n\\nattack-back-attempt1.prompt.txt EXACT PROMPT:\\nCreate a NEW transparent RGBA animation sprite sheet for the exact first-reference creature, Hell Cougar (monster:지옥의 쿠거). The first image is the original identity. The second image is a newly authored same-character proportion/style reference only; every output pose must be newly drawn, not copied, mirrored, repeated, transformed or composited from it. The source is a LOW, HEAVY muscular BLACK/CHARCOAL cougar/panther, subtle bluegrey fur glints, gold eyes only if the face is actually visible, broad feline muzzle/fangs when visible, small pointed ears, thick shoulders/haunches, FOUR connected feline legs with broad clawed paws, one long attached BLACK tail. Keep source head, core and limb proportions. No mane, brown or white fur, stripes, armor, weapons, wings, humanoid anatomy or added objects. Use source-style detailed 2D hand-painted RPG sprite art.\\n\\nOUTPUT LAYOUT: portrait 1024 x 1536 transparent PNG, EXACTLY TWELVE whole animals, three evenly spaced phase COLUMNS and four evenly spaced direction ROWS. Every animal is SMALL: at most 220 pixels wide and 180 pixels high including tail and all paws, centered well inside its cell. Huge transparent gutters between all animals, no contact between cells, no boundary contact. Cell centres x=171,512,853; row centres y=192,576,960,1344. These coordinates describe placement only and must NOT be drawn.\\n\\nRows top to bottom are true W facing left, true NW facing up-left/away, true N BACK VIEW facing straight up/away, true NE facing up-right/away. W is a true left-facing side profile, independently drawn. NW/NE show rear skull, back/haunch volumes, far forepaw projecting away along diagonal, face mostly hidden by correct perspective. N shows back of head/ears, spine, haunches, rear legs and attached tail: NO front face, eye pair, frontal chest or forward-facing muzzle on the rear of its head. All actual anatomy rotations; no mirrored views.\\n\\nColumns left to right show THREE distinct articulated MELEE CLAW ATTACK phases, all grounded: (1) WINDUP: head lowered, chest twists, the striking FOREPAW bends back toward chest on a visibly attached upper arm and elbow; other three paws firmly support the body. (2) CONTACT: that foreleg extends FORWARD ALONG THE ROW'S HEADING, elbow/wrist/claws reach forward in a clear slash while shoulder remains attached; head and chest follow a small grounded lunge. Exactly three other connected support paws stay planted. In N the forepaw reaches AWAY/UP, not toward the viewer. (3) RECOVER: striking foreleg retracts and lowers to the floor, chest untwists, hind hocks flex and weight returns. Clearly different limb joint positions and body articulation in all three columns, never repeated standing poses with tail variation. Maintain comparable head/core size through all 12 poses.\\n\\nEvery leg grows continuously from a shoulder or hip through elbow/knee and wrist/hock to its own paw; no detached paw, doubled paw, fifth limb, floating arm or disappearing rear leg. Tail attaches to rump in all phases. No leap, no hovering; floatingFALSE. Keep complete tail, ears and paws inside each cell. All visible pixels belong to the one complete animal in that cell. NO ground, shadow, cast shadow, glow, slash effects, motion lines, particles, blood, smoke, background wash, checkerboard, border, text, labels, numbers or grid lines. Empty space must have real alpha zero, not black paint.\\n\\nTHIRD additionalreference is thissameactor rearidle compassmodel, ensure trueNWleft/Nup/NEright and hidefrontfaces. Keephead/coremodelscaleconsistent with secondEprofile reference. Allnewlydrawn 12poses onlythis Hell Cougar target, never Waring productionart.\\n\\n\\nhit-front-attempt3.prompt.txt EXACT PROMPT:\\nRe-render the attached E/SE/S/SW two-hit-phase blackcougar sheet with much larger blank gutters. Newlyauthored Hell Cougar, preserve all8actualarticulatedposes, compactskull/corebodymass andexact4leganatomy, no pixelwarp/copy/mirror/repeatedstills. ExactlyEIGHT fullcats in LANDSCAPE1536x1024, FOUR equalcolumns TWOequalrows. Columnheadings EtrueRIGHTsideprofile, SEfrontRIGHT lower-right, Sfrontdown, SWfrontLEFTlower-left. Row1HITrecoil, Row2HITpartialrecover, sameactualjointposes asreference. All1catpercell, centers x192,576,960,1344 and y256,768. Wholeanimal includinglongtail/paws max260pxwide220pxhigh within384x512cell, at least100pxhorizontalblank and250pxverticalblank; outer60pxmargins. DoNOTenlargefiguresto fillcells. Currentreferenceportrait4colsisTOONARROW andbodycropincludesneighbor: shifttoLANDSCAPEanddrawclearsafegutters.\\nOriginalheavyBLACK/charcoalfeline, subtlebluegreyfur, pointedears/goldfronteyes/broaddarkmuzzleshortfangs, sourcecompacthead, strongconnectedshoulder/haunchribcage,4attachedfelinelegs/clawpaws andlongattachedcurledtail. All8groundedfloatingFALSE withconsistentlocalfloor, noextra/severedlimbs. Maintain SAMEhead/coreMODELscale inall8, matchingoriginal compactheadandlongbody notgiantheadshortbody. Actual HIT A→B elbow/knee/hock/head/coreanglechanges, no attack/repeatedidle. Eprofilecompassright allposes, SWleftallposes. TransparentRGBAalpha0, no floor/shadow/background/halo/text/grid/particles/effects. No cropping/overlap/fragments/missingfigure. Keepwholecoherentmass, originalmodelandnew2Ddetail.\\n\\n\\nhit-back-attempt2.prompt.txt EXACT PROMPT:\\nDraw new transparent RGBA detailed 2D RPG black panther sprites for ONLY Hell Cougar (monster:지옥의 쿠거), from exact original neutral reference1 and sameactor compact-head E reference2. THIRDsameactorrearidleref fixestruebackcompass/bodyvolume. This is newly authored motion from a neutral portrait, not extraction. Heavy low black/charcoal feline with subtle blue-grey fur, short pointed ears, gold front eyes, broad dark muzzle with short fangs, strong connected shoulders/rump, FOUR attached cat legs with black claw paws, long attached black tail with curledtip. No mane/armor/weapons/brown fur/new colors/humanoid parts. Constant compact skull/core MODEL dimensions in all phases, same intrinsic limb lengths, changing posture not body/head resize.\\nTransparent1536x1024 LANDSCAPE with FOUR equal direction COLUMNS: W trueLEFTsideprofile, NW REAR-LEFTawayUPPERLEFT, N BACKstraightawayUP, NE REAR-RIGHTawayUPPERRIGHT. All phases hold their compass, no rearfrontface reset. TrueW longanatomicalsidebody/head, notfront3quarter. NW/N/NE showbackofskull/backears/spine/rump/tail, NOfrontgoldeneyes/nose/muzzle/teeth. KeeprearheadcompassawaythroughALLstates, no lookingback. Full four-legged bodies including all tail/paws safe inside cells, generous margins, huge blank gutters, no neighboring rectangle overlap. Every visible pixel belongs to intact connected creature, no fragments or extra limbs. Empty alpha0, no floor/shadow/halo/background/text/grid/effects/particles/blood. floatingFALSE all poses grounded, consistent localfloor in eachcell.\\nEXACTLY EIGHT whole animals: FOUR COLUMNS by TWO ROWS, no more/no fewer. Row1 centers y256, row2 centers y768; x192,576,960,1344. Each wholefigure max260pxwide200pxhigh. At least70px horizontalblank and250px verticalblank. ROW1 HIT A: shoulders/head jerk BACK awayfrom column travel heading, elbows bend defensively, hindhocks drop and supporting paws plant, tailcounterbalances; clear recoil notattack. ROW2 HIT B: head/core partially recover and bow, actualdifferent elbow/forepaw and knee/hock jointbends, onepawresettles, tailchangesconnected; distinct fromrow1andidle. Exactly2 distinct articulated hitstates ineachdirection, 8 newlydrawnfullbodies. NOdeathcorpses inthissheet. Keep head/core model same scale, commonlocalgroundsupport, no hovering/rearing.\\n\\nPreserve skull-to-shoulder/hip MASS proportion fromreferences. Do notinflateheadsorreducetorsolength. Longfourleggedfelinebody, intactshoulderstohaunchribcage. Rearvisibleforelimbocclusionnaturalbutkeepfouractualroots.\\n\\n\\ndeath-front-attempt2.prompt.txt EXACT PROMPT:\\nDraw new transparent RGBA detailed 2D RPG black panther sprites for ONLY Hell Cougar (monster:지옥의 쿠거), from exact original neutral reference1 and sameactor compact-head E reference2. This is newly authored motion from a neutral portrait, not extraction. Heavy low black/charcoal feline with subtle blue-grey fur, short pointed ears, gold front eyes, broad dark muzzle with short fangs, strong connected shoulders/rump, FOUR attached cat legs with black claw paws, long attached black tail with curledtip. No mane/armor/weapons/brown fur/new colors/humanoid parts. Constant compact skull/core MODEL dimensions in all phases, same intrinsic limb lengths, changing posture not body/head resize.\\nTransparent1024x1536 portrait with FOUR equal direction COLUMNS: E trueRIGHT side profile, SE frontRIGHT down-right, S fullFRONT down/viewer, SW frontLEFT down-left. All phases hold their compass, no SWright reset. TrueE long anatomical side body/head, not3quarter face. Full four-legged bodies including all tail/paws safe inside cells, generous margins, huge blank gutters, no neighboring rectangle overlap. Every visible pixel belongs to intact connected creature, no fragments or extra limbs. Empty alpha0, no floor/shadow/halo/background/text/grid/effects/particles/blood. floatingFALSE all poses grounded, consistent localfloor in eachcell.\\nEXACTLY TWELVE whole animals: FOUR COLUMNS by THREE ROWS, no more/no fewer. Row centers y256,768,1280; x128,384,640,896. Wholebody includingtail/foldedlegs max185pxwide190pxhigh, generous70px horizontalblank and250px verticalblank. THREE DISTINCT DEATH PHASES, preserve head/core MODELscale throughout:\\nROW1 DEATH BUCKLE: fourlegs physically bend underbody, chest/head droop, recognizable completebody losesheight halfway, bodymass remains.\\nROW2 DEATH FALL: whole ribcage rolls onto SIDE DOWN, headrestingnearforepaws, twofore andtwohindlegs visibly fold alongbody, attachedtaildrapesground. Whole coherent cat, no floating limbs; lower thanrow1 but notyetfinal.\\nROW3 FINAL CORPSE: whole recognizable cat liesVERYLOW/FLAT ONSIDE ONGROUND, onequarterlivingheight, head sideways restingflat with eyesCLOSED/dark, allFOUR limbs stillattachedfolded/drapedalongbody, longtail connectedlimpcurled. No livecrouchedbody/uprighthead, no missing/severedlegs/tail, noemptycell. Flattening from physicaljointcollapse notscaledportrait. Corpses preserve E/SE/S/SWdirection evenwhensidefallen. All12newlydrawnuniquecompleteposes, notrepeat/translation/mirror.\\n\\n\\ndeath-back-attempt3.prompt.txt EXACT PROMPT:\\nRe-render the attached TWELVE HellCougar deathphase poses with safer layout and generous alphagutters, preserving originalbody/compactskull/4leganatomy andactualthreecollapsedposes. Currentportraitfourcolumnstoonarrow andwholebodycropcontainsneighbor. Change to LANDSCAPE1536x1024, FOUR equaldirectioncolumns and THREEequalphaserows, xcenters192,576,960,1344; ycenters171,512,853. Eachwholeanimalincludingalltail/fallenpaws fits260pxwide200pxhigh inside384x341cell, atleast100px horizontalblank and120pxverticalblank, safeoutermargins. DoNOTenlargefiguresorcliptails/paws. Samehead/core modelscale all12; no perposewholebodyshrink.\\nColumnsLEFTtoRIGHT WtrueLEFTsideprofile, NWbackLEFTawayupper-left, NBACKstraightawayup, NEbackRIGHTawayupper-right. SAMEcompasscamera/headheading throughoutdeaths; true rearbackofskull/ears/spine/rump/tail, NOfrontgoldface/nose/muzzle onNW/N/NE. InfinalNviewer seesclosest rump/tailandfarheadUP, flatbodyrests onground. NWheadupperleft/NEupperright. Preserve sourceblack/charcoalstrongmuscularfeline subtleroughbluegreyfur pointedears4clawedlegs longattachedcurledtail, no mane/armor/weapons/newcolor/humanparts.\\nTHREE ROWS:1DEATHBUCKLE fourlegs bend,chest/head droopunderbody, actualcollapse beginning.2DEATHFALL ribcage rollsontoSIDE/DOWN, headnearforepaws, bothforeandbothhindlegs foldingconnected, taildrapesground.3FINALCORPSE fullyLOW/FLAT ONGROUNDONSIDE, headrestsflat eyeclosed/dark ifWvisible, all4limbs attachedfolded/drapedalongsubstantialbody, connectedlimptail, no raisedlivecrouchtorso/head. Maintaincorpsebodymass/headsize; heightlossfromjointcollapse notscaledportrait. Actual3differentphysicalposes notduplicates/stills/mirror. Anatomicalviewprojectionpreserved, no severedpieces. GroundedfloatingFALSEatallphases withcommonlocalcontactline, nohovering. All12completeintactsprites separatedbyrealalpha0, no floor/shadow/background/halo/text/grid/particles/effects/blood. Newlyauthored2D notextraction or manualpixelwarp.\\n\\n\\nNEW INDEPENDENT N3 GROUNDED EXACT PROMPT:\\nMake a focused hind-PAW CONTACT-PLANE correction to the attached three-pose BLACK PANTHER N walk sheet. Preserve its SMALLER drawing scale, exact head/core/body proportions, all four continuous leg chains, rear-facing camera, and the recently-correct actual FORE pair alternation. Do not grow or lengthen bodies. Exactly3 complete figures, THREE columns×ONE row on1536x1024 landscape transparentRGBA canvas, broadly spaced asreference1. Reference2 is the exact neutral source panther only for realistic paw/stone-black fur identity, not direction or pose. Newauthoredmotionrepair, not recoveredoriginalanimation.\\n\\nThe LOWEST hind paw in CONTACT A (leftmostfigure, anatomicalLEFT hindpaw atbottom) and CONTACT B (rightmostfigure, anatomicalRIGHT hindpaw atbottom) currently shows its WHOLE PLANTAR SOLE/PINK PADS directly to the viewer. That cannot be the loaded grounded support paw. Repaint each of those two low hindpaws as a REALISTIC LOADED PAW resting FLAT on its sole, sole/pads facing DOWN INTO THE INVISIBLE GROUND. Show the DARK FURRED DORSAL TOP, rounded rear heel and toes curling away UP along N; no visible large heart-shaped pawpad or fullplantar underside on these loaded paws. Their ankle/hock stays naturally attached, paw remains exactly at the same existing low support location, toes not dangling. Do not merely color over the pad: redraw coherent3D paw volume, heel, knuckles/toes and floor-contact plane. No floating foot. The opposite higher hindpaw can bend/lift and show its underside/pads as an UNWEIGHTED trailing/swing paw. CONTACT A left hind planted low/right hind lifted higher; CONTACT B right hind planted low/left hind lifted higher. Passing middlefigure keeps onehindpaw planted with dorsalfoot top, other lifted. Preserve the existing LEFT/RIGHT hind depth swap.\\n\\nMOST IMPORTANTLY preserve the good FORE GAIT: column1 left forewrist extended/dorsal planted and right forewrist bent/pad lifted; column3 right forewrist extended/dorsal planted and left forewrist bent/pad lifted; column2 real passing transition. Both attached fore shoulder→elbow→wrist chains remain visible outside body occlusion. Do not accidentally change forepaws while fixing hindpaws. Exactly4 legs, no extra feet or detached wrists.\\n\\nSource identity stays a charcoal BLACK muscular feline with pointed rear ears, nape/spine/rump, FOUR natural feline legs, broad clawed paws and long curled attachedtail. N fullback/away in all3, no face/chest turn, no newfeatures/weapons/clothes. Uniform source head/core/limb scale and painting; same smallfigure dimensions and broad transparentgutters, no clipping/overlap. All emptypixels alpha0, no floor or contactshadow, backdrop/text/labels/borders/diagram colors/particles.3 genuine distinct connected articulated poses, no duplicate endpoints or global shrink of onlyonepose.\\n\\n\\nROOT exactNfootplane issuedprompt:\\nMake a new precisely corrected 2D RPG animation sheet from the attached three-pose black panther REAR WALK sheet. Preserve the THREE complete whole panthers, trueBACK/NORTH view of head/back/rumps/tail, connected anatomy, charcoal-black fur with mutedbluegray highlights, samehead/skull/torso scale, existing distinct frontleg support alternation and existing oppositehindleg depths. This is newlyauthored reference-based art. Exactly3 COLUMNS by1ROW on1536x1024 TRANSPARENT RGBA; eachwholepanther same modestsize asattached, fullyfits own512x1024cell with hugeemptygutters includingtail. Only material repair: grounded HIND PAW plane and toe orientation for an animal walking AWAY/screenUP. In col1 the LEFT HIND LEG is loaded, in col3 the RIGHT HIND LEG is loaded; col2 intermediate LEFT loaded. Draw each loaded hindpaw as a real REAR VIEW: camera sees back of furred heel/hock; toes point FORWARD AWAY SCREENUP hidden on FAR EDGE of paw, sole lies flat on ground facingDOWN. NO prominent front-view claw nails pointing DOWN toward camera on loaded hindfeet! No eye-shaped fullplantar sole towardviewer on loadedhindfeet. Far/foward toes may be mostly hidden behind rearheel, only tiny sideclaw tip atfarUPedge. Rebuild actual rearheel/hock/toe geometry, doNOTmerely erase pads or repaintclaws on samefront-facingpaw. Opposite lifted trailinghindpaw may show underside pads due flexion. Col1 LEFTforepaw loaded/rightfore lifted, col3 RIGHTforepaw loaded/leftfore lifted, preserve those chains and allfourattachedlegs. Do not turn rearbody tofront or reverseheading. Tail remainsattachedtospine, no disconnectedspike/paw/particles. Preserve all three genuine phases, dontduplicate or mirror art. Allpixels aroundcompletebodies transparent, nofloor/shadow/aura/glow/text/labels. Wholepanther includinglongcurlingtail must fit cleanly in eachcell. Stable realistic blackpanther; no equipment and no other creature.\\n\", \"new_rear20_exact_issued_prompts\": {\"W\": \"Create5 NEW complete hand-painted2D RPG blackpanther action sprites from FIRST image ONLY for body/head/core identity. Preserve exactly the same original compacthead/ear/muzzle size relative to shoulders, spine, waist, hip core, fourfelinelegs and attachedlongblackcurvedtail. Same source animal in every phase, NOT bulked-upbear/gorilla/bull/human. Do not widenhips, grow torso, lengthen/shrink legs or grow head when action changes. CharcoalBLACK coat with subdued desaturatedbluegray highlights, nevergray/silver/brown, no mane/armor/markings. All5 exactsameanatomicalscale.\\nLayout: EXACTLY FIVE COLUMNS ONE HORIZONTAL ROW on1536x1024 true transparentRGBA. Centersx153,461,768,1075,1382. Each completeanimal SMALL within its307pixelcolumn, maximum260pixelswide includingtail ANDextendedstrikepaw, at least40pixelsemptytransparentgutterbetweencompletebodyrectangles. Hugeemptyverticalspace. SECONDimageisplacementboxesONLY, erasewhitebackground/lines. Keepallfingertips/ears/paws/tailtips fully included and connected. Foldtailtofit, nevercroporcutbody.\\nFivephases lefttoright: 1 ATTACK WINDUP: the NEAR FORELEG visiblygrowing fromthefrontside shoulder foldsback towardchest, elbowflexed, pawcoiled; OTHERforepaw and BOTH hindpaws firmlyplant. Lowfelinebody. 2 CONTACT: SAME NEAR FORELEG extendsFORWARD along exactheading, attached shoulder-elbow-wrist-claw, clearreachingpaw towardtarget; other3paws continue grounded support. No legswap. Head/chest smallgroundedlunge, SAME head/core/hip proportions. 3 RECOVERY: SAMEstrikingforeelbowbendsback and lowerspawtowardfloor, chestuntwists andtailcountercurves, genuinejointpose differentfromwindup/contact. 4 HIT RECOIL: head/neck/chest drawbackanddown subtly, knees/hocksflex withweightback; originalcoredoesnotinflate, body remainsupportedandlow. 5 HIT RECOVER: weight settlesforward/headlifts partly/foreelbowsopenin different nonduplicated joints fromrecoil, tailrelaxes. No shift/scale/repeatedstills.\\nExactlyFOUR connectedfelinelegchains growing fromcorrectshoulder/hip through elbow/knee andwrist/hocktopaw, longtailgrowsfromrump. Groundedquadruped throughout, neverbiped, humanarm/hand/fingers/thumb or hovering. Paws pointalong bodyheading andcorrectgroundplane; no backwardsloadedtoes, nofrontalclawfan onrearpaws. No detachedlimb, fifthleg or rearlegdisappearance.\\nALL5 TRUE W LEFT PROFILE. Nose/hoodlessfelinehead point LEFT, back/spine genuinely side-on, goldLEFTeye visible when face visible, tailtrailsRIGHT. ContactclawreachesLEFT. The nearforeleg is the one visibly in front ofthetorso, not thefarlegbehind; it stays thesamestrikingleg in ALL3attackphases. Hindfeetandfarforepawsstayflat onground duringattack, not jumping. Keeporiginal longlowbody andcompacthead, do notbecomehaunch-heavy crouchingbear.\\nNo floor, shadow, fog, glow, slashflash, particles, detachedbits, text, label, border or checkerboard. Originaldarkpantheridentity/palette and sourcehead/core ratios prioritizedoverexaggeratedgesture. EXACT5 wholeNEW poses, transparentoutsidebodies.\\n\", \"NW\": \"FIRSTimage placement diagram is MANDATORY: draw five complete animals at the five STAGGERED rectangular positions, not a straight horizontal line. Columns1,3,5 are LOW aroundy750; columns2,4 are HIGH aroundy280. Exact5columns in canonical left-to-right order, eachwholefigure SMALL withinits ownrectangle. This alternating low/high packing prevents any FULL BODY BOUNDING RECTANGLE from containing a pixel of its neighbor, including tail or longreachclaw. Keep at least120pixels verticalgap between low/high wholebodyrectangles. Do NOT alignallfivegroundlines, donotfillblankspaces. Finaltransparent1536x1024, eraseallboxes/whitebackground. Eachwholepantherincludingtailandextendedclawwithin240pxwidth/250pxheight; sameanatomicaldrawing-scaleall5, hugealphaemptygutters.\\nSECONDimage authoritativecharacter: exactcharcoalBLACK panther, trueNWrearquarter body/headaimedUPLEFT/AWAY, smallpointedears/compacthead/sourcebodycore/hipsandlimbproportions. Sameoriginalhead/corewidthall5, no bulkyhip orheadgrowthforaction, no silver/brown/whitefur. Detailedhand-painted2D. Sameheadingall5, face mostlyhiddenwithbackskull/spine/haunchesvisible; neverfrontface/pureprofile.\\nFiveNEWwholeposes lefttoright:1LOWWINDUP nearforeelbowbendsbacknearshoulder/clawfoldedunderchest, otherforepaw+bothhindpawsgrounded.2HIGHCONTACT SAMEnearforelegextendsUPLEFT/AWAYalongtargetdirection, continuousshoulder-elbow-wrist-claw; other3pawsactualgroundsupport, nojump.3LOWRECOVERY SAMEstrikeforeelbowretractsandlowerspawbesidechesttowardground, shouldertwistsettles.4HIGHHITRECOIL head/chestdrawbackandlower, realknees/hocksflexwithsupportedweightback, unchangedcore/headscale.5LOWHITRECOVER weightforward/necksettles andforekneesopenin distinctjointposefromrecoil. Actual4connectedfelinelegchainsandtailin everypose, nohand/fingers/humanoidarms/fifthlimb/floatingbody. Rearloadedheel/dorsalside towardviewer, toespointUPLEFT/AWAYaway, mostlyhiddenfarclawtips not frontalfrontpawfans.\\nEveryfigurewholebody completewithuncuttail/ear/feet. Curltailinwardtokeepownbox, nevercroporassemble. No copied/transformedstills, floor,shadow,glow,particles,slashbeam,textorlabels. MostimportantSTAGGEREDsourcepositions exactlyFIRSTdiagram, trueemptyalpha, stable sameblackpantheranatomy.\\n\", \"N\": \"Edit the SECOND reference five-pose panther sheet into a NEW properly spaced full5 drawing sheet. FIRST image is authoritative N idle original body/head/core proportions and CHARCOALBLACK palette. SECOND image supplies only the now-correct RIGHTforeleg windup/contact/recovery and distinct2hit gestures. THIRD image shows the exact correctly rebuilt REAR HINDPAW plane: backofroundedfurredheel facesviewer, toes pointUP/AWAY and aremostlyhidden, NO hugefrontfacingtoes/clawfan. Rebuild BOTH loadedhindfeet in ALL5 like this actual3rdreference, attachedthroughhock/ankletocorrecthip, not merely erasingnails. FOURTH isplacementdiagramONLY, erasealllines/text/colors.\\nDraw allFIVE entire animals UNIFORMLY30percent SMALLER thanSECONDimage, preserving head/core/limb ratio. Each complete body andtail must fit SMALL within270pixelswidth, contactposeupforelegtotalheightatmost510pixels. Exactly5 COLUMNS ONE HORIZONTAL ROW transparent1536x1024; centers153,461,768,1075,1382, allfive groundcontactsneary780. Keep at least40pixelscompletelyemptytransparentgutter between fullbodyrectangles, especiallytailtipandnextbody. Enormousblankspaceabove/below. SAMEheadandhipsizeall5, matching FIRSTimage ratios; no swollenhipsorhugebroadshoulders.\\nALLfiveTRUE fullBACK N aimedUP/AWAY, noface/nose/eyes/chest, 4connectedfelinelegs, smallpointedears, attachedcurvedblacktail. First3 use SAMEanatomical RIGHT FORELEG (screenRIGHT): 1 windup bendsRIGHTpawbesideRIGHTshoulder, LEFTforepawandbothhindpawssupport; 2RIGHTforelegextendsUP/AWAY withpawabovehood/headcrown, other3actualpawssupport, NOlegswap; 3RIGHTforeelbowretractsandlowersbelowchesttowardground. 4HITRECOIL head/chestdrawbackandlower, alljointsflexwhilebodygrounded andsamecorewidth; 5HITRECOVER weightforward/headsettlesinvisiblydifferentjointpose. No duplicates, mirrored/scaledstillposing, humanoidarms/fingers, bipedstance orfloatingbody. Bothhindpaws PLANTED REARVIEW: furredHEEL/BACK towardcamera, foretoespointUP/AWAYhiddenatfarend andsoleDOWN, nofrontalclawfan/padeye towardviewer. Correctfeetwithrealhockandtoevolumeas3rdref.\\nKeepblackcharcoalnotgrayblue, noaddedobjects, floor, shadow, particles, glow, slashflash, labels, grids orcheckerboard. TruecleantransparentRGBA, exactlyfivecomplete newlydrawn panthers.\\n\", \"NE\": \"FIRSTimage placement diagram is MANDATORY: draw five complete animals at the five STAGGERED rectangular positions, not a straight horizontal line. Columns1,3,5 are LOW aroundy750; columns2,4 are HIGH aroundy280. Exact5columns in canonical left-to-right order, eachwholefigure SMALL withinits ownrectangle. This alternating low/high packing prevents any FULL BODY BOUNDING RECTANGLE from containing a pixel of its neighbor, including tail or longreachclaw. Keep at least120pixels verticalgap between low/high wholebodyrectangles. Do NOT alignallfivegroundlines, donotfillblankspaces. Finaltransparent1536x1024, eraseallboxes/whitebackground. Eachwholepantherincludingtailandextendedclawwithin240pxwidth/250pxheight; sameanatomicaldrawing-scaleall5, hugealphaemptygutters.\\nSECONDimage authoritativecharacter: exactcharcoalBLACK panther, trueNErearquarter body/headaimedUPRIGHT/AWAY, smallpointedears/compacthead/sourcebodycore/hipsandlimbproportions. Sameoriginalhead/corewidthall5, no bulkyhip orheadgrowthforaction, no silver/brown/whitefur. Detailedhand-painted2D. Sameheadingall5, face mostlyhiddenwithbackskull/spine/haunchesvisible; neverfrontface/pureprofile.\\nFiveNEWwholeposes lefttoright:1LOWWINDUP nearforeelbowbendsbacknearshoulder/clawfoldedunderchest, otherforepaw+bothhindpawsgrounded.2HIGHCONTACT SAMEnearforelegextendsUPRIGHT/AWAYalongtargetdirection, continuousshoulder-elbow-wrist-claw; other3pawsactualgroundsupport, nojump.3LOWRECOVERY SAMEstrikeforeelbowretractsandlowerspawbesidechesttowardground, shouldertwistsettles.4HIGHHITRECOIL head/chestdrawbackandlower, realknees/hocksflexwithsupportedweightback, unchangedcore/headscale.5LOWHITRECOVER weightforward/necksettles andforekneesopenin distinctjointposefromrecoil. Actual4connectedfelinelegchainsandtailin everypose, nohand/fingers/humanoidarms/fifthlimb/floatingbody. Rearloadedheel/dorsalside towardviewer, toespointUPRIGHT/AWAYaway, mostlyhiddenfarclawtips not frontalfrontpawfans.\\nEveryfigurewholebody completewithuncuttail/ear/feet. Curltailinwardtokeepownbox, nevercroporassemble. No copied/transformedstills, floor,shadow,glow,particles,slashbeam,textorlabels. MostimportantSTAGGEREDsourcepositions exactlyFIRSTdiagram, trueemptyalpha, stable sameblackpantheranatomy.\\n\"}}",
+  "instruction_record_kind": "Original84 baseline authoring record plus exactissued4selectednewrear5poseprompts. Oldback20sheets entirelyexcluded; allrawfailures/prompt attempts retained in portable-rear20-v01.",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Rootreviewed all104previousv2Main+temporal; rejected20rearattack/hitcoregrowth. Independently reviewed allnewW/NW/N/NEidle+fivephase fixedrootstrips20261015: compacthomologoushead/hip, trueclosedrearloadedheels, continuousforestrikes, charcoalpalette. This approves exactv3statictrial ONLY. ActualMainv3full104+charge/lifecycle+temporal required before completion. Other84sourcebytes unchanged; noPNGmodification."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        254,
+        110,
+        525,
+        225
+      ],
+      "margin": [
+        127,
+        265,
+        253,
+        553
+      ],
+      "source_anchor": [
+        516,
+        331
+      ],
+      "rgba_sha256": "2e4f380685c2fd2635e65874f70692cea0f05659051cf812d6fd211321131bcc",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        252,
+        395,
+        528,
+        226
+      ],
+      "margin": [
+        125,
+        264,
+        250,
+        552
+      ],
+      "source_anchor": [
+        516,
+        617
+      ],
+      "rgba_sha256": "5a09e2998082c699341be6166e6e7e8ea9ab74b62221d1ec51ebc25013f2588b",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        235,
+        694,
+        573,
+        228
+      ],
+      "margin": [
+        108,
+        262,
+        205,
+        550
+      ],
+      "source_anchor": [
+        516,
+        918
+      ],
+      "rgba_sha256": "ce83b949bed227a2f290096dacc82211b217f44bb17a7792b85a9cef2b563397",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        252,
+        980,
+        543,
+        226
+      ],
+      "margin": [
+        125,
+        264,
+        235,
+        552
+      ],
+      "source_anchor": [
+        516,
+        1202
+      ],
+      "rgba_sha256": "a2012e20052f2eefe1296b29dcc57c99742705a203f2302af1272b38108f8918",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        244,
+        1257,
+        572,
+        220
+      ],
+      "margin": [
+        117,
+        270,
+        206,
+        558
+      ],
+      "source_anchor": [
+        516,
+        1473
+      ],
+      "rgba_sha256": "6e1f465a3f4d4f12e8c501717a14b8b86743d55fbd7e02022b3376f32ad8d492",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        31,
+        94,
+        472,
+        392
+      ],
+      "margin": [
+        345,
+        340,
+        694,
+        774
+      ],
+      "source_anchor": [
+        269,
+        482
+      ],
+      "rgba_sha256": "1126c12b79cae28dfe66fcf2ea2f4af97f972a1007443fba62cb1b48e44e50a1",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        602,
+        95,
+        305,
+        387
+      ],
+      "margin": [
+        429,
+        345,
+        861,
+        779
+      ],
+      "source_anchor": [
+        756,
+        478
+      ],
+      "rgba_sha256": "f416d43ee750d05a6725e76db2117608db46af9bdcb69d03f5a41d37b16f64eb",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1041,
+        95,
+        463,
+        388
+      ],
+      "margin": [
+        355,
+        344,
+        703,
+        778
+      ],
+      "source_anchor": [
+        1269,
+        479
+      ],
+      "rgba_sha256": "611197e7dd3a1e80bf68f391a3b3fefdbc3e2357be86a2fc77c0066bb5c4f8ae",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        32,
+        565,
+        479,
+        393
+      ],
+      "margin": [
+        346,
+        339,
+        687,
+        773
+      ],
+      "source_anchor": [
+        269,
+        954
+      ],
+      "rgba_sha256": "7d0835638cd4305e5bb42e40991788707038a5662be1f67e8c81ec9c8cddbef1",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        606,
+        559,
+        301,
+        399
+      ],
+      "margin": [
+        433,
+        333,
+        865,
+        767
+      ],
+      "source_anchor": [
+        756,
+        954
+      ],
+      "rgba_sha256": "78e4b9690963d6393a84746138915ee3fd5b01784eae32072ab05e441ce29021",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1040,
+        565,
+        451,
+        394
+      ],
+      "margin": [
+        354,
+        338,
+        715,
+        772
+      ],
+      "source_anchor": [
+        1269,
+        955
+      ],
+      "rgba_sha256": "a745f00e1da7328739cbb5801b22df7849b0251b2a4c0af3768db7f229ce010c",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        36,
+        325,
+        461,
+        398
+      ],
+      "margin": [
+        363,
+        334,
+        705,
+        768
+      ],
+      "source_anchor": [
+        256,
+        719
+      ],
+      "rgba_sha256": "51e17b5e4e6dd41e9ffa3536cd64d46e38ff49b1584a7d49e62f8924f16b9508",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        569,
+        327,
+        424,
+        388
+      ],
+      "margin": [
+        384,
+        344,
+        742,
+        778
+      ],
+      "source_anchor": [
+        768,
+        711
+      ],
+      "rgba_sha256": "5d5b449a687afb6b2a5f5b5d1985cbea9a29c413f443e7172686ab4143aded96",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        1045,
+        331,
+        459,
+        397
+      ],
+      "margin": [
+        348,
+        335,
+        707,
+        769
+      ],
+      "source_anchor": [
+        1280,
+        724
+      ],
+      "rgba_sha256": "d96d3cc16d439beade16b612936d9b859f18ba323ccf44601877ae2d14b5baa6",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        54,
+        234,
+        390,
+        571
+      ],
+      "margin": [
+        633,
+        476,
+        1280,
+        1099
+      ],
+      "source_anchor": [
+        256,
+        801
+      ],
+      "rgba_sha256": "6b98bbe9cf1830460dc281bb1125d24afb25b77c9e83216bf5b7f10334b3d96e",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        540,
+        230,
+        384,
+        569
+      ],
+      "margin": [
+        607,
+        478,
+        1286,
+        1101
+      ],
+      "source_anchor": [
+        768,
+        795
+      ],
+      "rgba_sha256": "27bc0ffb325136c85c5a0533452a374e463b7e3245f8459061425e68b984dc2e",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        1076,
+        231,
+        380,
+        572
+      ],
+      "margin": [
+        631,
+        475,
+        1290,
+        1098
+      ],
+      "source_anchor": [
+        1280,
+        799
+      ],
+      "rgba_sha256": "2dda084776d3e7ed064ad51992beb8672c19dfec7f6b889965ddae6cf4a8bdaf",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        35,
+        362,
+        460,
+        352
+      ],
+      "margin": [
+        362,
+        380,
+        706,
+        814
+      ],
+      "source_anchor": [
+        256,
+        710
+      ],
+      "rgba_sha256": "b6e52e11c994c1b65e22c30fcee221ef6936ea869fe6fff08293629d558ab672",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        582,
+        365,
+        423,
+        337
+      ],
+      "margin": [
+        397,
+        395,
+        743,
+        829
+      ],
+      "source_anchor": [
+        768,
+        698
+      ],
+      "rgba_sha256": "aa68d9a4e2a77f25b264bbac2c0a95caa0b2be91ed26f2aa925121a5018f3fc9",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1056,
+        363,
+        433,
+        351
+      ],
+      "margin": [
+        359,
+        381,
+        733,
+        815
+      ],
+      "source_anchor": [
+        1280,
+        710
+      ],
+      "rgba_sha256": "082e64b4b4cfa2300aa21227bf02765a6281eb856e4d81d0cf926043dcf879ad",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        242,
+        110,
+        591,
+        227
+      ],
+      "margin": [
+        93,
+        263,
+        187,
+        551
+      ],
+      "source_anchor": [
+        538,
+        333
+      ],
+      "rgba_sha256": "1dd9bbd9f00d1d7295a89af399bff43e8e02933f51e14802f646811e8fd2ecc7",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        241,
+        399,
+        593,
+        228
+      ],
+      "margin": [
+        92,
+        262,
+        185,
+        550
+      ],
+      "source_anchor": [
+        538,
+        623
+      ],
+      "rgba_sha256": "c048608ac0c3b469536848bc3ee7789a704769458b8ca2ce511067a9107fc205",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        211,
+        689,
+        642,
+        229
+      ],
+      "margin": [
+        62,
+        261,
+        136,
+        549
+      ],
+      "source_anchor": [
+        538,
+        914
+      ],
+      "rgba_sha256": "ec0ec47063744fccefa82efdec82b20963b289ef2df5be7d6bc7cd0513581a3a",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        243,
+        973,
+        604,
+        226
+      ],
+      "margin": [
+        94,
+        264,
+        174,
+        552
+      ],
+      "source_anchor": [
+        538,
+        1195
+      ],
+      "rgba_sha256": "9a6506ebf3bf6c19ad6774782f9922a9f45916b95aadbd906255c5fd4ae29fe1",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        220,
+        1244,
+        617,
+        230
+      ],
+      "margin": [
+        71,
+        260,
+        161,
+        548
+      ],
+      "source_anchor": [
+        538,
+        1470
+      ],
+      "rgba_sha256": "b785f20b93535296b85c6ec97a7229d90ed9054c4dcfb5cf7e2a00293c3abcb8",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        84,
+        95,
+        449,
+        393
+      ],
+      "margin": [
+        347,
+        339,
+        717,
+        773
+      ],
+      "source_anchor": [
+        320,
+        484
+      ],
+      "rgba_sha256": "984371be2f92a78cd7c9e91c720544b58b91c1e292aa7e2a215e05a4a10f9968",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        661,
+        93,
+        255,
+        392
+      ],
+      "margin": [
+        447,
+        340,
+        911,
+        774
+      ],
+      "source_anchor": [
+        797,
+        481
+      ],
+      "rgba_sha256": "70c3adb6797c94b39d7c58d6e4cee0d4bd19868ef76ed853e0048661f6c07613",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1015,
+        97,
+        445,
+        390
+      ],
+      "margin": [
+        354,
+        342,
+        721,
+        776
+      ],
+      "source_anchor": [
+        1244,
+        483
+      ],
+      "rgba_sha256": "297a75731dc6299691eb7b0b3de447277a39316717a130f29356333caad27572",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        81,
+        561,
+        502,
+        401
+      ],
+      "margin": [
+        344,
+        331,
+        664,
+        765
+      ],
+      "source_anchor": [
+        320,
+        958
+      ],
+      "rgba_sha256": "8c2886a24e00eec335e57dc7fe6396b5ef98f4a59f82847140c535a3a72255b3",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        667,
+        563,
+        278,
+        386
+      ],
+      "margin": [
+        453,
+        346,
+        888,
+        780
+      ],
+      "source_anchor": [
+        797,
+        945
+      ],
+      "rgba_sha256": "46a8d2d3ec86b72ca792bce1ff6739b42f92da5bf27579dbbafc7c09df22fdb7",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1034,
+        564,
+        432,
+        395
+      ],
+      "margin": [
+        373,
+        337,
+        734,
+        771
+      ],
+      "source_anchor": [
+        1244,
+        955
+      ],
+      "rgba_sha256": "7563006b1b5cfb5ae30830fcc9919ceedc07a1acdbcc0352cc47e2ab580086fa",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        31,
+        292,
+        490,
+        423
+      ],
+      "margin": [
+        358,
+        309,
+        676,
+        743
+      ],
+      "source_anchor": [
+        256,
+        711
+      ],
+      "rgba_sha256": "e2dd6b71e6dcfbfee523d217613da9025c902bf6f912e9ef108f6873b788f7ec",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        564,
+        295,
+        461,
+        382
+      ],
+      "margin": [
+        379,
+        350,
+        705,
+        784
+      ],
+      "source_anchor": [
+        768,
+        673
+      ],
+      "rgba_sha256": "0a5b97079fd4e1be72a02116e63a6388d0e66deba89e501335f1fffa3ed57ca0",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1062,
+        293,
+        454,
+        409
+      ],
+      "margin": [
+        365,
+        323,
+        712,
+        757
+      ],
+      "source_anchor": [
+        1280,
+        698
+      ],
+      "rgba_sha256": "3a4bf2b26cd7a1852bca4ec06a4d89ec8d11273e744660984a9fe4120da3050b",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        10,
+        191,
+        481,
+        696
+      ],
+      "margin": [
+        734,
+        588,
+        1567,
+        1352
+      ],
+      "source_anchor": [
+        300,
+        883
+      ],
+      "rgba_sha256": "0aaa3152577078c1d1cc6c2419b1f4c810593c8b3e622243549688caa0c4d526",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        583,
+        190,
+        427,
+        697
+      ],
+      "margin": [
+        809,
+        587,
+        1621,
+        1351
+      ],
+      "source_anchor": [
+        798,
+        883
+      ],
+      "rgba_sha256": "5d74a0d262a64bd16d24207c0f0e1133fe2e89aa563becb15273d3dba09c09ab",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1048,
+        190,
+        479,
+        699
+      ],
+      "margin": [
+        832,
+        585,
+        1569,
+        1349
+      ],
+      "source_anchor": [
+        1240,
+        885
+      ],
+      "rgba_sha256": "35e388d71e70198d05ef4fbedb06e84ea84f168fb61ecfeea1bdbb6d198cfa45",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        177,
+        94,
+        702,
+        456
+      ],
+      "margin": [
+        269,
+        448,
+        738,
+        984
+      ],
+      "source_anchor": [
+        628,
+        546
+      ],
+      "rgba_sha256": "9157b8a3c25b7c193c9fa9d258a6b5666cd05c661462baa8e4002ec33885e76b",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        179,
+        596,
+        680,
+        420
+      ],
+      "margin": [
+        267,
+        484,
+        760,
+        1020
+      ],
+      "source_anchor": [
+        632,
+        1012
+      ],
+      "rgba_sha256": "2f590b5d0b2813ea859dc38764781377aac674b5324a5c199f108a331b0f2c3b",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        180,
+        1079,
+        669,
+        413
+      ],
+      "margin": [
+        272,
+        491,
+        771,
+        1027
+      ],
+      "source_anchor": [
+        628,
+        1488
+      ],
+      "rgba_sha256": "6b7e017301416cbf0494b447e7a4389dae486a9672d1913e17213dbe49b64f9c",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        17,
+        154,
+        306,
+        166
+      ],
+      "margin": [
+        152,
+        220,
+        306,
+        446
+      ],
+      "source_anchor": [
+        171,
+        316
+      ],
+      "rgba_sha256": "578da0439dc29e0096fa65c7b481bccddf7e0c8e406279e2a825a24bc7674b88",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        29,
+        465,
+        276,
+        220
+      ],
+      "margin": [
+        164,
+        166,
+        336,
+        392
+      ],
+      "source_anchor": [
+        171,
+        681
+      ],
+      "rgba_sha256": "58ff7d9bb00f028db49d653522a539ae0e8e4541af7dd633bdaa73a812ad648b",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        78,
+        813,
+        212,
+        246
+      ],
+      "margin": [
+        213,
+        140,
+        400,
+        366
+      ],
+      "source_anchor": [
+        171,
+        1055
+      ],
+      "rgba_sha256": "33fcc8a666b908bee69a6d773383bb05c566ad3b910ce44599fb23f41ab01078",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        37,
+        1175,
+        305,
+        215
+      ],
+      "margin": [
+        172,
+        171,
+        307,
+        397
+      ],
+      "source_anchor": [
+        171,
+        1386
+      ],
+      "rgba_sha256": "91ea23bbda97490b38d1313e844e5a083f224dd2141e0d9c54acfdf350076804",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        341,
+        157,
+        362,
+        171
+      ],
+      "margin": [
+        135,
+        215,
+        250,
+        441
+      ],
+      "source_anchor": [
+        512,
+        324
+      ],
+      "rgba_sha256": "49db60de5981daa2826c1317086e519c311fdd6ac515eb38c65f6cb7a316ae98",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        353,
+        469,
+        329,
+        238
+      ],
+      "margin": [
+        147,
+        148,
+        283,
+        374
+      ],
+      "source_anchor": [
+        512,
+        703
+      ],
+      "rgba_sha256": "9b0408d522db321ab22e8c46bcb7ef79f72b053d9ff7f97ff6f9ff6cb47ae6a2",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        399,
+        813,
+        211,
+        266
+      ],
+      "margin": [
+        193,
+        120,
+        401,
+        346
+      ],
+      "source_anchor": [
+        512,
+        1075
+      ],
+      "rgba_sha256": "614fce56a7e8d8761ca7893059cbc1fc18f55dd3acc7565ba181af47d7ca9679",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        343,
+        1183,
+        349,
+        237
+      ],
+      "margin": [
+        137,
+        149,
+        263,
+        375
+      ],
+      "source_anchor": [
+        512,
+        1416
+      ],
+      "rgba_sha256": "e0135fd78615a53ac94c037dbd2c7381ee499d1fa4f8c89ac5ac88faa5acfdb7",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        705,
+        151,
+        299,
+        188
+      ],
+      "margin": [
+        158,
+        198,
+        313,
+        424
+      ],
+      "source_anchor": [
+        853,
+        335
+      ],
+      "rgba_sha256": "5e15b9df00d79ff2e66642a56cad018f6742855cdd11cf7c03b7d5dc48dc6864",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        715,
+        469,
+        271,
+        240
+      ],
+      "margin": [
+        168,
+        146,
+        341,
+        372
+      ],
+      "source_anchor": [
+        853,
+        705
+      ],
+      "rgba_sha256": "046f881de178ba8a560cc5df9b98ba78ab895fd9c43569ee54c01e93d92d6af7",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        731,
+        815,
+        211,
+        246
+      ],
+      "margin": [
+        184,
+        140,
+        401,
+        366
+      ],
+      "source_anchor": [
+        853,
+        1057
+      ],
+      "rgba_sha256": "819d70d448554a1a397ec02f2f50796e0a95021df082ae9cf0f82573fd93e6e6",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        725,
+        1175,
+        279,
+        242
+      ],
+      "margin": [
+        178,
+        144,
+        333,
+        370
+      ],
+      "source_anchor": [
+        853,
+        1413
+      ],
+      "rgba_sha256": "0703ded9ae67a0783d12abc66c1b1dc1dd355e908f18324782dcd58ee5661035",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        40,
+        210,
+        379,
+        239
+      ],
+      "margin": [
+        130,
+        170,
+        269,
+        409
+      ],
+      "source_anchor": [
+        234,
+        445
+      ],
+      "rgba_sha256": "ca1738a9bf7fea4bffb7038e1a372ea6212bd3f2bbd3c9e59cc5ebf5c15cd521",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        465,
+        205,
+        305,
+        244
+      ],
+      "margin": [
+        166,
+        165,
+        343,
+        404
+      ],
+      "source_anchor": [
+        623,
+        445
+      ],
+      "rgba_sha256": "8a2b32f59866785ac4a22d08b4c847a3c4a81f72fce41013f7c1c774a14ec549",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        815,
+        195,
+        232,
+        265
+      ],
+      "margin": [
+        192,
+        144,
+        416,
+        383
+      ],
+      "source_anchor": [
+        947,
+        456
+      ],
+      "rgba_sha256": "6e986134d734eb6ab1602c9961d63898ea0c098dfa79fea220981c22913faa40",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1169,
+        211,
+        321,
+        248
+      ],
+      "margin": [
+        169,
+        161,
+        327,
+        400
+      ],
+      "source_anchor": [
+        1324,
+        455
+      ],
+      "rgba_sha256": "7addf86fd54680a77756e14dafef7ff055bb7a1907146352e6217abc7b4034a7",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        36,
+        676,
+        405,
+        215
+      ],
+      "margin": [
+        126,
+        194,
+        243,
+        433
+      ],
+      "source_anchor": [
+        234,
+        887
+      ],
+      "rgba_sha256": "f71b5d9f8361cb1699cf31988774ec2dc43707d887bafee94c5cc4787e834a46",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        492,
+        673,
+        273,
+        227
+      ],
+      "margin": [
+        193,
+        182,
+        375,
+        421
+      ],
+      "source_anchor": [
+        623,
+        896
+      ],
+      "rgba_sha256": "7045f067a12384bfc1d181696aaf269610de0734438ff9f8d0b1e9f6d95f22f4",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        850,
+        656,
+        225,
+        253
+      ],
+      "margin": [
+        227,
+        156,
+        423,
+        395
+      ],
+      "source_anchor": [
+        947,
+        905
+      ],
+      "rgba_sha256": "34c91a86c85b44c1a604dec910dfc69da47bba7a8b89df5143d721b843c55d50",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1146,
+        680,
+        344,
+        232
+      ],
+      "margin": [
+        146,
+        177,
+        304,
+        416
+      ],
+      "source_anchor": [
+        1324,
+        908
+      ],
+      "rgba_sha256": "33a8dac55ca2be93bfa74b72ff504efb5582e10d15291bbefc2aeedb9b93ced2",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        10,
+        671,
+        284,
+        136
+      ],
+      "margin": [
+        123,
+        201,
+        249,
+        397
+      ],
+      "source_anchor": [
+        153,
+        803
+      ],
+      "rgba_sha256": "0227ff9f88ec337a217cfca2a07a108f467a88e1c499f00ac4c3e75322280361",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        303,
+        664,
+        227,
+        161
+      ],
+      "margin": [
+        149,
+        176,
+        306,
+        372
+      ],
+      "source_anchor": [
+        420,
+        821
+      ],
+      "rgba_sha256": "4eec6ede3c50e4dab03e985f0773925b04a784a166e2e8a2ae5547aafd239297",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        555,
+        658,
+        184,
+        166
+      ],
+      "margin": [
+        177,
+        171,
+        349,
+        367
+      ],
+      "source_anchor": [
+        644,
+        820
+      ],
+      "rgba_sha256": "cfac31c809b972bfda8068c9ec646af33f699f36439431a82b6c5848945aa79f",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        762,
+        663,
+        251,
+        162
+      ],
+      "margin": [
+        141,
+        175,
+        282,
+        371
+      ],
+      "source_anchor": [
+        887,
+        821
+      ],
+      "rgba_sha256": "fe77114934984835cf9d4cc179beae9faef8e2c33e801f878660d5fe8aa222e4",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        6,
+        1029,
+        295,
+        101
+      ],
+      "margin": [
+        119,
+        236,
+        238,
+        432
+      ],
+      "source_anchor": [
+        153,
+        1126
+      ],
+      "rgba_sha256": "57f54b9f8f634e64b87cfeef0fee8edd14b279763535198a4ba5c0a34bab785a",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        308,
+        1029,
+        229,
+        109
+      ],
+      "margin": [
+        154,
+        228,
+        304,
+        424
+      ],
+      "source_anchor": [
+        420,
+        1134
+      ],
+      "rgba_sha256": "5b947bfb85c57dc9b2e29eec8aa65bd53e9d942a496c5e7405825b1d392a9b42",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        548,
+        1022,
+        188,
+        118
+      ],
+      "margin": [
+        170,
+        219,
+        345,
+        415
+      ],
+      "source_anchor": [
+        644,
+        1136
+      ],
+      "rgba_sha256": "09b5e1f7c2c9e4186a245d3e7643cf0ab1facd8c1ca6c30e2d5a149dfdca2065",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        758,
+        1022,
+        257,
+        117
+      ],
+      "margin": [
+        137,
+        220,
+        276,
+        416
+      ],
+      "source_anchor": [
+        887,
+        1135
+      ],
+      "rgba_sha256": "55fe7033f2a423327a5ee7e8648692634e6c94e443ff14011e5fce6ea578c717",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        9,
+        1362,
+        295,
+        85
+      ],
+      "margin": [
+        122,
+        252,
+        238,
+        448
+      ],
+      "source_anchor": [
+        153,
+        1443
+      ],
+      "rgba_sha256": "adcb2d87e76a80784ab26eecfc2e51abf6f5c21db63455ca4faa17eefe90776d",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        314,
+        1363,
+        222,
+        93
+      ],
+      "margin": [
+        160,
+        244,
+        311,
+        440
+      ],
+      "source_anchor": [
+        420,
+        1452
+      ],
+      "rgba_sha256": "c6c0a5adb9349a5fb70eaabee38e9de68db6f20ef53071f8d024fb76e2771ccd",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        548,
+        1358,
+        193,
+        101
+      ],
+      "margin": [
+        170,
+        236,
+        340,
+        432
+      ],
+      "source_anchor": [
+        644,
+        1455
+      ],
+      "rgba_sha256": "47bf9dc1e878b74f1e29e4be7aa4f0474f4d6f12ab967ee756d983004bc85172",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        761,
+        1361,
+        254,
+        96
+      ],
+      "margin": [
+        140,
+        241,
+        279,
+        437
+      ],
+      "source_anchor": [
+        887,
+        1453
+      ],
+      "rgba_sha256": "f80a7b61b77580f9db8035495f3e34780b6614d41c422c08f1f1a500d8ec69bf",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        39,
+        144,
+        372,
+        192
+      ],
+      "margin": [
+        173,
+        262,
+        348,
+        528
+      ],
+      "source_anchor": [
+        226,
+        332
+      ],
+      "rgba_sha256": "50534d675bc133b15a68906893263ac32971aeea96aee8f0c190db5cf29e866f",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        468,
+        110,
+        319,
+        247
+      ],
+      "margin": [
+        204,
+        207,
+        401,
+        473
+      ],
+      "source_anchor": [
+        624,
+        353
+      ],
+      "rgba_sha256": "63ce1591757b56b1cc755f189be54f1e2774d4689b8f4e2363f8cbbb9363df53",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        861,
+        112,
+        211,
+        254
+      ],
+      "margin": [
+        252,
+        200,
+        509,
+        466
+      ],
+      "source_anchor": [
+        969,
+        362
+      ],
+      "rgba_sha256": "c863f56c4a4bc304170304957e14f9f38023c2a10ed9aefdf9aefd1a95f96644",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1169,
+        112,
+        315,
+        243
+      ],
+      "margin": [
+        201,
+        211,
+        405,
+        477
+      ],
+      "source_anchor": [
+        1328,
+        351
+      ],
+      "rgba_sha256": "2872bd466731d57502e19ea55c5ea700126458394d4c7b17a07aca1e8c8ab18d",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        38,
+        466,
+        379,
+        171
+      ],
+      "margin": [
+        172,
+        283,
+        341,
+        549
+      ],
+      "source_anchor": [
+        226,
+        633
+      ],
+      "rgba_sha256": "bb8fb0c0602499df0bf12094c1c1bce2d8e03f579f9cf7fce38bb2b3cd8d5259",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        446,
+        442,
+        350,
+        229
+      ],
+      "margin": [
+        182,
+        225,
+        370,
+        491
+      ],
+      "source_anchor": [
+        624,
+        667
+      ],
+      "rgba_sha256": "22cc5da2e23291d5ef578ab3dccafe9a7b8df5156c0d248e2c43a128096654eb",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        847,
+        416,
+        248,
+        262
+      ],
+      "margin": [
+        238,
+        192,
+        472,
+        458
+      ],
+      "source_anchor": [
+        969,
+        674
+      ],
+      "rgba_sha256": "947530673ccc4a1513a5c6ed2bf3d1c0330ef143732291a397968fcd1eda9a75",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1172,
+        448,
+        314,
+        209
+      ],
+      "margin": [
+        204,
+        245,
+        406,
+        511
+      ],
+      "source_anchor": [
+        1328,
+        653
+      ],
+      "rgba_sha256": "d86f39942a2fcf0a086d8020dd3601de2c20ca32a99304da99a900f91caf1a63",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        23,
+        773,
+        410,
+        155
+      ],
+      "margin": [
+        157,
+        299,
+        310,
+        565
+      ],
+      "source_anchor": [
+        226,
+        924
+      ],
+      "rgba_sha256": "b9790864152e44d84630fc72499b1b79d90dc957d8b365de21a46a4ff405092b",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        455,
+        765,
+        328,
+        186
+      ],
+      "margin": [
+        191,
+        268,
+        392,
+        534
+      ],
+      "source_anchor": [
+        624,
+        947
+      ],
+      "rgba_sha256": "fe8c793c0fbdfbf15501d5eac8fa05e74804211e7bbccab703ecb9d9078084e5",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        826,
+        757,
+        273,
+        204
+      ],
+      "margin": [
+        217,
+        250,
+        447,
+        516
+      ],
+      "source_anchor": [
+        969,
+        957
+      ],
+      "rgba_sha256": "158123a1bd44162365e85effbf7f27bd2bc267ecf7fcf06eccff269e8a269875",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1153,
+        764,
+        348,
+        196
+      ],
+      "margin": [
+        185,
+        258,
+        372,
+        524
+      ],
+      "source_anchor": [
+        1328,
+        956
+      ],
+      "rgba_sha256": "55c42d40c65a1f1731bd99c685f32a3bd83d94ee45b328c4814667439760ff4d",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        26,
+        309,
+        399,
+        174
+      ],
+      "margin": [
+        93,
+        185,
+        169,
+        394
+      ],
+      "source_anchor": [
+        217,
+        479
+      ],
+      "rgba_sha256": "a11e49ce2b7365526dcc3f0cfd6347d9a377b2a3b3442824875dfe293a55441e",
+      "sheet": 14
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        426,
+        308,
+        455,
+        174
+      ],
+      "margin": [
+        58,
+        185,
+        113,
+        394
+      ],
+      "source_anchor": [
+        652,
+        478
+      ],
+      "rgba_sha256": "3db0109cd077e9f061d97a15085d416f7d528993ced79d395bf1f49b17380e11",
+      "sheet": 14
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        899,
+        308,
+        414,
+        175
+      ],
+      "margin": [
+        97,
+        184,
+        154,
+        393
+      ],
+      "source_anchor": [
+        1086,
+        479
+      ],
+      "rgba_sha256": "3e96c36ed9443a46be6e09f5aa8990fa7636fed26ec0ac9212b7c50e882f9eab",
+      "sheet": 14
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        1333,
+        308,
+        355,
+        176
+      ],
+      "margin": [
+        97,
+        183,
+        213,
+        392
+      ],
+      "source_anchor": [
+        1520,
+        480
+      ],
+      "rgba_sha256": "77021d83dacd45932759004006adec15d67bdcc85c79b478dbd171d88630ff8f",
+      "sheet": 14
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        1706,
+        305,
+        425,
+        180
+      ],
+      "margin": [
+        95,
+        179,
+        143,
+        388
+      ],
+      "source_anchor": [
+        1895,
+        481
+      ],
+      "rgba_sha256": "4b43add877ea20a5be995b1aac7108754044f333eaa9038fffb03d932949af73",
+      "sheet": 14
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        56,
+        572,
+        395,
+        352
+      ],
+      "margin": [
+        334,
+        312,
+        661,
+        704
+      ],
+      "source_anchor": [
+        250,
+        920
+      ],
+      "rgba_sha256": "345feec815cccc37caee91e778975f759e37449a48b109fae7b31267c6667d4e",
+      "sheet": 15
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        270,
+        157,
+        448,
+        385
+      ],
+      "margin": [
+        283,
+        279,
+        608,
+        671
+      ],
+      "source_anchor": [
+        515,
+        538
+      ],
+      "rgba_sha256": "2b1a1b01e23061f1047e86763df54cf5031de6ffbf7e60e80dde8bca98f35da1",
+      "sheet": 15
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        611,
+        593,
+        376,
+        327
+      ],
+      "margin": [
+        330,
+        337,
+        680,
+        729
+      ],
+      "source_anchor": [
+        809,
+        916
+      ],
+      "rgba_sha256": "74ee457568dd61d78b0e3b69824055bfe8b3a1575d7cb5b369b3fcf3dba68f7e",
+      "sheet": 15
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        892,
+        218,
+        347,
+        312
+      ],
+      "margin": [
+        364,
+        352,
+        709,
+        744
+      ],
+      "source_anchor": [
+        1056,
+        526
+      ],
+      "rgba_sha256": "1aed0bb255150eccf3c90291f869f2ff493b3c3e1629ad480a69fed530c036c6",
+      "sheet": 15
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        1140,
+        591,
+        378,
+        339
+      ],
+      "margin": [
+        329,
+        325,
+        678,
+        717
+      ],
+      "source_anchor": [
+        1339,
+        926
+      ],
+      "rgba_sha256": "a38dd2b9efe42a363a30a155a7c9bbf2ad2cead884b269af26fa0c3f4a695228",
+      "sheet": 15
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        41,
+        322,
+        275,
+        494
+      ],
+      "margin": [
+        571,
+        365,
+        1093,
+        874
+      ],
+      "source_anchor": [
+        154,
+        812
+      ],
+      "rgba_sha256": "c6b0a0827609c5bcc340a4c3b5b60defd6724596ed6538efb39d337a813e6f73",
+      "sheet": 16
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        351,
+        206,
+        264,
+        610
+      ],
+      "margin": [
+        574,
+        249,
+        1104,
+        758
+      ],
+      "source_anchor": [
+        461,
+        812
+      ],
+      "rgba_sha256": "fd486a01136869278c3750037d5668c00ff9d434995e6770a0c479ba0c687de4",
+      "sheet": 16
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        649,
+        334,
+        268,
+        483
+      ],
+      "margin": [
+        565,
+        376,
+        1100,
+        885
+      ],
+      "source_anchor": [
+        768,
+        813
+      ],
+      "rgba_sha256": "43a94dcf81bc2d5a6f122f0a6179ac7bd72a3a451dd8471d71069de9f68e6d2b",
+      "sheet": 16
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        956,
+        389,
+        283,
+        427
+      ],
+      "margin": [
+        565,
+        432,
+        1085,
+        941
+      ],
+      "source_anchor": [
+        1075,
+        812
+      ],
+      "rgba_sha256": "590f3ec07c163e037b150ffee8360f470306bfcc000ff2b322edca2702aaae6f",
+      "sheet": 16
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1271,
+        333,
+        260,
+        483
+      ],
+      "margin": [
+        573,
+        376,
+        1108,
+        885
+      ],
+      "source_anchor": [
+        1382,
+        812
+      ],
+      "rgba_sha256": "ba2744160f3e6b93b1a4139231e28b349e451f5988e047976d8948896eff89b5",
+      "sheet": 16
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        38,
+        598,
+        302,
+        281
+      ],
+      "margin": [
+        290,
+        298,
+        618,
+        639
+      ],
+      "source_anchor": [
+        208,
+        875
+      ],
+      "rgba_sha256": "afa3e48fe1edcc9df095debb042232ef407d98a48485f2d02f2f5e490b618da7",
+      "sheet": 17
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        328,
+        175,
+        355,
+        366
+      ],
+      "margin": [
+        310,
+        213,
+        565,
+        554
+      ],
+      "source_anchor": [
+        478,
+        537
+      ],
+      "rgba_sha256": "803ecb6e5b205129b36171ba50550539e436f7ebe7b6b6660fe2b61819814bd7",
+      "sheet": 17
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        599,
+        583,
+        345,
+        300
+      ],
+      "margin": [
+        303,
+        279,
+        575,
+        620
+      ],
+      "source_anchor": [
+        756,
+        879
+      ],
+      "rgba_sha256": "c9576d27a0014c2d888f4415b7dae2da762a142ca2a57eb5bb7a870d8223f4c1",
+      "sheet": 17
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        916,
+        259,
+        287,
+        283
+      ],
+      "margin": [
+        320,
+        296,
+        633,
+        637
+      ],
+      "source_anchor": [
+        1056,
+        538
+      ],
+      "rgba_sha256": "a83d840a14d06b2ef6211a01cb4cc08a4e114770a1a1151b4520082a763db634",
+      "sheet": 17
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1182,
+        576,
+        337,
+        305
+      ],
+      "margin": [
+        294,
+        274,
+        583,
+        615
+      ],
+      "source_anchor": [
+        1348,
+        877
+      ],
+      "rgba_sha256": "76d6b7080b6e768f7725443d00fc5d5c6d7718e79f420954e610297501fb9f14",
+      "sheet": 17
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-0.png",
+          "sha256": "ca00d9cf55f910a9963d676a49d7e1a10b63f7e2449ee32ca84ff22400bd806b",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            778,
+            778
+          ],
+          "foot": [
+            389,
+            486
+          ],
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-1.png",
+          "sha256": "f358b581e4cfae5ad3e0850bca0f9ac894bc4d4b22429613292a1fb0d7febda8",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1166,
+            1166
+          ],
+          "foot": [
+            583,
+            728
+          ],
+          "directions": [
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-5.png",
+          "sha256": "f6d95e33b84d11bc6111d436ab9823e149bac217a43bf4cf3b0fd1f38fdebdeb",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            778,
+            778
+          ],
+          "foot": [
+            389,
+            486
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-6.png",
+          "sha256": "b44e18084bbf8b0e91aede845f86cf0da3f2e02cba24e0398fc8960ca4b46e56",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1166,
+            1166
+          ],
+          "foot": [
+            583,
+            728
+          ],
+          "directions": [
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-6.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-6.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-6.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-0.png",
+          "sha256": "ca00d9cf55f910a9963d676a49d7e1a10b63f7e2449ee32ca84ff22400bd806b",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            778,
+            778
+          ],
+          "foot": [
+            389,
+            486
+          ],
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-2.png",
+          "sha256": "a1895a4cbab833fd5afbc64deffb9c76687812fe9a64c80947e9c1c0b9fe5bb0",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1166,
+            1166
+          ],
+          "foot": [
+            583,
+            728
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-3.png",
+          "sha256": "3a15dfd2dd6b228acecdf2ac0bb75055636ba1686f7bbd731a8fbf727657d372",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1670,
+            1670
+          ],
+          "foot": [
+            835,
+            1043
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-4.png",
+          "sha256": "839c740f9f53714bdfcf1c0a436256d6f9886f00bff6258677ca7e8862f21485",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1166,
+            1166
+          ],
+          "foot": [
+            583,
+            728
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-5.png",
+          "sha256": "f6d95e33b84d11bc6111d436ab9823e149bac217a43bf4cf3b0fd1f38fdebdeb",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            778,
+            778
+          ],
+          "foot": [
+            389,
+            486
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-7.png",
+          "sha256": "995bfadf2650d58a6723521382637856adfda277e3b13c3fdbb27991a5f9190c",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1166,
+            1166
+          ],
+          "foot": [
+            583,
+            728
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-8.png",
+          "sha256": "17442b771e5b24c8df7bf6ff01e3b5d8d13752d7af3a16294ce72b55bdeacf5b",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            2048,
+            2048
+          ],
+          "foot": [
+            1024,
+            1280
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-9.png",
+          "sha256": "97b89c5d8e8181bc86b82064e2e9a20af436f082fa100b43c59ecef97a962646",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1440,
+            1440
+          ],
+          "foot": [
+            720,
+            900
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-8.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-9.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-10.png",
+          "sha256": "58142e863d467fa509141e75236a376f5155b41e2a1164b02dacbb7d359717cd",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            612,
+            612
+          ],
+          "foot": [
+            306,
+            382
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-14.png",
+          "sha256": "8ea93cda008549174b9eee6de11d76fa6d03dadaaa86540bb5c4c5981d5ea6b9",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            568,
+            568
+          ],
+          "foot": [
+            284,
+            355
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas568. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-15.png",
+          "sha256": "7ac451047f8819e292c14ca41d75a1d78c43b0cb75f74b88e78b0e2df5167c95",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1056,
+            1056
+          ],
+          "foot": [
+            528,
+            660
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas1056. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-16.png",
+          "sha256": "91ad52793b9ff237332d4bc2adeb8812e4e95ba627bbe2eb5d21c1cfafefe283",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1368,
+            1368
+          ],
+          "foot": [
+            684,
+            855
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas1368. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-17.png",
+          "sha256": "5cea8e1ededc57af1ce73d4522e2cf92d193dc9f59c8c52efe72e0190c3c84be",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas920. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-14.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-15.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-16.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-17.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-11.png",
+          "sha256": "521c534cd3867885c837e65dcf000007a8b35abbd940bc1fcb302f7727faca69",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-14.png",
+          "sha256": "8ea93cda008549174b9eee6de11d76fa6d03dadaaa86540bb5c4c5981d5ea6b9",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            568,
+            568
+          ],
+          "foot": [
+            284,
+            355
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas568. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-15.png",
+          "sha256": "7ac451047f8819e292c14ca41d75a1d78c43b0cb75f74b88e78b0e2df5167c95",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1056,
+            1056
+          ],
+          "foot": [
+            528,
+            660
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas1056. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-16.png",
+          "sha256": "91ad52793b9ff237332d4bc2adeb8812e4e95ba627bbe2eb5d21c1cfafefe283",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1368,
+            1368
+          ],
+          "foot": [
+            684,
+            855
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas1368. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-17.png",
+          "sha256": "5cea8e1ededc57af1ce73d4522e2cf92d193dc9f59c8c52efe72e0190c3c84be",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "PROPOSED FOR ROOT REVIEW ONLY. Own same-heading idle skull/ear landmarks and transverse hip/core comparison in rear20-landmarks-and-anchors.json; canvas920. No full-alpha-height normalization or max_living fitting. New PNG byte-unchanged, whole5poses fullyused.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-14.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-15.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-16.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-17.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-12.png",
+          "sha256": "419309bc17a6e526f95099c6fdb7d71d4bf135750254d2602ef674f133e0a00c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            533,
+            533
+          ],
+          "foot": [
+            266,
+            333
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-13.png",
+          "sha256": "9d90a4ace68232ac96a447d0000a1466ccfa8de978524c85879afcc904e441a6",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            720,
+            720
+          ],
+          "foot": [
+            360,
+            450
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Root static Main-v2 trial: coordinate-unit rebase0.9 on previously matched sheets, N2048 retained to reduce newly larger N by10%; max_living reference115.2→~128 cancels rebase for unchanged poses. NE new smaller repack calibrated original-equivalent1600→rebased1440 by same-heading ear/skull/core landmarks, actualspine root628..632 rather than tail-bbox524. Actual Main full104/ground/temporal review pending. No PNG resize; no exclusion/guard change.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v3/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 114.15204678362574
+}

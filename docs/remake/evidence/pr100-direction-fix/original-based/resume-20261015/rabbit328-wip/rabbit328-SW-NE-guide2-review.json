@@ -1,0 +1,49 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_missing_diagonal_static_guide_visual_qa",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "comparison_guide": "/workspace/generated_images/exec-db1b5ac8-ef59-4597-919e-84868d9eae8d.png",
+  "candidate": "/workspace/generated_images/exec-42f0fd70-0fc7-417a-84a2-8954a3bd8c46.png",
+  "candidate_sha256": "2a03c377b7907f102ec015e6a7111b7b29a41cab2996a326a56be59f15b6af3c",
+  "verdict": "HOLD",
+  "direction_verdict": "PASS_STATIC",
+  "direction_slots": [
+    {"slot": 1, "expected": "SW", "observed": "SW", "pass": true, "evidence": "Front bodice and face visible; nose/gaze point left and shoe toes point lower-left. Distinct three-quarter front-left view."},
+    {"slot": 2, "expected": "NE", "observed": "NE", "pass": true, "evidence": "Cap back, hair back, back bodice and shoulder blades dominate; narrow right cheek edge and both shoes turn upper-right. Distinct three-quarter back-right view."}
+  ],
+  "source_fidelity": {
+    "status": "partial",
+    "preserved": ["pale short hair", "dark rabbit-ear cap with bent and upright ears", "black-purple bodice", "pale pleated skirt with gold hem", "light cuffs", "stockings and chunky dark shoes"],
+    "concerns": ["Long dark rear/side bow tails or loops protrude beyond the skirt at the waist, despite the prompt excluding giant rear ribbon loops/tails.", "Floral head/collar ornament, spiky hair tufts, apron straps, glove fittings and open-back costume details are newly resolved interpretations; the tiny original does not independently verify them."]
+  },
+  "compatibility_with_guide1": {
+    "status": "fail_as_direct_combination",
+    "observation": "Correct directions do not make this a consistent replacement pair. Guide2 uses a visibly higher viewing angle, more downward-looking face, more spiky layered hair, puffed upper sleeves and apron-like bodice straps. Guide1 has a smoother rounded bob, largely bare shoulders/off-shoulder trim and a different bodice construction. Ear shape, head ornament and rear trim also differ.",
+    "scale": "Raw sprite heights differ because the sheets have different layouts/resolutions. A reviewed scale could normalize height; scaling alone cannot reconcile the camera, hairstyle and costume differences.",
+    "approved_for_mix": false
+  },
+  "body_and_ground": {
+    "status": "pass_static_only",
+    "observation": "Exactly two attached legs per figure, no obvious torso/leg separation, no held weapon, and complete ears/shoes. Shoes appear planted.",
+    "lowest_opaque_y": [828, 823],
+    "baseline_difference_pixels": 5,
+    "unverified": ["common animation anchor", "motion continuity", "Main ground contact", "runtime scale"]
+  },
+  "geometry": {
+    "report": "/workspace/scratch/pr100-resume/rabbit328-SW-NE-guide2-geometry.json",
+    "image_size": [1774, 887],
+    "alpha_extrema": [0, 255],
+    "connected_poses": 2,
+    "complete_pose_regions": "pass",
+    "canvas_size": 1536,
+    "canvas_review_status": "diagnostic_only_not_approved",
+    "padding": "Ears and shoes are uncropped, but about 6-7 percent top/bottom padding is less than the prompt's requested 15 percent."
+  },
+  "required_before_passing": [
+    "Keep these corrected SW/NE direction cues while producing one consistent costume, hairstyle, camera angle and proportions across all directions.",
+    "Resolve rear loop/tail and ornament differences against the original source rather than treating generated details as established source features.",
+    "Review scale and anchors, then verify actual role animations and Main separately."
+  ],
+  "counts_as_completed_entity": false
+}

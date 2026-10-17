@@ -36,6 +36,8 @@ func _count(definition: Dictionary, mode: String) -> int:
 	return total
 
 func _sample_capacity(field: PlayableField, seed_value: int) -> void:
+	# Each seed starts from the same production configuration and fresh sampler.
+	field.configure(field.data)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var occupied: Array[Vector2] = []
@@ -65,6 +67,38 @@ func _sample_capacity(field: PlayableField, seed_value: int) -> void:
 		if first.is_finite():
 			var entry := Vector2(float(field.data.spawn_position[0]), float(field.data.spawn_position[1]))
 			check(not field.path(entry, first).is_empty(), "reachable from current entrance " + str(field.data.map_id) + "/" + str(spawn.id))
+
+func _dense_respawn_cases(field: PlayableField) -> void:
+	for spawn: Dictionary in field.data.monster_spawn:
+		if str(spawn.get("mode", "normal")) != "dense": continue
+		var cells: Array = field.spawn_cells[str(spawn.id)]
+		var spacing: float = float(spawn.get("min_spacing", 28.0))
+		check(cells.size() >= int(spawn.max_count), "dense terrain fits declared capacity " + str(field.data.map_id))
+		for index: int in range(cells.size()):
+			for other: int in range(index):
+				check(field.cell_to_world(cells[index]).distance_squared_to(field.cell_to_world(cells[other])) >= spacing * spacing, "dense candidate separation " + str(field.data.map_id))
+		for seed_value: int in [20261012, 20261013]:
+			field.configure(field.data)
+			var rng := RandomNumberGenerator.new()
+			rng.seed = seed_value
+			var occupied: Array[Vector2] = []
+			for slot: int in range(int(spawn.max_count)): occupied.append(field.sample_spawn(str(spawn.id), rng))
+			# Vacating eight slots represents deaths followed by a dense respawn.
+			for index: int in range(occupied.size() - 1, -1, -1):
+				if index % 3 == 0: occupied.remove_at(index)
+			var replacements: int = 0
+			for slot: int in range(int(spawn.max_count) - occupied.size()):
+				for attempt: int in range(64):
+					var point := field.sample_spawn(str(spawn.id), rng)
+					var clear := true
+					for other: Vector2 in occupied:
+						if other.distance_squared_to(point) < spacing * spacing: clear = false; break
+					if not clear: continue
+					check(field.walkable(point) and field.point_clear(point) and not field.is_safe(point) and field.spawn_contains(spawn, point), "dense respawn uses real valid terrain")
+					occupied.append(point)
+					replacements += 1
+					break
+			check(replacements == 8 and occupied.size() == int(spawn.max_count), "dense deaths refill full capacity seed %d %s" % [seed_value, field.data.map_id])
 
 func _run() -> void:
 	_geometry_cases()
@@ -121,6 +155,7 @@ func _run() -> void:
 			if mode == "boss":
 				total_bosses += 1
 				check(int(spawn.max_count) == 1, "one boss per encounter")
+				check(int(spawn.get("respawn_time", 0)) == (28800 if id == "aden_world" else 86400) and str(spawn.get("respawn_policy", "")) == "wall_clock", "all boss slots follow current regional wall-clock policy " + id + "/" + str(spawn.id))
 				check(not boss_names.has(str(spawn.monster_types[0])), "no duplicated boss encounter " + str(spawn.monster_types[0]))
 				boss_names[str(spawn.monster_types[0])] = id
 				check(spawn.has("patrol_region"), "boss patrol is bounded " + id)
@@ -160,6 +195,7 @@ func _run() -> void:
 			check(field.spawn_cells.get(str(spawn.id), []).size() > 0, "nonempty reachable candidates " + id + "/" + str(spawn.id))
 		_sample_capacity(field, 20261012)
 		_sample_capacity(field, 20261013)
+		if id in ["oman_03", "oman_07"]: _dense_respawn_cases(field)
 		total_normal += _count(definition, "normal")
 		total_dense += _count(definition, "dense")
 		report.maps[id] = {"normal": _count(definition, "normal"), "dense": _count(definition, "dense"), "boss": _count(definition, "boss"), "spawns": definition.monster_spawn}
@@ -180,4 +216,5 @@ func _run() -> void:
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(report, "\t")); file.close()
 	print("RENEWED MAP SPAWN TEST: %d checks, %d failures" % [checks, failures.size()])
+	if failures.is_empty(): print("RENEWED_MAP_SPAWN_OK")
 	quit(0 if failures.is_empty() else 1)

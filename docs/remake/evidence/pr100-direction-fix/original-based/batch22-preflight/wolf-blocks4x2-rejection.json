@@ -1,0 +1,30 @@
+{
+  "path": "/workspace/twilight-artwork/batch22/wolf/idle-v2.png",
+  "sha256": "8b1ed57ff5deec538f6143702baa97108a300dc020224df37c68422abb32fc90",
+  "directions_axis": "blocks4x2",
+  "logical_phases": 2,
+  "intended_status": "REVIEW_HOLD",
+  "trials": [
+    {
+      "canvas": 256,
+      "result": "rejected",
+      "reason": "Pose cannot fit the foot-anchored canvas"
+    },
+    {
+      "canvas": 512,
+      "result": "rejected",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "canvas": 1024,
+      "result": "rejected",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "canvas": 2048,
+      "result": "rejected",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_unchanged": true
+}

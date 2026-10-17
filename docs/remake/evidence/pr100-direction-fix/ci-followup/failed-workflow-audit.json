@@ -1,0 +1,130 @@
+{
+  "sha": "93df8ee87849ee2cc7b7ab7c8bdd2be5a5654d53",
+  "source_summary_observed_utc": "2026-10-13T08:49:32.104881+00:00",
+  "failures": [
+    {
+      "run": 38368109666,
+      "workflow": "Monster World Validate",
+      "failed_steps": [
+        "Reproducible catalog and all regressions",
+        "Upload exact-sha logs and OpenGL review evidence"
+      ],
+      "cause": "Generator removes existing special attack blocks from two legacy boss catalog records; git diff exits 1 before regressions start. Artifact upload failure is cascading because test-results was never produced.",
+      "repair_owner": "root; generator already amended"
+    },
+    {
+      "run": 38368109724,
+      "workflow": "TWILIGHT 25 Map Visual Styles",
+      "failed_steps": [
+        "Full Godot import boot and map regression tests"
+      ],
+      "cause": "Only renewed_map_spawn_test marked FAIL; 149/153 checks passed, 3 skips, 0 not run. Missing success sentinel known; gameplay assertions have zero failures.",
+      "repair_owner": "root; sentinel already amended"
+    },
+    {
+      "run": 38368109817,
+      "workflow": "TWILIGHT Integration Validate",
+      "failed_steps": [
+        "Full project regression, import, boot and all smoke tests"
+      ],
+      "cause": "Only renewed_map_spawn_test marked FAIL; 149/153 checks passed, 3 skips, 0 not run. Missing success sentinel known; gameplay assertions have zero failures.",
+      "repair_owner": "root; sentinel already amended"
+    },
+    {
+      "run": 38368109829,
+      "workflow": "Original Skill Migration Validation",
+      "failed_steps": [
+        "All behavioral and regression suites"
+      ],
+      "cause": "Only renewed_map_spawn_test marked FAIL; 149/153 checks passed, 3 skips, 0 not run. Missing success sentinel known; gameplay assertions have zero failures.",
+      "repair_owner": "root; sentinel already amended"
+    },
+    {
+      "run": 38368109883,
+      "workflow": "L1J Runtime and Recovery Validation",
+      "failed_jobs": [
+        "regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe)",
+        "regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64)"
+      ],
+      "failed_steps": [
+        "Import, boot and all regression checks with isolated saves"
+      ],
+      "cause": "Both OS jobs only renewed_map_spawn_test marked FAIL; each 149/153 checks passed, 3 skips, 0 not run. Missing success sentinel known; gameplay assertions have zero failures.",
+      "repair_owner": "root; sentinel already amended"
+    },
+    {
+      "run": 38368109907,
+      "workflow": "Godot Validate",
+      "failed_steps": [
+        "Render actual region gameplay"
+      ],
+      "cause": "Expected 37 gameplay captures, got 36. Oman1 detail target tomb no longer exists after reference contour reconstruction; all four other detail kinds exist.",
+      "additional_issue": "Actual stairs shares the previous portal position; a static capture could switch maps on slow software rendering and become mislabeled.",
+      "repair_owner": "remaining_ci",
+      "changed_file": "tests/capture_regions.gd",
+      "repair": "Select actual Oman stairs; explicit missing-landmark error; hold static portal cooldown; validate map identity before saving each PNG.",
+      "validation": "Godot 4.7.2 full llvmpipe rendered pass exit 0; 37 PNG files and 4 active probes; no SCRIPT ERROR or ERROR; Oman stairs PNG visually verified on intended map.",
+      "evidence_manifest": "/workspace/pr100-ci-audit/capture-region-fix-final/validation-manifest.json"
+    }
+  ],
+  "late_failure_audit": [
+    {
+      "run": 38368109816,
+      "workflow": "TWILIGHT Combat Resolution Equivalence",
+      "step": "Full project boot and exact formula regressions",
+      "failed_tests": [
+        "renewed_map_spawn_test"
+      ],
+      "passed": 149,
+      "total": 153,
+      "skipped": 3,
+      "not_run": 0,
+      "cause": "Known missing success sentinel; failed test elapsed 3.049s, no timeout."
+    },
+    {
+      "run": 38368109939,
+      "workflow": "TWILIGHT Monster AI Leash and Path",
+      "step": "Full project import, boot and GDScript regression suite",
+      "failed_tests": [
+        "renewed_map_spawn_test"
+      ],
+      "passed": 149,
+      "total": 153,
+      "skipped": 3,
+      "not_run": 0,
+      "cause": "Known missing success sentinel; failed test elapsed 3.145s, no timeout."
+    },
+    {
+      "run": 38368109933,
+      "workflow": "Combat Animation Validate",
+      "step": "All headless regressions",
+      "failed_tests": [
+        "ground_loot_system_test",
+        "renewed_map_spawn_test"
+      ],
+      "passed": 148,
+      "total": 153,
+      "skipped": 3,
+      "not_run": 0,
+      "cause": "Known ground-loot failure at 150.122s default budget, plus known missing renewed success sentinel at 3.054s.",
+      "evidence_limit": "Failed-step summary logs show exact per-test result timing; per-test artifact TIMEOUT text is not present in head-ci-latest."
+    },
+    {
+      "run": 38368109853,
+      "workflow": "TWILIGHT renewed-map spawn validation",
+      "step": "Full project regression including boss persistence",
+      "failed_tests": [
+        "ground_loot_system_test",
+        "original_skill_learning_conditions_test",
+        "renewed_map_spawn_test"
+      ],
+      "passed": 147,
+      "total": 153,
+      "skipped": 3,
+      "not_run": 0,
+      "cause": "Known ground-loot failure at 150.119s default budget; known learning failure at 150.178s default budget; known missing renewed success sentinel at 3.331s.",
+      "evidence_limit": "Failed-step summary logs show exact per-test result timing; per-test artifact TIMEOUT text is not present in head-ci-latest."
+    }
+  ],
+  "late_audit_conclusion": "No additional failing test, new script error, background/input failure, or new runtime defect identified in the four late failed-step logs."
+}

@@ -1,0 +1,3277 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      955,
+      617,
+      319,
+      308
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 11,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "e952ef78ea7cc4e296c8b7b72be41a14c8c7cfbb10ced857747e0746ccc1fca0"
+  },
+  "target_keys": [
+    "monster:알비노 악어거북"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 11,
+      "body": "turtle",
+      "variant": 9,
+      "width": 0.972,
+      "weapon": "claws",
+      "crest": 3,
+      "accent": "aa8aaf"
+    },
+    "animation_profile": {
+      "motion_style": "crawl",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 78
+  },
+  "target_references": {
+    "monster:알비노 악어거북": {
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "region": [
+        955,
+        617,
+        319,
+        308
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 4,
+      "cell": 11,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+      "image_size": [
+        1274,
+        1234
+      ],
+      "region_rgba_sha256": "e952ef78ea7cc4e296c8b7b72be41a14c8c7cfbb10ced857747e0746ccc1fca0"
+    }
+  },
+  "target_presentations": {
+    "monster:알비노 악어거북": {
+      "visual": {
+        "atlas": 4,
+        "cell": 11,
+        "body": "turtle",
+        "variant": 9,
+        "width": 0.972,
+        "weapon": "claws",
+        "crest": 3,
+        "accent": "aa8aaf"
+      },
+      "animation_profile": {
+        "motion_style": "crawl",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 78
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "idle-front8-fixed EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY EIGHT fullbodyturtlesonPORTRAIT1024x1536 TRANSPARENT RGBA, TWOphaseCOLUMNS byFOURdirectionROWS. Cell512x384;centersx256,768 andy192,576,960,1344. Wholebodyincludingneck/tail/spikes/4paws <=330x250pixels,generoustransparentgutters/safeouters. Samehead/shellCOREscaleandfixedisometriccamera,doNOTenlargefigures. All4pawsPLANTED, NOraisedfoot/visiblehindsole/pawpad, notwalking. Alpha0emptyspace,no matte/grayband/floor/shadow/text/grid/effects.\nDIRECTIONROWStopbottom:E TRUE RIGHT PROFILElongshellside/oneeye,noseRIGHT;SE FRONTRIGHTlowerRIGHT;S DIRECTFRONTviewer/down,nose/chestcenteredsymmetricBOTHfronteyes;SW FRONTLEFTlowerLEFT,noseremainsLEFTinbothcols. Fourcorrectattachedlegs,sameviewbothcols.\nPHASECOLUMNS:LEFT IDLEA stillalertlowheavystance,all4pawsgrounded,neckforwardpartlyopenbeak. RIGHT IDLEB genuinelynewbreathingneck/headbow/shoulderelbowflex/jawslightlycloses,tailbendsdifferentlybutALL4PAWSSTILLPLANTEDsolesDOWN, no steps/liftedfeet/stride. Rigidspikeshellconnectedto4legs;no bodygap/hover, noduplicates/translations/scalemotion. Fullsourcebodyfaithful.\n\nEDIT THE SECOND IMAGE: physicalBOTTOM DIRECTIONROW4 is WRONG becauseitfacesRIGHT. REDRAWBOTHBOTTOMROWanimalsintoSWTRUE FRONT-LEFT. Their HEADandNOSEmustbeatLEFT/LOWERLEFTendofturtle; TAILatRIGHT/UPPERRIGHTend. ShowfrontchestplusLEFTbodythreequarter, actualnewleftbodyanatomy/naturalocclusion withall4pawsplanted,notright-facingSEorE. Row2SEremainsfrontRIGHT; row4SWmustvisiblyopposeit. KeepotherrowsE/SE/Sandall8completeposeswithsamepalette/head/shellcoremodelsize/clean-alpha. NOThorizontalflip, drawindependentnewSWbreathinganatomyandspikesscutes. Exactly2phasecols4directionrows.\n\n\nidle-rear8 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY EIGHT fullbodyturtlesonPORTRAIT1024x1536 TRANSPARENT RGBA, TWOphaseCOLUMNS byFOURdirectionROWS. Cell512x384;centersx256,768 andy192,576,960,1344. Wholebodyincludingneck/tail/spikes/4paws <=330x250pixels,generoustransparentgutters/safeouters. Samehead/shellCOREscaleandfixedisometriccamera,doNOTenlargefigures. All4pawsPLANTED, NOraisedfoot/visiblehindsole/pawpad, notwalking. Alpha0emptyspace,no matte/grayband/floor/shadow/text/grid/effects.\nDIRECTIONROWStopbottom:W TRUE LEFT PROFILElongshellside/oneeye,noseLEFT;NW BACKLEFTawayupperLEFT;N FULLBACKawayUPbackshell/rump/tail/backheadNOfrontalredface;NE BACKRIGHTawayupperRIGHT. RearheadpointsAWAYinlinebody,notlookingbackatviewer. Fourcorrectattachedlegs,all4planted,NOexposedrearsole.\nPHASECOLUMNS:LEFT IDLEA stillalertlowheavystance,all4pawsgrounded,neckforwardpartlyopenbeak. RIGHT IDLEB genuinelynewbreathingneck/headbow/shoulderelbowflex/jawslightlycloses,tailbendsdifferentlybutALL4PAWSSTILLPLANTEDsolesDOWN, no steps/liftedfeet/stride. Rigidspikeshellconnectedto4legs;no bodygap/hover, noduplicates/translations/scalemotion. Fullsourcebodyfaithful.\n\n\nwalk-E-W6 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP E TRUE RIGHT SIDE PROFILE longhorizontal shell/head noseRIGHT/one sideeye;BOTTOM W TRUE LEFT SIDE PROFILE noseLEFT/onesideeye. Neverthreequarterfront; exactsidebody andprofileheadall3cols. NeararmfrontmostvisiblearmunderneckmustbeLONGleadingcontactA andHIGHCURLEDunderchestcontactB,farmostarmnowleads.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\n\nwalk-S-N6 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP S FULLFRONTtowardviewer/downwidebeak/bothredfronteyes;BOTTOM N FULLBACKawayUPshell/rump/tail/backheadNOfrontalredface. InS LEFTcol anatomicalleftforeleg(screenRIGHT)forwardLOWPLANTED/oppositerightforeleg(screenLEFT)BENTRAISED; RIGHTcolanatomicalrightforeleg(screenLEFT)LOWPLANTED/leftforeleg(screenRIGHT)BENTRAISED. InN LEFTcolscreenLEFT hindfootLOWPLANTED,screenRIGHThindfootHIGHBACKBENTshowingsoles;RIGHTcolscreenRIGHThindfootLOWPLANTED,screenLEFThindfootHIGHBACKBENTshowingsoles. EXPOSEDPAWPAD MUSTSWITCHSCREENside,notfixedsamefoot.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\n\nwalk-SE-SW6 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP SE FRONT-RIGHTlowerRIGHT;BOTTOM SW FRONT-LEFTlowerLEFT. Truefrontthreequarterfixedcamera. AtLEFTcolnearforearmverylongforward/lowplanted; atRIGHTcolthesameNEARforearmnowVERYHIGHCURLEDUPUNDERCHESTwithcharcoalclawsfacingbackunderitselbow, FARforearmextendsstraightforwardandplants. Differentforearmmustleadinrightcol. DoNOTredrawsamenearleadingarmtwoendpoints.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\n\nwalk-NW-NE6-final EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP NW BACK-LEFTawayUPPERLEFT;BOTTOM NE BACK-RIGHTawayUPPERRIGHT. Backofhead/shell/rump/tail,NOfacialmasklookingback. AtLEFTcolNEARhindlegflexesBACK/RAISEDsolevisible,FARhindlegFORWARD/LOWPLANTED;RIGHTcolNEARhindlegFORWARD/LOWPLANTED,FARhindlegBACK/RAISEDsolevisible. Visibleknees/hocksoverlapandpawpadMUSTSWITCHanatomicalside. Forelegsoppositepairreachawaybeneathshell,fourlegstotalattached.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\nCRITICALCORRECTION: thisisREARcamera, NOTFRONT. ViewerstandsBEHINDturtle lookingtowardsitsTAIL/RUMP. TOPROW NW tail/rumpareclosertovieweratLOWERRIGHT,headpointsAWAYUPPERLEFTonFARSIDEandmuzzleisCOMPLETELYHIDDENbyhead/shellocclusion. BOTTOMROW NE tail/rumpcloseratLOWERLEFT,headpointsAWAYUPPERRIGHTonfarside,muzzleCOMPLETELYHIDDEN. NOredeyes,NOopenmouth,NOteeth,NOtongue visibleinANYof6poses. Showonlyback/topofskullifanyheadextendsbeyondfarshellrim; canhideheadunderfarshellrim. Shellrear/tail/hindlegsdominatebackprojection. UsefirstreferenceREAR Nbodyfortruebackanatomy,secondreferenceforsourceivoryspikeshell/palescalesonly. Keep4attachedlegsandoppositeNEAR/FARraisedhindsoleendpoints: col1nearhindsolevisible/farhindplanted;col3nearhindplanted/FARhindsolevisible. DO NOTdrawleft/rightprofilefaceagain. Backturtlerotated45degreesNW/NEwithnopossiblefrontalfeature. Same6layout3phasecols2directionrows,fullvisiblebody,safealpha0gutters.\n\nFINALFOOTCORRECTIONforBOTTOMROW NE only: LEFTCONTACTcol has LEFTscreenhindpawSOLEshowingandraised; RIGHTCONTACTcolMUSTnowhave RIGHTscreenhindpawSOLEshowingandraised,andLEFTscreenhindfootLOWPLANTEDtoesdown/solehidden. Exactlyswitchwhichhindfootisraisedbetweencol1andcol3. InbottomRIGHTcell, drawLEFTscreenhindlegextendingDOWNtoaplantedtoe/clawonthefloor, withNOsolevisibleonleft; drawRIGHTscreenhindknee/hockBENTUP/BACKsoitsDARKSOLEandclawsfacetheviewerontheRIGHTsideofspine/tailroot. DoNOTcopyleftraisedsolefrombottomLEFT. Middlecoltransferringweightneitherendpointduplicate. TOPNWalreadyalternatescorrectly,keepitsoppositesoles. Truebackshell/rump/headawayNOredeyes/mouth. All6bodiespreservedcompletefullsourceidentityandfourconnectedlegs. Redrawthisjointarticulationnotmerelytailturn.\n\n\nattack-front12-fixed EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly TWELVE SMALLcompletealbinosnappingturtles onPORTRAIT1024x1536canvas,THREEPHASECOLUMNS byFOURDIRECTIONROWS. Centersx171,512,853 andy192,576,960,1344. Eachwholebodyincludingneck/muzzle/tail/spikes/all4paws <=230pixelWIDTH by185pixelHEIGHT,clearhorizontalgutter>=100,vertical>=150,safeoutermargin; doNOTenlargefigures. Completeboundingrectanglecannotincludeotherbody. SameHEAD/SHELLCORESCALE asattachedidlewalkreference; actualalphaZEROemptybackground,no floor/shadow/matte/grayband/haze/text/grid/particles/effects.\nDIRECTIONROWS topbottom:E TRUE RIGHT SIDE PROFILE onegold/redsideeye longshellside headRIGHT; SE FRONT-RIGHTlowerRIGHT; S DIRECTFRONTviewer/downwidebeakredfronteyes; SW FRONT-LEFTlowerLEFT neverrightface. Windup/contact/recoveryallkeepheading. ScontactneckextendsDOWNtowardviewer withforeshortenedbeak; SWcontactextendsDOWNLEFT. All4correctattachedscalylegsunderheavyivoryspikedshell.\nPHASECOLUMNSlefttoright:1 WINDUP neckgathersBACKintoshell,jawpartlyCLOSES,bodycrouchbracedall4paws,elbowsbend.2 ACTUALMELEEBITE neckextendsFORWARDalongrowheading,massiveattachedtoothedbeakjawopensandSNAPSnearfoeheight, shoulder/kneearticulationbraceall4legsandatleast3pawsonfloor, noleap/hover/body-leggap.3 RECOVERY neckretracts,heavyheadbows/jawpartlycloses,shoulders/elbowsresettle,tailslightcounterbalance. Genuineclear3phaseneck/jaw/legarticulation,nottranslated/resizedstillorbeams/projectiles/clawtrails; allpartsconnectedtoonecompletebody. SourcefloatingFALSE,commonplantedpawbaseline. Keep3phasesfixeddirection/camera, headreachesactualheadingnotatcameraonrearviews.\n\nFOCUSED COMPASS CORRECTION: Physical DIRECTION ROW3 is S FULLFRONT in ALL THREE columns. In WINDUP leftcol, keep snout centered directlytowardviewer/down, BOTHnostrils andBOTHredfronteyes symmetricallyvisible, jawmostlyclosed; no turning toSE/rightside. CONTACTmiddlecol also Sstraightfront widegape,symmetricfronthead; RECOVERYrightcol samefrontalcamera jawpartlyclosed. No sideyawonSrow, no headturning betweenphases, mouthopen/neckextensionisattack notyaw. OtherrowsE/SE/SWremainexact directions. Thiscorrectionisforfull12newposes, notpatchpixels; preserveallsourcebodyandcleanalpha.\n\n\nattack-rear12 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly TWELVE SMALLcompletealbinosnappingturtles onPORTRAIT1024x1536canvas,THREEPHASECOLUMNS byFOURDIRECTIONROWS. Centersx171,512,853 andy192,576,960,1344. Eachwholebodyincludingneck/muzzle/tail/spikes/all4paws <=230pixelWIDTH by185pixelHEIGHT,clearhorizontalgutter>=100,vertical>=150,safeoutermargin; doNOTenlargefigures. Completeboundingrectanglecannotincludeotherbody. SameHEAD/SHELLCORESCALE asattachedidlewalkreference; actualalphaZEROemptybackground,no floor/shadow/matte/grayband/haze/text/grid/particles/effects.\nDIRECTIONROWS topbottom:W TRUE LEFT SIDE PROFILE headLEFT,onevisible redsideeye; NW BACK-LEFT awayUPPERLEFT; N FULLBACKdirectlyawayUP; NE BACK-RIGHT awayUPPERRIGHT. Rearrowsbackofhead/spinyshell/rump/tail, nofrontfacemask/redfrontaleyes/mouthtowardviewer. Bitecontactheadextendsonfarsideaway:NupperUPshowsBACKofskull/neck, notanupraisedfrontface. NW/NEheadalsoawayinlinebodyandmuzzlehiddenbyprofileocclusion, notlookingbackatviewer. All4scalylegsattachedandbodygrounded.\nPHASECOLUMNSlefttoright:1 WINDUP neckgathersBACKintoshell,jawpartlyCLOSES,bodycrouchbracedall4paws,elbowsbend.2 ACTUALMELEEBITE neckextendsFORWARDalongrowheading,massiveattachedtoothedbeakjawopensandSNAPSnearfoeheight, shoulder/kneearticulationbraceall4legsandatleast3pawsonfloor, noleap/hover/body-leggap.3 RECOVERY neckretracts,heavyheadbows/jawpartlycloses,shoulders/elbowsresettle,tailslightcounterbalance. Genuineclear3phaseneck/jaw/legarticulation,nottranslated/resizedstillorbeams/projectiles/clawtrails; allpartsconnectedtoonecompletebody. SourcefloatingFALSE,commonplantedpawbaseline. Keep3phasesfixeddirection/camera, headreachesactualheadingnotatcameraonrearviews.\n\n\nhd-E-SE10 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nSPARSE exact TEN fullbodyalbinosnappingturtleposes onPORTRAIT1024x1536, TWO DIRECTION COLUMNS byFIVE PHASE ROWS. Centersx256,768 andy154,461,768,1075,1382. Wholebodyincludingfallenshell/tail/head/spikes/all4feet <=330pixelWIDTH by190pixelHEIGHT per512x307cell. Hugehorizontalgutters>150pxandvertical>100px,safeoutermargin. DoNOTenlargebodytofillcells. Oneconnectedturtlepercell, no boundingrectangleintrusion orclippedspikes. SameHEAD/SHELLCOREsizeeachframe. EmptyspaceactualalphaZERO,no matte/graybands/haze/floor/shadow/text/labels/grid/particles/effects.\nDIRECTION COLUMNSlefttoright E TRUE RIGHT SIDE PROFILE longsidebody/onlyoneeye/noseright; SE FRONT-RIGHTlowerRIGHT. Fixedtruecompasscameraacrossallphases.\nFIVEPHASE ROWS:1 HITA neck/headrecoilBACKintoshell,elbowsbend,hindpawsbrace,bodyrigidattached.2 HITB distinctpartialrecoveryheadbow/jawrelax,fore/hindkneeschange,onepawresettlesground,notidleduplicate.3 DEATHBUCKLE bodylosessupportasALL4knees/elbowsfold,shellbeginsTILTINGontotheRIGHTSIDE,headandneckdrooptowardfloor,eyesclose.4 DEATHFALL wholeintactturtleROLLSONTOITSRIGHTSIDE: rigidspikedshellrotatesontoedge,all4legsFOLDandDRAPEalonglowerbody,neck/headrestlimponfloor,taildrapes. THISISNOTstanding/crouch: no3or4supportpawsunderuprightbody.5 FINALDEADCORPSE turtlefullyRESTSONRIGHTSIDEandplastron/shelledgeONFLOOR, legsareLIMP/FOLDEDSTACKEDalongsidebodywithNOstanding/kneeling stance. HeadNECKliesflat/downonfloor,eyesCLOSED/DARK,mouthrelaxednearlyclosed,tailflatconnected. SpikedshellisstillWHOLEsame3DsolidbonyVOLUMEbuttippedsideways; doNOTflatten/melt/shrinkrigidshell. Corpsekeepssameheadingandcameraevenrolledsideways,all4limbsattachedandrecognizablebodymass. RearNmustvisiblyTILTontoSIDEwithONEshelledgeonthefloorandlimplegsstacked/drapedtotheside,headhiddenfarUP; NOuprightsymmetriclivefourlegstance! NW/NErearheadstaysaway,notfrontalcorpse. Finalcorpseisgroundedsubstantialwholebody notemptyfade/fragments. Lowestcorpseedgeandplantedpawsshareprojectedlocalfloorbaseline. All20distinctgenuineNEWarticulatedframes,nottranslated/resizedstills.\n\n\n\nhd-S5-prone EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly FIVEcompletefullbodyposes inONE HORIZONTALROW ofFIVE PHASECOLUMNS on1536x1024TRANSPARENT RGBA. Cell307x1024,centersx154,461,768,1075,1382 andall y512. EachWHOLEturtleincludinghead/tail/spikes/all4feetfitswithin230pixelWIDTH by240pixelHEIGHT. Broad>70pxemptyhorizontalguttersandsafemargins,mostlyEMPTYcanvas. Donotenlargeanimalstofillcells. Oneconnectedsubstantialbodypercell, norectangularcropcontainsanotherbody, no cutoffspikes/tail/paws. SameHEAD/SHELLCORESCALEall5. EmptybackgroundALPHA0,no matte/floor/shadow/haze/grayband/text/grid/particles/effects.\nALL5POSES S FULLDIRECTFRONTtowardviewer/DOWN. Head/noseATBOTTOMofshell,tailUPbehind. Bothredeyesvisiblebeforeclosing,centeredwidebeakforehead. InALL5nosepointsDOWNtowardviewer,NEVERright/leftprofile. DeadHEADrestsFRONT/BOTTOMofturtlepointingDOWN,verticalbodyaxis,nostrilsfrontalandeyesclosed.\nFIVEphasecolumnsLEFTtoright:1 HITA neck/headrecoilsBACKunderfarshellrim,elbowsbend,hindfeetbrace,headjawflinch.2 HITB differentpartialrecoveryheadbow/jawrelaxes,shoulder/elbow/kneeangleschange,notsameposeas1.3 DEATHBUCKLE ALL4legsFOLDunderheavyshell,headandneckDROPtolowerfloor,shelldropsclosertofloor,eyelidsCLOSE.4 DEATHFALL WHOLEbodysettlesPRONEontoPLASTRON onfloor,ALL4limbsfold/splaylimptotheSIDES,headNECKliesFLATonfloorinfrontofshell,eyesCLOSEDandjawrelaxedalmostclosed.5 FINALDEADCORPSE completeintactturtlefullyRESTSPRONEonplastron,fourlimbsLIMPfullyfolded/splayedbesidebodyandNOstanding/kneeling pawsunderbody,shellbellygroundednothovering,neckheadflat/limponfloor,EYESCLOSED,mouthresting. KeepRIGIDIVORYSPIKEDSHELLFULLVOLUME,neverflatten/melt/shrinkit; showactuallegsupportcollapseandheadslumpnotjustresizedshell. Fullattachedcompacttaildrapesfloor. Nofade/empty/fragment. All5genuinelydifferentarticulatedNEWfullbodyposes,commonplantedpaw/corpsegroundbaseline. DoNOTroll/YAWtheanimalintoadifferentcompass; pronecollapsekeepsexactheadingandcamera.\n\n\nhd-SW5-vertical EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly FIVEcompletefullbodyposes inONE VERTICALCOLUMN ofFIVE PHASEROWS on1024x1536TRANSPARENT RGBA. Cell1024x307,centersALLx512 andy154,461,768,1075,1382. EachWHOLEturtleincludinghead/tail/spikes/all4feetfitswithin330pixelWIDTH by180pixelHEIGHT. Broad>110pxemptyverticalguttersandsafemargins,mostlyEMPTYcanvas. Donotenlargeanimalstofillcells. Oneconnectedsubstantialbodypercell, norectangularcropcontainsanotherbody, no cutoffspikes/tail/paws. SameHEAD/SHELLCORESCALEall5. EmptybackgroundALPHA0,no matte/floor/shadow/haze/grayband/text/grid/particles/effects.\nALL5POSES SW FRONT-LEFT,head/noseatLOWERLEFTendofturtle,TAILatUPPERRIGHT. NosepointsLEFT/lowerLEFTinEVERYpose,includingfinalcorpse. FrontchestplusLEFTsideofshell; actualthreequarterfrontLEFT,neverright-facingSE/E. Bothfrontandleftsideheadbeforeclosedeyes,corpseheadstillLOWERLEFTnoseLEFT,nosuddenheadturnright.\nFIVEphaseROWS TOPtobottom:1 HITA neck/headrecoilsBACKunderfarshellrim,elbowsbend,hindfeetbrace,headjawflinch.2 HITB differentpartialrecoveryheadbow/jawrelaxes,shoulder/elbow/kneeangleschange,notsameposeas1.3 DEATHBUCKLE ALL4legsFOLDunderheavyshell,headandneckDROPtolowerfloor,shelldropsclosertofloor,eyelidsCLOSE.4 DEATHFALL WHOLEbodysettlesPRONEontoPLASTRON onfloor,ALL4limbsfold/splaylimptotheSIDES,headNECKliesFLATonfloorinfrontofshell,eyesCLOSEDandjawrelaxedalmostclosed.5 FINALDEADCORPSE completeintactturtlefullyRESTSPRONEonplastron,fourlimbsLIMPfullyfolded/splayedbesidebodyandNOstanding/kneeling pawsunderbody,shellbellygroundednothovering,neckheadflat/limponfloor,EYESCLOSED,mouthresting. KeepRIGIDIVORYSPIKEDSHELLFULLVOLUME,neverflatten/melt/shrinkit; showactuallegsupportcollapseandheadslumpnotjustresizedshell. Fullattachedcompacttaildrapesfloor. Nofade/empty/fragment. All5genuinelydifferentarticulatedNEWfullbodyposes,commonplantedpaw/corpsegroundbaseline. DoNOTroll/YAWtheanimalintoadifferentcompass; pronecollapsekeepsexactheadingandcamera.\n\nSPACING correction: exactlyONEcolumnofFIVE separatecompletefullbodies, lots ofemptyspacearoundeveryturtle; SMALL entirebodies<=330x180px, doNOTfill1024width or307heightcells. No body-boundscroprectanglesoverlapadjacentrows. KeepSWnoseLEFT/downLEFTineverypose,wholepronecorpseunshrunkwithalllimbsattachedandclosedeyes.\n\n\nhit-death-rear20 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nEXACTLY TWENTY SMALL fullbodyturtles,FOURdirectioncolumns byFIVEphase rows onPORTRAIT1024x1536canvas. Cellcentersx128,384,640,896 andy154,461,768,1075,1382. Wholebody includingforwardneck/reartail/shellspikes/all4feet <=185pixelWIDTH by185pixelHEIGHT per256x307cell. Atleast55pxclearhorizontal and100pxverticalgutters,safeoutermargin. Mostlyemptycanvas,doNOTenlargefigures. SAMEhead/shellCOREdrawingmodelscale, useattachedneutral/idlewalkdesignsource. EmptybackgroundactualalphaZERO,no matte/floor/shadow/graybands/haze/text/labels/particles/effects, no overlappingrectanglecrops.\nFourDIRECTION COLUMNSlefttoright:W TRUE LEFT SIDE PROFILE onevisibleeye headLEFT;NW BACKLEFTawayupperLEFT;N FULLBACKdirectlyawayUP;NE BACKRIGHTawayupperRIGHT. Rearanglesonlybackshell/spine/rump/tail/backofhead, nofrontredmask/eyes/mouthtowardviewer; rearheadpointsAWAYalignedbody. Keepfixedcamera/headingall5rows. All4paleclawedlegsattachedbeneathfullsourceivoryshell.\nFIVEPHASE ROWS:1 HITA neck/headrecoilBACKintoshell,elbowsbend,hindpawsbrace,bodyrigidattached.2 HITB distinctpartialrecoveryheadbow/jawrelax,fore/hindkneeschange,onepawresettlesground,notidleduplicate.3 DEATHBUCKLE bodylosessupportasALL4knees/elbowsfold,shellbeginsTILTINGontotheRIGHTSIDE,headandneckdrooptowardfloor,eyesclose.4 DEATHFALL wholeintactturtleROLLSONTOITSRIGHTSIDE: rigidspikedshellrotatesontoedge,all4legsFOLDandDRAPEalonglowerbody,neck/headrestlimponfloor,taildrapes. THISISNOTstanding/crouch: no3or4supportpawsunderuprightbody.5 FINALDEADCORPSE turtlefullyRESTSONRIGHTSIDEandplastron/shelledgeONFLOOR, legsareLIMP/FOLDEDSTACKEDalongsidebodywithNOstanding/kneeling stance. HeadNECKliesflat/downonfloor,eyesCLOSED/DARK,mouthrelaxednearlyclosed,tailflatconnected. SpikedshellisstillWHOLEsame3DsolidbonyVOLUMEbuttippedsideways; doNOTflatten/melt/shrinkrigidshell. Corpsekeepssameheadingandcameraevenrolledsideways,all4limbsattachedandrecognizablebodymass. RearNmustvisiblyTILTontoSIDEwithONEshelledgeonthefloorandlimplegsstacked/drapedtotheside,headhiddenfarUP; NOuprightsymmetriclivefourlegstance! NW/NErearheadstaysaway,notfrontalcorpse. Finalcorpseisgroundedsubstantialwholebody notemptyfade/fragments. Lowestcorpseedgeandplantedpawsshareprojectedlocalfloorbaseline. All20distinctgenuineNEWarticulatedframes,nottranslated/resizedstills.\n\n\nS HEAD PROPORTION CORRECTION EXACT PROMPT:\nEDIT FIRST IMAGE ONLY, the SIX-pose ivory albino snapping turtle WALK sheet, exactly THREEphasecolumns andTWOdirectionrows. Keep its entirelayout, sourceivoryspikedshells, ALLFOURattachedlegs, feet/jointangles/supportcontacts, tailpositions andall THREE BOTTOM N/BACK poses unchanged in design andplacement. The provenalternatingwalkmustremain: TOP S leftcolscreenLEFTforepawforwardlowplanted/oppositeforepawraisedback, thirdcoloppositescreensideforwardlowplanted; bottomNhindsolesswitchscreensides. DoNOTredrawdifferentgait or changebody/camera/cellscale.\nONLY correct the THREE TOP S FRONT HEADS. Their ivoryfrontal skull/cheeks/beak/mouth are intrinsically tooBROAD for the existing original idle model. Second reference is the exact desired S OPEN-MOUTH IDLE facialproportions crop(diagnostic), thirdreference exact fullsourcebody. Redraw top3heads to that narrower skull/cheek/beak model, about20-25%NARROWER thancurrent topheads while maintaining almostsamecrown-to-beaklength (only~5-8%shorter ifnecessary). DoNOTgloballyresize turtle orshell: shellcore isalreadycorrect. Eyesred/crimsonremainfront; bringiris/cheekspacingtoidleproportions,narrowjawopening/cheekspread, retain source hookedivorybeak, pale scales, darkredmouth/pinktongue/pointedteeth andgenuineopen-jawcrawlalerthead. Correctactualnewheadanatomy not rasterwarp, nohead-neckgap: naturalnarrower ivorynapejoinsunchangedshouldersunderunchangedshellrim. Keepheadcenter anddirectionDIRECTFRONT/downtowardviewerfixed, no3quarteryaw. All3Sheads independentlynewfullneck/headposes coherentwithgait, no samecropduplicated.\nThe existing image already has correct S/N TWOdirectionanatomy; keep all NBACKheads completelyaway andnofrontmask. EmptybackgroundactualalphaZERO, nofloor/shadow/matte/text/labels/grid/haze/effects/fragments. Noaddedprops. Preserve sourceivorygiantpyramidalspikedshell, pale4legs/charcoalclaws, compactattachedknobbytail. Exactly SIX wholebodyposes ontheSAME1536x1024canvas, no clipping orneighborcropoverlap. Thisis newlydrawn authoredheadcorrection, notoriginalanimationextraction. SecondreferenceisheadproportionguideONLYandmustnotappearasanextraanimal.\n",
+  "instruction_record_kind": "exact prompts saved before imagegen; every failed/unselected prompt and raw output retained",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "AUTHOR STATIC ONLY awaiting independent root review and Godot Main. All104 selected genuine fullbody frames strict/complete/visible+raw unique. Exact source ivory rigid pyramidal spiked shell, pale scales/fourlegs/charcoalclaws/red eyes/beak/plastron/attachedknobbytail preserved. Eightactual compass bodies, Nback excludes frontmask, NW/NErearwalk head/face hidden. All8 crawl endpoints explicitly reverse leading foreleg or raisedhindsole; passing joints separately flex. Attachedneck/jaw melee bite gather->extend/contact->recover; hitrecoil and fullsubstantialgroundedcorpse withclosedeyes. Final front S/SW corpses prone; rear N/NW/NE corpses tiltedonto shellside with connectedlimbs andheadaway. Scale notes candidly record broader S walkinghead and up-pitched S hithead as independent/Main review items. Alpha0redRGB in S/SWstrip does not show on actual white/blackcomposites; no pixelcleanup. No gameplay, attacktiming, drops/pickup, Androiddevice orCI success claim from author. Completion delta0, no repo/profile/map writes. Additionalrootrequested S skullcorrection: conservative comparableopenmouthfacialwidth now22.0 normalized vsidle22.889(-4%), crown/beaklengthwithin~3%. Proven oppositelegsupportandshellcore preservedvisually. N3/bodypaintnotbyteidenticalafterimagegen;all6poses independentlyrevalidated. ROOT independently reviewed all104 normalized5role8heading poses; sourceidentity/completebody/frontback/head-core/grounding approved for actualMain trial only. S3walkskulls correctedafterrootdiscovered~26%breadthgrowth; new6sheet independently rechecked, headbreadthnowwithin4%ofidle, genuineoppositesupportandN3retained. PriorPNGandallfailurespreserved; no globalshellshrink."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        7,
+        44,
+        503,
+        326
+      ],
+      "margin": [
+        327,
+        398,
+        649,
+        826
+      ],
+      "source_anchor": [
+        256,
+        366
+      ],
+      "rgba_sha256": "d34d54e34942c39ce9f56774e961025c6e9db6aab65d3e54e5a8f3fa5a45b87c",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        23,
+        390,
+        476,
+        359
+      ],
+      "margin": [
+        343,
+        365,
+        676,
+        793
+      ],
+      "source_anchor": [
+        256,
+        745
+      ],
+      "rgba_sha256": "25968d62fd56faf2cb29c4ef1eba9f11e20e36b764ce79caee8836a7230d37d5",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        47,
+        760,
+        434,
+        344
+      ],
+      "margin": [
+        367,
+        380,
+        718,
+        808
+      ],
+      "source_anchor": [
+        256,
+        1100
+      ],
+      "rgba_sha256": "ebe67ef4936a51a8aba5c6cbb4b3c8f30bcf9947746908fc878729ddaf4ae330",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        24,
+        1126,
+        487,
+        339
+      ],
+      "margin": [
+        344,
+        385,
+        665,
+        813
+      ],
+      "source_anchor": [
+        256,
+        1461
+      ],
+      "rgba_sha256": "4f4cd47968957dad33b4c8a99915bba8121643b03b71dac0fe10d7cc91017922",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        522,
+        47,
+        497,
+        320
+      ],
+      "margin": [
+        330,
+        404,
+        655,
+        832
+      ],
+      "source_anchor": [
+        768,
+        363
+      ],
+      "rgba_sha256": "ce599181746a6fbe03adfc20d5809fbf7c654d79aae0b7bdb5aac012029f970c",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        526,
+        394,
+        470,
+        355
+      ],
+      "margin": [
+        334,
+        369,
+        682,
+        797
+      ],
+      "source_anchor": [
+        768,
+        745
+      ],
+      "rgba_sha256": "8ba2e29f6e279efce3bebd10f804a0653f9d21f90d2a24a900e1bfd905c0f6f5",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        533,
+        765,
+        453,
+        338
+      ],
+      "margin": [
+        341,
+        386,
+        699,
+        814
+      ],
+      "source_anchor": [
+        768,
+        1099
+      ],
+      "rgba_sha256": "732dea1d5d8d49608c56e7300a89b2f200a0694dedef6c38aea8d9f020b0c189",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        529,
+        1129,
+        487,
+        335
+      ],
+      "margin": [
+        337,
+        389,
+        665,
+        817
+      ],
+      "source_anchor": [
+        768,
+        1460
+      ],
+      "rgba_sha256": "35bcf246863f04779f3ca459ec3d3b3b3578a7a08b3156957794cc9116287630",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        25,
+        64,
+        479,
+        308
+      ],
+      "margin": [
+        345,
+        416,
+        673,
+        844
+      ],
+      "source_anchor": [
+        256,
+        368
+      ],
+      "rgba_sha256": "b25b93a26aa1487b83bda3de81a2f1728b2a50b80253780a746361cbd3439a75",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        55,
+        412,
+        451,
+        328
+      ],
+      "margin": [
+        375,
+        396,
+        701,
+        824
+      ],
+      "source_anchor": [
+        256,
+        736
+      ],
+      "rgba_sha256": "b906cae9c2623d6ea3aba96afda7e49871d3dd7444b1d1731e1b82ea28400622",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        74,
+        769,
+        395,
+        355
+      ],
+      "margin": [
+        394,
+        369,
+        757,
+        797
+      ],
+      "source_anchor": [
+        256,
+        1120
+      ],
+      "rgba_sha256": "8c76fa554caf0f1a9d21fe0cb16c4363a99dfcec8a0925f526f7ff7aecb0d070",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        26,
+        1152,
+        473,
+        324
+      ],
+      "margin": [
+        346,
+        400,
+        679,
+        828
+      ],
+      "source_anchor": [
+        256,
+        1472
+      ],
+      "rgba_sha256": "8e63c1a1b55a3a2ab0d21bca76c4e8733901d214fe4e171a8dd1e35399549e2a",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        542,
+        69,
+        463,
+        305
+      ],
+      "margin": [
+        350,
+        419,
+        689,
+        847
+      ],
+      "source_anchor": [
+        768,
+        370
+      ],
+      "rgba_sha256": "bf904abceb015972e28dad39dabe4dcbfa05f49eb500da700331d9474afb3bab",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        562,
+        419,
+        420,
+        319
+      ],
+      "margin": [
+        370,
+        405,
+        732,
+        833
+      ],
+      "source_anchor": [
+        768,
+        734
+      ],
+      "rgba_sha256": "862bc12eeb6f4b810829501af59f7ff701ab0e709c1508dcd0ac9fd00ba4051b",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        575,
+        779,
+        391,
+        345
+      ],
+      "margin": [
+        383,
+        379,
+        761,
+        807
+      ],
+      "source_anchor": [
+        768,
+        1120
+      ],
+      "rgba_sha256": "7497767da7fa57e3daf3cb46e4f4bd9050b6cb8169073dd378bd63ff1df3f1b2",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        540,
+        1152,
+        453,
+        321
+      ],
+      "margin": [
+        348,
+        403,
+        699,
+        831
+      ],
+      "source_anchor": [
+        768,
+        1469
+      ],
+      "rgba_sha256": "a685a4a57b3e89892306c504ce2c122479b37c2dada61bc3353d824969196359",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        27,
+        161,
+        477,
+        324
+      ],
+      "margin": [
+        347,
+        400,
+        675,
+        828
+      ],
+      "source_anchor": [
+        256,
+        481
+      ],
+      "rgba_sha256": "794b0d523e02fd3c064c5e1776b3f9139be67681cd558bd2c6575bfafce8150e",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        41,
+        626,
+        462,
+        316
+      ],
+      "margin": [
+        361,
+        408,
+        690,
+        836
+      ],
+      "source_anchor": [
+        256,
+        938
+      ],
+      "rgba_sha256": "5fef262870eca90dfa1e04dc8549b1e1c9ec261081cdc91402a8bf634a8895af",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        542,
+        161,
+        470,
+        313
+      ],
+      "margin": [
+        350,
+        411,
+        682,
+        839
+      ],
+      "source_anchor": [
+        768,
+        470
+      ],
+      "rgba_sha256": "c6472e2751655e79db8c722a46dcbf40c916038a89e6085907d0a5ba78eaa081",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        528,
+        629,
+        464,
+        305
+      ],
+      "margin": [
+        336,
+        419,
+        688,
+        847
+      ],
+      "source_anchor": [
+        768,
+        930
+      ],
+      "rgba_sha256": "5580593d02b645deedf55fbf323379a3ad98d355a1f98555978fca99cd5499a9",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        1048,
+        161,
+        468,
+        321
+      ],
+      "margin": [
+        344,
+        403,
+        684,
+        831
+      ],
+      "source_anchor": [
+        1280,
+        478
+      ],
+      "rgba_sha256": "6b9cd47133ca9693ec113de47c2f01df5180e65e201a06a54115df589c483360",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        1040,
+        628,
+        474,
+        307
+      ],
+      "margin": [
+        336,
+        417,
+        678,
+        845
+      ],
+      "source_anchor": [
+        1280,
+        931
+      ],
+      "rgba_sha256": "d59b4b8ab31baef08d9b9d6d60e13dab37e0a4f9b24cef9ad7d5e80fa009a254",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        14,
+        45,
+        474,
+        437
+      ],
+      "margin": [
+        360,
+        368,
+        806,
+        843
+      ],
+      "source_anchor": [
+        294,
+        477
+      ],
+      "rgba_sha256": "9901c2edc94d79b7486c8a1cfa8d542da2e77a37085a6bc4a9d0f79eada2a280",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        23,
+        525,
+        474,
+        422
+      ],
+      "margin": [
+        383,
+        382,
+        806,
+        858
+      ],
+      "source_anchor": [
+        280,
+        943
+      ],
+      "rgba_sha256": "7cfb224454f694d53ce7407947c00ec8738373787197b932fc917d20db524744",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        534,
+        47,
+        467,
+        425
+      ],
+      "margin": [
+        400,
+        380,
+        813,
+        855
+      ],
+      "source_anchor": [
+        774,
+        467
+      ],
+      "rgba_sha256": "61f3d197a9a4e2b7b238529a01450b971d3873f6a380ef83ccb28e29cb0724f4",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        537,
+        525,
+        462,
+        431
+      ],
+      "margin": [
+        397,
+        374,
+        818,
+        849
+      ],
+      "source_anchor": [
+        780,
+        951
+      ],
+      "rgba_sha256": "0be4260ad234fdbe4cec1102cc4b58612670146388f04fa2ad097aa52fa9ea30",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        1048,
+        44,
+        474,
+        439
+      ],
+      "margin": [
+        448,
+        367,
+        806,
+        841
+      ],
+      "source_anchor": [
+        1240,
+        477
+      ],
+      "rgba_sha256": "25961871cfe51cbca64e14d0cbe565426a1f64047dd53d370846f24b064b4f1c",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1040,
+        523,
+        475,
+        423
+      ],
+      "margin": [
+        410,
+        383,
+        805,
+        857
+      ],
+      "source_anchor": [
+        1270,
+        940
+      ],
+      "rgba_sha256": "c8ae3001d26ce5ae838ae8b1363c5771c72548f51236a5a0566808499d76c2a7",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        31,
+        113,
+        478,
+        388
+      ],
+      "margin": [
+        351,
+        336,
+        674,
+        764
+      ],
+      "source_anchor": [
+        256,
+        497
+      ],
+      "rgba_sha256": "1bc5c101d804b318343113e7a6bc36269889ed69dc5540d9c4a59921de2d072f",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        38,
+        584,
+        480,
+        391
+      ],
+      "margin": [
+        358,
+        333,
+        672,
+        761
+      ],
+      "source_anchor": [
+        256,
+        971
+      ],
+      "rgba_sha256": "251ee20129f3d13636e07ef93cff6bb1111e5be332fd4b59eeee92a2218f952c",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        535,
+        114,
+        465,
+        369
+      ],
+      "margin": [
+        343,
+        355,
+        687,
+        783
+      ],
+      "source_anchor": [
+        768,
+        479
+      ],
+      "rgba_sha256": "b407be2f78c56a9d575e636b0c02787ffbb02bc21290a6dbbb31f980d76b99cc",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        535,
+        585,
+        467,
+        370
+      ],
+      "margin": [
+        343,
+        354,
+        685,
+        782
+      ],
+      "source_anchor": [
+        768,
+        951
+      ],
+      "rgba_sha256": "82561857869e9a294001b6aa744021b6372f54b7222ace7b5462543d223b7f60",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        1019,
+        114,
+        494,
+        372
+      ],
+      "margin": [
+        315,
+        352,
+        658,
+        780
+      ],
+      "source_anchor": [
+        1280,
+        482
+      ],
+      "rgba_sha256": "371416c315e13a13d6a27a0c616f3b7a4d6ace7bc193b86b6346efd64413de44",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1025,
+        586,
+        486,
+        378
+      ],
+      "margin": [
+        321,
+        346,
+        666,
+        774
+      ],
+      "source_anchor": [
+        1280,
+        960
+      ],
+      "rgba_sha256": "cbf5135a132b097c95789df772e407f7261779208cf0fd145b1ac9202f48619e",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        14,
+        90,
+        485,
+        380
+      ],
+      "margin": [
+        398,
+        424,
+        795,
+        900
+      ],
+      "source_anchor": [
+        256,
+        466
+      ],
+      "rgba_sha256": "2d91d4ab3f96abb6cf5e24e3059a32028b18987b7f14b0612a8c54e903818aa5",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        15,
+        560,
+        519,
+        376
+      ],
+      "margin": [
+        399,
+        428,
+        761,
+        904
+      ],
+      "source_anchor": [
+        256,
+        932
+      ],
+      "rgba_sha256": "e1e4b8c2f8e83629fc368db2038ac95acd04f2e2db76247d6c1274941888a4b1",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        554,
+        86,
+        440,
+        387
+      ],
+      "margin": [
+        426,
+        417,
+        840,
+        893
+      ],
+      "source_anchor": [
+        768,
+        469
+      ],
+      "rgba_sha256": "ed84920823941ab2048a21a6e434008eb94b97da3a0e522468701675ac44c171",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        544,
+        558,
+        462,
+        386
+      ],
+      "margin": [
+        416,
+        418,
+        818,
+        894
+      ],
+      "source_anchor": [
+        768,
+        940
+      ],
+      "rgba_sha256": "9ccc061ceafad13ff1ac19bdf07749cdbdf1c7d263954d524eb194f302ff5a35",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1032,
+        89,
+        492,
+        381
+      ],
+      "margin": [
+        392,
+        423,
+        788,
+        899
+      ],
+      "source_anchor": [
+        1280,
+        466
+      ],
+      "rgba_sha256": "d3db6604ba2e23b128bf7201188085ec8fcdc4f1fdb99bfa399bca569279d2de",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1026,
+        559,
+        498,
+        384
+      ],
+      "margin": [
+        386,
+        420,
+        782,
+        896
+      ],
+      "source_anchor": [
+        1280,
+        939
+      ],
+      "rgba_sha256": "8be8e2e2373992cc4ca8b89dee37b74924d80a00a385e5f1ff55af73538b0b6c",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        7,
+        156,
+        338,
+        227
+      ],
+      "margin": [
+        268,
+        317,
+        526,
+        637
+      ],
+      "source_anchor": [
+        171,
+        379
+      ],
+      "rgba_sha256": "bbde5e493f0c2ea131c954e1c4f33855145deca20dd58fa19dd4458dcf77719b",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        7,
+        504,
+        338,
+        255
+      ],
+      "margin": [
+        268,
+        289,
+        526,
+        609
+      ],
+      "source_anchor": [
+        171,
+        755
+      ],
+      "rgba_sha256": "0fb9ec9f4ad74545ccfb92dc423d13bcda76d1b64acaacb5f0becc8c66a11667",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        12,
+        810,
+        322,
+        287
+      ],
+      "margin": [
+        273,
+        257,
+        542,
+        577
+      ],
+      "source_anchor": [
+        171,
+        1093
+      ],
+      "rgba_sha256": "42c002aebde772a6051ae6c8759c8e8420fecd174ce0e2749d7d84174a306204",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        12,
+        1186,
+        339,
+        259
+      ],
+      "margin": [
+        273,
+        285,
+        525,
+        605
+      ],
+      "source_anchor": [
+        171,
+        1441
+      ],
+      "rgba_sha256": "d44e639359971574a92a2dec4e74f71522b90ff1926861d2ecd1cbec597c4871",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        353,
+        156,
+        340,
+        227
+      ],
+      "margin": [
+        273,
+        317,
+        524,
+        637
+      ],
+      "source_anchor": [
+        512,
+        379
+      ],
+      "rgba_sha256": "4e58c71ee73edd07dccab252afa04c37ff16ad44e6926104d6eac0ebf3a21953",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        352,
+        499,
+        334,
+        262
+      ],
+      "margin": [
+        272,
+        282,
+        530,
+        602
+      ],
+      "source_anchor": [
+        512,
+        757
+      ],
+      "rgba_sha256": "4379bcd69f7c6e6b76007feb23ab16cb450fd6251b8dd48ac260067ccd1eed3d",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        371,
+        809,
+        283,
+        288
+      ],
+      "margin": [
+        291,
+        256,
+        581,
+        576
+      ],
+      "source_anchor": [
+        512,
+        1093
+      ],
+      "rgba_sha256": "510428be4583664ea1750e9a12f19c30a0ea97009f79594a1fcc9ea22f3a9130",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        362,
+        1190,
+        340,
+        257
+      ],
+      "margin": [
+        282,
+        287,
+        524,
+        607
+      ],
+      "source_anchor": [
+        512,
+        1443
+      ],
+      "rgba_sha256": "51f018e5e711991f68a5e42a62d92d7f85b35f38e2450b3ab0a01021ad5484bb",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        696,
+        160,
+        322,
+        223
+      ],
+      "margin": [
+        275,
+        321,
+        542,
+        641
+      ],
+      "source_anchor": [
+        853,
+        379
+      ],
+      "rgba_sha256": "0c805b94537350a4880b20200ea3741f4aef8bee7f80b39a1a8c1cdc51a03175",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        690,
+        503,
+        325,
+        260
+      ],
+      "margin": [
+        269,
+        284,
+        539,
+        604
+      ],
+      "source_anchor": [
+        853,
+        759
+      ],
+      "rgba_sha256": "d217feae4bf475f92e91ef78fcf3cf2561ab4d6f8a875e645458c7a36cca8b65",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        698,
+        815,
+        313,
+        282
+      ],
+      "margin": [
+        277,
+        262,
+        551,
+        582
+      ],
+      "source_anchor": [
+        853,
+        1093
+      ],
+      "rgba_sha256": "b70228997260fc35cc3d798b0768441b11ad9274410ed0624b5bf55c45bb9f1a",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        712,
+        1188,
+        309,
+        260
+      ],
+      "margin": [
+        291,
+        284,
+        555,
+        604
+      ],
+      "source_anchor": [
+        853,
+        1444
+      ],
+      "rgba_sha256": "a97a8cfcf0642b62008efc21204d1f96a9ed6c7a04ece6800cf084f3ab10cb75",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        22,
+        133,
+        309,
+        220
+      ],
+      "margin": [
+        283,
+        324,
+        555,
+        644
+      ],
+      "source_anchor": [
+        171,
+        349
+      ],
+      "rgba_sha256": "8b45f15f64b30700af0c14ed9a58443a2d5eb8d0f14e803fbc6e90dcc7e37873",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        24,
+        464,
+        291,
+        227
+      ],
+      "margin": [
+        285,
+        317,
+        573,
+        637
+      ],
+      "source_anchor": [
+        171,
+        687
+      ],
+      "rgba_sha256": "c1de509c5ac670be3e2bef89647fbe5ad76055b3df2a8590f242187269777701",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        34,
+        802,
+        288,
+        275
+      ],
+      "margin": [
+        295,
+        269,
+        576,
+        589
+      ],
+      "source_anchor": [
+        171,
+        1073
+      ],
+      "rgba_sha256": "a41997be4b63a174a04dd165e738ef03332f954d9ac459429bdf4a8c7f72a150",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        19,
+        1178,
+        304,
+        235
+      ],
+      "margin": [
+        280,
+        309,
+        560,
+        629
+      ],
+      "source_anchor": [
+        171,
+        1409
+      ],
+      "rgba_sha256": "b3f87903078a40c71faf09d316ea75d23d108b090eb71ef2f341e6d990f9a1ec",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        343,
+        133,
+        343,
+        222
+      ],
+      "margin": [
+        263,
+        322,
+        521,
+        642
+      ],
+      "source_anchor": [
+        512,
+        351
+      ],
+      "rgba_sha256": "10fe7374edca20c517ee207d90243386807be34e80365406a8b80d4e6e5f47b5",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        378,
+        471,
+        300,
+        221
+      ],
+      "margin": [
+        298,
+        323,
+        564,
+        643
+      ],
+      "source_anchor": [
+        512,
+        688
+      ],
+      "rgba_sha256": "79b51cf446ee58966e50533507633b658cb2cb8bc2d334d5ca20aa63288abb6d",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        382,
+        787,
+        277,
+        290
+      ],
+      "margin": [
+        302,
+        254,
+        587,
+        574
+      ],
+      "source_anchor": [
+        512,
+        1073
+      ],
+      "rgba_sha256": "a1c1d5be85970aa31db6181b17e7c1fcddd6bc7dc37b6919914df6551fdad343",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        358,
+        1168,
+        310,
+        249
+      ],
+      "margin": [
+        278,
+        295,
+        554,
+        615
+      ],
+      "source_anchor": [
+        512,
+        1413
+      ],
+      "rgba_sha256": "792c34fb06f3f99b809aeeedebced469af71cce6b79c4adba981e4f0db46b236",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        705,
+        134,
+        309,
+        220
+      ],
+      "margin": [
+        284,
+        324,
+        555,
+        644
+      ],
+      "source_anchor": [
+        853,
+        350
+      ],
+      "rgba_sha256": "9c18cf3f3a7fae5cdeead15f9e3273ab0a9855d2ed0502715e2fc3bbaf4962d3",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        712,
+        467,
+        284,
+        224
+      ],
+      "margin": [
+        291,
+        320,
+        580,
+        640
+      ],
+      "source_anchor": [
+        853,
+        687
+      ],
+      "rgba_sha256": "a30db2caeb21f056e76704bf43d7e4e23c7186caac908ef31481c86d859e3701",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        712,
+        809,
+        286,
+        268
+      ],
+      "margin": [
+        291,
+        276,
+        578,
+        596
+      ],
+      "source_anchor": [
+        853,
+        1073
+      ],
+      "rgba_sha256": "7d47c5df437e123d22141f4f63cc6226c72aefa3d6bf3ebc0385241768587803",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        703,
+        1180,
+        302,
+        233
+      ],
+      "margin": [
+        282,
+        311,
+        562,
+        631
+      ],
+      "source_anchor": [
+        853,
+        1409
+      ],
+      "rgba_sha256": "98f76745dd18739386486dc15784158f721da4e3edc88036f81499e0824baebf",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        68,
+        57,
+        380,
+        261
+      ],
+      "margin": [
+        279,
+        343,
+        580,
+        699
+      ],
+      "source_anchor": [
+        269,
+        314
+      ],
+      "rgba_sha256": "88ee4a4481cd3e9bcd923a680f6b41710c8b1234e827d5d5b24cb51e8fc72886",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        569,
+        45,
+        378,
+        284
+      ],
+      "margin": [
+        287,
+        320,
+        582,
+        676
+      ],
+      "source_anchor": [
+        762,
+        325
+      ],
+      "rgba_sha256": "2ff7c35f1869e4b7bf679cb679e89417541aa9666731a8da083c1c9dcef5751b",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        76,
+        360,
+        408,
+        269
+      ],
+      "margin": [
+        287,
+        335,
+        552,
+        691
+      ],
+      "source_anchor": [
+        269,
+        625
+      ],
+      "rgba_sha256": "cf45b2b666203026b9a379c73cd2221d523e53720dad932604fd43a5400db046",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        569,
+        335,
+        396,
+        298
+      ],
+      "margin": [
+        287,
+        306,
+        564,
+        662
+      ],
+      "source_anchor": [
+        762,
+        629
+      ],
+      "rgba_sha256": "f552a480a05f61fa88fc05b29143f0d2bc64e2f6eecdf1ab8cc5369a80cb5ca8",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        88,
+        676,
+        401,
+        250
+      ],
+      "margin": [
+        299,
+        354,
+        559,
+        710
+      ],
+      "source_anchor": [
+        269,
+        922
+      ],
+      "rgba_sha256": "6fda250736f915fb4d1de03895aa96db15bcd65a0f39b472820aff603dce0a5c",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        565,
+        652,
+        401,
+        281
+      ],
+      "margin": [
+        283,
+        323,
+        559,
+        679
+      ],
+      "source_anchor": [
+        762,
+        929
+      ],
+      "rgba_sha256": "b0f628480cf90280fd55b3cf713deed302f8c99eb45b492c18d37a3386ec2a95",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        62,
+        959,
+        423,
+        243
+      ],
+      "margin": [
+        273,
+        361,
+        537,
+        717
+      ],
+      "source_anchor": [
+        269,
+        1198
+      ],
+      "rgba_sha256": "b71650735bf3512ca8d4a3071ea741e8ad0cef1cb20131736a6e49893fdde05a",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        569,
+        958,
+        386,
+        254
+      ],
+      "margin": [
+        287,
+        350,
+        574,
+        706
+      ],
+      "source_anchor": [
+        762,
+        1208
+      ],
+      "rgba_sha256": "ee10b8f1a7042beaa647ecaff9c43e39336af66149763c3998c838965f2f2bc3",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        61,
+        1250,
+        436,
+        226
+      ],
+      "margin": [
+        272,
+        378,
+        524,
+        734
+      ],
+      "source_anchor": [
+        269,
+        1472
+      ],
+      "rgba_sha256": "6f432d7151984462c00738816825faa8f4177bbf55a3edb4009d600b47fbcb23",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        566,
+        1254,
+        404,
+        227
+      ],
+      "margin": [
+        284,
+        377,
+        556,
+        733
+      ],
+      "source_anchor": [
+        762,
+        1477
+      ],
+      "rgba_sha256": "e2b9e4b460edbc654b8018e38cf4b41042058f65485719f7a4c1e4dbf263e6b3",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        15,
+        157,
+        389,
+        369
+      ],
+      "margin": [
+        374,
+        355,
+        763,
+        783
+      ],
+      "source_anchor": [
+        217,
+        522
+      ],
+      "rgba_sha256": "fdcbf4188577b2e44e1dfb89847ab7c646456792be0f7336923c7892e27fb596",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        446,
+        173,
+        369,
+        366
+      ],
+      "margin": [
+        370,
+        358,
+        783,
+        786
+      ],
+      "source_anchor": [
+        652,
+        535
+      ],
+      "rgba_sha256": "e8a195f1ea76955a530b83d52794b61a865facd50820ce3f3d2a228619f2bed9",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        852,
+        207,
+        388,
+        341
+      ],
+      "margin": [
+        342,
+        383,
+        764,
+        811
+      ],
+      "source_anchor": [
+        1086,
+        544
+      ],
+      "rgba_sha256": "16750e657c3ffc2f41067a29bc84698c64c64db7747f24f508d11146103103b7",
+      "sheet": 9
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        1256,
+        222,
+        448,
+        328
+      ],
+      "margin": [
+        312,
+        396,
+        704,
+        824
+      ],
+      "source_anchor": [
+        1520,
+        546
+      ],
+      "rgba_sha256": "e65dc13bd8c2954a44bb92f4110769da68e2421bfa37b590b57a15ed22aa1839",
+      "sheet": 9
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        1723,
+        239,
+        428,
+        311
+      ],
+      "margin": [
+        344,
+        413,
+        724,
+        841
+      ],
+      "source_anchor": [
+        1955,
+        546
+      ],
+      "rgba_sha256": "77f837424e59b57d75e99e0a41b7ebb275f573be11e29d5b597b25dcae8e1731",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        303,
+        45,
+        418,
+        260
+      ],
+      "margin": [
+        293,
+        374,
+        590,
+        748
+      ],
+      "source_anchor": [
+        514,
+        301
+      ],
+      "rgba_sha256": "38fcbbf0b87ab472b489f11445cfd10face15ea449ef34cfa1a5ea29860f0e52",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        297,
+        330,
+        436,
+        290
+      ],
+      "margin": [
+        287,
+        344,
+        572,
+        718
+      ],
+      "source_anchor": [
+        514,
+        616
+      ],
+      "rgba_sha256": "ee185523abf05110482cd22710c5556317881632c3f2a8dc65357f66da13d478",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        285,
+        644,
+        466,
+        270
+      ],
+      "margin": [
+        275,
+        364,
+        542,
+        738
+      ],
+      "source_anchor": [
+        514,
+        910
+      ],
+      "rgba_sha256": "8250b40849a5cfb8e2ed51c8ec4d90ece0044c1577146acc9eb90e367a4b5cdb",
+      "sheet": 10
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        261,
+        940,
+        504,
+        258
+      ],
+      "margin": [
+        251,
+        376,
+        504,
+        750
+      ],
+      "source_anchor": [
+        514,
+        1194
+      ],
+      "rgba_sha256": "1b72a933fb3e9cdde9f238e532b2763c1966143585b1f08f5dff0bc3cddc06e8",
+      "sheet": 10
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        257,
+        1249,
+        515,
+        255
+      ],
+      "margin": [
+        247,
+        379,
+        493,
+        753
+      ],
+      "source_anchor": [
+        514,
+        1500
+      ],
+      "rgba_sha256": "4f4ddcc32a28d425dd4af6f08375ac2301d841cd9ad69caa1c1e6807e8e00c85",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        16,
+        160,
+        251,
+        189
+      ],
+      "margin": [
+        194,
+        215,
+        389,
+        451
+      ],
+      "source_anchor": [
+        142,
+        345
+      ],
+      "rgba_sha256": "bfc31a20700161594bc4fd85886d678c75341fca66fa7b6c37249e37691a6b87",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        283,
+        142,
+        228,
+        204
+      ],
+      "margin": [
+        206,
+        200,
+        412,
+        436
+      ],
+      "source_anchor": [
+        397,
+        342
+      ],
+      "rgba_sha256": "c94cb67c18e4aa03005a83ce257f0936194c4e87d3da12bec3cb30d11d470812",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        526,
+        142,
+        207,
+        217
+      ],
+      "margin": [
+        215,
+        187,
+        433,
+        423
+      ],
+      "source_anchor": [
+        631,
+        355
+      ],
+      "rgba_sha256": "25d0c02e46f55c58115b588d27015398fe52615367103bd9538988c5e9e2bdc9",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        764,
+        142,
+        232,
+        204
+      ],
+      "margin": [
+        200,
+        200,
+        408,
+        436
+      ],
+      "source_anchor": [
+        884,
+        342
+      ],
+      "rgba_sha256": "9c0698f04d291ff6d87e057e2f503f025a99b5b88854245c71036d592f16328a",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        16,
+        446,
+        255,
+        187
+      ],
+      "margin": [
+        194,
+        217,
+        385,
+        453
+      ],
+      "source_anchor": [
+        142,
+        629
+      ],
+      "rgba_sha256": "bfe814dc81e914d12a931d7edaf5ed526deb22eeb71a3a387635c05287c329b2",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        282,
+        429,
+        229,
+        206
+      ],
+      "margin": [
+        205,
+        198,
+        411,
+        434
+      ],
+      "source_anchor": [
+        397,
+        631
+      ],
+      "rgba_sha256": "678a268c4a779d87035c3d2945a4aff5406c01fd8cc65ded805f8c781e3f140f",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        524,
+        428,
+        216,
+        218
+      ],
+      "margin": [
+        213,
+        186,
+        424,
+        422
+      ],
+      "source_anchor": [
+        631,
+        642
+      ],
+      "rgba_sha256": "10bb662175a4c593f7bc22f0244a2f798a9f004103c4810ddad36305556dab0a",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        762,
+        430,
+        251,
+        206
+      ],
+      "margin": [
+        198,
+        198,
+        389,
+        434
+      ],
+      "source_anchor": [
+        884,
+        632
+      ],
+      "rgba_sha256": "bf48bdccc3f5a58ad88e576e1b374b1b08a4df30e1d7c4dd8d4ffe0324100c16",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        13,
+        721,
+        269,
+        197
+      ],
+      "margin": [
+        191,
+        207,
+        371,
+        443
+      ],
+      "source_anchor": [
+        142,
+        914
+      ],
+      "rgba_sha256": "ec8e5c0d628eba0a0ef582440a32554feed6965d3e8acacb74dc91df00ff5499",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        294,
+        722,
+        226,
+        196
+      ],
+      "margin": [
+        217,
+        208,
+        414,
+        444
+      ],
+      "source_anchor": [
+        397,
+        914
+      ],
+      "rgba_sha256": "391df85f49f229b9909ccfd34285577bf543375e9470f98ea7083ee6be6ac941",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        528,
+        723,
+        209,
+        197
+      ],
+      "margin": [
+        217,
+        207,
+        431,
+        443
+      ],
+      "source_anchor": [
+        631,
+        916
+      ],
+      "rgba_sha256": "1e229fd132fc659746283c5d9e2d7c872d9eec7be62e3d94bf435e3fe2e3e84e",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        752,
+        726,
+        262,
+        193
+      ],
+      "margin": [
+        188,
+        211,
+        378,
+        447
+      ],
+      "source_anchor": [
+        884,
+        915
+      ],
+      "rgba_sha256": "44da02d2c952a60e51f81ddfb27adbb0203178fa9b9196c77116c24308aad77d",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        13,
+        1006,
+        271,
+        179
+      ],
+      "margin": [
+        191,
+        225,
+        369,
+        461
+      ],
+      "source_anchor": [
+        142,
+        1181
+      ],
+      "rgba_sha256": "4fbc6dbee386f5924d6131fd416b1a4722e8064dea3e7ac1f53ad5256d0a74f9",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        290,
+        1000,
+        236,
+        188
+      ],
+      "margin": [
+        213,
+        216,
+        404,
+        452
+      ],
+      "source_anchor": [
+        397,
+        1184
+      ],
+      "rgba_sha256": "a298bfe5886ef1f2ca8ee28554c5942a7faa98f2c9b3725dbff3382b6c7f92b3",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        540,
+        1001,
+        196,
+        189
+      ],
+      "margin": [
+        229,
+        215,
+        444,
+        451
+      ],
+      "source_anchor": [
+        631,
+        1186
+      ],
+      "rgba_sha256": "8ab2e92f043c404163fc268226db4d6c65570a02173b3dfb0bd3ae236df522a2",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        751,
+        1009,
+        260,
+        182
+      ],
+      "margin": [
+        187,
+        222,
+        380,
+        458
+      ],
+      "source_anchor": [
+        884,
+        1187
+      ],
+      "rgba_sha256": "0d9fdaa5ebec9b5f07093033417eb5271ff373456d5942dbe568ea90c44f8c4a",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        13,
+        1275,
+        274,
+        176
+      ],
+      "margin": [
+        191,
+        228,
+        366,
+        464
+      ],
+      "source_anchor": [
+        142,
+        1447
+      ],
+      "rgba_sha256": "604feac7cfbacee5aab3b53cf4df8f192ba600a6b64fd6df0261c3b39a3d55ca",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        290,
+        1261,
+        238,
+        193
+      ],
+      "margin": [
+        213,
+        211,
+        402,
+        447
+      ],
+      "source_anchor": [
+        397,
+        1450
+      ],
+      "rgba_sha256": "7ef1b1cb81522fb0c79ab9098a1135446de40adb52ec9485c5c5f5006f854a4f",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        527,
+        1267,
+        210,
+        189
+      ],
+      "margin": [
+        216,
+        215,
+        430,
+        451
+      ],
+      "source_anchor": [
+        631,
+        1452
+      ],
+      "rgba_sha256": "40ce3a795b7a6a94336d90a1b104f612bd1c3740f359fc0148f09a30f9569106",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        754,
+        1276,
+        260,
+        179
+      ],
+      "margin": [
+        190,
+        225,
+        380,
+        461
+      ],
+      "source_anchor": [
+        884,
+        1451
+      ],
+      "rgba_sha256": "44ac148b1d1b9772b0833d2c0e9f186e5745640f5685082700ed85823d07c0ab",
+      "sheet": 11
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-0.png",
+          "sha256": "7b50de700080902f8ca0d47ac0844a81bb469fa323504e20ef80934140acee75",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1152,
+            1152
+          ],
+          "foot": [
+            576,
+            720
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "1152 independently matches front head and rigid shell core across breathingposes. Original dense S reference iris27.62px/512=13.81 in256canvas; selected S idle iris61.73px/1152=13.72. Full-shell volume and fourlegsupport viewed separately from overall projected height.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-1.png",
+          "sha256": "07809111d99a21ce0ed96195b46a83e78519cb0a70de15a82804fd27e5b7d25a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1152,
+            1152
+          ],
+          "foot": [
+            576,
+            720
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "1152 reviewed against front idle through skull/neck, rigid shell mass and hindhip width; fixed backhead/sidebody view and fourplantedlegs. RearN back of skull can extend above farshellrim; no frontmask pasted on rear.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-2.png",
+          "sha256": "1d645e3e424e3161f534b304d513302e8067ac0eefd50acf98e350feb440f574",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1152,
+            1152
+          ],
+          "foot": [
+            576,
+            720
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E",
+            "W"
+          ],
+          "source_direction_indices": [
+            0,
+            4
+          ],
+          "scale_review_note": "1152 uses sideprofile skull/neck and large rigid shell core matching idle; foreleg shoulder/elbow/wrist traces prove anatomical near/far leading swap, with oppositehindpair. Gait footreach does not determine scale.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-3.png",
+          "sha256": "3316de73264ffbd2c9f71886933a1e70592a4e05ff8cf48317ed9e9bbe390b22",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1280,
+            1280
+          ],
+          "foot": [
+            640,
+            800
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S",
+            "N"
+          ],
+          "source_direction_indices": [
+            2,
+            6
+          ],
+          "scale_review_note": "1280 jointly balances S head and rigid shell-core landmarks rather than normalizing long movinglimbs/tail. Front iris span78.36px projects15.67 vs idle13.72, while shellwidth474px projects94.8 vs idle434px->96.44. Walking head is drawn broader than neutral; root independent/Main review must confirm this is acceptable and not visible size pulsing. Perpose projected bodymidline anchors remove obvious wholefigure layout offsets without pixel edits. Root conditionalHOLD measured intrinsic cheekwidth+26%; a focusedimagegenheadredraw reduces S skull/breadth to approximate idle width-4% and crown/beaklength+3% atUNCHANGED1280canvas. WholePNG editedbyimagegen; body/Nrendering isrepainted(notbyteidentical), butposebboxes/limb/support geometry remain within2px andbothNraisedsoles/headawayunchanged. IndependentQA/Mainstillrequired.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-4.png",
+          "sha256": "16a85826f0b13cd4217160ac1302f102cc11479c1a217b1e58130b6d8fbf98d9",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1152,
+            1152
+          ],
+          "foot": [
+            576,
+            720
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "SE",
+            "SW"
+          ],
+          "source_direction_indices": [
+            1,
+            3
+          ],
+          "scale_review_note": "1152 independently compares sameview rigid shell core/neck/head with front idle; extended nearforeleg oncontactA becomes visibly curled/lifted behindelbow oncontactB while farforeleg plants. Allpartsconnected; no width-fit shortcut.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-5.png",
+          "sha256": "ee3564d67a81b66998f049ee91ece3cf167ccc6a5f6d8234ae212f123a6befbe",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1280,
+            1280
+          ],
+          "foot": [
+            640,
+            800
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NW",
+            "NE"
+          ],
+          "source_direction_indices": [
+            5,
+            7
+          ],
+          "scale_review_note": "1280 compares rear shell/scute core, skullback andhipwidth to idle/rearattack; alternate exposed near/far hindsoles now switch sides in BOTHdirections. No frontmouth/eyes visible towardviewer. Bodyyaw is actuallyrear, not front/profile.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-6.png",
+          "sha256": "acca2873f82eda6da758c11faf24d03b799952342f2e23b36b64ede48f16e131",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            864,
+            864
+          ],
+          "foot": [
+            432,
+            540
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "864 matches frontalS iris46.86px/864=13.884 to idle13.72 and same S shellcore322px/864=95.407 to idle96.44. Neck/jawreach remains the meleecontact extent, not head/core scale.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-7.png",
+          "sha256": "905b9f5cee8fcadea8ed2eabacf14e91aeb7680ff0914aaf1b0407ec8d47935c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            864,
+            864
+          ],
+          "foot": [
+            432,
+            540
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "864 independently reviewed side/rear rigid shellcore/neckskull/hipwidth against matching idle; no frontface at N, neckextends away oncontact. Attached beak/jaw/neck action with braced groundedlegs, not projectile.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+          "sha256": "7140bd0e96e885d628317f6a4a897de3a401d9e8056b6e4f0ae68378bb39de2e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "960 uses rigid side-shell/head/core landmarks matched to living idle/attack, independent of shortening collapsed body or longlimps. Complete shellvolume remains onside/prone floor with closedeye/headrest.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-9.png",
+          "sha256": "0068e562c65121717df298220e51a2c5ab46b4fb79c3ecdae2219a349e95a7a2",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1152,
+            1152
+          ],
+          "foot": [
+            576,
+            720
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "1152 uses rigid S shellspike core matching idle rather than corpse height. HitA pitches skull/jawUP, making visible iris span54.05px differ from neutral61.73; core model remains substantial and Main transition must confirm. Prone final body/plastron/head and limplegs rest on floor, closedeyes, headingS retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-10.png",
+          "sha256": "30e8e299033da523ca0f1ad211e6025ac47fe488d1ae26757fef9a898441214f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1008,
+            1008
+          ],
+          "foot": [
+            504,
+            630
+          ],
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "1008 side/front-left shell/headcore matched to source and idle; large blank outercanvas is not a sizebasis. Prone finalcorpse remainsSW/headlowerLEFT, all4limbsfold/splay, headclosedeyes onfloor, attached knobbytail retainsbonycurl.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "sha256": "f4747f30997bcda4cd06f9dfcb1aa3cba391fbf1e01dad773bc30430baf4b29f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "640 compares rear skull/neck, shellscute core andhipwidth to rearidle/attack separately from rolled-shell bbox. N/NW/NE terminal corpses tiltonto rigid shellside/edge with all4limbs draped, no upright live support. Rearheadfacesaway throughout.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+          "sha256": "7140bd0e96e885d628317f6a4a897de3a401d9e8056b6e4f0ae68378bb39de2e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "960 uses rigid side-shell/head/core landmarks matched to living idle/attack, independent of shortening collapsed body or longlimps. Complete shellvolume remains onside/prone floor with closedeye/headrest.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-9.png",
+          "sha256": "0068e562c65121717df298220e51a2c5ab46b4fb79c3ecdae2219a349e95a7a2",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1152,
+            1152
+          ],
+          "foot": [
+            576,
+            720
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "1152 uses rigid S shellspike core matching idle rather than corpse height. HitA pitches skull/jawUP, making visible iris span54.05px differ from neutral61.73; core model remains substantial and Main transition must confirm. Prone final body/plastron/head and limplegs rest on floor, closedeyes, headingS retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-10.png",
+          "sha256": "30e8e299033da523ca0f1ad211e6025ac47fe488d1ae26757fef9a898441214f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1008,
+            1008
+          ],
+          "foot": [
+            504,
+            630
+          ],
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "1008 side/front-left shell/headcore matched to source and idle; large blank outercanvas is not a sizebasis. Prone finalcorpse remainsSW/headlowerLEFT, all4limbsfold/splay, headclosedeyes onfloor, attached knobbytail retainsbonycurl.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "sha256": "f4747f30997bcda4cd06f9dfcb1aa3cba391fbf1e01dad773bc30430baf4b29f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "640 compares rear skull/neck, shellscute core andhipwidth to rearidle/attack separately from rolled-shell bbox. N/NW/NE terminal corpses tiltonto rigid shellside/edge with all4limbs draped, no upright live support. Rearheadfacesaway throughout.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-9.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-10.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 87.8
+}

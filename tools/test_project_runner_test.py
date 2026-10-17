@@ -33,13 +33,14 @@ class RunnerTests(unittest.TestCase):
         self.logs = self.root / 'logs'
 
     def run_case(self, output='CASE_OK\n', code=0, import_output='', missing=False,
-                 raw=False, hang=False, child=False, bake_output='NAV_BAKE_OK 1\n',
+                 raw=False, hang=False, child=False, extra_env=None, bake_output='NAV_BAKE_OK 1\n',
                  bake_code=0, bake_files=True, bake_hang=False):
         engine = self.root / 'controlled_engine'
         if not missing:
             content = f'''#!{sys.executable}
 import os, pathlib, subprocess, sys, time
 print("DATA_DIRS=" + repr([os.environ.get(k) for k in ["XDG_DATA_HOME", "APPDATA", "LOCALAPPDATA"]]), flush=True)
+print("ENGINE_ARGS=" + repr(sys.argv[1:]), flush=True)
 if "--import" in sys.argv:
     print({import_output!r}, flush=True)
 elif "--script" in sys.argv and sys.argv[sys.argv.index("--script") + 1] == "res://tools/bake_hunting_navigation.gd":
@@ -65,6 +66,9 @@ elif "--script" in sys.argv:
             engine.chmod(0o755)
         env = os.environ.copy()
         env.pop('GITHUB_ACTIONS', None)
+        env.pop('TWILIGHT_RUNNER_CAPTURE_DIR', None)
+        if extra_env:
+            env.update(extra_env)
         process = subprocess.run(
             [sys.executable, str(self.root / 'tools/test_project.py'), '--godot', str(engine),
              '--logs', str(self.logs), '--timeout', '1', '--import-timeout', '1'],
@@ -199,6 +203,52 @@ elif "--script" in sys.argv:
             paths.append(values[0])
             self.assertFalse(Path(values[0]).exists())
         self.assertEqual(len(set(paths)), 4)
+
+    def case_engine_args(self):
+        import ast
+        log = (self.logs / 'case_test.log').read_text()
+        line = next(s for s in log.splitlines() if s.startswith('ENGINE_ARGS='))
+        return ast.literal_eval(line.split('=', 1)[1])
+
+    def test_optional_capture_defaults_to_headless(self):
+        (self.root / 'tests/case_test.gd').write_text(
+            '# TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_RUNNER_CAPTURE_DIR\n'
+            'extends SceneTree\n# environment-gated RenderingServer.frame_post_draw\n')
+        process, summary = self.run_case()
+        self.assertEqual(process.returncode, 0)
+        self.assertEqual(summary['passed'], 4)
+        self.assertIn('--headless', self.case_engine_args())
+        self.assertNotIn('--rendering-driver', self.case_engine_args())
+
+    def test_requested_optional_capture_requires_real_renderer(self):
+        (self.root / 'tests/case_test.gd').write_text(
+            '# TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_RUNNER_CAPTURE_DIR\n'
+            'extends SceneTree\n# environment-gated RenderingServer.frame_post_draw\n')
+        process, _ = self.run_case(extra_env={
+            'TWILIGHT_RUNNER_CAPTURE_DIR': str(self.root / 'captures'),
+            'DISPLAY': ':controlled-runner-only',
+        })
+        self.assertEqual(process.returncode, 0)
+        self.assertIn('--rendering-driver', self.case_engine_args())
+        self.assertNotIn('--headless', self.case_engine_args())
+
+    def test_unannotated_draw_still_requires_real_renderer(self):
+        (self.root / 'tests/case_test.gd').write_text(
+            'extends SceneTree\n# required RenderingServer.frame_post_draw\n')
+        process, _ = self.run_case(extra_env={'DISPLAY': ':controlled-runner-only'})
+        self.assertEqual(process.returncode, 0)
+        self.assertIn('--rendering-driver', self.case_engine_args())
+        self.assertNotIn('--headless', self.case_engine_args())
+
+    def test_ambiguous_annotation_keeps_real_renderer(self):
+        (self.root / 'tests/case_test.gd').write_text(
+            '# TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_RUNNER_CAPTURE_DIR\n'
+            '# TWILIGHT_OPTIONAL_RENDER_ENV: OTHER_CAPTURE_DIR\n'
+            'extends SceneTree\n# RenderingServer.frame_post_draw\n')
+        process, _ = self.run_case(extra_env={'DISPLAY': ':controlled-runner-only'})
+        self.assertEqual(process.returncode, 0)
+        self.assertIn('--rendering-driver', self.case_engine_args())
+        self.assertNotIn('--headless', self.case_engine_args())
 
     def test_timeout_preserves_partial_log(self):
         self.assert_failed_case(hang=True)

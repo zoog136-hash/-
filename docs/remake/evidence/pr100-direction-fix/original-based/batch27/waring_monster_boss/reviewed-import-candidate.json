@@ -1,0 +1,749 @@
+{
+  "schema": 1,
+  "actor": "waring_cougar_source",
+  "target_keys": [
+    "monster:웨링"
+  ],
+  "source": "Newly authored from the existing neutral project atlas portrait; not recovered original animation or verified external original game art",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_0.png",
+    "region": [
+      634,
+      929,
+      317,
+      310
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 0,
+    "cell": 14,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+    "image_size": [
+      1269,
+      1239
+    ],
+    "region_rgba_sha256": "4bacceef8441bfe9d702f484f963d496670c945679c1f56bdb8dc50a07328788"
+  },
+  "supplemental_body_context": {
+    "path": "/workspace/scratch/pr100-continuation/next-boss-source-review/waring-cougar-body-context.png",
+    "sha256": "fcefa7d42e0758c0daf7ef238ec752ecb24502a129768acc32fac606f177180e"
+  },
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 0,
+      "cell": 14,
+      "body": "cougar",
+      "variant": 1,
+      "width": 1.024,
+      "weapon": "claws",
+      "crest": 1,
+      "accent": "b76d5a"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 128
+  },
+  "display_height_basis": "max_living_frame",
+  "prompt": "idle-walk-attempt1 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME IDLE/WALK animation sprites for ONLY the BLACK COUGAR/PANTHER in the attached existing project source. This exact target is Waring, a grounded four-legged black feline boss. New articulated motion drawn from a neutral portrait, NOT recovered original animation. Preserve source identity: muscular low stalking BLACK/very dark charcoal fur cougar body, subtly bluish-grey fur highlights, powerful connected shoulders and haunches, FOUR feline legs ending in big black paws with short pale claws, long attached BLACK TAIL curled at tip, small pointed feline ears, golden-yellow FRONT EYES, broad dark feline muzzle with fangs and a restrained dark red mouth interior when visible. NO lion mane, stripes, brown fur, extra horns, wings, human arms/legs, biped posture, armor, staff, weapons or new objects. Preserve the source's lean muscular black panther volume and detailed painterly fur. Every limb/ear/tail is physically connected to one substantial four-legged body, no detached paws or tail tips. Repaint clean silhouettes, ignore source border fragments.\n\nVERY SPARSE LAYOUT: exactly EIGHT equal direction columns by FIVE equal phase rows, FORTY complete SMALL full-body panthers on1536x1024 canvas. Each WHOLE feline including tail tip and extended paws fits within130pixel WIDTH and140pixel HEIGHT of its192x205cell. Keep at least55pixels clear horizontal gutter and60vertical gutter; broad safe outer margins. Do not enlarge animals to fill cells, no adjacent crop rectangle overlap. Keep same head/core model scale and fixed camera. Empty space alpha0; no floor paint, shadow, background, text, labels, borders, dust, particles, aura, bloody marks or detached fragments.\n\nDIRECTION COLUMNS left to right, same camera down each column: E TRUE RIGHT SIDE PROFILE, nose/body/paws point right; SE FRONT-RIGHT toward lower-right; S full FRONT toward viewer/down; SW FRONT-LEFT toward lower-left; W TRUE LEFT SIDE PROFILE; NW BACK-LEFT away/upper-left; N FULL BACK away/up; NE BACK-RIGHT away/upper-right. Front views show gold eyes/muzzle. N shows actual BACK of feline head/ears, spine, rump and tail with NO front eyes/mouth pasted onto rear. NW/NE are real rear body anatomy, not mirrored fronts. Profiles show true long feline side body and side head, far legs partially occluded naturally but present. Exactly FOUR connected legs in every pose, never extra or missing limbs.\n\nFIVE PHASE ROWS top to bottom:\nROW1 IDLE relaxed stalking stance, all4 paws on ground, back low, tail loosely curled.\nROW2 IDLE breathing, shoulder/ribcage flex subtly, head and elbows change, tail curls in different attached arc, all4 paws planted; genuine newly drawn anatomy.\nROW3 WALK DIAGONAL CONTACT A: anatomical RIGHT FOREPAW and LEFT HINDPAW reach FORWARD along travel heading and PLANT; LEFT FOREPAW and RIGHT HINDPAW trail BACK, hip/shoulder opposite rotation. Show clear front/back separation of the four legs.\nROW4 WALK PASSING/TRANSFER: supporting pair bears weight under core while opposite fore/hind pair bends and passes forward, elbows/hocks distinctly flex and paws unweight; at least two paws grounded. Not another standing stance.\nROW5 WALK DIAGONAL CONTACT B: anatomical LEFT FOREPAW and RIGHT HINDPAW now reach FORWARD and PLANT; RIGHT FOREPAW and LEFT HINDPAW trail BACK. Visibly reverse leading foreleg/hindleg and thigh/ankle overlap from row3, with opposing shoulder/hip weight transfer and connected flexing spine.\n\nReal quadruped gait, not a translating portrait or tail sway. Four legs remain attached at correct shoulder/pelvis, no body/leg gap or distorted paws. Same planted local ground baseline and stable head/core scale in every cell; grounded floatingFALSE, no jumping or invented hover. All40 distinct newly DRAWN full-body articulated poses, never repeats/resized stills or mirror-only frames. Correct front/back compass and exactly four anatomically coherent legs.\n\n\nattack-front-attempt2 EXACT PROMPT:\nCreate a very SPARSE transparent RGBA 2D GAME MELEE CLAW ATTACK atlas with exactly TWELVE TINY complete black cougar/panther bodies. Large PORTRAIT1024x1536, THREE phase columns and FOUR direction rows. Centers roughly x171,512,853 and y192,576,960,1344. Each WHOLE animal including fur, attacking paw, claws and long tail fits within220pixel WIDTH by170pixel HEIGHT. Canvas should look mostly EMPTY. Do NOT enlarge figures to fill cells. Huge transparent gutters more than100pixels horizontal and150vertical; safe outer margins, no complete bounding rectangles overlap, no clipped tips. Stable HEAD/CORE model scale. All empty alpha0, no floor/shadow/text/labels/grid/background/aura/dust/particles/claw trail/blood.\n\nEXACT SOURCE BLACK PANTHER identity from FIRST existing project portrait and SECOND authored idle/walk atlas: muscular low stalking BLACK/charcoal fur feline with subtle blue-grey highlights, broad black feline muzzle, gold FRONT eyes, fangs, pointed small ears, powerful shoulders/haunches, FOUR attached feline legs with big black clawed paws, long BLACK tail attached at rump and curledtip. No mane, stripes, brown fur, human limbs, biped posture, wings, horns, armor, staff, weapon or extra object. Coherent connected four-legged anatomy with solid ribcage/spine, no detached parts or source border debris. Grounded floatingFALSE; at least three paws planted on same local floorbaseline during claw attack.\n\nDIRECTION ROWS TOP TO BOTTOM: ROW1 E TRUE RIGHT SIDE PROFILE (nose and long body pointRIGHT); ROW2 SE FRONT-RIGHT toward lower-right; ROW3 S full FRONT toward viewer/down; ROW4 SW FRONT-LEFT toward lower-left. ALL3 phases in eachrow keep exact same muzzle/body heading including windup; SW always frontLEFT, no right-facing reset. True side E shows side body/head depth, not front image turnedsideways. Strike aimsEright, SEdownright, Sdown/towardviewer(foreshortenedpaw), SWdownleft. Preserve4leganatomy and exact view, farlegs naturally occluded butnotmissing.\n\nPHASE COLUMNS left to right for EACH direction row: LEFT WINDUP crouch on supporting forepaw/hindlegs, shoulder gathers, one forepaw curls UP/BACK near chest preparing strike. MIDDLE ACTUAL CLAW CONTACT core lunges forward low and one continuously attached foreleg/paw extends FORWARD in row heading at target height, shoulder/elbow/ankle connected; other forepaw supports under chest and hindpaws brace on floor. COMPACT paw reach within220pixel wholebodywidth, no leaping or detached slash effects. RIGHT RECOVERY attacking paw retracts/down toward ground, core rises slightly, weight returns to hips and tail bends differently. Genuine3phase shoulder/leg/spine motion, not duplicate/translated/scaled stills or mirror-only poses. Exactly four connected legs and connected tail perfigure, full source body safe in every cell. This is newly drawn animation from neutral source, not extraction.\n\n\nattack-rear-attempt2 EXACT PROMPT:\nCreate a very SPARSE transparent RGBA 2D GAME MELEE CLAW ATTACK atlas with exactly TWELVE TINY complete black cougar/panther bodies. Large PORTRAIT1024x1536, THREE phase columns and FOUR direction rows. Centers roughly x171,512,853 and y192,576,960,1344. Each WHOLE animal including fur, attacking paw, claws and long tail fits within220pixel WIDTH by170pixel HEIGHT. Canvas should look mostly EMPTY. Do NOT enlarge figures to fill cells. Huge transparent gutters more than100pixels horizontal and150vertical; safe outer margins, no complete bounding rectangles overlap, no clipped tips. Stable HEAD/CORE model scale. All empty alpha0, no floor/shadow/text/labels/grid/background/aura/dust/particles/claw trail/blood.\n\nEXACT SOURCE BLACK PANTHER identity from FIRST existing project portrait and SECOND authored idle/walk atlas: muscular low stalking BLACK/charcoal fur feline with subtle blue-grey highlights, broad black feline muzzle, gold FRONT eyes, fangs, pointed small ears, powerful shoulders/haunches, FOUR attached feline legs with big black clawed paws, long BLACK tail attached at rump and curledtip. No mane, stripes, brown fur, human limbs, biped posture, wings, horns, armor, staff, weapon or extra object. Coherent connected four-legged anatomy with solid ribcage/spine, no detached parts or source border debris. Grounded floatingFALSE; at least three paws planted on same local floorbaseline during claw attack.\n\nDIRECTION ROWS TOP TO BOTTOM: ROW1 W TRUE LEFT SIDE PROFILE (nose/body pointLEFT); ROW2 NW BACK-LEFT away/upper-left, rear head/back/rump dominate; ROW3 N FULL BACK directly away/up, only back of head/ears/spine/rump/tail and NO visible golden front eyes or mouth; ROW4 NE BACK-RIGHT away/upper-right with actual rear anatomy. ALL3 phases perrow keep exact same head/body heading including windup, NO turning face back toward viewer. For NW/N/NE show back of head and rear torso, no frontal eye/mouth pasted onto back. Clawstrike aimsWleft, NWupperleftaway, Nupaway, NEupperrightaway while rear body remains visible. Four correct connected legs, farforepaw may project above far shoulder when striking away, not an extra limb.\n\nPHASE COLUMNS left to right for EACH direction row: LEFT WINDUP crouch on supporting forepaw/hindlegs, shoulder gathers, one forepaw curls UP/BACK near chest preparing strike. MIDDLE ACTUAL CLAW CONTACT core lunges forward low and one continuously attached foreleg/paw extends FORWARD in row heading at target height, shoulder/elbow/ankle connected; other forepaw supports under chest and hindpaws brace on floor. COMPACT paw reach within220pixel wholebodywidth, no leaping or detached slash effects. RIGHT RECOVERY attacking paw retracts/down toward ground, core rises slightly, weight returns to hips and tail bends differently. Genuine3phase shoulder/leg/spine motion, not duplicate/translated/scaled stills or mirror-only poses. Exactly four connected legs and connected tail perfigure, full source body safe in every cell. This is newly drawn animation from neutral source, not extraction.\n\n\nhit-death-front-attempt1 EXACT PROMPT:\nCreate a very SPARSE transparent RGBA 2D GAME HIT/DEATH sprite atlas with exactly TWENTY TINY complete black COUGAR/PANTHER bodies. Large PORTRAIT1024x1536canvas, FOUR direction columns and FIVE phase rows. Centers aroundx128,384,640,896 andy154,461,768,1075,1382. Each WHOLE animal INCLUDING long tail and fallen paws must fit within190pixelWIDTH by180pixelHEIGHT. Tiny fullbody figures, mostly EMPTY canvas, do not enlarge to fill cells. At least60pixels clear horizontal gutters and100vertical, safe outer margins. No overlapping rectangular crops or clipped ears/tail/paws. Stable HEAD/CORE drawing scale, death is actual physical folding not resized animal. Empty background alpha0; no floor/shadow/text/labels/grid/borders/aura/dust/blood/gore/particles/effects.\n\nEXACT SOURCE identity from FIRST existing project portrait and SECOND authored idle/walk: muscular low BLACK/charcoal fur feline, subtle bluish-grey fur highlights, gold/yellow FRONT eyes, dark cougar muzzle/fangs, pointed small ears, powerful shoulders and haunches, FOUR connected feline legs with big black paws/short paleclaws, long attached BLACK tail curlingtip. No lionmane, stripes, brownfur, horns,wings,weapons,armor,staff,humanlimbs or addedobjects. Substantial continuous ribcage/spine joins shoulders/hips, correct4legs always attached. One connected complete silhouette, no severed paw/tail/ear. floatingFALSE, grounded at all phases. Clean painterly outlines, ignore source border debris. Newly authored from a neutral portrait, not recovered original motion.\n\nFOUR DIRECTION COLUMNS LEFT TO RIGHT fixed through all5phases: E TRUE RIGHT SIDE PROFILE nose/body right; SE FRONT-RIGHT/lower-right; S full FRONT toward viewer/down; SW FRONT-LEFT/lower-left. E is actual sidehead/longsidebody depth, SE/S/SW front gold eyes/muzzle beforeclosing fordeath. SW face always LEFT/lowerleft, never turns right. Even flat corpse retains exactcolumnorientation, fourconnectedlegs and wholeattachedtail. Independentlydrawn views, no mirror-only fronts.\n\nFIVE PHASE ROWS TOP TO BOTTOM: ROW1 HIT A head/shoulders jerk BACK away from heading, elbows bend defensively, hindhaunches lower to brace with plantedpaws, attached tail counterbalances. ROW2 HIT B different partially recovering core/head bow, fore/hind knee/hock angles change, one paw resettles on ground; distinct from idle/row1. ROW3 DEATH BUCKLE all4 legs bend under torso, head/chest droop and wholecore loses height toward ground. ROW4 DEATH FALL ribcage rolls onto side/down, head rests nearforepaws, bothforelegs and bothhindlegs fold along intactbody, tail drapes connected on ground. ROW5 FINAL CORPSE whole recognizable panther lies VERYLOW/FLAT ON SIDE on floor, aboutonequarterlivingheight, head resting sideways with FRONT eyes CLOSED/dark whenvisible, allFOUR limbs folded/draped along body and connected, tail limp curled around body to staywithin190pixelwidth. No uprighthead/torso, no crouching live pose, no missing limb/tail, no disconnected parts. Keepheadscale and bodymass, do not shrinkportrait. Lowestpaw/corpsecontact shares same localcellfloorbaseline, no levitation. All20 genuine distinct articulated newly DRAWN frames; no repeated/scaled/translated stills, mirrorshortcut or emptycells. Correct fourlegs anatomical connections and sourceidentity.\n\n\nhit-death-rear-attempt1 EXACT PROMPT:\nCreate a very SPARSE transparent RGBA 2D GAME HIT/DEATH sprite atlas with exactly TWENTY TINY complete black COUGAR/PANTHER bodies. Large PORTRAIT1024x1536canvas, FOUR direction columns and FIVE phase rows. Centers aroundx128,384,640,896 andy154,461,768,1075,1382. Each WHOLE animal INCLUDING long tail and fallen paws must fit within190pixelWIDTH by180pixelHEIGHT. Tiny fullbody figures, mostly EMPTY canvas, do not enlarge to fill cells. At least60pixels clear horizontal gutters and100vertical, safe outer margins. No overlapping rectangular crops or clipped ears/tail/paws. Stable HEAD/CORE drawing scale, death is actual physical folding not resized animal. Empty background alpha0; no floor/shadow/text/labels/grid/borders/aura/dust/blood/gore/particles/effects.\n\nEXACT SOURCE identity from FIRST existing project portrait and SECOND authored idle/walk: muscular low BLACK/charcoal fur feline, subtle bluish-grey fur highlights, gold/yellow FRONT eyes, dark cougar muzzle/fangs, pointed small ears, powerful shoulders and haunches, FOUR connected feline legs with big black paws/short paleclaws, long attached BLACK tail curlingtip. No lionmane, stripes, brownfur, horns,wings,weapons,armor,staff,humanlimbs or addedobjects. Substantial continuous ribcage/spine joins shoulders/hips, correct4legs always attached. One connected complete silhouette, no severed paw/tail/ear. floatingFALSE, grounded at all phases. Clean painterly outlines, ignore source border debris. Newly authored from a neutral portrait, not recovered original motion.\n\nFOUR DIRECTION COLUMNS LEFT TO RIGHT fixed through all5phases: W TRUE LEFT SIDE PROFILE (nose/body faceLEFT); NW BACK-LEFT away/upper-left; N FULL BACK directly away/up; NE BACK-RIGHT away/upper-right. Rear views show only back of head/ears, spine/rump and tail, NEVER frontal golden eyes/muzzle or face pasted onto back. Keep head aligned away with body through recoil/collapse, no lookingback toward viewer. Four anatomically attached feline legs at shoulder/pelvis, real side/rear volume not mirroredfront. CORPSE preserves rear camera: N flatbody head farUP, viewer sees spine/rump/tail/back ofhead; no face throughbody, NW/NE similarlyrear. Wprofileeyeclosesfordeath. Whole animal includinglimbs/tail alwaysconnected.\n\nFIVE PHASE ROWS TOP TO BOTTOM: ROW1 HIT A head/shoulders jerk BACK away from heading, elbows bend defensively, hindhaunches lower to brace with plantedpaws, attached tail counterbalances. ROW2 HIT B different partially recovering core/head bow, fore/hind knee/hock angles change, one paw resettles on ground; distinct from idle/row1. ROW3 DEATH BUCKLE all4 legs bend under torso, head/chest droop and wholecore loses height toward ground. ROW4 DEATH FALL ribcage rolls onto side/down, head rests nearforepaws, bothforelegs and bothhindlegs fold along intactbody, tail drapes connected on ground. ROW5 FINAL CORPSE whole recognizable panther lies VERYLOW/FLAT ON SIDE on floor, aboutonequarterlivingheight, head resting sideways with FRONT eyes CLOSED/dark whenvisible, allFOUR limbs folded/draped along body and connected, tail limp curled around body to staywithin190pixelwidth. No uprighthead/torso, no crouching live pose, no missing limb/tail, no disconnected parts. Keepheadscale and bodymass, do not shrinkportrait. Lowestpaw/corpsecontact shares same localcellfloorbaseline, no levitation. All20 genuine distinct articulated newly DRAWN frames; no repeated/scaled/translated stills, mirrorshortcut or emptycells. Correct fourlegs anatomical connections and sourceidentity.\n\n\nINDEPENDENT_REVIEW_SELECTED_CORRECTIONS EXACT PROMPTS:\n\nprompt-idle-front8-spacing-correction.txt\nNew transparent RGBA 2D GAME IDLE SPRITE SHEET for exactlythe same SOURCE BLACK PANTHER boss. Newly draw ONLY EIGHT whole animals: FOUR equal direction COLUMNS by TWO phase ROWS,1536x1024. Each complete body including tail fits within250x250pixels and stays at least50pixels from cell edges; centersx192,576,960,1344 andy256,768. Broad empty transparentgutters. No extrafigures. AlphaZERO background, no gradient/cloud/grayband/haze/shadow/floor, no text/grid/effects. Allpartsconnected. Sourceblack/charcoal muscularcougar, subtleblue-grayfurhighlights, goldfront/sideeyes, smallpointedears, blackmuzzle/fangs,4attachedcatlegs endingbigblackclawedpaws,longblackcurledtail. No mane/stripes/armor/props/newobjects, no biped or floating. Samehead/bodycoresizeeachcell, fixedcamera andexactcompass.\nROW1 neutral stillstalking IDLE all4paws planted lowshoulders/hips. ROW2 gentlebreathing IDLE chest/shouldersflex subtly,headbowslittle,elbowsrelax,butALL4pawsstillplanted,samegroundbaseline. Tailmaycurl differently; bodyanatomyalsochanges. Not walking, no raisedpaw, no leaping, no duplicatedstill. All8 fullrecognizable connectedbodies, no clippedtails/ears/paws or detachedfragments. Reference1sourceidentity,reference2samebody andcleanalpha.\nDIRECTION COLUMNSlefttoright:1 E TRUE RIGHT SIDE PROFILE longbodyhorizontalandrightfacing,onlyone visible sideeye andrightpointingmuzzle;2 SE FRONT-RIGHT lowerRIGHT, frontchest+rightsidevisible;3 S DIRECTLYFRONT towardviewer/down symmetricalfrontmuzzleandgoldeneyes;4 SW FRONT-LEFT lowerLEFT (mirrorcamangleofSEbutnewdrawing), frontchest+LEFTside, BOTH nose andbreastpointlowerLEFT, neverrightface or fullfrontSduplicate. Keepfixedviewbothrows. Showfouranatomicallyattachedlegs withnatural far-legocclusion. No unusedcells or missingdirections.\n\nprompt-idle-rear8-standing-correction.txt\nSPARSE transparent RGBA 2D GAME IDLE atlas, ONLY EIGHT complete source BLACK COUGAR/PANTHER bodies. Layout is TWO phase COLUMNS by FOUR direction ROWS on PORTRAIT1024x1536. Exact centersx256,768 andy192,576,960,1344. Each WHOLE BLACK ANIMAL including longtail must be SMALL within300pixelWIDTH by220pixelHEIGHT. Leave at least150pixelhorizontal clear gutter,100verticalgap and60pxoutermargin; no enlarged figures filling cells, no boundingrectangle reaching neighboringbody. AlltransparentemptyalphaZERO, NO shadow/floor/fog/band/gradient/matte/text/grid/effects. Source muscularBLACKcougar,painterlybluishgrayfurhighlights,smallpointedears,goldsideeyes onlywhenfrontsideheadvisible,blackmuzzle/fangs,FOURcorrectlyattached felinelegs/paws/claws,longattachedblacktail curledtip. No mane, stripes,horns,humanoidlimbs,armor,props,addedobjects,fragments. Continuousshoulders/ribcage/hips andall FOUR PAWS planted with soles DOWN, no pawpads visible and no lifted or swinging feet. SameHEAD andBODYCORE scale allcells. Usefirstreferenceexactsourceidentityandsecond SAMEBODY IDLE guide only, no copyediting sourcepixels.\nDIRECTION ROWS topbottom:1 W TRUE LEFT SIDE PROFILE noseleft longbodysideways,onegoldsideeye;2 NW BACK-LEFT awayUPPERLEFT rearhead/spine/rump/tail,no frontfacemask;3 N FULLBACK directlyawayUP,backofhead/ears/spine/rump/tail,NEVERfrontgoldeneyes/nose/mouth;4 NE BACK-RIGHT awayUPPERRIGHT rearhead/spine/rump/tail,no frontfacemask. NW/NE headpointsawayalignedbody anddoesnotlookbacktowardviewer. Camera andcompassfixedinbothcols.\nLEFT PHASE1 neutral IDLE stillstalking allFOUR paws planted,shoulderslow,hipsweightbearing,sourceblackfelineface calmalert,tailcurl. RIGHT PHASE2 gentlebreathing IDLE differentchest/shoulderflex,slightheadbow/elbowrelaxation,attachedtaildifferentarc,ALL FOUR PAWS firmly on their projected floor with soles DOWN, no visible pawpad or raised hindfoot, no liftedlegs/walking/leaping/floating. Independentlydrawn distinctposes; no resized/translatedstill or mirroring. Entire animal including everyear/paw/tailtip must have generoussafeemptytransparentmargin. Exactly8 animals, no unusedbody or strayfragment.\n\nCRITICAL STILL IDLE posture: never reuse the walking pose with raised hindpaw showing a sole. BOTH hindfeet stand firmly on floor, toes/claws oriented away for rear views, heel/hock joins straight down to planted paw. No exposed pawpad toward camera. Both forepaws similarly contact floor with body supported by FOUR legs. Rearbody is solid relaxed standing stance, no motion stride. Do not copy or translate firstphase: secondphase chest/shoulder/head breath is distinct while feet stay planted. Rear idle reference is the IDLE contact-sheet guide, use its 4-paw stance. Keep wholeanimal <=300x220pixels and widegaps.\n\nprompt-walk-E-W.txt\nCreate NEW accurately articulated painted2D sprite poses of ONLY exactsourceblack/charcoalCOUGAR/PANTHER boss \"웨링\": muscularcrouchedcat, subtlebluegrayfur, goldeneyes, felinemuzzle/fangs, exactlyFOURconnectedlegs/paws/claws andlongcurledattachedtail. No equipment, clothes, extra limbs, manes, stripes, newcolors, blood/effect. Sourcebodyproportions andpaintedstyle preserved, no redesign. Groundedfeline: at leasttwo paws supportbody; nofloatingtorso/detachedlegs. Realshoulder/elbow/knee/hock/ankle/paw articulation, no translated/copied/mirrored stills. OutputtrueRGBA transparentbackground, no floor/shadow/matte/haze/text/grid/markers. Everycompletebody+tail fitsSMALLinsideitsowncellwithhugecleartransparentgutters; neverclippaw/tailoroverlapneighborboundingrectangle.\nLARGE LEG-IDENTITY STUDY: EXACT3COLUMNS x2ROWS =6completebodies onlandscape1536x1024. TOPROW E trueRIGHTPROFILE, BOTTOMROW W trueLEFTPROFILE. Head/bodycompass remainsfixedprofile, not3/4turn. Eachcell512x512; fullbody+tail atmost250pxwide and180pxhighwithimmensegutters.\nCOLUMNS:1 contactA(LEFTfore+RIGHThindforward);2 passingknees/hocksflexedundertrunk;3 contactB(RIGHTfore+LEFThindforward). EndpointsMUSTshowactualoppositeanatomicalforelegleading, notsamefrontpawpose.\nTOP-E seesLEFTside nearestcamera: col1 NEARLEFTforeleg extendsRIGHT/forwardandpawPLANTED, FARRIGHTforetrails; col3 NEARLEFTforeleg MUST be unmistakably FOLDED BACK/UPtowardCHEST, elbowandwristsharplybent, pawLIFTEDclearlyoffground; atsame time FARRIGHTforeleg extendsstraightRIGHT/forwardwithitsclawedpawPLANTED. Exposebothshoulderattachments andtwofrontpaws clearly. DoNOTkeepnearforeplantedforward incol3. Lefthind/Righthinddiagonalopposite.\nBOTTOM-W seesRIGHTside nearestcamera: col1 NEARRIGHTforeleg MUSTbeFOLDEDBACK/UPtowardCHESTandpawLIFTED, FARLEFTforelegstraightLEFT/forwardpawPLANTED; col3 NEARRIGHTforelegextendsLEFT/forwardandpawPLANTED whileFARLEFTforelegfoldsback/lifts. DoNOTkeepnearforeleadinginbothendpoints. Hinddiagonalopposite.\nMiddlecolumn hasdifferentpassingkneebends, cannotreplaceendpointlegswap. Preserveall4limbs, stablehead/shoulder/hipheight andsamecoremodelscale. No posedirectionflip, no mirrorcopy, no bodyscaling/bobtrick, no coloredlegmarkers.\n\nprompt-walk-S-N.txt\nCreate NEW accurately articulated painted2D sprite poses of ONLY exactsourceblack/charcoalCOUGAR/PANTHER boss \"웨링\": muscularcrouchedcat, subtlebluegrayfur, goldeneyes, felinemuzzle/fangs, exactlyFOURconnectedlegs/paws/claws andlongcurledattachedtail. No equipment, clothes, extra limbs, manes, stripes, newcolors, blood/effect. Sourcebodyproportions andpaintedstyle preserved, no redesign. Groundedfeline: at leasttwo paws supportbody; nofloatingtorso/detachedlegs. Realshoulder/elbow/knee/hock/ankle/paw articulation, no translated/copied/mirrored stills. OutputtrueRGBA transparentbackground, no floor/shadow/matte/haze/text/grid/markers. Everycompletebody+tail fitsSMALLinsideitsowncellwithhugecleartransparentgutters; neverclippaw/tailoroverlapneighborboundingrectangle.\nLARGE LEG-IDENTITY STUDY: EXACT3COLUMNS x2ROWS =6completebodies onlandscape1536x1024. TOPROW S directFRONT(head/chest/muzzlefacesviewer), BOTTOMROW N directBACK(rump/spine/tail/backheadaway, NOfronteyes/muzzle).\nColumns1 contactA LEFTfore+RIGHThindforward,2passingdifferentkneeflex,3contactB RIGHTfore+LEFThindforward. FIXactualoppositelegdepth/overlap.\nSFRONT anatomicalLEFT=SCREENRIGHT: col1 SCREENRIGHTforelegstraightforwardwithpawLOWER/NEARERVIEWERandPLANTED whileSCREENLEFTforelegfoldedbackwithpawclearlyLIFTEDbehind; col3 SCREENLEFTforelegstraightforwardLOWER/NEARER/PLANTED andSCREENRIGHTforelegfoldedback/LIFTED. Elbow/ankle/pawoverlap MUSTreverse. Head/cheststaysstraightfront, actual4legsnot2-leggedhumanoid.\nNBACK anatomicalRIGHT=SCREENRIGHT: col1 SCREENRIGHThindlegadvancesAWAY/up (hock/ankleandpawHIGHER/FARTHERfromviewer), SCREENLEFThindlegtrailsNEARERVIEWERwithpawLOWER/planted. col3 SCREENLEFThindlegadvancesAWAY/up/higherfarther whileSCREENRIGHThindlegtrailsNEARER/lower/planted. Bothactualhindknees/hocks/paws visible onoppositesidesoftail and REVERSEdepthatendpoints. Tailcurlcanmoveaside butMUSTNOThidelegmotion orsubstituteforthejointswap. Samefullbackhead/spine, nopastedfaceorheadturn.\nMiddlecolumn differentpassing jointbendwithactualweighttransfer. Everylimb staysconnectedtobody,stablecoreheight/scale andatleasttwo supportingpaws, hugeclearcutoutgutters andnohalo.\n\nprompt-walk-front-diagonals-correction.txt\nCreate a NEW transparent RGBA hand-painted 2D isometric game walking sprite sheet for the exact source BLACK COUGAR boss in first reference, with same black/charcoal muscular feline body, subtle blue-gray fur highlights, gold eyes only on front/side head, 4 attached feline legs/paws, long connected curled black tail, small ears and dark muzzle/fangs. No props/armor, no lion mane, no detached parts, no shadows/text/floor/effects. Preserve source body identity. Match the second successful CARDINAL WALK reference for genuine alternating leg motion, head/core size and strong readable bent joints. New genuine articulated drawings, not translation/tail wobble or left-right copies. EXACTLY SIX full bodies arranged THREE phase COLUMNS and TWO direction ROWS on1536x1024, huge clear gutters and safe margin. Whole figure including tail within390x360pixels of each512x512cell; heads/core same scale between cells. Empty pixels alpha0, no matte. Each of the FOUR legs attaches to shoulder or pelvis; natural far-leg occlusion allowed but no extra or missing legs. At least TWO planted support paws per frame, stable local ground.\nTOP ROW SE FRONT-RIGHT (head and chest face lowerRIGHT); BOTTOM ROW SW FRONT-LEFT (face lowerLEFT), exact fixed three-quarter front camera across all columns. Not profiles. Near foreleg means the visibly frontmost shoulder/arm; far foreleg means the arm behind it. SHOW THE NEAR FORELEG IN CLEARLY OPPOSITE POSITIONS AT ENDPOINTS.\nCOL1 CONTACT A: near foreleg extends LONG FORWARD toward direction of travel and paw is low/planted; far foreleg is flexed BACK under chest. Near hindleg trails back; far hindleg comes forward under hip.\nCOL2 PASSING: shoulders move over planted supporting paw; other foreleg passes flexed through center with elbow and paw visibly lifted. Hip and knee angles change.\nCOL3 CONTACT B OPPOSITE: near foreleg is now HIGHLY BENT and TUCKED BACK under the chest, paw CLEARLY LIFTED off floor and behind its own elbow. The FAR FORELEG is visibly STRAIGHT FORWARD and PLANTED in front of chest. This is critical: do not redraw the same long leading near arm from column1. Near hindleg now comes FORWARD and plants; far hindleg trails BACK. Trace shoulder-to-elbow-to-wrist on both forelegs to ensure the long leading leg really switches anatomical side. Hip/shoulder twist reverses subtly; tail may counterbalance. THREE true WALK frames per direction. No attack swipe, no leaping. Gold front eyes and black muzzle remain in exact fixed direction; SW never turns right.\n\nprompt-walk-rear-diagonals-correction.txt\nCreate a NEW transparent RGBA hand-painted 2D isometric game walking sprite sheet for the exact source BLACK COUGAR boss in first reference, with same black/charcoal muscular feline body, subtle blue-gray fur highlights, gold eyes only on front/side head, 4 attached feline legs/paws, long connected curled black tail, small ears and dark muzzle/fangs. No props/armor, no lion mane, no detached parts, no shadows/text/floor/effects. Preserve source body identity. Match the second successful CARDINAL WALK reference for genuine alternating leg motion, head/core size and strong readable bent joints. New genuine articulated drawings, not translation/tail wobble or left-right copies. EXACTLY SIX full bodies arranged THREE phase COLUMNS and TWO direction ROWS on1536x1024, huge clear gutters and safe margin. Whole figure including tail within390x360pixels of each512x512cell; heads/core same scale between cells. Empty pixels alpha0, no matte. Each of the FOUR legs attaches to shoulder or pelvis; natural far-leg occlusion allowed but no extra or missing legs. At least TWO planted support paws per frame, stable local ground.\nTOP ROW NW BACK-LEFT away/upperLEFT; BOTTOM ROW NE BACK-RIGHT away/upperRIGHT. Every pose shows back of head/ears, long back, rump, hindlegs, tail; NO frontal eyes or mouth, no head turning toward viewer. Fixed true rear-three-quarter camera across all3cols. Make the two rear hindlegs visibly ALTERNATE, with one paw clearly lifted showing its pawpad at each contact.\nCOL1 CONTACT A: NEAR HINDLEG flexes knee/hock and trails BACK toward viewer with its sole/pawpad visible and unweighted; FAR HINDLEG reaches FORWARD away from viewer and plants under pelvis to support weight. Near foreleg reaches FORWARD away; far foreleg trails back.\nCOL2 PASSING: raised hindpaw swings forward under rump with hock bent; other hindleg supports under body, opposite foreleg passes.\nCOL3 CONTACT B OPPOSITE: NEAR HINDLEG now stretches FORWARD away from viewer and plants under hip; FAR HINDLEG is now the flexed trailing BACK leg with the exposed pawpad toward viewer. The exposed sole must SWITCH to the other anatomical hindleg, not remain on the same screen-side leg. Near foreleg now trails back; FAR foreleg reaches forward away to plant. Show clearly reversed near/far hocks, knees, ankle overlaps, and alternate paw pads. Four legs attached and at leasttwo grounded; no leaping, no enlarged feet, no animal falling. Trace each hip-to-knee-to-hock-to-paw. THREE true WALK frames, not three tail variations.\n",
+  "prompt_record_kind": "exact saved pre-generation prompts; original and excluded attempts preserved unchanged",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-0.png",
+      "rows": 2,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 1008,
+      "source_anchors": [
+        [
+          259,
+          418
+        ],
+        [
+          686,
+          435
+        ],
+        [
+          986,
+          423
+        ],
+        [
+          1319,
+          430
+        ],
+        [
+          259,
+          894
+        ],
+        [
+          686,
+          908
+        ],
+        [
+          986,
+          897
+        ],
+        [
+          1319,
+          904
+        ]
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "scale_review_note": "1008 canvas matches front-S gold iris separation37.846px to original19.3px/512 (9.612 vs9.65 in256 canvas). Core crouch and head volume reviewed on proposed normalized contact sheets; no death bounding height used."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-1.png",
+      "rows": 2,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 1008,
+      "source_anchors": [
+        [
+          256,
+          335
+        ],
+        [
+          256,
+          718
+        ],
+        [
+          256,
+          1108
+        ],
+        [
+          256,
+          1446
+        ],
+        [
+          768,
+          336
+        ],
+        [
+          768,
+          726
+        ],
+        [
+          768,
+          1109
+        ],
+        [
+          768,
+          1453
+        ]
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "scale_review_note": "1008 canvas independently matches rear skull-to-neck and shoulder/pelvis body core to original low stalking idle, with planted four-paw support and no exposed lifted pawpads. Full rear view has no facial features. Whole tail/corpse extents were not used as head scale."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-2.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "E",
+        "W"
+      ],
+      "canvas_size": 1120,
+      "source_anchors": [
+        [
+          256,
+          408
+        ],
+        [
+          256,
+          883
+        ],
+        [
+          768,
+          411
+        ],
+        [
+          768,
+          891
+        ],
+        [
+          1280,
+          405
+        ],
+        [
+          1280,
+          883
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1120 canvas uses source-faithful profile head/core landmarks and side-body length; E/W contact endpoints explicitly switch near vs far foreleg and opposite hindleg. Extended paws/tail do not set role scale."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-3.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "S",
+        "N"
+      ],
+      "canvas_size": 1512,
+      "source_anchors": [
+        [
+          298,
+          467
+        ],
+        [
+          290,
+          985
+        ],
+        [
+          789,
+          463
+        ],
+        [
+          790,
+          984
+        ],
+        [
+          1239,
+          466
+        ],
+        [
+          1290,
+          975
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1512 canvas matches S iris separation57.318px to original19.3px/512 (9.705 vs9.65 in256 canvas). Rear shoulder-to-hip centerline remains comparable despite bent alternate hindlegs. Manual projected midline anchors compensate whole-figure layout offsets without modifying any source pixel."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-4.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "SE",
+        "SW"
+      ],
+      "canvas_size": 1104,
+      "source_anchors": [
+        [
+          256,
+          484
+        ],
+        [
+          256,
+          936
+        ],
+        [
+          768,
+          475
+        ],
+        [
+          768,
+          922
+        ],
+        [
+          1280,
+          484
+        ],
+        [
+          1280,
+          935
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1104 canvas matches SE iris separation36.5606px to original17.0833px/512 (8.478 vs8.541 in256canvas), with foreleg endpoint overlap explicitly reversing. Reach is organic gait extension, not display scale."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-5.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "NW",
+        "NE"
+      ],
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          256,
+          477
+        ],
+        [
+          256,
+          954
+        ],
+        [
+          768,
+          463
+        ],
+        [
+          768,
+          963
+        ],
+        [
+          1280,
+          449
+        ],
+        [
+          1280,
+          953
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1280 canvas independently reviewed against original NW/NE skull, neck, shoulder and haunch core; final normalized contact sheets retain source body mass while alternate trailing hindpaw soles switch sides. Raised paw/tail bounding height is not the scale basis."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-6.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 640,
+      "source_anchors": [
+        [
+          171,
+          363
+        ],
+        [
+          171,
+          738
+        ],
+        [
+          171,
+          1094
+        ],
+        [
+          171,
+          1413
+        ],
+        [
+          512,
+          380
+        ],
+        [
+          512,
+          753
+        ],
+        [
+          512,
+          1113
+        ],
+        [
+          512,
+          1427
+        ],
+        [
+          853,
+          381
+        ],
+        [
+          853,
+          748
+        ],
+        [
+          853,
+          1087
+        ],
+        [
+          853,
+          1416
+        ]
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "sha256": "be40c130ad62842f91c42ca36e346ab7a3c1c7ebe3ecfeba38ed88c7ca0d6c80",
+      "source_anchors_review_status": "PROPOSED_NOT_APPROVED",
+      "scale_review_note": "PROPOSED_NOT_APPROVED: head/core normalization, never death-height normalization. Front S neutral eye span about24 pixels at first512 canvas; attack front about30, hit front about32 -> canvases640/680. Rear matched W shoulder-to-hip core length roughly1.25-1.34 times first source sheet ->640/688; attack rear shares front640 model basis. These approximate author landmarks require parent independent final-scale review. Source anchors keep regular root-x and actual lowest planted paw/corpse-contour y. PNGs byte-unchanged.",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-7.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 640,
+      "source_anchors": [
+        [
+          171,
+          349
+        ],
+        [
+          171,
+          699
+        ],
+        [
+          171,
+          1064
+        ],
+        [
+          171,
+          1413
+        ],
+        [
+          512,
+          353
+        ],
+        [
+          512,
+          704
+        ],
+        [
+          512,
+          1070
+        ],
+        [
+          512,
+          1417
+        ],
+        [
+          853,
+          355
+        ],
+        [
+          853,
+          704
+        ],
+        [
+          853,
+          1065
+        ],
+        [
+          853,
+          1431
+        ]
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "sha256": "9b648b9fed06cd19d8f006c0937ed6cbd065cc5eeabd07578872a93ef403d904",
+      "source_anchors_review_status": "PROPOSED_NOT_APPROVED",
+      "scale_review_note": "PROPOSED_NOT_APPROVED: head/core normalization, never death-height normalization. Front S neutral eye span about24 pixels at first512 canvas; attack front about30, hit front about32 -> canvases640/680. Rear matched W shoulder-to-hip core length roughly1.25-1.34 times first source sheet ->640/688; attack rear shares front640 model basis. These approximate author landmarks require parent independent final-scale review. Source anchors keep regular root-x and actual lowest planted paw/corpse-contour y. PNGs byte-unchanged.",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-8.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "canvas_size": 680,
+      "source_anchors": [
+        [
+          152,
+          416
+        ],
+        [
+          409,
+          423
+        ],
+        [
+          637,
+          439
+        ],
+        [
+          877,
+          426
+        ],
+        [
+          152,
+          698
+        ],
+        [
+          409,
+          704
+        ],
+        [
+          637,
+          711
+        ],
+        [
+          877,
+          706
+        ],
+        [
+          152,
+          971
+        ],
+        [
+          409,
+          977
+        ],
+        [
+          637,
+          974
+        ],
+        [
+          877,
+          978
+        ],
+        [
+          152,
+          1214
+        ],
+        [
+          409,
+          1223
+        ],
+        [
+          637,
+          1223
+        ],
+        [
+          877,
+          1218
+        ],
+        [
+          152,
+          1474
+        ],
+        [
+          409,
+          1480
+        ],
+        [
+          637,
+          1478
+        ],
+        [
+          877,
+          1482
+        ]
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "sha256": "e6ab0ef33c136626cadcd7af2b02a1f7391f2b90b1460c6c4e7aff2b85d8eab1",
+      "source_anchors_review_status": "PROPOSED_NOT_APPROVED",
+      "scale_review_note": "PROPOSED_NOT_APPROVED: head/core normalization, never death-height normalization. Front S neutral eye span about24 pixels at first512 canvas; attack front about30, hit front about32 -> canvases640/680. Rear matched W shoulder-to-hip core length roughly1.25-1.34 times first source sheet ->640/688; attack rear shares front640 model basis. These approximate author landmarks require parent independent final-scale review. Source anchors keep regular root-x and actual lowest planted paw/corpse-contour y. PNGs byte-unchanged.",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-9.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "canvas_size": 688,
+      "source_anchors": [
+        [
+          150,
+          413
+        ],
+        [
+          422,
+          416
+        ],
+        [
+          648,
+          417
+        ],
+        [
+          888,
+          415
+        ],
+        [
+          150,
+          667
+        ],
+        [
+          422,
+          674
+        ],
+        [
+          648,
+          678
+        ],
+        [
+          888,
+          674
+        ],
+        [
+          150,
+          940
+        ],
+        [
+          422,
+          945
+        ],
+        [
+          648,
+          961
+        ],
+        [
+          888,
+          960
+        ],
+        [
+          150,
+          1210
+        ],
+        [
+          422,
+          1199
+        ],
+        [
+          648,
+          1216
+        ],
+        [
+          888,
+          1217
+        ],
+        [
+          150,
+          1476
+        ],
+        [
+          422,
+          1472
+        ],
+        [
+          648,
+          1482
+        ],
+        [
+          888,
+          1481
+        ]
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "sha256": "fa7dfdfc02c2ed17d9c208e92a357f82b36f5fa56c0c76ae0ea0163e5b4a9dc2",
+      "source_anchors_review_status": "PROPOSED_NOT_APPROVED",
+      "scale_review_note": "PROPOSED_NOT_APPROVED: head/core normalization, never death-height normalization. Front S neutral eye span about24 pixels at first512 canvas; attack front about30, hit front about32 -> canvases640/680. Rear matched W shoulder-to-hip core length roughly1.25-1.34 times first source sheet ->640/688; attack rear shares front640 model basis. These approximate author landmarks require parent independent final-scale review. Source anchors keep regular root-x and actual lowest planted paw/corpse-contour y. PNGs byte-unchanged.",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Independent STATIC review: complete source black cougar body, clean alpha composites, actual E/W side bodies and N/back head occlusion; walk endpoints traced shoulder/elbow/wrist and hip/knee/hock showing alternating near/far support in all8 directions. Original failed gait40 excluded, selected idle16/walk24 are newly authored unchanged PNGs; alloriginal attack24 and hit/death40 retained. Per-role head/body-core scale reviewed separately from death shortening. Rear attack briefly rears on planted hind paws, and full terminal corpses are low/grounded/complete. NW hit rotates head toward left side during recoil with one sideeye, preserving rear torso; Main reviewer should inspect this transition. Actual Godot Main, combat timing, dropped items, Android and integration have NOT been run by this reviewer; this is candidate-only and changes completion count by zero. ROOT independently reviewed all104 normalized poses for identity, actual8view direction, articulation, core scale, connected body, complete death and source preservation. New16idle/24walk poses independently reviewed: cardinal and diagonal fore/hind support reverses; attached4leg anatomy and scale preserve original black panther. Existing64 attack/hit/death poses also approved for Main trial. Completion remains zero pending full actualMain plus independent Main visual review."
+  },
+  "status": "HOLD_PENDING_INDEPENDENT_QA_AND_MAIN",
+  "actual_import_performed": false,
+  "runtime_profiles_changed": false,
+  "main_scene_verified": false,
+  "map_changes": false,
+  "complete_count_added": 0,
+  "root_static_review": {
+    "approved_for_Main_trial": true,
+    "completion_added": 0,
+    "scope": "all104 static poses; actualMain pending"
+  }
+}

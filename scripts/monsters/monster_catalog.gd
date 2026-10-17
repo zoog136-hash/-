@@ -3,7 +3,6 @@ class_name TwilightMonsterCatalog
 
 const CATALOG_PATH = "res://data/monsters/monster_world_catalog.json"
 const SPAWN_PATH = "res://data/monsters/world_spawn_profiles.json"
-const LEVEL_FALLBACK_PATH = "res://data/monsters/l1j_level_fallback_v1.json"
 const RELAYOUT = preload("res://scripts/monsters/renewed_map_spawns.gd")
 # These dedicated field encounters were added by the renewed placement layer.
 # Reuse supported local boss attacks, without changing base HP, loot or visuals.
@@ -16,17 +15,12 @@ const DEDICATED_BOSS_SPECIALS: Dictionary = {
 }
 static var catalog: Dictionary = {}
 static var spawn_profiles: Dictionary = {}
-static var level_fallback: Dictionary = {}
 static var records_by_name: Dictionary = {}
 
 static func ensure_loaded() -> void:
 	if not catalog.is_empty(): return
 	catalog = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH)) as Dictionary
 	spawn_profiles = JSON.parse_string(FileAccess.get_file_as_string(SPAWN_PATH)) as Dictionary
-	if FileAccess.file_exists(LEVEL_FALLBACK_PATH):
-		var parsed_fallback: Variant = JSON.parse_string(FileAccess.get_file_as_string(LEVEL_FALLBACK_PATH))
-		if parsed_fallback is Dictionary:
-			level_fallback = (parsed_fallback as Dictionary).get("overrides", {})
 
 static func expand(original: Array) -> Array:
 	ensure_loaded()
@@ -45,14 +39,6 @@ static func expand(original: Array) -> Array:
 		# to reproduce original rewards. Loot rates remain in loot_drop.gd.
 		result.append(record)
 		by_name[str(record.name)] = record
-	# Apply fallback only to reviewed, previously unmatched names at unchanged level and HP.
-	for record: Dictionary in result:
-		var fallback_patch: Dictionary = level_fallback.get(str(record.name), {})
-		if fallback_patch.is_empty(): continue
-		if int(record.get("lv", -1)) != int(fallback_patch.get("expected_level", -2)): continue
-		if int(record.get("hp", -1)) != int(fallback_patch.get("previous_hp", -2)): continue
-		for stat_key: String in ["hp", "atk", "ac", "mr", "melee_accuracy", "ranged_accuracy", "magic_accuracy"]:
-			if fallback_patch.has(stat_key): record[stat_key] = fallback_patch[stat_key]
 	records_by_name = {}
 	for record: Dictionary in result:
 		var name: String = str(record.name)

@@ -1,0 +1,273 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 176,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "cast",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"special": "cast",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/attack.png",
+					"sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
+					"size": [
+						1024,
+						544
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				544
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/cast.png",
+					"sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
+					"size": [
+						1024,
+						544
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				544
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/death.png",
+					"sha256": "c61c937bfb4cc0e081a3e3df0778092ce6f7898a9daf05ea00b8fda6ebf0a582",
+					"size": [
+						1024,
+						612
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				612
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "c61c937bfb4cc0e081a3e3df0778092ce6f7898a9daf05ea00b8fda6ebf0a582",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/hit.png",
+					"sha256": "8127389a5847b06f83543455b10deed544af2f644ef56f291db82db71d0ddf4c",
+					"size": [
+						1024,
+						252
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				252
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "back_forth",
+			"sha256": "8127389a5847b06f83543455b10deed544af2f644ef56f291db82db71d0ddf4c",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/idle.png",
+					"sha256": "e9a0fbb6674cde910ac0f106924585b0862c785cc804b39dd8639a2abf2abfcb",
+					"size": [
+						1024,
+						488
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				488
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "e9a0fbb6674cde910ac0f106924585b0862c785cc804b39dd8639a2abf2abfcb",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"special": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/special.png",
+					"sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
+					"size": [
+						1024,
+						544
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				544
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/walk.png",
+					"sha256": "aef58f3660661cdd68d78adf039c6dd483ea29effa8a9b6dd563717fe27902fd",
+					"size": [
+						1024,
+						876
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				876
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "aef58f3660661cdd68d78adf039c6dd483ea29effa8a9b6dd563717fe27902fd",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

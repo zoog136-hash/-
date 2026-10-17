@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a separate new fully transparent RGBA 2D game animation atlas using the attached ORIGINAL character portrait as the authoritative design. Preserve exact anatomy, colors, silhouette, materials, equipment and proportions. Do not modify the portrait. Large square canvas with EXACTLY8 equal columns and8 equal rows,64 different SMALL independently articulated full-body poses. Every COMPLETE silhouette including wing, tail and held club occupies AT MOST38 percent of each cell width AND height. Wide empty transparent horizontal/vertical gutters, safe borders; no pose or bounding rectangle overlaps a neighbor. Direction columns E true right-facing side/profile, SE front-right, S FRONT chest and face toward viewer/screen down, SW front-left, W true left-facing profile, NW back-left, N full BACK away/screen up with no frontal face visible, NE back-right. Rows1 relaxed idle,2 distinct breathing idle,3 walking phase A,4 phase B,5 phase C,6 attack windup,7 attack contact toward that compass direction,8 recovery. All64 show articulated anatomy, never identical/scaled/translated stills. Entire creature and held item stay connected. No text, grid, floor, shadow, detached particles, blood, haze or added equipment; outside painted silhouette alpha0. Match the original detailed dark-fantasy 2D game sprite shading. Preserve the exact original bald stocky broad-bellied brown-gray humanoid brute, heavy shoulders and rounded belly, small rough face, thick bare arms, short thick legs, worn simple brown/beige loin wraps and the same large heavy gray/brown club with the blue-gray handle shown in its hands. Do not replace its original held object with a sword, axe, shield, or armored warrior. Preserve its body proportions and neutral earthy palette. N must show back of bald head, shoulder/back anatomy and back of original waist wrap, no front face or belly facing backward. Three actual alternating planted-foot walking phases; attack pulls the original club back with a stable grip, strikes forward in its direction on contact, then recovers. Keep every club end inside its own cell.\nHIT/DEATH EXACT PROMPT:\nCreate a NEW fully transparent RGBA 2D HIT AND DEATH atlas, LANDSCAPE canvas about1600pixels wide by1000high. Exactly8 equal direction columns and5 equal phase rows,40 poses. Each ENTIRE body and ALL weapons, wings and tail must be SMALLER THAN40percent of its cell width and height, with very wide horizontal and vertical transparent gutters. The first attached ORIGINAL portrait is authoritative; second main atlas establishes consistent motion art style. Preserve original identity, anatomy, colors, equipment and proportions. E true right side,SE front-right,S front toward viewer/down,SW front-left,W true left side,NW back-left,N entire back away/up,NE back-right. Rows1 recoil,2 distinct recovery,3 dying/buckling,4 collapse,5 terminal fully flat corpse, all40 organically articulated unique poses. No standing final row; no detached parts, particles, floor, shadow, labels, grid, black backing, glow or haze. All40 alpha-bounded rectangles disjoint and complete inside safe outer borders. Make a separate file; original unchanged. Preserve the exact original bald stocky broad-bellied brown-gray humanoid brute, heavy shoulders and rounded belly, small rough face, thick bare arms, short thick legs, worn simple brown/beige loin wraps and the same large heavy gray/brown club with the blue-gray handle shown in its hands. Do not replace its original held object with a sword, axe, shield, or armored warrior. Preserve its body proportions and neutral earthy palette. N must show back of bald head, shoulder/back anatomy and back of original waist wrap, no front face or belly facing backward. Three actual alternating planted-foot walking phases; attack pulls the original club back with a stable grip, strikes forward in its direction on contact, then recovers. Keep every club end inside its own cell. The prior square hit sheet had a corpse rectangle touching another body. Use the wide landscape layout and MUCH SMALLER figures, particularly corpses lying sideways; shorten the pose span by naturally folding limbs while retaining the complete same club, rather than clipping any part. Terminal corpse is clearly lying flat on the side/belly, not kneeling upright, with the blue-gray-handled club retained against the body.",
+  "prompt_record_kind": "exact final prompts; original existing portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/king_bugbear/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/king_bugbear/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared source portrait with every direction and role. Preserve the exact original bald stocky broad-bellied brown-gray humanoid brute, heavy shoulders and rounded belly, small rough face, thick bare arms, short thick legs, worn simple brown/beige loin wraps and the same large heavy gray/brown club with the blue-gray handle shown in its hands. Do not replace its original held object with a sword, axe, shield, or armored warrior. Preserve its body proportions and neutral earthy palette. N must show back of bald head, shoulder/back anatomy and back of original waist wrap, no front face or belly facing backward. Three actual alternating planted-foot walking phases; attack pulls the original club back with a stable grip, strikes forward in its direction on contact, then recovers. Keep every club end inside its own cell. Main has64 real articulated poses. N shows rear anatomy with face hidden, S front anatomy, E/W side views, and four distinct diagonal views. All frame rectangles are disjoint. Preserve source and generated image bytes; normalize resolution with virtual canvases, and use one maximum-living-pose scale within the original display-height budget. Actual Main combat, lifecycle and rendered appearance remain pending; this import alone does not certify completion. Hit sheet has40poses: two recoil and three death phases ending with a flat corpse. The first hit sheet was rejected for overlapping body rectangles. The selected wider landscape replacement passes strict disjoint-body analysis."
+  }
+}

@@ -18,6 +18,10 @@ ERROR = re.compile(
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
 SUCCESS = re.compile(r'\b[A-Z][A-Z0-9_]*_OK\b')
 SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
+OPTIONAL_RENDER_ENV = re.compile(
+    r'^\s*#\s*TWILIGHT_OPTIONAL_RENDER_ENV:\s*([A-Z][A-Z0-9_]*)\s*$',
+    re.MULTILINE,
+)
 # Fixed, existing TWILIGHT geometry contracts; not source-grid acceptance.
 # Do not add generic gameplay tests here to hide source regressions.
 LEGACY_GEOMETRY_TESTS = frozenset({
@@ -40,6 +44,17 @@ RENEWED_SPAWN_SUMMARY = re.compile(
     r'^RENEWED MAP SPAWN TEST: ([1-9][0-9]*) checks, ([0-9]+) failures$',
     re.MULTILINE,
 )
+
+
+def requires_renderer(source: str, env: Mapping[str, str]) -> bool:
+    """Only explicitly annotated, environment-gated captures may use headless."""
+    if 'RenderingServer.frame_post_draw' not in source:
+        return False
+    optional = OPTIONAL_RENDER_ENV.findall(source)
+    if len(optional) == 1:
+        return bool(env.get(optional[0], '').strip())
+    # Missing/ambiguous annotations retain mandatory real-render validation.
+    return True
 
 
 def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
@@ -66,6 +81,16 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         # 150-second subprocess cap in the concurrently loaded integration job.
         # Give only this exhaustive real-play suite bounded CI headroom.
         return max(requested, 300)
+    if name in {'original_based_mummy_lord_gameplay_test',
+                'original_based_seer_boss_gameplay_test',
+                'original_based_raziel_watcher_gameplay_test',
+                'original_based_salah_gameplay_test'}:
+        # Preserve PR100's original-HP boss lifecycle budget.
+        return max(requested, 450)
+    if name == 'original_based_transform_temporal_main_test':
+        # This inherited 10-case Main/120Hz audit runs all original gameplay,
+        # save/drop checks and continuous pose playback, not a short smoke.
+        return max(requested, 2400)
     return requested
 
 

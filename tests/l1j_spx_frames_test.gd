@@ -13,11 +13,24 @@ func _check(value: bool, label: String) -> void:
 func _run() -> void:
     var sprite_id: String = "99999-0"
     var expected_count: int = 2
-    if not ResourceLoader.exists("res://assets/l1j/candidates/spx_converted/99999-0/SpriteFrames.tres"):
+    var fixture_frames: String = "res://assets/l1j/candidates/spx_converted/99999-0/SpriteFrames.tres"
+    var fixture_metadata: String = "res://assets/l1j/candidates/spx_converted/99999-0/frame_metadata.json"
+    var original_frames: String = "res://assets/l1j/candidates/spx_converted/21624-0/SpriteFrames.tres"
+    var original_metadata: String = "res://assets/l1j/candidates/spx_converted/21624-0/frame_metadata.json"
+    var fixture_present: bool = FileAccess.file_exists(fixture_frames) or FileAccess.file_exists(fixture_metadata)
+    var original_present: bool = FileAccess.file_exists(original_frames) or FileAccess.file_exists(original_metadata)
+    if not fixture_present and not original_present:
+        print("L1J_SPX_FRAMES_SKIP: optional original SPX sequence and explicit CI fixture are absent; original art remains unavailable")
+        quit(0)
+        return
+    if not fixture_present:
         # Installed source packs contain genuine sequence IDs, never the CI ID.
         sprite_id = "21624-0"
-        var source: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/l1j/candidates/spx_converted/21624-0/frame_metadata.json"))
-        if source is Dictionary: expected_count = int(source.get("frame_count", 0))
+        if FileAccess.file_exists(original_metadata):
+            var source: Variant = JSON.parse_string(FileAccess.get_file_as_string(original_metadata))
+            if source is Dictionary: expected_count = int(source.get("frame_count", 0))
+        else:
+            _check(false, "partially installed original sequence lacks metadata")
         _check(expected_count > 1, "original sequence metadata missing")
     var bridge: RefCounted = BRIDGE.new()
     var absent: SpriteFrames = bridge.call("sprite_frames", sprite_id, "spx") as SpriteFrames

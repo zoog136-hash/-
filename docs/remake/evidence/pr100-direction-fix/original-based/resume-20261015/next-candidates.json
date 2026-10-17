@@ -1,0 +1,588 @@
+{
+  "head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
+  "audit_scope": "Read-only pending124 exact importer sharing_identity eligibility, whole-body source/contact readiness only. No generation or runtime changes.",
+  "pending_count": 124,
+  "excluded_keys": [
+    "monster:검은숲 늑대",
+    "monster:말하는 섬 들개",
+    "monster:알비노 심해어",
+    "monster:알비노 피쉬맨",
+    "monster:에바 왕국 심해어인",
+    "transform:328",
+    "transform:352",
+    "transform:357",
+    "transform:360",
+    "transform:407",
+    "transform:7"
+  ],
+  "eligible_pending_count": 113,
+  "sharing_identity_group_count": 113,
+  "compatible_count_distribution": {
+    "1": 113
+  },
+  "largest_compatible_count": 1,
+  "high_yield_sharing_group_found": false,
+  "sharing_result": "All nonexcluded pending identities are singletons under existing importer rules. Matching atlas SHA or region alone is not eligible sharing because actual preserved presentation fields differ. Do not relax rules or substitute completed native profiles.",
+  "ranked_candidates": [
+    {
+      "rank": 1,
+      "key": "transform:376",
+      "name": "베테랑 낚시꾼 폴",
+      "groupnames": [
+        "hero_plus"
+      ],
+      "compatiblecount": 1,
+      "compatible_keys": [
+        "transform:376"
+      ],
+      "sharing_identity_sha256": "e2675b9769629bde0e66891245594725a8a1570b9e093289bfa85ed0fc211f69",
+      "presentation_to_preserve": {
+        "body": "humanoid",
+        "source_options": [
+          "공격 속도 +98%",
+          "이동 속도 +2%",
+          "스킬 쿨타임 감소 +15%",
+          "PVE 대미지 감소 +3%",
+          "아데나 드롭량 증가 +3%",
+          "무게 보너스 +300"
+        ]
+      },
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/catalog/77499baacaaa399548946cb3.png",
+          "kind": "existing_catalog_portrait",
+          "catalog_source_id": "376",
+          "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/376.png?v=261001c",
+          "sha256": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66",
+          "image_size": [
+            108,
+            132
+          ]
+        },
+        "actual_sha256": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66",
+        "sha256_match": true,
+        "bytes": 9320,
+        "tracked": true,
+        "exact_region_xywh": [
+          0,
+          0,
+          108,
+          132
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          27,
+          13,
+          71,
+          121
+        ],
+        "main_body_pixels": 2169,
+        "main_connected_body_pixels_outside_region": 0,
+        "main_body_margins_LTRB": [
+          27,
+          13,
+          37,
+          11
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nonmain_components_area_gt100": [],
+        "source_unchanged": true
+      },
+      "decision": "RECOMMENDED_NEXT_SMALL_RISK_TRIAL",
+      "source_review": "Complete isolated male fishing character. Brown cap, pale shirt with brown/red gear, compact shoulder/back equipment, two separate pale-tan lower legs and two brown boots. No long skirt hides knee progression. One compact long dark rod/tool projects upper-left over shoulder; exact attachment and handedness must be preserved.",
+      "risks": [
+        "Small108×132 source cannot verify hidden rear costume details; rear views are new authoring and must be declared.",
+        "Preserve compact shoulder rod/gear in both front and rear; do not replace it with a new firearm or spear.",
+        "Use one-direction alternate-leg pilot, then direction subsets. Existing rabbit8dir failure must not be repeated by claiming7rows as8."
+      ]
+    },
+    {
+      "rank": 2,
+      "key": "transform:123",
+      "name": "이실로테(총)",
+      "groupnames": [
+        "hero_plus"
+      ],
+      "compatiblecount": 1,
+      "compatible_keys": [
+        "transform:123"
+      ],
+      "sharing_identity_sha256": "7fb5ecfd3f645ea0c4f3c9711f67a09b163fcebed49e0524c38fd5bacffe0d02",
+      "presentation_to_preserve": {
+        "body": "archer",
+        "source_options": [
+          "공격 속도 +109%",
+          "이동 속도 +2%",
+          "스킬 쿨타임 감소 +15%",
+          "PvP 원거리 추가 대미지 +2",
+          "MR +2",
+          "원거리 명중 +4"
+        ]
+      },
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/catalog/5a63357054f72a54d89e7b30.png",
+          "kind": "existing_catalog_portrait",
+          "catalog_source_id": "123",
+          "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/123.png?v=261001c",
+          "sha256": "97746bf25f41ed0660a5021df75fa5e8964f1d4dff25a3936d6d0f74850916b1",
+          "image_size": [
+            111,
+            145
+          ]
+        },
+        "actual_sha256": "97746bf25f41ed0660a5021df75fa5e8964f1d4dff25a3936d6d0f74850916b1",
+        "sha256_match": true,
+        "bytes": 12822,
+        "tracked": true,
+        "exact_region_xywh": [
+          0,
+          0,
+          111,
+          145
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          18,
+          19,
+          94,
+          127
+        ],
+        "main_body_pixels": 2572,
+        "main_connected_body_pixels_outside_region": 0,
+        "main_body_margins_LTRB": [
+          18,
+          19,
+          17,
+          18
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nonmain_components_area_gt100": [],
+        "source_unchanged": true
+      },
+      "decision": "BACKUP_SMALL_RISK_TRIAL",
+      "source_review": "Complete isolated female gun user with a compact blue/gold upper outfit, clearly separated bare lower legs and two pale/dark shoes, one long diagonal gun across upper body. Lower limbs are easier to inspect than the rabbit skirt.",
+      "risks": [
+        "Long firearm needs extra gutters and exact stable handedness.",
+        "Attack contact should be reviewed as the actual ranged weapon role rather than improvised slash.",
+        "New rear details cannot be claimed as extracted original animation."
+      ]
+    },
+    {
+      "rank": 3,
+      "key": "transform:359",
+      "name": "서커스단 트롬본 인형",
+      "groupnames": [
+        "hero_plus"
+      ],
+      "compatiblecount": 1,
+      "compatible_keys": [
+        "transform:359"
+      ],
+      "sharing_identity_sha256": "d38e846596b4e221257f362b9b9783f92f79016e92d174f2ba2b12357c9547d6",
+      "presentation_to_preserve": {
+        "body": "archer",
+        "source_options": [
+          "이동 속도 +2%",
+          "공격 속도 +98%",
+          "스킬 쿨타임 감소 +15%",
+          "PVE 원거리 추가 대미지 +2",
+          "원거리 대미지 +1"
+        ]
+      },
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/catalog/ec230f19da2fd4dc5363ab53.png",
+          "kind": "existing_catalog_portrait",
+          "catalog_source_id": "359",
+          "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/359.png?v=261001c",
+          "sha256": "c7043809271cbb43fb9d177f11f974a877cbf9f4c58671cd6dd6368c5b8bbf91",
+          "image_size": [
+            108,
+            132
+          ]
+        },
+        "actual_sha256": "c7043809271cbb43fb9d177f11f974a877cbf9f4c58671cd6dd6368c5b8bbf91",
+        "sha256_match": true,
+        "bytes": 13652,
+        "tracked": true,
+        "exact_region_xywh": [
+          0,
+          0,
+          108,
+          132
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          20,
+          9,
+          99,
+          124
+        ],
+        "main_body_pixels": 2970,
+        "main_connected_body_pixels_outside_region": 0,
+        "main_body_margins_LTRB": [
+          20,
+          9,
+          9,
+          8
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nonmain_components_area_gt100": [],
+        "source_unchanged": true
+      },
+      "decision": "BACKUP_SMALL_RISK_TRIAL",
+      "source_review": "Complete isolated slim circus trombone doll with tall red/orange upper costume, two long separate pale/dark trouser legs and black shoes. Gold trombone extends sideways across face/upper torso.",
+      "risks": [
+        "Trombone can obscure facing evidence and needs wide safe gutters.",
+        "Keep the exact instrument and hand connections; do not reinterpret as rifle/sword.",
+        "Do not infer shared art with circus drum or ringmaster."
+      ]
+    },
+    {
+      "rank": 4,
+      "key": "monster:알비노 변이된 골렘",
+      "name": "알비노 변이된 골렘",
+      "groupnames": [
+        "normal_monster"
+      ],
+      "compatiblecount": 1,
+      "compatible_keys": [
+        "monster:알비노 변이된 골렘"
+      ],
+      "sharing_identity_sha256": "1910cc73ee448f78d6b71ae9fa43cb56c7c036665e277f942908350df4839dba",
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 2,
+          "cell": 3,
+          "body": "crystal",
+          "variant": 11,
+          "width": 1.024,
+          "weapon": "sword",
+          "crest": 2,
+          "accent": "849bab"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/monsters/original/atlas_2.png",
+          "region": [
+            916,
+            0,
+            292,
+            321
+          ],
+          "kind": "existing_project_atlas",
+          "atlas": 2,
+          "cell": 3,
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+          "image_size": [
+            1222,
+            1287
+          ],
+          "region_rgba_sha256": "94faa27ac13a8f22476f7c2edf8cc269a0571e77b6cf6d9dc3b67e500a1b893c"
+        },
+        "actual_sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "sha256_match": true,
+        "bytes": 3017297,
+        "tracked": true,
+        "exact_region_xywh": [
+          916,
+          0,
+          292,
+          321
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          17,
+          12,
+          287,
+          301
+        ],
+        "main_body_pixels": 38257,
+        "main_connected_body_pixels_outside_region": 0,
+        "main_body_margins_LTRB": [
+          17,
+          12,
+          5,
+          20
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          0,
+          0,
+          66
+        ],
+        "nonmain_components_area_gt100": [
+          409,
+          184
+        ],
+        "source_unchanged": true
+      },
+      "decision": "BACKUP_SOURCE_GUIDE_REVIEW_REQUIRED",
+      "source_review": "Existing project atlas contains a complete main blue crystal golem body with two arms and two distinct short legs. Main body is not cut by its specified region. Angular limb articulation is clear.",
+      "risks": [
+        "Region also includes separate neighboring fragments; a source guide must identify full main body without claiming these fragments are body or altering source bytes.",
+        "Crystal spikes and shattered death may create disconnected components that importer correctly rejects; request contiguous articulated body until final full collapse.",
+        "This is existing project artwork, not verified original external game art."
+      ]
+    }
+  ],
+  "rejected_apparent_simple_candidates": [
+    {
+      "key": "monster:알비노 몽크",
+      "reason": "Main connected body extends beyond specified source region; not a clean whole-body source. Do not silently enlarge/guess or truncate.",
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/monsters/original/atlas_3.png",
+          "region": [
+            0,
+            899,
+            328,
+            300
+          ],
+          "kind": "existing_project_atlas",
+          "atlas": 3,
+          "cell": 12,
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+          "image_size": [
+            1312,
+            1199
+          ],
+          "region_rgba_sha256": "7ea3960c7b010a83b5187dd5ace956f5b765ab0d013a482e378f448486bd1955"
+        },
+        "actual_sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "sha256_match": true,
+        "bytes": 2985119,
+        "tracked": true,
+        "exact_region_xywh": [
+          0,
+          899,
+          328,
+          300
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          14,
+          0,
+          315,
+          276
+        ],
+        "main_body_pixels": 53283,
+        "main_connected_body_pixels_outside_region": 808,
+        "main_body_margins_LTRB": [
+          14,
+          0,
+          13,
+          24
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          91,
+          0,
+          0
+        ],
+        "nonmain_components_area_gt100": [],
+        "source_unchanged": true
+      }
+    },
+    {
+      "key": "monster:놀",
+      "reason": "Main connected body extends beyond specified source region; not a clean whole-body source. Do not silently enlarge/guess or truncate.",
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/monsters/original/atlas_5.png",
+          "region": [
+            16,
+            305,
+            304,
+            306
+          ],
+          "kind": "existing_project_atlas",
+          "atlas": 5,
+          "cell": 4,
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "sha256": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284",
+          "image_size": [
+            1287,
+            1222
+          ],
+          "region_rgba_sha256": "03aacdb80bdc12007b84dff89e36b730dd85312c366cdd932a06db1ee847e9df"
+        },
+        "actual_sha256": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284",
+        "sha256_match": true,
+        "bytes": 2447171,
+        "tracked": true,
+        "exact_region_xywh": [
+          16,
+          305,
+          304,
+          306
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          4,
+          50,
+          271,
+          306
+        ],
+        "main_body_pixels": 35544,
+        "main_connected_body_pixels_outside_region": 221,
+        "main_body_margins_LTRB": [
+          4,
+          50,
+          33,
+          0
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          33,
+          0,
+          20
+        ],
+        "nonmain_components_area_gt100": [
+          505
+        ],
+        "source_unchanged": true
+      }
+    },
+    {
+      "key": "monster:로머",
+      "reason": "Main connected body extends beyond specified source region; not a clean whole-body source. Do not silently enlarge/guess or truncate.",
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/monsters/original/atlas_0.png",
+          "region": [
+            634,
+            0,
+            317,
+            309
+          ],
+          "kind": "existing_project_atlas",
+          "atlas": 0,
+          "cell": 2,
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+          "image_size": [
+            1269,
+            1239
+          ],
+          "region_rgba_sha256": "a28db9425a5212729ea475b3c5942cd2f2b9f212b0655976b3f06f8d6e054b9a"
+        },
+        "actual_sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "sha256_match": true,
+        "bytes": 2297049,
+        "tracked": true,
+        "exact_region_xywh": [
+          634,
+          0,
+          317,
+          309
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          0,
+          11,
+          317,
+          309
+        ],
+        "main_body_pixels": 48183,
+        "main_connected_body_pixels_outside_region": 2922,
+        "main_body_margins_LTRB": [
+          0,
+          11,
+          0,
+          0
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          95,
+          0,
+          32,
+          45
+        ],
+        "nonmain_components_area_gt100": [],
+        "source_unchanged": true
+      }
+    },
+    {
+      "key": "monster:넝마",
+      "reason": "Main connected body extends beyond specified source region; not a clean whole-body source. Do not silently enlarge/guess or truncate.",
+      "source_proof": {
+        "reference": {
+          "path": "res://assets/monsters/original/atlas_0.png",
+          "region": [
+            0,
+            619,
+            317,
+            310
+          ],
+          "kind": "existing_project_atlas",
+          "atlas": 0,
+          "cell": 8,
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+          "image_size": [
+            1269,
+            1239
+          ],
+          "region_rgba_sha256": "d7be30fc549fe52a771f69fd9289c708c5157616c627e8e4b1f8361c497ec1d4"
+        },
+        "actual_sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "sha256_match": true,
+        "bytes": 2297049,
+        "tracked": true,
+        "exact_region_xywh": [
+          0,
+          619,
+          317,
+          310
+        ],
+        "main_body_alpha_gt100_bbox_in_region_xyxy": [
+          25,
+          0,
+          317,
+          310
+        ],
+        "main_body_pixels": 39819,
+        "main_connected_body_pixels_outside_region": 233,
+        "main_body_margins_LTRB": [
+          25,
+          0,
+          0,
+          0
+        ],
+        "region_boundary_alpha_gt100_counts_LTRB": [
+          0,
+          31,
+          16,
+          8
+        ],
+        "nonmain_components_area_gt100": [],
+        "source_unchanged": true
+      }
+    }
+  ],
+  "contact_sheet_all30": "/workspace/scratch/pr100-resume/next-candidates-source-contact.png",
+  "contact_sheet_selected": "/workspace/scratch/pr100-resume/next-candidates-clean-contact.png",
+  "production_changes": false,
+  "imagegen_performed": false,
+  "Main": "not_run",
+  "completed_added": 0
+}

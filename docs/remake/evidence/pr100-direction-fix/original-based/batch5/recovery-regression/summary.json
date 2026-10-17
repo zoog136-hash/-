@@ -1,0 +1,135 @@
+{
+  "recorded_at_utc": "2026-10-13T22:46:58.401343+00:00",
+  "basis_commit": "67a45d4eb3c85dce454346326e6be9b364cec4e3",
+  "changed_code": [
+    "tests/full_visual_manifest_test.gd",
+    "tests/capture_all_catalog_motion.gd",
+    "tests/capture_full_catalog.gd"
+  ],
+  "source_references_sha256_match": 222,
+  "recovered_files_still_match_backup": [
+    "assets/actors/eight_direction/original_based/bugbear/SpriteFrames.tres",
+    "assets/actors/eight_direction/original_based/bugbear/poses-0.png",
+    "assets/actors/eight_direction/original_based/bugbear/poses-1.png",
+    "assets/actors/eight_direction/original_based/bugbear/provenance.json",
+    "assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+    "assets/actors/eight_direction/original_based/reaper_male/poses-0.png",
+    "assets/actors/eight_direction/original_based/reaper_male/poses-1.png",
+    "assets/actors/eight_direction/original_based/reaper_male/provenance.json",
+    "assets/actors/eight_direction/original_based/sand_worm/SpriteFrames.tres",
+    "assets/actors/eight_direction/original_based/sand_worm/poses-0.png",
+    "assets/actors/eight_direction/original_based/sand_worm/poses-1.png",
+    "assets/actors/eight_direction/original_based/sand_worm/provenance.json",
+    "data/combat_animation_profiles.json",
+    "tests/original_based_bugbear_gameplay_test.gd",
+    "tests/original_based_monster_gameplay_test.gd",
+    "tests/original_based_motion_import_test.py",
+    "tests/original_based_reaper_male_gameplay_test.gd",
+    "tests/original_based_sand_worm_gameplay_test.gd",
+    "tools/import_original_based_motion.py"
+  ],
+  "runtime_or_art_changes": false,
+  "manifest_before": {
+    "result": "failed",
+    "reason": "The old test compared gait 0 and 2, the same position in an authored two-frame loop. Eight direction assertions failed for transform:258."
+  },
+  "manifest_after": {
+    "command": [
+      "/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+      "--path",
+      "/workspace/TWILIGHT",
+      "--script",
+      "res://tests/full_visual_manifest_test.gd",
+      "--headless"
+    ],
+    "subject": null,
+    "exit_code": 0,
+    "seconds": 12.019360050999921,
+    "log": "/workspace/pr100-authoring/batch5_adjacent_walk-headless.log"
+  },
+  "main_before": {
+    "result": "failed",
+    "reason": "Legacy-only identity metadata rejected native SpriteFrames. 130 equipped identities were skipped."
+  },
+  "main_after": {
+    "passed": 723,
+    "failed": 0,
+    "method": "production Main.tscn equip APIs; two distinct authored frames drawn in GL per identity",
+    "all_states_rendered": false,
+    "views_available_is_legacy_atlas_metadata": true
+  },
+  "production_renderers": {
+    "passed": 723,
+    "failed": 0,
+    "scope": "Existing Player.tscn/follower/relic renderer inspection, separate from Main gameplay. Two authored frames and raster hashes per identity."
+  },
+  "whole_project_regression": "Still running at this evidence checkpoint; its earlier manifest failure is preserved and the corrected case has passed. Final CI is reported separately for the exact pushed commit.",
+  "manual_art_review_all_identities": false,
+  "files": [
+    {
+      "path": "manifest-before.log",
+      "bytes": 946,
+      "sha256": "f556c9c5c3b17abb6f5a235e62d4f8758820c9ca3e1781c62f33c8e700756c4d"
+    },
+    {
+      "path": "manifest-after.log",
+      "bytes": 615,
+      "sha256": "b75ab0746aee2297f17a1276027e85af3c3a00e138825c2908f710c08392e4c1"
+    },
+    {
+      "path": "manifest-after.run.json",
+      "bytes": 367,
+      "sha256": "dc6d094343d7a7a7ea00afe46eece72745611063c669263ee2ef2eb0df199c6a"
+    },
+    {
+      "path": "main-before.log",
+      "bytes": 1331,
+      "sha256": "5ce02b6e6a3d1e96a0a9c2510f234084b0e2e3425d8ccbe51c74a7aa05d734b9"
+    },
+    {
+      "path": "main-after.log",
+      "bytes": 1498,
+      "sha256": "a3201bd125e4741caa2bbb0a73b263327550d4e7062b480d54e3c0f5cb451d4e"
+    },
+    {
+      "path": "production-renderers.log",
+      "bytes": 1057,
+      "sha256": "2ba395e9750de1bc1657d6774f8b09eb1d2408fa957b973ceeb1aeddc84c32c1"
+    },
+    {
+      "path": "main-render.json",
+      "bytes": 243933,
+      "sha256": "c9db77be3ff6cad6a2a054675ac59e8284ce0e1df2f8868d709fd520fcd9945d"
+    },
+    {
+      "path": "production-renderers.json",
+      "bytes": 265056,
+      "sha256": "396e287bd1fd7fefef3f00a058c68caeafc2d9b1b1ed14f86c9effa07905a6fa"
+    },
+    {
+      "path": "main-reaper-male-walk-0.png",
+      "bytes": 132696,
+      "sha256": "0a90658819ec5020fd5ab9f5df0570dec1540f8fece44877d0cfbe9b0ae3f8b2"
+    },
+    {
+      "path": "main-reaper-male-walk-1.png",
+      "bytes": 132592,
+      "sha256": "796bf38d7ea8d7e918bb5883fa5bc4f9057b80c4374541b6bb6de4cfdb4743f8"
+    },
+    {
+      "path": "download-diagnosis.json",
+      "bytes": 1262,
+      "sha256": "4ac71f9dc39e3feb1dc52fc39774edcf9ca8734b59b1b11ae0e4e9a9fc584c46"
+    },
+    {
+      "path": "ci-android.json",
+      "bytes": 522346,
+      "sha256": "446337047d1564ecb0bca6368999ca083a19f9498159226719080e9de7b1f43d"
+    },
+    {
+      "path": "pending-files-backup.json",
+      "bytes": 655,
+      "sha256": "0632738a200b73db6d8b9b87562d9a5e5d27ded1a7201ccc87e79db1fb11e3e2"
+    }
+  ]
+}

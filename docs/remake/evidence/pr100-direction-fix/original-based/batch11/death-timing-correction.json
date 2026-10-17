@@ -1,0 +1,11 @@
+{
+  "CI_failure": "Windows spear captain: eight movement/attack directions passed; real VFX death-frame coverage failed. Linux45m and integration40m jobs were cancelled at their wall-clock caps.",
+  "reproduction": "Observing real process/render updates exposed missing phases in local Main: spear captain NE [1,2]; red guard E/SE/NW [0,2] and S [1,2]. Independent .14s cadence regression failed three assertions before the runtime fix.",
+  "runtime_cause": "CombatVFX normalized every death into the first half of its .8s lifetime, ignoring the source SpriteFrames speed. The real authored .65s track was compressed into .4s, with .133s phases.",
+  "runtime_fix": "Use sum(frame_duration)/animation_speed for authored corpse playback. Keep the ordinary .8s fade lifetime; longer source tracks receive their full duration plus .15s hold. No sprite pixels, damage, respawn rules or attack timing changed.",
+  "QA_fix": "Observe the actual process/render clock, record exact age and pose duration, and save PNGs after the VFX expires. Retain strict [0,1,2] coverage, exact orientation/anchor/scale, lifetime/pool and respawn assertions.",
+  "verification": "Five final Main runs passed, including all24 three-frame deaths per render run; five core VFX/hit/authored-state/timeline/canvas tests passed. Weighted long-duration and ordinary source tracks are independently checked.",
+  "CI_budget": "Measured old full Linux jobs35-45m and Windows51m; additional three boss lifecycles and three normal probes require more time. Full Linux suite jobs75m, Windows90m. Only three real boss tests have a450s minimum; ordinary per-test bounds remain unchanged.",
+  "CI_diagnostics": "A focused Windows Main death step runs before the complete suite. Real JSON reports remain outside temporary saves; bounded failing stdout is retained even if ZIP transport fails.",
+  "Windows_retest": "Pending terminal verification of the newly pushed commit; local Linux success is not Windows success."
+}

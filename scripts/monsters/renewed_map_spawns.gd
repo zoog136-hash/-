@@ -230,6 +230,8 @@ static func apply(definition: Dictionary, profiles: Dictionary, records: Diction
 		var half: Vector2 = _vector(boss.half_size)
 		var spawn: Dictionary = {"id": boss.id, "mode": "boss", "monster_types": [boss.name], "max_count": 1,
 			"respawn_time": (28800 if id == "aden_world" else 86400), "respawn_policy": "wall_clock", "roaming_radius": 120, "min_spacing": 64, "boss_name": boss.name,
+			"map_id": id, "floor_id": null,
+			"verification_status": {"exact_spawn_area": "unverified", "coordinates": "local_only", "respawn": "wall_clock_local_only"},
 			"coordinate_evidence": "current_habitat_relative_local_pve_not_original_server"}
 		_set_box(spawn, Rect2(center - half, half * 2.0))
 		spawns.append(spawn)

@@ -1,0 +1,70 @@
+validate	Existing region render and active-play comparison	﻿2026-10-13T12:32:55.0947199Z ##[group]Run set -o pipefail
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.0947434Z [36;1mset -o pipefail[0m
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.0947608Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/region-render"[0m
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.0947805Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.0948246Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee test-results/region-render.log[0m
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.0948738Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/region-render.log; then exit 1; fi[0m
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.1002053Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.1002246Z ##[endgroup]
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.1419057Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.2696973Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.2698896Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.3460769Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+validate	Existing region render and active-play comparison	2026-10-13T12:32:55.3461317Z 
+validate	Existing region render and active-play comparison	2026-10-13T12:32:59.3943478Z LANDMARK_CACHE oman_01 cells=3 size=(1152, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:00.2334891Z REGION_CAPTURE oman_01 entrance calls=528.0 props=138
+validate	Existing region render and active-play comparison	2026-10-13T12:33:00.7691787Z REGION_CAPTURE oman_01 central calls=416.0 props=151
+validate	Existing region render and active-play comparison	2026-10-13T12:33:01.3637124Z LANDMARK_CACHE oman_10 cells=5 size=(1536, 768)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:01.9903369Z REGION_CAPTURE oman_10 entrance calls=560.0 props=72
+validate	Existing region render and active-play comparison	2026-10-13T12:33:02.7614054Z REGION_CAPTURE oman_10 central calls=587.0 props=122
+validate	Existing region render and active-play comparison	2026-10-13T12:33:02.8962942Z LANDMARK_CACHE domination_summit cells=7 size=(1536, 768)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:03.4900826Z REGION_CAPTURE domination_summit entrance calls=380.0 props=63
+validate	Existing region render and active-play comparison	2026-10-13T12:33:04.1280484Z REGION_CAPTURE domination_summit central calls=368.0 props=115
+validate	Existing region render and active-play comparison	2026-10-13T12:33:04.8860552Z LANDMARK_CACHE escaros_01 cells=3 size=(1152, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:05.5539657Z REGION_CAPTURE escaros_01 entrance calls=593.0 props=246
+validate	Existing region render and active-play comparison	2026-10-13T12:33:06.3706846Z REGION_CAPTURE escaros_01 central calls=651.0 props=148
+validate	Existing region render and active-play comparison	2026-10-13T12:33:06.5433945Z LANDMARK_CACHE escaros_02 cells=3 size=(1152, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:07.2345924Z REGION_CAPTURE escaros_02 entrance calls=611.0 props=263
+validate	Existing region render and active-play comparison	2026-10-13T12:33:07.9632982Z REGION_CAPTURE escaros_02 central calls=603.0 props=120
+validate	Existing region render and active-play comparison	2026-10-13T12:33:08.1056906Z LANDMARK_CACHE escaros_03 cells=3 size=(1152, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:08.8177054Z REGION_CAPTURE escaros_03 entrance calls=608.0 props=210
+validate	Existing region render and active-play comparison	2026-10-13T12:33:09.5676473Z REGION_CAPTURE escaros_03 central calls=591.0 props=250
+validate	Existing region render and active-play comparison	2026-10-13T12:33:09.7073240Z LANDMARK_CACHE escaros_04 cells=3 size=(1152, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:10.4394860Z REGION_CAPTURE escaros_04 entrance calls=593.0 props=239
+validate	Existing region render and active-play comparison	2026-10-13T12:33:11.2599650Z REGION_CAPTURE escaros_04 central calls=613.0 props=150
+validate	Existing region render and active-play comparison	2026-10-13T12:33:11.4762743Z LANDMARK_CACHE escaros_05 cells=3 size=(1152, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:12.2327943Z REGION_CAPTURE escaros_05 entrance calls=576.0 props=249
+validate	Existing region render and active-play comparison	2026-10-13T12:33:13.0478818Z REGION_CAPTURE escaros_05 central calls=556.0 props=84
+validate	Existing region render and active-play comparison	2026-10-13T12:33:14.4030760Z LANDMARK_CACHE albino_01 cells=4 size=(1536, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:15.3758706Z REGION_CAPTURE albino_01 entrance calls=1217.0 props=155
+validate	Existing region render and active-play comparison	2026-10-13T12:33:16.3079587Z REGION_CAPTURE albino_01 central calls=1080.0 props=206
+validate	Existing region render and active-play comparison	2026-10-13T12:33:17.7323096Z LANDMARK_CACHE albino_02 cells=4 size=(1536, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:18.7369729Z REGION_CAPTURE albino_02 entrance calls=1204.0 props=148
+validate	Existing region render and active-play comparison	2026-10-13T12:33:19.6759072Z REGION_CAPTURE albino_02 central calls=1075.0 props=212
+validate	Existing region render and active-play comparison	2026-10-13T12:33:20.3390299Z LANDMARK_CACHE albino_03 cells=4 size=(1536, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:21.3327786Z REGION_CAPTURE albino_03 entrance calls=1239.0 props=159
+validate	Existing region render and active-play comparison	2026-10-13T12:33:22.3239842Z REGION_CAPTURE albino_03 central calls=1097.0 props=218
+validate	Existing region render and active-play comparison	2026-10-13T12:33:22.9727368Z LANDMARK_CACHE albino_04 cells=4 size=(1536, 384)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:23.9611584Z REGION_CAPTURE albino_04 entrance calls=1223.0 props=157
+validate	Existing region render and active-play comparison	2026-10-13T12:33:24.8249139Z REGION_CAPTURE albino_04 central calls=1075.0 props=244
+validate	Existing region render and active-play comparison	2026-10-13T12:33:24.9700203Z LANDMARK_CACHE faith_01 cells=5 size=(1536, 768)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:25.8049195Z REGION_CAPTURE faith_01 entrance calls=591.0 props=76
+validate	Existing region render and active-play comparison	2026-10-13T12:33:26.7438206Z REGION_CAPTURE faith_01 central calls=627.0 props=115
+validate	Existing region render and active-play comparison	2026-10-13T12:33:26.9156228Z LANDMARK_CACHE faith_04 cells=5 size=(1536, 768)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:27.7183958Z REGION_CAPTURE faith_04 entrance calls=589.0 props=79
+validate	Existing region render and active-play comparison	2026-10-13T12:33:28.6608565Z REGION_CAPTURE faith_04 central calls=634.0 props=116
+validate	Existing region render and active-play comparison	2026-10-13T12:33:29.5862726Z REGION_RENDER median_ms=25.732 p95_ms=37.551
+validate	Existing region render and active-play comparison	2026-10-13T12:33:37.0227005Z ERROR: Active-play probe did not remain active in aden_world
+validate	Existing region render and active-play comparison	2026-10-13T12:33:37.0227461Z    at: push_error (core/variant/variant_utility.cpp:1023)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:37.0227664Z    GDScript backtrace (most recent call first):
+validate	Existing region render and active-play comparison	2026-10-13T12:33:37.0227878Z        [0] _benchmark_play (res://tests/capture_regions.gd:98)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:37.0228097Z        [1] _save_view (res://tests/capture_regions.gd:31)
+validate	Existing region render and active-play comparison	2026-10-13T12:33:37.0231657Z ACTIVE_PLAY {"active_monsters":0,"auto_target_frames":180,"distance_world_pixels":985.9,"frames":180,"map":"aden_world","median_ms":20.663,"mode":"active_auto_hunt","p95_ms":30.925,"peak_draw_calls":891,"physics_p95_ms":0.315,"player_landed_hits":0,"process_p95_ms":35.975,"xp_gained":0}
+validate	Existing region render and active-play comparison	2026-10-13T12:33:43.7333969Z ACTIVE_PLAY {"active_monsters":38,"auto_target_frames":179,"distance_world_pixels":3123.9,"frames":180,"map":"oman_10","median_ms":30.61,"mode":"active_auto_hunt","p95_ms":37.503,"peak_draw_calls":1071,"physics_p95_ms":84.308,"player_landed_hits":8,"process_p95_ms":34.713,"xp_gained":0}
+validate	Existing region render and active-play comparison	2026-10-13T12:33:51.2479162Z REGION_AUTO_STATIONARY albino_04 target_frames=180 damage_hits=11 active_monsters=15
+validate	Existing region render and active-play comparison	2026-10-13T12:33:51.2480255Z ACTIVE_PLAY {"active_monsters":15,"auto_target_frames":180,"distance_world_pixels":0.0,"frames":180,"map":"albino_04","median_ms":29.595,"mode":"active_auto_hunt","p95_ms":39.703,"peak_draw_calls":1232,"physics_p95_ms":2.806,"player_landed_hits":11,"process_p95_ms":45.607,"xp_gained":0}
+validate	Existing region render and active-play comparison	2026-10-13T12:33:58.9611652Z REGION_AUTO_STATIONARY faith_04 target_frames=180 damage_hits=12 active_monsters=14
+validate	Existing region render and active-play comparison	2026-10-13T12:33:58.9612916Z ACTIVE_PLAY {"active_monsters":14,"auto_target_frames":180,"distance_world_pixels":0.0,"frames":180,"map":"faith_04","median_ms":34.447,"mode":"active_auto_hunt","p95_ms":38.272,"peak_draw_calls":774,"physics_p95_ms":3.839,"player_landed_hits":12,"process_p95_ms":38.434,"xp_gained":0}
+validate	Existing region render and active-play comparison	2026-10-13T12:33:58.9614023Z REGION_CAPTURE_COUNT 37
+validate	Existing region render and active-play comparison	2026-10-13T12:33:58.9615104Z REGION_CAPTURE_DIRECTORY /home/runner/work/_temp/region-render/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/world-regions-review
+validate	Existing region render and active-play comparison	2026-10-13T12:33:59.2987008Z ##[error]Process completed with exit code 1.

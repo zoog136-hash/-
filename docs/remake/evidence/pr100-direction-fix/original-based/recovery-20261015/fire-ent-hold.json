@@ -1,0 +1,48 @@
+{
+  "key": "transform:407",
+  "name": "화염의 엔트",
+  "status": "HOLD - provisional runtime binding removed, prior profile restored",
+  "restored_from": "3fbdea4e6a9632e8858c0d6e16ce670acff4138a",
+  "reason": "Attack E/S/W introduce bright bead eyes and jaw/mouth shape unlike original and idle; no unverifiable face detail accepted",
+  "frames_requiring_review": [
+    40,
+    42,
+    44
+  ],
+  "old_provisional_profile": {
+    "name": "화염의 엔트",
+    "layout": "directional8",
+    "motion_style": "slash",
+    "floating": false,
+    "prior_visual_profile": {
+      "name": "화염의 엔트",
+      "layout": "directional4",
+      "motion_style": "slash",
+      "floating": false
+    },
+    "frames_path": "res://assets/actors/eight_direction/original_based/fire_ent_transform/SpriteFrames.tres",
+    "pixel_scale": 1.002865,
+    "color_tint": "ffffff",
+    "sprite_offset": [
+      0,
+      -32.09168
+    ],
+    "embedded_shadow": false,
+    "authored_motion_weight": 0,
+    "hit_recoil": 0,
+    "action_hit_frames": {
+      "attack": 1
+    },
+    "attack_hit_frame": 1,
+    "death_duration": 0.65,
+    "movement_fps": 6.25,
+    "authoring_reference": "res://assets/catalog/e452df267006c1029bae8dde.png"
+  },
+  "restored_profile": {
+    "name": "화염의 엔트",
+    "layout": "directional4",
+    "motion_style": "slash",
+    "floating": false
+  },
+  "assets_preserved": "fire_ent_transform PNG/TRES/provenance retained unchanged, not counted"
+}

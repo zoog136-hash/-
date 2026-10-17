@@ -1,0 +1,790 @@
+{
+  "schema": 1,
+  "actor": "albino_crocodile_turtle_source",
+  "target_keys": [
+    "monster:알비노 악어거북"
+  ],
+  "source": "Newly authored articulated motion from existing neutral project atlas; not recovered original animation or verified external original game art",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      955,
+      617,
+      319,
+      308
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 11,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "e952ef78ea7cc4e296c8b7b72be41a14c8c7cfbb10ced857747e0746ccc1fca0"
+  },
+  "supplemental_body_context": {
+    "path": "/workspace/scratch/pr100-continuation/albino-crocodile-turtle-authoring/source-wholebody-context.png",
+    "sha256": "7dc0c5a752d8ffdbb3de11cc5fb59c3e6667201bc8f2a1bafe72027fb513e3a1",
+    "kind": "additional unchanged-source crop only; original region/reference plan unchanged",
+    "main_body_connected_pixels_outside_recorded_region": 58
+  },
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 11,
+      "body": "turtle",
+      "variant": 9,
+      "width": 0.972,
+      "weapon": "claws",
+      "crest": 3,
+      "accent": "aa8aaf"
+    },
+    "animation_profile": {
+      "motion_style": "crawl",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 78
+  },
+  "display_height_basis": "max_living_frame",
+  "prompt": "idle-front8-fixed EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY EIGHT fullbodyturtlesonPORTRAIT1024x1536 TRANSPARENT RGBA, TWOphaseCOLUMNS byFOURdirectionROWS. Cell512x384;centersx256,768 andy192,576,960,1344. Wholebodyincludingneck/tail/spikes/4paws <=330x250pixels,generoustransparentgutters/safeouters. Samehead/shellCOREscaleandfixedisometriccamera,doNOTenlargefigures. All4pawsPLANTED, NOraisedfoot/visiblehindsole/pawpad, notwalking. Alpha0emptyspace,no matte/grayband/floor/shadow/text/grid/effects.\nDIRECTIONROWStopbottom:E TRUE RIGHT PROFILElongshellside/oneeye,noseRIGHT;SE FRONTRIGHTlowerRIGHT;S DIRECTFRONTviewer/down,nose/chestcenteredsymmetricBOTHfronteyes;SW FRONTLEFTlowerLEFT,noseremainsLEFTinbothcols. Fourcorrectattachedlegs,sameviewbothcols.\nPHASECOLUMNS:LEFT IDLEA stillalertlowheavystance,all4pawsgrounded,neckforwardpartlyopenbeak. RIGHT IDLEB genuinelynewbreathingneck/headbow/shoulderelbowflex/jawslightlycloses,tailbendsdifferentlybutALL4PAWSSTILLPLANTEDsolesDOWN, no steps/liftedfeet/stride. Rigidspikeshellconnectedto4legs;no bodygap/hover, noduplicates/translations/scalemotion. Fullsourcebodyfaithful.\n\nEDIT THE SECOND IMAGE: physicalBOTTOM DIRECTIONROW4 is WRONG becauseitfacesRIGHT. REDRAWBOTHBOTTOMROWanimalsintoSWTRUE FRONT-LEFT. Their HEADandNOSEmustbeatLEFT/LOWERLEFTendofturtle; TAILatRIGHT/UPPERRIGHTend. ShowfrontchestplusLEFTbodythreequarter, actualnewleftbodyanatomy/naturalocclusion withall4pawsplanted,notright-facingSEorE. Row2SEremainsfrontRIGHT; row4SWmustvisiblyopposeit. KeepotherrowsE/SE/Sandall8completeposeswithsamepalette/head/shellcoremodelsize/clean-alpha. NOThorizontalflip, drawindependentnewSWbreathinganatomyandspikesscutes. Exactly2phasecols4directionrows.\n\n\nidle-rear8 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY EIGHT fullbodyturtlesonPORTRAIT1024x1536 TRANSPARENT RGBA, TWOphaseCOLUMNS byFOURdirectionROWS. Cell512x384;centersx256,768 andy192,576,960,1344. Wholebodyincludingneck/tail/spikes/4paws <=330x250pixels,generoustransparentgutters/safeouters. Samehead/shellCOREscaleandfixedisometriccamera,doNOTenlargefigures. All4pawsPLANTED, NOraisedfoot/visiblehindsole/pawpad, notwalking. Alpha0emptyspace,no matte/grayband/floor/shadow/text/grid/effects.\nDIRECTIONROWStopbottom:W TRUE LEFT PROFILElongshellside/oneeye,noseLEFT;NW BACKLEFTawayupperLEFT;N FULLBACKawayUPbackshell/rump/tail/backheadNOfrontalredface;NE BACKRIGHTawayupperRIGHT. RearheadpointsAWAYinlinebody,notlookingbackatviewer. Fourcorrectattachedlegs,all4planted,NOexposedrearsole.\nPHASECOLUMNS:LEFT IDLEA stillalertlowheavystance,all4pawsgrounded,neckforwardpartlyopenbeak. RIGHT IDLEB genuinelynewbreathingneck/headbow/shoulderelbowflex/jawslightlycloses,tailbendsdifferentlybutALL4PAWSSTILLPLANTEDsolesDOWN, no steps/liftedfeet/stride. Rigidspikeshellconnectedto4legs;no bodygap/hover, noduplicates/translations/scalemotion. Fullsourcebodyfaithful.\n\n\nwalk-E-W6 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP E TRUE RIGHT SIDE PROFILE longhorizontal shell/head noseRIGHT/one sideeye;BOTTOM W TRUE LEFT SIDE PROFILE noseLEFT/onesideeye. Neverthreequarterfront; exactsidebody andprofileheadall3cols. NeararmfrontmostvisiblearmunderneckmustbeLONGleadingcontactA andHIGHCURLEDunderchestcontactB,farmostarmnowleads.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\n\nwalk-S-N6 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP S FULLFRONTtowardviewer/downwidebeak/bothredfronteyes;BOTTOM N FULLBACKawayUPshell/rump/tail/backheadNOfrontalredface. InS LEFTcol anatomicalleftforeleg(screenRIGHT)forwardLOWPLANTED/oppositerightforeleg(screenLEFT)BENTRAISED; RIGHTcolanatomicalrightforeleg(screenLEFT)LOWPLANTED/leftforeleg(screenRIGHT)BENTRAISED. InN LEFTcolscreenLEFT hindfootLOWPLANTED,screenRIGHThindfootHIGHBACKBENTshowingsoles;RIGHTcolscreenRIGHThindfootLOWPLANTED,screenLEFThindfootHIGHBACKBENTshowingsoles. EXPOSEDPAWPAD MUSTSWITCHSCREENside,notfixedsamefoot.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\n\nwalk-SE-SW6 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP SE FRONT-RIGHTlowerRIGHT;BOTTOM SW FRONT-LEFTlowerLEFT. Truefrontthreequarterfixedcamera. AtLEFTcolnearforearmverylongforward/lowplanted; atRIGHTcolthesameNEARforearmnowVERYHIGHCURLEDUPUNDERCHESTwithcharcoalclawsfacingbackunderitselbow, FARforearmextendsstraightforwardandplants. Differentforearmmustleadinrightcol. DoNOTredrawsamenearleadingarmtwoendpoints.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\n\nwalk-NW-NE6-final EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nONLY SIX fullbodyturtles on1536x1024 TRANSPARENT RGBA, THREEphaseCOLUMNS byTWOdirectionROWS. Cell512x512,centersx256,768,1280 andy256,768. Fullbodyincludingforwardneck/reartail/spikes/paws <=390x350pixels withbroademptygutters/safeouters. Samehead/shellCORE drawingmodelsize inall6cells. Alpha0emptybackground,no floor/shadow/graybands/matte/haze/text/grid/effects. Fourlegsattachedatshoulders/hips,atleastTWOgroundedweightbearingsupportpaws, heavyLOWCRAWLnotjump.\nTOP NW BACK-LEFTawayUPPERLEFT;BOTTOM NE BACK-RIGHTawayUPPERRIGHT. Backofhead/shell/rump/tail,NOfacialmasklookingback. AtLEFTcolNEARhindlegflexesBACK/RAISEDsolevisible,FARhindlegFORWARD/LOWPLANTED;RIGHTcolNEARhindlegFORWARD/LOWPLANTED,FARhindlegBACK/RAISEDsolevisible. Visibleknees/hocksoverlapandpawpadMUSTSWITCHanatomicalside. Forelegsoppositepairreachawaybeneathshell,fourlegstotalattached.\nTHREEphaseCOLUMNS: LEFT CONTACTA NEARforelegSTRAIGHTLONGFORWARD andPLANTED,FARforelegHIGHBENT/TUCKEDBACKunderchest; NEARhindlegBACK/FARhindlegFORWARD. MIDDLE PASSING bentelbows/kneespawpassingthroughcenter,othersupportpairfirmground. RIGHT CONTACTB OPPOSITE: NEARforelegCLEARLYHIGHBENTANDTUCKEDBACK behinditsownelbow, footLIFTEDandunderchest; FARforelegLONGSTRAIGHTFORWARDandPLANTED. NEARhindlegFORWARD/PLANTED,FARhindlegBACK/RAISED. Tracebothshoulders/elbows/wrists andhips/knees/hocks soanatomicalleadingpair REALLYswitches. DoNOTrepeatthenearforelegextendedinbothendpoints. Shellrigidwholeandbodylowattached, jaw/headfixedheading,neckadjustsslightly. Independentarticulation,nottranslatedstill/tailwobble/shellrocking.\n\nCRITICALCORRECTION: thisisREARcamera, NOTFRONT. ViewerstandsBEHINDturtle lookingtowardsitsTAIL/RUMP. TOPROW NW tail/rumpareclosertovieweratLOWERRIGHT,headpointsAWAYUPPERLEFTonFARSIDEandmuzzleisCOMPLETELYHIDDENbyhead/shellocclusion. BOTTOMROW NE tail/rumpcloseratLOWERLEFT,headpointsAWAYUPPERRIGHTonfarside,muzzleCOMPLETELYHIDDEN. NOredeyes,NOopenmouth,NOteeth,NOtongue visibleinANYof6poses. Showonlyback/topofskullifanyheadextendsbeyondfarshellrim; canhideheadunderfarshellrim. Shellrear/tail/hindlegsdominatebackprojection. UsefirstreferenceREAR Nbodyfortruebackanatomy,secondreferenceforsourceivoryspikeshell/palescalesonly. Keep4attachedlegsandoppositeNEAR/FARraisedhindsoleendpoints: col1nearhindsolevisible/farhindplanted;col3nearhindplanted/FARhindsolevisible. DO NOTdrawleft/rightprofilefaceagain. Backturtlerotated45degreesNW/NEwithnopossiblefrontalfeature. Same6layout3phasecols2directionrows,fullvisiblebody,safealpha0gutters.\n\nFINALFOOTCORRECTIONforBOTTOMROW NE only: LEFTCONTACTcol has LEFTscreenhindpawSOLEshowingandraised; RIGHTCONTACTcolMUSTnowhave RIGHTscreenhindpawSOLEshowingandraised,andLEFTscreenhindfootLOWPLANTEDtoesdown/solehidden. Exactlyswitchwhichhindfootisraisedbetweencol1andcol3. InbottomRIGHTcell, drawLEFTscreenhindlegextendingDOWNtoaplantedtoe/clawonthefloor, withNOsolevisibleonleft; drawRIGHTscreenhindknee/hockBENTUP/BACKsoitsDARKSOLEandclawsfacetheviewerontheRIGHTsideofspine/tailroot. DoNOTcopyleftraisedsolefrombottomLEFT. Middlecoltransferringweightneitherendpointduplicate. TOPNWalreadyalternatescorrectly,keepitsoppositesoles. Truebackshell/rump/headawayNOredeyes/mouth. All6bodiespreservedcompletefullsourceidentityandfourconnectedlegs. Redrawthisjointarticulationnotmerelytailturn.\n\n\nattack-front12-fixed EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly TWELVE SMALLcompletealbinosnappingturtles onPORTRAIT1024x1536canvas,THREEPHASECOLUMNS byFOURDIRECTIONROWS. Centersx171,512,853 andy192,576,960,1344. Eachwholebodyincludingneck/muzzle/tail/spikes/all4paws <=230pixelWIDTH by185pixelHEIGHT,clearhorizontalgutter>=100,vertical>=150,safeoutermargin; doNOTenlargefigures. Completeboundingrectanglecannotincludeotherbody. SameHEAD/SHELLCORESCALE asattachedidlewalkreference; actualalphaZEROemptybackground,no floor/shadow/matte/grayband/haze/text/grid/particles/effects.\nDIRECTIONROWS topbottom:E TRUE RIGHT SIDE PROFILE onegold/redsideeye longshellside headRIGHT; SE FRONT-RIGHTlowerRIGHT; S DIRECTFRONTviewer/downwidebeakredfronteyes; SW FRONT-LEFTlowerLEFT neverrightface. Windup/contact/recoveryallkeepheading. ScontactneckextendsDOWNtowardviewer withforeshortenedbeak; SWcontactextendsDOWNLEFT. All4correctattachedscalylegsunderheavyivoryspikedshell.\nPHASECOLUMNSlefttoright:1 WINDUP neckgathersBACKintoshell,jawpartlyCLOSES,bodycrouchbracedall4paws,elbowsbend.2 ACTUALMELEEBITE neckextendsFORWARDalongrowheading,massiveattachedtoothedbeakjawopensandSNAPSnearfoeheight, shoulder/kneearticulationbraceall4legsandatleast3pawsonfloor, noleap/hover/body-leggap.3 RECOVERY neckretracts,heavyheadbows/jawpartlycloses,shoulders/elbowsresettle,tailslightcounterbalance. Genuineclear3phaseneck/jaw/legarticulation,nottranslated/resizedstillorbeams/projectiles/clawtrails; allpartsconnectedtoonecompletebody. SourcefloatingFALSE,commonplantedpawbaseline. Keep3phasesfixeddirection/camera, headreachesactualheadingnotatcameraonrearviews.\n\nFOCUSED COMPASS CORRECTION: Physical DIRECTION ROW3 is S FULLFRONT in ALL THREE columns. In WINDUP leftcol, keep snout centered directlytowardviewer/down, BOTHnostrils andBOTHredfronteyes symmetricallyvisible, jawmostlyclosed; no turning toSE/rightside. CONTACTmiddlecol also Sstraightfront widegape,symmetricfronthead; RECOVERYrightcol samefrontalcamera jawpartlyclosed. No sideyawonSrow, no headturning betweenphases, mouthopen/neckextensionisattack notyaw. OtherrowsE/SE/SWremainexact directions. Thiscorrectionisforfull12newposes, notpatchpixels; preserveallsourcebodyandcleanalpha.\n\n\nattack-rear12 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly TWELVE SMALLcompletealbinosnappingturtles onPORTRAIT1024x1536canvas,THREEPHASECOLUMNS byFOURDIRECTIONROWS. Centersx171,512,853 andy192,576,960,1344. Eachwholebodyincludingneck/muzzle/tail/spikes/all4paws <=230pixelWIDTH by185pixelHEIGHT,clearhorizontalgutter>=100,vertical>=150,safeoutermargin; doNOTenlargefigures. Completeboundingrectanglecannotincludeotherbody. SameHEAD/SHELLCORESCALE asattachedidlewalkreference; actualalphaZEROemptybackground,no floor/shadow/matte/grayband/haze/text/grid/particles/effects.\nDIRECTIONROWS topbottom:W TRUE LEFT SIDE PROFILE headLEFT,onevisible redsideeye; NW BACK-LEFT awayUPPERLEFT; N FULLBACKdirectlyawayUP; NE BACK-RIGHT awayUPPERRIGHT. Rearrowsbackofhead/spinyshell/rump/tail, nofrontfacemask/redfrontaleyes/mouthtowardviewer. Bitecontactheadextendsonfarsideaway:NupperUPshowsBACKofskull/neck, notanupraisedfrontface. NW/NEheadalsoawayinlinebodyandmuzzlehiddenbyprofileocclusion, notlookingbackatviewer. All4scalylegsattachedandbodygrounded.\nPHASECOLUMNSlefttoright:1 WINDUP neckgathersBACKintoshell,jawpartlyCLOSES,bodycrouchbracedall4paws,elbowsbend.2 ACTUALMELEEBITE neckextendsFORWARDalongrowheading,massiveattachedtoothedbeakjawopensandSNAPSnearfoeheight, shoulder/kneearticulationbraceall4legsandatleast3pawsonfloor, noleap/hover/body-leggap.3 RECOVERY neckretracts,heavyheadbows/jawpartlycloses,shoulders/elbowsresettle,tailslightcounterbalance. Genuineclear3phaseneck/jaw/legarticulation,nottranslated/resizedstillorbeams/projectiles/clawtrails; allpartsconnectedtoonecompletebody. SourcefloatingFALSE,commonplantedpawbaseline. Keep3phasesfixeddirection/camera, headreachesactualheadingnotatcameraonrearviews.\n\n\nhd-E-SE10 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nSPARSE exact TEN fullbodyalbinosnappingturtleposes onPORTRAIT1024x1536, TWO DIRECTION COLUMNS byFIVE PHASE ROWS. Centersx256,768 andy154,461,768,1075,1382. Wholebodyincludingfallenshell/tail/head/spikes/all4feet <=330pixelWIDTH by190pixelHEIGHT per512x307cell. Hugehorizontalgutters>150pxandvertical>100px,safeoutermargin. DoNOTenlargebodytofillcells. Oneconnectedturtlepercell, no boundingrectangleintrusion orclippedspikes. SameHEAD/SHELLCOREsizeeachframe. EmptyspaceactualalphaZERO,no matte/graybands/haze/floor/shadow/text/labels/grid/particles/effects.\nDIRECTION COLUMNSlefttoright E TRUE RIGHT SIDE PROFILE longsidebody/onlyoneeye/noseright; SE FRONT-RIGHTlowerRIGHT. Fixedtruecompasscameraacrossallphases.\nFIVEPHASE ROWS:1 HITA neck/headrecoilBACKintoshell,elbowsbend,hindpawsbrace,bodyrigidattached.2 HITB distinctpartialrecoveryheadbow/jawrelax,fore/hindkneeschange,onepawresettlesground,notidleduplicate.3 DEATHBUCKLE bodylosessupportasALL4knees/elbowsfold,shellbeginsTILTINGontotheRIGHTSIDE,headandneckdrooptowardfloor,eyesclose.4 DEATHFALL wholeintactturtleROLLSONTOITSRIGHTSIDE: rigidspikedshellrotatesontoedge,all4legsFOLDandDRAPEalonglowerbody,neck/headrestlimponfloor,taildrapes. THISISNOTstanding/crouch: no3or4supportpawsunderuprightbody.5 FINALDEADCORPSE turtlefullyRESTSONRIGHTSIDEandplastron/shelledgeONFLOOR, legsareLIMP/FOLDEDSTACKEDalongsidebodywithNOstanding/kneeling stance. HeadNECKliesflat/downonfloor,eyesCLOSED/DARK,mouthrelaxednearlyclosed,tailflatconnected. SpikedshellisstillWHOLEsame3DsolidbonyVOLUMEbuttippedsideways; doNOTflatten/melt/shrinkrigidshell. Corpsekeepssameheadingandcameraevenrolledsideways,all4limbsattachedandrecognizablebodymass. RearNmustvisiblyTILTontoSIDEwithONEshelledgeonthefloorandlimplegsstacked/drapedtotheside,headhiddenfarUP; NOuprightsymmetriclivefourlegstance! NW/NErearheadstaysaway,notfrontalcorpse. Finalcorpseisgroundedsubstantialwholebody notemptyfade/fragments. Lowestcorpseedgeandplantedpawsshareprojectedlocalfloorbaseline. All20distinctgenuineNEWarticulatedframes,nottranslated/resizedstills.\n\n\n\nhd-S5-prone EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly FIVEcompletefullbodyposes inONE HORIZONTALROW ofFIVE PHASECOLUMNS on1536x1024TRANSPARENT RGBA. Cell307x1024,centersx154,461,768,1075,1382 andall y512. EachWHOLEturtleincludinghead/tail/spikes/all4feetfitswithin230pixelWIDTH by240pixelHEIGHT. Broad>70pxemptyhorizontalguttersandsafemargins,mostlyEMPTYcanvas. Donotenlargeanimalstofillcells. Oneconnectedsubstantialbodypercell, norectangularcropcontainsanotherbody, no cutoffspikes/tail/paws. SameHEAD/SHELLCORESCALEall5. EmptybackgroundALPHA0,no matte/floor/shadow/haze/grayband/text/grid/particles/effects.\nALL5POSES S FULLDIRECTFRONTtowardviewer/DOWN. Head/noseATBOTTOMofshell,tailUPbehind. Bothredeyesvisiblebeforeclosing,centeredwidebeakforehead. InALL5nosepointsDOWNtowardviewer,NEVERright/leftprofile. DeadHEADrestsFRONT/BOTTOMofturtlepointingDOWN,verticalbodyaxis,nostrilsfrontalandeyesclosed.\nFIVEphasecolumnsLEFTtoright:1 HITA neck/headrecoilsBACKunderfarshellrim,elbowsbend,hindfeetbrace,headjawflinch.2 HITB differentpartialrecoveryheadbow/jawrelaxes,shoulder/elbow/kneeangleschange,notsameposeas1.3 DEATHBUCKLE ALL4legsFOLDunderheavyshell,headandneckDROPtolowerfloor,shelldropsclosertofloor,eyelidsCLOSE.4 DEATHFALL WHOLEbodysettlesPRONEontoPLASTRON onfloor,ALL4limbsfold/splaylimptotheSIDES,headNECKliesFLATonfloorinfrontofshell,eyesCLOSEDandjawrelaxedalmostclosed.5 FINALDEADCORPSE completeintactturtlefullyRESTSPRONEonplastron,fourlimbsLIMPfullyfolded/splayedbesidebodyandNOstanding/kneeling pawsunderbody,shellbellygroundednothovering,neckheadflat/limponfloor,EYESCLOSED,mouthresting. KeepRIGIDIVORYSPIKEDSHELLFULLVOLUME,neverflatten/melt/shrinkit; showactuallegsupportcollapseandheadslumpnotjustresizedshell. Fullattachedcompacttaildrapesfloor. Nofade/empty/fragment. All5genuinelydifferentarticulatedNEWfullbodyposes,commonplantedpaw/corpsegroundbaseline. DoNOTroll/YAWtheanimalintoadifferentcompass; pronecollapsekeepsexactheadingandcamera.\n\n\nhd-SW5-vertical EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nExactly FIVEcompletefullbodyposes inONE VERTICALCOLUMN ofFIVE PHASEROWS on1024x1536TRANSPARENT RGBA. Cell1024x307,centersALLx512 andy154,461,768,1075,1382. EachWHOLEturtleincludinghead/tail/spikes/all4feetfitswithin330pixelWIDTH by180pixelHEIGHT. Broad>110pxemptyverticalguttersandsafemargins,mostlyEMPTYcanvas. Donotenlargeanimalstofillcells. Oneconnectedsubstantialbodypercell, norectangularcropcontainsanotherbody, no cutoffspikes/tail/paws. SameHEAD/SHELLCORESCALEall5. EmptybackgroundALPHA0,no matte/floor/shadow/haze/grayband/text/grid/particles/effects.\nALL5POSES SW FRONT-LEFT,head/noseatLOWERLEFTendofturtle,TAILatUPPERRIGHT. NosepointsLEFT/lowerLEFTinEVERYpose,includingfinalcorpse. FrontchestplusLEFTsideofshell; actualthreequarterfrontLEFT,neverright-facingSE/E. Bothfrontandleftsideheadbeforeclosedeyes,corpseheadstillLOWERLEFTnoseLEFT,nosuddenheadturnright.\nFIVEphaseROWS TOPtobottom:1 HITA neck/headrecoilsBACKunderfarshellrim,elbowsbend,hindfeetbrace,headjawflinch.2 HITB differentpartialrecoveryheadbow/jawrelaxes,shoulder/elbow/kneeangleschange,notsameposeas1.3 DEATHBUCKLE ALL4legsFOLDunderheavyshell,headandneckDROPtolowerfloor,shelldropsclosertofloor,eyelidsCLOSE.4 DEATHFALL WHOLEbodysettlesPRONEontoPLASTRON onfloor,ALL4limbsfold/splaylimptotheSIDES,headNECKliesFLATonfloorinfrontofshell,eyesCLOSEDandjawrelaxedalmostclosed.5 FINALDEADCORPSE completeintactturtlefullyRESTSPRONEonplastron,fourlimbsLIMPfullyfolded/splayedbesidebodyandNOstanding/kneeling pawsunderbody,shellbellygroundednothovering,neckheadflat/limponfloor,EYESCLOSED,mouthresting. KeepRIGIDIVORYSPIKEDSHELLFULLVOLUME,neverflatten/melt/shrinkit; showactuallegsupportcollapseandheadslumpnotjustresizedshell. Fullattachedcompacttaildrapesfloor. Nofade/empty/fragment. All5genuinelydifferentarticulatedNEWfullbodyposes,commonplantedpaw/corpsegroundbaseline. DoNOTroll/YAWtheanimalintoadifferentcompass; pronecollapsekeepsexactheadingandcamera.\n\nSPACING correction: exactlyONEcolumnofFIVE separatecompletefullbodies, lots ofemptyspacearoundeveryturtle; SMALL entirebodies<=330x180px, doNOTfill1024width or307heightcells. No body-boundscroprectanglesoverlapadjacentrows. KeepSWnoseLEFT/downLEFTineverypose,wholepronecorpseunshrunkwithalllimbsattachedandclosedeyes.\n\n\nhit-death-rear20 EXACT PROMPT:\nCreate NEW transparent RGBA hand-painted 2D isometric GAME animation sprites for ONLY the exact IVORY ALBINO ALLIGATOR SNAPPING TURTLE in attached existing project source. This is newly authored articulated animation from a neutral portrait, NOT recovered original motion. Preserve source identity precisely: huge elongated domed IVORY/cream shell with many large irregular triangular PYRAMIDAL SPIKES and layered bony ivory scutes with beige-gold creases; pale ivory scaly alligator-like wrinkled neck/head and FOUR thick scaly reptile legs; broad pale feet with dark charcoal hooked claws; cream/bone plastron underside; red/crimson FRONT/SIDE EYES; massive broad pale snapping-turtle hooked BEAK/muzzle and wide hinged toothed jaw with dark reddish mouth/pink tongue when open; compact knobby rear tail attached under back of shell. No green or brown shell, no horns on head, no wings, no armor or props, no human limbs, no extra turtle or detached shell/spikes/paws/tail. Neck/shoulders/hips remain connected to solid body under rigid shell. Shell is a substantial coherent rigid mass, not melted or fragmented. Detail source-like sharp shell spikes and ivory scale anatomy.\nEXACTLY TWENTY SMALL fullbodyturtles,FOURdirectioncolumns byFIVEphase rows onPORTRAIT1024x1536canvas. Cellcentersx128,384,640,896 andy154,461,768,1075,1382. Wholebody includingforwardneck/reartail/shellspikes/all4feet <=185pixelWIDTH by185pixelHEIGHT per256x307cell. Atleast55pxclearhorizontal and100pxverticalgutters,safeoutermargin. Mostlyemptycanvas,doNOTenlargefigures. SAMEhead/shellCOREdrawingmodelscale, useattachedneutral/idlewalkdesignsource. EmptybackgroundactualalphaZERO,no matte/floor/shadow/graybands/haze/text/labels/particles/effects, no overlappingrectanglecrops.\nFourDIRECTION COLUMNSlefttoright:W TRUE LEFT SIDE PROFILE onevisibleeye headLEFT;NW BACKLEFTawayupperLEFT;N FULLBACKdirectlyawayUP;NE BACKRIGHTawayupperRIGHT. Rearanglesonlybackshell/spine/rump/tail/backofhead, nofrontredmask/eyes/mouthtowardviewer; rearheadpointsAWAYalignedbody. Keepfixedcamera/headingall5rows. All4paleclawedlegsattachedbeneathfullsourceivoryshell.\nFIVEPHASE ROWS:1 HITA neck/headrecoilBACKintoshell,elbowsbend,hindpawsbrace,bodyrigidattached.2 HITB distinctpartialrecoveryheadbow/jawrelax,fore/hindkneeschange,onepawresettlesground,notidleduplicate.3 DEATHBUCKLE bodylosessupportasALL4knees/elbowsfold,shellbeginsTILTINGontotheRIGHTSIDE,headandneckdrooptowardfloor,eyesclose.4 DEATHFALL wholeintactturtleROLLSONTOITSRIGHTSIDE: rigidspikedshellrotatesontoedge,all4legsFOLDandDRAPEalonglowerbody,neck/headrestlimponfloor,taildrapes. THISISNOTstanding/crouch: no3or4supportpawsunderuprightbody.5 FINALDEADCORPSE turtlefullyRESTSONRIGHTSIDEandplastron/shelledgeONFLOOR, legsareLIMP/FOLDEDSTACKEDalongsidebodywithNOstanding/kneeling stance. HeadNECKliesflat/downonfloor,eyesCLOSED/DARK,mouthrelaxednearlyclosed,tailflatconnected. SpikedshellisstillWHOLEsame3DsolidbonyVOLUMEbuttippedsideways; doNOTflatten/melt/shrinkrigidshell. Corpsekeepssameheadingandcameraevenrolledsideways,all4limbsattachedandrecognizablebodymass. RearNmustvisiblyTILTontoSIDEwithONEshelledgeonthefloorandlimplegsstacked/drapedtotheside,headhiddenfarUP; NOuprightsymmetriclivefourlegstance! NW/NErearheadstaysaway,notfrontalcorpse. Finalcorpseisgroundedsubstantialwholebody notemptyfade/fragments. Lowestcorpseedgeandplantedpawsshareprojectedlocalfloorbaseline. All20distinctgenuineNEWarticulatedframes,nottranslated/resizedstills.\n\n\nS HEAD PROPORTION CORRECTION EXACT PROMPT:\nEDIT FIRST IMAGE ONLY, the SIX-pose ivory albino snapping turtle WALK sheet, exactly THREEphasecolumns andTWOdirectionrows. Keep its entirelayout, sourceivoryspikedshells, ALLFOURattachedlegs, feet/jointangles/supportcontacts, tailpositions andall THREE BOTTOM N/BACK poses unchanged in design andplacement. The provenalternatingwalkmustremain: TOP S leftcolscreenLEFTforepawforwardlowplanted/oppositeforepawraisedback, thirdcoloppositescreensideforwardlowplanted; bottomNhindsolesswitchscreensides. DoNOTredrawdifferentgait or changebody/camera/cellscale.\nONLY correct the THREE TOP S FRONT HEADS. Their ivoryfrontal skull/cheeks/beak/mouth are intrinsically tooBROAD for the existing original idle model. Second reference is the exact desired S OPEN-MOUTH IDLE facialproportions crop(diagnostic), thirdreference exact fullsourcebody. Redraw top3heads to that narrower skull/cheek/beak model, about20-25%NARROWER thancurrent topheads while maintaining almostsamecrown-to-beaklength (only~5-8%shorter ifnecessary). DoNOTgloballyresize turtle orshell: shellcore isalreadycorrect. Eyesred/crimsonremainfront; bringiris/cheekspacingtoidleproportions,narrowjawopening/cheekspread, retain source hookedivorybeak, pale scales, darkredmouth/pinktongue/pointedteeth andgenuineopen-jawcrawlalerthead. Correctactualnewheadanatomy not rasterwarp, nohead-neckgap: naturalnarrower ivorynapejoinsunchangedshouldersunderunchangedshellrim. Keepheadcenter anddirectionDIRECTFRONT/downtowardviewerfixed, no3quarteryaw. All3Sheads independentlynewfullneck/headposes coherentwithgait, no samecropduplicated.\nThe existing image already has correct S/N TWOdirectionanatomy; keep all NBACKheads completelyaway andnofrontmask. EmptybackgroundactualalphaZERO, nofloor/shadow/matte/text/labels/grid/haze/effects/fragments. Noaddedprops. Preserve sourceivorygiantpyramidalspikedshell, pale4legs/charcoalclaws, compactattachedknobbytail. Exactly SIX wholebodyposes ontheSAME1536x1024canvas, no clipping orneighborcropoverlap. Thisis newlydrawn authoredheadcorrection, notoriginalanimationextraction. SecondreferenceisheadproportionguideONLYandmustnotappearasanextraanimal.\n",
+  "prompt_record_kind": "exact prompts saved before imagegen; every failed/unselected prompt and raw output retained",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-0.png",
+      "rows": 2,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          256,
+          366
+        ],
+        [
+          256,
+          745
+        ],
+        [
+          256,
+          1100
+        ],
+        [
+          256,
+          1461
+        ],
+        [
+          768,
+          363
+        ],
+        [
+          768,
+          745
+        ],
+        [
+          768,
+          1099
+        ],
+        [
+          768,
+          1460
+        ]
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "scale_review_note": "1152 independently matches front head and rigid shell core across breathingposes. Original dense S reference iris27.62px/512=13.81 in256canvas; selected S idle iris61.73px/1152=13.72. Full-shell volume and fourlegsupport viewed separately from overall projected height."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-1.png",
+      "rows": 2,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          256,
+          368
+        ],
+        [
+          256,
+          736
+        ],
+        [
+          256,
+          1120
+        ],
+        [
+          256,
+          1472
+        ],
+        [
+          768,
+          370
+        ],
+        [
+          768,
+          734
+        ],
+        [
+          768,
+          1120
+        ],
+        [
+          768,
+          1469
+        ]
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "scale_review_note": "1152 reviewed against front idle through skull/neck, rigid shell mass and hindhip width; fixed backhead/sidebody view and fourplantedlegs. RearN back of skull can extend above farshellrim; no frontmask pasted on rear."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-2.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "E",
+        "W"
+      ],
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          256,
+          481
+        ],
+        [
+          256,
+          938
+        ],
+        [
+          768,
+          470
+        ],
+        [
+          768,
+          930
+        ],
+        [
+          1280,
+          478
+        ],
+        [
+          1280,
+          931
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1152 uses sideprofile skull/neck and large rigid shell core matching idle; foreleg shoulder/elbow/wrist traces prove anatomical near/far leading swap, with oppositehindpair. Gait footreach does not determine scale."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-3.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "S",
+        "N"
+      ],
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          294,
+          477
+        ],
+        [
+          280,
+          943
+        ],
+        [
+          774,
+          467
+        ],
+        [
+          780,
+          951
+        ],
+        [
+          1240,
+          477
+        ],
+        [
+          1270,
+          940
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1280 jointly balances S head and rigid shell-core landmarks rather than normalizing long movinglimbs/tail. Front iris span78.36px projects15.67 vs idle13.72, while shellwidth474px projects94.8 vs idle434px->96.44. Walking head is drawn broader than neutral; root independent/Main review must confirm this is acceptable and not visible size pulsing. Perpose projected bodymidline anchors remove obvious wholefigure layout offsets without pixel edits. Root conditionalHOLD measured intrinsic cheekwidth+26%; a focusedimagegenheadredraw reduces S skull/breadth to approximate idle width-4% and crown/beaklength+3% atUNCHANGED1280canvas. WholePNG editedbyimagegen; body/Nrendering isrepainted(notbyteidentical), butposebboxes/limb/support geometry remain within2px andbothNraisedsoles/headawayunchanged. IndependentQA/Mainstillrequired."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-4.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "SE",
+        "SW"
+      ],
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          256,
+          497
+        ],
+        [
+          256,
+          971
+        ],
+        [
+          768,
+          479
+        ],
+        [
+          768,
+          951
+        ],
+        [
+          1280,
+          482
+        ],
+        [
+          1280,
+          960
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1152 independently compares sameview rigid shell core/neck/head with front idle; extended nearforeleg oncontactA becomes visibly curled/lifted behindelbow oncontactB while farforeleg plants. Allpartsconnected; no width-fit shortcut."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-5.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "NW",
+        "NE"
+      ],
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          256,
+          466
+        ],
+        [
+          256,
+          932
+        ],
+        [
+          768,
+          469
+        ],
+        [
+          768,
+          940
+        ],
+        [
+          1280,
+          466
+        ],
+        [
+          1280,
+          939
+        ]
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "1280 compares rear shell/scute core, skullback andhipwidth to idle/rearattack; alternate exposed near/far hindsoles now switch sides in BOTHdirections. No frontmouth/eyes visible towardviewer. Bodyyaw is actuallyrear, not front/profile."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-6.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 864,
+      "source_anchors": [
+        [
+          171,
+          379
+        ],
+        [
+          171,
+          755
+        ],
+        [
+          171,
+          1093
+        ],
+        [
+          171,
+          1441
+        ],
+        [
+          512,
+          379
+        ],
+        [
+          512,
+          757
+        ],
+        [
+          512,
+          1093
+        ],
+        [
+          512,
+          1443
+        ],
+        [
+          853,
+          379
+        ],
+        [
+          853,
+          759
+        ],
+        [
+          853,
+          1093
+        ],
+        [
+          853,
+          1444
+        ]
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "864 matches frontalS iris46.86px/864=13.884 to idle13.72 and same S shellcore322px/864=95.407 to idle96.44. Neck/jawreach remains the meleecontact extent, not head/core scale."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-7.png",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 864,
+      "source_anchors": [
+        [
+          171,
+          349
+        ],
+        [
+          171,
+          687
+        ],
+        [
+          171,
+          1073
+        ],
+        [
+          171,
+          1409
+        ],
+        [
+          512,
+          351
+        ],
+        [
+          512,
+          688
+        ],
+        [
+          512,
+          1073
+        ],
+        [
+          512,
+          1413
+        ],
+        [
+          853,
+          350
+        ],
+        [
+          853,
+          687
+        ],
+        [
+          853,
+          1073
+        ],
+        [
+          853,
+          1409
+        ]
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "scale_review_note": "864 independently reviewed side/rear rigid shellcore/neckskull/hipwidth against matching idle; no frontface at N, neckextends away oncontact. Attached beak/jaw/neck action with braced groundedlegs, not projectile."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-8.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "canvas_size": 960,
+      "source_anchors": [
+        [
+          269,
+          314
+        ],
+        [
+          762,
+          325
+        ],
+        [
+          269,
+          625
+        ],
+        [
+          762,
+          629
+        ],
+        [
+          269,
+          922
+        ],
+        [
+          762,
+          929
+        ],
+        [
+          269,
+          1198
+        ],
+        [
+          762,
+          1208
+        ],
+        [
+          269,
+          1472
+        ],
+        [
+          762,
+          1477
+        ]
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "scale_review_note": "960 uses rigid side-shell/head/core landmarks matched to living idle/attack, independent of shortening collapsed body or longlimps. Complete shellvolume remains onside/prone floor with closedeye/headrest."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-9.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "rows",
+      "directions": [
+        "S"
+      ],
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          217,
+          522
+        ],
+        [
+          652,
+          535
+        ],
+        [
+          1086,
+          544
+        ],
+        [
+          1520,
+          546
+        ],
+        [
+          1955,
+          546
+        ]
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "scale_review_note": "1152 uses rigid S shellspike core matching idle rather than corpse height. HitA pitches skull/jawUP, making visible iris span54.05px differ from neutral61.73; core model remains substantial and Main transition must confirm. Prone final body/plastron/head and limplegs rest on floor, closedeyes, headingS retained."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-10.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "directions": [
+        "SW"
+      ],
+      "canvas_size": 1008,
+      "source_anchors": [
+        [
+          514,
+          301
+        ],
+        [
+          514,
+          616
+        ],
+        [
+          514,
+          910
+        ],
+        [
+          514,
+          1194
+        ],
+        [
+          514,
+          1500
+        ]
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "scale_review_note": "1008 side/front-left shell/headcore matched to source and idle; large blank outercanvas is not a sizebasis. Prone finalcorpse remainsSW/headlowerLEFT, all4limbsfold/splay, headclosedeyes onfloor, attached knobbytail retainsbonycurl."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/poses-11.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "directions_axis": "columns",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 640,
+      "source_anchors": [
+        [
+          142,
+          345
+        ],
+        [
+          397,
+          342
+        ],
+        [
+          631,
+          355
+        ],
+        [
+          884,
+          342
+        ],
+        [
+          142,
+          629
+        ],
+        [
+          397,
+          631
+        ],
+        [
+          631,
+          642
+        ],
+        [
+          884,
+          632
+        ],
+        [
+          142,
+          914
+        ],
+        [
+          397,
+          914
+        ],
+        [
+          631,
+          916
+        ],
+        [
+          884,
+          915
+        ],
+        [
+          142,
+          1181
+        ],
+        [
+          397,
+          1184
+        ],
+        [
+          631,
+          1186
+        ],
+        [
+          884,
+          1187
+        ],
+        [
+          142,
+          1447
+        ],
+        [
+          397,
+          1450
+        ],
+        [
+          631,
+          1452
+        ],
+        [
+          884,
+          1451
+        ]
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "scale_review_note": "640 compares rear skull/neck, shellscute core andhipwidth to rearidle/attack separately from rolled-shell bbox. N/NW/NE terminal corpses tiltonto rigid shellside/edge with all4limbs draped, no upright live support. Rearheadfacesaway throughout."
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "AUTHOR STATIC ONLY awaiting independent root review and Godot Main. All104 selected genuine fullbody frames strict/complete/visible+raw unique. Exact source ivory rigid pyramidal spiked shell, pale scales/fourlegs/charcoalclaws/red eyes/beak/plastron/attachedknobbytail preserved. Eightactual compass bodies, Nback excludes frontmask, NW/NErearwalk head/face hidden. All8 crawl endpoints explicitly reverse leading foreleg or raisedhindsole; passing joints separately flex. Attachedneck/jaw melee bite gather->extend/contact->recover; hitrecoil and fullsubstantialgroundedcorpse withclosedeyes. Final front S/SW corpses prone; rear N/NW/NE corpses tiltedonto shellside with connectedlimbs andheadaway. Scale notes candidly record broader S walkinghead and up-pitched S hithead as independent/Main review items. Alpha0redRGB in S/SWstrip does not show on actual white/blackcomposites; no pixelcleanup. No gameplay, attacktiming, drops/pickup, Androiddevice orCI success claim from author. Completion delta0, no repo/profile/map writes. Additionalrootrequested S skullcorrection: conservative comparableopenmouthfacialwidth now22.0 normalized vsidle22.889(-4%), crown/beaklengthwithin~3%. Proven oppositelegsupportandshellcore preservedvisually. N3/bodypaintnotbyteidenticalafterimagegen;all6poses independentlyrevalidated. ROOT independently reviewed all104 normalized5role8heading poses; sourceidentity/completebody/frontback/head-core/grounding approved for actualMain trial only. S3walkskulls correctedafterrootdiscovered~26%breadthgrowth; new6sheet independently rechecked, headbreadthnowwithin4%ofidle, genuineoppositesupportandN3retained. PriorPNGandallfailurespreserved; no globalshellshrink."
+  },
+  "root_static_review": {
+    "approved_for_Main_trial": true,
+    "poses_reviewed": 104,
+    "actual_Main_contact_and_grounding_pending": true,
+    "completed_added": 0
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "source_path": "/workspace/generated_images/exec-7e8f914f-1cfa-4e56-8c1d-d469ce72b2da.png",
+  "candidate_path": "/workspace/scratch/pr100-resume/focused-walk/SE-NW/generated.png",
+  "sha256": "a6d301208a795b71c9aae7ebb928fa83c87a7c1b35090406d521966f65b7bb4c",
+  "source_sha256": "a6d301208a795b71c9aae7ebb928fa83c87a7c1b35090406d521966f65b7bb4c",
+  "diagnostic_only": true,
+  "rows_count": 3,
+  "directions_axis": "rows",
+  "directions": [
+    "SE",
+    "NW"
+  ],
+  "canvas_size": 1024,
+  "production_imported": false,
+  "complete_count_added": 0,
+  "image_mode": "RGBA",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "analyze_status": "PASS",
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SE",
+        "region": [
+          168,
+          20,
+          259,
+          486
+        ],
+        "margin": [
+          424,
+          158,
+          765,
+          538
+        ],
+        "source_anchor": [
+          256,
+          502
+        ],
+        "rgba_sha256": "32040968cd5f3d80237b77e1ccbf80604785b383ff3718d9477e36218e0eea20"
+      },
+      {
+        "row": 0,
+        "direction": "NW",
+        "region": [
+          152,
+          526,
+          262,
+          465
+        ],
+        "margin": [
+          408,
+          179,
+          762,
+          559
+        ],
+        "source_anchor": [
+          256,
+          987
+        ],
+        "rgba_sha256": "f99ea8151d91af7231e399d616fbffaf3996896d2e3f0d7d33966d8b3048fc2d"
+      },
+      {
+        "row": 1,
+        "direction": "SE",
+        "region": [
+          632,
+          15,
+          239,
+          490
+        ],
+        "margin": [
+          376,
+          154,
+          785,
+          534
+        ],
+        "source_anchor": [
+          768,
+          501
+        ],
+        "rgba_sha256": "b00d335fc9c22b5a3f106675f53f64c19b68933ebb259f1c494db31b2793934e"
+      },
+      {
+        "row": 1,
+        "direction": "NW",
+        "region": [
+          647,
+          521,
+          241,
+          454
+        ],
+        "margin": [
+          391,
+          190,
+          783,
+          570
+        ],
+        "source_anchor": [
+          768,
+          971
+        ],
+        "rgba_sha256": "9fbbea5cee5f1cb0b40a0d756c2034753553113cb9bfba0f76fe5ec6d07af51a"
+      },
+      {
+        "row": 2,
+        "direction": "SE",
+        "region": [
+          1118,
+          21,
+          239,
+          484
+        ],
+        "margin": [
+          350,
+          160,
+          785,
+          540
+        ],
+        "source_anchor": [
+          1280,
+          501
+        ],
+        "rgba_sha256": "1e99343e649d6ea22f551f0f10f3a9cfff5d172b87d3f545f54e72980869dc00"
+      },
+      {
+        "row": 2,
+        "direction": "NW",
+        "region": [
+          1109,
+          525,
+          255,
+          470
+        ],
+        "margin": [
+          341,
+          174,
+          769,
+          554
+        ],
+        "source_anchor": [
+          1280,
+          991
+        ],
+        "rgba_sha256": "dd56cf1ae29564818fa06b600fe4e07eaecfaf05d65b272977ad4e3b06f29fe5"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 469.5,
+    "canvas_size": [
+      1024,
+      1024
+    ],
+    "foot": [
+      512,
+      640
+    ]
+  },
+  "complete_pose_regions_status": "PASS",
+  "static_visual_verdict": "HOLD",
+  "static_visual_reasons": [
+    "Top row SE front-right and bottom row NW rear-left are visibly distinguished.",
+    "Original model and guide costume are broadly preserved, with connected legs.",
+    "Columns 1 and 3 retain the same leading leg/thigh overlap in both rows; no clear anatomical opposite-leg contact reversal.",
+    "Per-cell 15% top/bottom margins not respected, despite no actual image-edge clipping.",
+    "Main runtime and final-scale review not performed; candidate must not be counted complete."
+  ]
+}

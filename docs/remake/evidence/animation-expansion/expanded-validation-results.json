@@ -1,0 +1,44 @@
+[
+  {
+    "step": "expanded-import",
+    "command": [
+      "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+      "--headless",
+      "--path",
+      "/workspace/twilight-animation",
+      "--editor",
+      "--import"
+    ],
+    "exit": 0,
+    "errors": false,
+    "seconds": 27.632
+  },
+  {
+    "step": "expanded-native",
+    "command": [
+      "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+      "--headless",
+      "--path",
+      "/workspace/twilight-animation",
+      "--script",
+      "res://tests/native_animation_expansion_test.gd"
+    ],
+    "exit": 0,
+    "errors": false,
+    "seconds": 11.289
+  },
+  {
+    "step": "approved-direction",
+    "command": [
+      "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+      "--headless",
+      "--path",
+      "/workspace/twilight-animation",
+      "--script",
+      "res://tests/eight_direction_animation_test.gd"
+    ],
+    "exit": 0,
+    "errors": false,
+    "seconds": 0.919
+  }
+]

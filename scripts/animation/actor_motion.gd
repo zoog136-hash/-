@@ -147,7 +147,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 	visual_hold = maxf(0.0, visual_hold - delta)
 	if dead:
 		death_clock += delta
-		_set_state("death" if death_clock < 0.35 else "corpse", delta)
+		_set_state("death" if death_clock < profile.death_duration else "corpse", delta)
 		return
 	move_ratio = real_velocity.length() / maxf(1.0, profile.reference_speed)
 	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
@@ -193,6 +193,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	if not is_instance_valid(sprite): return
+	sprite.self_modulate = profile.color_tint
 	if impact_pose_pending and not dead:
 		visual_progress = attack_hit_ratio
 		_set_state("attack")
@@ -282,13 +283,22 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	sprite.rotation = lean
 	sprite.position = (anchor * stretch).rotated(lean) + offset + Vector2(0, bob)
 	var tint: Color = Color(1.45, 0.8, 0.7) if hit_clock > 0.0 else Color.WHITE
-	if dead: tint.a = 1.0 - clampf((death_clock - 0.55) / 0.45, 0.0, 1.0)
+	if dead: tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
 	sprite.modulate = tint
 	if sprite is AnimatedSprite2D:
 		apply_frames(sprite)
 	elif sprite is Sprite2D:
 		if frame_source != null: apply_frames(sprite)
 		else: (sprite as Sprite2D).flip_h = direction.x < -0.1
+	# Some newly authored actions have different source pixel resolutions. Their
+	# proportional virtual canvases retain the same world-space foot and size,
+	# without resampling or overwriting either original sheet. Existing packs
+	# have no such metadata and keep their exact previous scale.
+	if source != null and source.has_meta("twilight_canvas_size") and (sprite is Sprite2D or sprite is AnimatedSprite2D):
+		var reference_canvas: Vector2 = source.get_meta("twilight_canvas_size")
+		var pose: Texture2D = (sprite as Sprite2D).texture if sprite is Sprite2D else source.get_frame_texture((sprite as AnimatedSprite2D).animation, (sprite as AnimatedSprite2D).frame)
+		if pose != null and reference_canvas.x > 0. and reference_canvas.y > 0. and pose.get_width() > 0 and pose.get_height() > 0:
+			sprite.scale *= reference_canvas / pose.get_size()
 	impact_pose_pending = false
 
 func _resolve_frames(frames: SpriteFrames) -> void:
@@ -385,7 +395,7 @@ func apply_frames(sprite: Node2D) -> void:
 	var count: int = track.count
 	var frame_value: int = 0
 	if presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
-		var marker_frame: int = clampi(profile.attack_hit_frame, 0, count - 1)
+		var marker_frame: int = clampi(profile.hit_frame_for(_resolved_role), 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))
 		else:
@@ -394,7 +404,7 @@ func apply_frames(sprite: Node2D) -> void:
 		var start: float = maxf(0.7, attack_hit_ratio)
 		frame_value = _weighted_frame(track, (attack_elapsed / attack_duration - start) / (1.0 - start))
 	elif dead and _resolved_role == "death":
-		frame_value = _weighted_frame(track, death_clock / 0.35)
+		frame_value = _weighted_frame(track, death_clock / maxf(.01, profile.death_duration))
 	elif _resolved_role == "hit":
 		frame_value = _weighted_frame(track, 1.0 - hit_clock / hit_duration)
 	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:

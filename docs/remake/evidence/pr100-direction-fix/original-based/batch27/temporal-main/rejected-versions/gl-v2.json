@@ -1,0 +1,50 @@
+{
+	"capture_root": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-captures",
+	"cases": [
+		{
+			"name": "웨링",
+			"native_phases": 104,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_0.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 104,
+			"report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-cases/waring-monster-boss.json",
+			"report_sha256": "83807b2feb9a5a860673bb5f0c629d52bc8abc980608084f7f067f2bc1cbb3cf",
+			"roles": 40,
+			"slug": "waring-monster-boss"
+		},
+		{
+			"name": "불신의 댄싱 소드",
+			"native_phases": 104,
+			"reference_binding": {
+				"original": "res://assets/external_l1j/monsters/11319.png",
+				"resolved_portrait": "res://assets/external_l1j/monsters/11319.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 104,
+			"report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-cases/dancing-sword.json",
+			"report_sha256": "5715d4bfa2a9312252b0ddd4330b0d52a4e7b80bf83f571ddaa83e4f6857d766",
+			"roles": 40,
+			"slug": "dancing-sword"
+		}
+	],
+	"checks": 80510,
+	"clock": "production advance/apply at120Hz simulation steps; at least20Hz and every native texture transition observed, held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [
+		"complete rendered body is inside diagnostic crop SE-attack-1",
+		"complete rendered body is inside diagnostic crop S-attack-1"
+	],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 212467064,
+	"wall_time_performance_claim": false
+}

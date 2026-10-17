@@ -1,0 +1,45 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_missing_SW_static_guide_visual_qa",
+  "candidate": "/workspace/generated_images/exec-6c68e599-425a-4588-8457-453ab943d2e6.png",
+  "candidate_sha256": "742430cbe65dbe4785cce9c6e75db43a7343416b6a683141d02381ef5a3015c6",
+  "comparison_guide": "/workspace/generated_images/exec-715ba4a8-2acd-463c-b27c-54f0367e93ce.png",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "verdict": "PASS_STATIC_SW_DIRECTION_GUIDE_ONLY",
+  "production_animation_verdict": "HOLD",
+  "direction": {
+    "expected": "SW",
+    "observed": "SW",
+    "pass": true,
+    "evidence": "The left-facing face remains a three-quarter front view, the front bodice and pale front skirt pleats are visible, and both shoe toe tips point lower-left. This is not the former SE repeat or a pure W profile."
+  },
+  "guide3_compatibility": {
+    "identity_and_style": "Closely related design: pale rounded bob, gold-buckled rabbit cap, purple puff sleeves, small pale collar/purple tie, black bodice, pale pleated gold-edged skirt, compact rear bow, white cuffs, dark gloves, asymmetric stocking bands and chunky dark shoes. No giant rear loops, weapon or added tail.",
+    "proportions": "A usable complementary static orientation guide after proportional metadata normalization. The single image is much larger in pixels; that is not an identity failure. It appears slightly longer in the legs and more detailed in the collar/buttons than guide3. Uniform height normalization cannot itself prove all internal proportions match, so inspect the combined diagnostic lineup before production use.",
+    "diagnostic_height_ratio": 0.375,
+    "ratio_meaning": "480px example guide3 body height divided by 1280px SW body height; an illustrative metadata/display comparison only, not approved gameplay scale.",
+    "approved_as_matching_direction_reference": true,
+    "approved_as_production_animation_frame": false
+  },
+  "body": {
+    "status": "pass_static",
+    "observation": "Two attached legs, complete ears/hands/shoes, no obvious detached fragments. Both shoes look planted in the neutral stance. Main floor contact is untested."
+  },
+  "geometry": {
+    "report": "/workspace/scratch/pr100-resume/rabbit328-SW-guide4-geometry.json",
+    "image_size": [1024,1536],
+    "visible_box_alpha_over_100": [238,139,767,1419],
+    "visible_height": 1280,
+    "importer_at_max_2048_canvas": "FAIL_POSE_CANNOT_FIT_FOOT_ANCHORED_CANVAS",
+    "reason": "The 1280px body plus crop padding exceeds the space above the fixed 5/8-height foot anchor. This is a separate import geometry issue, not an orientation rejection. No source pixels or importer constraints were changed.",
+    "scale_review_status": "diagnostic_only_not_approved"
+  },
+  "source_claim": "New reference-based art; not original animation extraction. Fine costume details remain interpreted from a low-resolution source.",
+  "next": [
+    "Use the verified SW direction alongside the seven correctly remapped guide3 directions for one consistent animation design.",
+    "Resolve production geometry and compare the normalized combined lineup without silently moving the floor anchor or weakening importer checks.",
+    "Produce and validate actual eight-direction roles and Main evidence."
+  ],
+  "counts_as_completed_entity": false
+}

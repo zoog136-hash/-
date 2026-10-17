@@ -1,0 +1,168 @@
+{
+  "names": [
+    "화염의 엔트",
+    "알비노 뿔 개구리",
+    "알비노 악어거북",
+    "악몽의 잭 오 랜턴",
+    "바포메트"
+  ],
+  "targets": [
+    {
+      "key": "transform:407",
+      "name": "화염의 엔트",
+      "group": "hero_plus",
+      "reference": {
+        "path": "res://assets/catalog/e452df267006c1029bae8dde.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "407",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/407.png?v=261001c",
+        "sha256": "e81a288db6310eb0ef312f2e0b8accd52816301828269d8c404bd69344e292db",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "presentation_to_preserve": {
+        "body": "special",
+        "source_options": [
+          "이동 속도 +2%",
+          "공격 속도 +98%",
+          "스킬 쿨타임 감소 +15%",
+          "PVE 대미지 리덕션 +2",
+          "물리 방어력 (AC) -2"
+        ]
+      }
+    },
+    {
+      "key": "transform:352",
+      "name": "알비노 뿔 개구리",
+      "group": "hero_plus",
+      "reference": {
+        "path": "res://assets/catalog/0ffb2e6843a5f87f54a2fd76.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "352",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/352.png?v=261001c",
+        "sha256": "b81b4eca8b25fe5d72ecb074cc6f449ff8a377138721f1a20b682c34c205052f",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "presentation_to_preserve": {
+        "body": "beast",
+        "source_options": [
+          "공격 속도 +90%",
+          "이동 속도 +12%",
+          "스킬 쿨타임 감소 +15%"
+        ]
+      }
+    },
+    {
+      "key": "transform:349",
+      "name": "알비노 악어거북",
+      "group": "hero_plus",
+      "reference": {
+        "path": "res://assets/catalog/3b9b22970c8e33b6dddc37e9.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "349",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/349.png?v=261001c",
+        "sha256": "26087ad720005c102cc458ecc30dbf6cb33799264c4f89e608710b82991a6308",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "presentation_to_preserve": {
+        "body": "large",
+        "source_options": [
+          "공격 속도 +98%",
+          "이동 속도 +2%",
+          "스킬 쿨타임 감소 +15%",
+          "PVE 대미지 리덕션 +2",
+          "근거리 대미지 +1"
+        ]
+      }
+    },
+    {
+      "key": "transform:173",
+      "name": "악몽의 잭 오 랜턴",
+      "group": "hero_plus",
+      "reference": {
+        "path": "res://assets/catalog/0eb12938f27a9aea00efc7f2.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "173",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/173.png?v=261001c",
+        "sha256": "b0c4a733b1b1a32e7e648f1c8f0175f0bc5e1464dfe220e6a298548febf51436",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "presentation_to_preserve": {
+        "body": "spirit",
+        "source_options": [
+          "공격 속도 +102%",
+          "이동 속도 +2%",
+          "스킬 쿨타임 감소 +15%",
+          "최대 MP +10"
+        ]
+      }
+    },
+    {
+      "key": "transform:7",
+      "name": "바포메트",
+      "group": "hero_plus",
+      "reference": {
+        "path": "res://assets/catalog/626d89e940ee6d7cd7446881.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "7",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/7.png?v=261001c",
+        "sha256": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "presentation_to_preserve": {
+        "body": "humanoid",
+        "source_options": [
+          "이동 속도 +13%",
+          "공격 속도 +90%",
+          "스킬 쿨타임 감소 +15%",
+          "PvP 대미지 리덕션 +2"
+        ]
+      }
+    }
+  ],
+  "status": "Five accepted source-based candidates; baphomet held for repeated death-pose errors. Actual Main validation pending.",
+  "replacement_targets": [
+    {
+      "key": "transform:288",
+      "name": "도구리",
+      "group": "hero_plus",
+      "reference": {
+        "path": "res://assets/catalog/103fc704c444ace82ff91235.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "288",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/288.png?v=261001c",
+        "sha256": "a48d6b0f65498379d0bb8188b2ffceb5dcec38a9e4233abd056e38f1c36ee244",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "presentation_to_preserve": {
+        "body": "special",
+        "source_options": [
+          "공격 속도 +98%",
+          "이동 속도 +5%",
+          "스킬 쿨타임 감소 +15%",
+          "근거리 회피력 +1"
+        ]
+      }
+    }
+  ],
+  "held_targets": [
+    "transform:7"
+  ]
+}

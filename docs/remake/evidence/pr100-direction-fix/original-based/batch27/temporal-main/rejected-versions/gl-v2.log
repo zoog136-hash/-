@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PR100_TEMPORAL_CASE {"name":"웨링","native_phases":104,"reference_binding":{"identity_limit":"Existing project artwork, not verified external original game art","original":"res://assets/monsters/original/atlas_0.png","reference_kind":"existing_project_atlas","resolved_portrait":"res://assets/monsters/original/atlas_0.png","synthetic_fixture":false},"rendered_native_phases":104,"report":"/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-cases/waring-monster-boss.json","report_sha256":"83807b2feb9a5a860673bb5f0c629d52bc8abc980608084f7f067f2bc1cbb3cf","roles":40,"slug":"waring-monster-boss"}
+PR100_GAMEPLAY_FAIL: complete rendered body is inside diagnostic crop SE-attack-1
+PR100_GAMEPLAY_FAIL: complete rendered body is inside diagnostic crop S-attack-1
+PR100_TEMPORAL_CASE {"name":"불신의 댄싱 소드","native_phases":104,"reference_binding":{"original":"res://assets/external_l1j/monsters/11319.png","resolved_portrait":"res://assets/external_l1j/monsters/11319.png","synthetic_fixture":false},"rendered_native_phases":104,"report":"/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-cases/dancing-sword.json","report_sha256":"5715d4bfa2a9312252b0ddd4330b0d52a4e7b80bf83f571ddaa83e4f6857d766","roles":40,"slug":"dancing-sword"}
+PR100_TEMPORAL_MAIN_RESULT {"cases":2,"checks":80510,"failures":["complete rendered body is inside diagnostic crop SE-attack-1","complete rendered body is inside diagnostic crop S-attack-1"],"rendered":true,"report":"/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2.json"}

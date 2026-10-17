@@ -1,0 +1,780 @@
+{
+	"boss": [
+		{
+			"compass": "E",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(1.0, 0.0)",
+			"facing": 0,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(1.0, 0.0)"
+		},
+		{
+			"compass": "SE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707105, 0.707108)",
+			"facing": 1,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.707105, 0.707108)"
+		},
+		{
+			"compass": "S",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, 1.0)",
+			"facing": 2,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.0, 1.0)"
+		},
+		{
+			"compass": "SW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707105, 0.707108)",
+			"facing": 3,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-0.707105, 0.707108)"
+		},
+		{
+			"compass": "W",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-1.0, 0.0)",
+			"facing": 4,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-1.0, 0.0)"
+		},
+		{
+			"compass": "NW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707105, -0.707108)",
+			"facing": 5,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-0.707105, -0.707108)"
+		},
+		{
+			"compass": "N",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, -1.0)",
+			"facing": 6,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.0, -1.0)"
+		},
+		{
+			"compass": "NE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707105, -0.707108)",
+			"facing": 7,
+			"kind": "charge",
+			"name": "웨링",
+			"player_hp_after": 1733,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.707105, -0.707108)"
+		}
+	],
+	"checks": 2343,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 768,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792084697.62944,
+				"expires_at": 1792085297.62944,
+				"grade": "고급",
+				"hunt_batch": "38dc64c875390029de91083058c11359",
+				"id": "a0ed122ac39e518690d2d3ba45ca956a",
+				"item_name": "강력 HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					15176.0,
+					1680.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			},
+			{
+				"created_at": 1792084697.63218,
+				"expires_at": 1792085297.63218,
+				"grade": "일반",
+				"hunt_batch": "38dc64c875390029de91083058c11359",
+				"id": "dda77e475abe1a227a2b5f3e078cf5ec",
+				"item_name": "철 광석",
+				"map_id": "aden_world",
+				"position": [
+					15214.0,
+					1680.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 26400,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 429
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(83.17969, 0.0)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(58.83203, 58.83008)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 83.19873)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-58.83203, 58.83008)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-83.17969, 0.0)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-58.83203, -58.83008)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -83.19873)",
+			"name": "웨링",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(58.83203, -58.83008)",
+			"name": "웨링",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 64,
+			"facing": 0,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 1,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 2,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 3,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 4,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 5,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 6,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 64,
+			"facing": 7,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 0,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 1,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 2,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 3,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 4,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 5,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 6,
+			"kind": "melee",
+			"name": "웨링"
+		},
+		{
+			"damage": 102,
+			"facing": 7,
+			"kind": "melee",
+			"name": "웨링"
+		}
+	],
+	"physics_ticks": 8540,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"scope": "original-based waring_monster_boss, actual Main and production AI/combat/lifecycle",
+	"screenshots": [],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "웨링",
+		"normal_attack_probe": "Pause only special cooldown for normal attacks; exercise the unchanged existing special separately",
+		"normal_is_existing_population_actor": false,
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_0.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"special_probe": "Real production AI special in eight directions; positions and full player healing are QA inputs; boss stats and skill configuration unchanged",
+		"stats_overridden": false,
+		"synthetic_fixture": false
+	},
+	"staff_normal": []
+}

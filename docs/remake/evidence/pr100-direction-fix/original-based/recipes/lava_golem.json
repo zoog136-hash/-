@@ -1,0 +1,16 @@
+{
+  "key": "monster:라바 골렘",
+  "target_keys": [
+    "monster:라바 골렘",
+    "monster:화룡의 둥지 라바 골렘"
+  ],
+  "prompt": "Create a newly articulated 2D isometric RPG animation atlas based strictly on the attached original character. Preserve its exact silhouette, proportions, materials, colors and face; use this original as the character model, never invent another creature. Match the small detailed painted game sprite style and camera. Fully transparent RGBA background, no labels, no grid, no scenery. EXACTLY 8 columns and 13 rows, 104 complete separated poses. Columns always E screen-right profile, SE front-right, S full front, SW front-left, W screen-left profile, NW back-left, N full back, NE back-right. Front shows original chest/face; back shows the back of the head and shoulders, no face. Keep each pose visibly SMALL in its cell, including all extended arms: at most 50 percent of cell width and height, with at least 25 fully transparent pixels around every body and a large outer transparent margin. Never overlap neighboring poses or touch sheet edges. Consistent model scale throughout. EXACT thirteen rows top to bottom: 1 neutral idle; 2 breathing idle, chest rises; 3 locomotion left leg ahead; 4 passing step; 5 locomotion right leg ahead; 6 attack windup, pull one fist back; 7 attack contact, heavy fist fully punches in the facing direction; 8 recovery, retract fist; 9 hit recoil backwards; 10 recovery from hit; 11 death knees buckle; 12 death body falls close to ground; 13 final flat collapsed body. Death remains one connected contiguous body/pile, with arms still connected, no detached flying parts. Every row must contain eight genuine different compass views. Every action row must have actually articulated different arms/legs/torso, never repeated or translated stills. Keep clear empty transparent gutters. No text. This is the original LAVA GOLEM, a broad lumpy hunched body of dark rock filled with extremely bright orange and yellow molten lava. Preserve exactly its original asymmetrical jagged rock masses, massive low arms, small sunk head, rocky legs and the orange/yellow hot seams. No weapons, no clothes, no horns, no armor, no eyes invented as a human face. Keep the molten texture within the body silhouette; do not surround it with extra fireballs, disconnected flames, smoke, red mist or detached sparks. Its original glowing lava body remains fully connected in every pose. Keep all emitted light bounded to its cell.",
+  "output_path": "res://assets/actors/eight_direction/original_based/lava_golem/poses.png",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared with original 15738.png: hulking lumpy dark rock body, intense orange/yellow lava seams, low heavy arms and sunk head retained; no weapons or new armor. Front chest and back shoulder faces, side profiles and diagonals differ. Actual 104 separated poses include alternating steps, directional fist punch, recoil and three contiguous collapse states. Original and generated PNG bytes remain unchanged. Actual Main size/facing/AI/combat/death/drop need testing before completion."
+  }
+}

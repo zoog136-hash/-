@@ -1,0 +1,1805 @@
+{
+  "schema": 1,
+  "basis_commit": "62ad60ae118c28f6f11bfc6facb3d5564e2ba929",
+  "preserved_session_start_commit": "6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b",
+  "branch": "feature/twilight-animation-20261013",
+  "counts": {
+    "hero_plus": [
+      136,
+      180
+    ],
+    "normal_monster": [
+      184,
+      258
+    ],
+    "boss": [
+      35,
+      60
+    ],
+    "total": [
+      355,
+      498
+    ],
+    "remaining": {
+      "hero_plus": 44,
+      "normal_monster": 74,
+      "boss": 25,
+      "total": 143
+    }
+  },
+  "planned_targets": 5,
+  "completed_in_batch": 4,
+  "newly_validated": [
+    "monster:블루 하피",
+    "monster:질투의 좀비 나이트",
+    "monster:질투의 좀비 메이드",
+    "monster:불신의 임프"
+  ],
+  "unbound_planned_target": "monster:오크 마법사",
+  "new_designs": 2,
+  "new_distinct_poses": 208,
+  "native_resources": 83,
+  "original_based_designs": 47,
+  "original_based_distinct_poses": 4840,
+  "validation": {
+    "main_headless": {
+      "cases": 4,
+      "checks": 3457,
+      "failures": []
+    },
+    "main_opengl": {
+      "cases": 4,
+      "checks": 3856,
+      "failures": [],
+      "screenshots": 344
+    },
+    "related_python_tests": 35,
+    "production_body_kind_assertions": "Both zombie names resolve undead; blue harpy resolves flying in actual Main. Their fallback body metadata remains unchanged.",
+    "video": "main-batch.mp4 is a 240-second real Xvfb Main excerpt at 15 FPS, not a complete four-case recording or performance benchmark.",
+    "initial_render_attempt": "X11 connection blocked before gameplay in default sandbox; preserved diagnostic, rerun with display access passed.",
+    "existing_alias_reference_regression": {
+      "cases": 4,
+      "checks": 3886,
+      "failures": []
+    }
+  },
+  "preservation": {
+    "original_references": 222,
+    "original_files": 117,
+    "original_sha256": {
+      "assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+      "assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+      "assets/catalog/e090d7a50d6f7a23fe55576c.png": "d0c26b83f744e9ba811eb2649ac78ae32938a437ef5d3f6984f2c9c3cc367af7",
+      "assets/catalog/23ddcb3e1e4a9f3c6f48124e.png": "c83eb1dd8aab0fc7b726a6c44f9a7fed43b4bb82d273ca5f5f1405fdb0fe8e77",
+      "assets/catalog/0c6685aea67140a668a2e435.png": "6a41bfe070b3726565f444588c199a7b21dd140d417bde48ccf3ea9fc57a07c5",
+      "assets/catalog/de8b2ddefd09cd8ade958384.png": "94457571d8749778f1c2c2548288fa69f4bf5c87e7139a225647dc8787f302f8",
+      "assets/catalog/e8276e21323905849d6c9cd3.png": "d7d03cfffa0ff0b045a224ef2546ae9566faa642dafa8eff69b3fd46fc3a54ae",
+      "assets/catalog/dc95f84013483f22ba99d798.png": "978a51df5cb31131134d4f2dca4f66cd48c908db6b0b46be8a10bf3c568ca2c8",
+      "assets/catalog/28f3cc7da2ef8ab97ed03296.png": "e2cfc69f827a0836230bded49ec5c13aea90c5efadad9f0e69b6f6b7acf1e52e",
+      "assets/catalog/672979626328d4a7e72a7762.png": "3fde39a02645010eb4ae6838cce62086810e6e2788d7303bf44b4b4e2d0ec8f3",
+      "assets/catalog/22da970593e807d3e14de888.png": "0cd589996841afa8c1c251e5b1b68efdcfa461da7b9cd2cc75729e028b7a5d0e",
+      "assets/catalog/be6f2f0c73cd7dffe54e98b6.png": "0ad4f88dfd6540dc6d441c5ef0726908b6f6add0b8d353dede6499354d2f74ab",
+      "assets/catalog/0e6c8d847abc53e0f210f938.png": "401caa29182acec3478fae546407331156d03e511143075c4589afdbdebd2182",
+      "assets/catalog/fe823245b3bb47d25032af5d.png": "9fd4e015ee61eac96c7573428d6a59e5a242a3eb2520312965f5667eb8b6ed29",
+      "assets/catalog/fc02cba251d675d0d26277a0.png": "6c9fe7082678728b28a2c5befd6cfada0be61512be3affe6c862c56bcb93dce8",
+      "assets/catalog/4954db6f65010804b3185b7a.png": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+      "assets/catalog/8f548bbfb547f0acb2e157af.png": "49690ae0bfbfaa565665a19c6041da859f42301af2a5a92aeb763d3f1d2c287d",
+      "assets/catalog/e452df267006c1029bae8dde.png": "e81a288db6310eb0ef312f2e0b8accd52816301828269d8c404bd69344e292db",
+      "assets/catalog/09aec526b6598da31fe8706e.png": "827ff749efd4af6105d43b9a69acb6474ed4f2634197980258630c4931da5db5",
+      "assets/catalog/64d25f3ba900292ba831c0b3.png": "5dd0e42a4ceab3527edc3f7e46b9adf9ac471645af0e5823388217d9eb740ddb",
+      "assets/catalog/065cfed934bd88d9ae823770.png": "6c191669bf597f8f841d1f9831f2e05f912b2d1c59129834530db4a090fdc081",
+      "assets/catalog/8af2dd8be3cfb5b851b59d37.png": "406ded98472ee588eeacfafa77f34455be5172d65fbdeebca41bab5e3cd9646f",
+      "assets/catalog/77499baacaaa399548946cb3.png": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66",
+      "assets/catalog/e3588916ce3e7e64dff4cae3.png": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+      "assets/catalog/ec230f19da2fd4dc5363ab53.png": "c7043809271cbb43fb9d177f11f974a877cbf9f4c58671cd6dd6368c5b8bbf91",
+      "assets/catalog/ef11a31515ba49797bc7bb02.png": "cdc7f20987c47aea4e8b431cdabe494bcb59278a71d9efff5946e25bb72aba72",
+      "assets/catalog/4f7cead373e7901052fa2b5c.png": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
+      "assets/catalog/0ffb2e6843a5f87f54a2fd76.png": "b81b4eca8b25fe5d72ecb074cc6f449ff8a377138721f1a20b682c34c205052f",
+      "assets/catalog/72b67492cfa1d57101f23c63.png": "ad311f8468a2d0b0ffc10f55a460ebfadff3eaa150e5ebd9c4cc47e1a17402e3",
+      "assets/catalog/3b9b22970c8e33b6dddc37e9.png": "26087ad720005c102cc458ecc30dbf6cb33799264c4f89e608710b82991a6308",
+      "assets/catalog/96c155500a24fa3048b0f5d0.png": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+      "assets/catalog/103fc704c444ace82ff91235.png": "a48d6b0f65498379d0bb8188b2ffceb5dcec38a9e4233abd056e38f1c36ee244",
+      "assets/catalog/f111979ea61b2aea33dae32f.png": "54b5307d60c5b8cbf422ee596173d09296034c974d06ae69c571483ef4e98448",
+      "assets/catalog/bace1006d136d422a1bb7fb9.png": "69428f91ad9635a546d465c93b5e7729879899c12afb97fbf31d724e135f4766",
+      "assets/catalog/03d946f9367717a52aca2ebf.png": "ac6c744d3024b070a7a3356cdd5cf3a8f6512bec02d30fffc5231fcc68098826",
+      "assets/catalog/8816dfeaabd5f82d37e06dd9.png": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8",
+      "assets/catalog/f94774460beb232c4b5f84a7.png": "66e5c627f415d3c2a0bc951921dbe77fb8b5bc0363b57603e5710b22c5a72481",
+      "assets/catalog/d3129a87e012cec4099d9a3d.png": "b0426616db7c09e1970c738fef9b1caad5d9892b59ff654c8d576010f90c5488",
+      "assets/catalog/cd5447c670243d36bd017101.png": "004ac8b456888e4833af456f7b7e771aac1ccd3fa5fe76f42ea2d77931a9d22e",
+      "assets/catalog/0912019ed5caa32914f6699a.png": "eb0c2eeb137e2aed1294bd5806e873b633282f036bea8ce6ceab48f7c418a863",
+      "assets/catalog/8285c5c41fcd1e6145c397e3.png": "71038b5762f948ce73dc7c1e97e13a108c47b4757a880454064ed0581b87b33f",
+      "assets/catalog/f0e737c6db30210b1fa4b220.png": "50a114a762c36f0620499da421a773713495b4417a419ee88684cc223d186489",
+      "assets/catalog/8bf952f2ddac970272de1acb.png": "eaeb21be40ef08dd95c900db83d272800781069832dd4ca902e4f6d680e78511",
+      "assets/catalog/0eb12938f27a9aea00efc7f2.png": "b0c4a733b1b1a32e7e648f1c8f0175f0bc5e1464dfe220e6a298548febf51436",
+      "assets/catalog/87117dbb872151681c4f8566.png": "c81a1cb75fcac21306727e1f148d7ba18b3ce0c0de31994219ddfd65f00be097",
+      "assets/catalog/394db77a53ca94ad44ed0042.png": "1977f46122b5465cf080f3ec8c12639dd07fcd1063b3e488d3ff599f00494f8e",
+      "assets/catalog/5a63357054f72a54d89e7b30.png": "97746bf25f41ed0660a5021df75fa5e8964f1d4dff25a3936d6d0f74850916b1",
+      "assets/catalog/9ad7673e0bc7551d5fef799b.png": "3847b725808e1d665e93ee992e0e95790b572ce920647afc233d7966af33ac3d",
+      "assets/catalog/49f044c2f50dcc0a68af9d16.png": "f12c319d1e385a94756bd0a3a2163007f49dbbe25c8ee09e07b639b6768bee34",
+      "assets/catalog/73d5ffcf7bd47bbbd9ff5338.png": "b9488518b5f578fe6df165f1e536fa24a8148136b679c22f2cee6dfe9705098c",
+      "assets/catalog/a237a9af26fd206d8bcb43b7.png": "dc967926567d7ef6864c8c4810070c3cfc739cfb815f9c99ecb17b07c16c9d3e",
+      "assets/catalog/626d89e940ee6d7cd7446881.png": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490",
+      "assets/catalog/8dad718d9d43087a10fc03d4.png": "298f88d539d2bd09d60bf4da92f484a486d25071804618f89d3cfcb53b0f1edc",
+      "assets/catalog/1b99b161b4ebedb6c86c2f16.png": "3b870c6e168277b0d2f1c44636feb019afda3cc43c9405cbcf3ecbea0fe5d38b",
+      "assets/external_l1j/monsters/1318.png": "51ac08e1f0f44588e6926fe9064361ad6a6aef4e857d008c36c30220e3265084",
+      "assets/l1j/verified/monsters/45223.png": "38c4e474ae6886f20003c4f1d7ca7f1959b02e2978c0bd5021e75c1fba5a4b9e",
+      "assets/external_l1j/monsters/15738.png": "e9589630be6646a03c24031e33f2ca1ea18228f223a54c4eab23aef866a1a3bd",
+      "assets/l1j/verified/monsters/5030.png": "a817ed08eeffaf3a62c1b513a07b1d129c255428498cb84b7a22a1f6b26bb4e6",
+      "assets/external_l1j/monsters/16145.png": "c9694def871d2e233bb771f2e206817e5cb112a52d72867c1c6e7cc9d805abe8",
+      "assets/external_l1j/monsters/15742.png": "52e2bdf6b03fc93247ca0989a8d7415edd69f17629fab4a748c991befb11d301",
+      "assets/external_l1j/monsters/1112.png": "3d17f669d7a47fbaf636b3c9a93d6b78e8e0abe244f80516b39b40b0b0667937",
+      "assets/monsters/original/atlas_2.png": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "assets/monsters/original/atlas_3.png": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+      "assets/monsters/original/atlas_0.png": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+      "assets/monsters/original/atlas_1.png": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+      "assets/external_l1j/monsters/4820.png": "2e5a4e41492befef6ad9d487dc8417f94c4c65a18fc13abcc269ff85d98c2d39",
+      "assets/external_l1j/monsters/5683.png": "e3916722bef2a61f01320c89e162898637e39ef603e53cf8ed3634b13826c4ff",
+      "assets/external_l1j/monsters/12983.png": "0abf61fecce2cde49bc84721f2ff1f3a21955e1207a3cb40dcd9ea8b10d8a40c",
+      "assets/external_l1j/monsters/14169.png": "3408f66ca885a60fa8e1e7203ca679baf42bc33b679912a3266afeaecb864b94",
+      "assets/external_l1j/monsters/16150.png": "4c1487c13cbdc8c189f39668151a2c8ce017250077314ec0d4d38da806e6c6ec",
+      "assets/external_l1j/monsters/15665.png": "2ba615eafeff28e06ce56958eccb82cce1f682b47bb64aa5411a93d4dc2b545f",
+      "assets/external_l1j/monsters/15772.png": "5fcd8d578b3a3f27bbe278c95b97902b42205e9ed769ca41ad9e2c3d3d4cefe2",
+      "assets/external_l1j/monsters/4151.png": "187a55905fc402e9f7c8d4cc91e5d29a402e247a6b0a03f4307ac142a8aebb41",
+      "assets/external_l1j/monsters/1041.png": "d81568df1382f8b7b613dc88ff2c988db1f4ae954c09c6254ef76b42b182f38e",
+      "assets/external_l1j/monsters/15663.png": "f302ffb3174094aefed5666f18bad067ede22e5e310f561b4938d7d9abb2bffb",
+      "assets/external_l1j/monsters/1610.png": "5f63cc13b565672641661233f469930dfcb1bca6bb5b056c150227a40545b20e",
+      "assets/monsters/original/atlas_4.png": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+      "assets/external_l1j/monsters/16835.png": "366f2dedab8da7d450f442ab7dc21ff886f69fd88fb0e19356670fee5e41be85",
+      "assets/external_l1j/monsters/15664.png": "0ce59d33c4b214ae1e047da7e2160143389078497ee07669bfd15376957f7b50",
+      "assets/external_l1j/monsters/15671.png": "1520a1dbc4d835bd4fe0e471472dd6f22e10625f4498b687c0261410f503b80a",
+      "assets/external_l1j/monsters/1024.png": "2e77475b545a94ffb9ac39a97eed51957fbb9c666867fc5104c1ec8cb2e7d1dd",
+      "assets/external_l1j/monsters/15757.png": "60a025d864e5b0180991e8bffb9c9dc00c7fc20eea18cdf944c31d5d0f75c1c4",
+      "assets/external_l1j/monsters/15758.png": "c56c49dcfcbf4e6e81ae6ca306dff032643376728e7eb3acf1c21b8e1762ad84",
+      "assets/external_l1j/monsters/15759.png": "13715ec2d076d72e9998f59b66326fdb47decf104cf8885e28432c57fbc322b6",
+      "assets/external_l1j/monsters/15604.png": "266e56d24b0e0da19639eced5ff576123596655c421d25c723e20723142a3f0b",
+      "assets/external_l1j/monsters/1820.png": "104a6b7454c2ad2a704e4e3a8ec5fc6a6dd5fdec078ae255048d7c7cbec14263",
+      "assets/monsters/original/atlas_5.png": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284",
+      "assets/external_l1j/monsters/15639.png": "66aa04fa2f2bf2e898d4dad718ff2b0a51d398e1a0b9d826309dbb507d5b32be",
+      "assets/external_l1j/monsters/15649.png": "0ae9414be57c1724fb817e9aee8232c6d29430b1ffc4108a2d7cdcce95b475b9",
+      "assets/external_l1j/monsters/15641.png": "23f87b6b59cdbf4f9980e950602b69ea251e7009fe039cc1db23a880fa080341",
+      "assets/external_l1j/monsters/1597.png": "a5be6b3e38cbe5ed6fe645297ae34726531956be08d224aa42950fa4a00a816a",
+      "assets/external_l1j/monsters/2392.png": "6aafe103cb611b804df3da493d38cd7d127475cdc1b948a7d59fc665c8730493",
+      "assets/external_l1j/monsters/11319.png": "37b68430cb7bc5d2de057b49bc1d7098fceab34e2c98ee7ca363e8c06c190333",
+      "assets/external_l1j/monsters/15751.png": "21e60cede9a0fa5d4763607a6ffb0f1d1e272c63a51524fc6bcddf90254904eb",
+      "assets/external_l1j/monsters/15753.png": "5cf0babe719dce09421b9a8cc2bab4d62739f5ae93aa258f2c8ddc0a8ff0d6c1",
+      "assets/external_l1j/monsters/13304.png": "10d00458ed7c67f3f0d50fe067551de62afe28f95afeeb489ace6ed06c2447f6",
+      "assets/external_l1j/monsters/15561.png": "db6a8edb128094b279c4539b04a8beeb6a24c80c4430f5fa5668762cf08b02f3",
+      "assets/external_l1j/monsters/15554.png": "c9392fff7ad517bdb9725cc1e750241e5ef0276ed21f3adc5fbbd4d9d1501b3a",
+      "assets/external_l1j/monsters/16158.png": "7c2f3b27db09c5b5296a3cd70a203847b8943a179ef2d1aafbc07e1ff91b557d",
+      "assets/external_l1j/monsters/15648.png": "70678037163db132c48b7acae8aebbf0b385e48250c08ab8d1c1943e0403b50a",
+      "assets/external_l1j/monsters/10358.png": "9cae4923ee519c31007de839e33fdb7ed9ca076f6b02d364502aa89faf7022ba",
+      "assets/external_l1j/monsters/2158.png": "be45d9e49d80b710848d2895e041bf34b46dfb7d786161b72959c5cf394325b0",
+      "assets/external_l1j/monsters/2147.png": "115f934971f919b6865bdf77afa7f58e0917eb98a4586a99d4d61c033cc2c658",
+      "assets/external_l1j/monsters/13290.png": "33377e9e39dc4a3f7c9443c36c80244ec170fc8083be6bde9ad2c9860af15f96",
+      "assets/external_l1j/monsters/1574.png": "f099e7cd1c5027f2251bfae63e0e34a5c00495c5f134e5202f4a3bde7e30e8b2",
+      "assets/external_l1j/monsters/10355.png": "662f4d54d31dd49e6941ab78407cd1d2054349ea7c0b428dd16bd0b56d3e7440",
+      "assets/external_l1j/monsters/15793.png": "2eb097a9b8590da0730d76a1cbaad6c2c9df0c73e5e4ee0df915be125f471505",
+      "assets/external_l1j/monsters/15598.png": "361e796dc6262104b38799d69dee73427084e8fcadcc3ec6336f4b9ef960b3d9",
+      "assets/external_l1j/monsters/1211.png": "04a09168d13bbade36971ba4e6a971bc17505abe7b08943a2ed5fe76ad55c0c4",
+      "assets/external_l1j/monsters/2535.png": "998160c7a2005ee993d43ce2d7b3ce33d86d488e4521a290dc4dee90273d8240",
+      "assets/external_l1j/monsters/15576.png": "99a1f006c11b3b3e2fe18ff6025c9248568c45cd2f8d02a722aca680e47467f1",
+      "assets/external_l1j/monsters/15749.png": "e8ca6f4fb1397b932dc5252b7ff6b788402a5d43c090429b2a2fbba0ce4aa5be",
+      "assets/external_l1j/monsters/16842.png": "7c2f3b27db09c5b5296a3cd70a203847b8943a179ef2d1aafbc07e1ff91b557d",
+      "assets/external_l1j/monsters/16843.png": "4c1487c13cbdc8c189f39668151a2c8ce017250077314ec0d4d38da806e6c6ec",
+      "assets/external_l1j/monsters/16154.png": "57cc6b1792dace21141d213df8b219bda6be86f07971fcecbc0fd57f1bc16aec",
+      "assets/external_l1j/monsters/145.png": "4e33a88ab0310d8afc3910b245b1db42e74246325febfce560fa927ee5164ff7",
+      "assets/external_l1j/monsters/5110.png": "cec611c763c6b172f8c4e4f5ec8d2c05b451fbd033bdefa4ea171b96ea89ad9f"
+    },
+    "previous_png_tres": [
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/SpriteFrames.tres",
+        "git_blob": "f0f6a46568d57cbda5338ec1785b7bd6a7fcd238"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/attack.png",
+        "git_blob": "1eff0ae93388936e4a274dd95ccefadb8ddc8ae6"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/cast.png",
+        "git_blob": "1eff0ae93388936e4a274dd95ccefadb8ddc8ae6"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/death.png",
+        "git_blob": "8159799d9ee33db1b098ac03c6ced520a38f06d5"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/hit.png",
+        "git_blob": "273ca359ae5f88fe1d2c3d74c73cf92f6fdc52d2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/idle.png",
+        "git_blob": "9fd32e421cba3de8c44c5475ff0532c3c51b446c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_armored/walk.png",
+        "git_blob": "1b11afc990643b60eda3e74fc633edce8e97cb8d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/SpriteFrames.tres",
+        "git_blob": "dfe693f33b96e740600cdbd88b98ad7b639064ca"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/attack.png",
+        "git_blob": "273dee459c4705bbb8a85991e28dfaede091bf2d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/cast.png",
+        "git_blob": "273dee459c4705bbb8a85991e28dfaede091bf2d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/death.png",
+        "git_blob": "395a54ad39dedb1d97a0f4409b67fbfff940d571"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/hit.png",
+        "git_blob": "13ec9df6eb5aae253312cdc6b635918528e1a7f9"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/idle.png",
+        "git_blob": "202bec1d6c0823816bba42ad5fe43386de8776dc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/antlion_small/walk.png",
+        "git_blob": "78c95ab72e4c20e66e03e668511711d48ca71a8f"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/SpriteFrames.tres",
+        "git_blob": "a7de7ca5b60aa87ac9f64b4d8bc2295a50ac0d76"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/attack.png",
+        "git_blob": "6a2c2dc79f9322417627359602b44e13f62761ad"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/cast.png",
+        "git_blob": "d4471cc9c07a40a7d41506ee9a99f416c1b85c87"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/death.png",
+        "git_blob": "5ff65aa82ee7e2b60d138e14334d9df0b33d4bb7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/hit.png",
+        "git_blob": "cf7108d846a75310099fe21b5965ada2acbd8617"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/idle.png",
+        "git_blob": "b383cef0ca9305ba9cf2f32d37665038884e5afd"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/walk.png",
+        "git_blob": "619fcef3faae0d2fa1fb8dafd916bea242f29792"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
+        "git_blob": "6624863b351e767dbd7b50bb05ab23fe565b57e1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/attack.png",
+        "git_blob": "2a51c6e198c119d1e4fb22a9cef824d7a24deb4a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/cast.png",
+        "git_blob": "275385dadece8b56241a4b3313f89309d4bd0d67"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/death.png",
+        "git_blob": "18e582a5fd7884ef001cbe25e2f4408c70676dc0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/hit.png",
+        "git_blob": "4b91767b8ae2ad4f55a75dbb678793b08ec9e8f2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/idle.png",
+        "git_blob": "aad2fc2006cf1354f7d5c201d8c17f3a1520b08a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/walk.png",
+        "git_blob": "3ac33ba182ddc00ff5cd71977ebb56ef7001d7bc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
+        "git_blob": "291727b214156420fc5cf11bb170f779f2f0b491"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/attack.png",
+        "git_blob": "ca475b41f07d5c91a40fcee4222dbfe296736c80"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/cast.png",
+        "git_blob": "ea6cf039362b0cb6f0970ad50cb4a1aebe9b6d0b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/death.png",
+        "git_blob": "9c2b9708ffc9aaa9f5e7d5759eb83b4139423976"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/hit.png",
+        "git_blob": "7edf074f2b90b4738c1d07346c238cbf0b6d57ad"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/idle.png",
+        "git_blob": "af3d659f1630dc97e67d4e2d6793658b14455c1e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/ranged_attack.png",
+        "git_blob": "ca475b41f07d5c91a40fcee4222dbfe296736c80"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_leather_head_long_longbow/walk.png",
+        "git_blob": "0c5e3f5f9ae9714867d61a66912b2b96c94edab6"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+        "git_blob": "fabc69351413582e7dc050b239b1d97674864966"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/attack.png",
+        "git_blob": "de50b0a6ec25af2eb3943847bf50dc9c05569876"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/cast.png",
+        "git_blob": "bb9d0432e8a9dff511b68b421be8e09a161b0c15"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/death.png",
+        "git_blob": "7692cd018601dc9c6297c45d5adb867b05e6f670"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/hit.png",
+        "git_blob": "3226de3638b99203b5b9b598b6183562e74f42d2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/idle.png",
+        "git_blob": "bea5bd25cad450dd8a63ab86438d481dc3e57628"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/walk.png",
+        "git_blob": "62c2223eace5d6ec1cb879671016e92a42ae7d37"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/SpriteFrames.tres",
+        "git_blob": "fd6c17593bbc20ff1c9e596d9943e54c71993120"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/attack.png",
+        "git_blob": "452de39b14d6962ba77ed9fe088817e94d17dfa2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/cast.png",
+        "git_blob": "bb5837c58763e2e198952cc1640b1e6da49e1464"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/death.png",
+        "git_blob": "a3b89d9232947a0f2a50c0d3e51f5d40733d9bce"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/hit.png",
+        "git_blob": "04ed0267024e502929d317c02a5de1df147b50ce"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/idle.png",
+        "git_blob": "e10af3770bc4a113f27745e1d02a44bf9a30abcc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/walk.png",
+        "git_blob": "36c3223ef256df05dcc1b7fa3a810a6d83b4c71f"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/SpriteFrames.tres",
+        "git_blob": "0df1b3a54c11a77cc67c2c5cefd54d3018885acb"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/attack.png",
+        "git_blob": "85391d419865cb87c7e623e141705184b580b030"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/cast.png",
+        "git_blob": "bb6548a8b09af153afe53de802373a5dc925506b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/death.png",
+        "git_blob": "0ffa5785866e088a54ad59fe204dcad372336136"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/hit.png",
+        "git_blob": "e7c5f1cca62c6b2cbea7086be328a086e1be086e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/idle.png",
+        "git_blob": "0cda9d81465145cbfdc395f74639cc7ae00fd2cf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/goblin/walk.png",
+        "git_blob": "6d3b903b43d8792946d29af66ebbf159f2477472"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/SpriteFrames.tres",
+        "git_blob": "aa7ff7927383f08ecbac480954df97f462735e58"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/attack.png",
+        "git_blob": "90f6bbf0af604c84b7f63bc7de81ec2dedd2cac5"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/cast.png",
+        "git_blob": "5bd501458b93f9f4ce976aaf8ce0c5fec51160d0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/death.png",
+        "git_blob": "8d516326e516f7f7d58e3dfed31987d2a33c41b0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/hit.png",
+        "git_blob": "695159d4df21347c63cf8f56421fe560e1f3dbd7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/idle.png",
+        "git_blob": "c118fb79646b20e8d88ab7be928824eb711ddc79"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin/walk.png",
+        "git_blob": "57f0351d3aa8f3e5f7d389497414a6a824b46d89"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/SpriteFrames.tres",
+        "git_blob": "9cb8836f100b6ee81bf575f7bd67be8ee69fbdb7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/attack.png",
+        "git_blob": "4bdca777202f32f66174896648a77123d39befc0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/cast.png",
+        "git_blob": "40a13cecd05beebc7b18ad62ed3bf3b14f164052"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/death.png",
+        "git_blob": "23540e77f1cb12c2c047cfc0fd4bf2e9cb0a07fe"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/hit.png",
+        "git_blob": "4e07e29297e720d86683f0a7789ebdfa100a375e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/idle.png",
+        "git_blob": "d328b3ace75dcfaae4fa5f2374ff998178b0e42a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/ranged_attack.png",
+        "git_blob": "4bdca777202f32f66174896648a77123d39befc0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/hobgoblin_archer/walk.png",
+        "git_blob": "63db02ea2fc86ec977dfe02ab7784cc51668e9da"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/SpriteFrames.tres",
+        "git_blob": "c69cf1cab4783bda73bc02db7e129637a98593cc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/attack.png",
+        "git_blob": "871a6aed3cfa9c3f3890fe2fb85f5cf01acf3b37"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/cast.png",
+        "git_blob": "bba207753767d8b4fa9b9a4b174a981267444a7c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/death.png",
+        "git_blob": "a3f7a0b92e18e808d3bbe02506add54f53b11a43"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/hit.png",
+        "git_blob": "b27b35bd9e9087900f555bff3979b84c5287ba54"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/idle.png",
+        "git_blob": "f449e0ef04925eb251a9cd2ffe71f0e35ab7dcb6"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/walk.png",
+        "git_blob": "b939b01765268245c8ccdab81f5bdcc44e4d89d0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+        "git_blob": "b9f830917564cde0aac98234375489bbce26acea"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/attack.png",
+        "git_blob": "e549351d2cb7a372f8f6885a533924dea428b1cd"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/cast.png",
+        "git_blob": "eb6ac65a2e5c88f5dfb87c0e2e81d2a4764843ea"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/death.png",
+        "git_blob": "d054d8809c7d76146dccc505ddb36ea16e3da33e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/hit.png",
+        "git_blob": "b349b83e241bb1752843aa1ad61db3b6692f83a1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/idle.png",
+        "git_blob": "55a179484eba1d06efa187abf3d753f3d1170596"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/walk.png",
+        "git_blob": "bd65c6ee1de4755cf5d18f6c8a4d4ca103f49783"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/SpriteFrames.tres",
+        "git_blob": "e7fe92a3cc2ef1f9154eb912c3b616882a90a794"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/attack.png",
+        "git_blob": "fc6f1104228246f9bb201c829517a2521dca3ecd"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/cast.png",
+        "git_blob": "7cc73bfbb97c48ce4840959924c9b7917c0d1ee5"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/death.png",
+        "git_blob": "83a9356cb6e58a7f0abaf37138d77e09bf65d3a0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/hit.png",
+        "git_blob": "93dce4f0ac311e93e01c9c4598ccc06235c5c0a9"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/idle.png",
+        "git_blob": "9287172cf1989bc27afb21f887380ac12f943f60"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_dagger/walk.png",
+        "git_blob": "b59198b222585f6b6247604e3c9a3892f4ecdf58"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+        "git_blob": "0155563f01dfd39ab0065bfcf6219f9ee9970cdc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/attack.png",
+        "git_blob": "0984a42cb145ac86820b1f7923d66550bb85d9ad"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/cast.png",
+        "git_blob": "53216ff4087ea67064caaef0018b7f5c223911a9"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/death.png",
+        "git_blob": "b81f8af35cf42bbc4253df2c2ed3d542f078c8c1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/hit.png",
+        "git_blob": "385523db03368a98f3ce8b55d623d6e12e2c3a99"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/idle.png",
+        "git_blob": "ef466668bbf18a7611ddca00475ad2fa6bb1d618"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/ranged_attack.png",
+        "git_blob": "0984a42cb145ac86820b1f7923d66550bb85d9ad"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_head_short_longbow/walk.png",
+        "git_blob": "edf514edacf28a6d49ebeb6a8bb5a6e1c2c38d47"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/SpriteFrames.tres",
+        "git_blob": "56ec1699df7c5c96392bb89d4c953ff4ed9a5772"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/attack.png",
+        "git_blob": "a24307b9d0374edc30c4bf90433a551b035d6611"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/cast.png",
+        "git_blob": "5fcbf4d590a8837f215e63333587b3c13ec141b2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/death.png",
+        "git_blob": "e53ed67017f40c473fc85fa32707d31f803dc09c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/hit.png",
+        "git_blob": "d4cf59e83ab988c3c20a222bf6d46aba5f971090"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/idle.png",
+        "git_blob": "59d97dd98ccccb38dde4b4983714b3dd8b12cd18"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/ranged_attack.png",
+        "git_blob": "a24307b9d0374edc30c4bf90433a551b035d6611"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/walk.png",
+        "git_blob": "1d77961425c0b13b0fe6df5238bfa86896395618"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/SpriteFrames.tres",
+        "git_blob": "3694cdae252ff4fa4bdc1098b8f6f2d580c67e6d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/attack.png",
+        "git_blob": "3de7b7479eb1d3d502f670be4a3296ca70c186dc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/cast.png",
+        "git_blob": "9d9504bab402012edf3e4bf8d5dae8846c8c0888"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/death.png",
+        "git_blob": "b0386f415236a1a02d28d735d7e1b0604dbf235c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/hit.png",
+        "git_blob": "8e9b312f4d2995a099b530ad75033c60b385478e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/idle.png",
+        "git_blob": "c5c48d565a481d8b21a72d4471c4d1e1507a30f3"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/walk.png",
+        "git_blob": "dd9cd9e865a26068dee43cee6d8dfb24a6b20e1e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+        "git_blob": "d97a988af40461a6ef080d3ba2f7657ceab9a2f1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/attack.png",
+        "git_blob": "155d33a5050a9181884d1a8d17621b97e970a2eb"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/cast.png",
+        "git_blob": "aff791a96b8a86e8bbdd56cee661d4f49ce3bbe0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/death.png",
+        "git_blob": "da79d8f206375223bc7e1378c6ba35794140898d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/hit.png",
+        "git_blob": "539da4bfe689e1cbd3296c7ab5bc9b4d1360f558"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/idle.png",
+        "git_blob": "bc708c89c63ef929b21d51daa5cbd99418d3959c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/walk.png",
+        "git_blob": "ba300cdf915b226e86d9f95ca637a051b1f150cc"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/SpriteFrames.tres",
+        "git_blob": "e572590ca8a3fa3ef5fa9b77bbcc37ed0f53417f"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/attack.png",
+        "git_blob": "1971b768bdd9cf0c3bd310f38a265ed8faaa4ab2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/cast.png",
+        "git_blob": "d8f34743e18f4c1c966077e2797b68e73a402a97"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/death.png",
+        "git_blob": "cb011952397a29f497370457b130a48df25f6aa7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/hit.png",
+        "git_blob": "625cee1d8610d269743357a4caf3554d5d0882c0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/idle.png",
+        "git_blob": "a470fc8aed4988d667079e5b02d598433247f01a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/walk.png",
+        "git_blob": "ecd8feec219d8c8b1692daad5fa9d75f2174da86"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/SpriteFrames.tres",
+        "git_blob": "9d2d9c2946745473403dc8e902d188b2f8a3b8c3"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/attack.png",
+        "git_blob": "ba043df520ea7f913345ba662241a760c804f197"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/cast.png",
+        "git_blob": "ea0c169d17a8e8077f1593d03fe3f4e0b21839a0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/death.png",
+        "git_blob": "c8d0948110405c70ab13dfea9d2cf44b41aa17cf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/hit.png",
+        "git_blob": "a79c6f14ebcae76e8d4aba3014543e12af3d8166"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/idle.png",
+        "git_blob": "33f99a3aef838ff26d366840fa1d2e18b8a74c1e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/walk.png",
+        "git_blob": "59b1ef89153f6f34621ea5ff683a0e5806875d96"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "git_blob": "2a78d53be2fe35b1da0cfdb29ded4e61274fc4b4"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+        "git_blob": "d38343733244d41d3c6306a42f1d993b07cf6ae2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+        "git_blob": "9bb1ae508ec64d649f0512f3f59661b754a4595f"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+        "git_blob": "fe0afd12cb77ab11e680a8fdb623f60aa5690001"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+        "git_blob": "64f6d979eb01865dc5f6eca0ba4d2f9fa36d5e3c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+        "git_blob": "b0bec298291f21bc2b6c61c08f3c55c905e5b4db"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+        "git_blob": "a74a0fe3234a82c0f612e60c6a6ae1b483b864b3"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/SpriteFrames.tres",
+        "git_blob": "70d37c185b6eff83125a43f5a50f0c4e7de27dd2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/attack.png",
+        "git_blob": "779a857468063da06b0264baba7b9b94798a82aa"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/cast.png",
+        "git_blob": "804d522bb098a314f68104f9926a9208667e7375"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/death.png",
+        "git_blob": "c6eb7a17d5030bf3f0b26aa3f4110978e50d72ff"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/hit.png",
+        "git_blob": "83a88f1eb8a227d40984362b3d58c2d9e03a6a68"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/idle.png",
+        "git_blob": "5cfd17224d35e366f1aecf2ff78395b6a195329c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/minotaur/walk.png",
+        "git_blob": "0b683fd5bc9c0e3e68ac761e3217870a32ee2e9b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/SpriteFrames.tres",
+        "git_blob": "992f291e3d82d50bcaaf6903c052521ea71da0b7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/attack.png",
+        "git_blob": "92da9e8f6f4b2cd713d1d8a26e5d59e1ceb56b2e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/cast.png",
+        "git_blob": "4be6880868237312e76a70421b2051640874afc9"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/death.png",
+        "git_blob": "549863ff3b029af9e7f99e22c761d2a1a33086e4"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/hit.png",
+        "git_blob": "8f685d26061c1e1643128da8403c0222f101bccb"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/idle.png",
+        "git_blob": "025225c785a6ff2cd11046cb1cb85e7bde74c748"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton/walk.png",
+        "git_blob": "cfc58a60a7a91ed169ca884895a66f1dbcbb29b5"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/SpriteFrames.tres",
+        "git_blob": "8fa29b400444669b75073138a5d47daa3e93293e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/attack.png",
+        "git_blob": "b28bb81c7e41171b4d40c032762542f42a2594bf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/cast.png",
+        "git_blob": "a16744c27f1bc6fa79b7ad04a7beb185c37d09e2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/death.png",
+        "git_blob": "7e380f7370786dadd3abd2c35b81a223360d7b13"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/hit.png",
+        "git_blob": "d43a21ddc641d4d1f147e2a7b950afdf796d1abf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/idle.png",
+        "git_blob": "3766b1399ee804cd44924e367966a75679c53785"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/ranged_attack.png",
+        "git_blob": "b28bb81c7e41171b4d40c032762542f42a2594bf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_archer/walk.png",
+        "git_blob": "16f7f22f6c3e51d521128168bb5087034177b8a2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
+        "git_blob": "f4c3d1b88a9eda163d3c91b1707b6366e3f83005"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/attack.png",
+        "git_blob": "5a50d6bd02786a2bbf1cd49e8d21146ea64ad6af"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/cast.png",
+        "git_blob": "7bad18aa8b42820bf37c2b2d24a6c6aa240ddff1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/death.png",
+        "git_blob": "5343c65ea1c06c531532212ad0e7da0d8bfa8dcf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/hit.png",
+        "git_blob": "f5b5e9999172680a0c189e46e504e92e1eb41b4b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/idle.png",
+        "git_blob": "18ea381f9d1f4530a4478f0a9e4f6721ecd8cb3b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/special.png",
+        "git_blob": "7bad18aa8b42820bf37c2b2d24a6c6aa240ddff1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_knight_boss/walk.png",
+        "git_blob": "1713a63701431302070c591d59bb7e9c96987c45"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/SpriteFrames.tres",
+        "git_blob": "e933c2159111401df8b62e4b9115f903e14b11f1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/attack.png",
+        "git_blob": "07236fe3d6dc702dba2bd8eb4c85054d833989ee"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/cast.png",
+        "git_blob": "07236fe3d6dc702dba2bd8eb4c85054d833989ee"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/death.png",
+        "git_blob": "6b2c31f1ed2ea20535297d363202af0525557fbf"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/hit.png",
+        "git_blob": "173f4f9826056d141343fecb3ef7173b77033b5b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/idle.png",
+        "git_blob": "0c7144639d113b513308a9b03079fc7193bcdd32"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/special.png",
+        "git_blob": "07236fe3d6dc702dba2bd8eb4c85054d833989ee"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage/walk.png",
+        "git_blob": "5aaba4c067b97052b353e0c0e3135deb3569feb7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/SpriteFrames.tres",
+        "git_blob": "a87516ed6f4758a837deb5cf72eb8e1ce5b37847"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/attack.png",
+        "git_blob": "9bae9ce88454196560945b0279f10b8ec8288250"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/cast.png",
+        "git_blob": "9bae9ce88454196560945b0279f10b8ec8288250"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/death.png",
+        "git_blob": "e769f564dbd4f764fc4b0e664865e9a214182a31"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/hit.png",
+        "git_blob": "fd208c6bf966f3547b681b046e77cb9ae55297cd"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/idle.png",
+        "git_blob": "eb9ae1c1994c63e0af2caf04005e36695bbce0b5"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/special.png",
+        "git_blob": "9bae9ce88454196560945b0279f10b8ec8288250"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_boss/walk.png",
+        "git_blob": "eae22a6b54d071e2eab1e3c53e0cc3ea8075880b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/SpriteFrames.tres",
+        "git_blob": "50f3bf3560b7c46bdfeadad1e76ba3ce01c5f40c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/attack.png",
+        "git_blob": "0a7f5ca2fa8bd23751762789467d8b4edc9e7a19"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/cast.png",
+        "git_blob": "0a7f5ca2fa8bd23751762789467d8b4edc9e7a19"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/death.png",
+        "git_blob": "5ece8a3d111ac75c495931862d1f9324648f2faa"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/hit.png",
+        "git_blob": "426645341e60c826cc544f535b9f35aaf49cd6f7"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/idle.png",
+        "git_blob": "3b6cef32627647637d1eea192da98eadd488a019"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/special.png",
+        "git_blob": "0a7f5ca2fa8bd23751762789467d8b4edc9e7a19"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/skeleton_mage_high_boss/walk.png",
+        "git_blob": "61f286b67226cf2ca22d7cd1de7a2791a8055dfe"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/SpriteFrames.tres",
+        "git_blob": "4203bc9c15b0aa89808d89249de6d89c419a0e0d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/attack.png",
+        "git_blob": "e7646cd4921ca33b7d198a559c6386af767a8f88"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/cast.png",
+        "git_blob": "d9f45394d25e85c4777a706becd2aec1d0a1b0cb"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/death.png",
+        "git_blob": "69c184703500630c646593d9c0268a66de00d577"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/hit.png",
+        "git_blob": "3a7d4b5b35b6adb1b669b819fde50bd01e8c7d85"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/idle.png",
+        "git_blob": "f1b3182d1b6ce5c4740c48bf589102238a9b4d28"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/ranged_attack.png",
+        "git_blob": "d9f45394d25e85c4777a706becd2aec1d0a1b0cb"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/special.png",
+        "git_blob": "d9f45394d25e85c4777a706becd2aec1d0a1b0cb"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern/walk.png",
+        "git_blob": "4ab6ea5198135af66440cbf4d6b0e417c23a19e1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/SpriteFrames.tres",
+        "git_blob": "cf6a73ce1c7b94c3e1bd9b9aaf7f3aae066bbc18"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/attack.png",
+        "git_blob": "ede2b5689951462ec949b40348989e6cc736e3f2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/cast.png",
+        "git_blob": "54493d1234a3dd187dccc9725c9aa7cbf244ec27"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/death.png",
+        "git_blob": "4c8a5ce71a0544d79e4bb3f16c8076dceacb741b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/hit.png",
+        "git_blob": "03794a2b90d96d468e610955176c1b5f926d8291"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/idle.png",
+        "git_blob": "9358e1bf1c9dcb353861622772a64c8bad47d05b"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/ranged_attack.png",
+        "git_blob": "54493d1234a3dd187dccc9725c9aa7cbf244ec27"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/special.png",
+        "git_blob": "54493d1234a3dd187dccc9725c9aa7cbf244ec27"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air/walk.png",
+        "git_blob": "d875ac81d0512526926f06159b9910cfd7cf9510"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres",
+        "git_blob": "7092942ec86997ab5deaa92f9e3745fdc25aac7e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/attack.png",
+        "git_blob": "30953206b53bc9b91c3518ded8a64ec37d96f75a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/cast.png",
+        "git_blob": "301d03e53ccb81a1c403edf1b1bb30957336fa49"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/death.png",
+        "git_blob": "161ad9ad5bf4e416cf7caef47d22347f9b673a7c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/hit.png",
+        "git_blob": "a08b54f0f7df47a1318e7944eb53d568d3189300"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/idle.png",
+        "git_blob": "6d559d8924b2a31ded5ce2a94c96528c62c6f06e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/ranged_attack.png",
+        "git_blob": "301d03e53ccb81a1c403edf1b1bb30957336fa49"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/special.png",
+        "git_blob": "301d03e53ccb81a1c403edf1b1bb30957336fa49"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_air_boss/walk.png",
+        "git_blob": "c78da28226ded790abb6050b50cdcc469eeef8ad"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/SpriteFrames.tres",
+        "git_blob": "760ae1fc548bcaa345dfac562a160f93cec2b5c3"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/attack.png",
+        "git_blob": "c92ceff9ac63ca65a0076fb48c3def17cdb7b439"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/cast.png",
+        "git_blob": "ecbf607f199c794970020f358b8a32b2ad6b496e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/death.png",
+        "git_blob": "c04fafe2d6451af6052de1299298ef58a3bb06b0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/hit.png",
+        "git_blob": "53199e5d3fed4a545bcf146560b4237648421684"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/idle.png",
+        "git_blob": "d48a0a6fe38ee5d94d10a051c746f06975b440a2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/ranged_attack.png",
+        "git_blob": "ecbf607f199c794970020f358b8a32b2ad6b496e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/special.png",
+        "git_blob": "ecbf607f199c794970020f358b8a32b2ad6b496e"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_fire/walk.png",
+        "git_blob": "9bfbc0ab2821d1816f77dce831471cf52beb71a2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/SpriteFrames.tres",
+        "git_blob": "e8f4adcc6d3757ec05a22e84fedd62f806a1886c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/attack.png",
+        "git_blob": "3f5fc8713cee7fa44b248d85382b8ae778d25351"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/cast.png",
+        "git_blob": "0d7b99f1ee3687d5bfa226ffc26ef44c5380ab9a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/death.png",
+        "git_blob": "7b1bbf2e2ef37ac2d16f3032235a9f68509fab62"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/hit.png",
+        "git_blob": "b85ce89d20acda96ee65aa9d6d89a82eabd297ad"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/idle.png",
+        "git_blob": "882c493b549b27d9b5f6aa094a6301db0b3c4bc2"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/ranged_attack.png",
+        "git_blob": "0d7b99f1ee3687d5bfa226ffc26ef44c5380ab9a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/special.png",
+        "git_blob": "0d7b99f1ee3687d5bfa226ffc26ef44c5380ab9a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/wyvern_water/walk.png",
+        "git_blob": "2165ccf215cca3ae8c7b97b7bda5435402d48c7d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/SpriteFrames.tres",
+        "git_blob": "cd02abe6d7eccf18354f629b6b8de37073d1d395"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/attack.png",
+        "git_blob": "8cb3dbc5df6e0d0389a351244155bd5cad7bfa7f"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/cast.png",
+        "git_blob": "989a2fe9cf855b7ba57af94909dedde4c728b6a4"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/death.png",
+        "git_blob": "c755c115f2cd7b938c8757c0399ecd2ce396a69d"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/hit.png",
+        "git_blob": "6a30751b71d6b47087ef58335309757f615c469c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/idle.png",
+        "git_blob": "8edccc22198cb5f3f2037f5efbcb84381752a8c6"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie/walk.png",
+        "git_blob": "c649cf4b0c010d7216f54af603254e5b9f2bdbaa"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/SpriteFrames.tres",
+        "git_blob": "7f7a433ec8450a5e26f0c33acaf28c06318c62d1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/attack.png",
+        "git_blob": "2b19eb326133541743b4261c046fc6f566ad644c"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/cast.png",
+        "git_blob": "feb8b5a673059cedf34518f0553bd7bd50ac414a"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/death.png",
+        "git_blob": "df916f7e5d103a6cc6b847dbe033b32936fc07e0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/hit.png",
+        "git_blob": "5e675c0e24ef15d0f756e6125cc7423fd28ab9c1"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/idle.png",
+        "git_blob": "cc5e523f8f116f06254bed8f4b2686e37158d5f0"
+      },
+      {
+        "path": "assets/actors/eight_direction/expanded/zombie_dark/walk.png",
+        "git_blob": "cf25f3c0d4bbd8f84a057ef49bdb8a703ff04630"
+      },
+      {
+        "path": "assets/actors/eight_direction/knight/SpriteFrames.tres",
+        "git_blob": "5d5b17e8fac6a4c915c7ce9692e4ddf20089ff75"
+      },
+      {
+        "path": "assets/actors/eight_direction/knight/attack.png",
+        "git_blob": "d38343733244d41d3c6306a42f1d993b07cf6ae2"
+      },
+      {
+        "path": "assets/actors/eight_direction/knight/death.png",
+        "git_blob": "fe0afd12cb77ab11e680a8fdb623f60aa5690001"
+      },
+      {
+        "path": "assets/actors/eight_direction/knight/hit.png",
+        "git_blob": "64f6d979eb01865dc5f6eca0ba4d2f9fa36d5e3c"
+      },
+      {
+        "path": "assets/actors/eight_direction/knight/idle.png",
+        "git_blob": "b0bec298291f21bc2b6c61c08f3c55c905e5b4db"
+      },
+      {
+        "path": "assets/actors/eight_direction/knight/walk.png",
+        "git_blob": "a74a0fe3234a82c0f612e60c6a6ae1b483b864b3"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/albino_frog/SpriteFrames.tres",
+        "git_blob": "88eeb996eb8eac6afc1b9cd0446f4a7c3b0581a0"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/albino_frog/poses-0.png",
+        "git_blob": "c2c463d6bc0f882eb5f208c860102afbb8d79db4"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/albino_frog/poses-1.png",
+        "git_blob": "0f58c13fe72486745e42a69a6ffba14157390e45"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/albino_giant_crab/SpriteFrames.tres",
+        "git_blob": "d8bd9a7f2d13894718743ee21f725a305b0f6c20"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/albino_giant_crab/poses-0.png",
+        "git_blob": "77ee71a0c9544f7a4c3df2c086ab2af5ee596b9c"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/albino_giant_crab/poses-1.png",
+        "git_blob": "6f0ad63b03f363410cd54927442d79bc61a949dc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ancient_penguin/SpriteFrames.tres",
+        "git_blob": "1a3b8c98fc810d860393a2ec779887c4da030ed9"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ancient_penguin/poses-0.png",
+        "git_blob": "9900f81c77b3518d1cb7f1c02d606ef001eee201"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ancient_penguin/poses-1.png",
+        "git_blob": "31ffb813916625200541db7dff5742eb16b63ad9"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+        "git_blob": "5c8ccab657105aca809fc49a328f5918f1ccc1e3"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/asitagio/poses-0.png",
+        "git_blob": "e4360a951164508d8e173517908389f83f5001f5"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/asitagio/poses-1.png",
+        "git_blob": "21ecdbb84d218a2d8bfab3c7f320eafe62d6f404"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/basilisk/SpriteFrames.tres",
+        "git_blob": "709f0423a6ec9aad756c4a39e3d1b24bb86d4fdd"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/basilisk/poses-0.png",
+        "git_blob": "df05bec516fa7f8a3263cd74d8555bc909d21f2a"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/basilisk/poses-1.png",
+        "git_blob": "97166694beecfd93bfc17b5e6ecd5415d7f61fe2"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres",
+        "git_blob": "c93a70e14c8048055fb9716d888b086279e19c1e"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/bone_dragon/poses-0.png",
+        "git_blob": "cb8d6ed1b135f9e0a60796aaa38b67f539aa73a8"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/bone_dragon/poses-1.png",
+        "git_blob": "fa14375bbf611b90b5f939f4b393dc8f18c4c5fb"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/bugbear/SpriteFrames.tres",
+        "git_blob": "f990678c11b63d7937a16683950572df64d9f589"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/bugbear/poses-0.png",
+        "git_blob": "93c71ba2ae3b198ce60f9be520b68592923d0136"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/bugbear/poses-1.png",
+        "git_blob": "8e8258b7cb751fff63f32e2b2970fae5b0304aaf"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/cockatrice/SpriteFrames.tres",
+        "git_blob": "991c35c5ef661d4649306eba2fcc789171919b95"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/cockatrice/poses.png",
+        "git_blob": "6c1c8ad1891de74b545213f33f7c30c5d38bc195"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/crabman/SpriteFrames.tres",
+        "git_blob": "95c707d930bdc6b6fe8063d80169f5ed7156c076"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/crabman/poses-0.png",
+        "git_blob": "0496c3afcbce59e3738c9604bc5a4c07f882a256"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/crabman/poses-1.png",
+        "git_blob": "e76a495df656ab3702c308d5d76f390fa4ef16e7"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/cyclops/SpriteFrames.tres",
+        "git_blob": "e416c33e7f7635bd6bbe39b90e445c091c4403e5"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/cyclops/poses-0.png",
+        "git_blob": "de9ddbb66efb8d3e8264d3042b593afc63fb2740"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/cyclops/poses-1.png",
+        "git_blob": "01c348cfe29e19bcad77223619d47b10442d4d90"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/dire_wolf/SpriteFrames.tres",
+        "git_blob": "c5f90b5cc6b9b239d02a4316678e62df7c4aa717"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/dire_wolf/poses-0.png",
+        "git_blob": "7697a858aa8f8283e32508ff65d34a2eacd2625d"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/dire_wolf/poses-1.png",
+        "git_blob": "3d31917feb83ba68136ec6bfc31e309fe4245751"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres",
+        "git_blob": "f7d257b2631fb150757cfaa59102af03623b64a4"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ettin/poses-0.png",
+        "git_blob": "fe4cd4143bd2472958ac9ad0624923090ab48ce0"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ettin/poses-1.png",
+        "git_blob": "238446352f8f4d291cb4ed8c92957db10342a605"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/fire_egg/SpriteFrames.tres",
+        "git_blob": "f24c92bd8b3d2d8fed825580a8ab86e0a2060f76"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/fire_egg/poses-0.png",
+        "git_blob": "a430908672085131ed221d9a1f2ae57af4dd3725"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/fire_egg/poses-1.png",
+        "git_blob": "10c7af080f15b20217fc7f00f3e3461bc2b7e2cc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ghost/SpriteFrames.tres",
+        "git_blob": "4581da54f50fd95c2bbb531462eec2e02714428d"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ghost/poses-0.png",
+        "git_blob": "28e7a5c1e8c10d4424abffe0a12a247da3981c25"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ghost/poses-1.png",
+        "git_blob": "187218b0240171f4c3ce6b58352d167c741dc8b3"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ghoul/SpriteFrames.tres",
+        "git_blob": "8230de875615075917995f3328f4862561d549be"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ghoul/poses-0.png",
+        "git_blob": "239a19759251a3469d092c85940af968eab3facc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ghoul/poses-1.png",
+        "git_blob": "d87846932c7133e33ac9bcb9b601522209177305"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/harpy/SpriteFrames.tres",
+        "git_blob": "458e0c83b5fbb0578090a3d99a660e19232f6875"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/harpy/poses.png",
+        "git_blob": "196aec3bfbd57db8ae84ecc51468ad13e67dfef7"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/horn_cerberus/SpriteFrames.tres",
+        "git_blob": "17be712b286f3370eb52b68678cfa4ddc766327d"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/horn_cerberus/poses-0.png",
+        "git_blob": "2e7ceb74b09287599190628a52993aa085fcbb02"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/horn_cerberus/poses-1.png",
+        "git_blob": "e61a6bc2bfac899ed1b5ac6c0f09e0b54e3850e8"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ice_golem/SpriteFrames.tres",
+        "git_blob": "1bd26f2b8849c97983ebb3b6ce2b1662efc8fbdc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ice_golem/poses.png",
+        "git_blob": "06901116089133a574a964ebcf1a67793a2673e7"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ice_man/SpriteFrames.tres",
+        "git_blob": "b9ea1cfc245e0a8a0e9ed742b887f2fa1b539efc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ice_man/poses-0.png",
+        "git_blob": "f4f15969fac0c0fedee35194ba4b4a64c739e5bc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ice_man/poses-1.png",
+        "git_blob": "b73e20d8e9b6b14c5148824b3cdee42b0f85c1a0"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/iron_golem/SpriteFrames.tres",
+        "git_blob": "5aef9935f25ae784fa227140faa0a913c858efcb"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/iron_golem/poses-0.png",
+        "git_blob": "2af72a643119eef19fc031f66dcf04653aae52be"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/iron_golem/poses-1.png",
+        "git_blob": "115e6af67cb516bdf2b6a18130dc30a8717dd5fd"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/king_bugbear/SpriteFrames.tres",
+        "git_blob": "14f6713c08cd453d74a4e76d3c16c6886259a050"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/king_bugbear/poses-0.png",
+        "git_blob": "737cd3ea1d9d78b36f833315bae0317b2124b909"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/king_bugbear/poses-1.png",
+        "git_blob": "9cb8d2d85649230dc3ee12d8ed50d95d9595222f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/kraken_transform/SpriteFrames.tres",
+        "git_blob": "13b1d82e9d2257fadbfab938ad12826df7143995"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/kraken_transform/poses-0.png",
+        "git_blob": "25e8424e6aac25eff44b25be1f8de72df644a742"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/kraken_transform/poses-1.png",
+        "git_blob": "20768404d13e0e2e922f40818952d6f3eca2ce18"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lamia/SpriteFrames.tres",
+        "git_blob": "4e1f910deb55bc8c2eb9d9865adb24cfafe8515a"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lamia/poses-0.png",
+        "git_blob": "aadaff6273a769fd8df28a474dd724211621b686"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lamia/poses-1.png",
+        "git_blob": "f0483c86358bb2922595ff8b02a3dec0c9f8c364"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lava_golem/SpriteFrames.tres",
+        "git_blob": "dde7dd87b6d58929abd25d8722ad7114c04f21ae"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lava_golem/poses.png",
+        "git_blob": "2708a618c85dbb0de0eef4f0be8f7c703990b8dc"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lizard/SpriteFrames.tres",
+        "git_blob": "271ab9295d5f63d01ec0edda1fec3a795a9bde17"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lizard/poses-0.png",
+        "git_blob": "7f6f1816ea2fbda7e5fcb8d7cf9ca4b02c854e6f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lizard/poses-1.png",
+        "git_blob": "cf4e87fc5f874535977cd3d3af57c57398773c13"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lycanthrope/SpriteFrames.tres",
+        "git_blob": "33430fd057ce3e17d35f556d0e2c37acc692f98a"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/lycanthrope/poses.png",
+        "git_blob": "0dd4d24f84dcb49ae3a58ef0e8ec3675203b1197"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/mummy_lord/SpriteFrames.tres",
+        "git_blob": "01fc74b39ed76d1c9c00215fcbba8ef95540245b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/mummy_lord/poses-0.png",
+        "git_blob": "e6c696e9924bfd46868fba358482f45483af70ce"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/mummy_lord/poses-1.png",
+        "git_blob": "3db8e81d2fb2610ce483be398a51b5ce61277f40"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres",
+        "git_blob": "e423353389fa9d23e5f4c8fd637de2fee8c1a190"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/ogre/poses.png",
+        "git_blob": "c0c71854b6e151ef00be12a5cb05246ea189312f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/pan/SpriteFrames.tres",
+        "git_blob": "45af486fb1c4c278f3ec95d2409b61c13dfaa5be"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/pan/poses-0.png",
+        "git_blob": "81ab2dea3dbf8e6aec416bc452146508010c2319"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/pan/poses-1.png",
+        "git_blob": "61abbc248bb478ee36774e57ab04335f4d2ca268"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/pan/poses-2.png",
+        "git_blob": "f1ccafee5ac16f9abd9154fdee4a22d7aecd0dd8"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres",
+        "git_blob": "3d3d3b4d141f284de6fa6e295c04f1684520be58"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/reaper_female/poses-0.png",
+        "git_blob": "74985360d5c26436a704ea3009d85803bef8ee9f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/reaper_female/poses-1.png",
+        "git_blob": "144aae2c7f342abae283f4fa91a1a20eb96b3091"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+        "git_blob": "c75db6f98df1e5b864cecf1fa71c67fcc8097256"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/reaper_male/poses-0.png",
+        "git_blob": "f21d549fd4216f55e0e5598456ca2ba49fa9a866"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/reaper_male/poses-1.png",
+        "git_blob": "4b1e5e1d2c3e8e221f966fd3af8dc17a0c761b83"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/saber_tiger/SpriteFrames.tres",
+        "git_blob": "cc007e157ba3261ea2a71201e9a28da2442d3414"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/saber_tiger/poses-0.png",
+        "git_blob": "bbc830dacf5e7773248bced57f0989524cfa5db2"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/saber_tiger/poses-1.png",
+        "git_blob": "9ad03886ebbfdcb4079ec98cdd14c40c86bb0404"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/salah/SpriteFrames.tres",
+        "git_blob": "8acc3d10bbb559a3cfd7558a43c7d728d14f760b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/salah/poses-0.png",
+        "git_blob": "8d3e76960bcec8adb44dd45318a51871f1ffd0e4"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/salah/poses-1.png",
+        "git_blob": "fdac1371e6adb4ecf4f9e59f80fc3289bba8645f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/sand_worm/SpriteFrames.tres",
+        "git_blob": "431ebb26ca92f7370b7f450ad3c1e44362a15555"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/sand_worm/poses-0.png",
+        "git_blob": "567b31760c6136a7d096df523e285b8f5715c1b1"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/sand_worm/poses-1.png",
+        "git_blob": "097c9971fd28448c002beb955af82e5940667baa"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/scorpion/SpriteFrames.tres",
+        "git_blob": "8ac67a62d2ee41c8c3c6df4b123ed5ca95671aab"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/scorpion/poses-0.png",
+        "git_blob": "7b1fd3203ffe772adf3070aa47a7bf24ef514d4f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/scorpion/poses-1.png",
+        "git_blob": "b6cf9babaf2b75a422db60005daa527652f39be2"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/seer_boss/SpriteFrames.tres",
+        "git_blob": "35963dec49b175110a9db7e3dd2ca03506df82ce"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/seer_boss/poses-0.png",
+        "git_blob": "3d66dfce625f05eeaa08116c7af03a6fde18ea64"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/seer_boss/poses-1.png",
+        "git_blob": "6c1342d8aff07b89b47e31bcb115892e4eb6dc6f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/snowman/SpriteFrames.tres",
+        "git_blob": "b0918b8d29699a926efc16da260834f6b0e0b765"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/snowman/poses-0.png",
+        "git_blob": "9ad021a5e2b64fc9cc3fd26357682303b4e5260f"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/snowman/poses-1.png",
+        "git_blob": "d9f435313964b9434b63d0c88300d5bc21e7b6c1"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+        "git_blob": "c813c93ffc74d6ca69420a5e670359e3d9319ec2"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+        "git_blob": "62a3d031f81bfaa06419a245cb19e2dccf5dd035"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+        "git_blob": "b6e5bc9e4bd498f5669f605e95710d0492080ab6"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres",
+        "git_blob": "3ab2da0182cfe2cf13b858f044131abd7345a9b1"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard/poses-0.png",
+        "git_blob": "fe5fcf19f6c037f616835e967ed4785039b4d3c5"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard/poses-1.png",
+        "git_blob": "69636df0a848d027c0494f01f8098f8a3ad1ab8d"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard/poses-2.png",
+        "git_blob": "50712ea73e08c15a5e959d1a9712ca35dbc1617d"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_green/SpriteFrames.tres",
+        "git_blob": "d75cc614b4b20247bf5c2ec2746f210e0143ac6b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_green/poses-0.png",
+        "git_blob": "4cbf2f3016fd075fbb632454e02be91ee0765157"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_green/poses-1.png",
+        "git_blob": "74f350a7cf92eae242a61d02d7bf6f2604d62d1c"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_green/poses-2.png",
+        "git_blob": "1f4a57fa4707ecc5f6cd4759d446b2c54ff96150"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_red/SpriteFrames.tres",
+        "git_blob": "192a28a0d6f06d03546942f56181f72e78565b7b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_red/poses-0.png",
+        "git_blob": "08c6dcf8053ec17920a5b2407f6f8a06891f778a"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_red/poses-1.png",
+        "git_blob": "fe8cb1121ff876581fdc87c26d640688382a29a2"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spear_guard_red/poses-2.png",
+        "git_blob": "f09ee1f070b26e5db8f4550f686cad8f5d5a7255"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres",
+        "git_blob": "3481c009e8150c569bb08aadffc479bff568ec69"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/succubus/poses.png",
+        "git_blob": "61986255c0b7b9d1b1e78b15a06189ab71533739"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/water_spirit/SpriteFrames.tres",
+        "git_blob": "217cef385969a8b40ed7e20b7f6693db2847a56b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/water_spirit/poses-0.png",
+        "git_blob": "f8f59b0e69f4321763594574ee960c2542aad811"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/water_spirit/poses-1.png",
+        "git_blob": "2cfd2f747afb16a03ce22b481d01ce2bf3ed3ea4"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/werewolf/SpriteFrames.tres",
+        "git_blob": "b683ef2663ec1607a50e043b61ed5b3f8b69bcc9"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/werewolf/poses.png",
+        "git_blob": "fdb083401bbd5d32ae74920271c83f13fcaaa335"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/yeti/SpriteFrames.tres",
+        "git_blob": "5d3e90aca66679629e51430a9a22611b2b14ae1d"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/yeti/poses-0.png",
+        "git_blob": "28e78b542add366dd92a363468b6a4706aac8f16"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/yeti/poses-1.png",
+        "git_blob": "e7ed935bf15e6b0a2d2d8421ce9ee9b0d6841c09"
+      },
+      {
+        "path": "assets/actors/eight_direction/skeleton_guard/SpriteFrames.tres",
+        "git_blob": "2fdf52a0c452dd56ac2d2947660f0c12703dcc95"
+      },
+      {
+        "path": "assets/actors/eight_direction/skeleton_guard/attack.png",
+        "git_blob": "92da9e8f6f4b2cd713d1d8a26e5d59e1ceb56b2e"
+      },
+      {
+        "path": "assets/actors/eight_direction/skeleton_guard/death.png",
+        "git_blob": "549863ff3b029af9e7f99e22c761d2a1a33086e4"
+      },
+      {
+        "path": "assets/actors/eight_direction/skeleton_guard/hit.png",
+        "git_blob": "8f685d26061c1e1643128da8403c0222f101bccb"
+      },
+      {
+        "path": "assets/actors/eight_direction/skeleton_guard/idle.png",
+        "git_blob": "025225c785a6ff2cd11046cb1cb85e7bde74c748"
+      },
+      {
+        "path": "assets/actors/eight_direction/skeleton_guard/walk.png",
+        "git_blob": "cfc58a60a7a91ed169ca884895a66f1dbcbb29b5"
+      }
+    ]
+  },
+  "scope_limits": [
+    "Orc mage failed two compass reviews; second draft also includes an adjacent body in a crop. No binding, reaction sheet or Main completion claim. All drafts retained outside runtime asset tree.",
+    "Previous commit62ad60a Android export passed for81 native resources; current83-resource export and exact-head CI are pending the next push. Android device execution not run.",
+    "Old six sheets with79 pixels outside old crop regions remain unchanged and await visual attribution review.",
+    "Albino crocodile remains unbound; archived previous drafts retained."
+  ],
+  "handoff_reason": "User requested stopping repeated same errors after preserving the current batch. Orc compass generation failed twice; no further full-atlas retries this session.",
+  "next_steps": [
+    "Confirm PR100 current remote head includes both session commits and no uncommitted work.",
+    "Check exact-head CI and Android status; inspect failed jobs only instead of repeating passing full tests.",
+    "Resume orc mage from an independently reviewed eight-view turntable; do not condition another full atlas on the same rejected direction draft.",
+    "Review old fragment-attribution findings, then select next5–10 identities from current143-item list. Preserve originals and verify each actual name in Main."
+  ],
+  "ci_followup": "ci-reference-fix/summary.json"
+}

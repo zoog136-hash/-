@@ -1,0 +1,14 @@
+{
+  "base_sha": "c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39",
+  "authoritative_before_files": "git-head-before-*.txt: both tracked files were unchanged from this HEAD before the audit fix",
+  "snapshot_comparison": [
+    {
+      "source": "tools/audit_eight_direction_coverage.py",
+      "captured_matches_prechange_HEAD": false
+    },
+    {
+      "source": "tests/eight_direction_coverage_audit_test.py",
+      "captured_matches_prechange_HEAD": true
+    }
+  ]
+}

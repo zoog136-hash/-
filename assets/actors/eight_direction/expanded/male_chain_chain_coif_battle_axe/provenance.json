@@ -1,0 +1,241 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/attack.png",
+					"sha256": "a4f473feb478d4fadb7ef6b860f53bdc2ab44c9299dd754747486c8355bb64c4",
+					"size": [
+						1024,
+						340
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				340
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "a4f473feb478d4fadb7ef6b860f53bdc2ab44c9299dd754747486c8355bb64c4",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/cast.png",
+					"sha256": "a36544448c6583119b338ff1a6b9b103e6907e2d4c5d8c4fe13e82441efa3086",
+					"size": [
+						1024,
+						356
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				356
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "a36544448c6583119b338ff1a6b9b103e6907e2d4c5d8c4fe13e82441efa3086",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/death.png",
+					"sha256": "b1a71991d5675b847a98aca9603e8e12bab6848d5695e0134cfecfb7d05b9826",
+					"size": [
+						1024,
+						340
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				340
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "b1a71991d5675b847a98aca9603e8e12bab6848d5695e0134cfecfb7d05b9826",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/hit.png",
+					"sha256": "52ace00f93c1af4811d8d3fde62e7440dbfea77c944ee4e145f0bccbab91b7b8",
+					"size": [
+						1024,
+						164
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				164
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "play_once",
+			"sha256": "52ace00f93c1af4811d8d3fde62e7440dbfea77c944ee4e145f0bccbab91b7b8",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/idle.png",
+					"sha256": "f47f0e5bd19690a1a8e84982c7f0397809d715a2a3622e8e15f1b03d92337a3d",
+					"size": [
+						1024,
+						264
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				264
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "f47f0e5bd19690a1a8e84982c7f0397809d715a2a3622e8e15f1b03d92337a3d",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/walk.png",
+					"sha256": "ca581cbd89defacc6ee6de1a11664cbfd17981b70dbb9d1d82b251f6bd306e55",
+					"size": [
+						1024,
+						476
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				476
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "ca581cbd89defacc6ee6de1a11664cbfd17981b70dbb9d1d82b251f6bd306e55",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

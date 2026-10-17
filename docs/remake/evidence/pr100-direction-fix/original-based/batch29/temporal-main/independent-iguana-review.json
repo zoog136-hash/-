@@ -1,0 +1,146 @@
+{
+  "reviewer": "/root/iguana_recovery, independent of Hell Cougar author",
+  "reviewed_utc": "2026-10-15T21:45:29.911760+00:00",
+  "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL",
+  "scope": "Direct visual review of all eight exact v3 contact PNGs, 104 native poses generated from actual Main production MotionController QA-clocked capture. Review of true heading, source-faithful coherent head/core proportions, attached whole-body mechanics, loaded paws and attack/hit/death progression.",
+  "source_summary": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-render/summary.json",
+  "source_summary_sha256": "d4d910ff97d06ff2bba87d5ca7fd5dcd87f62841e700fed3ee6197366885c58e",
+  "contact_manifest": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/temporal-contact-manifest.json",
+  "contact_manifest_sha256": "a5e24552ff4f73d4b47800c3d106489596d50f68e55a82ef3e2e25cce634e059",
+  "contact_and_capture_sha_verified": true,
+  "all104_native_capture_sha_verified": true,
+  "directions": [
+    {
+      "direction": "E",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/E-temporal-contact.png",
+      "sha256": "1465ca99be7a527fb1bb0266f58d4e604ae07950dcbdb551e13076a771a08094",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "SE",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/SE-temporal-contact.png",
+      "sha256": "b72b9d903b404a5fceab94c49ed55210274660f22a7f187db66d7de1e91c653e",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "S",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/S-temporal-contact.png",
+      "sha256": "f78932ee2e742a5229a6c01a7a44ab92d7504f5d5efbfd340744ae660b6ea0f0",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "SW",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/SW-temporal-contact.png",
+      "sha256": "1e4b96b53825de5a75fea1a0309843ce14460c31daaa502212324bdf7ed9d19c",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "W",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/W-temporal-contact.png",
+      "sha256": "211fd152a34e0b015eae7a859bb5283183fc3244076d2248b7d1a7139b188a95",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "NW",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/NW-temporal-contact.png",
+      "sha256": "fc9693438ac19e8ae780dd389e245b29cbb970a8a00d18a333a27a3850307b1b",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "N",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/N-temporal-contact.png",
+      "sha256": "54dbb63e5bd3470442821947a1cc0f692a9f316dad92986932dc83c0201d06cd",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    },
+    {
+      "direction": "NE",
+      "contact": "/workspace/scratch/pr100-continuation/temporal-batch29-v3-contacts/hell-cougar-monster-boss/NE-temporal-contact.png",
+      "sha256": "9052a0019c2e3d1c9b633ff2eea07957d8bbfa54b1e650d426bfc36100c12474",
+      "native_poses_directly_reviewed": 13,
+      "role_counts": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "verdict": "PASS_BOUNDED_ACTUAL_MAIN_TEMPORAL_VISUAL"
+    }
+  ],
+  "observations_by_direction": {
+    "E": "True right profile in all five states; muzzle/ear size remains comparable as attack crouches/reaches and hit arches shoulders. Near/far paws remain attached and loaded support paws stay grounded; final corpse has continuous spine and tucked limbs.",
+    "SE": "Front-right quarter is distinct from full E and S. Gait/reach/hit preserve attached forequarter/hips; yaw stays SE through collapse. Stance changes expose different amount of chest without the prior 1.4-1.5x rear torso jump.",
+    "S": "Front face and chest remain centered, two eyes/ears readable. Alternating stride reaches and forepaw strike are visible; hit is an upright hunched recoil with broader exposed shoulders, while skull and attached core remain coherent. Death curls downward into grounded frontal corpse.",
+    "SW": "Front-left quarter retained through all phases; snout and reach point down-left, far paws remain distinguishable, body has no detached fragments. Low attack and collapse retain own head/core proportions.",
+    "W": "True left profile, independently directed forepaw reach; attack head/core no longer expands from the standing frame. Hip and shoulder mass remain comparable during red recoil; side corpse stays connected to tail and paws.",
+    "NW": "Back-left quarter with away-facing head and visible rear/haunches; new attack and hit keep own idle/walk shoulder/hip mass rather than former oversized rear core. Forelimb strike goes away-left; death presents an attached away-facing curled body.",
+    "N": "Full rear heading keeps ears/head away and tail centered-to-right as it flexes. New raised forepaw attack changes shoulder height rather than inflating torso; red hit remains within own living rear body scale. Final corpse is rear-facing with attached folded haunches.",
+    "NE": "Back-right quarter maintains away-right head, visible rump and long tail. New right-up reach retains head/core mass, recovery and recoil stay connected; collapse lands as a rear-right corpse with no camera-facing replacement."
+  },
+  "prior_v2_failure_recheck": "W/NW/N/NE living attack/hit poses no longer exhibit the prior 1.4-1.5x rear core growth. Remaining silhouette changes correspond to crouch, back arch, forelimb extension or collapse; no broken frame, detached torso/legs, false mirror heading or empty pose observed.",
+  "failures": [],
+  "runtime_summary_had_failures": [],
+  "limits": [
+    "Contact images support bounded native phase visual review. They are uniformly halved diagnostic views of Main readbacks, not additional animation assets.",
+    "QA-clocked sequence is not wall-time performance or independent AI/combat correctness evidence. Root separately owns ordinary Main AI/combat/lifecycle checks.",
+    "No Android real-device test performed; no completion count, profile, production PNG or game code edited by this reviewer."
+  ],
+  "completed_added": 0,
+  "production_edits": false
+}

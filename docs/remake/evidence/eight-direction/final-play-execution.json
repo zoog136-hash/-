@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+    "--path",
+    "/workspace/twilight-animation",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/capture_eight_direction_play.gd",
+    "--write-movie",
+    "/workspace/evidence/baseline/animation-packed-final/capture.avi",
+    "--fixed-fps",
+    "30"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 230.73660509100046,
+  "display": ":311",
+  "save_data": "/workspace/evidence/baseline/animation-packed-final/user-data"
+}

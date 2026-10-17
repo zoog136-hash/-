@@ -1,0 +1,497 @@
+[
+  {
+    "name": "아이언 골렘",
+    "key": "monster:아이언 골렘",
+    "headless": {
+      "report": "original_based_iron_golem_gameplay_test-headless.json",
+      "checks_in_stdout": 869,
+      "seconds": 45.355159172999265,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791933683.70751,
+            "expires_at": 1791934283.70751,
+            "grade": "일반",
+            "hunt_batch": "a82a52ade2a3b4d5829e3c65e94e6251",
+            "id": "f9dfa75882c3c76fa3f8f13f37e4dd17",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1260,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 53
+      },
+      "pose_review": null
+    },
+    "opengl": {
+      "report": "original_based_iron_golem_clear_pose-opengl.json",
+      "checks_in_stdout": 999,
+      "seconds": 127.79150343699985,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791934567.26326,
+            "expires_at": 1791935167.26326,
+            "grade": "일반",
+            "hunt_batch": "6efe861f6498b4558a9c807c855dbbed",
+            "id": "0eb9c34f5c209849e3c72c9af895f8ec",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1260,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 53
+      },
+      "pose_review": {
+        "foreground_clear": true,
+        "monster_position": [
+          15160.0,
+          1520.0
+        ],
+        "offset": [
+          0.0,
+          -160.0
+        ],
+        "repositioned": true,
+        "terrain_hidden_or_modified": false,
+        "walkable": true
+      }
+    }
+  },
+  {
+    "name": "지옥의 아이언골렘",
+    "key": "monster:지옥의 아이언골렘",
+    "headless": {
+      "report": "original_based_iron_golem_hell-headless.json",
+      "checks_in_stdout": 807,
+      "seconds": 31.82748911300041,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791933670.48714,
+            "expires_at": 1791934270.48714,
+            "grade": "일반",
+            "hunt_batch": "5f25d4bf497106324f6bc1048652bdf3",
+            "id": "fb089a6888b654aa153359a1b0ca5ac3",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1720,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 18
+      },
+      "pose_review": null
+    },
+    "opengl": {
+      "report": "original_based_iron_golem_hell-opengl.json",
+      "checks_in_stdout": 816,
+      "seconds": 49.154884582000705,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791933851.30386,
+            "expires_at": 1791934451.30386,
+            "grade": "일반",
+            "hunt_batch": "b785fa187ef850cc8285f1c394ba9e93",
+            "id": "9b282357adabef522c2b3a46f71914af",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1720,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 18
+      },
+      "pose_review": null
+    }
+  },
+  {
+    "name": "글루디오 던전 구울",
+    "key": "monster:글루디오 던전 구울",
+    "headless": {
+      "report": "original_based_ghoul_gameplay_test-headless.json",
+      "checks_in_stdout": 1085,
+      "seconds": 40.12005109799975,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791933710.00148,
+            "expires_at": 1791934310.00148,
+            "grade": "일반",
+            "hunt_batch": "b462d02cf18a2ee9de05960d7e13cab0",
+            "id": "49ad6f9c1fcfb2b82cab391fb4e4b55d",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 291,
+        "manual_pickup": true,
+        "player_hp": 1871,
+        "weapon_attempts": 6
+      },
+      "pose_review": null
+    },
+    "opengl": {
+      "report": "original_based_ghoul_clear_pose-opengl.json",
+      "checks_in_stdout": 1199,
+      "seconds": 113.56179575500028,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791934681.47148,
+            "expires_at": 1791935281.47148,
+            "grade": "일반",
+            "hunt_batch": "ff34644fefb29e2cda5f09d67665baf4",
+            "id": "c6c236b2588b5e9004c9d29d3c2b4a75",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 291,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 6
+      },
+      "pose_review": {
+        "foreground_clear": true,
+        "monster_position": [
+          15160.0,
+          1520.0
+        ],
+        "offset": [
+          0.0,
+          -160.0
+        ],
+        "repositioned": true,
+        "terrain_hidden_or_modified": false,
+        "walkable": true
+      }
+    }
+  },
+  {
+    "name": "불사의 구울",
+    "key": "monster:불사의 구울",
+    "headless": {
+      "report": "original_based_ghoul_undying-headless.json",
+      "checks_in_stdout": 767,
+      "seconds": 37.834389714999816,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791933721.46042,
+            "expires_at": 1791934321.46042,
+            "grade": "일반",
+            "hunt_batch": "b8572fcbab489194bed4e72b5bfc7d54",
+            "id": "0dc33b9db87d1f0b0045b03d81770951",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1700,
+        "manual_pickup": true,
+        "player_hp": 1874,
+        "weapon_attempts": 17
+      },
+      "pose_review": null
+    },
+    "opengl": {
+      "report": "original_based_ghoul_undying-opengl.json",
+      "checks_in_stdout": 776,
+      "seconds": 42.875249855999755,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791934028.97431,
+            "expires_at": 1791934628.97431,
+            "grade": "일반",
+            "hunt_batch": "f14c857952e7184e55be89ebfea66306",
+            "id": "096d7a5342e739a7805b06ca52e1365b",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1700,
+        "manual_pickup": true,
+        "player_hp": 1874,
+        "weapon_attempts": 17
+      },
+      "pose_review": null
+    }
+  },
+  {
+    "name": "도마뱀",
+    "key": "monster:도마뱀",
+    "headless": {
+      "report": "original_based_lizard_sized-headless.json",
+      "checks_in_stdout": 1005,
+      "seconds": 42.41884818499966,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791935091.51892,
+            "expires_at": 1791935691.51892,
+            "grade": "일반",
+            "hunt_batch": "b59197140de4ecfb620a658e99549448",
+            "id": "c9b0951c6beeee50cef31cbba682459e",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 700,
+        "manual_pickup": true,
+        "player_hp": 1740,
+        "weapon_attempts": 25
+      },
+      "pose_review": null
+    },
+    "opengl": {
+      "report": "original_based_lizard_sized-opengl.json",
+      "checks_in_stdout": 1071,
+      "seconds": 174.12501660099952,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791935223.71694,
+            "expires_at": 1791935823.71694,
+            "grade": "일반",
+            "hunt_batch": "02773cd1904770650f2961d2c7c7d994",
+            "id": "d18940465b5d04f5a91ba493f5883e01",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 700,
+        "manual_pickup": true,
+        "player_hp": 1740,
+        "weapon_attempts": 25
+      },
+      "pose_review": {
+        "foreground_clear": true,
+        "monster_position": [
+          15160.0,
+          1520.0
+        ],
+        "offset": [
+          0.0,
+          -160.0
+        ],
+        "repositioned": true,
+        "terrain_hidden_or_modified": false,
+        "walkable": true
+      }
+    }
+  },
+  {
+    "name": "알비노 도마뱀",
+    "key": "monster:알비노 도마뱀",
+    "headless": {
+      "report": "original_based_lizard_albino_sized-headless.json",
+      "checks_in_stdout": 927,
+      "seconds": 46.892808893999245,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791935096.27287,
+            "expires_at": 1791935696.27287,
+            "grade": "일반",
+            "hunt_batch": "4efb895e98f502fe55cedeb1da4a350e",
+            "id": "60d30805effe33beac659acb008cf37d",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1880,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 27
+      },
+      "pose_review": null
+    },
+    "opengl": {
+      "report": "original_based_lizard_albino_sized-opengl.json",
+      "checks_in_stdout": 936,
+      "seconds": 56.82322001200009,
+      "directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791935280.96495,
+            "expires_at": 1791935880.96495,
+            "grade": "일반",
+            "hunt_batch": "7d05366547f385e26786c87002afc91b",
+            "id": "916fad62978d34c02e9c8d30a16852c2",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1880,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 27
+      },
+      "pose_review": null
+    }
+  }
+]

@@ -1,0 +1,241 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/attack.png",
+					"sha256": "ec812780b7fad0c16b191287a0923e224b46d6801427a540285f16227efeb076",
+					"size": [
+						1024,
+						312
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				312
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "ec812780b7fad0c16b191287a0923e224b46d6801427a540285f16227efeb076",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/cast.png",
+					"sha256": "caa364d0fc8e6093286b5b04f48ad1eccf57ca32b432343af3be7e31c05bb8d2",
+					"size": [
+						1024,
+						328
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				328
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "caa364d0fc8e6093286b5b04f48ad1eccf57ca32b432343af3be7e31c05bb8d2",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/death.png",
+					"sha256": "7cd16579727d8c7258539ecd56fa3f1e49128725ceed4030be9c23ca15765074",
+					"size": [
+						1024,
+						352
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				352
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "7cd16579727d8c7258539ecd56fa3f1e49128725ceed4030be9c23ca15765074",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/hit.png",
+					"sha256": "baf2b777b6d86f988e2f4f67ceb224d7af75025d853896d3268c0b354c0af3da",
+					"size": [
+						1024,
+						172
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				172
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "play_once",
+			"sha256": "baf2b777b6d86f988e2f4f67ceb224d7af75025d853896d3268c0b354c0af3da",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/idle.png",
+					"sha256": "3ae683e7d01c3babc807e941de3a6392b7a412aa938e2cb508f304da37141223",
+					"size": [
+						1024,
+						272
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				272
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "3ae683e7d01c3babc807e941de3a6392b7a412aa938e2cb508f304da37141223",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/walk.png",
+					"sha256": "4489ef590cfa9a171329900cff8fa7d66ec10c397d43f4033ced80e9720d9952",
+					"size": [
+						1024,
+						476
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				476
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "4489ef590cfa9a171329900cff8fa7d66ec10c397d43f4033ced80e9720d9952",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

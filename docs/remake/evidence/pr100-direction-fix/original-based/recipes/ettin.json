@@ -1,0 +1,56 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a separate new fully transparent RGBA 2D game animation atlas using the attached ORIGINAL character portrait as the authoritative design. Preserve exact anatomy, colors, silhouette, materials, equipment and proportions. Do not modify the portrait. Large square canvas with EXACTLY8 equal columns and8 equal rows,64 different SMALL independently articulated full-body poses. Every COMPLETE silhouette including wing, tail and held club occupies AT MOST38 percent of each cell width AND height. Wide empty transparent horizontal/vertical gutters, safe borders; no pose or bounding rectangle overlaps a neighbor. Direction columns E true right-facing side/profile, SE front-right, S FRONT chest and face toward viewer/screen down, SW front-left, W true left-facing profile, NW back-left, N full BACK away/screen up with no frontal face visible, NE back-right. Rows1 relaxed idle,2 distinct breathing idle,3 walking phase A,4 phase B,5 phase C,6 attack windup,7 attack contact toward that compass direction,8 recovery. All64 show articulated anatomy, never identical/scaled/translated stills. Entire creature and held item stay connected. No text, grid, floor, shadow, detached particles, blood, haze or added equipment; outside painted silhouette alpha0. Match the original detailed dark-fantasy 2D game sprite shading. Preserve the ACTUAL original TWO-HEADED large stocky humanoid: both separate rough human-like heads side by side, gray/brown mottled heavy body, original shoulder covering and lower wraps, thick bony-looking hands and broad feet, and the same oversized pale knotted/bony heavy club shown by the lower hand. Precisely preserve the pictured equipment and original earthy gray/brown/ivory palette; do not add helmets, armor, extra heads or replace the club with a sword. E/W are actual anatomical side views with near/far heads properly occluding; S clearly shows both faces; N shows backs of BOTH heads and shoulders, never faces staring backward. Walking has three clearly different planted-foot/hip phases. Melee attack raises and swings the original heavy club in the exact column direction with arms/shoulders articulated and both heads carried consistently, then recovers.\nHIT/DEATH EXACT PROMPT:\nCreate a new separate transparent RGBA HIT/DEATH sprite atlas based on the FIRST attached original portrait, using the SECOND 8-direction main atlas only as a style reference. Keep the exact original identity, equipment, anatomy, palette and proportions. Exactly8 direction columns E right-side,SE front-right,S frontal/down,SW front-left,W left-side,NW back-left,N entirely rear away/up,NE back-right. Exactly5 rows:1 incoming recoil,2 distinct hit recovery,3 death buckling,4 death collapse,5 fully FLAT terminal corpse with limbs relaxed and the same weapon still held or touching the body. All40 are real different articulated poses. Preserve BOTH compass orientation and the flat last row; rear shows back of heads, never a front face pasted backward. Each COMPLETE body including club occupies LESS THAN40 percent of its cell width/height, huge fully transparent gutters and safe outside borders; all frame rectangles must stay separate. No standing last row, dismemberment, detached particles, floor, shadow, text, black fill or halo. Fully transparent alpha0 outside connected body/weapon. Preserve the ACTUAL original TWO-HEADED large stocky humanoid: both separate rough human-like heads side by side, gray/brown mottled heavy body, original shoulder covering and lower wraps, thick bony-looking hands and broad feet, and the same oversized pale knotted/bony heavy club shown by the lower hand. Precisely preserve the pictured equipment and original earthy gray/brown/ivory palette; do not add helmets, armor, extra heads or replace the club with a sword. E/W are actual anatomical side views with near/far heads properly occluding; S clearly shows both faces; N shows backs of BOTH heads and shoulders, never faces staring backward. Walking has three clearly different planted-foot/hip phases. Melee attack raises and swings the original heavy club in the exact column direction with arms/shoulders articulated and both heads carried consistently, then recovers.",
+  "prompt_record_kind": "exact final prompts; original existing portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ettin/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ettin/poses-1.png",
+      "rows": 4,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared source portrait with every direction and role. Preserve the ACTUAL original TWO-HEADED large stocky humanoid: both separate rough human-like heads side by side, gray/brown mottled heavy body, original shoulder covering and lower wraps, thick bony-looking hands and broad feet, and the same oversized pale knotted/bony heavy club shown by the lower hand. Precisely preserve the pictured equipment and original earthy gray/brown/ivory palette; do not add helmets, armor, extra heads or replace the club with a sword. E/W are actual anatomical side views with near/far heads properly occluding; S clearly shows both faces; N shows backs of BOTH heads and shoulders, never faces staring backward. Walking has three clearly different planted-foot/hip phases. Melee attack raises and swings the original heavy club in the exact column direction with arms/shoulders articulated and both heads carried consistently, then recovers. Main has64 real articulated poses. N shows rear anatomy with face hidden, S front anatomy, E/W side views, and four distinct diagonal views. All frame rectangles are disjoint. Preserve source and generated image bytes; normalize resolution with virtual canvases, and use one maximum-living-pose scale within the original display-height budget. Actual Main combat, lifecycle and rendered appearance remain pending; this import alone does not certify completion. Hit sheet actually has32poses: two recoil and two death phases, ending with collapsed full body and both heads/club retained. Use exactly those two death frames; never duplicate a frame to claim three."
+  }
+}

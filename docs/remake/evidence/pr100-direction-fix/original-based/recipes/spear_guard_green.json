@@ -1,0 +1,180 @@
+{
+  "prompt": "LOCOMOTION EXACT PROMPT:\nProduce ONLY the FIRST FIVE rows of movement poses from the second attached draft, using first original portrait for identity. Do not include any attack row. Exactly8 columns x5 rows=40 SMALL fully separated complete soldiers each with exactly ONE spear, fully transparent RGBA, large margins/gutters, no text/shadow/grid/particles. Rows1 idle,2 breathing idle,3 stepA,4 stepB,5 stepC. Eight distinct directioncolumns: E right trueSIDE,SE front-right,S directFRONT,SW front-left,W left trueSIDE,NW back-left,N fullBACK,NE back-right. Every footstep must be truly articulated. Maintain exact one spear and original anatomical gripside, complete shaft andtip at safe distance from nearby poses. Body plus spear stays under45% of cell size. The exact original GREEN SPEAR GUARD is an adult armored human soldier: round dark steel closed helmet with face concealed by visor, gray metal sleeves/shoulders, long white sleeveless split surcoat with green side panels/trim and green diagonal chest sash, brown belt, brown trousers and brown knee-high boots. Retain the original white/green placement and simple cloth silhouette. ONE long wooden spear with a narrow steel point is held on the same anatomical side as in the portrait and remains one continuous shaft in all poses. No shield, cape, horns, extra weapons or new emblem.\nATTACK EXACT PROMPT:\nFix SPACING ONLY in the second attached attack atlas, preserving all24 spear poses and their now-correct compass directions, with first original portrait as authoritative costume. Each full soldier plus spear must be approximately HALF the current height and width within its cell. Surround every pose with HUGE empty transparent space above, below and on both sides; absolutely no spear tip can enter a neighbouring pose's rectangular bounding box. There must be a visibly wide blank horizontal band between all8 rows, especially LEFT/W row5, upper-left/NW row6, UP/N row7 and upper-right/NE row8. Same layout EXACTLY3 columns (windup, forward contact, recovery) and8 rows(E right, SE down-right, S down, SW down-left, W left, NW up-left, N up fullback, NE up-right),24 complete articulated bodies. No additional poses. KEEP THE EXACT COMPASS AND EACH SINGLE SPEAR: never turn the first RIGHT row left, never turn the third DOWN row up. One continuous spear in the hands in each pose. Preserve original white/green tunic, dark steel closed helmet and sleeves, brown trousers/boots, wooden shaft/steel spearhead. Fully transparent RGBA, no shadows, text, grid or particles. This is a tiny sprite sheet with much more transparent blank area than painted content, not large close-up figures.\nHIT/DEATH EXACT PROMPT:\nCreate the HIT/DEATH atlas for the FIRST attached ORIGINAL portrait. The second image only shows its draft movement design; keep the exact original identity and detailed painted 2D elevated RPG viewpoint, no cartoon outline or anatomy changes. Fully TRANSPARENT RGBA, no floor/shadows/text/grid/background/detached effects. EXACTLY8 COLUMNS and5 ROWS, forty separate complete articulated bodies. Keep each whole body AND weapon under45% of cell width/height, exceptionally generous clear gutters; nothing overlaps, touches or clips. Camera columns E right SIDE PROFILE, SE front-right, S straight FRONT looking toward viewer/down, SW front-left, W left SIDE PROFILE, NW back-left, N completely BACK away/up without face, NE back-right. Keep all8 compass views distinct while collapsing; E/W must not repeat the front-diagonal view. Rows: 1 pronounced HIT recoil,2 distinct HIT recovery,3 DEATH knees/legs buckle,4 collapsing very low onto ground,5 terminal entirely FLAT dead body. No extra rows. Each pose genuinely different through articulation, not translated/scaled duplicates. Keep every full silhouette connected. The exact original GREEN SPEAR GUARD is an adult armored human soldier: round dark steel closed helmet with face concealed by visor, gray metal sleeves/shoulders, long white sleeveless split surcoat with green side panels/trim and green diagonal chest sash, brown belt, brown trousers and brown knee-high boots. Retain the original white/green placement and simple cloth silhouette. ONE long wooden spear with a narrow steel point is held on the same anatomical side as in the portrait and remains one continuous shaft in all poses. No shield, cape, horns, extra weapons or new emblem. Walk with alternating planted foot steps and coherent spear grip. Attack winds the spear back, thrusts its tip in the exact column direction with one continuous shaft and proper S/N foreshortening, then recovers to guard. The weapon must never pass through the body or duplicate; keep the entire tip and shaft safely within each cell. Keep ONE continuous spear touching the same anatomical hand in every pose, including flat death. Recoil bends knees and withdraws the spear. Falling drops torso to ground while still holding the spear; terminal row lies fully flat with spear resting on the ground and visibly touching its gripping hand. No upright kneeling final corpse. Ensure spear tips cannot reach the neighbouring cells.",
+  "prompt_record_kind": "exact final prompts with explicit per-sheet direction layout and reviewed foot anchors",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_guard_green/poses-0.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "canvas_size": 392,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_guard_green/poses-1.png",
+      "rows": 3,
+      "directions_axis": "rows",
+      "canvas_size": 224,
+      "source_anchors": [
+        [
+          219,
+          156
+        ],
+        [
+          221,
+          302
+        ],
+        [
+          238,
+          459
+        ],
+        [
+          211,
+          607
+        ],
+        [
+          211,
+          766
+        ],
+        [
+          250,
+          946
+        ],
+        [
+          239,
+          1120
+        ],
+        [
+          197,
+          1291
+        ],
+        [
+          570,
+          156
+        ],
+        [
+          573,
+          303
+        ],
+        [
+          576,
+          459
+        ],
+        [
+          561,
+          607
+        ],
+        [
+          580,
+          765
+        ],
+        [
+          600,
+          941
+        ],
+        [
+          591,
+          1118
+        ],
+        [
+          555,
+          1292
+        ],
+        [
+          932,
+          156
+        ],
+        [
+          942,
+          303
+        ],
+        [
+          948,
+          460
+        ],
+        [
+          923,
+          607
+        ],
+        [
+          941,
+          765
+        ],
+        [
+          975,
+          940
+        ],
+        [
+          949,
+          1120
+        ],
+        [
+          913,
+          1292
+        ]
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_guard_green/poses-2.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original167 portrait remains authoritative: closed dark steel helmet, metal shoulders/sleeves, white surcoat with green panels/sash, brown trousers/boots and exactly one wooden spear with steel tip. Separate attack sheet has directions in physical rows E,SE,S,SW,W,NW,N,NE and three phase columns; all24 tips point correctly including E right, S down and N away/up. Tiny re-authoring removed intersecting spear rectangles. Locomotion has two idle/three planted steps; recoil and three-stage collapse end fully flat holding the single spear. Reviewed foot anchors retain weapon reach without treating the shaft tip as a body center. Idle helmet-to-boots about137px, attack E poses81/77/79px; virtual canvases392/224 keep articulated body scale within roughly1px. Actual Main validation remains required."
+  },
+  "authoring_history": [
+    {
+      "version": "main-v1",
+      "status": "rejected",
+      "reason": "Spear rectangles overlap; E/S attack directions are wrong"
+    },
+    {
+      "version": "main-v2",
+      "status": "rejected",
+      "reason": "Spacing improved but E/S spear direction remained wrong"
+    },
+    {
+      "version": "attack-v1",
+      "status": "rejected",
+      "reason": "Compass corrected but adjacent W/NW/N/NE pose rectangles overlap"
+    }
+  ]
+}

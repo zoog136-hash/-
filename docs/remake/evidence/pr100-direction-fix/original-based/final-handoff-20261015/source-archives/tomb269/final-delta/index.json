@@ -1,0 +1,35 @@
+{
+  "format": "twilight-source-wip-finaldelta-v1",
+  "actor": "transform:269",
+  "base_directory_name": "tomb269-portable-wip-20261015",
+  "base_manifest_sha256": "3fc3a37b15ba52d62b40baa89b22ca745cc9c62cea9d1a885310510b72bc6999",
+  "manifest_sha256": "590f108576654611675a5994a936921d2c8541b32d192deac9dc637b945a795a",
+  "restorer_sha256": "d8afaef78d1776fd886a7e39a77865a0317e03866ea2ca46a6e63f33a5162fe8",
+  "parts": [
+    {
+      "path": "tomb269-finaldelta-part01.zip",
+      "sha256": "51dbaf21f1b03b6e66cb77e1c5392d2fec93d8913a4c68647427939bffb8147d",
+      "bytes": 9627381,
+      "objects": 30
+    }
+  ],
+  "changed_members": 31,
+  "unique_objects": 30,
+  "replaced_base_members": [],
+  "first_read_after_restore": "CURRENT_RESUME_STOP_FINAL.md",
+  "all_further_production": "STOPPED per user instruction",
+  "running_generations": 0,
+  "review_flags": "ALL FALSE",
+  "Main": "UNVERIFIED",
+  "completed_added": 0,
+  "restore_proof": {
+    "path": "restore-proof.json",
+    "sha256": "cab65c5e7be3dde4f2234b4a0fdd93ca6d0f88f854139e28f59716a491707e71",
+    "all_delta_member_sha256": "PASS",
+    "base_selected51_exact_sha_preserved": "PASS"
+  },
+  "readme": {
+    "path": "RESTORE_README.md",
+    "sha256": "84eb4e64c3db6a271bc4108e85e80c609ecdf29daf28be1e2e5a2bc6dcf953b2"
+  }
+}

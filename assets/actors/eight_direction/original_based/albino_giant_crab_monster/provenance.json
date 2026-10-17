@@ -1,0 +1,3135 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      637,
+      617,
+      318,
+      308
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 10,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "76f31edba8cd09e055cab036e2a6d5476cb4cb8a7ca17ddfabb3644124364162"
+  },
+  "target_keys": [
+    "monster:알비노 자이언트 크랩"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 10,
+      "body": "crab",
+      "variant": 14,
+      "width": 0.998,
+      "weapon": "claws",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "crawl",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 78
+  },
+  "target_references": {
+    "monster:알비노 자이언트 크랩": {
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "region": [
+        637,
+        617,
+        318,
+        308
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 4,
+      "cell": 10,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+      "image_size": [
+        1274,
+        1234
+      ],
+      "region_rgba_sha256": "76f31edba8cd09e055cab036e2a6d5476cb4cb8a7ca17ddfabb3644124364162"
+    }
+  },
+  "target_presentations": {
+    "monster:알비노 자이언트 크랩": {
+      "visual": {
+        "atlas": 4,
+        "cell": 10,
+        "body": "crab",
+        "variant": 14,
+        "width": 0.998,
+        "weapon": "claws",
+        "crest": 4,
+        "accent": "8daa7b"
+      },
+      "animation_profile": {
+        "motion_style": "crawl",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 78
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "attack-front-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate newly authored 2D hand-painted isometric RPG animation sprites of ONLY the pale ivory giant CRAB in the reference. Preserve original white/cream rough angular SPIKED carapace, subtle rust-brown chipped stains and joints, two bright RED bead eyes on the front rim, squat compact wide shell, hard armored segmented legs and curved pointed foot tips. Very important asymmetry: creature has ONE huge powerful anatomical RIGHT pincer (screen LEFT in the full FRONT reference) and ONE smaller anatomical LEFT pincer. Preserve which physical claw is bigger through rotation; do not mirror the character into a different left-handed crab. Eight walking legs in four pairs plus two front pincer arms, with natural depth occlusion, not extra limbs. Every limb joins the one compact shell. No human hands/legs, no blade/weapon, no scorpion tail, no detached elements, no shadow or ground plane. The small silver triangular sliver at far left of the source crop is neighboring art, NOT part of the crab: do not reproduce it. Same source ivory/brown/red palette and original detailed painted game-sprite quality, no cartoon simplification or3Dassets. This is NEW reference-based motion, NOT recovered original animation.\n\nEXACT layout FOUR equal columns by THREE equal rows, exactly TWELVE complete SMALL isolated crabs. ONE full articulated figure per cell, maximum42percent cellwidth and50percent cellheight, huge transparent padding especially in front of the huge extended attack claw. Target about150pxwidth entire figure within each384pxwidecell. Preserve complete shell, every visible walking-leg/pincer tip and safe transparent margins. No overlap/merged bodies or rectangular crops containing neighboring crab. No labels, grid, background, shadows, detachedparticles or extra figures. Actual alpha transparent emptyspace. Source appearance/camera and asymmetric claws match attached idle sheet, but poses are NEW.\n\nColumns left to right: E = RIGHT-facing exact side profile, one red eye near leading edge, huge anatomical RIGHT claw is on near/foreground side below shell and aims right; SE = FRONT-right three-quarter, two red eyes with foreshortening, large right claw on near side; S = full FRONT facing viewer/screenDOWN, huge anatomical right claw is screenLEFT, smaller left claw screenRIGHT; SW = FRONT-left three-quarter, face and both claws point down-left with true shell depth. Rotate the whole crab model, not a flat picture. True side profile is narrower shell depth than front. Preserve pincer asymmetry and use naturally occluded far legs rather than inventing extra legs. All four column headings remain consistent in ALLfive rows.\n\nRows top to bottom are ONLY a three-stage melee attack with the ORIGINAL HUGE ANATOMICAL RIGHT PINCER. Smaller LEFT pincer remains small/thin and stays close beside shell throughout. Never swap which claw is big.\nROW1 WINDUP: planted walking legs brace wide and bend knees, shell leans slightly away from target. HUGE RIGHT pincer elbow pulls back beside shell and its two heavy jaws OPEN WIDELY, preparing a snapping strike. Small left claw protects lowerfront. Distinct retracted-open jaw pose.\nROW2 ACTUAL STRIKE/CONTACT: huge right claw lunges DIRECTLY toward the faced target, forearm and elbow extend in front of the head, thick jaws SNAP nearly CLOSED in a powerful gripping impact. Shell/shoulders shift toward the exact faced heading while at least three feet remain grounded. E = giant foreground claw extends RIGHT; SE = giant claw extends down-RIGHT with correct foreshortening; S = giant claw reaches toward VIEWER/DOWN with foreshortening and screenleft anatomicalroot, not a lateral screenleft swing; SW = giant claw reaches DOWN-LEFT. No projectile/effect. This is the actual contactframe1 and must not remain retracted or aim opposite the face. Small claw remains visibly much smaller.\nROW3 RECOVERY: huge claw elbow folds back halfway, jaw partly reopens, shell tilts back toward neutral and walking legs unbrace into a clearly different stance. Do not repeat the windup or an idle. Real changed joints/claw openings/shell lean, not a translated or resized still.\n\nAll12 crab bodies remain physically continuous, source ivory/spikes/brown chips/redbeadeyes preserved, no clipping or extra limbs. Same shell/head model size and body contact baseline in allcells. Empty space alpha0. Newly authored2D motion, not original extractedanimation.\n\nattack-rear-N-correction2.prompt.txt EXACT ISSUED PROMPT:\nEdit the supplied12pose whitecrab attack sheet (FOURcolumns by THREErows) for ONE precise attack-direction correction. Preserve all12actual figures, transparentalpha, ivory spiked carapace/brownchips, asymmetric huge anatomicalRIGHTpincer and tiny anatomicalLEFTpincer, groundedeightwalkinglegs, no duplicateposes or clipping. This is new2Dauthoring, not original extractedanimation. No text/grid/shadows/background/extrafigures.\n\nColumnheadings Wleftprofile, NWbackleft, NstraightBACK/up, NEbackright; rows windupopenclaw, extendedclosingSTRIKE, retractedrecovery. Current N STRIKE (ROW2 COLUMN3, center of third cell around x960 y512 in1536x1024 sheet) wrongly extends its giant claw diagonally RIGHT. Correct that ONE contact pose to attack STRAIGHT AWAY/UP, exactly along the Naxis.\n\nReconstruct the thirdcolumn middle-row giant RIGHT pincer forearm so it emerges from screenRIGHT of shell, then elbow bends INWARD and extends AWAY from viewer, strongly FORESHORTENED, bringing the closed claw TIP vertically above the CENTER of its shell at approximately x960,y410. The shell/corecenter remains about x960,y545. Tip targetx must stay close to960, not x1140or1160. Do NOT extend the N claw sideways to the right like NE. The big claw remains the same anatomicalRIGHTpincer even while aimed straightaway through an inward elbow bend. Show its heavy upper/far dorsal surface and closed grippingjaw from back. Smallleftclaw stays tiny beside shell. Redeyes and frontal face hidden behind carapace in all3Nposes. Nbodyback, upward claw attack, original scale and grounded legs all must agree. This is NOT a vertical claw raised above a FRONTface: keep complete pureBACK and attackAWAY.\n\nOther11figures retain their alreadycorrect Wleft, NWupleft, NEupright targetvectors and threephaseanatomy. Preserve giantfarupperclaw and tinylowernearclaw in W. No newview, no missingpose, no isolatedpincer, no shape mirroring, no detachedparts. All12complete connectedcrabs surrounded by generous empty alpha0gutters. No pixels cropped or overlap neighbors.\n\nattack-rear-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate newly authored 2D hand-painted isometric RPG animation sprites of ONLY the pale ivory giant CRAB in the reference. Preserve original white/cream rough angular SPIKED carapace, subtle rust-brown chipped stains and joints, two bright RED bead eyes on the front rim, squat compact wide shell, hard armored segmented legs and curved pointed foot tips. Very important asymmetry: creature has ONE huge powerful anatomical RIGHT pincer (screen LEFT in the full FRONT reference) and ONE smaller anatomical LEFT pincer. Preserve which physical claw is bigger through rotation; do not mirror the character into a different left-handed crab. Eight walking legs in four pairs plus two front pincer arms, with natural depth occlusion, not extra limbs. Every limb joins the one compact shell. No human hands/legs, no blade/weapon, no scorpion tail, no detached elements, no shadow or ground plane. The small silver triangular sliver at far left of the source crop is neighboring art, NOT part of the crab: do not reproduce it. Same source ivory/brown/red palette and original detailed painted game-sprite quality, no cartoon simplification or3Dassets. This is NEW reference-based motion, NOT recovered original animation.\n\nEXACT layout FOUR equal columns by THREE equal rows, exactly TWELVE complete SMALL isolated crabs. ONE full articulated figure per cell, maximum42percent cellwidth and50percent cellheight, huge transparent padding especially in front of the huge extended attack claw. Target about150pxwidth entire figure within each384pxwidecell. Preserve complete shell, every visible walking-leg/pincer tip and safe transparent margins. No overlap/merged bodies or rectangular crops containing neighboring crab. No labels, grid, background, shadows, detachedparticles or extra figures. Actual alpha transparent emptyspace. Source appearance/camera and asymmetric claws match attached idle sheet, but poses are NEW.\n\nColumns left to right: W = exact LEFT-facing side profile, one red eye at the left leading edge, huge anatomical RIGHT pincer on FAR/upper side partly occluded by shell while smaller LEFT pincer is near/foreground below; NW = BACK-left three-quarter, rear shell is dominant, front face/eyes hidden behind carapace, claws extend toward upper-left with big right pincer on the crab's upper-right side of its body axis; N = pure BACK facing AWAY/screenUP, NO red frontal eyes or mouth visible, broad dorsal/rear shell, huge anatomical right pincer appears screenRIGHT reaching away behind shell and smaller left pincer screenLEFT; NE = BACK-right three-quarter, dorsal/rear carapace dominant with front face/eyes hidden, both pincers aim upper-right and the huge anatomical right pincer lies on the nearer right side. These are TRUE rear anatomical views, not front crabs mirrored or looking over their shells. Preserve which actual pincer is huge through rotation, including occluded far-side connections and all walking-leg roots. All four headings remain consistent in ALLfive rows. Match the character scale/anatomy and source colors from the supplied front-motion reference.\n\nRows top to bottom are ONLY a three-stage melee attack with the ORIGINAL HUGE ANATOMICAL RIGHT PINCER. Smaller LEFT pincer remains small/thin and stays close beside shell throughout. Never swap which claw is big.\nROW1 WINDUP: planted walking legs brace wide and bend knees, shell leans slightly away from target. HUGE RIGHT pincer elbow pulls back beside shell and its two heavy jaws OPEN WIDELY, preparing a snapping strike. Small left claw protects lowerfront. Distinct retracted-open jaw pose.\nROW2 ACTUAL STRIKE/CONTACT: huge right claw lunges DIRECTLY toward the faced target, forearm and elbow extend in front of the head, thick jaws SNAP nearly CLOSED in a powerful gripping impact. Shell/shoulders shift toward the exact faced heading while at least three feet remain grounded. W = huge FAR/UPPER right pincer extends LEFT well ahead of face, while small NEAR/LOWER pincer stays tiny; NW = huge right pincer extends AWAY/UP-LEFT with rear shell remaining visible; N = huge right pincer at screenRIGHT extends AWAY/UP behind shell with foreshortening, not laterally sideways; NE = huge right pincer reaches UP-RIGHT. N/NW/NE keep frontal face/red eyes hidden. No projectile/effect. This is the actual contactframe1 and must not remain retracted or aim opposite the face. Small claw remains visibly much smaller.\nROW3 RECOVERY: huge claw elbow folds back halfway, jaw partly reopens, shell tilts back toward neutral and walking legs unbrace into a clearly different stance. Do not repeat the windup or an idle. Real changed joints/claw openings/shell lean, not a translated or resized still.\n\nAll12 crab bodies remain physically continuous, source ivory/spikes/brown chips/redbeadeyes preserved, no clipping or extra limbs. Same shell/head model size and body contact baseline in allcells. Empty space alpha0. Newly authored2D motion, not original extractedanimation.\n\nCRUCIAL PERMANENT RIGHT-BIG ASYMMETRY: In W/LEFTprofile the huge bulky ivory crushing claw is the FAR/UPPER pincer. The NEAR/LOWER claw is a THIN NARROW tiny pincer about one-third the giant's mass. Never render two similar-size claws or place hugeclaw in near/lower leftprofile position. In N/BACKview huge anatomicalRIGHTclaw is screenRIGHT and smallerLEFTclaw screenLEFT. Supplied corrected rear sheet demonstrates these exact views and asymmetric claw placement; match that anatomy across all12poses. Omitneighboring silvertriangularblade fromsource.\n\nhit-death-front-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate newly authored 2D hand-painted isometric RPG animation sprites of ONLY the pale ivory giant CRAB in the reference. Preserve original white/cream rough angular SPIKED carapace, subtle rust-brown chipped stains and joints, two bright RED bead eyes on the front rim, squat compact wide shell, hard armored segmented legs and curved pointed foot tips. Very important asymmetry: creature has ONE huge powerful anatomical RIGHT pincer (screen LEFT in the full FRONT reference) and ONE smaller anatomical LEFT pincer. Preserve which physical claw is bigger through rotation; do not mirror the character into a different left-handed crab. Eight walking legs in four pairs plus two front pincer arms, with natural depth occlusion, not extra limbs. Every limb joins the one compact shell. No human hands/legs, no blade/weapon, no scorpion tail, no detached elements, no shadow or ground plane. The small silver triangular sliver at far left of the source crop is neighboring art, NOT part of the crab: do not reproduce it. Same source ivory/brown/red palette and original detailed painted game-sprite quality, no cartoon simplification or3Dassets. This is NEW reference-based motion, NOT recovered original animation.\n\nEXACT layout FOUR equal columns by FIVE equal rows, exactly TWENTY complete SMALL isolated crab sprites. One figure centered in each equalcell, entire crab including alltips at most42percent cellWIDTH and50percent cellHEIGHT. Generous transparent gutters, around60px clearance where possible; no bodies/rectangles overlap, no tipcropping or neighboringbodypieces. Transparent emptybackground alpha0. No shadow, text, labels, grid, particles, effects, blood or detachedlimbs. All hard-shell/body/leg/claw pixels coherent and connected. Match attached front idle sheet character style, original shell/head/modelscale and permanent hugeRIGHT/leftsmallclaw asymmetry. Newly authored real articulated poses.\n\nColumns left to right: E = RIGHT-facing exact side profile, one red eye near leading edge, huge anatomical RIGHT claw is on near/foreground side below shell and aims right; SE = FRONT-right three-quarter, two red eyes with foreshortening, large right claw on near side; S = full FRONT facing viewer/screenDOWN, huge anatomical right claw is screenLEFT, smaller left claw screenRIGHT; SW = FRONT-left three-quarter, face and both claws point down-left with true shell depth. Rotate the whole crab model, not a flat picture. True side profile is narrower shell depth than front. Preserve pincer asymmetry and use naturally occluded far legs rather than inventing extra legs. All four column headings remain consistent in ALLfive rows.\n\nFIVE ROWS ONLY, top to bottom:\n1 HIT RECOIL: shell tilts BACK away from faced incoming strike, HUGE anatomicalRIGHTclaw raises defensively with elbow bending across front and jaw partly open, smallLEFTpincer pulls inward. Walking-leg knees buckle asymmetrically while at least three plantedfeet support shell. Real displaced joints/shellpitch, never bodyfloating.\n2 HIT RECOVER: shell pitches forward and opposite knees flex, hugeRIGHTclaw lowers halfway with its jaw closing, smallerLEFTclaw lifts slightly. Different joints and silhouette from row1, stable groundedsupport. Preserve exact heading, not rotatingflatimage.\n3 DEATH START: knees fold under the carapace, shell sinks to about70percent standingheight and tips slightly forward, red eyes dim, large claw elbow drops and its heavy palm nearsground, small claw droops. Body/shell size staysunchanged; actual leg bending lowersbody, never uniformly shrinkthecrab.\n4 DEATH COLLAPSE: legs buckle farther and lie folded to sides/undershell, solid carapace tilts and rests lower, hugeclosedclaw and smallclaw falllimp onto ground. About45percent standingheight; retain same full shell width/mass and originalspikes, not a mini crab or meltedblob.\n5 TERMINAL DEAD CRAB: unmistakably DEAD, rigid original carapace lies FLAT LOW ontheground with legs collapsed and tucked under/splayed along ground, all still connected and complete. Both claws lie limp onthefloor beside shell; enormous physicalRIGHTpalm remains obvious, smallerLEFTpincer stayssmall. Tinyfront redeyes dim/slitlike/downcast, no alert liftinghead. Totalheight about25-30percent standingheight, achieved by foldedlimbs and restinghardshell, never scaling or dissolving body. Samecarapacesize and width as livingcrab, no emptyframe. No hoveringcorpse, no legs holdinglivingbodyup, no flatshadow replacingrealdeadbody.\n\nAllfive phases retain columnfacing and sourceidentity. Actual joint articulation, clawjawmotion, shellpitch and knee collapse differ acrossrows. Everycrab fully visible and grounded at SAME lowercontactbaseline withinitscell; corpse rests onthatbaseline, not floatinghigher inrowcell. Exactly20separatewholebodyfigures, sameconsistent anatomy and palette, transparentalpha.\n\nhit-death-front-correction2.prompt.txt EXACT ISSUED PROMPT:\nEdit this supplied20pose paleivorycrab sheet, maintaining FOURcolumns(E,SE,S,SW) and FIVErows, exactly20completeconnectedfigures and transparentalpha. Preserve original ivoryspikedcarapace, brownscratches, redfrontbeadeyes, huge anatomicalRIGHTpincer/smallLEFTpincer, eightwalkinglegs and all originaldetail. Do not mirror claws or views. Newlyauthored2Dsprites not extractedoriginalanimation. No text, grids, shadows, floorplane, particles, detachedparts, clipping or overlap. Generous emptytransparentgutters.\n\nKeep first TWOrows as two distinct articulated HIT recoil/recover poses. Correct the final THREErows into much more convincing physical DEATH. Current finalrow still looks like a squat living crab with upright bigpincer and legs supporting it. Dead crab's hard shell must actually rest bellydown ONGROUND, legs foldflat limp, and the huge pincer must lie FLAT/EDGE-ON along ground instead of hanging upright.\n\nROW3 deathstart: knees buckle, shell drops downward, both pincerarms sag, heavy giantclaw begins to roll onto its flat broadside. Body drops to about75percent standingheight while shellvolume remainsconstant.\nROW4 collapse: NO upright walking-leg arches holding bodyup. All walkinglegs buckle outwards/down into FLAT limp horizontal folds, bodybelly meetsground, giantRIGHTpincer rotates 70-90degrees so its broad palm rests on floor and presents a LOW edge-on silhouette. Smallerpincer liesdowntoo, redeyesnarrow/closed. Headandbody still face each columnheading but no alertraisedface. Carapacesamewidth andmass, not shrunken. Heightabout55percentliving.\nROW5 fully DEAD/FINAL: unchanged fullsize rigidcarapace lies low flat onground, ALLlegs collapsed and tucked/sprawled HORIZONTALLY in one lowplane, NO pointedfeet planted under an elevatedbody. Huge physicalRIGHTclaw lies flat on floor alongside/infront of shell, its pincerjaws CLOSED and oriented alongfloor, its broadface foreshortened EDGE-ON so it no longer adds uprightheight. SourcepalmstillhugeinLENGTH/width, do not reducepalmto a different smallclaw. SmallerLEFTpincer remains smaller andflat. Closed dim redeyes, face drooped. Fullfigure aboutHALF the standingheight, roughly80px high versus160pxliving in thissheet, yetsame260-280pxwidth/shellmass. Body visibly collapseddead not sleepingcrouch. Complete nonempty corpse with continuous joints, no detachedlimbs, no melting/no uniformlyscaledminicrab.\n\nImportant EfacesRIGHT, SEfrontDOWNRIGHT, SfullFRONTwithbigrightclawscreenLEFT, SWfrontDOWNLEFT inallrows. Ground baseline within eachcell fixed: lowest corpse/body/limb pixels remain atcellbottom contact, not centered high asfigureflattens. Exactly20wholebodies in4x5. Do not let any current pose spill into neighboringcell or imageedge. Preserve sourcecharacter/modelstyle. Transparentalphaemptyspace.\n\nhit-death-rear-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate newly authored 2D hand-painted isometric RPG animation sprites of ONLY the pale ivory giant CRAB in the reference. Preserve original white/cream rough angular SPIKED carapace, subtle rust-brown chipped stains and joints, two bright RED bead eyes on the front rim, squat compact wide shell, hard armored segmented legs and curved pointed foot tips. Very important asymmetry: creature has ONE huge powerful anatomical RIGHT pincer (screen LEFT in the full FRONT reference) and ONE smaller anatomical LEFT pincer. Preserve which physical claw is bigger through rotation; do not mirror the character into a different left-handed crab. Eight walking legs in four pairs plus two front pincer arms, with natural depth occlusion, not extra limbs. Every limb joins the one compact shell. No human hands/legs, no blade/weapon, no scorpion tail, no detached elements, no shadow or ground plane. The small silver triangular sliver at far left of the source crop is neighboring art, NOT part of the crab: do not reproduce it. Same source ivory/brown/red palette and original detailed painted game-sprite quality, no cartoon simplification or3Dassets. This is NEW reference-based motion, NOT recovered original animation.\n\nEXACT layout FOUR equal columns by FIVE equal rows, exactly TWENTY complete SMALL isolated crab sprites. One figure centered in each equalcell, entire crab including alltips at most42percent cellWIDTH and50percent cellHEIGHT. Generous transparent gutters, around60px clearance where possible; no bodies/rectangles overlap, no tipcropping or neighboringbodypieces. Transparent emptybackground alpha0. No shadow, text, labels, grid, particles, effects, blood or detachedlimbs. All hard-shell/body/leg/claw pixels coherent and connected. Match attached front idle sheet character style, original shell/head/modelscale and permanent hugeRIGHT/leftsmallclaw asymmetry. Newly authored real articulated poses.\n\nColumns left to right: W = exact LEFT-facing side profile, one red eye at the left leading edge, huge anatomical RIGHT pincer on FAR/upper side partly occluded by shell while smaller LEFT pincer is near/foreground below; NW = BACK-left three-quarter, rear shell is dominant, front face/eyes hidden behind carapace, claws extend toward upper-left with big right pincer on the crab's upper-right side of its body axis; N = pure BACK facing AWAY/screenUP, NO red frontal eyes or mouth visible, broad dorsal/rear shell, huge anatomical right pincer appears screenRIGHT reaching away behind shell and smaller left pincer screenLEFT; NE = BACK-right three-quarter, dorsal/rear carapace dominant with front face/eyes hidden, both pincers aim upper-right and the huge anatomical right pincer lies on the nearer right side. These are TRUE rear anatomical views, not front crabs mirrored or looking over their shells. Preserve which actual pincer is huge through rotation, including occluded far-side connections and all walking-leg roots. All four headings remain consistent in ALLfive rows. Match the character scale/anatomy and source colors from the supplied front-motion reference.\n\nFIVE ROWS ONLY, top to bottom:\n1 HIT RECOIL: shell tilts BACK away from faced incoming strike, HUGE anatomicalRIGHTclaw raises defensively with elbow bending across front and jaw partly open, smallLEFTpincer pulls inward. Walking-leg knees buckle asymmetrically while at least three plantedfeet support shell. Real displaced joints/shellpitch, never bodyfloating.\n2 HIT RECOVER: shell pitches forward and opposite knees flex, hugeRIGHTclaw lowers halfway with its jaw closing, smallerLEFTclaw lifts slightly. Different joints and silhouette from row1, stable groundedsupport. Preserve exact heading, not rotatingflatimage.\n3 DEATH START: knees fold under the carapace, shell sinks to about70percent standingheight and tips slightly forward, red eyes dim, large claw elbow drops and its heavy palm nearsground, small claw droops. Body/shell size staysunchanged; actual leg bending lowersbody, never uniformly shrinkthecrab.\n4 DEATH COLLAPSE: legs buckle farther and lie folded to sides/undershell, solid carapace tilts and rests lower, hugeclosedclaw and smallclaw falllimp onto ground. About45percent standingheight; retain same full shell width/mass and originalspikes, not a mini crab or meltedblob.\n5 TERMINAL DEAD CRAB: unmistakably DEAD, rigid original carapace lies FLAT LOW ontheground with legs collapsed and tucked under/splayed along ground, all still connected and complete. Both claws lie limp onthefloor beside shell; enormous physicalRIGHTpalm remains obvious, smallerLEFTpincer stayssmall. Tinyfront redeyes dim/slitlike/downcast, no alert liftinghead. Totalheight about25-30percent standingheight, achieved by foldedlimbs and restinghardshell, never scaling or dissolving body. Samecarapacesize and width as livingcrab, no emptyframe. No hoveringcorpse, no legs holdinglivingbodyup, no flatshadow replacingrealdeadbody.\n\nAllfive phases retain columnfacing and sourceidentity. Actual joint articulation, clawjawmotion, shellpitch and knee collapse differ acrossrows. Everycrab fully visible and grounded at SAME lowercontactbaseline withinitscell; corpse rests onthatbaseline, not floatinghigher inrowcell. Exactly20separatewholebodyfigures, sameconsistent anatomy and palette, transparentalpha.\n\nCRITICAL WLEFTprofile pincer asymmetry: huge bulky anatomicalRIGHTpincer is FAR/UPPER and SMALL anatomicalLEFTpincer is NEAR/LOWER thin/narrow onlyONE-THIRDmass. Never mirror frontEintoW or swapthegiantclaw. In Nbackview giantRIGHTclaw appears screenRIGHT, smallLEFTclaw screenLEFT. N/NW/NE never show redfrontalface/eyes.\n\nQUALITY IMPROVEMENT FOR FINAL3DEATHROWS: copy physical collapse quality of attached FRONT hit/death sheet, but independently render these W/NW/N/NE camera views. Deathstart: knees buckle/height75percent and heavyclawrollsontofloor. Collapse: legsfoldHORIZONTALLY and shellbellyrestsground, closed giantpalmrotatesflat EDGE-ON so itdoesnotadduprightheight. Finalcorpse: samefullsizespikedrigidcarapace lies low onground, ALLlegs collapsed/tucked/sprawledHORIZONTAL with NO archedlegs holdinglivingbodyup, bothpincers limpflat alongfloor, giantpalm remains largeinlength but edge-on/foreshortenedverticalheight, closedjaw. TotalfigureaboutHALFstandingheight (around80px versus160pxliving), same260-280pxwidth/shellmass. Never uniformlyscaledminiatureormeltedblob. No hoveringdeadcrab, no alertface, no detachedlimbs. Keepall20figuresseparatecomplete, alpha0background, hugeclearance, no spriteshiftedabovegroundbaseline.\n\nhit-death-rear-back-correction2.prompt.txt EXACT ISSUED PROMPT:\nEdit the supplied FOURcolumn/FIVErow20pose ivorycrab sheet. Preserve all20completeconnectedfigures, alpha transparentbackground, sourceivoryspikedrigidcarapace/brownchips, eightlegs, asymmetric hugeanatomicalRIGHTpincer and tinyLEFTpincer. Keeporiginal detailed2Dstyle/modelsize and lowdeadbodyposture. No text/grid/shadows/effects/detachedpieces/cropping/neighboroverlap. Exactviewcolumns Wleftprofile, NWBACK-left, NpureBACK, NEBACK-right; rows2hit+3death.\n\nIMPORTANT ERROR IN THE LAST2ROWS OF COLUMNS2AND4: those NW/NE deadcrabs currently show FRONT eyes/mouth along the NEAR/BOTTOM edge and put giantclaws like a front-facing corpse. Correct the four NW/NE collapse/final cells into TRUE BACK three-quarter corpses, matching the rearcarapace orientation of the three priorrows and the pureBACK N column. Do not paint a front crab and label itback. In ALL3NW/NEdeathphases the face, red eyes and mouth are completely OCCLUDED behind the FAR/UPPER edge of the hardcarapace. The NEAR/BOTTOM edge shows the REAR armored abdominal rim with NO eyes, NO mouth and NO face. Remove frontalredslits and mouth from thosebackcorpses. Reconstruct rearsegmentedabdomen surfaces, not simply erase eyes off a frontface.\n\nNW death: shellpoints AWAY/up-left, bothclawarms originate from the FAR/upper-left frontside and lie limpflat along that upper-left/side groundplane, massiveRIGHTpincer stillattachedandlarge, smallLEFTpincer smaller. Nearbottomedgeisrearbody plus collapsedwalkinglegs, not a giant frontalclaw.\nNE death: shellpoints AWAY/up-right, clawarms originate from FAR/upper-right frontside and lie flat along upper-right/side groundplane, giantRIGHTpincer stays on correctrightside, no frontface atbottom.\nN pureBACK collapse/final is already good: use that hiddenface/rearabdomen logic while keeping NW/NE different threequarterdirections. Wleftprofile may legitimately retain its oneLEFTleading eye because W is sideview; keepthatcorrectprofile and hugefarupperclaw/smallnearlowerclaw.\n\nAllcorpses still samefullrigidshellwidth/mass, ALLwalkinglegs foldedflat limp without uprightfootarches, giantpalmrestsedge-on/flat so wholedeadbodyLOWaboutHALFlivingheight. Samegroundbaselinewithin eachcell, no hovering/shrunkcrab/emptyframe. Preserve first2hitrows and correctdeathstart poses, originalcamera/headings and all20distinctanatomically articulatedfigures. Backgroundtransparentalpha0.\n\nidle-walk-front-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate newly authored 2D hand-painted isometric RPG animation sprites of ONLY the pale ivory giant CRAB in the reference. Preserve original white/cream rough angular SPIKED carapace, subtle rust-brown chipped stains and joints, two bright RED bead eyes on the front rim, squat compact wide shell, hard armored segmented legs and curved pointed foot tips. Very important asymmetry: creature has ONE huge powerful anatomical RIGHT pincer (screen LEFT in the full FRONT reference) and ONE smaller anatomical LEFT pincer. Preserve which physical claw is bigger through rotation; do not mirror the character into a different left-handed crab. Eight walking legs in four pairs plus two front pincer arms, with natural depth occlusion, not extra limbs. Every limb joins the one compact shell. No human hands/legs, no blade/weapon, no scorpion tail, no detached elements, no shadow or ground plane. The small silver triangular sliver at far left of the source crop is neighboring art, NOT part of the crab: do not reproduce it. Same source ivory/brown/red palette and original detailed painted game-sprite quality, no cartoon simplification or3Dassets. This is NEW reference-based motion, NOT recovered original animation.\n\nEXACT layout FOUR equal columns by FIVE equal rows, exactly TWENTY complete small isolated crab figures. Each entire crab including its BIG pincer and every rear walking-leg tip fits within at most42percent of cell WIDTH and50percent of cell HEIGHT, centered with very generous fully transparent gutters. No overlap, cropping, touching neighboring sprites or image edges. Keep full claws/legs visible. At least60px clear padding where possible. No text, labels, grid, shadows, particles or extra figures. Alpha transparent empty space.\n\nColumns left to right: E = RIGHT-facing exact side profile, one red eye near leading edge, huge anatomical RIGHT claw is on near/foreground side below shell and aims right; SE = FRONT-right three-quarter, two red eyes with foreshortening, large right claw on near side; S = full FRONT facing viewer/screenDOWN, huge anatomical right claw is screenLEFT, smaller left claw screenRIGHT; SW = FRONT-left three-quarter, face and both claws point down-left with true shell depth. Rotate the whole crab model, not a flat picture. True side profile is narrower shell depth than front. Preserve pincer asymmetry and use naturally occluded far legs rather than inventing extra legs. All four column headings remain consistent in ALLfive rows.\n\nRows top to bottom:\n1 IDLE A: stable squat carapace over grounded eight-leg support, walking legs naturally bent, big pincer loosely closed in front and smaller pincer low.\n2 IDLE B: genuine different alert breathing articulation: big claw jaw opens slightly and elbow bends inward, smaller pincer lifts and closes, eye stalks angle outward, several leg knees flex while at least three planted feet support shell. Shell does not float or detach.\n3 CRAWL A: alternating gait toward faced heading: anatomical right-side walking legs1and3 plus left-side2and4 planted push backward, opposite group lifted with knees bending forward. Big claw swings slightly forward while small claw draws back. Actual changed leg joint angles, feet and torso yaw.\n4 CRAWL B: passing/compression phase: previously lifted feet lower near shell, planted knees compress, opposing pincer swing passes center. Body remains at original scale and all limbs connected, stable ground-support feet. Clearly different leg geometry from other phases.\n5 CRAWL C: opposite stride: left-side walking legs1and3 plus right-side2and4 planted push, previous support group lifted and bends forward. Big claw draws back as smaller claw swings forward, clear opposite support-leg articulation. Same facing and physical right big pincer, never flip the crab or change direction.\n\nEvery image is genuinely newly articulated shell/legs/pincers, not a translated, rotated, resized or repeated still. Maintain same shell/head/body model size and actual ground contact baseline within cells. Exactly20 complete connected crab poses on transparent alpha.\n\nidle-walk-rear-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate newly authored 2D hand-painted isometric RPG animation sprites of ONLY the pale ivory giant CRAB in the reference. Preserve original white/cream rough angular SPIKED carapace, subtle rust-brown chipped stains and joints, two bright RED bead eyes on the front rim, squat compact wide shell, hard armored segmented legs and curved pointed foot tips. Very important asymmetry: creature has ONE huge powerful anatomical RIGHT pincer (screen LEFT in the full FRONT reference) and ONE smaller anatomical LEFT pincer. Preserve which physical claw is bigger through rotation; do not mirror the character into a different left-handed crab. Eight walking legs in four pairs plus two front pincer arms, with natural depth occlusion, not extra limbs. Every limb joins the one compact shell. No human hands/legs, no blade/weapon, no scorpion tail, no detached elements, no shadow or ground plane. The small silver triangular sliver at far left of the source crop is neighboring art, NOT part of the crab: do not reproduce it. Same source ivory/brown/red palette and original detailed painted game-sprite quality, no cartoon simplification or3Dassets. This is NEW reference-based motion, NOT recovered original animation.\n\nEXACT layout FOUR equal columns by FIVE equal rows, exactly TWENTY complete small isolated crab figures. Each entire crab including its BIG pincer and every rear walking-leg tip fits within at most42percent of cell WIDTH and50percent of cell HEIGHT, centered with very generous fully transparent gutters. No overlap, cropping, touching neighboring sprites or image edges. Keep full claws/legs visible. At least60px clear padding where possible. No text, labels, grid, shadows, particles or extra figures. Alpha transparent empty space.\n\nColumns left to right: W = exact LEFT-facing side profile, one red eye at the left leading edge, huge anatomical RIGHT pincer on FAR/upper side partly occluded by shell while smaller LEFT pincer is near/foreground below; NW = BACK-left three-quarter, rear shell is dominant, front face/eyes hidden behind carapace, claws extend toward upper-left with big right pincer on the crab's upper-right side of its body axis; N = pure BACK facing AWAY/screenUP, NO red frontal eyes or mouth visible, broad dorsal/rear shell, huge anatomical right pincer appears screenRIGHT reaching away behind shell and smaller left pincer screenLEFT; NE = BACK-right three-quarter, dorsal/rear carapace dominant with front face/eyes hidden, both pincers aim upper-right and the huge anatomical right pincer lies on the nearer right side. These are TRUE rear anatomical views, not front crabs mirrored or looking over their shells. Preserve which actual pincer is huge through rotation, including occluded far-side connections and all walking-leg roots. All four headings remain consistent in ALLfive rows. Match the character scale/anatomy and source colors from the supplied front-motion reference.\n\nRows top to bottom:\n1 IDLE A: stable squat carapace over grounded eight-leg support, walking legs naturally bent, big pincer loosely closed in front and smaller pincer low.\n2 IDLE B: genuine different alert breathing articulation: big claw jaw opens slightly and elbow bends inward, smaller pincer lifts and closes, eye stalks angle outward, several leg knees flex while at least three planted feet support shell. Shell does not float or detach.\n3 CRAWL A: alternating gait toward faced heading: anatomical right-side walking legs1and3 plus left-side2and4 planted push backward, opposite group lifted with knees bending forward. Big claw swings slightly forward while small claw draws back. Actual changed leg joint angles, feet and torso yaw.\n4 CRAWL B: passing/compression phase: previously lifted feet lower near shell, planted knees compress, opposing pincer swing passes center. Body remains at original scale and all limbs connected, stable ground-support feet. Clearly different leg geometry from other phases.\n5 CRAWL C: opposite stride: left-side walking legs1and3 plus right-side2and4 planted push, previous support group lifted and bends forward. Big claw draws back as smaller claw swings forward, clear opposite support-leg articulation. Same facing and physical right big pincer, never flip the crab or change direction.\n\nEvery image is genuinely newly articulated shell/legs/pincers, not a translated, rotated, resized or repeated still. Maintain same shell/head/body model size and actual ground contact baseline within cells. Exactly20 complete connected crab poses on transparent alpha.\n\nidle-walk-rear-correction2.prompt.txt EXACT ISSUED PROMPT:\nEdit the attached rear animation sheet of the same pale ivory giant crab. Keep exact FOUR columns by FIVE rows,20 complete figures, transparent alpha, original ivory/brown/red source style and asymmetric huge anatomicalRIGHTpincer plus smaller anatomicalLEFTpincer. This is a precise DIRECTION REPAIR, not a new character. Preserve the TWENTY distinct animated poses and source identity. Keep figures small with huge transparent gutters, complete leg/claw tips and no overlap/cropping. No background, shadows, text, labels, grid or detached pieces.\n\nCRITICAL ERROR TO FIX: The FIRST COLUMN currently looks RIGHT. It MUST look LEFT in ALL FIVE ROWS. Repaint first column as genuine LEFT-facing crab side view: pointed face edge and one visible red eye at LEFT front of the shell; both pincers aim LEFT; walking legs behind shell to the RIGHT. Huge anatomical RIGHT pincer is the FAR-side upper/partly obscured claw; smaller anatomical LEFT pincer is the NEAR-side lower/foreground claw. Do not just mirror the current first column, because this would put the huge claw on the wrong anatomical side. Reconstruct side view with correct permanent pincer asymmetry. The crab must never look to screenRIGHT in column1, especially travel phases.\n\nOther columns: col2 NW rear-left/up-left, col3 N fullBACK/up with NO frontal eyes or mouth, col4 NE rear-right/up-right. Preserve these actual rear views and the original pointed dorsal shell, spikes, rust-brown chipping, connected legs and claws. In N the huge physical right pincer is on screenRIGHT. Preserve all connected eight walking legs/four pairs where visible and natural occlusion, no extra limbs.\n\nFive rows remain idleA, idleB with pincer/leg flex, crawlA alternate four-leg planted group, crawlB passing lower-body compression, crawlC opposite four-leg planted group; actual bent joints and opposite stride, not translated copies. Consistent same body/shell scale and ground contact. All20complete connected silhouettes, alpha transparent. Match sourcecolor/details. No3Dassets.\n\nidle-walk-rear-correction3.prompt.txt EXACT ISSUED PROMPT:\nEdit the attached rear animation sheet of the same pale ivory giant crab. Keep exact FOUR columns by FIVE rows,20 complete figures, transparent alpha, original ivory/brown/red source style and asymmetric huge anatomicalRIGHTpincer plus smaller anatomicalLEFTpincer. This is a precise DIRECTION REPAIR, not a new character. Preserve the TWENTY distinct animated poses and source identity. Keep figures small with huge transparent gutters, complete leg/claw tips and no overlap/cropping. No background, shadows, text, labels, grid or detached pieces.\n\nCRITICAL ERROR TO FIX: The FIRST COLUMN currently looks RIGHT. It MUST look LEFT in ALL FIVE ROWS. Repaint first column as genuine LEFT-facing crab side view: pointed face edge and one visible red eye at LEFT front of the shell; both pincers aim LEFT; walking legs behind shell to the RIGHT. Huge anatomical RIGHT pincer is the FAR-side upper/partly obscured claw; smaller anatomical LEFT pincer is the NEAR-side lower/foreground claw. Do not just mirror the current first column, because this would put the huge claw on the wrong anatomical side. Reconstruct side view with correct permanent pincer asymmetry. The crab must never look to screenRIGHT in column1, especially travel phases.\n\nOther columns: col2 NW rear-left/up-left, col3 N fullBACK/up with NO frontal eyes or mouth, col4 NE rear-right/up-right. Preserve these actual rear views and the original pointed dorsal shell, spikes, rust-brown chipping, connected legs and claws. In N the huge physical right pincer is on screenRIGHT. Preserve all connected eight walking legs/four pairs where visible and natural occlusion, no extra limbs.\n\nFive rows remain idleA, idleB with pincer/leg flex, crawlA alternate four-leg planted group, crawlB passing lower-body compression, crawlC opposite four-leg planted group; actual bent joints and opposite stride, not translated copies. Consistent same body/shell scale and ground contact. All20complete connected silhouettes, alpha transparent. Match sourcecolor/details. No3Dassets.\n\nSECOND CRITICAL REPAIR TO COLUMN1 LEFT PROFILE: The lower foreground pincer is STILL too huge. That is the SMALL anatomical LEFT claw and must be a THIN SMALL NARROW pointed claw, only about ONE THIRD the mass/width of the giant claw. The anatomical RIGHT giant claw is on the FAR UPPER side: enlarge the FAR/UPPER LEFT-AIMED pincer into the original very thick bulky enormous ivory crushing claw with massive broad palm and heavy serrated jaw. The huge pincer must appear ABOVE/behind the small front pincer in LEFT PROFILE. No ambiguity: UPPER/FAR CLAW HUGE AND BULKY, LOWER/NEAR CLAW TINY AND NARROW. Same permanent right-big asymmetry as source crab, do not produce two similarly bulky claws. Repaint column1 across ALL5rows with that unmistakable scale difference while preserving left-looking one-eye head. The other3columns are genuine rear camera views and retain appropriate big claw side; don't change other anatomy. Keep20complete poses and alpha transparency.",
+  "instruction_record_kind": "Exact prompt files saved before every imagegen call; all failed alternatives preserved and excluded",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Independent review of all104 authored crab poses on white/black proper alpha composites and complete normalized ground-contact comparison, against exact existing-project atlas4cell10 plus wholebody context. Preserve rough spiked ivory/cream carapace, brown chips/joints, two front red beadeyes, one huge anatomicalRIGHTpincer and narrowLEFTpincer, articulated connected walking legs with natural occlusion. No source-neighbor silverblade reproduced. Exact source is existing project art, not verified external original animation. S hugeclaw screenLEFT; W hugeclaw far/upper with small near/lower claw, including WtravelC return; N hugeclaw screenRIGHT before inward-elbow UPcontact. E/W opposingprofiles, frontS eyes/face and N/NW/NE backs hidefrontface in living and correctedcollapsedcorpses. Clawjaw openings, elbow extension/retraction, asymmetric leg/knee supports and shellpitch change physically through2idle/3crawl/3meleeattack/2hit/3death frames, rather than translated or mirrored stills. N strike giantclosedclaw is centeredUP from shell, NW/NE diagonal reach remains correct. All8 terminalcorpses retain fullspiked shell and connected limp claws/legs foldedflat into lowgroundedbody; no emptyframes, detachedpincers or miniaturecarapace. Exact104 source poses usedonce,104raw and104visibleunique, strictanalyze+completevisible guard PASS unchanged. Own anatomical landmarks are S red eye spans53/53/56px and N rigid dorsal rim corners166/157/171px; reviewed canvases512,512,512,480,544,528 normalizefront spans26.5/26.5/26.35 and rear83.0/83.73/82.91. Scale excludes raised giantclaw and collapseddeathheight. Everybody-rootX staysfixed at sourcecolumn root;12SE/S live supportYs are revised3–21sourcepx from hanginggiantpincer bottom to actual outer walkingfeet. All104 supportanchors viewed; isometric depth allows differentfeet/claw screenYs on groundplane. Source PNGs, sourceatlas and recordedregion remain byteexact. Preserve nativevisualheight78,floatingfalse,crawl,melee,attackhitratio0.44 andmedian_idle displaybasis so raisedclaw cannot shrinkstandingcore. This is staticapproval for Main only. Actual native78standingcomparison, worldfloor support, all8five-role playback, melee pincercontact/timing, death/drop/pickup andregressions remain mandatory."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        49,
+        19,
+        275,
+        158
+      ],
+      "margin": [
+        113,
+        166,
+        237,
+        354
+      ],
+      "source_anchor": [
+        192,
+        173
+      ],
+      "rgba_sha256": "14fd6b369e1799c224b0f6393f2ca53a33f4171e778a9ea72e5471a48653dc66",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        418,
+        16,
+        289,
+        171
+      ],
+      "margin": [
+        98,
+        167,
+        223,
+        341
+      ],
+      "source_anchor": [
+        576,
+        169
+      ],
+      "rgba_sha256": "d660bf1efa178c9e5716ac06c950b2b3df88fc21dc91e2797da9b541fb61317e",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        809,
+        19,
+        295,
+        167
+      ],
+      "margin": [
+        105,
+        167,
+        217,
+        345
+      ],
+      "source_anchor": [
+        960,
+        172
+      ],
+      "rgba_sha256": "5b3ee2af65968249b8bd62c40398bea0254019698ef994afa68ac2e701830d94",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1211,
+        20,
+        283,
+        164
+      ],
+      "margin": [
+        123,
+        160,
+        229,
+        348
+      ],
+      "source_anchor": [
+        1344,
+        180
+      ],
+      "rgba_sha256": "67bc41a7f09210c79a9336e637dd0c4057ecb8d77070ed79a63b123a7d7eeb8b",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        51,
+        214,
+        276,
+        167
+      ],
+      "margin": [
+        115,
+        157,
+        236,
+        345
+      ],
+      "source_anchor": [
+        192,
+        377
+      ],
+      "rgba_sha256": "79ce6fd730dfb393a995ba37bc82b03003ae6ec88967b65e650f8980c7d08b4a",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        419,
+        213,
+        288,
+        175
+      ],
+      "margin": [
+        99,
+        170,
+        224,
+        337
+      ],
+      "source_anchor": [
+        576,
+        363
+      ],
+      "rgba_sha256": "8bded18481603d311fc52adc9bb11fb19ffb7d4f790c8f1a0979aeaf9f64156f",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        803,
+        216,
+        311,
+        170
+      ],
+      "margin": [
+        99,
+        169,
+        201,
+        342
+      ],
+      "source_anchor": [
+        960,
+        367
+      ],
+      "rgba_sha256": "70baa2a99c3f6841af76157ba05721b03ba655ef9d0cdad10334175db854aa40",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1208,
+        219,
+        286,
+        164
+      ],
+      "margin": [
+        120,
+        160,
+        226,
+        348
+      ],
+      "source_anchor": [
+        1344,
+        379
+      ],
+      "rgba_sha256": "f1ab92bed45b26b8cfda4f336a916a5233a6b4bee2d6328ba7b9b90924fbcfa7",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        48,
+        416,
+        283,
+        158
+      ],
+      "margin": [
+        112,
+        166,
+        229,
+        354
+      ],
+      "source_anchor": [
+        192,
+        570
+      ],
+      "rgba_sha256": "8d443cc03f148fa5d09b63c4eb0a579c10e4a00591aa16680d21b284430a8972",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        413,
+        413,
+        311,
+        170
+      ],
+      "margin": [
+        93,
+        168,
+        201,
+        342
+      ],
+      "source_anchor": [
+        576,
+        565
+      ],
+      "rgba_sha256": "d8645dee13561d3d651e425ceeb978f6ce4cd225b687a9b77e484400b6284a61",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        800,
+        412,
+        313,
+        172
+      ],
+      "margin": [
+        96,
+        161,
+        199,
+        340
+      ],
+      "source_anchor": [
+        960,
+        571
+      ],
+      "rgba_sha256": "69905a4fbd25b422138daeb1e0227ab7716c07a90de02887465de12c7f454701",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1211,
+        416,
+        284,
+        164
+      ],
+      "margin": [
+        123,
+        160,
+        228,
+        348
+      ],
+      "source_anchor": [
+        1344,
+        576
+      ],
+      "rgba_sha256": "1bc2301473a6fa1639207855eb06d2ba44a06b89c2e2f2460827c4214a0bee45",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        52,
+        611,
+        269,
+        160
+      ],
+      "margin": [
+        116,
+        164,
+        243,
+        352
+      ],
+      "source_anchor": [
+        192,
+        767
+      ],
+      "rgba_sha256": "5b5319f9b0deebba41e19d5c09d0492089cc4881d6cecb6ab07ac7284606a5f4",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        435,
+        611,
+        282,
+        169
+      ],
+      "margin": [
+        115,
+        164,
+        230,
+        343
+      ],
+      "source_anchor": [
+        576,
+        767
+      ],
+      "rgba_sha256": "62aee4357cfac8e6899ac1e100a3baab21a5d80d7d30e7b0255584b3b1ff2744",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        821,
+        609,
+        274,
+        172
+      ],
+      "margin": [
+        117,
+        163,
+        238,
+        340
+      ],
+      "source_anchor": [
+        960,
+        766
+      ],
+      "rgba_sha256": "6121d9dfd90fffb705a3380972e921f9cfad34f3e29bb361b3d5ee95921ae5fb",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        1203,
+        611,
+        272,
+        161
+      ],
+      "margin": [
+        115,
+        163,
+        240,
+        351
+      ],
+      "source_anchor": [
+        1344,
+        768
+      ],
+      "rgba_sha256": "ded84bd5789cba21cc38790272f3c95359d88c56e222766d82f7836b90ef8eee",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        56,
+        814,
+        280,
+        166
+      ],
+      "margin": [
+        120,
+        158,
+        232,
+        346
+      ],
+      "source_anchor": [
+        192,
+        976
+      ],
+      "rgba_sha256": "71e6596a7480ed47d17bf3f7520c35676318ef2450e96bde8f0da81b8b372e40",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        423,
+        810,
+        303,
+        170
+      ],
+      "margin": [
+        103,
+        166,
+        209,
+        342
+      ],
+      "source_anchor": [
+        576,
+        964
+      ],
+      "rgba_sha256": "ca2bcb641f20eacb2ed783a8c6b13b56bc8ec1d142c00997e34e053365962098",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        809,
+        808,
+        292,
+        173
+      ],
+      "margin": [
+        105,
+        162,
+        220,
+        339
+      ],
+      "source_anchor": [
+        960,
+        966
+      ],
+      "rgba_sha256": "0475462a63b5f213ce9dcbed3ad889ef450b24de2aac6928abcdf1c00f6432fe",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        1203,
+        812,
+        287,
+        166
+      ],
+      "margin": [
+        115,
+        158,
+        225,
+        346
+      ],
+      "source_anchor": [
+        1344,
+        974
+      ],
+      "rgba_sha256": "7c439dbe90e0e5022b5c9dbf6f56d999d94142dbf48022977490b7073187b025",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        31,
+        23,
+        321,
+        187
+      ],
+      "margin": [
+        95,
+        137,
+        191,
+        325
+      ],
+      "source_anchor": [
+        192,
+        206
+      ],
+      "rgba_sha256": "fb115c5294565aa270a483b72f9538c450753eda33e2a10da123a34631268676",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        409,
+        34,
+        303,
+        172
+      ],
+      "margin": [
+        89,
+        152,
+        209,
+        340
+      ],
+      "source_anchor": [
+        576,
+        202
+      ],
+      "rgba_sha256": "9ee790d9f0f67fcf3ef2805fc773b6ed073437a978b29c3c5e0f3d9cc01dc286",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        800,
+        34,
+        310,
+        167
+      ],
+      "margin": [
+        96,
+        157,
+        202,
+        345
+      ],
+      "source_anchor": [
+        960,
+        197
+      ],
+      "rgba_sha256": "bf041bcba81b670a92794629c20e9d3272aabaea43f6e82fc4e528fd5d83e5b5",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1174,
+        35,
+        311,
+        171
+      ],
+      "margin": [
+        86,
+        153,
+        201,
+        341
+      ],
+      "source_anchor": [
+        1344,
+        202
+      ],
+      "rgba_sha256": "3a8b9a71f15aed103064e4f1a85c9a25ff40d1abc0536667b24f3d926c2a8bfd",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        29,
+        215,
+        322,
+        188
+      ],
+      "margin": [
+        93,
+        136,
+        190,
+        324
+      ],
+      "source_anchor": [
+        192,
+        399
+      ],
+      "rgba_sha256": "368fa8feb9cd9b48029f158d157ea76736a93c4ecceb28099f63f767c78bd23b",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        408,
+        223,
+        313,
+        174
+      ],
+      "margin": [
+        88,
+        150,
+        199,
+        338
+      ],
+      "source_anchor": [
+        576,
+        393
+      ],
+      "rgba_sha256": "c294f9a851567ecbee49a57b17b7abc83097c8eea6e0d1104be572d6fc2b7102",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        800,
+        227,
+        313,
+        162
+      ],
+      "margin": [
+        96,
+        162,
+        199,
+        350
+      ],
+      "source_anchor": [
+        960,
+        385
+      ],
+      "rgba_sha256": "15cd5b0c45249a6cfcb3bf00a738b7172355728e1f1f2c8365cbe38e76fa3816",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1181,
+        226,
+        318,
+        171
+      ],
+      "margin": [
+        93,
+        153,
+        194,
+        341
+      ],
+      "source_anchor": [
+        1344,
+        393
+      ],
+      "rgba_sha256": "503a408015d87e31bb49ebc81cd442978bbc017e9daf1e1b458fa0e80e6c570a",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        35,
+        411,
+        316,
+        177
+      ],
+      "margin": [
+        99,
+        147,
+        196,
+        335
+      ],
+      "source_anchor": [
+        192,
+        584
+      ],
+      "rgba_sha256": "8294c2ea86992b572af0ad8dc1b550f439050592ccc8a242b2051c6b62460e8c",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        410,
+        421,
+        318,
+        167
+      ],
+      "margin": [
+        90,
+        157,
+        194,
+        345
+      ],
+      "source_anchor": [
+        576,
+        584
+      ],
+      "rgba_sha256": "d64f5b7cbc307219dfcdee0c9eaeac4b0fcd3008841e329ea91eb28cd5274a72",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        798,
+        424,
+        317,
+        165
+      ],
+      "margin": [
+        94,
+        159,
+        195,
+        347
+      ],
+      "source_anchor": [
+        960,
+        585
+      ],
+      "rgba_sha256": "01fcfd7f62b5f076dfcd7592461688d9b18be1331efe3836fba9505e8ecf0357",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1177,
+        423,
+        321,
+        171
+      ],
+      "margin": [
+        89,
+        153,
+        191,
+        341
+      ],
+      "source_anchor": [
+        1344,
+        590
+      ],
+      "rgba_sha256": "ad9307cac84bb694b2c4abee89fcbd675a0e870f5c5e1f94509ca6dc1142001a",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        38,
+        600,
+        318,
+        179
+      ],
+      "margin": [
+        102,
+        145,
+        194,
+        333
+      ],
+      "source_anchor": [
+        192,
+        775
+      ],
+      "rgba_sha256": "282cb372958b02f94deac7a77129914104f0307bda0e43ae7491daaf270d597c",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        416,
+        616,
+        315,
+        169
+      ],
+      "margin": [
+        96,
+        155,
+        197,
+        343
+      ],
+      "source_anchor": [
+        576,
+        781
+      ],
+      "rgba_sha256": "9396306630296de0a34a1f323559a2f950a5136e307f3fab0dc04dd1eca395bf",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        800,
+        614,
+        309,
+        163
+      ],
+      "margin": [
+        96,
+        161,
+        203,
+        349
+      ],
+      "source_anchor": [
+        960,
+        773
+      ],
+      "rgba_sha256": "8d7640857f476379486a4b56c4abc09d6f3a4db221deaf2f8b2fcd74649968c1",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1172,
+        618,
+        318,
+        165
+      ],
+      "margin": [
+        84,
+        159,
+        194,
+        347
+      ],
+      "source_anchor": [
+        1344,
+        779
+      ],
+      "rgba_sha256": "eb05e48b61463a82f65a559ba9bf3751012e35b4e2b29fc35ff37c0e3c91cf96",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        32,
+        792,
+        320,
+        186
+      ],
+      "margin": [
+        96,
+        138,
+        192,
+        326
+      ],
+      "source_anchor": [
+        192,
+        974
+      ],
+      "rgba_sha256": "049eaa65d0f0606bdff9968705c4f92679d66abdf7d194eae65aae2495b3a02a",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        407,
+        804,
+        328,
+        175
+      ],
+      "margin": [
+        87,
+        149,
+        184,
+        337
+      ],
+      "source_anchor": [
+        576,
+        975
+      ],
+      "rgba_sha256": "81c497ac943d1dcd4fb4d7553bcb17b8fa4f538e1b8b6ae9ea4f9702caeba8f7",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        805,
+        807,
+        321,
+        163
+      ],
+      "margin": [
+        101,
+        161,
+        191,
+        349
+      ],
+      "source_anchor": [
+        960,
+        966
+      ],
+      "rgba_sha256": "8029eeeea83ec8902bdc02fc2f7c30282e9576223d1894a19049f9f8d03e43fc",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1180,
+        813,
+        318,
+        171
+      ],
+      "margin": [
+        92,
+        153,
+        194,
+        341
+      ],
+      "source_anchor": [
+        1344,
+        980
+      ],
+      "rgba_sha256": "dc21e74f1d4d3e76fc3f228e7b03052935b7454155c21f613a42c52831bd6184",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        33,
+        140,
+        322,
+        196
+      ],
+      "margin": [
+        97,
+        128,
+        190,
+        316
+      ],
+      "source_anchor": [
+        192,
+        332
+      ],
+      "rgba_sha256": "30f09b4b31fece580655de558734aab2c66906b2c118064f2e0ff58bcd3d4502",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        414,
+        130,
+        332,
+        201
+      ],
+      "margin": [
+        94,
+        126,
+        180,
+        311
+      ],
+      "source_anchor": [
+        576,
+        324
+      ],
+      "rgba_sha256": "cc7b761dec51c087f1f72ced6af3b1c5f996e1efa801e2eb5b9f030ae09ab64a",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        785,
+        130,
+        324,
+        198
+      ],
+      "margin": [
+        81,
+        126,
+        188,
+        314
+      ],
+      "source_anchor": [
+        960,
+        324
+      ],
+      "rgba_sha256": "2b0401505dd079abc41fa267ffac4aede55bbb88c0498fc05830e515dcd6a5ca",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1149,
+        134,
+        356,
+        201
+      ],
+      "margin": [
+        61,
+        123,
+        156,
+        311
+      ],
+      "source_anchor": [
+        1344,
+        331
+      ],
+      "rgba_sha256": "1f7699d171c0c9f6401a293eca7dfefe8dfa764702b7d22c284b42625ec3be31",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        39,
+        422,
+        374,
+        210
+      ],
+      "margin": [
+        103,
+        114,
+        138,
+        302
+      ],
+      "source_anchor": [
+        192,
+        628
+      ],
+      "rgba_sha256": "b7b315954df0e86ae0ab71076d5b8aff1365d9d578aa312a727a95ff4c268f7e",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        432,
+        429,
+        334,
+        203
+      ],
+      "margin": [
+        112,
+        121,
+        178,
+        309
+      ],
+      "source_anchor": [
+        576,
+        628
+      ],
+      "rgba_sha256": "d5186f39d99d4d6ecb9d49533f2b6553caa80b53c333a6634558902fc7afa01c",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        799,
+        423,
+        318,
+        213
+      ],
+      "margin": [
+        95,
+        118,
+        194,
+        299
+      ],
+      "source_anchor": [
+        960,
+        625
+      ],
+      "rgba_sha256": "96121d91c9c8e4dc4183f1bee9f76ac82a0fdceef270cff8a693d7e32ccdf42c",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1136,
+        423,
+        365,
+        210
+      ],
+      "margin": [
+        48,
+        114,
+        147,
+        302
+      ],
+      "source_anchor": [
+        1344,
+        629
+      ],
+      "rgba_sha256": "8510508c1768670d2e5be06b711616bd9406f1f2cdea109fe61419c1d133b949",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        40,
+        720,
+        327,
+        216
+      ],
+      "margin": [
+        104,
+        108,
+        185,
+        296
+      ],
+      "source_anchor": [
+        192,
+        932
+      ],
+      "rgba_sha256": "5d939dde4c4662a3279891659a7b1b6a9a755a19d7cb3fcbdd1ac1b3a1dbfe7b",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        426,
+        725,
+        329,
+        195
+      ],
+      "margin": [
+        106,
+        129,
+        183,
+        317
+      ],
+      "source_anchor": [
+        576,
+        916
+      ],
+      "rgba_sha256": "cbd60606f13d9e05666561f3144601f8c34b32f7776774d873792f7c8a200277",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        781,
+        722,
+        332,
+        205
+      ],
+      "margin": [
+        77,
+        119,
+        180,
+        307
+      ],
+      "source_anchor": [
+        960,
+        923
+      ],
+      "rgba_sha256": "f49f3d82cbf2ff528dd02c712be8bffdf257cbf0b4459bb1cb2e2e5b4d2e7495",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1164,
+        724,
+        336,
+        205
+      ],
+      "margin": [
+        76,
+        119,
+        176,
+        307
+      ],
+      "source_anchor": [
+        1344,
+        925
+      ],
+      "rgba_sha256": "f0fab8fb52dd3f99fd456e0a3161317ae935786ffdf538317861f6587ecd1fff",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        41,
+        126,
+        312,
+        220
+      ],
+      "margin": [
+        89,
+        84,
+        168,
+        260
+      ],
+      "source_anchor": [
+        192,
+        342
+      ],
+      "rgba_sha256": "ad4574428c2f5315f58926ddc34ba8e7d2377499713cd715b679a600d63b592c",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        430,
+        100,
+        301,
+        248
+      ],
+      "margin": [
+        94,
+        56,
+        179,
+        232
+      ],
+      "source_anchor": [
+        576,
+        344
+      ],
+      "rgba_sha256": "b2ffed3a004656fcc8c90fd86f402a245bb78d732aaca3acde6b1f5a19584e41",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        824,
+        71,
+        295,
+        271
+      ],
+      "margin": [
+        104,
+        33,
+        185,
+        209
+      ],
+      "source_anchor": [
+        960,
+        338
+      ],
+      "rgba_sha256": "c956ce137cc99568a8b73f175ae7406c277c744c57ed248f5d89c2acf086acb4",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1182,
+        104,
+        332,
+        250
+      ],
+      "margin": [
+        78,
+        54,
+        148,
+        230
+      ],
+      "source_anchor": [
+        1344,
+        350
+      ],
+      "rgba_sha256": "b2e9811dd35780c3be214047e3a12914d597a4ef3c0ad29bba7d08ccd7706055",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        11,
+        438,
+        408,
+        196
+      ],
+      "margin": [
+        59,
+        108,
+        72,
+        284
+      ],
+      "source_anchor": [
+        192,
+        630
+      ],
+      "rgba_sha256": "d181f5ddb04e52127ec2ea4251006fcd1591ac64e613a7696d86536e40588e67",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        417,
+        403,
+        336,
+        238
+      ],
+      "margin": [
+        81,
+        66,
+        144,
+        242
+      ],
+      "source_anchor": [
+        576,
+        637
+      ],
+      "rgba_sha256": "a830405f8551b205cd66986da89181bc84f8175286872e33585a2f68cb9fc1a2",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        810,
+        366,
+        289,
+        277
+      ],
+      "margin": [
+        90,
+        27,
+        191,
+        203
+      ],
+      "source_anchor": [
+        960,
+        639
+      ],
+      "rgba_sha256": "6bd9fa7c5dc900941add0e69c21085e9aa477b076e77e5b2ef8eb0eaa614eeb8",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1173,
+        411,
+        350,
+        243
+      ],
+      "margin": [
+        69,
+        61,
+        130,
+        237
+      ],
+      "source_anchor": [
+        1344,
+        650
+      ],
+      "rgba_sha256": "c6d42331ad08785adc5edd361ee76d40f4d2771c1fbe9e309b3993cffb376d23",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        52,
+        734,
+        319,
+        217
+      ],
+      "margin": [
+        100,
+        87,
+        161,
+        263
+      ],
+      "source_anchor": [
+        192,
+        947
+      ],
+      "rgba_sha256": "992f06093ae08eae4c3e8f19be515e82d29bce40e187d41242537eebb270363e",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        451,
+        720,
+        303,
+        224
+      ],
+      "margin": [
+        115,
+        80,
+        177,
+        256
+      ],
+      "source_anchor": [
+        576,
+        940
+      ],
+      "rgba_sha256": "c64ef0241084c7111130733f858ec2b33e0c70110f5939f6f72239a09357bc0a",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        801,
+        731,
+        312,
+        212
+      ],
+      "margin": [
+        81,
+        92,
+        168,
+        268
+      ],
+      "source_anchor": [
+        960,
+        939
+      ],
+      "rgba_sha256": "b4c4d2325c3eea97db658838c949cfabb260cf1edebbdbb35525f815cb07d2db",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1193,
+        727,
+        318,
+        232
+      ],
+      "margin": [
+        89,
+        72,
+        162,
+        248
+      ],
+      "source_anchor": [
+        1344,
+        955
+      ],
+      "rgba_sha256": "68fc988352dd6d3b1d978968b4e360b66dbd25d11e0fe80230e37e27920d52a6",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        34,
+        12,
+        300,
+        192
+      ],
+      "margin": [
+        114,
+        152,
+        244,
+        352
+      ],
+      "source_anchor": [
+        192,
+        200
+      ],
+      "rgba_sha256": "0197ddb78ab4f89523932834410bbb32ab7895a9af7f740ac5bdcd926d0521e7",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        420,
+        10,
+        341,
+        200
+      ],
+      "margin": [
+        116,
+        144,
+        203,
+        344
+      ],
+      "source_anchor": [
+        576,
+        206
+      ],
+      "rgba_sha256": "09a9001662cc41ad75307436ad3129395d9cf4daf6d6cfd509e60b4393d5db5a",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        815,
+        10,
+        310,
+        195
+      ],
+      "margin": [
+        127,
+        149,
+        234,
+        349
+      ],
+      "source_anchor": [
+        960,
+        201
+      ],
+      "rgba_sha256": "f0311cbfbdae66dffb5aaff1f0ff644621da9718bf18a6692dcd1f6a4f4152e3",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1207,
+        14,
+        298,
+        202
+      ],
+      "margin": [
+        135,
+        142,
+        246,
+        342
+      ],
+      "source_anchor": [
+        1344,
+        212
+      ],
+      "rgba_sha256": "9e09e547d84ed82ff36e97f5235abb98257e0b4e55dff64077d770d9b3e06ac3",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        48,
+        220,
+        298,
+        191
+      ],
+      "margin": [
+        128,
+        153,
+        246,
+        353
+      ],
+      "source_anchor": [
+        192,
+        407
+      ],
+      "rgba_sha256": "b8e6370cc05bcaabcc19fa403d09cc6476969ce4a54d546961ec8e6886ae688a",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        448,
+        229,
+        309,
+        184
+      ],
+      "margin": [
+        144,
+        160,
+        235,
+        360
+      ],
+      "source_anchor": [
+        576,
+        409
+      ],
+      "rgba_sha256": "f8301ff01dee8426510d875904e61857a2a77e0387867a6fbf66018853c5105b",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        808,
+        232,
+        304,
+        178
+      ],
+      "margin": [
+        120,
+        166,
+        240,
+        366
+      ],
+      "source_anchor": [
+        960,
+        406
+      ],
+      "rgba_sha256": "3f40b0243c3baf77207a05cd7aa5c0dcf564cd8e4d6d6926e30d645b42a4aedf",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1183,
+        232,
+        308,
+        184
+      ],
+      "margin": [
+        111,
+        160,
+        236,
+        360
+      ],
+      "source_anchor": [
+        1344,
+        412
+      ],
+      "rgba_sha256": "de3706b25492e327a44f86df7cd281f78fac235452656cdf32b5d55294353f9f",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        34,
+        468,
+        328,
+        167
+      ],
+      "margin": [
+        114,
+        177,
+        216,
+        377
+      ],
+      "source_anchor": [
+        192,
+        631
+      ],
+      "rgba_sha256": "3355e242ac9864a2bd7ef5ae35ab6167e248b547ffce67a65b8c6e4b14511717",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        429,
+        476,
+        326,
+        160
+      ],
+      "margin": [
+        125,
+        184,
+        218,
+        384
+      ],
+      "source_anchor": [
+        576,
+        632
+      ],
+      "rgba_sha256": "841e4b483faef0ce7ba51830a4ecc857605a7d543d5de418555da1c626340143",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        784,
+        473,
+        337,
+        164
+      ],
+      "margin": [
+        96,
+        180,
+        207,
+        380
+      ],
+      "source_anchor": [
+        960,
+        633
+      ],
+      "rgba_sha256": "bb50f74eb59676201e2cf43d1c75568d04d43952d865e81e43c2ea5665ba0116",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1173,
+        477,
+        333,
+        158
+      ],
+      "margin": [
+        101,
+        186,
+        211,
+        386
+      ],
+      "source_anchor": [
+        1344,
+        631
+      ],
+      "rgba_sha256": "ec8562561c77e5567572a39f69b425e514783aa6fb4cbeac22d26a3ba3feab06",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        18,
+        689,
+        369,
+        141
+      ],
+      "margin": [
+        98,
+        203,
+        175,
+        403
+      ],
+      "source_anchor": [
+        192,
+        826
+      ],
+      "rgba_sha256": "4907ab9d008f349e8515b82d44ede52c5620a9047fbb0944ac0c39dd0d1cb9ce",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        402,
+        692,
+        370,
+        138
+      ],
+      "margin": [
+        98,
+        206,
+        174,
+        406
+      ],
+      "source_anchor": [
+        576,
+        826
+      ],
+      "rgba_sha256": "68ddc987923e6ac780eed6a873d674d53264813b3afcfd19f532b398699ed170",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        779,
+        690,
+        351,
+        144
+      ],
+      "margin": [
+        91,
+        200,
+        193,
+        400
+      ],
+      "source_anchor": [
+        960,
+        830
+      ],
+      "rgba_sha256": "f1e4edf0393c972bb49f0b90d9883abdc89a5530cb41a909191c97e119e82189",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        1148,
+        694,
+        374,
+        138
+      ],
+      "margin": [
+        76,
+        206,
+        170,
+        406
+      ],
+      "source_anchor": [
+        1344,
+        828
+      ],
+      "rgba_sha256": "abcf143e1f12cd1b942f160b51adece5d4acce15f4621cfe61a5751b7b2b1642",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        14,
+        874,
+        369,
+        118
+      ],
+      "margin": [
+        94,
+        226,
+        175,
+        426
+      ],
+      "source_anchor": [
+        192,
+        988
+      ],
+      "rgba_sha256": "d77f8440e1995f64c907aa2d98da637ffe7211ae7200a0f760feef64bd6e5026",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        393,
+        877,
+        371,
+        116
+      ],
+      "margin": [
+        89,
+        228,
+        173,
+        428
+      ],
+      "source_anchor": [
+        576,
+        989
+      ],
+      "rgba_sha256": "a12e395251c4f6bf1a34d7111e0feb44e42307182ec3062a0408e3b722ac624a",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        768,
+        871,
+        371,
+        124
+      ],
+      "margin": [
+        80,
+        220,
+        173,
+        420
+      ],
+      "source_anchor": [
+        960,
+        991
+      ],
+      "rgba_sha256": "0206b0e602d05a48752b092e2a1fb7850cc7a9c1e65779ffdccfc97719898591",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        1152,
+        876,
+        372,
+        118
+      ],
+      "margin": [
+        80,
+        226,
+        172,
+        426
+      ],
+      "source_anchor": [
+        1344,
+        990
+      ],
+      "rgba_sha256": "997bb00e8df89bd70fc7497739fdd171218efda3ee8e69484531bcdfec372fcb",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        42,
+        27,
+        308,
+        217
+      ],
+      "margin": [
+        114,
+        117,
+        220,
+        311
+      ],
+      "source_anchor": [
+        192,
+        240
+      ],
+      "rgba_sha256": "d35383172442bed467fb17fceae5c7ad10f2ba2f9f1748125255b1414b3e08d3",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        416,
+        51,
+        320,
+        193
+      ],
+      "margin": [
+        104,
+        141,
+        208,
+        335
+      ],
+      "source_anchor": [
+        576,
+        240
+      ],
+      "rgba_sha256": "16da0fda4c64708afba05b364a99ed8dcef3226a7174937373672f6585938922",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        797,
+        50,
+        319,
+        196
+      ],
+      "margin": [
+        101,
+        138,
+        209,
+        332
+      ],
+      "source_anchor": [
+        960,
+        242
+      ],
+      "rgba_sha256": "865d8568468919b7558bbf8c7520753ce0455d318e2523e7c7b8cdc135793811",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1180,
+        35,
+        310,
+        210
+      ],
+      "margin": [
+        100,
+        124,
+        218,
+        318
+      ],
+      "source_anchor": [
+        1344,
+        241
+      ],
+      "rgba_sha256": "2c0746a9ae86bc0281698329a59093dc38a8cad3569617ff69be1676b078ba31",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        26,
+        251,
+        322,
+        182
+      ],
+      "margin": [
+        98,
+        152,
+        206,
+        346
+      ],
+      "source_anchor": [
+        192,
+        429
+      ],
+      "rgba_sha256": "d913332b0af2de65e792d21d2a2aac26dc019dc19597de8167dc4fdcf388657f",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        406,
+        265,
+        330,
+        170
+      ],
+      "margin": [
+        94,
+        164,
+        198,
+        358
+      ],
+      "source_anchor": [
+        576,
+        431
+      ],
+      "rgba_sha256": "5575cc7c025c27d4457771a3be8339bf15c4c229119d3dbf2bbe85d6910135a3",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        792,
+        266,
+        326,
+        170
+      ],
+      "margin": [
+        96,
+        164,
+        202,
+        358
+      ],
+      "source_anchor": [
+        960,
+        432
+      ],
+      "rgba_sha256": "a543d29565e812d40ad4420d2822a8253ab8e0cd269e3ffb3f52b43e77ff1f69",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1189,
+        252,
+        326,
+        182
+      ],
+      "margin": [
+        109,
+        152,
+        202,
+        346
+      ],
+      "source_anchor": [
+        1344,
+        430
+      ],
+      "rgba_sha256": "1f92c92ee50366f6e7fda238305b68e360a02a6f243195c5f91af81edbbcf9fc",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        21,
+        484,
+        348,
+        141
+      ],
+      "margin": [
+        93,
+        193,
+        180,
+        387
+      ],
+      "source_anchor": [
+        192,
+        621
+      ],
+      "rgba_sha256": "9fd48432312ce1fd97e3148be3505bcde392c7001873f88cdb51696fbba0b21c",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        404,
+        473,
+        350,
+        146
+      ],
+      "margin": [
+        92,
+        188,
+        178,
+        382
+      ],
+      "source_anchor": [
+        576,
+        615
+      ],
+      "rgba_sha256": "223273b1ac20190b419055c23947146b5f4f3783f55095126fab3a80d1ba4559",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        776,
+        476,
+        352,
+        152
+      ],
+      "margin": [
+        80,
+        182,
+        176,
+        376
+      ],
+      "source_anchor": [
+        960,
+        624
+      ],
+      "rgba_sha256": "6544291e6c6688058e1fbbaa40bdbb06b7194256dcf3f428a2a98d705a053fad",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1161,
+        477,
+        358,
+        152
+      ],
+      "margin": [
+        81,
+        182,
+        170,
+        376
+      ],
+      "source_anchor": [
+        1344,
+        625
+      ],
+      "rgba_sha256": "dff1511e3ab89d81a43e40e44ceee93480c19079dda7f0747774444de1e1f973",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        21,
+        680,
+        347,
+        139
+      ],
+      "margin": [
+        93,
+        195,
+        181,
+        389
+      ],
+      "source_anchor": [
+        192,
+        815
+      ],
+      "rgba_sha256": "cd65c2c70728ae8f03c51b0801478d58583ff97d355c094cb0c9c769eb33dcee",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        396,
+        674,
+        360,
+        139
+      ],
+      "margin": [
+        84,
+        195,
+        168,
+        389
+      ],
+      "source_anchor": [
+        576,
+        809
+      ],
+      "rgba_sha256": "ebb29ed05501928508ee81518f8b33fefb99046249aafa65c91d3546ea35ded8",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        775,
+        681,
+        355,
+        141
+      ],
+      "margin": [
+        79,
+        193,
+        173,
+        387
+      ],
+      "source_anchor": [
+        960,
+        818
+      ],
+      "rgba_sha256": "8ed38fef510c709a5259929c9935358af65b3b3aa759ec757ddc5e828b28900c",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1160,
+        676,
+        359,
+        149
+      ],
+      "margin": [
+        80,
+        185,
+        169,
+        379
+      ],
+      "source_anchor": [
+        1344,
+        821
+      ],
+      "rgba_sha256": "77fae044bf291b6c992d8a7445f66a13a78e844a60d097fea6923d41bbb5a67a",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        17,
+        879,
+        354,
+        115
+      ],
+      "margin": [
+        89,
+        219,
+        174,
+        413
+      ],
+      "source_anchor": [
+        192,
+        990
+      ],
+      "rgba_sha256": "9afae26a7d9032babe2552e6eb33deda110cea1de8611be8c58679a2fc154604",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        393,
+        877,
+        369,
+        122
+      ],
+      "margin": [
+        81,
+        212,
+        159,
+        406
+      ],
+      "source_anchor": [
+        576,
+        995
+      ],
+      "rgba_sha256": "5e7b9a23cde16157577345e305350c7a52effc3a69c2f920f1eb8138e89261d2",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        771,
+        873,
+        364,
+        124
+      ],
+      "margin": [
+        75,
+        210,
+        164,
+        404
+      ],
+      "source_anchor": [
+        960,
+        993
+      ],
+      "rgba_sha256": "333f40255a35091643163ec72363a9721f1c18da406ba9af0bf26bc4dd22fbdf",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1151,
+        877,
+        371,
+        118
+      ],
+      "margin": [
+        71,
+        216,
+        157,
+        410
+      ],
+      "source_anchor": [
+        1344,
+        991
+      ],
+      "rgba_sha256": "f116d58fc36e65f4c15864723f4321a7a4a9ea521ed9d77545f0d657a02f6027",
+      "sheet": 5
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "sha256": "6f9b3db80a5851ba0b8c61dcc92161953d5a5a663f1d109033d3967c4a0cf10e",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Independent living S front red eye center separation span53sourcepx (+/-3), normalized26.50 at canvas512. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "sha256": "0dcaa1352ab8cc4a625a945ba7a683dea99be87ac02e5c3b7128434ad2682b4d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Independent living N rigid rear carapace lateral rim corners, below spikes and above abdomen span166sourcepx (+/-8), normalized83.00 at canvas512. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "sha256": "6f9b3db80a5851ba0b8c61dcc92161953d5a5a663f1d109033d3967c4a0cf10e",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Independent living S front red eye center separation span53sourcepx (+/-3), normalized26.50 at canvas512. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "sha256": "0dcaa1352ab8cc4a625a945ba7a683dea99be87ac02e5c3b7128434ad2682b4d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Independent living N rigid rear carapace lateral rim corners, below spikes and above abdomen span166sourcepx (+/-8), normalized83.00 at canvas512. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-2.png",
+          "sha256": "03b9823b6ee9c83f7440f6bb3e05353a43250e9f04bdb549a438d40a5fcf9423",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Independent living S front red eye center separation span53sourcepx (+/-3), normalized26.50 at canvas512. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-3.png",
+          "sha256": "72dc6fc03063b43fb8913d3bff65ca19a2edb50e8573de2343b8d0dccb1c41f9",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            480,
+            480
+          ],
+          "foot": [
+            240,
+            300
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Independent living N rigid rear carapace lateral rim corners, below spikes and above abdomen span157sourcepx (+/-8), normalized83.73 at canvas480. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "sha256": "52b3025d3d6006353abb3df7336c63e0ff2127caad8f4587e5990581f61541d5",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            544,
+            544
+          ],
+          "foot": [
+            272,
+            340
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Independent living S front red eye center separation span56sourcepx (+/-3), normalized26.35 at canvas544. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "sha256": "5d54c222ea65b58d62f21cf50202bbe5a49688735f6ef8ab72ac9c63f1f5dd2f",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            528,
+            528
+          ],
+          "foot": [
+            264,
+            330
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Independent living N rigid rear carapace lateral rim corners, below spikes and above abdomen span171sourcepx (+/-8), normalized82.91 at canvas528. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "sha256": "52b3025d3d6006353abb3df7336c63e0ff2127caad8f4587e5990581f61541d5",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            544,
+            544
+          ],
+          "foot": [
+            272,
+            340
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Independent living S front red eye center separation span56sourcepx (+/-3), normalized26.35 at canvas544. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "sha256": "5d54c222ea65b58d62f21cf50202bbe5a49688735f6ef8ab72ac9c63f1f5dd2f",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            528,
+            528
+          ],
+          "foot": [
+            264,
+            330
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Independent living N rigid rear carapace lateral rim corners, below spikes and above abdomen span171sourcepx (+/-8), normalized82.91 at canvas528. Uses eye centers/front or actual rigid dorsal rim corners/rear, excluding raised huge pincer, belly, walking legs and collapsed death height. Six source-coordinate and normalized104 comparisons; original native78 standing core is Main gate. Body-root X remains fixed at actual column root; reviewed walking-foot support Y prevents hanging front giant pincer from controlling ground support. No PNG or threshold changes.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "median_idle",
+  "display_reference_height": 80.5
+}

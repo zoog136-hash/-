@@ -1,0 +1,31 @@
+{
+  "image_size": [
+    1024,
+    1536
+  ],
+  "alpha_extrema": [
+    0,
+    254
+  ],
+  "visible_box_alpha_over_100": [
+    238,
+    139,
+    767,
+    1419
+  ],
+  "visible_height": 1280,
+  "visible_width": 529,
+  "candidate_sha256": "742430cbe65dbe4785cce9c6e75db43a7343416b6a683141d02381ef5a3015c6",
+  "importer_diagnostic": {
+    "canvas_size": 2048,
+    "status": "fail",
+    "error": "Pose cannot fit the foot-anchored canvas",
+    "reason": "1280px body height plus region padding exceeds the 1280px space above the fixed 5/8-height foot anchor. No workaround or source modification applied."
+  },
+  "height_only_comparison": {
+    "example_guide3_body_height": 480,
+    "source_body_height": 1280,
+    "ratio": 0.375,
+    "scale_review_status": "diagnostic_only_not_approved"
+  }
+}

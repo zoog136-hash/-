@@ -1,0 +1,269 @@
+{
+  "status": "FROZEN_PASS_HEADLESS3_GL3_REQUIRES_ROOT_CODE_AND_VISUAL_REVIEW_BEFORE_COMMIT",
+  "validator": "/workspace/twilight/tests/original_based_temporal_main_test.gd",
+  "validator_sha256": "cc193e2cd41309732ca6735e3bfd20adb672cc229edc73123967e7550f7a768c",
+  "exact_validated_code_snapshot": "/workspace/scratch/pr100-continuation/temporal-smoke/code-snapshots/validator-clear.gd",
+  "new_repo_files": [
+    "tests/original_based_temporal_main_test.gd",
+    "tests/fixtures/pr100_temporal_smoke.json"
+  ],
+  "validation": [
+    {
+      "mode": "headless",
+      "summary": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-clear.gameplay.temporal.json",
+      "sha256": "3199dd9979b2b0d3b520cb7351a28672ffc92ae540429131dabe34adc8592461",
+      "checks": 119169,
+      "cases": [
+        {
+          "name": "불신의 댄싱 소드",
+          "roles": 40,
+          "native_phases": 104,
+          "all_controller_steps_logged": 5640,
+          "phase_pngs_sha_verified": 0,
+          "original_full_viewport_pngs_sha_verified": 0,
+          "maximum_canvas_error_native_pixels": 2.15791860682657e-05,
+          "case_report": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-clear.gameplay.temporal-cases/dancing-sword.json",
+          "case_report_sha256": "28d6a61bcdf2790b3d8c5a1ec51763ea3eaf98d5a3968a44ea88e72fda7a4b39",
+          "player_clearance": {
+            "camera_focus": [
+              13765.1572265625,
+              2439.431640625
+            ],
+            "player_hidden_or_modified": false,
+            "player_position": [
+              13277.1572265625,
+              2471.431640625
+            ],
+            "player_visible_bounds_world": [
+              13126.7568359375,
+              2287.431640625,
+              300.7998046875,
+              300.800048828125
+            ],
+            "player_walkable": true,
+            "review_envelope_world": [
+              13569.1572265625,
+              2211.431640625,
+              440.0,
+              400.0
+            ]
+          },
+          "failures": []
+        },
+        {
+          "name": "교만의 레버넌트",
+          "roles": 40,
+          "native_phases": 104,
+          "all_controller_steps_logged": 5640,
+          "phase_pngs_sha_verified": 0,
+          "original_full_viewport_pngs_sha_verified": 0,
+          "maximum_canvas_error_native_pixels": 4.31583721365314e-05,
+          "case_report": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-clear.gameplay.temporal-cases/pride-revenant.json",
+          "case_report_sha256": "5a986cd22bced62677987863ec28ff87ef8d9a89a13e4449a09773aefd4779f1",
+          "player_clearance": {
+            "camera_focus": [
+              13765.1572265625,
+              2439.431640625
+            ],
+            "player_hidden_or_modified": false,
+            "player_position": [
+              13277.1572265625,
+              2471.431640625
+            ],
+            "player_visible_bounds_world": [
+              13126.7568359375,
+              2287.431640625,
+              300.7998046875,
+              300.800048828125
+            ],
+            "player_walkable": true,
+            "review_envelope_world": [
+              13569.1572265625,
+              2211.431640625,
+              440.0,
+              400.0
+            ]
+          },
+          "failures": []
+        },
+        {
+          "name": "시커",
+          "roles": 40,
+          "native_phases": 104,
+          "all_controller_steps_logged": 5640,
+          "phase_pngs_sha_verified": 0,
+          "original_full_viewport_pngs_sha_verified": 0,
+          "maximum_canvas_error_native_pixels": 4.31583721365314e-05,
+          "case_report": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-clear.gameplay.temporal-cases/seeker.json",
+          "case_report_sha256": "d34df34dac9d9c021d353cb5e89b75456444d7b9ae566fc26b46598b6e0eb69f",
+          "player_clearance": {
+            "camera_focus": [
+              13765.1572265625,
+              2439.431640625
+            ],
+            "player_hidden_or_modified": false,
+            "player_position": [
+              13277.1572265625,
+              2471.431640625
+            ],
+            "player_visible_bounds_world": [
+              13126.7568359375,
+              2287.431640625,
+              300.7998046875,
+              300.800048828125
+            ],
+            "player_walkable": true,
+            "review_envelope_world": [
+              13569.1572265625,
+              2211.431640625,
+              440.0,
+              400.0
+            ]
+          },
+          "failures": []
+        }
+      ],
+      "failures": []
+    },
+    {
+      "mode": "rendered",
+      "summary": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-clear.json",
+      "sha256": "760de0c47a02a9cc25da2cb585fdff0b4c40de2210f69445580745cef6a60d62",
+      "checks": 121077,
+      "cases": [
+        {
+          "name": "웨링",
+          "roles": 40,
+          "native_phases": 104,
+          "all_controller_steps_logged": 5640,
+          "phase_pngs_sha_verified": 104,
+          "original_full_viewport_pngs_sha_verified": 3,
+          "maximum_canvas_error_native_pixels": 4.31583721365314e-05,
+          "case_report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-clear-cases/waring-monster-boss.json",
+          "case_report_sha256": "34c837b58cc9220c617a662a8990e076b5f0c98aab6e446e3208749800144cbe",
+          "player_clearance": {
+            "camera_focus": [
+              13765.1572265625,
+              2439.431640625
+            ],
+            "player_hidden_or_modified": false,
+            "player_position": [
+              13277.1572265625,
+              2471.431640625
+            ],
+            "player_visible_bounds_world": [
+              13126.7568359375,
+              2287.431640625,
+              300.7998046875,
+              300.800048828125
+            ],
+            "player_walkable": true,
+            "review_envelope_world": [
+              13569.1572265625,
+              2211.431640625,
+              440.0,
+              400.0
+            ]
+          },
+          "failures": []
+        },
+        {
+          "name": "불신의 댄싱 소드",
+          "roles": 40,
+          "native_phases": 104,
+          "all_controller_steps_logged": 5640,
+          "phase_pngs_sha_verified": 104,
+          "original_full_viewport_pngs_sha_verified": 3,
+          "maximum_canvas_error_native_pixels": 2.15791860682657e-05,
+          "case_report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-clear-cases/dancing-sword.json",
+          "case_report_sha256": "3b3490a1d5639955369eac0e60e0d4428c3635153796e62408def564a5711da1",
+          "player_clearance": {
+            "camera_focus": [
+              13765.1572265625,
+              2439.431640625
+            ],
+            "player_hidden_or_modified": false,
+            "player_position": [
+              13277.1572265625,
+              2471.431640625
+            ],
+            "player_visible_bounds_world": [
+              13126.7568359375,
+              2287.431640625,
+              300.7998046875,
+              300.800048828125
+            ],
+            "player_walkable": true,
+            "review_envelope_world": [
+              13569.1572265625,
+              2211.431640625,
+              440.0,
+              400.0
+            ]
+          },
+          "failures": []
+        },
+        {
+          "name": "교만의 레버넌트",
+          "roles": 40,
+          "native_phases": 104,
+          "all_controller_steps_logged": 5640,
+          "phase_pngs_sha_verified": 104,
+          "original_full_viewport_pngs_sha_verified": 3,
+          "maximum_canvas_error_native_pixels": 4.31583721365314e-05,
+          "case_report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-clear-cases/pride-revenant.json",
+          "case_report_sha256": "7c3c40b78c0ce65fd9da9cf8a16a4cf754ddf59d91ab40f94f28eaad1a6e32a0",
+          "player_clearance": {
+            "camera_focus": [
+              13765.1572265625,
+              2439.431640625
+            ],
+            "player_hidden_or_modified": false,
+            "player_position": [
+              13277.1572265625,
+              2471.431640625
+            ],
+            "player_visible_bounds_world": [
+              13126.7568359375,
+              2287.431640625,
+              300.7998046875,
+              300.800048828125
+            ],
+            "player_walkable": true,
+            "review_envelope_world": [
+              13569.1572265625,
+              2211.431640625,
+              440.0,
+              400.0
+            ]
+          },
+          "failures": []
+        }
+      ],
+      "failures": []
+    }
+  ],
+  "storyboards": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-clear-contacts",
+  "storyboard_manifest": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-clear-contacts/temporal-contact-manifest.json",
+  "scope": "QA-clocked120HzproductionMotionControlleronfreshDBactorsinactualMain. NoAI/combat/weapon-death/wall-timeperformanceclaim. ExistingunchangedgameplaytestsandfullCIremainrequired.",
+  "every120Hzstep_checked_and_logged": true,
+  "rendering": "Everyactualnativeframechange/start/endobservedatframe_post_draw;PNG+metadataatomic;rich20Hzcontrollerrecordswithdraw_synchronizedflag.",
+  "player_occlusion_prevented": "RealunchangedQAplayerplacedonwalkableground512worldpixelsaway; camerasamefocus; playerpresentationboundscheckedoutsidewalk/bodyenvelopeandactualbodyboundsateachcapture.",
+  "native_canvas_epsilon": 1,
+  "actual_measured_max_native_pixels": 4.31583721365314e-05,
+  "direct_texture_assignment": false,
+  "production_game_maps_existing_guards_modified": false,
+  "rejected_evidence_preserved": [
+    "gl-v1.json",
+    "gl-v2.json",
+    "gl-ready.json",
+    "delivery-manifest-before-player-clearance.json",
+    "code-snapshots/version-evidence.json"
+  ],
+  "helpers": [
+    "helpers/run_temporal_validation.py",
+    "helpers/compose_temporal_contacts.py"
+  ],
+  "committed": false,
+  "completed_added": 0
+}

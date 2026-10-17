@@ -1,0 +1,23 @@
+extends "res://tests/original_based_succubus_gameplay_test.gd"
+
+# TWILIGHT_OPTIONAL_RENDER_CAPTURE
+# TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_PR100_CAPTURE_DIR
+# RenderingServer.frame_post_draw is awaited by the inherited capture helper.
+const BOSS_SKILL_QA = preload("res://tests/original_based_boss_skill_helper.gd")
+
+func subject_name() -> String: return "불신의 시어"
+func subject_folder() -> String: return "seer_boss"
+
+func prepare_monster_direction(direction: int) -> bool:
+	normal.special_cooldown = 9999.
+	return super.prepare_monster_direction(direction)
+
+func monster_case() -> void:
+	report.setup.normal_attack_probe = "Original magic range and real projectiles, with only special cooldown paused for normal attacks"
+	await super.monster_case()
+	await BOSS_SKILL_QA.exercise(self, "beam")
+
+func lifecycle_case() -> void:
+	await super.lifecycle_case()
+	if is_instance_valid(normal):
+		check(not normal.species_visual.warning_active and not normal.motion.active, "actual weapon death clears boss warning and motion")

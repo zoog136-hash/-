@@ -1,0 +1,780 @@
+{
+  "basis_commit": "e66e861a318c2f6f42d1ce33519ae527e12be59c",
+  "source_targets": 222,
+  "unique_image_or_regions": 153,
+  "source_hashes_match": true,
+  "previously_tracked_asset_files_changed": [],
+  "authored_actors": {
+    "werewolf": {
+      "assets/actors/eight_direction/original_based/werewolf/SpriteFrames.tres": {
+        "bytes": 25247,
+        "sha256": "ceedb48fe1aa55a40858ee3d016a4d6826cc92b5396a5449771a8f2bc0743011"
+      },
+      "assets/actors/eight_direction/original_based/werewolf/poses.png": {
+        "bytes": 2116396,
+        "sha256": "58854c0f6502d5b67de78d9be47f8ea765431a6380e1f89ac92db520ef6a6d7d"
+      },
+      "assets/actors/eight_direction/original_based/werewolf/provenance.json": {
+        "bytes": 43259,
+        "sha256": "9a4c6296680341f838ec2195603b7e8d0053a97b4a532610dd3154348c477149"
+      }
+    },
+    "ghost": {
+      "assets/actors/eight_direction/original_based/ghost/SpriteFrames.tres": {
+        "bytes": 25519,
+        "sha256": "10ba0b53c6a5c54402f07834a9ea7a1b2cab81170c1d8e0a6315bef530d3aef3"
+      },
+      "assets/actors/eight_direction/original_based/ghost/poses-0.png": {
+        "bytes": 1321043,
+        "sha256": "652675cb62ee2ac9375f91021a795160706973d82211863f07ea2a69084fe34a"
+      },
+      "assets/actors/eight_direction/original_based/ghost/poses-1.png": {
+        "bytes": 1249463,
+        "sha256": "67737f986ce3edbd6ee64973329105227ab5a6d863a57ffd8779c39ad2bdefbf"
+      },
+      "assets/actors/eight_direction/original_based/ghost/provenance.json": {
+        "bytes": 50006,
+        "sha256": "f1fd23b72e7ad5a74e678bb71ebdb433b1227399663db31c537d729c367e015e"
+      }
+    },
+    "reaper_female": {
+      "assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres": {
+        "bytes": 25536,
+        "sha256": "37d0a8ab104a241a589e463708e1a448a1f17252940ab1858e718b67fc2989f3"
+      },
+      "assets/actors/eight_direction/original_based/reaper_female/poses-0.png": {
+        "bytes": 2121182,
+        "sha256": "6e24057fb07dfd0a09a64e23af379d1546fffa1905760a09b32da143e284263c"
+      },
+      "assets/actors/eight_direction/original_based/reaper_female/poses-1.png": {
+        "bytes": 1561375,
+        "sha256": "2e39e48610f3bb67428244b13f3596ddbab28ed2cc42522efad803af85b0fc8c"
+      },
+      "assets/actors/eight_direction/original_based/reaper_female/provenance.json": {
+        "bytes": 50684,
+        "sha256": "fd8e208d443639abdd89ae76204e14cf69560e54e3347eb8a344adbf1e33acb1"
+      }
+    },
+    "ogre": {
+      "assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres": {
+        "bytes": 25177,
+        "sha256": "545882b03696e0a0bb3dd18e81652d93c022f234fdf287f2a851af194b3dbf37"
+      },
+      "assets/actors/eight_direction/original_based/ogre/poses.png": {
+        "bytes": 1218260,
+        "sha256": "98c34178e5f05b119f57c14d2b252b224e0b8a83b8574f5951be570e9a032651"
+      },
+      "assets/actors/eight_direction/original_based/ogre/provenance.json": {
+        "bytes": 48443,
+        "sha256": "0975e65ef8b7d402b5c1bd3aa4ba72ac5374725ddf9fedb17a52680ae290a922"
+      }
+    },
+    "lava_golem": {
+      "assets/actors/eight_direction/original_based/lava_golem/SpriteFrames.tres": {
+        "bytes": 25180,
+        "sha256": "58753f44c844136e4c27184edbc26042a1524a71bbeb0dd2b75f5a4e22220924"
+      },
+      "assets/actors/eight_direction/original_based/lava_golem/poses.png": {
+        "bytes": 1830178,
+        "sha256": "88f1063e77a1cd950214b0fb5a4a9469de1ea3b1dcfa0daa13caa1d67b9ca6cd"
+      },
+      "assets/actors/eight_direction/original_based/lava_golem/provenance.json": {
+        "bytes": 46882,
+        "sha256": "db4d14c675d4e26bf06f37324218f0bb66707a18641ad321f3d80e1c8cee0693"
+      }
+    },
+    "ice_golem": {
+      "assets/actors/eight_direction/original_based/ice_golem/SpriteFrames.tres": {
+        "bytes": 25187,
+        "sha256": "f16f8e03a7d0b2892cc0f8cfc5a44f5f393d1a22a448ab0dd831750ddec98518"
+      },
+      "assets/actors/eight_direction/original_based/ice_golem/poses.png": {
+        "bytes": 2230123,
+        "sha256": "18c31b7d917641f11c908fd8004b8245b185826c4a8ff26ed885dbec8ad46105"
+      },
+      "assets/actors/eight_direction/original_based/ice_golem/provenance.json": {
+        "bytes": 46409,
+        "sha256": "284245644f31bba9363f25113e01e889303b640b79525e689caa031992a4aed0"
+      }
+    },
+    "cockatrice": {
+      "assets/actors/eight_direction/original_based/cockatrice/SpriteFrames.tres": {
+        "bytes": 25214,
+        "sha256": "63c64f14f7b35845c139eb49e5d21eca43476caad204e7f5e2b60527efaf5f7b"
+      },
+      "assets/actors/eight_direction/original_based/cockatrice/poses.png": {
+        "bytes": 1759011,
+        "sha256": "a6dfd5f3fc0012267ffe4d14f35f150fb5654cd0b36e870a8efc13408e5aec14"
+      },
+      "assets/actors/eight_direction/original_based/cockatrice/provenance.json": {
+        "bytes": 49141,
+        "sha256": "888e9ae7ae7c12863c8985aedd72de5f43969d0275276c80d5b49bf7ec7e1172"
+      }
+    },
+    "cyclops": {
+      "assets/actors/eight_direction/original_based/cyclops/SpriteFrames.tres": {
+        "bytes": 25473,
+        "sha256": "66911aa52c234993d1dda4f3bb64f8a718466757137d430a8bee6f011a7f2618"
+      },
+      "assets/actors/eight_direction/original_based/cyclops/poses-0.png": {
+        "bytes": 1109766,
+        "sha256": "50db3b4956d3b948407f5ae60cab26799fb4e6ff000924c49aa70a97ca5828bf"
+      },
+      "assets/actors/eight_direction/original_based/cyclops/poses-1.png": {
+        "bytes": 1228726,
+        "sha256": "795f07f0b8da197f320eacf9b15f6b52991c67ccdcc3daa7a70fd7677b523924"
+      },
+      "assets/actors/eight_direction/original_based/cyclops/provenance.json": {
+        "bytes": 50862,
+        "sha256": "cdf18205cd038dc01febc03ff9fcdcbb447c8fc29dc49f77b918efd0eb7d1fcd"
+      }
+    },
+    "spear_captain": {
+      "assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres": {
+        "bytes": 25505,
+        "sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57"
+      },
+      "assets/actors/eight_direction/original_based/spear_captain/poses-0.png": {
+        "bytes": 1195751,
+        "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4"
+      },
+      "assets/actors/eight_direction/original_based/spear_captain/poses-1.png": {
+        "bytes": 1221849,
+        "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7"
+      },
+      "assets/actors/eight_direction/original_based/spear_captain/provenance.json": {
+        "bytes": 50706,
+        "sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523"
+      }
+    },
+    "harpy": {
+      "assets/actors/eight_direction/original_based/harpy/SpriteFrames.tres": {
+        "bytes": 25243,
+        "sha256": "74b907887e4e2f20d4d862adb07c54ea2c337dcc359a80703ca95e0a90517219"
+      },
+      "assets/actors/eight_direction/original_based/harpy/poses.png": {
+        "bytes": 2022775,
+        "sha256": "28c5a87ccf3b0bd9da0650c8e8892df37e85f7688acbfb43a2197965b348c4ce"
+      },
+      "assets/actors/eight_direction/original_based/harpy/provenance.json": {
+        "bytes": 46998,
+        "sha256": "6c049f2fd27035b4b043a291f9c51ae656c03ec1612112a7e4a5345e700ffd7b"
+      }
+    },
+    "lycanthrope": {
+      "assets/actors/eight_direction/original_based/lycanthrope/SpriteFrames.tres": {
+        "bytes": 25264,
+        "sha256": "67d12924c6c5ddbb8476e4c056a91c9a74e3c8aab3897f6ce8863ca01a15ba06"
+      },
+      "assets/actors/eight_direction/original_based/lycanthrope/poses.png": {
+        "bytes": 1799656,
+        "sha256": "26b3f9c2c4f570f82e8d1e2ea48160ec3787a57ccbf623377f780b2379d51b35"
+      },
+      "assets/actors/eight_direction/original_based/lycanthrope/provenance.json": {
+        "bytes": 47022,
+        "sha256": "0967e0827eaeb5c12262c7d37d338b2a6b5318270f153261f1b12719b1a965e1"
+      }
+    },
+    "succubus": {
+      "assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres": {
+        "bytes": 25240,
+        "sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8"
+      },
+      "assets/actors/eight_direction/original_based/succubus/poses.png": {
+        "bytes": 1508283,
+        "sha256": "169216bd3385df4b20bdb34172d7ed9105daaef8e7ecf6ec1c8d4c95831c2f91"
+      },
+      "assets/actors/eight_direction/original_based/succubus/provenance.json": {
+        "bytes": 49485,
+        "sha256": "379d1d9e879bf837eeb4f86c8aa960dbb659ede88963031cfb91f463c7808770"
+      }
+    },
+    "bugbear": {
+      "assets/actors/eight_direction/original_based/bugbear/SpriteFrames.tres": {
+        "bytes": 25497,
+        "sha256": "d5d0b4cc94b93c4fc16efce25fd6974fe425f10a71f1524111a318bcf5a17c7a"
+      },
+      "assets/actors/eight_direction/original_based/bugbear/poses-0.png": {
+        "bytes": 2855083,
+        "sha256": "aa916d657e2a24d1ef2ba187b6d68e20216312ead0eb184f3567bb7e16811a89"
+      },
+      "assets/actors/eight_direction/original_based/bugbear/poses-1.png": {
+        "bytes": 1626563,
+        "sha256": "3bb54b0fb7615c6c18227af0cb2f0da75bb73f54691a2daa4e9028cd2ebdb684"
+      },
+      "assets/actors/eight_direction/original_based/bugbear/provenance.json": {
+        "bytes": 48878,
+        "sha256": "b450626a3786b811a86a928aafab5ac48f9af8f6aea2cacd5083fbd475e604c5"
+      }
+    },
+    "sand_worm": {
+      "assets/actors/eight_direction/original_based/sand_worm/SpriteFrames.tres": {
+        "bytes": 25476,
+        "sha256": "618c80b898c39a576970c9496ccada119053ac358229b9cff75d18ab95cc0136"
+      },
+      "assets/actors/eight_direction/original_based/sand_worm/poses-0.png": {
+        "bytes": 1140437,
+        "sha256": "3b76d1aefbf3eb75842658a90353241c50f586baae62207524770ffba4fbc5c9"
+      },
+      "assets/actors/eight_direction/original_based/sand_worm/poses-1.png": {
+        "bytes": 1488188,
+        "sha256": "050593636764a531527c47da53823e3081d9021047ad850a8d7bc93c4586b033"
+      },
+      "assets/actors/eight_direction/original_based/sand_worm/provenance.json": {
+        "bytes": 47791,
+        "sha256": "0900f620525eda081c12f4efdc5443b46e1cc848dd083add6aaf8c0d931910b8"
+      }
+    },
+    "reaper_male": {
+      "assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres": {
+        "bytes": 23780,
+        "sha256": "9c7b0762939f8c6ec20f51924e7f2a48c55424a23fd935821182891e8a966ffd"
+      },
+      "assets/actors/eight_direction/original_based/reaper_male/poses-0.png": {
+        "bytes": 2562939,
+        "sha256": "edd95ae36fb94bbfada2bbd51ef5099a2d2949285ac3394f5f891d3e4c57fe34"
+      },
+      "assets/actors/eight_direction/original_based/reaper_male/poses-1.png": {
+        "bytes": 2269044,
+        "sha256": "a11e238abb6a35604e22927dfc52bd86651c597a82c899325041e2bc8f7a4447"
+      },
+      "assets/actors/eight_direction/original_based/reaper_male/provenance.json": {
+        "bytes": 45691,
+        "sha256": "6402666115e8f7b45ea3a7a333e8755c2c28545f575bec442026bd295db38406"
+      }
+    },
+    "iron_golem": {
+      "assets/actors/eight_direction/original_based/iron_golem/SpriteFrames.tres": {
+        "bytes": 25524,
+        "sha256": "0bd5bcc0e2b3d9c8b49f9a6424d9dafb6c05b33a8306bbb7af18e09e340bf924"
+      },
+      "assets/actors/eight_direction/original_based/iron_golem/poses-0.png": {
+        "bytes": 1921996,
+        "sha256": "fce944c4825426c9786ec13dc1b4a19442a7d8d04812721093889fe615d86e6a"
+      },
+      "assets/actors/eight_direction/original_based/iron_golem/poses-1.png": {
+        "bytes": 1647406,
+        "sha256": "158285c929040a56ec9da5fa9797e5ec117cd01e0c0fac98bf9fa4a96a3396a0"
+      },
+      "assets/actors/eight_direction/original_based/iron_golem/provenance.json": {
+        "bytes": 50266,
+        "sha256": "9a06322250d4e5a510f3f124180f524768fc5d3e696200d2d8d35c79af7d0ba1"
+      }
+    },
+    "ghoul": {
+      "assets/actors/eight_direction/original_based/ghoul/SpriteFrames.tres": {
+        "bytes": 25521,
+        "sha256": "b99d730d41806760e9d5a5fc3f6ed2da6df484043b387e775540356c6ec1e90f"
+      },
+      "assets/actors/eight_direction/original_based/ghoul/poses-0.png": {
+        "bytes": 1795557,
+        "sha256": "3a71ad41f984dceeed1718fb87874f022f95295d54a9060fa2a15947a3ab4fe2"
+      },
+      "assets/actors/eight_direction/original_based/ghoul/poses-1.png": {
+        "bytes": 1612538,
+        "sha256": "eb306d7335da0812f7143b75044ca36ae6602c5037ac12608ebc54e582f54eef"
+      },
+      "assets/actors/eight_direction/original_based/ghoul/provenance.json": {
+        "bytes": 50214,
+        "sha256": "001a0720ed11b90ebd2ef44df4d07658d5f0bafa8baa22d80dc08b95382b490d"
+      }
+    },
+    "lizard": {
+      "assets/actors/eight_direction/original_based/lizard/SpriteFrames.tres": {
+        "bytes": 25464,
+        "sha256": "c41afdd32264f8e3f554c0f99b6f980560be5e7296ad072db99b9f091df4dff5"
+      },
+      "assets/actors/eight_direction/original_based/lizard/poses-0.png": {
+        "bytes": 1583247,
+        "sha256": "d39579ee49b7e85bcd40bf07e7a376360eeaf8a5d4ce2128d88b602d756bbefb"
+      },
+      "assets/actors/eight_direction/original_based/lizard/poses-1.png": {
+        "bytes": 1118901,
+        "sha256": "5e41f456cd65eb43275735f4347979637c3ad74df4e5e3b7260aef9fb0bd1606"
+      },
+      "assets/actors/eight_direction/original_based/lizard/provenance.json": {
+        "bytes": 50581,
+        "sha256": "fc2ee4474b0cd302fdd9c03c7b1274084b0f77f1ff8c94bf9f83f6d1b6df3d6f"
+      }
+    },
+    "crabman": {
+      "assets/actors/eight_direction/original_based/crabman/SpriteFrames.tres": {
+        "bytes": 25521,
+        "sha256": "a88f0125e0cf654745029cd09f94f168a16ef8ba8297632000333e1068a45e10"
+      },
+      "assets/actors/eight_direction/original_based/crabman/poses-0.png": {
+        "bytes": 2007124,
+        "sha256": "0fcb2694c7eb0f39718967343d67b5e48b012d551c2598f66ba2b75df029ef19"
+      },
+      "assets/actors/eight_direction/original_based/crabman/poses-1.png": {
+        "bytes": 1440173,
+        "sha256": "8073044b1ad2a93aa4a038c3decd4752b0f4ca463a3d16a4cbb184c2e4985d8d"
+      },
+      "assets/actors/eight_direction/original_based/crabman/provenance.json": {
+        "bytes": 50747,
+        "sha256": "2345518b2f3d8491904e15cbb7a19b960cddcc5e645bea59ba4a68e03291c341"
+      }
+    },
+    "asitagio": {
+      "assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres": {
+        "bytes": 23759,
+        "sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f"
+      },
+      "assets/actors/eight_direction/original_based/asitagio/poses-0.png": {
+        "bytes": 1305542,
+        "sha256": "5b269be5b859636a2a8547146e4d6054711ace7559efbbc55abfcd4e021fbeee"
+      },
+      "assets/actors/eight_direction/original_based/asitagio/poses-1.png": {
+        "bytes": 1100720,
+        "sha256": "94f0a6d05a0aafe0c5ef361b4dbab39640e3777fb45325dc04b0748be8854580"
+      },
+      "assets/actors/eight_direction/original_based/asitagio/provenance.json": {
+        "bytes": 46940,
+        "sha256": "dac2f49da444e6643ffaa47f3b0bdc723b39aab6dc3b567ec69359d3807f4fa1"
+      }
+    },
+    "spear_guard_green": {
+      "assets/actors/eight_direction/original_based/spear_guard_green/SpriteFrames.tres": {
+        "bytes": 25678,
+        "sha256": "469442ca32825d8d9ba059a6ad1b77acbbdb2cf0ca973b4367a193c4be646587"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_green/poses-0.png": {
+        "bytes": 1001446,
+        "sha256": "9b3090266117a0e95caa82691d124c8c98fa3059cf5bfd2ac328d4bd1fafe624"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_green/poses-1.png": {
+        "bytes": 407262,
+        "sha256": "376542ab2be5a146da23d33aeebacb162f3a5ca4197b6dc18ab85494ee9b25b6"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_green/poses-2.png": {
+        "bytes": 1266786,
+        "sha256": "9abfdff4b278c546aed94c3c8bc57fa0e9ecd4ca99c525d2edb82e61664ddf8d"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_green/provenance.json": {
+        "bytes": 51248,
+        "sha256": "8aba3e2b71393974a0ca71100cf3c6a13b212a4ab065f26d1a6592f40587c2c2"
+      }
+    },
+    "spear_guard": {
+      "assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres": {
+        "bytes": 25666,
+        "sha256": "40f503239fcb40fa3f974d74f37edd525804de56a92e181b02296233b9320c06"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/poses-0.png": {
+        "bytes": 476446,
+        "sha256": "6d615eda6883af037402b549577bebfca2654b574ae00992b7eacd2e757dec08"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/poses-1.png": {
+        "bytes": 498807,
+        "sha256": "8ec9986aee4bd46ed7c53e4a8b8ebad1b4eded979b59cfa1e5c4b5c5f1d51ce3"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/poses-2.png": {
+        "bytes": 513603,
+        "sha256": "b7e1644c1236c88485e81f1ffeb7b6d3ddbacabdb3b900253db77824be46985e"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/provenance.json": {
+        "bytes": 51289,
+        "sha256": "bbea254bb221e3f66369ee17e1b8cef0a515b257f694f7e871df4685b1885cd3"
+      }
+    },
+    "spear_guard_red": {
+      "assets/actors/eight_direction/original_based/spear_guard_red/SpriteFrames.tres": {
+        "bytes": 25773,
+        "sha256": "c66d0bea915cf4d34d2aecc2669bb05aeedabe5e92c71d1fa66ef67e1e6c1f07"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/poses-0.png": {
+        "bytes": 513500,
+        "sha256": "2cc4512038bcddd026085d4801dd0ffc42fb0567cf6ec6512f0899af24f96721"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/poses-1.png": {
+        "bytes": 463422,
+        "sha256": "79747fe7224a188a07f36e8a5ca6b54f93f5a95745b977f4d682636b85de197f"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/poses-2.png": {
+        "bytes": 561343,
+        "sha256": "a3774590279a27b8a43a8c7ca88be111a8e44af3612bbe28853907d3ce1573c5"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/provenance.json": {
+        "bytes": 51565,
+        "sha256": "cf24dcf0ea56936620462f2ee4c3da28286cf59768b764afe83de453d8dd6e01"
+      }
+    },
+    "albino_frog": {
+      "assets/actors/eight_direction/original_based/albino_frog/SpriteFrames.tres": {
+        "bytes": 25473,
+        "sha256": "a0086663d7fd4060d75fd308ceaecd5b3c751a6fb7f62331d6ab8924ef077fca"
+      },
+      "assets/actors/eight_direction/original_based/albino_frog/poses-0.png": {
+        "bytes": 1158061,
+        "sha256": "9e30dbc5ee742b89b2450cc8d469eb6077eac709b8320c72e1d223e27789f9c5"
+      },
+      "assets/actors/eight_direction/original_based/albino_frog/poses-1.png": {
+        "bytes": 1014515,
+        "sha256": "0971d48d6fee73b99a5f0b1237b2b0d479271b70b0681d380f2ce82a0a95145d"
+      },
+      "assets/actors/eight_direction/original_based/albino_frog/provenance.json": {
+        "bytes": 52536,
+        "sha256": "8a04b1e3b0a01f7e0d2c49ee18a4c80dede931e56668326480ff49776a462bf7"
+      }
+    },
+    "fire_egg": {
+      "assets/actors/eight_direction/original_based/fire_egg/SpriteFrames.tres": {
+        "bytes": 25503,
+        "sha256": "091fc6d9ae16f7c9f201a2feb75233c62c762b67fb6c7660b0d0f9b1d8508ea2"
+      },
+      "assets/actors/eight_direction/original_based/fire_egg/poses-0.png": {
+        "bytes": 622961,
+        "sha256": "6c03d7e510d90db9c136d20ade542119dd1530567fe5df2edf64ccde5ab386f2"
+      },
+      "assets/actors/eight_direction/original_based/fire_egg/poses-1.png": {
+        "bytes": 521954,
+        "sha256": "ef75914a8e76fd471e53bacc628bdad595a208d8eec07e17c8084edc64f126e8"
+      },
+      "assets/actors/eight_direction/original_based/fire_egg/provenance.json": {
+        "bytes": 53081,
+        "sha256": "249dd4fe4074ab92c2b12494d53f6626ce01008b24cdafb46d3ee0d76624ecd3"
+      }
+    },
+    "horn_cerberus": {
+      "assets/actors/eight_direction/original_based/horn_cerberus/SpriteFrames.tres": {
+        "bytes": 25510,
+        "sha256": "4b149a0df03890cad3f6078b1d4e7b670a41d6ef8b1720c06053b2c3a1401b2b"
+      },
+      "assets/actors/eight_direction/original_based/horn_cerberus/poses-0.png": {
+        "bytes": 1652766,
+        "sha256": "b7ca0f5ecdb2bb98a27377434f08b922a2f3ec830f7c195bb8a819b726bb07ea"
+      },
+      "assets/actors/eight_direction/original_based/horn_cerberus/poses-1.png": {
+        "bytes": 1361710,
+        "sha256": "ce664da475eb0cf71d97af0c3d3bcde0812df5e2fde41c6c6ba34151657bb977"
+      },
+      "assets/actors/eight_direction/original_based/horn_cerberus/provenance.json": {
+        "bytes": 52588,
+        "sha256": "fcb26a488f053b56b11ba94c8276afb191874b279960d8d47928a8d261f4fcbf"
+      }
+    },
+    "mummy_lord": {
+      "assets/actors/eight_direction/original_based/mummy_lord/SpriteFrames.tres": {
+        "bytes": 25562,
+        "sha256": "fffb08e40b1468f3e51d048d95dc0c702e9c463ccbfce91a6e372c501c2d51be"
+      },
+      "assets/actors/eight_direction/original_based/mummy_lord/poses-0.png": {
+        "bytes": 1966968,
+        "sha256": "17227dcc079f02ddddd77cceef5408fe9a35f3e3390198238078fd0afc24ef3a"
+      },
+      "assets/actors/eight_direction/original_based/mummy_lord/poses-1.png": {
+        "bytes": 2228343,
+        "sha256": "4e560fe0cb6b96ed128eb4a340a37b0534ed2c5c11ec680ca704c6cd6463f793"
+      },
+      "assets/actors/eight_direction/original_based/mummy_lord/provenance.json": {
+        "bytes": 52476,
+        "sha256": "e63661417e6029cde39c5306e59051dc2fa6a29c27cc219a84ec41947c7814dd"
+      }
+    },
+    "seer_boss": {
+      "assets/actors/eight_direction/original_based/seer_boss/SpriteFrames.tres": {
+        "bytes": 25528,
+        "sha256": "73686979e341cf430d33bfac87465d921a171b385cabff61429e69acee81eece"
+      },
+      "assets/actors/eight_direction/original_based/seer_boss/poses-0.png": {
+        "bytes": 2468698,
+        "sha256": "657cf9adc9ea6ad3ee2daeb7ced8406f46ac728704d2fd1f21de9df12af09c42"
+      },
+      "assets/actors/eight_direction/original_based/seer_boss/poses-1.png": {
+        "bytes": 1929578,
+        "sha256": "6b72ec0d71200684cc208abf9e526fcaf4d54d396917c0c0b296f3f71fde6caf"
+      },
+      "assets/actors/eight_direction/original_based/seer_boss/provenance.json": {
+        "bytes": 52345,
+        "sha256": "1cdcc8fb7b5687a5374f9092d653b99c4b36aba99bbf998d26dfe1113bb3402c"
+      }
+    },
+    "salah": {
+      "assets/actors/eight_direction/original_based/salah/SpriteFrames.tres": {
+        "bytes": 25510,
+        "sha256": "83f39b00b3a5a64ee6c502c559bb7eff2ae9a15ed3e40d58f9f6d9eba4de2b2f"
+      },
+      "assets/actors/eight_direction/original_based/salah/poses-0.png": {
+        "bytes": 2219543,
+        "sha256": "dbb64203a29239d3d5f4f4b5f410969c8c54a24e1739e84d2a86e8d033043906"
+      },
+      "assets/actors/eight_direction/original_based/salah/poses-1.png": {
+        "bytes": 1710845,
+        "sha256": "8fdd54a0918193efb2917c75a3dc9ddb9cc8f648ebc33e7b452723b0c1ec30ea"
+      },
+      "assets/actors/eight_direction/original_based/salah/provenance.json": {
+        "bytes": 51847,
+        "sha256": "b79c03e24e33c37bb62a430d92ce0c38c14978b649a64b99555b178de241ed69"
+      }
+    },
+    "bone_dragon": {
+      "assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres": {
+        "bytes": 25517,
+        "sha256": "7707762025beb09a97622ed7934741f65e4bfa099dcadaaac9294a6a4b6a8f08"
+      },
+      "assets/actors/eight_direction/original_based/bone_dragon/poses-0.png": {
+        "bytes": 2698600,
+        "sha256": "cbe446f684e49497ba636529c40d7a116212169c81823b6032f51ac26453a29e"
+      },
+      "assets/actors/eight_direction/original_based/bone_dragon/poses-1.png": {
+        "bytes": 1781313,
+        "sha256": "74b78a8ac2c11bb08549d8beb18552e01dee8fc03ce506344280240a9b5edcb6"
+      },
+      "assets/actors/eight_direction/original_based/bone_dragon/provenance.json": {
+        "bytes": 52428,
+        "sha256": "a65425eb7566c55b8f7ee8758bdf39304f22c4c6553d21e7126450df940c03da"
+      }
+    },
+    "king_bugbear": {
+      "assets/actors/eight_direction/original_based/king_bugbear/SpriteFrames.tres": {
+        "bytes": 25470,
+        "sha256": "692af10f82c5f88d274086d1d142d6ca396e4870f593c4ed413af53c65d75f1d"
+      },
+      "assets/actors/eight_direction/original_based/king_bugbear/poses-0.png": {
+        "bytes": 1475248,
+        "sha256": "af59f1c02f0b26d5e42467317e0c7d736113f8a64f569750b11fb052e70db5db"
+      },
+      "assets/actors/eight_direction/original_based/king_bugbear/poses-1.png": {
+        "bytes": 948464,
+        "sha256": "101f59d958e25935097d9cc5daf903ade8e0cfb9cda03c8c055ad350be502787"
+      },
+      "assets/actors/eight_direction/original_based/king_bugbear/provenance.json": {
+        "bytes": 51568,
+        "sha256": "c2c79ce03452dcb670064df47a0930b2d9e58129c61214ab1037a584fd1ea4c6"
+      }
+    },
+    "ettin": {
+      "assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres": {
+        "bytes": 23767,
+        "sha256": "221ad6774c03e1e418dd8f5c9746b003b960f5fd1fc4b887d0bb812acc800c3a"
+      },
+      "assets/actors/eight_direction/original_based/ettin/poses-0.png": {
+        "bytes": 1915622,
+        "sha256": "4aef3c11f239b0bd4762d7f102e71e44bc76326249bad381d617bc185a7a570b"
+      },
+      "assets/actors/eight_direction/original_based/ettin/poses-1.png": {
+        "bytes": 1043179,
+        "sha256": "098b197d9b979ea72a9f2a585445575dd78521ed2781de62a1aa8ae7c619c53a"
+      },
+      "assets/actors/eight_direction/original_based/ettin/provenance.json": {
+        "bytes": 48462,
+        "sha256": "0d424d28f4f4cb08d77cc5fe87d6558c24df5b9d39a9eea7d6c17402809a0342"
+      }
+    },
+    "ancient_penguin": {
+      "assets/actors/eight_direction/original_based/ancient_penguin/SpriteFrames.tres": {
+        "bytes": 25464,
+        "sha256": "365e668000d78bef79dfebc314b22beadeffe9e241683b7a03443e185e7cacf0"
+      },
+      "assets/actors/eight_direction/original_based/ancient_penguin/poses-0.png": {
+        "bytes": 2517839,
+        "sha256": "013afcdb9ff091489e381b07930ac2fcfccbe3097cec083c8e80ea6b660d555f"
+      },
+      "assets/actors/eight_direction/original_based/ancient_penguin/poses-1.png": {
+        "bytes": 1255161,
+        "sha256": "8597fe98a86c5ca6b7f1442f94153071d33f2e45b449743aa961d3a31de23e6d"
+      },
+      "assets/actors/eight_direction/original_based/ancient_penguin/provenance.json": {
+        "bytes": 51058,
+        "sha256": "def663fae21669a3eb792654082ad4bc42b42b1cb377c83a119cecce117b3701"
+      }
+    },
+    "pan": {
+      "assets/actors/eight_direction/original_based/pan/SpriteFrames.tres": {
+        "bytes": 25609,
+        "sha256": "57484d435fdf1d5a288d171754ccced9038819b7c28eb237f38541b47d9cf01c"
+      },
+      "assets/actors/eight_direction/original_based/pan/poses-0.png": {
+        "bytes": 1194645,
+        "sha256": "7492e53dd7211be5672218b9acf864dbd09da02458a1c9bd29f0b5c165b82709"
+      },
+      "assets/actors/eight_direction/original_based/pan/poses-1.png": {
+        "bytes": 1825851,
+        "sha256": "a8a2329ca29699add96e9b174c8c5b2c2bfa74ee40cd0525c6dc072349a34a0d"
+      },
+      "assets/actors/eight_direction/original_based/pan/poses-2.png": {
+        "bytes": 806289,
+        "sha256": "0c199ebbcbb4d55a561b9efbd7368f26cd7af4b11186b33af596871f4160af6a"
+      },
+      "assets/actors/eight_direction/original_based/pan/provenance.json": {
+        "bytes": 53839,
+        "sha256": "1c2663ad174bdbb0d6a283dcb7fd4c16951857dfaf67813b96f353a3e65d5645"
+      }
+    },
+    "albino_giant_crab": {
+      "assets/actors/eight_direction/original_based/albino_giant_crab/SpriteFrames.tres": {
+        "bytes": 25514,
+        "sha256": "c42a182e2f9f4595fa5ad60c4e5003400565356940da4c75ba04ce6dcdc1d677"
+      },
+      "assets/actors/eight_direction/original_based/albino_giant_crab/poses-0.png": {
+        "bytes": 2341783,
+        "sha256": "c970ed8976bb891db53e675a5e8e681cd91e26866efa0cb0cdf4e63d8d67e3ee"
+      },
+      "assets/actors/eight_direction/original_based/albino_giant_crab/poses-1.png": {
+        "bytes": 1602709,
+        "sha256": "b9d53fe5e8036883db741b31d2bdf2e9fe6696824b3a0b0630f62bcaf1ed3d51"
+      },
+      "assets/actors/eight_direction/original_based/albino_giant_crab/provenance.json": {
+        "bytes": 51365,
+        "sha256": "d5d3480c3d31c5c5f28e2b2923f444ae20fca31e306a840d20afa415cb9b4ac5"
+      }
+    },
+    "kraken_transform": {
+      "assets/actors/eight_direction/original_based/kraken_transform/SpriteFrames.tres": {
+        "bytes": 25530,
+        "sha256": "ff460ef389fd4837aaad3e11ed5b7ee87cd496038b94b9e6249434db0c44c222"
+      },
+      "assets/actors/eight_direction/original_based/kraken_transform/poses-0.png": {
+        "bytes": 2601653,
+        "sha256": "ef7f5c2ecc93f3c389157602ff4b72271bee1dced6269870d51956c4f70f0338"
+      },
+      "assets/actors/eight_direction/original_based/kraken_transform/poses-1.png": {
+        "bytes": 1812892,
+        "sha256": "3f026d9735c78b8755c74541cbc9c29aa68d6ef87a003bd8c768a885aa627b03"
+      },
+      "assets/actors/eight_direction/original_based/kraken_transform/provenance.json": {
+        "bytes": 51865,
+        "sha256": "7dc5c4f00eb8138144a7f31e0267c58d1bc4cde7d979f90cbdeda69c9cda099b"
+      }
+    },
+    "snowman": {
+      "assets/actors/eight_direction/original_based/snowman/SpriteFrames.tres": {
+        "bytes": 25493,
+        "sha256": "ef61539519ee4333fe928b96d3fd45536be95f23021849e459b3d18569a8eaf3"
+      },
+      "assets/actors/eight_direction/original_based/snowman/poses-0.png": {
+        "bytes": 1742088,
+        "sha256": "36c0027cb39f4c55689ff52dff289dbb6e5f6dfef53b9bfc2e167fe505ee8608"
+      },
+      "assets/actors/eight_direction/original_based/snowman/poses-1.png": {
+        "bytes": 1342315,
+        "sha256": "0a7d2a52886f7a10c7fd75b9992d128de05cacd4e6a7013524a476a27d083a8e"
+      },
+      "assets/actors/eight_direction/original_based/snowman/provenance.json": {
+        "bytes": 51160,
+        "sha256": "bdabaabc1754b1f07ab6cc857b30f4a36caefcd5c90d65aa555055f38ff483ec"
+      }
+    },
+    "yeti": {
+      "assets/actors/eight_direction/original_based/yeti/SpriteFrames.tres": {
+        "bytes": 25505,
+        "sha256": "ef8eb934b29c8874661c5687746ef59c25de11bc6565285d1bd5527e326ff67e"
+      },
+      "assets/actors/eight_direction/original_based/yeti/poses-0.png": {
+        "bytes": 1787403,
+        "sha256": "e4191b46001381af281811fa7cc4ddc2ea93703c838ddc1c36aee00fd4cfa697"
+      },
+      "assets/actors/eight_direction/original_based/yeti/poses-1.png": {
+        "bytes": 1819234,
+        "sha256": "d3c42472cc9ed72fbffee48c183d98eb5920b60dd2602d23048a4837ea7873bb"
+      },
+      "assets/actors/eight_direction/original_based/yeti/provenance.json": {
+        "bytes": 51224,
+        "sha256": "4f3170ba655bd4b97cf966ccbfa8c7f51cb126f245af584f467d52bca1f1827f"
+      }
+    },
+    "ice_man": {
+      "assets/actors/eight_direction/original_based/ice_man/SpriteFrames.tres": {
+        "bytes": 25513,
+        "sha256": "f79d18b045a5f1d04cd62588420963dae87f57b668b87556d8b11b58cffec904"
+      },
+      "assets/actors/eight_direction/original_based/ice_man/poses-0.png": {
+        "bytes": 2475216,
+        "sha256": "da51ea20b049cd705b5925e3929246be8e20fc986c7679285ce495aaeca44bc6"
+      },
+      "assets/actors/eight_direction/original_based/ice_man/poses-1.png": {
+        "bytes": 2404956,
+        "sha256": "e5ac79015cd0237be849cb2cdba2285e336e5bab407bde8d68631c22f860ba02"
+      },
+      "assets/actors/eight_direction/original_based/ice_man/provenance.json": {
+        "bytes": 51560,
+        "sha256": "2212d691c8bc7ac8586a84a2ca4ac47b7dc0ecefe46a964f9b757a904d30e4d9"
+      }
+    },
+    "scorpion": {
+      "assets/actors/eight_direction/original_based/scorpion/SpriteFrames.tres": {
+        "bytes": 25521,
+        "sha256": "e5fb97b878bd7907b9833b07b348a1c9faff3969b5a371ec0c4192bc2627975a"
+      },
+      "assets/actors/eight_direction/original_based/scorpion/poses-0.png": {
+        "bytes": 1967332,
+        "sha256": "44b51a713f7245186b62c1e420952ca9e96863c4cbb29f1e0f30402231198a00"
+      },
+      "assets/actors/eight_direction/original_based/scorpion/poses-1.png": {
+        "bytes": 2051701,
+        "sha256": "fc0651cc0c58225e8e55ba83219cb133a27cdc7665a2f03eee756f2f84bd56fa"
+      },
+      "assets/actors/eight_direction/original_based/scorpion/provenance.json": {
+        "bytes": 51505,
+        "sha256": "bc733b7bfb9e4acf5cb8c05b746f1415f287e4f3badca4d4c09927d18b39b303"
+      }
+    },
+    "dire_wolf": {
+      "assets/actors/eight_direction/original_based/dire_wolf/SpriteFrames.tres": {
+        "bytes": 23767,
+        "sha256": "70146418979a95e8d9d2b90b9f4ba0b621caba0eb8b363d075a51cd05678ccf2"
+      },
+      "assets/actors/eight_direction/original_based/dire_wolf/poses-0.png": {
+        "bytes": 1651773,
+        "sha256": "7cf3b8f62e13dfa478bc03a25dbe72a5065f6183d23289329ccbc761772fc24f"
+      },
+      "assets/actors/eight_direction/original_based/dire_wolf/poses-1.png": {
+        "bytes": 1242922,
+        "sha256": "42ac1627132e278254bd166679215162f11f7500c02c3e583cb45314bf094a65"
+      },
+      "assets/actors/eight_direction/original_based/dire_wolf/provenance.json": {
+        "bytes": 48774,
+        "sha256": "28cd421a3a30fcde51103690b81255ddfb3a6df6c014be6907d82e4c27940520"
+      }
+    },
+    "saber_tiger": {
+      "assets/actors/eight_direction/original_based/saber_tiger/SpriteFrames.tres": {
+        "bytes": 23762,
+        "sha256": "157d8a6d6f264836cc8baa9d10bf39362005dab2a8668351b421d56772634e78"
+      },
+      "assets/actors/eight_direction/original_based/saber_tiger/poses-0.png": {
+        "bytes": 2056812,
+        "sha256": "38a911b93562e79184fe28e2b91fdd808578ced1b3844161b53d985619415e9a"
+      },
+      "assets/actors/eight_direction/original_based/saber_tiger/poses-1.png": {
+        "bytes": 1501733,
+        "sha256": "ad9e388097872f3abb6799b2fd9a00595bbaadac8ddaa49d0a39e2707bc62d01"
+      },
+      "assets/actors/eight_direction/original_based/saber_tiger/provenance.json": {
+        "bytes": 49200,
+        "sha256": "3385d1e0602da21033e9475188e645fdf86b01702904bbd4501758dfd88c1170"
+      }
+    },
+    "basilisk": {
+      "assets/actors/eight_direction/original_based/basilisk/SpriteFrames.tres": {
+        "bytes": 23731,
+        "sha256": "e9a957de8b8bc94b15d121f67339fc6056c36d7e15b63ab2f0a2ca3cc314638c"
+      },
+      "assets/actors/eight_direction/original_based/basilisk/poses-0.png": {
+        "bytes": 1511671,
+        "sha256": "d2457a4647b6a666240ccc96c99ec710b55f9fab62e045956d5ed4615ab940ce"
+      },
+      "assets/actors/eight_direction/original_based/basilisk/poses-1.png": {
+        "bytes": 1032125,
+        "sha256": "5af3d988164c0c5990983fe907774800c0510b7123eba107cca08a4850fdc252"
+      },
+      "assets/actors/eight_direction/original_based/basilisk/provenance.json": {
+        "bytes": 49238,
+        "sha256": "9ede0d5a69b736a2126ed8ee74db9d3a2a89630ed05039ce350686db62c5de28"
+      }
+    }
+  },
+  "remaining": {
+    "hero_plus": 44,
+    "normal_monster": 83,
+    "boss": 25
+  },
+  "not_completed": [
+    "Remaining152 identities including unbound albino crocodile draft",
+    "Current79-resource Android export",
+    "Actual Android device execution",
+    "Current final-commit full CI; no new full run requested during safe close"
+  ],
+  "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed.",
+  "latest_batch": "Safe close: three already authored/bound designs,288 real poses, four actual normal-monster identities validated in Main. New authoring/binding stopped on user request."
+}

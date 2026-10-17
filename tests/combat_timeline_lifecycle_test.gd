@@ -29,7 +29,8 @@ func _run() -> void:
 	root.add_child(player)
 	player.set_physics_process(false)
 	player.camera.enabled = false
-	check(player.class_sprite.sprite_frames.has_animation("attack"), "existing player attack frames imported")
+	var attack_animation: String = "attack_0" if player.class_profile.layout == "directional8" else "attack"
+	check(player.class_sprite.sprite_frames.has_animation(attack_animation), "existing player attack frames imported")
 	var hits: Array[int] = []
 	player.attack_strike.connect(func(id: int) -> void: hits.append(id))
 	# Crossing the marker and the end of recovery in one tick must render and hit once.
@@ -45,7 +46,7 @@ func _run() -> void:
 					player.motion.advance(1.0 / fps, Vector2.ZERO)
 					player.motion.apply(player.class_sprite, Vector2.ONE)
 					if hits.size() > before:
-						sampled_release = player.class_sprite.animation == "attack" and player.class_sprite.frame == 3
+						sampled_release = player.class_sprite.animation == attack_animation and player.class_sprite.frame == player.class_profile.attack_hit_frame
 				check(hits == [id], "single skipped-frame marker %s/%s/%s" % [fps, speed, style])
 				check(sampled_release and not player.motion.active, "release pose and unchanged cadence %s/%s/%s" % [fps, speed, style])
 	# Multiple physics ticks before rendering must not discard the only release pose.
@@ -53,15 +54,15 @@ func _run() -> void:
 	player.motion.advance(.11, Vector2.ZERO)
 	player.motion.advance(.11, Vector2.ZERO)
 	player.motion.apply(player.class_sprite, Vector2.ONE)
-	check(player.class_sprite.animation == "attack" and player.class_sprite.frame == 3, "release survives unsampled physics ticks")
+	check(player.class_sprite.animation == attack_animation and player.class_sprite.frame == player.class_profile.attack_hit_frame, "release survives unsampled physics ticks")
 	player.motion.advance(.01, Vector2.ZERO)
 	player.motion.apply(player.class_sprite, Vector2.ONE)
-	check(player.class_sprite.animation != "attack", "release latch clears after presentation")
+	check(player.class_sprite.animation != attack_animation, "release latch clears after presentation")
 	player.start_combat_attack(Vector2.RIGHT * 100, .1, "slash")
 	player.motion.advance(.11, Vector2.ZERO)
 	player.motion.advance(.3, Vector2.ZERO)
 	player.motion.apply(player.class_sprite, Vector2.ONE)
-	check(player.class_sprite.animation != "attack", "offscreen stale release expires")
+	check(player.class_sprite.animation != attack_animation, "offscreen stale release expires")
 	_test_reentrant_motion()
 	for status: String in ["stun", "fear", "silence"]:
 		hits.clear()

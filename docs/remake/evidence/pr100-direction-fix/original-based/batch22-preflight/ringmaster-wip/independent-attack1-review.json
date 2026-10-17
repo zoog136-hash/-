@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "target_key": "transform:357",
+  "decision": "REVIEW_HOLD_N_CONTACT_DIRECTION",
+  "source": {
+    "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.png",
+    "bytes": 2230595,
+    "sha256": "f476119a70479b2a5e0ff6cc12cdc6085fd822dbdf21693eae64c5070ae1feac",
+    "unchanged": true
+  },
+  "scope": "Independent24pose static attack review, emphasizing N/S windup→contact→recovery. No actual Main/targetbox/hitbox proof.",
+  "geometry": {
+    "result": "pass",
+    "directions_axis": "columns",
+    "logical_phases": 3,
+    "distinct_pixel_poses": 24,
+    "opaque_crop_loss_pixels": 0,
+    "foreign_body_crop": "pass with original3px padding",
+    "visible_image_border_pixels": 0,
+    "fit_canvas": 400,
+    "cross_role_or_runtime_scale_approved": false,
+    "guards_relaxed": false
+  },
+  "definite_blocker": {
+    "direction": "N",
+    "contact_phase": 1,
+    "finding": "The rear-facing body remains N, but the forward-pointing contact wand visibly extends strongly upper-right from the right grip. Its directed shaft/tip is closer to NE than N, so the required north-forward contact is not established.",
+    "approximate_source_pixel_landmarks": {
+      "grip": [
+        1737,
+        345
+      ],
+      "violet_orb_center": [
+        1767,
+        328
+      ],
+      "tip_minus_grip": [
+        30,
+        -17
+      ],
+      "angle_from_screen_up_degrees": 60.46,
+      "measurement_limit": "Manually read approximate source-image points, not rig anchors, exact component centroids or engine hitboxes."
+    },
+    "phase_sequence": "N0 raises the wand near the right shoulder; N1 thrusts diagonally right/up; N2 lowers the wand to the right. Unlike a transverse sword cut with a recorded overlapping target, these snapshots do not show the wand pointing into the N forward contact zone."
+  },
+  "south_assessment": {
+    "direction": "S",
+    "contact_phase": 1,
+    "result": "UNPROVEN_FORWARD_PROJECTION",
+    "finding": "The wand is strongly foreshortened directly in front of the chest. The violet orb/glove overlap can mean toward-camera projection, but the visible grip→tip segment does not clearly establish screen-down aim. This report does not call it a proven opposite-direction failure.",
+    "required_evidence": "A readable source-consistent projected wrist→tip direction or actual Main target contact; do not infer success only from the frontal torso."
+  },
+  "other_visual_findings": {
+    "body_directions": "All8 body views follow the guide, including N rear and S front.",
+    "source_identity": "Mask/ruff, purple-gold short jacket/puffed breeches, red stockings, dark shoes and violet-tipped wand retained. Fine mask expression remains new authoring inference.",
+    "hand_connections": "Same anatomical holding hand, attached grip/wrist/arm/wand/orb, both legs and visible soles in the inspected24poses. No hand-transfer failure found.",
+    "feet": "Wide braced contact stance with visible planted support; exact shared game ground plane remains unvalidated.",
+    "alpha": "No broad visible matte/haze/halo on proper alpha composite. Under-alpha0 RGB coloration is invisible and is not itself a failure."
+  },
+  "alpha_farther_than3px_from_alpha_gt100": {
+    "alpha_gt10_pixels": 158,
+    "alpha_gt25_pixels": 0,
+    "max_alpha": 23
+  },
+  "repair_goal_for_last_allowed_attempt": "Keep all source identity/handedness and3phase articulation. Make N contact orb visibly above its grip with minimal rightward projection and S contact orb visibly below/in front of its grip in screen-down direction. Do not edit or alpha-trim this original PNG; preserve the failed attempt.",
+  "inspection_paths": [
+    "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-attack-v1-independent.jpg",
+    "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-attack-v1-N-S-actualscale.jpg"
+  ],
+  "production_changes": false,
+  "source_PNGs_modified": 0,
+  "image_generation_performed": false,
+  "actual_Main_tested": false,
+  "completed_count_increment": 0
+}

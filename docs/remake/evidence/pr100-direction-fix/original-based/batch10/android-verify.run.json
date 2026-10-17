@@ -1,0 +1,16 @@
+{
+  "command": [
+    "python3",
+    "tools/verify_android_animation_export.py",
+    "--apk",
+    "/workspace/pr100-artifacts/TWILIGHT_PR100_ORIGINAL_BATCH10.apk",
+    "--godot",
+    "/workspace/.twilight-tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+    "--android-sdk",
+    "/workspace/.twilight-tools/android-sdk",
+    "--output",
+    "/workspace/pr100-authoring/batch10/android-validation"
+  ],
+  "exit_code": 0,
+  "seconds": 10.106791524998698
+}

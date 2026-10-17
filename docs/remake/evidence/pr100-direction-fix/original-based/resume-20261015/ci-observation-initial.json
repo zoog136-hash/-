@@ -1,0 +1,384 @@
+{
+  "observed_at_utc": "2026-10-15T13:12:57Z",
+  "repository": "zoog136-hash/-",
+  "pull_request": {
+    "number": 100,
+    "url": "https://github.com/zoog136-hash/-/pull/100",
+    "state": "open",
+    "draft": true,
+    "head_sha": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
+    "head_ref": "feature/twilight-animation-20261013",
+    "base_sha": "02842fdd123bf14db46bed91a3cb68c36fa8b9b1",
+    "mergeable": false,
+    "mergeable_state": "dirty"
+  },
+  "runs": [
+    {
+      "id": 38731518098,
+      "name": "TWILIGHT Integration Validate",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38731518098",
+      "head_sha": "031d747d34ab0df2e28361b0236e7c4ac79e2f0e",
+      "event": "workflow_dispatch",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-10-15T12:01:16Z",
+      "updated_at": "2026-10-15T12:27:28Z",
+      "job_status_counts": {
+        "in_progress": 1
+      },
+      "jobs": [
+        {
+          "id": 116410183066,
+          "name": "godot-integration",
+          "status": "in_progress",
+          "conclusion": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check out integration candidate",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install Godot 4.7.2 and software GL",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Full project regression, import, boot and all smoke tests",
+              "status": "in_progress",
+              "conclusion": null
+            },
+            {
+              "name": "Floor-loot visual, manual pickup and live AUTO regression",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Combat animation and world rendering regression",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Monster-crowd and authored-state animation regression",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Preserve Godot test evidence",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Post Check out integration candidate",
+              "status": "pending",
+              "conclusion": null
+            }
+          ]
+        }
+      ],
+      "actual_failed_jobs": []
+    },
+    {
+      "id": 38737764970,
+      "name": "Animation Presentation Validate",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38737764970",
+      "head_sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
+      "event": "workflow_dispatch",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-10-15T12:50:41Z",
+      "updated_at": "2026-10-15T12:50:45Z",
+      "job_status_counts": {
+        "queued": 29,
+        "in_progress": 1
+      },
+      "jobs": [
+        {
+          "id": 116431345142,
+          "name": "Original-based batch20 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345291,
+          "name": "presentation",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345322,
+          "name": "Original-based batchtransform-regression / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345357,
+          "name": "Original-based batch18 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345383,
+          "name": "Original-based batch16 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345438,
+          "name": "Original-based batch21 / shared engine per mode",
+          "status": "in_progress",
+          "conclusion": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify existing resource ledger",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install pinned Godot and software GL",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Import actual TWILIGHT project once",
+              "status": "in_progress",
+              "conclusion": null
+            },
+            {
+              "name": "Configured production Main cases in one headless engine",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Configured production Main cases in one OpenGL engine",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Preserve small batch diagnostics and generated saves",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Preserve every batch PNG capture separately",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "pending",
+              "conclusion": null
+            }
+          ]
+        },
+        {
+          "id": 116431345507,
+          "name": "Original-based batch15 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345557,
+          "name": "Original-based batch19 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345645,
+          "name": "Original-based Main / ogre-reaper",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345679,
+          "name": "Original-based batch17 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345698,
+          "name": "Original-based Main / cockatrice-spear",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345757,
+          "name": "Original-based Main / bugbear-sand-worm-reaper",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345791,
+          "name": "Original-based Main / succubus-field",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345808,
+          "name": "Original-based Main / succubus-regional",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345811,
+          "name": "Original-based Main / iron-golem-ghoul",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345839,
+          "name": "Original-based Main / king-bugbear-ettin",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345855,
+          "name": "Original-based Main / penguin-pan-transform",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345972,
+          "name": "Original-based Main / crabman-asitagio",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431345983,
+          "name": "Original-based Main / snowman-yeti",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346032,
+          "name": "Original-based Main / spear-guards",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346037,
+          "name": "Original-based Main / golems-cyclops",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346046,
+          "name": "Original-based Main / lizard-regional",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346072,
+          "name": "Original-based Main / frog-fire-egg",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346103,
+          "name": "Original-based Main / horn-cerberus",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346105,
+          "name": "Original-based Main / werewolf-ghost",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346151,
+          "name": "Original-based Main / bone-dragons",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346158,
+          "name": "Original-based Main / crab-kraken-transform",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346191,
+          "name": "Original-based Main / wolf-tiger-basilisk",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346224,
+          "name": "Original-based Main / harpy-lycanthrope",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        },
+        {
+          "id": 116431346236,
+          "name": "Original-based Main / salah-boss",
+          "status": "queued",
+          "conclusion": null,
+          "steps": null
+        }
+      ],
+      "actual_failed_jobs": []
+    }
+  ],
+  "latest_android": {
+    "run_id": 38722918015,
+    "url": "https://github.com/zoog136-hash/-/actions/runs/38722918015",
+    "head_sha": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+    "status": "completed",
+    "conclusion": "success",
+    "job": "build-android-apk",
+    "device_runtime_verified": false
+  },
+  "head_checks": {
+    "check_runs": 0,
+    "commit_statuses": 0
+  },
+  "notes": [
+    "Current integration and presentation have no completed verdict and must not be recorded as passing.",
+    "Current integration job log API returned BlobNotFound while job was in progress; no live logs were available.",
+    "No rerun, cancellation, dispatch, commit, or PR mutation performed."
+  ]
+}

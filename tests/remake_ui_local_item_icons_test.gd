@@ -42,9 +42,27 @@ func _run() -> void:
 		check(provenance.get("status","") == "inven_visual_alias" and provenance.get("source_id","") == "","visual alias does not claim publisher item identity: "+item_name)
 		check(RESOLVER.describe({"name":item_name,"sourceId":"unknown-publisher-id"},item_name).path == "","explicit unknown source cannot borrow local art: "+item_name)
 	check(observed.size() == LOCAL_POTIONS.size(),"all three real starter potion slots were inspected")
-	var ruby: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전"},"드래곤의 루비",{"드래곤의 루비":POTION_PATH})
-	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index" and ruby.status == "bundled_ui_art","pre-rework ruby link restored without claiming original source art")
-	check(not str(ruby.path).is_empty() or ruby.family == "gem","unlinked ruby uses an explicit gem fallback")
+	# world._load_data retains this explicit pre-rework UI index link. It is
+	# bundled placeholder art, never evidence of publisher-original ruby art.
+	var ruby_record: Dictionary = {"name":"드래곤의 루비","type":"축복충전"}
+	var ruby_before: String = JSON.stringify(ruby_record)
+	var legacy_images: Dictionary = hud.item_image_index.get("아이템",{})
+	# The current item loader deliberately removes the misleading ruby->HP
+	# potion stock icon. Do not restore a false visual identity in production.
+	check(not legacy_images.has("드래곤의 루비"),"production rejects the false ruby-as-HP-potion icon identity")
+	var current_ruby: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name,legacy_images)
+	check(current_ruby.path == "" and current_ruby.family == "gem" and current_ruby.status == "self_authored_substitute","ruby uses an honestly identified gem symbol without an explicit verified image")
+	# Separately retain the resolver's backward-compatible, caller-supplied
+	# exact-name link recovery without pretending it is publisher art.
+	var explicit_legacy: Dictionary = {"드래곤의 루비":POTION_PATH}
+	var ruby: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name,explicit_legacy)
+	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index","explicit legacy ruby index remains recoverable")
+	check(ruby.status == "bundled_ui_art" and ruby.source_id == "","explicit ruby placeholder never claims verified original art")
+	check(RESOLVER.texture(ruby_record,ruby_record.name,explicit_legacy) == load(POTION_PATH),"explicit ruby link resolves its actual preserved bundled texture")
+	var unindexed: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name)
+	check(unindexed.path == "" and unindexed.family == "gem","ruby without an explicit image link receives its appropriate family symbol")
+	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,legacy_images).path == "","an explicit unknown ruby ID cannot borrow the name-only index")
+	check(JSON.stringify(ruby_record) == ruby_before,"ruby visual lookup preserves the existing item record")
 	var borrowed: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전","sourceId":"local-unverified","image_path":POTION_PATH},"드래곤의 루비")
 	check(borrowed.path == POTION_PATH and borrowed.source_id == "local-unverified" and borrowed.status == "original_review_pending","explicit record art keeps unknown-source provenance instead of claiming original art")
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))

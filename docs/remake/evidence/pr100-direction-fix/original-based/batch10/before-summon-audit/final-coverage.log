@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/TWILIGHT/tools/audit_eight_direction_coverage.py", line 265, in <module>
+    main()
+  File "/workspace/TWILIGHT/tools/audit_eight_direction_coverage.py", line 236, in main
+    attach_gameplay_evidence(result, rows, args.gameplay_report, args.output_dir)
+  File "/workspace/TWILIGHT/tools/audit_eight_direction_coverage.py", line 212, in attach_gameplay_evidence
+    raise ValueError("Incomplete recorded gameplay case: " + str(path))
+ValueError: Incomplete recorded gameplay case: /workspace/TWILIGHT/docs/remake/evidence/pr100-direction-fix/original-based/batch10/original_based_salah_gameplay_test-headless.json

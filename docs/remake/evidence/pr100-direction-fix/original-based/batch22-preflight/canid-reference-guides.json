@@ -1,0 +1,145 @@
+{
+  "source_bytes_unchanged": true,
+  "guides": [
+    {
+      "target_key": "monster:말하는 섬 들개",
+      "source_reference_unmodified": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          21,
+          328,
+          278
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "7075ede23ffc3ca4db20236c24d1776a78209d05cedfd9f10452e208c26c4072"
+      },
+      "guide_kind": "Non-mutating authoring focus; production reference region and bytes stay unchanged",
+      "coordinate_convention": "xywh integers; relative positions are relative to the existing reference region",
+      "focus_bbox_relative_xywh": [
+        49,
+        24,
+        201,
+        231
+      ],
+      "focus_bbox_atlas_xywh": [
+        49,
+        45,
+        201,
+        231
+      ],
+      "primary_bbox_relative_xywh": [
+        55,
+        30,
+        189,
+        219
+      ],
+      "excluded_neighbor_regions_relative_xywh": [
+        [
+          316,
+          94,
+          12,
+          88
+        ],
+        [
+          133,
+          266,
+          52,
+          12
+        ],
+        [
+          196,
+          262,
+          35,
+          16
+        ]
+      ],
+      "primary_alpha_gt100_pixels_retained": 16652,
+      "primary_alpha_gt100_total": 16652,
+      "primary_clear_of_reference_edges": true,
+      "visual_reason": "Whole head/snout/ears, four connected legs/paws, torso and full tail are visible inside the primary silhouette; distant pieces at raw-region margins belong to neighboring atlas cells. Focus retains complete primary without inventing missing anatomy.",
+      "status": "READY_FOR_SMALL_RISK_TRIAL",
+      "secondary_large_component_pixels_inside_focus": 0,
+      "microcomponent_pixels_retained_inside_focus": 5,
+      "microcomponent_review_note": "Isolated one/few-pixel fur/antialias detail near the primary silhouette remains in the guide; no image pixels were deleted or relabelled."
+    },
+    {
+      "target_key": "monster:검은숲 늑대",
+      "source_reference_unmodified": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          0,
+          929,
+          317,
+          284
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "2fa29d922c8c7241cd7f69d6324462fd3ea7eee91a4545da0c9ff86be5b8a305"
+      },
+      "guide_kind": "Non-mutating authoring focus; production reference region and bytes stay unchanged",
+      "coordinate_convention": "xywh integers; relative positions are relative to the existing reference region",
+      "focus_bbox_relative_xywh": [
+        12,
+        44,
+        285,
+        230
+      ],
+      "focus_bbox_atlas_xywh": [
+        12,
+        973,
+        285,
+        230
+      ],
+      "primary_bbox_relative_xywh": [
+        16,
+        48,
+        277,
+        222
+      ],
+      "excluded_neighbor_regions_relative_xywh": [
+        [
+          299,
+          58,
+          18,
+          55
+        ],
+        [
+          78,
+          0,
+          6,
+          11
+        ],
+        [
+          57,
+          0,
+          4,
+          6
+        ]
+      ],
+      "primary_alpha_gt100_pixels_retained": 34151,
+      "primary_alpha_gt100_total": 34151,
+      "primary_clear_of_reference_edges": true,
+      "visual_reason": "Whole head/snout/ears, four connected legs/paws, torso and full tail are visible inside the primary silhouette; distant pieces at raw-region margins belong to neighboring atlas cells. Focus retains complete primary without inventing missing anatomy.",
+      "status": "READY_FOR_SMALL_RISK_TRIAL",
+      "secondary_large_component_pixels_inside_focus": 0,
+      "microcomponent_pixels_retained_inside_focus": 1,
+      "microcomponent_review_note": "Isolated one/few-pixel fur/antialias detail near the primary silhouette remains in the guide; no image pixels were deleted or relabelled."
+    }
+  ]
+}

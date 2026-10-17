@@ -1,0 +1,2630 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_2.png",
+    "region": [
+      611,
+      321,
+      305,
+      322
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 2,
+    "cell": 6,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+    "image_size": [
+      1222,
+      1287
+    ],
+    "region_rgba_sha256": "194964542da85e57d097e1add3c84d9f9bfee3b0603980abf0fcc01f36b422a8"
+  },
+  "target_keys": [
+    "monster:풍룡의 둥지 태풍수호자"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 2,
+      "cell": 6,
+      "body": "wind",
+      "variant": 4,
+      "width": 0.946,
+      "weapon": "staff",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": true
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:풍룡의 둥지 태풍수호자": {
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "region": [
+        611,
+        321,
+        305,
+        322
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 2,
+      "cell": 6,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "image_size": [
+        1222,
+        1287
+      ],
+      "region_rgba_sha256": "194964542da85e57d097e1add3c84d9f9bfee3b0603980abf0fcc01f36b422a8"
+    }
+  },
+  "target_presentations": {
+    "monster:풍룡의 둥지 태풍수호자": {
+      "visual": {
+        "atlas": 2,
+        "cell": 6,
+        "body": "wind",
+        "variant": 4,
+        "width": 0.946,
+        "weapon": "staff",
+        "crest": 4,
+        "accent": "8daa7b"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "attack-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate a production-quality transparent-background 2D game sprite animation contact sheet of the original PALE MINT-GREEN AND WHITE WIND ELEMENTAL in reference image 1, matching the newly authored idle/movement design in reference image 2. Preserve angular demonic wind-face, wispy sharp crest, long muscular arms and claws, swirling continuous torso merging into a connected tapering tornado base on the ground. No legs, no ice statue, no separate torso, no disconnected fragments. Rich but small-scale painted game sprite shading. These are NEWLY AUTHORED motion poses, not original extracted animations.\n\nEXACT GRID 8 COLUMNS x 3 ROWS, exactly 24 completely isolated small sprites. One figure centered in each of the 24 equal cells. Wide landscape image. Each full figure at most 42 percent of cell width and 58 percent of cell height, surrounded by generous transparent gutters, aim 60 pixels clearance. Every head tip, hand, claw and tornado base completely inside its own cell. Do not crop or merge sprites. No text, numbers, grid, shadows, background or detached particles. Completely transparent background.\n\nColumns left to right are E (full RIGHT profile), SE (FRONT-right three-quarter), S (FRONT), SW (FRONT-left three-quarter), W (full LEFT profile), NW (BACK-left three-quarter), N (pure BACK, frontal face not visible), NE (BACK-right three-quarter). Use genuinely different depth views, no copied or mirrored body. The visible face must point to the stated column direction. All active attack gestures must extend TOWARD the direction faced: E right, SE down-right, S down toward viewer, SW down-left, W left, NW up-left, N up away from viewer, NE up-right. Sideways screen gestures on the N or S view are wrong.\n\nROW 1 ATTACK WINDUP: bend both elbows deeply and bring both hands close together by the upper chest, palms cupped inward gathering wind, shoulders pull back, torso tilts slightly backward. Fingers curl. Funnel base grounded and compressed to brace. Clearly NOT relaxed hanging arms.\nROW 2 ATTACK IMPACT: commit entire shoulders and elbows into a strong two-handed forward thrust in the exact compass direction. Arms straighten, both open palms reach towards the target well beyond the chest, torso leans forward and rotates powerfully. In N view hands point away from viewer and are mostly obscured by back; in S view palms reach toward viewer with foreshortening. Do not show a beam or magic ball: the game supplies the detached projectile. Only character body.\nROW 3 ATTACK RECOVERY: both elbows retract and lower, one hand at lower chest, other arm halfway returning toward hanging, torso recoils toward upright with a slight opposite twist. Vortex shape returns from compressed to broad steady grounded spiral. Clearly distinct from both windup and impact and from idle.\n\nStrong pose/silhouette differences between the 3 rows are essential. Actual shoulders, elbows, wrists and torso articulation; NEVER just translate/scale the same still. All body wisps stay coherent and connected, preserve full fingers. Keep a stable ground contact baseline and creature scale. Exactly 24 independent complete full-body sprites, sparse layout. Alpha transparency.\n\ndeath-attempt2.prompt.txt EXACT ISSUED PROMPT:\nCreate EXACTLY 24 independent small sprites in an 8-COLUMN by 3-ROW sprite sheet on a completely TRANSPARENT alpha background. The attached first reference is the original wind elemental. Attached second reference is the approved idle design. Attached third reference had only four rows and its bottom row is NOT YET DEAD: do not repeat that standing or tall mound as a terminal corpse. This new sheet contains ONLY DEATH animation, THREE distinct phases, eight camera directions.\n\nFaithfully preserve the original creature: white and pale mint-green flowing wispy body, angular fierce face under swept crest, two long arms ending in sharp curled fingers, continuous torso merging into broad tapering tornado base; NO human legs, no disconnected limbs, no particles or effects. Painted pixel-game sprite shading, same original features. NEWLY AUTHORED 2D poses, not 3D.\n\nEight equal columns left to right: E (RIGHT profile), SE (front-right), S (FRONT), SW (front-left), W (LEFT profile), NW (back-left), N (straight BACK with absolutely no frontal face or eyes), NE (back-right). View direction stays recognizable from head/face orientation, shoulder axis and which back surface is visible. Do not simply mirror repeated figures. No grid, labels, text, shadows, background or ground plane.\n\nTHREE rows only, exactly eight figures per row:\nROW 1 START DYING: torso crumples FORWARD deeply in its facing direction. Head hangs downward, shoulders sink, elbows buckle and hands almost touch ground. The actual connected tornado body SLUMPS, bends and widens; height 65 percent of standing. A bent creature beginning to fall, not uniformly scaled upright.\nROW 2 COLLAPSE: head and chest FALL FLAT close to the ground and arms fold under and beside the torso. Broad soft continuous wind coils pool around the fallen torso. Height 35 percent of standing. Shoulders no longer upright. Show bent elbows, limp fingers, drooping crest. Body is a collapsed heap, not a smaller living tornado.\nROW 3 DEAD FINAL CORPSE: creature fully prone and flattened on the GROUND. Very LOW broad collapsed wind-body, height ONLY 15-20 percent of standing, roughly as wide as original shoulder span. Face turned sideways down onto coil, unlit eyes, crest droops horizontally, relaxed hands rest on ground beside the flattened coherent torso. Back views show flattened rear wind coils with head and arms collapsed. No standing cone, no floating vortex or halo, no portal, no empty frame, no separate shadow. Keep substantial visible nonempty dead body. Different articulation from row 2, not a translated or scaled copy.\n\nExactly 24 SMALL full-body sprites in 8x3 equal-cell layout. Figure no wider than 42 percent of cell width, and no taller than 58 percent of cell height. At least 60 pixels of empty space between figures where possible, generous transparent margins. All head tips, hands, base and corpse pixels fully inside each cell, no cropping or touching/merging neighbors. All figures sit at identical ground baseline WITHIN their own row cells; flattened death poses remain at bottom baseline, do not float in cell middle. Strong anatomical changes in each row, coherent connected body. Entire canvas alpha transparent.\n\nhit-attempt2.prompt.txt EXACT ISSUED PROMPT:\nCreate EXACTLY 16 independent small complete sprites, EXACT GRID EIGHT COLUMNS by TWO ROWS, transparent alpha background. This is ONLY the HIT REACTION animation for the original mint-green and white wind elemental in the first reference, matching newly authored idle design in second reference. Preserve pointed demonic wind-face, flowing wispy crest, two long muscular arms and clawed fingers, continuously swirling torso tapering to an unbroken broad grounded tornado base. No human legs, detached torso, wind particles or effects. Original painted game sprite style, same source colors and unique features. Newly authored 2D motion, no 3D.\n\nONE creature per cell. Very sparse grid, figure width no more than 42 percent cell, height no more than 58 percent cell, generous 60 pixel gutters wherever possible. All tips, claws and base visible, no figure cut off or touching neighbors. No text, grid, labels, shadows, background or floor. True alpha transparent canvas.\n\nEight columns left to right: E = exact RIGHT profile; SE = front-right three-quarter; S = straight FRONT; SW = front-left three-quarter; W = exact LEFT profile; NW = BACK-left three-quarter; N = pure BACK, NO frontal face or eyes; NE = BACK-right three-quarter. Rotate entire body depth consistently, never mirror or copy a still. Face/chest/shoulders agree on direction even during recoil.\n\nROW 1 HIT INITIAL RECOIL: creature jolts BACK away from the direction faced; head and shoulders thrown back, neck/torso curve backwards, one forearm raised across upper chest/lower face protectively and other elbow flares outward. Hands clenched slightly. Wind-base compresses but remains coherent and grounded.\nROW 2 HIT RECOVERY: head drops FORWARD and torso curls forward, forearm lowers from face to lower sternum, opposite hand reaches down and forward, elbows noticeably lower, shoulders twist opposite to row 1. Body resumes upright balance while base widens. These are clearly different silhouettes and actual head/shoulder/elbow/wrist articulation, not translated or resized versions of the same drawing.\n\nStable full standing body scale and ground baseline across both rows, no detached fragments. Exactly 16 complete wind-creature sprites in 8x2 layout, nothing else. Transparent alpha background.\n\nhit-death-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate a production-quality transparent-background 2D RPG sprite sheet based closely on the original pale mint-green/white wind elemental in reference image 1 and matching the small creature design in reference image 2. This monster has an angular demonic face, swept wispy crest, long arms and claws, continuously swirling torso ending in an unbroken tornado base. No human legs and no disconnected body parts. Preserve original soft mint-green and white painted pixel-art/game-sprite style. These are newly authored motion poses.\n\nEXACT GRID 8 columns x 5 rows. Exactly 40 small complete isolated sprites. One figure in each equal cell. Output wide landscape at high resolution. SMALL figures with all limbs and every wisp inside their own cell, lots of empty transparent gutters. Figure maximum width 42 percent of each cell, maximum height 58 percent of cell. Around 60 pixels padding where possible. No text, grid, labels, shadows, particles, effects, debris or extra figures. Fully transparent alpha background.\n\nColumns left to right E exact RIGHT profile, SE FRONT-right three-quarter, S straight FRONT toward viewer, SW FRONT-left three-quarter, W exact LEFT profile, NW BACK-left three-quarter, N straight BACK away from viewer with no visible frontal eyes/face, NE BACK-right three-quarter. True rotated camera views, not copied/mirrored stills. Head, chest, shoulders and arms all agree on that facing. Preserve those column directions throughout all 5 rows even while recoiling or dying.\n\nFive rows top to bottom. Distinct REAL articulated action poses, not translated/scaled copies:\n1 HIT A: sharp recoil from a frontal strike. Shoulders tip BACK away from faced direction, head jerks backward, one forearm crosses lower face, other elbow flares outward, coherent base compressed and braced on ground. Torso and arms bent.\n2 HIT B: recovery/recoil continuation, torso folds forward slightly, crossed forearm lowers toward sternum while other arm hangs half raised; shoulders twist the opposite way. Head lowers toward faced direction. Distinct from row 1, no pose duplication.\n3 DEATH A: body beginning to crumple. Head pitches downward, elbows buckle, both hands sink close to ground, torso bends deeply forward. Tornado cone visibly slumps and widens at its grounded base. Total height about 65 percent of standing height; actual anatomical bend, not uniform shrinking.\n4 DEATH B: body collapses further into a broad compact low coiled heap on ground. Shoulders and head folded over the base, long arms bent and piled beside torso; face close to ground for front views, rear crest visible for back views. Total height about 40 percent of standing height; wide grounded coherent silhouette, no standing tornado.\n5 DEATH C TERMINAL: unmistakably dead fully collapsed low wind-body lying on the ground in a still flattened connected pale mint-green coil. Crest and head droop sideways, visible relaxed hands lie against the low torso/base, face eyes dim, back views show flattened rear coil. Total height only 20 percent of standing height and width about the standing shoulder span. This is a substantive nonempty coherent DEAD BODY, not an empty frame, upright floating tornado, portal, ground shadow, debris or disappearing particles. Lowest pixels at the SAME ground baseline as preceding rows. No fake uniform scaling of living figure.\n\nEverything must stay one coherent connected body from head through torso to grounded wind base, except naturally open gaps between bent arms. No detached wind fragments. Full 40 figures and clear silhouettes, sparse layout. Preserve source identity in every pose. Terminal death is flattened dead body on ground. Alpha transparent.\n\nidle-walk-attempt1.prompt.txt EXACT ISSUED PROMPT:\nCreate a production-quality transparent-background 2D game sprite animation contact sheet based closely on the attached exact original wind elemental creature. NEWLY AUTHORED poses; preserve the original pale mint-green/white wispy painted pixel-art shading, distinct angular demonic face and long muscular swirling arms merging seamlessly into a continuous torso and broad funnel-shaped swirling tornado base touching the ground. No human legs, no separate feet, no separated torso. This is a wind elemental, not a person and not an ice statue. Readable arms, hands, palms, sharp white flow lines. No detached wind fragments, no particles or shadows.\n\nEXACT GRID: 8 equal-width columns by 5 equal-height rows. Output wide landscape image at highest available resolution. Exactly 40 isolated complete figures, exactly one per cell. Each figure occupies at most 42 percent of its cell width and 58 percent of its cell height. Lots of entirely transparent padding, at least 60 pixels separation wherever possible. Every entire head tip, arm, claw and tornado base visible within its own cell. No labels, no gridlines, no text, no extra poses, no overlaps, no cropping, no ground plane.\n\nCOLUMNS left to right are these eight TRUE camera views: E = face looking RIGHT exact side profile; SE = face looking down-right three-quarter front; S = FRONT face looking toward viewer; SW = face looking down-left three-quarter front; W = face looking LEFT exact side profile; NW = three-quarter BACK facing up-left, rear torso dominant; N = pure BACK completely away from viewer, NO visible frontal face; NE = three-quarter BACK facing up-right, rear torso dominant. Rotate the whole body in depth, not the image plane; do not mirror a single figure to fill columns. Correct direction of face, chest, shoulders and arms matters. Exact same character proportions across cells. Broad tornado-base grounded contact at same baseline in all 40 cells.\n\nROWS top to bottom, each row retains the column camera view and creates a GENUINELY DIFFERENT articulated pose:\n1 Idle A: relaxed wide hanging arms, neutral forward chest, low gently spiralling base.\n2 Idle B: chest subtly lifts and both elbows flex outward, wrists curl inward, head angles slightly toward target, base has visibly different coherent spiral flow. This is a distinct breathing pose not a translated duplicate.\n3 Travel A: continuous tornado base pushes toward its facing direction, left arm swings forward and right arm swings back, torso twists toward the left shoulder; connected body stays grounded.\n4 Travel B: opposite arm swing, right arm forward and left arm back with opposite torso twist, visible distinct coil phase in the coherent base. An actual alternating locomotion pose, not rescaled or shifted row 3.\n5 Travel C: arms return through mid-swing, torso leans toward facing direction, funnel base wider lower compression on the ground. Continuous anatomy and distinct silhouettes.\n\nKeep wind flow wisps part of the single connected body; nothing detached. Do not paint a floating base: lowest vortex must touch the same ground baseline. Preserve original anatomy and long fingers. Tiny detailed game sprites placed very sparsely across exact grid, not large portraits. Transparent alpha background is required. All 40 figures must be fully bounded and independent.",
+  "instruction_record_kind": "exact prompts saved before each generation; one rejected 32-pose output preserved separately and not counted",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "cast_uses_authored_attack": true,
+    "notes": "Author reviewed complete source-reference wind anatomy, pale mint-green/white palette, angular face, clawed long arms and continuously attached torso/vortex without human legs. E/W are opposing side profiles, S frontal face and N rear crest/body without frontal face; NW/NE show rear three-quarter anatomy. Idle elbow/wrist lift and chest flow, alternating travel arm/torsal/vortex bends, gathered-hands→facing-forward two-hand magic strike→retraction, defensive recoil→lowered forward recovery and three-stage slumped/flattened coherent dead body are newly authored distinct poses. All104 source frames mapped exactly once to five mandatory roles, no threshold/count relaxation. Separate hit-death32-pose output rejected because 40 requested, no use or counted poses. Strict geometry/complete-source-region and cross-sheet visible uniqueness PASS. Anchors from actual alpha>100 base bottoms; secondary canvas752 selected from frontal eye-pair anatomical scale (~13px idle versus~19px attack/hit/death first phases, manual±2px). It is not based on collapsed body height. Original project atlas retained unchanged; supplemental whole-body context used only for authoring the missing head tip. Original record magic/floatingtrue/height86/attack_hit_ratio0.52 must remain. Spell gesture may serve cast action without extra claimed pixels. Independent visual QA, Main eight-direction five-role playback/combat/death/drop/pickup, uniform display scale and ground-contact review remain pending. No runtime/profile/maps changed; no completion claim. Independent static QA approved all104/8compass/5roles and head landmark normalization for actual Main. Faint source-edge antialias recorded, no sourcepixels/thresholds changed. Optional cast alias omitted to preserve established monster attack_N fallback and existing exact normal-AI assertions."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        28,
+        27,
+        143,
+        171
+      ],
+      "margin": [
+        181,
+        153,
+        369,
+        341
+      ],
+      "source_anchor": [
+        103,
+        194
+      ],
+      "rgba_sha256": "14aff5e4dbba626b9f69cb97e2b1ffff529cf3653f5054ff9a281c10e19186cf",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        208,
+        30,
+        159,
+        168
+      ],
+      "margin": [
+        176,
+        156,
+        353,
+        344
+      ],
+      "source_anchor": [
+        288,
+        194
+      ],
+      "rgba_sha256": "1540f740c96fd089eb98d12bcdbd4a29eed3bfdb1ccf296484d7d8aaca0f7d3e",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        398,
+        27,
+        167,
+        172
+      ],
+      "margin": [
+        173,
+        152,
+        345,
+        340
+      ],
+      "source_anchor": [
+        481,
+        195
+      ],
+      "rgba_sha256": "64e18732911fb2c98e62d51c90ed35653b260e8aa74cdeafbc7c0fc672948005",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        593,
+        29,
+        162,
+        169
+      ],
+      "margin": [
+        179,
+        155,
+        350,
+        343
+      ],
+      "source_anchor": [
+        670,
+        194
+      ],
+      "rgba_sha256": "79029cc6b4f79cf47f579c56c9e9c5103a2f44180672cfd43def90a6a0407b0a",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        789,
+        29,
+        143,
+        169
+      ],
+      "margin": [
+        191,
+        155,
+        369,
+        343
+      ],
+      "source_anchor": [
+        854,
+        194
+      ],
+      "rgba_sha256": "ee5d81ae55ce6262dd9978fb49c94f77d7165c64d58f9d13e09c2d76c1c27b49",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        972,
+        29,
+        164,
+        169
+      ],
+      "margin": [
+        168,
+        155,
+        348,
+        343
+      ],
+      "source_anchor": [
+        1060,
+        194
+      ],
+      "rgba_sha256": "a2da02bc36e66cb5db66656e7db431828ddff07f2cc19eec09b087bb36afc832",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1166,
+        29,
+        172,
+        169
+      ],
+      "margin": [
+        172,
+        155,
+        340,
+        343
+      ],
+      "source_anchor": [
+        1250,
+        194
+      ],
+      "rgba_sha256": "80bb164030b28229741eeab176985bee030c943d9d455ee2c0e2c9409ccec9f7",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1365,
+        28,
+        153,
+        170
+      ],
+      "margin": [
+        187,
+        154,
+        359,
+        342
+      ],
+      "source_anchor": [
+        1434,
+        194
+      ],
+      "rgba_sha256": "a062b5605bb3f091f2d2ba0844abe6184b2424ebaef013ce28030c72a133a604",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        27,
+        224,
+        155,
+        175
+      ],
+      "margin": [
+        180,
+        149,
+        357,
+        337
+      ],
+      "source_anchor": [
+        103,
+        395
+      ],
+      "rgba_sha256": "54393dc9e1e1380949fdb7e7abce652f29e87868abe245d09199aee80b383747",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        209,
+        227,
+        164,
+        172
+      ],
+      "margin": [
+        179,
+        152,
+        348,
+        340
+      ],
+      "source_anchor": [
+        286,
+        395
+      ],
+      "rgba_sha256": "7fa6f6b9d8f1b4f85172e086dcc8952ecec072e38a6a98ddd7bfc549ccd2de73",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        397,
+        224,
+        168,
+        175
+      ],
+      "margin": [
+        171,
+        149,
+        344,
+        337
+      ],
+      "source_anchor": [
+        482,
+        395
+      ],
+      "rgba_sha256": "6191e3c34fb1a9e4dd5a31b216879209070a2134d42f1c70880ebcc5432898fb",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        588,
+        227,
+        165,
+        172
+      ],
+      "margin": [
+        172,
+        152,
+        347,
+        340
+      ],
+      "source_anchor": [
+        672,
+        395
+      ],
+      "rgba_sha256": "96aa1e0d62dcd23b6a8b57bb42c1dceb8d49b98a692cd29e8f6f17f241a853cd",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        779,
+        227,
+        154,
+        172
+      ],
+      "margin": [
+        181,
+        152,
+        358,
+        340
+      ],
+      "source_anchor": [
+        854,
+        395
+      ],
+      "rgba_sha256": "c5a1c55fe54797d1577fd673860b6622189f5abf00385252e42e747c2c4c327d",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        974,
+        226,
+        163,
+        172
+      ],
+      "margin": [
+        163,
+        152,
+        349,
+        340
+      ],
+      "source_anchor": [
+        1067,
+        394
+      ],
+      "rgba_sha256": "5abeeb09ecfe979d034853b1bc5cc583270bac5a9fa35c6ed2db8a5107b09dea",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1164,
+        226,
+        174,
+        172
+      ],
+      "margin": [
+        172,
+        152,
+        338,
+        340
+      ],
+      "source_anchor": [
+        1248,
+        394
+      ],
+      "rgba_sha256": "5ac7a126eb380ff8a81e5a244062a542b84d3f81addac33ff37533674165bfad",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1364,
+        226,
+        160,
+        172
+      ],
+      "margin": [
+        190,
+        152,
+        352,
+        340
+      ],
+      "source_anchor": [
+        1430,
+        394
+      ],
+      "rgba_sha256": "ce317767425c39d1ba32af217f0579dc1a3951838f1046e1d019acc328680984",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        23,
+        424,
+        154,
+        172
+      ],
+      "margin": [
+        198,
+        152,
+        358,
+        340
+      ],
+      "source_anchor": [
+        81,
+        592
+      ],
+      "rgba_sha256": "ab9126dba60e545ce8b04345d113be341d3bdb7b7a6a5d4e24272e460e20746f",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        200,
+        427,
+        168,
+        168
+      ],
+      "margin": [
+        185,
+        156,
+        344,
+        344
+      ],
+      "source_anchor": [
+        271,
+        591
+      ],
+      "rgba_sha256": "783e87d01f32c26ffcb16d07a2aee81e49c53f257708f80d875c3d26783b94ea",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        402,
+        424,
+        161,
+        172
+      ],
+      "margin": [
+        174,
+        152,
+        351,
+        340
+      ],
+      "source_anchor": [
+        484,
+        592
+      ],
+      "rgba_sha256": "3ce23e063f02d8b7d85947a73f7d71206d882bb2f13d2384d837562ce512c058",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        595,
+        426,
+        167,
+        169
+      ],
+      "margin": [
+        161,
+        155,
+        345,
+        343
+      ],
+      "source_anchor": [
+        690,
+        591
+      ],
+      "rgba_sha256": "b740cfe1395c1e1ce9b4c3a44f414a5fd50fa45fb7f65cfd7e0cabd2c4566424",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        783,
+        425,
+        152,
+        170
+      ],
+      "margin": [
+        161,
+        154,
+        360,
+        342
+      ],
+      "source_anchor": [
+        878,
+        591
+      ],
+      "rgba_sha256": "a11a77dfbbcca6767f5ab515579a9fcf2896926c09d8de1faa1aa137254f1cdc",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        968,
+        425,
+        169,
+        170
+      ],
+      "margin": [
+        158,
+        154,
+        343,
+        342
+      ],
+      "source_anchor": [
+        1066,
+        591
+      ],
+      "rgba_sha256": "8677dbd0af26ac905e7cfa874fc9015060435e336605b4e2d2f98ca12b216596",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1160,
+        424,
+        177,
+        171
+      ],
+      "margin": [
+        168,
+        153,
+        335,
+        341
+      ],
+      "source_anchor": [
+        1248,
+        591
+      ],
+      "rgba_sha256": "1ee73b3573c9aa14a2ad8812a4f6c446097ce415883daac93538695ac18747e5",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1360,
+        424,
+        167,
+        172
+      ],
+      "margin": [
+        187,
+        152,
+        345,
+        340
+      ],
+      "source_anchor": [
+        1429,
+        592
+      ],
+      "rgba_sha256": "8ac54e146092e9fb84a2bf5bc56e9b45d62b9c5be1db06844bc3ccf86ba06ba4",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        28,
+        622,
+        156,
+        169
+      ],
+      "margin": [
+        206,
+        155,
+        356,
+        343
+      ],
+      "source_anchor": [
+        78,
+        787
+      ],
+      "rgba_sha256": "e3ac834f6de8d422d3ebecf18195a19e6ec633246b31ec4ebad59a02c82fa4bb",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        217,
+        622,
+        158,
+        170
+      ],
+      "margin": [
+        201,
+        154,
+        354,
+        342
+      ],
+      "source_anchor": [
+        272,
+        788
+      ],
+      "rgba_sha256": "970e90f02aae2481e52b103743113c45773a1402ff798bebc8011316ed80a1ac",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        403,
+        622,
+        160,
+        170
+      ],
+      "margin": [
+        173,
+        154,
+        352,
+        342
+      ],
+      "source_anchor": [
+        486,
+        788
+      ],
+      "rgba_sha256": "2d5c32467a92584c630886a4e1df60ed88db3b7f8d28362a8daf1023ddcbf040",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        586,
+        623,
+        158,
+        169
+      ],
+      "margin": [
+        158,
+        155,
+        354,
+        343
+      ],
+      "source_anchor": [
+        684,
+        788
+      ],
+      "rgba_sha256": "4a4081c0fb418c986d108741c00020d8c8820ad91dbd489dea11f16985715747",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        778,
+        622,
+        151,
+        170
+      ],
+      "margin": [
+        156,
+        154,
+        361,
+        342
+      ],
+      "source_anchor": [
+        878,
+        788
+      ],
+      "rgba_sha256": "0e09141960dc9a500e77dc3af13674bd6f394b6adb50a2ea4d5982d0db5b5b8e",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        966,
+        624,
+        172,
+        168
+      ],
+      "margin": [
+        154,
+        156,
+        340,
+        344
+      ],
+      "source_anchor": [
+        1068,
+        788
+      ],
+      "rgba_sha256": "c9059a30234abe324b1908769e364f71581f1cce62bdea954aa6acb293679ace",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1160,
+        622,
+        175,
+        170
+      ],
+      "margin": [
+        172,
+        154,
+        337,
+        342
+      ],
+      "source_anchor": [
+        1244,
+        788
+      ],
+      "rgba_sha256": "6e314baf714f04bb4eca43b9479ed4d780e8db159beb8984c64798c11ed26ee6",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1360,
+        623,
+        171,
+        169
+      ],
+      "margin": [
+        190,
+        155,
+        341,
+        343
+      ],
+      "source_anchor": [
+        1426,
+        788
+      ],
+      "rgba_sha256": "148b1ba1bb7585b6bd8c566e0e5e3bca5e1b6f02eaf20b90558e4fee3c2d3a25",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        28,
+        819,
+        142,
+        175
+      ],
+      "margin": [
+        200,
+        149,
+        370,
+        337
+      ],
+      "source_anchor": [
+        84,
+        990
+      ],
+      "rgba_sha256": "1200e1afce1f8a3da89ba0b89947decfae5daed8153bc950cd79793a70e7e878",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        207,
+        822,
+        161,
+        172
+      ],
+      "margin": [
+        188,
+        152,
+        351,
+        340
+      ],
+      "source_anchor": [
+        275,
+        990
+      ],
+      "rgba_sha256": "c65ff39b25e28352229e977988074131a134d1a18fc6630090ef673ca3228dfc",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        402,
+        820,
+        164,
+        174
+      ],
+      "margin": [
+        176,
+        150,
+        348,
+        338
+      ],
+      "source_anchor": [
+        482,
+        990
+      ],
+      "rgba_sha256": "50085970988eb75f0f6f301cdf2142213dc6b841a80688e4d9e702572f9b630a",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        592,
+        823,
+        161,
+        171
+      ],
+      "margin": [
+        162,
+        153,
+        351,
+        341
+      ],
+      "source_anchor": [
+        686,
+        990
+      ],
+      "rgba_sha256": "ce4128b8fede16e80f20d6b02cc6834e47f27150130d0898a7919250e77d76b3",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        791,
+        821,
+        142,
+        173
+      ],
+      "margin": [
+        172,
+        151,
+        370,
+        339
+      ],
+      "source_anchor": [
+        875,
+        990
+      ],
+      "rgba_sha256": "d5f5cb89c2ea8db3ab9c61694eff460b97297ea78a8e63d1406d8cfaa3afefd3",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        970,
+        822,
+        167,
+        173
+      ],
+      "margin": [
+        165,
+        151,
+        345,
+        339
+      ],
+      "source_anchor": [
+        1061,
+        991
+      ],
+      "rgba_sha256": "f571bd6ef950bde91f9b5f1583ab12401f801ccba7cebd4ad587de945b3bd1f7",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1163,
+        821,
+        174,
+        173
+      ],
+      "margin": [
+        171,
+        151,
+        338,
+        339
+      ],
+      "source_anchor": [
+        1248,
+        990
+      ],
+      "rgba_sha256": "2d419feff468eedeb20281ba6a8138fa251194dc4a5f5c5845233cf302bf3033",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1362,
+        821,
+        164,
+        174
+      ],
+      "margin": [
+        184,
+        150,
+        348,
+        338
+      ],
+      "source_anchor": [
+        1434,
+        991
+      ],
+      "rgba_sha256": "1180e470d00902e8e4626dd6f508bce7204ca94f6c4eaae4a10aa4960987fd7a",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        41,
+        35,
+        162,
+        221
+      ],
+      "margin": [
+        297,
+        253,
+        590,
+        531
+      ],
+      "source_anchor": [
+        120,
+        252
+      ],
+      "rgba_sha256": "8005b5e601bc33aee22e31413015ce2c8922bf4eb75cfba920a777a9dbd2300a",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        265,
+        35,
+        181,
+        221
+      ],
+      "margin": [
+        279,
+        253,
+        571,
+        531
+      ],
+      "source_anchor": [
+        362,
+        252
+      ],
+      "rgba_sha256": "7f32a6b1503d209931e817cb05759e9f62566a7ffe555b6dbe051989b7d306b0",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        517,
+        34,
+        174,
+        222
+      ],
+      "margin": [
+        285,
+        252,
+        578,
+        530
+      ],
+      "source_anchor": [
+        608,
+        252
+      ],
+      "rgba_sha256": "83518c040a618c729cf5bb81443c3d8ba26fb64d0afe9ded407e65cca2e6c3b8",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        753,
+        35,
+        171,
+        221
+      ],
+      "margin": [
+        289,
+        253,
+        581,
+        531
+      ],
+      "source_anchor": [
+        840,
+        252
+      ],
+      "rgba_sha256": "ef95a2cf473d537902b2bf4b489b3dfe98068f5e6bdcffb30cefbcc73b9b27ed",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        1015,
+        33,
+        166,
+        223
+      ],
+      "margin": [
+        303,
+        251,
+        586,
+        529
+      ],
+      "source_anchor": [
+        1088,
+        252
+      ],
+      "rgba_sha256": "7700c37e7aa0c94085a562d0ec32f32a1b35d25de1594ba0278512e4465ac6bc",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1261,
+        34,
+        170,
+        221
+      ],
+      "margin": [
+        296,
+        253,
+        582,
+        531
+      ],
+      "source_anchor": [
+        1341,
+        251
+      ],
+      "rgba_sha256": "09898a7110749d21bb6e7188214a9d62d934a212d593606e591f2e874ef4a0ed",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1497,
+        37,
+        175,
+        218
+      ],
+      "margin": [
+        291,
+        256,
+        577,
+        534
+      ],
+      "source_anchor": [
+        1582,
+        251
+      ],
+      "rgba_sha256": "83e8d508d2dad6e1d607551155d2b9920dc67208f8b38c1289f8fbfa7a6a7a37",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1736,
+        37,
+        165,
+        219
+      ],
+      "margin": [
+        291,
+        255,
+        587,
+        533
+      ],
+      "source_anchor": [
+        1821,
+        252
+      ],
+      "rgba_sha256": "7308936ae4b71d902af68d19a88a47396f9c6e6909f05090818bb5cf5eb1affa",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        26,
+        284,
+        234,
+        228
+      ],
+      "margin": [
+        296,
+        246,
+        518,
+        524
+      ],
+      "source_anchor": [
+        106,
+        508
+      ],
+      "rgba_sha256": "cbdcd08e876e1c5beb0330164437d8b76ab56f7efc759e85b2f6cb4cf4a3357b",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        271,
+        287,
+        239,
+        225
+      ],
+      "margin": [
+        295,
+        249,
+        513,
+        527
+      ],
+      "source_anchor": [
+        352,
+        508
+      ],
+      "rgba_sha256": "173b941a72d64b31dce4b5c12d51de798d7cbefddca5554dd286fcd5dc37883d",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        524,
+        286,
+        188,
+        226
+      ],
+      "margin": [
+        289,
+        248,
+        564,
+        526
+      ],
+      "source_anchor": [
+        611,
+        508
+      ],
+      "rgba_sha256": "761f91a49e1e34e10f8d4f9c51b2aa9c1b92e97c3f3062f77e985a0d49cb1f7f",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        720,
+        286,
+        226,
+        225
+      ],
+      "margin": [
+        229,
+        249,
+        526,
+        527
+      ],
+      "source_anchor": [
+        867,
+        507
+      ],
+      "rgba_sha256": "2827faba6945f7a24b90d3963456c5547aaf7b0fe0e8665506b47128ac2baa96",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        966,
+        288,
+        230,
+        224
+      ],
+      "margin": [
+        226,
+        250,
+        522,
+        528
+      ],
+      "source_anchor": [
+        1116,
+        508
+      ],
+      "rgba_sha256": "2c0cbf16611bf537801dacad36ffe55864bf975da0515274275c021cbef67226",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1232,
+        290,
+        206,
+        223
+      ],
+      "margin": [
+        247,
+        251,
+        546,
+        529
+      ],
+      "source_anchor": [
+        1361,
+        509
+      ],
+      "rgba_sha256": "2058bb01d97ea4a0db3acb3e90b1950f261f22488b027e1d8070469de0cd55e7",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1503,
+        287,
+        161,
+        225
+      ],
+      "margin": [
+        299,
+        249,
+        591,
+        527
+      ],
+      "source_anchor": [
+        1580,
+        508
+      ],
+      "rgba_sha256": "c1b97e7dab5de27b08d55301cd1dfc0bd311189a0e95c2ec4aefdb4d96d011bb",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1718,
+        290,
+        208,
+        222
+      ],
+      "margin": [
+        299,
+        252,
+        544,
+        530
+      ],
+      "source_anchor": [
+        1795,
+        508
+      ],
+      "rgba_sha256": "28ddfe10dd1ef90df8c69b4d8fef576ae9d55ec7f5f2c8d4453d53ed6351449c",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        27,
+        538,
+        203,
+        231
+      ],
+      "margin": [
+        292,
+        243,
+        549,
+        521
+      ],
+      "source_anchor": [
+        111,
+        765
+      ],
+      "rgba_sha256": "ed5591cb4ce99fbc7805330e590a9415c1600da69fac6c56cd7b69dcbf2c43aa",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        277,
+        539,
+        198,
+        230
+      ],
+      "margin": [
+        297,
+        244,
+        554,
+        522
+      ],
+      "source_anchor": [
+        356,
+        765
+      ],
+      "rgba_sha256": "d39433507560124e37ca0dd791e0ff47d5403aa70202401949a0d044b9cf8717",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        510,
+        538,
+        205,
+        232
+      ],
+      "margin": [
+        278,
+        242,
+        547,
+        520
+      ],
+      "source_anchor": [
+        608,
+        766
+      ],
+      "rgba_sha256": "cab50afa538180d01d01c401f0639d4aee1e3b155e5d0e001e34fbf96a4d1ddf",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        747,
+        538,
+        193,
+        232
+      ],
+      "margin": [
+        265,
+        242,
+        559,
+        520
+      ],
+      "source_anchor": [
+        858,
+        766
+      ],
+      "rgba_sha256": "25b7611a570457efc56929251bf91e0035ee845f6118bc06028230663eb16ccb",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        997,
+        538,
+        190,
+        232
+      ],
+      "margin": [
+        273,
+        242,
+        562,
+        520
+      ],
+      "source_anchor": [
+        1100,
+        766
+      ],
+      "rgba_sha256": "74c1a1e5b712dd0d36a3ab6b5fd300638e63a4714f7a35b127f0f0a52b594a5c",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1228,
+        538,
+        216,
+        231
+      ],
+      "margin": [
+        248,
+        243,
+        536,
+        521
+      ],
+      "source_anchor": [
+        1356,
+        765
+      ],
+      "rgba_sha256": "4acda25ff133203781be388a93954c79eded6b69c348a6f2e8129bde8da53caa",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1483,
+        542,
+        201,
+        226
+      ],
+      "margin": [
+        273,
+        248,
+        551,
+        526
+      ],
+      "source_anchor": [
+        1586,
+        764
+      ],
+      "rgba_sha256": "fd61b142a0055dc736801c42d4d1758a7ebcea2190c84d4662c8501ebe7b2580",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1717,
+        538,
+        210,
+        231
+      ],
+      "margin": [
+        289,
+        243,
+        542,
+        521
+      ],
+      "source_anchor": [
+        1804,
+        765
+      ],
+      "rgba_sha256": "ef44be7ffae56c13bc287de977bae0050375acbf2bb4bbe144f47b31461a5a32",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        38,
+        60,
+        219,
+        269
+      ],
+      "margin": [
+        236,
+        205,
+        533,
+        483
+      ],
+      "source_anchor": [
+        178,
+        325
+      ],
+      "rgba_sha256": "be18073d65d1dd46aeda2d17a546814ce7bc57ce4de74161f00a5685f405fced",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        300,
+        61,
+        204,
+        270
+      ],
+      "margin": [
+        264,
+        204,
+        548,
+        482
+      ],
+      "source_anchor": [
+        412,
+        327
+      ],
+      "rgba_sha256": "db3ce289e96a2ba44ed8cd224d2c005713f169f2334874fb3894541b50e23091",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        554,
+        58,
+        249,
+        271
+      ],
+      "margin": [
+        254,
+        203,
+        503,
+        481
+      ],
+      "source_anchor": [
+        676,
+        325
+      ],
+      "rgba_sha256": "94a22b43822e609d4938ca7372e06cdb419de3e630f1c86ea2ddbea6c403af28",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        837,
+        61,
+        230,
+        268
+      ],
+      "margin": [
+        287,
+        206,
+        522,
+        484
+      ],
+      "source_anchor": [
+        926,
+        325
+      ],
+      "rgba_sha256": "9d562027bf3d9f2168c81e3cff75a9bfd02ea2cb85d56a1bf8fe79f06bd9fbd7",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        1118,
+        62,
+        212,
+        269
+      ],
+      "margin": [
+        314,
+        205,
+        540,
+        483
+      ],
+      "source_anchor": [
+        1180,
+        327
+      ],
+      "rgba_sha256": "165bb9116a261d62f0a2e4020a8c8576f264868843f8c9cdb8a0715b5df5895e",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1379,
+        61,
+        229,
+        268
+      ],
+      "margin": [
+        275,
+        206,
+        523,
+        484
+      ],
+      "source_anchor": [
+        1480,
+        325
+      ],
+      "rgba_sha256": "323bc349b1517f1a35c10909d99d59f8daafa9d1e29a19f008638f451b2fcac3",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1632,
+        61,
+        266,
+        268
+      ],
+      "margin": [
+        245,
+        206,
+        486,
+        484
+      ],
+      "source_anchor": [
+        1763,
+        325
+      ],
+      "rgba_sha256": "d97e18a9781bce94c31e4d46e8ec077b495c5c00643a4deb93b6f3aa4b66e23a",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1929,
+        60,
+        208,
+        270
+      ],
+      "margin": [
+        255,
+        204,
+        544,
+        482
+      ],
+      "source_anchor": [
+        2050,
+        326
+      ],
+      "rgba_sha256": "c603407bba476efadb8e2dc84847119f0ae1ff397313e28755b9eb77eefff8b4",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        37,
+        403,
+        234,
+        268
+      ],
+      "margin": [
+        274,
+        206,
+        518,
+        484
+      ],
+      "source_anchor": [
+        139,
+        667
+      ],
+      "rgba_sha256": "50b5833e5341409f12d2a78fa98c8583e26dbc0ed16ac31e047060c2c14fe7a5",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        315,
+        402,
+        233,
+        266
+      ],
+      "margin": [
+        289,
+        208,
+        519,
+        486
+      ],
+      "source_anchor": [
+        402,
+        664
+      ],
+      "rgba_sha256": "a8a9322f8e37c79c15220d19e7ee936187fe04082cf6f3768782042b590230ed",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        566,
+        405,
+        237,
+        268
+      ],
+      "margin": [
+        261,
+        206,
+        515,
+        484
+      ],
+      "source_anchor": [
+        681,
+        669
+      ],
+      "rgba_sha256": "dfeabd89d81e7529ab26d06fd61e6953ff86fb83f09232a6053fce726783b01d",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        817,
+        407,
+        232,
+        263
+      ],
+      "margin": [
+        251,
+        211,
+        520,
+        489
+      ],
+      "source_anchor": [
+        942,
+        666
+      ],
+      "rgba_sha256": "2a99647eeff7d0ea02260f6d2ecd8b9215fe39c7e11bb83fa3c02249ea9df58d",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        1102,
+        404,
+        222,
+        268
+      ],
+      "margin": [
+        244,
+        206,
+        530,
+        484
+      ],
+      "source_anchor": [
+        1234,
+        668
+      ],
+      "rgba_sha256": "33abecd433b2554c4668d356ee62f6f857c02f929dd37291bc864ff43786d9e6",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1360,
+        404,
+        239,
+        267
+      ],
+      "margin": [
+        234,
+        207,
+        513,
+        485
+      ],
+      "source_anchor": [
+        1502,
+        667
+      ],
+      "rgba_sha256": "87084d2e38a60815bf371cab9e4dd594c330d8a2c00047310f2a878f617f1aa4",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1638,
+        407,
+        261,
+        266
+      ],
+      "margin": [
+        248,
+        208,
+        491,
+        486
+      ],
+      "source_anchor": [
+        1766,
+        669
+      ],
+      "rgba_sha256": "989dc61bfae58c7d8cfc07cbe94f6fd9016e73e5516e7f3af74c1dfada8e3744",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1923,
+        405,
+        233,
+        267
+      ],
+      "margin": [
+        277,
+        207,
+        519,
+        485
+      ],
+      "source_anchor": [
+        2022,
+        668
+      ],
+      "rgba_sha256": "3bc6b2acfdfa81ac3bd516463db6f3ad9d9e8d3ec904ee6be9cd0fbe411888bc",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        25,
+        139,
+        205,
+        201
+      ],
+      "margin": [
+        271,
+        273,
+        547,
+        551
+      ],
+      "source_anchor": [
+        130,
+        336
+      ],
+      "rgba_sha256": "f4e6fa87f9e02541e37fe4af21b0e192225ea30fc7c50bced10da953d399f709",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        271,
+        143,
+        214,
+        200
+      ],
+      "margin": [
+        279,
+        274,
+        538,
+        552
+      ],
+      "source_anchor": [
+        368,
+        339
+      ],
+      "rgba_sha256": "7bd27f371f95b393388317ad5b0e618a5dce3d552e44f95407efc5a8e6aef018",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        532,
+        144,
+        203,
+        202
+      ],
+      "margin": [
+        279,
+        272,
+        549,
+        550
+      ],
+      "source_anchor": [
+        629,
+        342
+      ],
+      "rgba_sha256": "fabb605d60cbb3a47838df7df10ba22e4aa971e2306444ba3a987d1f3a5da510",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        778,
+        143,
+        211,
+        204
+      ],
+      "margin": [
+        274,
+        270,
+        541,
+        548
+      ],
+      "source_anchor": [
+        880,
+        343
+      ],
+      "rgba_sha256": "3381f15332cc57ca901e022f6e6f75b8290e61387ff948b7c7f4f70c8fae9b3b",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        1045,
+        143,
+        204,
+        198
+      ],
+      "margin": [
+        267,
+        276,
+        548,
+        554
+      ],
+      "source_anchor": [
+        1154,
+        337
+      ],
+      "rgba_sha256": "f0fc9904d4dbb3334516f86e602b8b58f4e88b23caba3f9d16e86fc577392dca",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1299,
+        142,
+        204,
+        207
+      ],
+      "margin": [
+        267,
+        267,
+        548,
+        545
+      ],
+      "source_anchor": [
+        1408,
+        345
+      ],
+      "rgba_sha256": "fad5b249ecaa79b917b5ac16180e9b107e9d668db367867fe1a45c8f79248a58",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1554,
+        139,
+        231,
+        208
+      ],
+      "margin": [
+        266,
+        266,
+        521,
+        544
+      ],
+      "source_anchor": [
+        1664,
+        343
+      ],
+      "rgba_sha256": "4232fa7223027c7b797c49099d2d1c747e7f7927f139eaa35a85786130ed0d26",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1827,
+        141,
+        196,
+        207
+      ],
+      "margin": [
+        288,
+        267,
+        556,
+        545
+      ],
+      "source_anchor": [
+        1915,
+        344
+      ],
+      "rgba_sha256": "2aa52b33e3005fe0a9dcf3b913f234e9588bb73999d084fd8f691ca27f7f8aee",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        25,
+        447,
+        229,
+        121
+      ],
+      "margin": [
+        230,
+        353,
+        523,
+        631
+      ],
+      "source_anchor": [
+        171,
+        564
+      ],
+      "rgba_sha256": "29920d2bfd227133a15cce9843b33fdf41500da9a57c07d141748c131d3dd94e",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        272,
+        450,
+        230,
+        117
+      ],
+      "margin": [
+        265,
+        357,
+        522,
+        635
+      ],
+      "source_anchor": [
+        383,
+        563
+      ],
+      "rgba_sha256": "e38b27bd854d8173956a951d5ed969521edd5d824d87267c96ee8d1b86d9b8b1",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        526,
+        451,
+        213,
+        117
+      ],
+      "margin": [
+        266,
+        357,
+        539,
+        635
+      ],
+      "source_anchor": [
+        636,
+        564
+      ],
+      "rgba_sha256": "04109f0de3c953954072ae97f0ec3bff206f12438aad89f2ca8ff8c9d96678df",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        760,
+        452,
+        231,
+        118
+      ],
+      "margin": [
+        244,
+        356,
+        521,
+        634
+      ],
+      "source_anchor": [
+        892,
+        566
+      ],
+      "rgba_sha256": "61ef7e4491f5bb5e5432fa0f8e675cdc989ab50c73a6efbe5597368a87262c1f",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        1012,
+        447,
+        244,
+        121
+      ],
+      "margin": [
+        276,
+        353,
+        508,
+        631
+      ],
+      "source_anchor": [
+        1112,
+        564
+      ],
+      "rgba_sha256": "96171fcfd3f7af5bb0587d4648c99187e1ae6498b53a87b688517493c1aa7dcd",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1289,
+        446,
+        234,
+        122
+      ],
+      "margin": [
+        281,
+        352,
+        518,
+        630
+      ],
+      "source_anchor": [
+        1384,
+        564
+      ],
+      "rgba_sha256": "5498a61527ca98f65c6dc03f9f2febc212da3d7f877d964ecc9bb08e13e818ce",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1548,
+        447,
+        244,
+        121
+      ],
+      "margin": [
+        258,
+        353,
+        508,
+        631
+      ],
+      "source_anchor": [
+        1666,
+        564
+      ],
+      "rgba_sha256": "63af0e3ea2265fe9c526c150bd1aaf1cf0cc1e23c1e6567dbb5a998740d56e19",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1813,
+        446,
+        224,
+        122
+      ],
+      "margin": [
+        255,
+        352,
+        528,
+        630
+      ],
+      "source_anchor": [
+        1934,
+        564
+      ],
+      "rgba_sha256": "cec770cf67184f08a98fde764aeaa05aa6d71c1cac7660a515f7c4398c35148a",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        23,
+        657,
+        239,
+        81
+      ],
+      "margin": [
+        245,
+        393,
+        513,
+        671
+      ],
+      "source_anchor": [
+        154,
+        734
+      ],
+      "rgba_sha256": "164e46cfd0c72992f9d04a6730f7f62c07192abef6647bf7ee83761ee567a917",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        271,
+        656,
+        236,
+        85
+      ],
+      "margin": [
+        259,
+        389,
+        516,
+        667
+      ],
+      "source_anchor": [
+        388,
+        737
+      ],
+      "rgba_sha256": "950e2fafdd90076b695b0265f94e25eafabd8dc602d80146ff677d34ff405d55",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        520,
+        657,
+        230,
+        84
+      ],
+      "margin": [
+        264,
+        390,
+        522,
+        668
+      ],
+      "source_anchor": [
+        632,
+        737
+      ],
+      "rgba_sha256": "012791a63a0719ac31d944561394616b79320428c08999f93c898500a6f9956b",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        762,
+        660,
+        229,
+        82
+      ],
+      "margin": [
+        255,
+        392,
+        523,
+        670
+      ],
+      "source_anchor": [
+        883,
+        738
+      ],
+      "rgba_sha256": "c44bdc3ba0909426a9f8a8064d3b19ebd53425c26d12216ed6ab98d25c2ba2e5",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        1013,
+        660,
+        248,
+        79
+      ],
+      "margin": [
+        262,
+        395,
+        504,
+        673
+      ],
+      "source_anchor": [
+        1127,
+        735
+      ],
+      "rgba_sha256": "a6650d14782ec0172fcff2ac968197955600132c3037bb8e0e4606c6050f5fcc",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1291,
+        654,
+        232,
+        85
+      ],
+      "margin": [
+        276,
+        389,
+        520,
+        667
+      ],
+      "source_anchor": [
+        1391,
+        735
+      ],
+      "rgba_sha256": "990872fc1e7435ebfa67bef683986961aba9b16ae44aa72aca3923e1562f0ec6",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1546,
+        655,
+        248,
+        82
+      ],
+      "margin": [
+        266,
+        392,
+        504,
+        670
+      ],
+      "source_anchor": [
+        1656,
+        733
+      ],
+      "rgba_sha256": "c2de48fbc41ca489901aa4a2b0b9b786b2cfd28f5b43a403286f33c9458a4a8b",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1812,
+        658,
+        219,
+        80
+      ],
+      "margin": [
+        255,
+        394,
+        533,
+        672
+      ],
+      "source_anchor": [
+        1933,
+        734
+      ],
+      "rgba_sha256": "fb04dfc8f5984b280427d638ffcc02b9d3dd706bcfc73104e2473baf0be29fea",
+      "sheet": 3
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/wind_lair_storm_guardian/poses-0.png",
+          "sha256": "3607f9da8481b98990b0ecd600e025652c6dc6ea5df99b33f73a8fe36ea36795",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/wind_lair_storm_guardian/poses-0.png",
+          "sha256": "3607f9da8481b98990b0ecd600e025652c6dc6ea5df99b33f73a8fe36ea36795",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        2,
+        3,
+        4
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/wind_lair_storm_guardian/poses-1.png",
+          "sha256": "1df85ac6f3a1b318e26146334bf6465dc1bc075792a2a0d6754fc4103d70f937",
+          "size": [
+            1942,
+            809
+          ],
+          "canvas_size": [
+            752,
+            752
+          ],
+          "foot": [
+            376,
+            470
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1,
+        2
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/wind_lair_storm_guardian/poses-2.png",
+          "sha256": "c910499fe41b25ad616ecec69497b2dc924d529211cf42aaab174146efe415a9",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            752,
+            752
+          ],
+          "foot": [
+            376,
+            470
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/wind_lair_storm_guardian/poses-3.png",
+          "sha256": "c7a1bd0128cfd91121879e20a9118a3263ff2383d2b70acf98eab5c03eda7a22",
+          "size": [
+            2048,
+            768
+          ],
+          "canvas_size": [
+            752,
+            752
+          ],
+          "foot": [
+            376,
+            470
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1,
+        2
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 92.25531914893617
+}

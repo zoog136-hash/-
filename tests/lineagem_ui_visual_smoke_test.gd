@@ -44,18 +44,21 @@ func _run() -> void:
 	_check(window.size.x <= 378 and window.position.x > 800,"inventory is a right shelf")
 	_check(window.find_child("CloseWindow",true,false) != null,"close and Esc action retained")
 	_check(compact != null and not compact.visible,"opening an unconnected window does not expose dead navigation")
-	var navigated: Array[String] = []
-	window.connect("navigate",func(section: String) -> void: navigated.append(section))
-	window.open("inventory","인벤토리","")
-	_check(compact != null and compact.visible,"connected inventory can return to the actual menu")
+	# Content windows keep the real menu shortcut; it appears only when the
+	# owning HUD connects navigation and must send the actual requested section.
+	var requested: Array[String] = []
+	window.navigate.connect(func(section: String) -> void: requested.append(section))
+	window.open("inventory","인벤토리","선택한 장비를 확인합니다.")
+	_check(compact != null and compact.visible,"connected inventory exposes the menu shortcut")
 	if compact != null: compact.pressed.emit()
-	_check(navigated == ["menu"],"shortcut emits the actual game-menu route exactly once")
+	_check(requested == ["menu"],"content shortcut routes to the actual game menu")
 	window.open("menu","메뉴","")
-	_check(compact != null and not compact.visible,"menu does not link back to itself")
 	var teleport: Button = window.find_child("MenuTeleportShortcut",true,false) as Button
-	_check(teleport != null and teleport.visible,"regional teleport shortcut stays in the real menu")
+	_check(compact != null and not compact.visible and teleport != null and teleport.visible,"menu keeps its regional travel action without a recursive menu button")
+	if teleport != null: teleport.pressed.emit()
+	_check(requested == ["menu","teleport"],"menu travel shortcut preserves the existing teleport route")
 	window.open("class_select","직업 선택","")
-	_check(compact != null and not compact.visible and teleport != null and not teleport.visible,"class selection exposes no gameplay shortcuts")
+	_check(compact != null and not compact.visible and teleport != null and not teleport.visible,"class selection hides game-navigation shortcuts")
 	window.queue_free()
 	await process_frame
 	if failures.is_empty():

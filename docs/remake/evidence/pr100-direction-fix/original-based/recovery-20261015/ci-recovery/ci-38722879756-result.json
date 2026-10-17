@@ -1,0 +1,35 @@
+{
+  "run_id": 38722879756,
+  "checkpoint": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+  "conclusion": "failure",
+  "passed": 194,
+  "total": 198,
+  "skipped_count": 3,
+  "not_run_count": 0,
+  "skipped": [
+    "original_map_catalog_test",
+    "original_world_runtime_test",
+    "source_first_map_test"
+  ],
+  "failed": [
+    "original_based_transform_batch_test"
+  ],
+  "failed_step": "Full project regression, import, boot and all smoke tests",
+  "cause": "Guard RESULT JSON omitted failures array required by fail-closed classify_result; exit0 and _OK do not override this malformed report.",
+  "minimum_fix": "Add failures: failures to the actual guard RESULT object; retain parser strictness and real failure checks.",
+  "artifacts_metadata": {
+    "artifacts": [
+      {
+        "digest": "sha256:e7fde041ccce8923d64c90f5fa110b0bed27c006d30b9e1a186209992917cba2",
+        "expired": false,
+        "id": 11969809875,
+        "name": "twilight-integration-check-ce19943619ba8ea0874446e6eee72ee3926bf739",
+        "size_in_bytes": 255321
+      }
+    ],
+    "total_count": 1
+  },
+  "log_path": "/workspace/twilight-run/recovery/ci-38722879756-failed.log",
+  "log_bytes": 30008,
+  "artifact_downloaded": false
+}

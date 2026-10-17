@@ -90,6 +90,8 @@ func _run() -> void:
 			var release_time: float = mob.motion.attack_duration * mob.motion.attack_hit_ratio
 			mob.motion.advance(release_time - .001, Vector2.ZERO)
 			mob.motion.apply(mob.sprite, mob.animation_base_scale)
+			var release_texture: Texture2D = mob.sprite.texture
+			var release_body: Transform2D = mob.sprite.transform.scaled_local(Vector2(-1.0 if mob.sprite.flip_h else 1.0, -1.0 if mob.sprite.flip_v else 1.0))
 			check(hits[0] == 0 and rig.effect_age < 0.0, "no damage/effect before marker " + record.name)
 			mob.motion.advance(.002, Vector2.ZERO)
 			check(not rig.warning_active and rig.effect_age == 0.0, "effect at marker " + record.name)
@@ -97,13 +99,30 @@ func _run() -> void:
 			check(rig.effect_outline == rig.warning_outline, "same warning and impact geometry " + record.name)
 			if kind == "charge":
 				check(mob.position == player.position, "existing charge moves on open ground " + record.name)
-				check(rig.effect_body.x.x < 0.0 and rig.effect_texture == mob.sprite.texture, "left-facing frozen charge trail " + record.name)
+				check(rig.effect_body == release_body and rig.effect_texture == release_texture, "charge snapshots the actual release pose " + record.name)
+				if mob.motion.profile.layout in ["directional8", "sequential8"]:
+					# A genuine W image already faces left; mirroring it would face right.
+					var frames: SpriteFrames = mob.motion.frame_source
+					var has_west: bool = frames != null and frames.has_animation("attack_4") and frames.get_frame_count("attack_4") > 0
+					check(has_west and mob.motion.facing8 == 4 and mob.motion._resolved_key == "attack_4", "charge selects native west attack " + record.name)
+					check(not mob.sprite.flip_h and not mob.sprite.flip_v and rig.effect_body.x.x > 0.0, "native west charge remains unmirrored " + record.name)
+					if has_west:
+						var before_marker: int = maxi(0, clampi(mob.motion.profile.hit_frame_for("attack"), 0, frames.get_frame_count("attack_4") - 1) - 1)
+						check(rig.effect_texture == frames.get_frame_texture("attack_4", before_marker), "charge freezes west pre-marker frame " + record.name)
+						check(frames.has_animation("attack_0") and rig.effect_texture != frames.get_frame_texture("attack_0", before_marker), "west charge is distinct from east " + record.name)
+				else:
+					check(rig.effect_body.x.x < 0.0 and rig.effect_texture == mob.sprite.texture, "left-facing frozen charge trail " + record.name)
 				arena.field_map = null
 			arena.combat_flights._physics_process(.6)
 			var expected: int = 0 if kind == "summon" else 3 if kind == "volley" else 1
 			check(hits[0] == expected, "special hit count " + record.name)
 			if kind == "summon": check(arena.field_population.summoned == before_summons + 1, "one summon " + record.name)
 			mob.motion.advance(1.0, Vector2.ZERO)
+			if kind == "charge":
+				mob.motion.face(Vector2.RIGHT)
+				mob.motion.apply(mob.sprite, mob.animation_base_scale)
+				check(rig.effect_texture == release_texture and rig.effect_body == release_body, "charge trail stays frozen after recovery and turn " + record.name)
+				check(rig.effect_center == original_center and rig.effect_aim == original_aim, "charge trail world anchor stays frozen after turn " + record.name)
 			arena.combat_flights._physics_process(.6)
 			check(hits[0] == expected, "no duplicate special " + record.name)
 			rig.tick(.6)

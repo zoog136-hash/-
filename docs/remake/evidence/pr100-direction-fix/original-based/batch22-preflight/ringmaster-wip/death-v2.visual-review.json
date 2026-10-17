@@ -1,0 +1,49 @@
+{
+  "target_key": "transform:357",
+  "status": "GEOMETRY_PASS_VISUAL_REVIEW_PENDING_INDEPENDENT",
+  "pass_geometry": true,
+  "distinct_real_death_poses": 24,
+  "phase_order": [
+    "knees buckle/hips lower",
+    "seated or side collapse, hips on ground",
+    "fully horizontal low corpse"
+  ],
+  "progressively_lower_body_bbox_medians": [
+    236.0,
+    148.5,
+    77.0
+  ],
+  "actual_death_motion": true,
+  "connected_body_equipment": true,
+  "short_wand_held_same_anatomical_right_hand": true,
+  "source_big_shapes_preserved": true,
+  "visible_haze_or_opaque_matte": false,
+  "crop_intrusion": false,
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "eight_views_review_notes": "Rows 1-2 show E/W opposing profiles, S front, N jacket back and diagonal transitions. Final N lies face-down with jacket back visible; S lies face-up. Final diagonal corpse projection, particularly NW, needs independent reviewer confirmation before approval.",
+  "production_import": false,
+  "main_validated": false,
+  "completed_count_increment": 0,
+  "source_claim": "New 2D authored motion from existing external catalog portrait; not verified recovered original-game animation.",
+  "source_sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
+  "canvas_scale": {
+    "provisional_fit_canvas": [
+      832,
+      832
+    ],
+    "approved_canvas": null,
+    "warning": "832 only proves crop fit and MUST NOT be used without head/torso scale comparison to accepted idle. Do not derive death canvas from low corpse bbox/standing height or rescale PNG pixels. All 24 heads and torso mass visually similar pixel scale; projected corpse height decreases physically."
+  },
+  "art_attempts": 2,
+  "original_v1_failure_preserved": "death-v1.png/.prompt.txt/.geometry.json/.visual-review.json; seven crop-intrusion regions",
+  "needs_independent_approval": true
+}

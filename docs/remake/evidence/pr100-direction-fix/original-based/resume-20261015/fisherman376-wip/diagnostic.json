@@ -1,0 +1,135 @@
+{
+  "target": "transform:376",
+  "status": "HOLD",
+  "candidate": "/workspace/scratch/pr100-resume/fisherman376-wip/generated-walk-E.png",
+  "original_generated": "/workspace/generated_images/exec-ea74e8df-8977-45a7-b03b-0c1173ebd6c8.png",
+  "sha256": "f1f47fc97c425497268d70f440ab3f1ee3e3dd4863f5a45dab49d4860a301a3f",
+  "source_sha256": "f1f47fc97c425497268d70f440ab3f1ee3e3dd4863f5a45dab49d4860a301a3f",
+  "pixels_untouched": true,
+  "source_reference": "/workspace/twilight/assets/catalog/77499baacaaa399548946cb3.png",
+  "source_reference_sha256": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66",
+  "image": {
+    "mode": "RGBA",
+    "size": [
+      1881,
+      836
+    ],
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "fully_transparent_pixels": 1292667
+  },
+  "parameters": {
+    "rows_count": 3,
+    "reference_rows": [
+      0,
+      1,
+      2
+    ],
+    "directions_axis": "rows",
+    "canvas_size": 1280,
+    "directions": [
+      "E"
+    ]
+  },
+  "canvas_note": "1280 diagnostic-only canvas, selected to accommodate unscaled authored poses. No runtime scale or source anchor approval.",
+  "strict_geometry": {
+    "status": "PASS",
+    "geometry": {
+      "image_size": [
+        1881,
+        836
+      ],
+      "frames": [
+        {
+          "row": 0,
+          "direction": "E",
+          "region": [
+            188,
+            86,
+            387,
+            653
+          ],
+          "margin": [
+            514,
+            151,
+            893,
+            627
+          ],
+          "source_anchor": [
+            314,
+            735
+          ],
+          "rgba_sha256": "16019a3625fe0341c1a0f69bfd915754810b9bc64cb477477542c7363890e172"
+        },
+        {
+          "row": 1,
+          "direction": "E",
+          "region": [
+            791,
+            86,
+            281,
+            662
+          ],
+          "margin": [
+            491,
+            142,
+            999,
+            618
+          ],
+          "source_anchor": [
+            940,
+            744
+          ],
+          "rgba_sha256": "516f796f69ddc5708539b86314985ad1e826f3052fba994b5296ce81863b5c76"
+        },
+        {
+          "row": 2,
+          "direction": "E",
+          "region": [
+            1398,
+            93,
+            371,
+            646
+          ],
+          "margin": [
+            470,
+            158,
+            909,
+            634
+          ],
+          "source_anchor": [
+            1568,
+            735
+          ],
+          "rgba_sha256": "ea37f23107780c4210a8ab5bce652f067af11e0262f172cd317bc3105cb5c287"
+        }
+      ],
+      "distinct_pixel_frames": 3,
+      "neutral_height": 647.0,
+      "canvas_size": [
+        1280,
+        1280
+      ],
+      "foot": [
+        640,
+        800
+      ]
+    },
+    "require_complete_pose_regions": "PASS"
+  },
+  "visual_review": {
+    "status": "HOLD",
+    "direction": "All three appear right-facing/E side views; no full compass claim.",
+    "leg_alternation": "FAIL: columns 1 and 3 appear to preserve the same near-leg-forward/far-leg-back overlap at thigh and knee. The required near-leg-back/far-leg-forward exchange is not established.",
+    "passing_phase": "Column 2 visibly bends and lifts one knee, but that alone does not supply an alternating cycle.",
+    "body_attachment": "Both legs visibly attach below trousers and boots attach to ankles.",
+    "grounding": "Contact phases have approximately matching lowest shoe level; middle support shoe is slightly lower. Main grounding unverified.",
+    "source_identity": "Brown cap, pale shirt, short trousers, brown boots, brown/red gear and shoulder rod recognizable. Ocher chest/hand detail was not semantically identified from tiny source; generated interpretation remains subject to source-identity review and is not validated.",
+    "spacing": "Rod tips have under 15% top margin, below requested safety padding.",
+    "main_tscn": "NOT RUN",
+    "runtime_import": "NOT RUN",
+    "runtime_scale": "NOT REVIEWED",
+    "full_8_directions": "NOT PRESENT",
+    "new_complete_count": 0
+  }
+}

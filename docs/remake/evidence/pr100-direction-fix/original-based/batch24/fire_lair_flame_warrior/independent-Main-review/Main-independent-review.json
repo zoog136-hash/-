@@ -1,0 +1,111 @@
+{
+  "status": "APPROVED_ACTUAL_MAIN_VISUAL_AND_RECORDED_GAMEPLAY_GATE",
+  "reviewer": "Root assistant, independently from the artwork-authoring agents",
+  "visual_review": {
+    "observed": "All104pose screenshots shown in actual production Main, five labeled all-direction contactimages; eight actualAI fullviewport captures; fireN release originalfull1280x720 additionally viewed",
+    "notes": "Originalorange/gold flamingangularhumanoid with narroweyes, crown, attachedtwoarms andcontinuous leglessvortex preserved. Corrected EwalkC facesRIGHT throughoppositerecovery. Backhead N hasnofrontface. N release opensbotharms laterally asamagicgesture; torso/headremainN andunchangedactualAI releases UPmagic withframe1profilemarker andtowardplayerphysicsflight. No meleeclawhit isclaimed. Deathfullycollapses tolowintactflamebody atstablefloor.",
+    "world_support": "Allpose body-rootlowercontour sits at approximately screen(702.4,443.2), derived from actualcamera/worldposition. Groundandterrainunchanged; sameoffrootyellowterrainpatch isnotbodyshadow. Sourcefloatingstatepreserved.",
+    "comparison": "Viewed existing completed seer_boss-authored-S-attack-1.png and ghost-authored-S-death-2.png from repository actualMain evidence. Newactors preserve source-specificpaintedbodydetail, stableground, front/backdistinction and coherentlowcorpse. Exact8sourcecontextcontact alsoviewed.",
+    "artwork_edited_during_review": false
+  },
+  "separate_automatic_evidence": {
+    "headless": {
+      "checks": 1675,
+      "failures": [],
+      "AI_directions": 8,
+      "magic_projectile_directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792076802.60344,
+            "expires_at": 1792077402.60344,
+            "grade": "일반",
+            "hunt_batch": "52d11527b6f5f0d513049ef95b6dec12",
+            "id": "98a1a6238f753cceda557f36353e5d28",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              29704.0,
+              14688.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1233,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 71
+      }
+    },
+    "render": {
+      "checks": 1787,
+      "failures": [],
+      "AI_directions": 8,
+      "magic_projectile_directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792077119.08588,
+            "expires_at": 1792077719.08588,
+            "grade": "일반",
+            "hunt_batch": "25104abf420a86afffb7a61a6ce2c43e",
+            "id": "b1164f2cb4aa1e40e3a1b7621650ae8d",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              29704.0,
+              14688.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1233,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 71
+      }
+    }
+  },
+  "scope_precision": "104all-roleposeimages are explicitly sampled productiontextures in Main. Real AI pursuit/attacks run inall8directions; lifecycle is actualweaponhit/death/drop/pickup. The contactsheets do not represent a separately recorded realtime8directionhit/deathmovie.",
+  "review_derivative_images": [
+    {
+      "file": "actual-AI-all-directions-full-viewport.png",
+      "sha256": "96bdbf553d353a72258c96fb8fa7bb4f06c1f46122019a8153d9fe1eab890db5"
+    },
+    {
+      "file": "attack-all-directions-all-poses.png",
+      "sha256": "8709dcd81ef6a5eadd8920e107abd485a34acd596142ccccabdd4e7d28b7ceac"
+    },
+    {
+      "file": "death-all-directions-all-poses.png",
+      "sha256": "d168a8dea0ef18a240c5b57ae7a4f5fe7b677f4cc9f448c3e5b126bd94f4d4b3"
+    },
+    {
+      "file": "hit-all-directions-all-poses.png",
+      "sha256": "dc1baaf86347f1381aa3c1adcf5fb52119d45ba5a47159e07e8fae91f62bb28a"
+    },
+    {
+      "file": "idle-all-directions-all-poses.png",
+      "sha256": "0d73e514d4a5ae9f04344d106d16798afc0c1aa6b6ca5e84b3bd4fb841de17b0"
+    },
+    {
+      "file": "walk-all-directions-all-poses.png",
+      "sha256": "59943510c0f4a9db3dded733bc4eaab341504fb085d87d2271e216483c21ec34"
+    }
+  ],
+  "blockers": []
+}

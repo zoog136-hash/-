@@ -1,0 +1,108 @@
+{
+  "status": "APPROVED_ACTUAL_MAIN_VISUAL_AND_RECORDED_GAMEPLAY_GATE",
+  "reviewer": "Root assistant independently from artworkauthors/correctors",
+  "visual_review": {
+    "observed": "All104actualMain poseimages in five labeled all-direction contacts plus8fullactualAIviewportimages; tentacleNterminalcorpse original1280x720 separatelyviewed",
+    "notes": "Exactwhite/ivorypinkveinedtoothedpetals, redtongue, attachedbrownrootstalk identity preserved. CorrectedSWidle/walk/attack staysfrontLEFT. N/NEattack nowrearpetalsoccludetongue androot/stalk bendsaway ratherthanturningfrontright. All8profiles/5roles haveconnectedwholebody, distinctrootflex/neckmotion, stablemodelscale andgroundsupport. Three-stagedeathfoldshead/stemontoattachedroots.8fullactualmeleeAIcaptures inspected: tongue/bitefacesrealplayer withactualcontact/HPdamage; no rangedcast isclaimed.",
+    "comparison": "Exactsourcebodycontexts in selected8-source-context-contact.png inspected; earliercompleted seer actualMainattack andghost actualMaindeath establish existingwholebody/ground/sourcefidelity quality. Newactorsretain detailedsource-specific anatomy without foregroundcover orbodybreaks inall104 poseviews.",
+    "PNG_pixels_changed_by_review": false
+  },
+  "automatic_gameplay_evidence": {
+    "headless": {
+      "checks": 848,
+      "failures": [],
+      "AI_directions": 8,
+      "magic_projectile_directions": 0,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792078397.28291,
+            "expires_at": 1792078997.28291,
+            "grade": "일반",
+            "hunt_batch": "4fb1ba3f902d1a39a17823229ab800c1",
+            "id": "bba12363f607c9816c3df2cd8686dce5",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1860,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 27
+      }
+    },
+    "render": {
+      "checks": 962,
+      "failures": [],
+      "AI_directions": 8,
+      "magic_projectile_directions": 0,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792078596.78763,
+            "expires_at": 1792079196.78763,
+            "grade": "일반",
+            "hunt_batch": "cd7c8b469687cd61b01d51c3c4945674",
+            "id": "41deafe31e18e048e403dd8ea0be46b8",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1860,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 27
+      }
+    }
+  },
+  "scope_precision": "All104roleframes were sampled explicitly in actualMain; realAI pursuit/attack ran inall8directions, plusactualweaponhit/death/drop/manualpickup. This isnotaseparatelyfilmed realtime8directionhit/deathmovie.",
+  "review_images": [
+    {
+      "file": "actual-AI-all-directions-full-viewport.png",
+      "sha256": "1aba42c1d3f5944edd3adac56621956b7c7b644381c681ff31d84ef5c90b0223"
+    },
+    {
+      "file": "attack-all-directions-all-poses.png",
+      "sha256": "e64033db1f42805971574891ca8ad8e86ac93d2d6cec4619465cbc12999672f0"
+    },
+    {
+      "file": "death-all-directions-all-poses.png",
+      "sha256": "f419ea5db6f8667fb644c66eba85395eabba2fb8d321b9907a46a43f6ac4cc13"
+    },
+    {
+      "file": "hit-all-directions-all-poses.png",
+      "sha256": "60eab5466b5cac7805f8764df016cd53f27a5b833c27ee3215f78a1ee492ba9a"
+    },
+    {
+      "file": "idle-all-directions-all-poses.png",
+      "sha256": "5599eb776c44310a3e5c1e8335f5d7bbd69ebdd1bf3c6ad8229a21225a831947"
+    },
+    {
+      "file": "walk-all-directions-all-poses.png",
+      "sha256": "cb9dbb74161c9b2451a859cdf7e0c9fe2072fa67dfed57b096af88713859d23f"
+    }
+  ],
+  "blockers": []
+}

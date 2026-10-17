@@ -1,0 +1,47 @@
+{
+  "head": "97af60383e1ea7a53877892d397792cc0fd202fd",
+  "scope": "Batch19 checkpoint only; not success for batch20 changes",
+  "runs": [
+    {
+      "conclusion": "success",
+      "databaseId": 38699557721,
+      "headSha": "97af60383e1ea7a53877892d397792cc0fd202fd",
+      "name": "TWILIGHT Android ARM64 APK Playtest",
+      "status": "completed",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38699557721"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 38699545618,
+      "headSha": "97af60383e1ea7a53877892d397792cc0fd202fd",
+      "name": "Animation Presentation Validate",
+      "status": "completed",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38699545618"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 38699532087,
+      "headSha": "97af60383e1ea7a53877892d397792cc0fd202fd",
+      "name": "TWILIGHT Integration Validate",
+      "status": "completed",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38699532087"
+    }
+  ],
+  "animation_job_count": 29,
+  "android_export": {
+    "passed": true,
+    "apk_sha256": "da893297a50b524a5d224296bca10faf524de726c11e6e268aab822d0d224c75",
+    "architectures": [
+      "arm64-v8a"
+    ],
+    "failures": []
+  },
+  "android_signature": {
+    "v2": true,
+    "v3": true
+  },
+  "android_apk_artifact": "https://github.com/zoog136-hash/-/actions/runs/38699557721/artifacts/11956033225",
+  "artifact_zip_bytes": 909947137,
+  "android_physical_device": "not tested",
+  "diagnostic_artifact_download": "Attempted; GitHub redirected artifact fetch returned403Forbidden. CI execution logs retrieved successfully; no claim of independent local APK inspection."
+}

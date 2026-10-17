@@ -36,6 +36,15 @@ func _run() -> void:
 	check(VISUALS.number_scale(.035, true) > 1.2, "critical number punch")
 	check(is_equal_approx(VISUALS.number_scale(.2, true), 1.0), "critical number settles")
 	check(is_equal_approx(VISUALS.number_scale(.035, false), 1.0), "normal text does not pulse")
+	# The same thin slash failed triangulation at distant world coordinates.
+	# Check every direction throughout its lifetime in production local space.
+	for direction: int in range(8):
+		var aim := Vector2.RIGHT.rotated(float(direction) * PI / 4.)
+		for step: int in range(100):
+			var progress := float(step) / 100.
+			for base_radius: float in [20., 29., 25., 36.25]:
+				var polygon := VISUALS.crescent_points(aim, base_radius * (.72 + progress * .7), progress)
+				check(Geometry2D.triangulate_polygon(polygon).size() == (polygon.size() - 2) * 3, "slash triangulates direction=%d progress=%d radius=%.2f" % [direction, step, base_radius])
 	for marker: float in [.1, .44, .7, .85]:
 		check(is_equal_approx(VISUALS.swing_envelope(marker, marker), 1.0), "swing centered on existing marker")
 		check(is_zero_approx(VISUALS.swing_envelope(marker - .17, marker)), "no early swing")

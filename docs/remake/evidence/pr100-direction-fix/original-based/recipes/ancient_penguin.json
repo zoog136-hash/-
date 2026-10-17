@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN-V1 EXACT PROMPT:\nCreate a separate NEW fully transparent RGBA 2D game sprite atlas based ONLY on the attached original TWILIGHT character portrait, which stays unchanged. Preserve this exact original identity, colors, equipment and anatomical proportions while drawing its genuine motion. Match the existing detailed hand-painted 2D isometric dark fantasy game style. EXACTLY8 equal direction columns by8 equal phase rows,64 complete SMALL separately articulated poses on a large square canvas. Each ENTIRE silhouette including every weapon/tail/claw/tentacle/horn is AT MOST38percent of its cell width AND height, with huge clear transparent gutters and safe transparent outer borders. No neighboring pose bounding rectangles overlap. Direction columns: E true right-facing PROFILE,SE front-right,S true FRONT toward viewer/screen down,SW front-left,W true left-facing PROFILE,NW back-left,N full BACK away from viewer/screen up,NE back-right. All directions need real anatomical rotation; N has no front face looking backward. Rows1 relaxed idle,2 different breathing idle,3 walking phaseA,4 walking phaseB,5 walking phaseC,6 attack windup,7 actual directed contact/release,8 recovery. All64 genuine different poses with articulated joints, never repeated/scaled/translated stills. Preserve consistent body volume across all poses. No labels, grid, floor, floor shadows, background, detached particles or extra equipment. Empty gaps are alpha0, including between limbs/tentacles. Preserve the original small stout bird with a deep navy/black feathered back and flippers, long layered icy BLUE swept crest feathers and cheek points, very full WHITE chest/beard plumage, amber/orange narrow beak and eyes, blue marking on its lower belly, short dark scaled toes. Keep exactly two natural flippers, two short feet, round heavy body, original bird head and original blue/white/navy palette. N shows layered back feathers and back of the swept blue crest, no beak or frontal white beard facing back; S shows the original full white front and narrow beak. Three walking phases alternate waddling toe contacts and flipper balance. Natural attack braces the bird, thrusts its original beak/head and one flipper toward the direction, then recovers. No sword, bow, staff, cape, human hands, crown or added equipment.\n\nHIT-V1 EXACT PROMPT:\nCreate a NEW separate transparent RGBA 2D HIT AND DEATH atlas, LANDSCAPE around1600x1000pixels. EXACTLY8 equal direction columns and5 phase rows,40 complete articulated poses. Each entire original body and ALL appendages/weapon must be TINY, smaller than40percent of its cell width AND height, with huge clear transparent gutters. First reference ORIGINAL portrait is authoritative; second reference, if present, is only for consistent art style. Preserve the original identity, palette, anatomy, materials, gear and proportions exactly. E true right side,SE front-right,S front toward viewer/down,SW front-left,W true left side,NW back-left,N entirely back away/up with no face looking backward,NE back-right. ROW1 recoil from hit;ROW2 distinct recovery;ROW3 death buckling/sinking;ROW4 body collapsing toward ground;ROW5 entire body fully FLAT on floor, all appendages relaxed. All40 genuinely articulated poses, never duplicates/scales/translations. No standing last row. Every body rectangle disjoint and away from outer borders; full weapons/claws/horns/tentacles retained and connected. No blood, dismemberment, detached particles, floor, shadow, text, grid, glow, haze or background. All empty gaps alpha0. Preserve the original small stout bird with a deep navy/black feathered back and flippers, long layered icy BLUE swept crest feathers and cheek points, very full WHITE chest/beard plumage, amber/orange narrow beak and eyes, blue marking on its lower belly, short dark scaled toes. Keep exactly two natural flippers, two short feet, round heavy body, original bird head and original blue/white/navy palette. N shows layered back feathers and back of the swept blue crest, no beak or frontal white beard facing back; S shows the original full white front and narrow beak. Three walking phases alternate waddling toe contacts and flipper balance. Natural attack braces the bird, thrusts its original beak/head and one flipper toward the direction, then recovers. No sword, bow, staff, cape, human hands, crown or added equipment. This sheet contains only hit and death, not standing attacks or walking rows. The final corpse is clearly flattened/collapsed with the complete original body and appendages retained, not a transformed rock or standing creature.",
+  "prompt_record_kind": "exact final prompts; each unchanged original catalog portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ancient_penguin/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ancient_penguin/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared each original portrait and generated sheet. Preserve the original small stout bird with a deep navy/black feathered back and flippers, long layered icy BLUE swept crest feathers and cheek points, very full WHITE chest/beard plumage, amber/orange narrow beak and eyes, blue marking on its lower belly, short dark scaled toes. Keep exactly two natural flippers, two short feet, round heavy body, original bird head and original blue/white/navy palette. N shows layered back feathers and back of the swept blue crest, no beak or frontal white beard facing back; S shows the original full white front and narrow beak. Three walking phases alternate waddling toe contacts and flipper balance. Natural attack braces the bird, thrusts its original beak/head and one flipper toward the direction, then recovers. No sword, bow, staff, cape, human hands, crown or added equipment. All eight anatomical views and five mandatory articulated roles are present, with104 actual different poses. N faces away and S faces the viewer; diagonals and E/W are distinct. Strict disjoint-body/unique-RGBA geometry passes. Original and generated PNG bytes stay unchanged, with virtual canvases only. Use one scale within the existing living-height budget. Actual Main contact, identity, size, transparency, foot anchoring, hit/death and transform roundtrip are still pending, so this import is not completion."
+  }
+}

@@ -1,0 +1,100 @@
+extends SceneTree
+
+const OUTPUT := "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview"
+const ART := "/workspace/generated_images/exec-f2797d6d-75e1-4d4f-80e4-5a23518c2b99.png"
+const FLOOR := Vector2(450, 440)
+const PREVIEW_SCALE := 0.65
+var actor: AnimatedSprite2D
+var phase_label: Label
+
+class GroundGuide extends Node2D:
+	func _draw() -> void:
+		draw_rect(Rect2(0, 0, 900, 540), Color("343c49"))
+		for x: int in range(0, 901, 50):
+			draw_line(Vector2(x, 50), Vector2(x, 440), Color("414958"), 1)
+		for y: int in range(90, 441, 50):
+			draw_line(Vector2(0, y), Vector2(900, y), Color("414958"), 1)
+		draw_line(Vector2(0, 440), Vector2(900, 440), Color("f4c564"), 2)
+		draw_line(Vector2(450, 405), Vector2(450, 458), Color("f4c564"), 1)
+		draw_circle(Vector2(450, 440), 3, Color("ff995e"))
+
+func label_at(value: String, point: Vector2, size: int = 18) -> Label:
+	var result := Label.new()
+	result.text = value
+	result.position = point
+	result.add_theme_font_size_override("font_size", size)
+	root.add_child(result)
+	return result
+
+func _initialize() -> void:
+	Engine.max_fps = 30
+	call_deferred("run")
+
+func run() -> void:
+	root.add_child(GroundGuide.new())
+	var geometry: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(OUTPUT + "/geometry.json"))
+	var image := Image.new()
+	var result := image.load(ART)
+	if result != OK:
+		push_error("Cannot read exact source image")
+		quit(1)
+		return
+	var texture := ImageTexture.create_from_image(image)
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+	frames.add_animation("diagnostic_E_walk")
+	frames.set_animation_loop("diagnostic_E_walk", true)
+	frames.set_animation_speed("diagnostic_E_walk", 6.25)
+	for spec: Dictionary in geometry.frames:
+		var region: Array = spec.region
+		var margin: Array = spec.margin
+		var atlas := AtlasTexture.new()
+		atlas.atlas = texture
+		atlas.region = Rect2(region[0], region[1], region[2], region[3])
+		atlas.margin = Rect2(margin[0], margin[1], margin[2], margin[3])
+		atlas.filter_clip = true
+		frames.add_frame("diagnostic_E_walk", atlas)
+	actor = AnimatedSprite2D.new()
+	actor.sprite_frames = frames
+	actor.animation = "diagnostic_E_walk"
+	actor.scale = Vector2.ONE * PREVIEW_SCALE
+	# A 1024 canvas is centered at512,512 and the requested foot is512,640.
+	actor.position = FLOOR - Vector2(0, 128) * PREVIEW_SCALE
+	root.add_child(actor)
+	label_at("DIAGNOSTIC ONLY | 328 | E gait | metadata registration", Vector2(18, 10), 19)
+	phase_label = label_at("", Vector2(18, 37), 17)
+	label_at("Fixed ground y440 | source canvas1024 | preview scale0.65 (unapproved)", Vector2(18, 466), 17)
+	label_at("Actual Godot AnimatedSprite2D / SpriteFrames; scratch scene, not Main", Vector2(18, 493), 16)
+	var registered: Array = []
+	for phase: int in range(3):
+		actor.frame = phase
+		phase_label.text = "Pose %d / 3 | requested source anchor %s" % [phase + 1, str(geometry.frames[phase].source_anchor)]
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var path := OUTPUT + "/registered-pose-%d.png" % phase
+		var capture := root.get_texture().get_image()
+		if capture.save_png(path) != OK:
+			push_error("Cannot save registered capture")
+			quit(1)
+			return
+		registered.append({"phase": phase, "path": path, "frame": actor.frame, "actual_AtlasTexture_size": actor.sprite_frames.get_frame_texture(actor.animation, phase).get_size()})
+	DirAccess.make_dir_recursive_absolute(OUTPUT + "/loop-frames")
+	actor.frame = 0
+	actor.play("diagnostic_E_walk")
+	var playback: Array = []
+	for index: int in range(90):
+		await process_frame
+		phase_label.text = "Pose %d / 3 | looping at6.25poses/s | ground and actor position fixed" % (actor.frame + 1)
+		await RenderingServer.frame_post_draw
+		var path := OUTPUT + "/loop-frames/%03d.png" % index
+		if root.get_texture().get_image().save_png(path) != OK:
+			push_error("Cannot save loop frame")
+			quit(1)
+			return
+		playback.append({"capture": index, "pose": actor.frame, "frame_progress": actor.frame_progress, "ticks_msec": Time.get_ticks_msec()})
+	var report := {"status": "rendered_diagnostic_only", "engine": Engine.get_version_info(), "renderer": RenderingServer.get_video_adapter_name(), "source_image_size": image.get_size(), "virtual_canvas": [1024, 1024], "preview_scale": PREVIEW_SCALE, "sprite_position": actor.position, "fixed_ground_position": FLOOR, "source_pixels_modified": false, "registered_captures": registered, "loop_capture_count": playback.size(), "playback": playback, "actual_Main": false, "final_scale_approved": false, "completed_added": 0}
+	var file := FileAccess.open(OUTPUT + "/godot-preview.json", FileAccess.WRITE)
+	file.store_string(JSON.stringify(report, "\t") + "\n")
+	file.close()
+	print("PR100_328_DIAGNOSTIC_PREVIEW_OK ", registered.size(), " registered PNG + ", playback.size(), " loop frames")
+	quit(0)

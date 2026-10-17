@@ -1,0 +1,70 @@
+{
+  "status": "PASS_LIGHTWEIGHT_REQUIRES_INDEPENDENT_REVIEW",
+  "target_key": "transform:357",
+  "role": "hit",
+  "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.png",
+  "bytes": 1406040,
+  "sha256": "ea75b44d447df7d835f462bdf25ef38468575db956f15f02258234fcc29d89a4",
+  "image_size": [
+    1774,
+    887
+  ],
+  "layout": "columns 8 by logical phases 2",
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "unique_real_motion_poses": 16,
+  "geometry": {
+    "analyze_pass": true,
+    "require_complete_pose_regions_pass": true,
+    "visible_omitted_pixels_alpha_gt_100": 0,
+    "foreign_other_body_crop_intrusions": [],
+    "foreign_other_body_crop_pixels": 0,
+    "small_disconnected_edge_fragments": [],
+    "boundary_visible_pixels": 0,
+    "low_alpha_fringe_gt25_more_than3px_from_gt100": 1,
+    "low_alpha_farthest_distance": 3.1622776601683795
+  },
+  "visual_review": {
+    "eight_directions": "PASS: ordered E/SE/S/SW/W/NW/N/NE; front three views show face, rear three show back mask/jacket. E and W side profiles preserved. No image-based mirroring was performed.",
+    "actual_motion": "PASS: upper row has head/chest recoil lean, shoulders back and flexed/braced knees; lower row head and torso more upright and knees partly straighten. Front/back frames have discernible torso tilt and bracing changes, rather than a translated still.",
+    "body_connections": "PASS: continuous head/neck/ruff, torso/pelvis/puffed breeches and red lower legs, knees/shoes connected; no floating limb.",
+    "weapon_hand": "PASS visually relative to rotation guide: same anatomical hand grips the short dark wand, violet end remains attached. Rear grip appears on the appropriate side. No new weapon or swap operation.",
+    "source_identity": "PASS: tall asymmetric white/black animal mask, white ruff, short purple-gold jacket, puffed breeches, red lower legs, dark gold-buckle boots preserved. No skirt/robe. Fine mask detail remains portrait-derived authoring, not verified original face.",
+    "transparent_edges": "PASS visual: no broad rectangular matte, fog or detached impact effect; all mask lobes/feet/wand tips remain within image, separated from adjacent poses.",
+    "foot_ground": "PASS sheet-level: feet at coherent ground baseline in each row, braced contact visible. Final animation foot-anchor consistency versus idle is pending."
+  },
+  "canvas_review": {
+    "canvas_size": 512,
+    "foot": [
+      256,
+      320
+    ],
+    "neutral_height": 293.0,
+    "rationale": "Smallest tested valid fit among 384/448/512; 384 and 448 fail the existing strict foot-anchored canvas check. 512 fits every full pose with 3px crop padding without pixel edits.",
+    "limit": "Only HIT pose crop fit reviewed. Idle anatomy scale and common final feet/anchor normalization are not approved by this agent; independent integration review must use actual idle, not assume this standalone virtual canvas."
+  },
+  "source_after_generation": {
+    "path": "/workspace/twilight/assets/catalog/4f7cead373e7901052fa2b5c.png",
+    "sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
+    "unchanged": true
+  },
+  "claim": "New 2D art based on existing external-origin catalog portrait and authored guide; not recovered original game animation",
+  "attempts": {
+    "v1": "HOLD retained, six foreign crop intrusions",
+    "v2": "lightweight pass; final independent review pending",
+    "attempt_limit_reached": true
+  },
+  "runtime_linked": false,
+  "actual_Main_tested": false,
+  "completion_counted": false,
+  "other_roles_changed": false,
+  "production_or_Git_changes": false
+}

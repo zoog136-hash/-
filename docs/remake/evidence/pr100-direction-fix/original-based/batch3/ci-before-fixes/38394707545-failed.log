@@ -1,0 +1,64 @@
+presentation	All boss poses and real gameplay renders	﻿2026-10-13T12:25:31.7344077Z ##[group]Run set -euo pipefail
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7344455Z [36;1mset -euo pipefail[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7344792Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/presentation"[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7345179Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7345840Z [36;1mfor name in capture_presentation_gallery capture_presentation_sequences capture_combat benchmark_presentation_battles; do[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7347175Z [36;1m  xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7348347Z [36;1m  if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|FAILED' "test-results/${name}.txt"; then exit 1; fi[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7348842Z [36;1mdone[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7349487Z [36;1mexport TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/pr100-main-directions"[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7350126Z [36;1mexport TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/pr100-main-directions/gameplay.json"[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7351540Z [36;1mXDG_DATA_HOME="${RUNNER_TEMP}/pr100-main-user" timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-main-render.txt[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7352872Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-main-render.txt; then exit 1; fi[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7353489Z [36;1mgrep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-main-render.txt[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7354290Z [36;1mfor name in original_based_monster_gameplay_test original_based_ghost_gameplay_test original_based_ogre_gameplay_test original_based_reaper_gameplay_test; do[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7356138Z [36;1m  TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/${name}-render" TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/${name}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${name}-render-user" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}-render.txt"[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7357804Z [36;1m  if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}-render.txt"; then exit 1; fi[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7358412Z [36;1m  grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}-render.txt"[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7358800Z [36;1mdone[0m
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7420384Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.7420738Z ##[endgroup]
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:31.8416318Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:35.4167462Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:35.4168269Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:36.0483269Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:36.0484473Z 
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:48.3452872Z PRESENTATION_GALLERY_OK bosses=60 captures=212
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:48.6396146Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:48.7964148Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:48.7965162Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:48.8519964Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:48.8521139Z 
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:50.7369297Z POSE_SEQUENCE_PROGRESS 0/180
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:54.6584094Z POSE_SEQUENCE_PROGRESS 60/180
+presentation	All boss poses and real gameplay renders	2026-10-13T12:25:58.6137029Z POSE_SEQUENCE_PROGRESS 120/180
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:02.4347740Z PRESENTATION_SEQUENCES_OK actors=12 frames=180
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:02.6896685Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:02.8540933Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:02.8542184Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:02.9106319Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:02.9107340Z 
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:15.6227101Z COMBAT_CAPTURE 01-base-companions
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:15.9271671Z COMBAT_CAPTURE 02-slash-hit
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:16.2175820Z COMBAT_CAPTURE 03-heavy-critical
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:16.5089204Z COMBAT_CAPTURE 04-magic-hit
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:16.8301507Z COMBAT_CAPTURE 05-transform-43
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:17.1637230Z COMBAT_CAPTURE 05-transform-393
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:17.4429057Z COMBAT_CAPTURE 06-monster-death
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:21.7586840Z COMBAT_CAPTURE 07-auto-120
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:28.2243788Z COMBAT_CAPTURE 07-auto-240
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:36.3971540Z COMBAT_CAPTURE 07-auto-359
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:36.3974739Z COMBAT_RENDER {"adapter":"llvmpipe (LLVM 20.1.2, 256 bits)","captures":10,"frames":300,"median_ms":56.234,"movement":3628.52465820312,"note":"Linux software GL diagnostic poses and live AUTO; not a hardware FPS guarantee.","p95_ms":72.726,"peak_nodes":8447,"peak_orphans":0,"vfx_high_water":6,"xp_delta":259}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:36.8896459Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:37.0465451Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:37.0466139Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:37.1031095Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:37.1032072Z 
+presentation	All boss poses and real gameplay renders	2026-10-13T12:26:58.6705531Z CROWD_SAMPLE {"flights_returned":true,"frames":180,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":45.145,"mode":"hunt","monster_released_hits":99,"orphans":0,"p95_ms":58.274,"peak_flights":3,"peak_nodes":6841,"physics_p95_ms":9.857,"player_landed_hits":40,"population":32,"process_p95_ms":50.001,"vfx_high_water":20,"vfx_returned":true}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:27:22.2013247Z CROWD_SAMPLE {"flights_returned":true,"frames":180,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":93.044,"mode":"hunt","monster_released_hits":521,"orphans":0,"p95_ms":106.295,"peak_flights":5,"peak_nodes":7353,"physics_p95_ms":15.724,"player_landed_hits":71,"population":96,"process_p95_ms":60.31,"vfx_high_water":36,"vfx_returned":true}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:28:06.6869550Z CROWD_SAMPLE {"flights_returned":true,"frames":180,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":178.958,"mode":"hunt","monster_released_hits":1332,"orphans":0,"p95_ms":192.44,"peak_flights":10,"peak_nodes":8121,"physics_p95_ms":23.558,"player_landed_hits":82,"population":192,"process_p95_ms":73.687,"vfx_high_water":53,"vfx_returned":true}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:28:19.3595936Z CROWD_SAMPLE {"flights_returned":true,"frames":180,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":48.208,"mode":"boss","monster_released_hits":97,"orphans":0,"p95_ms":57.056,"peak_flights":3,"peak_nodes":6841,"physics_p95_ms":11.372,"player_landed_hits":37,"population":32,"process_p95_ms":48.71,"vfx_high_water":53,"vfx_returned":true}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:28:43.1270880Z CROWD_SAMPLE {"flights_returned":true,"frames":180,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":93.216,"mode":"boss","monster_released_hits":551,"orphans":0,"p95_ms":106.468,"peak_flights":6,"peak_nodes":7353,"physics_p95_ms":15.657,"player_landed_hits":76,"population":96,"process_p95_ms":62.506,"vfx_high_water":53,"vfx_returned":true}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:29:27.1646448Z CROWD_SAMPLE {"flights_returned":true,"frames":180,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":177.011,"mode":"boss","monster_released_hits":1391,"orphans":0,"p95_ms":190.408,"peak_flights":10,"peak_nodes":8121,"physics_p95_ms":22.401,"player_landed_hits":90,"population":192,"process_p95_ms":75.528,"vfx_high_water":59,"vfx_returned":false}
+presentation	All boss poses and real gameplay renders	2026-10-13T12:29:27.3802086Z PRESENTATION_BENCHMARK_FAILED
+presentation	All boss poses and real gameplay renders	2026-10-13T12:29:27.6181467Z ##[error]Process completed with exit code 1.

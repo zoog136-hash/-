@@ -266,7 +266,7 @@ func _physics_process(delta: float) -> void:
 		motion.apply(sprite, animation_base_scale)
 		animation_state = motion.state
 		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.update_pose()
-		if motion.death_clock >= 1.0:
+		if motion.death_clock >= maxf(1.0, motion.profile.death_duration + .45):
 			if world_controller.has_method("recycle_monster") and world_controller.recycle_monster(self): return
 			queue_free()
 		return
@@ -283,7 +283,12 @@ func _physics_process(delta: float) -> void:
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
 	if is_instance_valid(species_visual) and species_visual.warning_active:
 		species_visual.warning_progress = clampf(motion.attack_elapsed / maxf(.01, motion.attack_duration * motion.attack_hit_ratio), 0.0, 1.0)
-	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
+	# Boss warning geometry keeps ticking even at the camera fringe.
+	# Resolve its authored eight-direction pose too, or a previously sampled
+	# frame can persist across a live telegraph (notably NW). Ordinary remote
+	# mobs retain their previous offscreen animation budget.
+	var boss_telegraph: bool = is_boss and is_instance_valid(species_visual) and species_visual.warning_active
+	if boss_telegraph or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
 		motion.apply(sprite, animation_base_scale)
 		if is_instance_valid(species_visual): species_visual.update_pose()
 	animation_state = motion.state
@@ -811,6 +816,7 @@ func _setup_animation(record: Dictionary) -> void:
 		if first != null:
 			motion.frame_source = frames
 			sprite.texture = first
+			sprite.material = null # pooled portrait shaders must not warp native views
 	motion.profile.reference_speed = maxf(1.0, base_move_speed)
 	visual_height = float(record.get("visual_height", 92.0 if is_boss else (62.0 if motion.profile.motion_style == "crawl" else 72.0)))
 	if sprite.texture != null:
@@ -821,6 +827,8 @@ func _setup_animation(record: Dictionary) -> void:
 			visual_height = sprite.texture.get_height()*scale_value
 	else:
 		animation_base_scale = Vector2.ONE
+	if motion.profile.pixel_scale > 0.0:
+		animation_base_scale = Vector2.ONE * motion.profile.pixel_scale
 	# Foot anchor and hit point depend on visible body size, not one fixed offset.
 	motion.profile.sprite_offset = Vector2(0, -visual_height * 0.46)
 	motion.profile.hit_position = Vector2(0, -visual_height * 0.42)
@@ -848,6 +856,7 @@ func _setup_animation(record: Dictionary) -> void:
 		shadow.name = "GroundShadow"
 		shadow.radius = motion.profile.shadow_size
 		add_child(shadow)
+	$GroundShadow.visible = not motion.profile.embedded_shadow
 	motion.apply(sprite, animation_base_scale)
 
 func current_attack_range() -> float:

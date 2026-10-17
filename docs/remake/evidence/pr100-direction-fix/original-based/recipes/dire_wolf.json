@@ -1,0 +1,56 @@
+{
+  "prompt": "main-v1 EXACT PROMPT:\nCreate a NEW separate fully transparent RGBA 2D game sprite atlas based ONLY on the attached unchanged original TWILIGHT monster portrait. Match detailed hand-painted isometric 2D dark-fantasy style, original identity/palette/anatomy. EXACTLY8 equal direction columns by8 phase rows,64 truly different articulated poses on a large square canvas. The ENTIRE body including full tail/jaws/spikes is at most35percent of cell width AND height. Leave very wide clear transparent gutters/borders, no neighboring-pose rectangle overlaps. Columns E true right profile,SE front-right,S full FRONT toward screen down,SW front-left,W true left profile,NW rear-left,N full BACK toward screen up,NE rear-right. All eight views really rotate the original anatomy; N hides the face. Phase rows1 relaxed idle,2 different breathing idle,3 walking phaseA,4 walking phaseB,5 walking phaseC,6 attack windup,7 actual directed contact,8 recovery. Alternate actual joint positions, never reuse, shift or resize a still. Consistent body volume, no background, ground shadows, grid, text, detached effects or invented equipment. Empty gaps/limb gaps must be alpha0. Preserve the exact original dark charcoal/gray shaggy dire wolf with a low long canine torso, heavy dark raised shoulder/back fur, lighter gray-brown underside and lower legs, original angular wolf muzzle/ears and visible canine teeth, four original articulated canine legs and original bushy tail silhouette. Keep the pictured head, mane and tail shape, colors and proportions; do not add heads, horns, wings, armor, human arms or held weapons. N is the real rump/back of wolf head with frontal eyes/muzzle hidden, S the original wolf face and chest. Walking alternates actual four-paw contacts with a natural low canine gait. Attack braces/draws head back, drives its original open jaws toward the direction with a forward natural canine lunge, then recovers.\n\nhit-v1 EXACT PROMPT:\nCreate a NEW separate fully transparent RGBA HIT/DEATH atlas from the FIRST attached unchanged original TWILIGHT monster portrait. SECOND image only guides consistent body volume/identity and the exact8views. Match detailed hand-painted isometric 2D dark-fantasy style. EXACTLY8direction columns by5phase rows,40 truly different articulated poses on a WIDE landscape canvas. Entire silhouette including every tail/fang/spike/paw is at most35percent of cell width and height, with huge clean transparent gutters/borders, no intersecting neighboring-body rectangles. Columns E trueRIGHTprofile,SE front-right,S fullFRONT screen down,SW front-left,W trueLEFTprofile,NW rear-left,N fullBACK screen up,NE rear-right. Every phase keeps its actual heading, N no frontalface. Rows1 nonlethal impact recoil with bent body/joints;2 different recovery recoil;3 death beginning with knees/legs losing support;4 much lower falling body;5 completely collapsed LOW whole body on ground with head and full tail/paws visible, no standing, no disappearing. Preserve the original four-legged animal anatomy. Never repeat or just shift/scale a still. No blood/wounds/severing/particles, extra gear, floor/shadows, text or grid. Background and all limb gaps are alpha0. No idle/walk/attack rows. Preserve the exact original dark charcoal/gray shaggy dire wolf with a low long canine torso, heavy dark raised shoulder/back fur, lighter gray-brown underside and lower legs, original angular wolf muzzle/ears and visible canine teeth, four original articulated canine legs and original bushy tail silhouette. Keep the pictured head, mane and tail shape, colors and proportions; do not add heads, horns, wings, armor, human arms or held weapons. N is the real rump/back of wolf head with frontal eyes/muzzle hidden, S the original wolf face and chest. ",
+  "prompt_record_kind": "exact selected prompts; unchanged original portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "output_path": "res://assets/actors/eight_direction/original_based/dire_wolf/poses-0.png"
+    },
+    {
+      "rows": 4,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3
+        ]
+      },
+      "output_path": "res://assets/actors/eight_direction/original_based/dire_wolf/poses-1.png"
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared the unchanged shaggy dark wolf portrait with64 real idle/walk/attack and32 real hit/death poses. Four actual hit/death rows provide2hit/2death, ending in a low complete fallen body;96 total poses, without inventing a fifth row. All8 anatomical views retain N rear/S front/Wleft and correct rear diagonals. Uniform maximum-living-height scale preserves the original86px budget. Preserve the exact original dark charcoal/gray shaggy dire wolf with a low long canine torso, heavy dark raised shoulder/back fur, lighter gray-brown underside and lower legs, original angular wolf muzzle/ears and visible canine teeth, four original articulated canine legs and original bushy tail silhouette. Keep the pictured head, mane and tail shape, colors and proportions; do not add heads, horns, wings, armor, human arms or held weapons. N is the real rump/back of wolf head with frontal eyes/muzzle hidden, S the original wolf face and chest. Walking alternates actual four-paw contacts with a natural low canine gait. Attack braces/draws head back, drives its original open jaws toward the direction with a forward natural canine lunge, then recovers. All source and generated PNG bytes remain unchanged; disjoint-body and unique-pixel checks pass. Actual Main verification remains pending; import alone is not completion."
+  }
+}

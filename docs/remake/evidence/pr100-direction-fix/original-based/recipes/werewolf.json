@@ -1,0 +1,13 @@
+{
+  "key": "monster:늑대인간",
+  "output_path": "res://assets/actors/eight_direction/original_based/werewolf/poses.png",
+  "prompt_record_kind": "summary_of_prior_generation_instructions",
+  "prompt": "Use the attached original brown/golden werewolf sprite as the character reference. Preserve the mane, long silver claws, digitigrade legs and palette. Transparent background, exactly eight columns and thirteen rows. Columns E,SE,S,SW,W,NW,N,NE. Rows: idle, breath, left foot walk, passing walk, right foot walk, attack windup, claw contact, attack recovery, hit recoil, hit recovery, kneeling death, falling death, corpse. Real articulated poses, no duplicated frames. Keep full poses and generous gutters, same elevated 2D camera, no new character design.",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared against assets/l1j/verified/monsters/5030.png: brown/gold swept mane, long pale silver finger claws, wolf muzzle and digitigrade feet retained. South exposes face/chest; north exposes furred back. Eastern and western views orient muzzle and reaching claw oppositely. Thirteen articulated rows include distinct stride/contact/recoil/collapse poses. Alpha analysis finds 104 separate bodies with bounded non-overlapping regions. This is newly drawn interpretation from the original portrait, not recovered original animation. Production Main scale/anchor/AI/contact/death validation still required. Rejected v3 overlaps poses and is not imported."
+  }
+}

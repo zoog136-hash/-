@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CROWD_CLEANUP_REMAINING [{"age":0.15,"caption":false,"color":"(0.48, 0.92, 0.38, 1.0)","critical":false,"critical_width":0.0,"display":"POISON 1","duration":0.65,"kind":"number","point":"(11232.0, 16234.0)","serial":2,"text":"POISON 1","width":78.0},{"age":0.15,"caption":false,"color":"(1.0, 0.3, 0.25, 1.0)","critical":false,"critical_width":0.0,"display":"BLEED 1","duration":0.65,"kind":"number","point":"(11232.0, 16226.0)","serial":3,"text":"BLEED 1","width":66.0},{"age":0.0,"caption":false,"color":"(0.48, 0.92, 0.38, 1.0)","critical":false,"critical_width":0.0,"display":"POISON 1","duration":0.65,"kind":"number","point":"(11232.0, 16234.0)","serial":4,"text":"POISON 1","width":78.0},{"age":0.0,"caption":false,"color":"(1.0, 0.3, 0.25, 1.0)","critical":false,"critical_width":0.0,"display":"BLEED 1","duration":0.65,"kind":"number","point":"(11232.0, 16226.0)","serial":5,"text":"BLEED 1","width":66.0}]
+ERROR: Crowd cleanup left an active damage source after retiring the sample
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/benchmark_presentation_battles.gd:52)
+       [1] _verify_cleanup (res://tests/benchmark_presentation_battles.gd:34)

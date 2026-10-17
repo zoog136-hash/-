@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "scope": "Independent early static inspection of 3/5 roles; not full animation completion or actual Main validation.",
+  "target_key": "monster:알비노 피쉬맨",
+  "reference_claim": "Existing TWILIGHT generated project atlas, not verified original external game art or recovered game animation",
+  "reference_sha_verified": true,
+  "authoring_reference_sha_verified": true,
+  "roles": [
+    {
+      "role": "idle",
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v2.png",
+      "sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+      "source_unchanged_after_analysis": true,
+      "geometry": "pass",
+      "distinct_poses": 16,
+      "logical_phases": 2,
+      "directions_axis": "blocks4x2",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "neutral_height": 191.5,
+      "image_size": [
+        1024,
+        1536
+      ],
+      "alpha_zero_fraction": 0.724792,
+      "omitted_alpha_gt100_pixels": 0,
+      "outside_crop_alpha_gt25_pixels": 0,
+      "outside_crop_max_alpha": 3,
+      "runtime_crop_noise_farther_than_3px_from_alpha_gt100": {
+        "alpha_gt10_pixels": 223,
+        "alpha_gt25_pixels": 24,
+        "max_alpha": 36,
+        "highest_alpha_gt25_poses": [
+          {
+            "phase": 1,
+            "direction": "S",
+            "alpha_gt25_pixels": 22,
+            "max_alpha": 36
+          },
+          {
+            "phase": 1,
+            "direction": "SE",
+            "alpha_gt25_pixels": 2,
+            "max_alpha": 27
+          },
+          {
+            "phase": 0,
+            "direction": "E",
+            "alpha_gt25_pixels": 0,
+            "max_alpha": 20
+          }
+        ]
+      }
+    },
+    {
+      "role": "walk",
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v2.png",
+      "sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+      "source_unchanged_after_analysis": true,
+      "geometry": "pass",
+      "distinct_poses": 24,
+      "logical_phases": 3,
+      "directions_axis": "blocks4x2",
+      "canvas_size": [
+        632,
+        632
+      ],
+      "neutral_height": 235.0,
+      "image_size": [
+        1024,
+        1536
+      ],
+      "alpha_zero_fraction": 0.471811,
+      "omitted_alpha_gt100_pixels": 0,
+      "outside_crop_alpha_gt25_pixels": 0,
+      "outside_crop_max_alpha": 9,
+      "runtime_crop_noise_farther_than_3px_from_alpha_gt100": {
+        "alpha_gt10_pixels": 627,
+        "alpha_gt25_pixels": 30,
+        "max_alpha": 71,
+        "highest_alpha_gt25_poses": [
+          {
+            "phase": 0,
+            "direction": "N",
+            "alpha_gt25_pixels": 6,
+            "max_alpha": 44
+          },
+          {
+            "phase": 1,
+            "direction": "NE",
+            "alpha_gt25_pixels": 6,
+            "max_alpha": 71
+          },
+          {
+            "phase": 1,
+            "direction": "SE",
+            "alpha_gt25_pixels": 5,
+            "max_alpha": 30
+          }
+        ]
+      }
+    },
+    {
+      "role": "attack",
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v2.png",
+      "sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+      "source_unchanged_after_analysis": true,
+      "geometry": "pass",
+      "distinct_poses": 24,
+      "logical_phases": 3,
+      "directions_axis": "blocks4x2",
+      "canvas_size": [
+        424,
+        424
+      ],
+      "neutral_height": 156.5,
+      "image_size": [
+        1024,
+        1536
+      ],
+      "alpha_zero_fraction": 0.644811,
+      "omitted_alpha_gt100_pixels": 0,
+      "outside_crop_alpha_gt25_pixels": 0,
+      "outside_crop_max_alpha": 6,
+      "runtime_crop_noise_farther_than_3px_from_alpha_gt100": {
+        "alpha_gt10_pixels": 2190,
+        "alpha_gt25_pixels": 102,
+        "max_alpha": 75,
+        "highest_alpha_gt25_poses": [
+          {
+            "phase": 1,
+            "direction": "NW",
+            "alpha_gt25_pixels": 35,
+            "max_alpha": 36
+          },
+          {
+            "phase": 2,
+            "direction": "W",
+            "alpha_gt25_pixels": 20,
+            "max_alpha": 36
+          },
+          {
+            "phase": 1,
+            "direction": "SE",
+            "alpha_gt25_pixels": 12,
+            "max_alpha": 49
+          }
+        ]
+      }
+    },
+    {
+      "role": "hit",
+      "path": "/workspace/twilight-artwork/batch22/fishman/hit-v1.png",
+      "sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+      "source_unchanged_after_analysis": true,
+      "geometry": "pass",
+      "distinct_poses": 16,
+      "logical_phases": 2,
+      "directions_axis": "blocks4x2",
+      "canvas_size": [
+        536,
+        536
+      ],
+      "neutral_height": 201.0,
+      "image_size": [
+        1024,
+        1536
+      ],
+      "alpha_zero_fraction": 0.682711,
+      "omitted_alpha_gt100_pixels": 0,
+      "outside_crop_alpha_gt25_pixels": 0,
+      "outside_crop_max_alpha": 5,
+      "runtime_crop_noise_farther_than_3px_from_alpha_gt100": {
+        "alpha_gt10_pixels": 600,
+        "alpha_gt25_pixels": 21,
+        "max_alpha": 61
+      },
+      "visual_review": "All8 directions retain source identity and full spear/net/gripping limbs. hit_0 lifts/recoils through neck/upper torso, while hit_1 returns to a more bent-knee compressed stance, preserving heading; no detached body, neighboring claw, visible clipping or broad alpha haze.",
+      "inspection_panel": "/workspace/twilight-run/recovery/remote-three-contact/fishman-hit-v1-inspection.jpg"
+    }
+  ],
+  "inspection_panel": "/workspace/twilight-run/recovery/remote-three-contact/fishman-3roles-inspection.jpg",
+  "visual_verdict": "pass_static_partial",
+  "remaining_roles": [
+    "death"
+  ],
+  "source_PNGs_modified": 0,
+  "completed_role_review_count": 4,
+  "required_role_count": 5,
+  "reviewed_real_poses": 80,
+  "reference_matches_current_authoring_plan": true,
+  "authoring_crop_is_exact_source_pixels": true,
+  "identity_review": "Pale ivory/pink scales, red round eyes, blunt fish muzzle/gill marks, pink dorsal/back fins, bronze/leather straps/bracers, torn purple-brown waist cloth, long wooden barbed spear and hanging coarse net match the exact installed project artwork. The neighboring right-edge crab claw is not part of the authored fishman and was not copied. This is existing project artwork, not verified original external game art.",
+  "direction_review": "All eight views inspected per role: E/W profiles, S frontal red eyes/chest, N dorsal/back view with no pasted frontal face, coherent diagonal head/shoulder/leg occlusion.",
+  "walk_review": "walk_0/1/2 in E,SE,S,SW,W,NW,N,NE show opposing support/swing legs, lifted knees in phases0/2 and a narrower under-hip passing stance in phase1. This is articulated gait rather than three translated idle poses.",
+  "attack_review": "attack_0 windup, attack_1 extended forward thrust and attack_2 recovery inspected in all eight. Contact tip directions: E right, SE down-right, S down, SW down-left, W left, NW up-left, N up, NE up-right. Gripping hands, shaft, net, arms and feet remain connected; full tip/butt and net are within independent crop rectangles. Actual contact timing/target alignment still requires Main.",
+  "transparency_review": "All three atlases pass strict existing separated-body/3px crop and full alpha>100 coverage checks without relaxed padding. E/S/NW attack_1 were independently composited on white and black; no broad fog, rectangular matte or visible halo was found. Low-alpha outliers are sparse antialias/net-thread fringes, unlike the held frog atlas.",
+  "transparency_diagnostic": "/workspace/twilight-run/recovery/remote-three-contact/fishman-attack-alpha-diagnostic.jpg",
+  "proportional_canvas_review": {
+    "idle": 512,
+    "walk": 632,
+    "attack": 424,
+    "normalized_neutral_heights_256": [
+      95.75,
+      95.189873,
+      94.490566,
+      96.0
+    ],
+    "finding": "Proportional canvas normalization keeps these neutral heights within about0.9%; do not apply one raw canvas to every sheet.",
+    "hit": 536
+  },
+  "blocking_issues_found": [],
+  "actual_Main_validation": "not_run_by_this_static_review",
+  "acceptance_limit": "4/5 roles only. Death and all-role game validation remain required; not a completed or connected entity.",
+  "integration_warnings": [
+    {
+      "kind": "review_actual_foot_anchors_before_runtime",
+      "scope": "Especially attack_1 S and downward spear thrusts",
+      "finding": "The S contact spear tip visibly extends below both planted feet. analyze() default source_anchor_y uses the lowest opaque pixel, which would anchor the spear tip to the ground rather than the feet. Proportional canvas sizes alone do not establish anatomical foot contact. Use explicitly visually reviewed per-pose source_anchors without changing source PNG pixels, then verify in Main.",
+      "classification": "Integration requirement, not a rejection of the authored source image."
+    }
+  ],
+  "excluded_failed_candidates": [
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v1.png",
+      "reason": "Generator/reviewer reports20 separated bodies instead of24. Not approved or included in accepted roles; do not fabricate missing frames."
+    }
+  ]
+}

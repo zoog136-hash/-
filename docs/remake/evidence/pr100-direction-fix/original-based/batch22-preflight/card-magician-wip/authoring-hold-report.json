@@ -1,0 +1,138 @@
+{
+  "target_key": "transform:360",
+  "name": "서커스단 카드 마술사",
+  "status": "HOLD_AFTER_TWO_WALK_VISUAL_FAILURES",
+  "source_claim": "Existing external-origin catalog portrait with Inven metadata used for newly authored2D art; no recovered original game animation claim",
+  "source_sha_at_stop": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+  "source_unchanged": true,
+  "approved_reference_guide": "rotation-v1.png (8view guide only)",
+  "approved_static_roles": {
+    "idle": "idle-v1.png"
+  },
+  "approved_static_motion_pose_count": 16,
+  "independent_idle_review": "PASS_STATIC_IDLE_ONLY, source/eight-view geometry and Eresting-twist accepted by root independent review",
+  "rejected_walks": [
+    {
+      "file": "walk-v1.png",
+      "geometry": "PASS24/24",
+      "visual": "FAIL: phase0/phase2 same leading leg unresolved; only middle passing is clear"
+    },
+    {
+      "file": "walk-v2.png",
+      "geometry": "PASS24/24",
+      "visual": "FAIL: phase2 NE wrongfrontview; NW/N card-hand side flips; leg alternation unresolved",
+      "visual_evidence": "/workspace/twilight-artwork/batch22/card_magician/walk-v2.visual-review.json"
+    }
+  ],
+  "unmade_required_roles": [
+    "attack",
+    "hit",
+    "death"
+  ],
+  "full104_pose_recipe": "NOT_CREATED: mandatory roles unavailable and walking unapproved",
+  "actual_Main_validation": "NOT_RUN; incomplete rejected candidate remains unlinked",
+  "source_anchor_pending": "Only approved idle planted boots are eligible. No runtime foot/contact approval performed. Held card/coat/hat must never replace anatomical boot ground anchors.",
+  "further_generation": "STOPPED as instructed after two failed walk trials; next actor selection/partial-source design belongs to root",
+  "production_changes": false,
+  "completed_count_increment": 0,
+  "files": [
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/authoring-reference.png",
+      "bytes": 13675,
+      "sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/idle-v1.geometry.json",
+      "bytes": 290,
+      "sha256": "9108fb9b97612221891403e4ffc57a742bbe9e8bbe7ab24dbfa6b670bde3bc65"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/idle-v1.png",
+      "bytes": 2034118,
+      "sha256": "2197351d31edbe2a21513b19549d07faa7a9fdb7d04c5e28a99154dc544aa509"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/idle-v1.prompt.txt",
+      "bytes": 2356,
+      "sha256": "7a404f6f918c2fa215755fed9d61e96d1095c324909001dc4355aedb95bd313f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/idle-v1.visual-review.json",
+      "bytes": 1256,
+      "sha256": "969631c825eafd44944abb236901a3ac87ab17d8ab530744d6aebc2fae4c8033"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/reference-proof.json",
+      "bytes": 1522,
+      "sha256": "ef4b612dd9401f48e5cb3e2ea9ae7fa7eb5a919d77618df1ec5956dddab311de"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/rotation-v1.geometry.json",
+      "bytes": 263,
+      "sha256": "2e342e319abd8637d5e838f4255b53f12479a6ab4a2f45bffd4caff370e9dc35"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/rotation-v1.png",
+      "bytes": 1068096,
+      "sha256": "e45aaa5bd5dd45a23c7126f0e7d6c103588db157c4426f4ef67b7b02687c88e0"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/rotation-v1.prompt.txt",
+      "bytes": 1912,
+      "sha256": "5c88b0432efe1de3ba620ffca3d5fe60490b24e8d905969a63a13eece9f114ef"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/rotation-v1.review.json",
+      "bytes": 791,
+      "sha256": "d6ed312a5ee3baf2fee81341a4fd38c6e83efc2d97477fa5d288b7ae7a969634"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v1.geometry.json",
+      "bytes": 290,
+      "sha256": "e4dd5c05740a9f7bdee3f821aa86f31f42aaf06b8a0c511c754beb043f019083"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v1.png",
+      "bytes": 2216311,
+      "sha256": "1b42607aab16aa152963344fcb3c9d1a837be635914719f882c6f321e5bb1850"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v1.prompt.txt",
+      "bytes": 2781,
+      "sha256": "24883b52d07e3ab5f5ee1469a25cbb78fddb9c008a9c334103ffb26fcfa65ccd"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v1.visual-review.json",
+      "bytes": 419,
+      "sha256": "174a62d841c99537803a889fa08bf3fc849dc40cb04bebef7eeaf5cef4609489"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v2.geometry.json",
+      "bytes": 290,
+      "sha256": "80c1b3011923c34851e795b107e61ce95d96bba8f62da30c433231f8c2ac074d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v2.png",
+      "bytes": 2199719,
+      "sha256": "81331e76ae1504574639433d987f644ae10b97ca70230ba87beb212150993636"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v2.prompt.txt",
+      "bytes": 2269,
+      "sha256": "08fb353682b98acf676390dd533d4b06cc5dd81f984a170c7163285b38beb609"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/card_magician/walk-v2.visual-review.json",
+      "bytes": 4056,
+      "sha256": "f972179c44d94f471d9edea8a3f5b2500c3a2bea61f60c536ae971710d3bec4d"
+    }
+  ],
+  "independent_review_correction": {
+    "historical_author_diagnosis_preserved": true,
+    "S": "Walkv2 Sphase0 viewer-right knee lift and Sphase2 viewer-left knee lift demonstrate real opposite strides. Initial S same-leg defect claim withdrawn.",
+    "E_W": "Side-view near/far-leg alternation remains unproved, not asserted definitively wrong.",
+    "HOLD_basis": "Phase2 NEwrong front-right direction and NW/N card-hand reversal are independently confirmed and remain sufficient for HOLD.",
+    "correction_applied_to": "walk-v2.visual-review.json",
+    "new_generation": "None"
+  }
+}

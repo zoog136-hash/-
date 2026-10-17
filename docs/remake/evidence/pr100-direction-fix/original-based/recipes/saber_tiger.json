@@ -1,0 +1,56 @@
+{
+  "prompt": "main-v2 EXACT PROMPT:\nCorrect the SECOND attached newly generated64-pose tiger atlas using the FIRST attached unchanged original tiger portrait. The only semantic defect is that the FIFTH column (W) wrongly faces RIGHT. Repaint all EIGHT poses in the FIFTH column as a genuine TRUE LEFT-FACING PROFILE: head and long saber teeth on the LEFT, tail and rump on the RIGHT, all walking and attack contacts directed LEFT. Do not reuse the current right-facing W poses. Retain the other seven correctly oriented columns and their genuine phases/identity/body volume, keeping the full64-pose8columns×8rows layout, fully transparent RGBA background, huge transparent gutters and intact complete tails/paws. First-column E stays RIGHT; secondSE front-right; thirdS fullFRONT down; fourthSW front-left; FIFTHW TRUELEFT; sixthNW rear-left; seventhN fullBACK up; eighthNE rear-right. No labels/grid/background. Rows2idle/3walk/3attack exactly as provided; maintain clean separated frame rectangles. Do not flip the complete sheet or exchange N/S. Preserve the actual WHITE saber-toothed tiger with dense narrow BLACK stripes, heavy white shoulder ruff/mane, round feline ears, pale feline face, very long paired ivory upper canine fangs, four muscular striped legs with broad white paws, long striped feline tail. Keep exact original proportions and stripe palette; never change to orange, lion or humanoid. N shows rump/striped back and rear of mane/head, with face/fangs hidden. S shows original face and both long fangs. Walking has three different alternating four-paw contact phases. Attack draws the neck/forequarters back, lunges the original saber-fanged muzzle and one natural paw in the compass direction, then returns.\n\nhit-v3 EXACT PROMPT:\nEdit the SECOND attached newly drawn tiger atlas only to provide much larger TRANSPARENT GUTTERS. The FIRST image is the unchanged original identity reference. Keep exactly the SAME32 real poses arranged EIGHT direction COLUMNS by FOUR phase ROWS. The views and articulated phase content in the second image are correct: KEEP them, including its correct rear-facing NW,N,NE collapsed bodies. Do not rotate or change any pose heading. Keep8columns4rows, do NOT transpose directions and phases. The defect is only neighboring frame bounding boxes overlap or nearly touch. Put each entire tiger silhouette inside the central HALF of its cell width and height, surrounded by at least25percent alpha0 empty space on all four sides. Every tail/fang/paw remains visible and fully contained. Wide landscape2:1 canvas, clean transparent RGBA background including all limb gaps, absolutely no painted backdrop/haze/spotlight/shadow/grid/text. Preserve the original white/black stripe palette and body volume of the second image. Columns E,SE,S,SW,W,NW,N,NE and rows hit1,hit2,death-slump,death-flat stay exactly as in the second image; create no extra phases or duplicates. NW head is upperLEFT and rump/tail lowerRIGHT even dead. N back hides frontal face. NE head upperRIGHT and rump/tail lowerLEFT even dead. Last row is a limp low whole body with folded limbs and chin resting low. Original tiger with heavy white mane, two ivory saber fangs,4feline legs and long striped tail.",
+  "prompt_record_kind": "exact selected prompts; unchanged original portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "output_path": "res://assets/actors/eight_direction/original_based/saber_tiger/poses-0.png"
+    },
+    {
+      "rows": 4,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3
+        ]
+      },
+      "output_path": "res://assets/actors/eight_direction/original_based/saber_tiger/poses-1.png"
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "W was repainted as true left profile. Final spacing revision preserves all8 correct headings and complete low collapsed tiger bodies, with strict frame-rectangle checks passing. The two existing tiger portrait files have identical actual SHA/dimensions and rendered presentation; each is independently checked and recorded. Exactly96 real poses:64 main+32 hit/death with2 actual death phases. No duplicate third death slot. One uniform maximum-living-height scale preserves the original78px budget. Preserve the actual WHITE saber-toothed tiger with dense narrow BLACK stripes, heavy white shoulder ruff/mane, round feline ears, pale feline face, very long paired ivory upper canine fangs, four muscular striped legs with broad white paws, long striped feline tail. Keep exact original proportions and stripe palette; never change to orange, lion or humanoid. N shows rump/striped back and rear of mane/head, with face/fangs hidden. S shows original face and both long fangs. Walking has three different alternating four-paw contact phases. Attack draws the neck/forequarters back, lunges the original saber-fanged muzzle and one natural paw in the compass direction, then returns. All source and generated PNG bytes remain unchanged; disjoint-body and unique-pixel checks pass. Actual Main verification remains pending; import alone is not completion."
+  }
+}

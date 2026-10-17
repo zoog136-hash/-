@@ -1,0 +1,789 @@
+{
+  "key": "monster:알비노 플라워",
+  "prompt": "{\n  \"attack-E-SE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 E=trueRIGHT profile, mouth/tonguepointsRIGHT. COLUMN2 SE=frontRIGHT, mouthdiagonallydown-right. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-E-SE-spaced-exact-prompt.txt\": \"EDIT THE ATTACHED EXISTING SIX-POSE FLOWER SPRITE SHEET. Keep exactly these six already-articulated complete creature poses, characterdesign, colors, rootshapes, tongue, camera and2columns×3rows ordering. This is a SPACING CORRECTION. Repack allsix at much SMALLER SAMEUNIFORM SCALE inside MUCH LARGER CLEAN EMPTY TRANSPARENT GUTTERS. Wholebody INCLUDING extendedtongue andallroots MUST occupy atmost35%cellwidth and40%cellheight. Think tiny stickers incenter ofhugeblankcells. Atleast120fullytransparentpixels HORIZONTALLY betweencompletebody BOUNDINGBOXES and80pixels VERTICALLY, pluslargeoutermargin. No root/tongue boundingrectangle may include evenonepixel from anotherpose. No pose overlaps orcellintrusion. OutputactualRGBAtransparency, everybackgroundpixelalpha0; opaque bodyinteriors and narrowantialiasededgesonly, no brown/pinkhaze/matte/floor/shadow. Keep every body part, nevertrim/shortenrootortongue. Preserveoriginal2columns×3rows, no extraoromittedpose. No labels/grid. Eachphase differentanatomicalpose stays unchanged.\\nColumnsare E-SE. Row1windup,row2contactlungesouttowardfacing,row3recovery. Preserve fixedcompassorientationineachcolumn.\\n\",\n  \"attack-N-NE-backfix-exact-prompt.txt\": \"EDIT THIS EXISTING 2COLUMN×3ROW SIX-POSE ATLAS. Exactsamecarnivorousalbino-flowerdesign, articulatedroots, ivoryredveinedpetals, greenrearsepals, bodyshape andsourcecolors. Correct ONLY the WRONGFRONTALFACING in MIDDLECONTACTROW: bothmiddlefigures wronglyturnmouth/teeth/tonguetowardviewer. ALLSIXfigures MUST stayBACKFACING, asalreadycorrectintopandbottomrows. LEFTCOLUMN N fullBACK facingAWAY/up: onlygreenrearsepals andbackofpalepetalsvisible, NOfrontmouth/teeth/tongue. RIGHTCOLUMN NE BACK-RIGHT: mostlyrear/greenssepals, NO frontal mouth. Middlecontactphase must clearlyLUNGEHEADAWAY/UP fromgroundedrootbase, stalkbendingforwardAWAY ratherthanrotatingtorso tofacecamera. Rearhead canforeshorten/squashintoawaybite; far-sidemouthisoccludedbyrearpetals. Topwindup stalkcoilstowardcamera, middlecontactreachesaway, bottomrecoveryretracts. Everyrootlimb/tongueremainsattached, nothingremovedfrombodyexceptfrontmouthiscorrectlyhiddenbyrearview. Exactlysixcompletebodies2cols3rows, no extra. ALSO repacksmallerwithhugeemptytransparentgutters: fullbodymax35%cellwidth40%cellheight,100pxgapsinbothaxes. TrueRGBAbackgroundalpha0, no floor/shadow/haze/matte/grid/text. Finaloutputsame2Dpaintedcreature, no redesign.\\n\",\n  \"attack-N-NE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 N=fullBACK,NO frontmouth/teeth/tongue,greenrearsepalsandpale rearpetals. COLUMN2 NE=rearRIGHT, showgreenbackandrearpetals,NO frontface. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-S-SW-facingfix-exact-prompt.txt\": \"EDIT THIS EXACT2COLUMN×3ROW SIX-POSE FLOWERATTACKATLAS. Preservecreaturedesign,rootanatomy,petals,teeth,tongue,allmotionposes. LEFTCOLUMNisSfullFRONT inEVERYrow;RIGHTCOLUMNisSW FRONT-LEFT inEVERYrow, head/mouthalwayspointsdownLEFT withtonguereachLEFT. TOPRIGHTWINDUPcurrentlyfacesRIGHTandmustbecorrectedtoFRONTLEFT. Keep itcoiledbackforwindup butfaceandjawstillpointLEFT, neverrotateheadtowardright. Middlecontact headlungesouttowarditsfacingdirectionleft/downleft;bottomrecoveryretractswithsamedirection. Keep rootedbaseattachedandgroundedallphases. Exactlysixcompletebodies2cols3rows. Also repackatsmallersameuniformscale withHUGEtransparentgutters: fullbodyincludingallrootsandtonguemax35%cellwidth40%cellheight,atleast120horizontal80verticaltransparentpixelsbetweenwholebodyBOUNDINGBOXES,wideouterborder. Allbackgroundalpha0,no haze/matte/floor/shadow/particles/labels/grid. No removedbodypartsorcroppedtips.\\n\",\n  \"attack-S-SW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 S=fullFRONT mouth/teeth/tonguefacingviewer. COLUMN2 SW=frontLEFT, mouthdiagonallydown-left. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-W-NW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 W=trueLEFTprofile, mouth/tonguepointsLEFT. COLUMN2 NW=rearLEFT, showgreenrearsepalsandpale rearpetals,NO frontmouth. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-W-NW-spaced-exact-prompt.txt\": \"EDIT THE ATTACHED EXISTING SIX-POSE FLOWER SPRITE SHEET. Keep exactly these six already-articulated complete creature poses, characterdesign, colors, rootshapes, tongue, camera and2columns×3rows ordering. This is a SPACING CORRECTION. Repack allsix at much SMALLER SAMEUNIFORM SCALE inside MUCH LARGER CLEAN EMPTY TRANSPARENT GUTTERS. Wholebody INCLUDING extendedtongue andallroots MUST occupy atmost35%cellwidth and40%cellheight. Think tiny stickers incenter ofhugeblankcells. Atleast120fullytransparentpixels HORIZONTALLY betweencompletebody BOUNDINGBOXES and80pixels VERTICALLY, pluslargeoutermargin. No root/tongue boundingrectangle may include evenonepixel from anotherpose. No pose overlaps orcellintrusion. OutputactualRGBAtransparency, everybackgroundpixelalpha0; opaque bodyinteriors and narrowantialiasededgesonly, no brown/pinkhaze/matte/floor/shadow. Keep every body part, nevertrim/shortenrootortongue. Preserveoriginal2columns×3rows, no extraoromittedpose. No labels/grid. Eachphase differentanatomicalpose stays unchanged.\\nColumnsare W-NW. Row1windup,row2contactlungesouttowardfacing,row3recovery. Preserve fixedcompassorientationineachcolumn.\\n\",\n  \"attack-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by THREE rows = TWENTY-FOUR complete separated plant bodies. ROW1 melee bite windup: stalk coils BACK away from its facing direction, jaws tense and tongue curls toward mouth; rooted base remains supported. ROW2 real attack CONTACT: whole flowerhead lunges outward IN THE EXACT FACING DIRECTION, mouth opens wide and teeth/tongue reach the target area ahead of its own roots, stalk bends forward but stays physically connected to grounded roots. Side directions must visibly reach right/left, north reaches AWAY/up showing rear petals rather than facing viewer. ROW3 actual recovery: stalk retracts, jaws partly close, tongue curls back, roots brace below. Three different clearly articulated attack phases in every compass direction. No external bite effect, no detached projectile, no new weapon or rootless floating head.\\n\",\n  \"attack-v2-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most30percent of cell width and35percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by THREE rows = TWENTY-FOUR complete separated plant bodies. ROW1 melee bite windup: stalk coils BACK away from its facing direction, jaws tense and tongue curls toward mouth; rooted base remains supported. ROW2 real attack CONTACT: whole flowerhead lunges outward IN THE EXACT FACING DIRECTION, mouth opens wide and teeth/tongue reach the target area ahead of its own roots, stalk bends forward but stays physically connected to grounded roots. Side directions must visibly reach right/left, north reaches AWAY/up showing rear petals rather than facing viewer. ROW3 actual recovery: stalk retracts, jaws partly close, tongue curls back, roots brace below. Three different clearly articulated attack phases in every compass direction. No external bite effect, no detached projectile, no new weapon or rootless floating head.\\n\\nUse large square2048×2048 canvas for24SMALLBODIES. Every complete root/flower lunge stays withinCENTER30%ofcellwidth35%cellheight. Keep at least80fullytransparentpixels between allbodies, especially longcontacttongues. Background is EXACTZEROALPHA, no translucentpink/brownmatte orfog. Opaque painted bodies with narrowantialias edges only.\\n\",\n  \"hit-death-E-SE-S-SW-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: E PURE RIGHT profile, flower mouth pointsRIGHT, SE front-right, mouth diagonaldown-right, S FULL FRONT, open toothed mouth towardviewer, SW front-left, mouth diagonaldown-left. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 hit recoil: head/stalk bendBACK opposite facing, petalscrumple, rootsbrace. ROW2 hitrecovery: head/stalk straightenpartway andpetalsreopen, genuinelydifferent root/flowerpose. ROW3 deathstage1: rootsbuckle, stalkbends sharplydown andhead droops. ROW4 deathstage2: WHOLE attachedplant falls sideways towardground, rootsfold andcompress beneath droopingstalk andhead. ROW5 FINALDEATH: LOW FLAT GROUNDED WILTED COMPLETE CORPSE. Flowerhead lies sideways flat andlimptongue staysattached; stalk andall rootlimbs crumple together onground. No standing corpse/crouch, no detachedparts, no emptytiles. All5phases inall4directions; preserve rearviews onfallenbodies, no frontal mouth everywhere.\\n\",\n  \"hit-death-E-SE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 E=trueRIGHT profile, mouth/tonguepointsRIGHT. COLUMN2 SE=frontRIGHT, mouthdiagonallydown-right. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-N-NE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 N=fullBACK,NO frontmouth/teeth/tongue,greenrearsepalsandpale rearpetals. COLUMN2 NE=rearRIGHT, showgreenbackandrearpetals,NO frontface. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-S-SW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 S=fullFRONT mouth/teeth/tonguefacingviewer. COLUMN2 SW=frontLEFT, mouthdiagonallydown-left. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-W-NW-N-NE-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: W PURE LEFT profile, flower mouth pointsLEFT, NW back-left, rear green sepals, NO frontmouth, N FULL BACK, rear green sepals andpale rearpetals, NO teeth/tonguefront, NE back-right, rear green sepals, NO frontmouth. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 hit recoil: head/stalk bendBACK opposite facing, petalscrumple, rootsbrace. ROW2 hitrecovery: head/stalk straightenpartway andpetalsreopen, genuinelydifferent root/flowerpose. ROW3 deathstage1: rootsbuckle, stalkbends sharplydown andhead droops. ROW4 deathstage2: WHOLE attachedplant falls sideways towardground, rootsfold andcompress beneath droopingstalk andhead. ROW5 FINALDEATH: LOW FLAT GROUNDED WILTED COMPLETE CORPSE. Flowerhead lies sideways flat andlimptongue staysattached; stalk andall rootlimbs crumple together onground. No standing corpse/crouch, no detachedparts, no emptytiles. All5phases inall4directions; preserve rearviews onfallenbodies, no frontal mouth everywhere.\\n\",\n  \"hit-death-W-NW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 W=trueLEFTprofile, mouth/tonguepointsLEFT. COLUMN2 NW=rearLEFT, showgreenrearsepalsandpale rearpetals,NO frontmouth. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by FIVE rows = FORTY complete separated plant bodies. ROW1 hit recoil: flowerhead and stalk bend BACK opposite facing direction, petals crumple inward, supporting roots brace on ground. ROW2 hit recovery: head returns partway upright and petals reopen with a genuinely different stalk/root posture. ROW3 death stage1: woody rootlimbs buckle, stalk bends sharply down and flowerhead droops, tongue limp but attached. ROW4 death stage2: entire attached plant falls sideways toward ground, roots fold and compress under drooping stalk and flowerhead. ROW5 FINAL DEATH: LOW FLAT GROUNDED wilted complete corpse, cream flowerhead lying on side with teeth and limp tongue still attached, stalk and all woody roots crumpled together on ground. Final corpse must NOT stand upright, NOT be a living crouch, NOT be an empty tile or isolated detached petals. Keep every original body part attached and visible in a safe generously spaced cell. Each death progression visibly changes the complete body pose. Preserve all8compass orientations across fallen bodies; rear deaths show rear sepals and petals, not frontmouth copied everywhere.\\n\",\n  \"idle-walk-E-SE-S-SW-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: E PURE RIGHT profile, flower mouth pointsRIGHT, SE front-right, mouth diagonaldown-right, S FULL FRONT, open toothed mouth towardviewer, SW front-left, mouth diagonaldown-left. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 idle neutral, jaws slightly open and supporting rootclusters planted. ROW2 genuinely different breathing: stalk curves andpetals/tongue flex with rootsanchored. ROW3 rootcrawlA: one rootbundle reaches forward while opposite roots pushback, stalk leans forward. ROW4 passing: reaching rootjoints fold under stalk, rear roots pullthrough visibly bent. ROW5 rootcrawlB: OPPOSITE rootbundle reachesforward and former reaching roots pushback, withdifferent rootjoint shapes andoverlaps. Actual articulated rootmotion, not bodytranslation/rotation or petalonlysway. Roots are attached and some roottoes supportground in everyphase.\\n\",\n  \"idle-walk-E-SE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and FIVE ROWS, exactly TEN whole plant figures on a PORTRAIT1024×1536canvas. This is NOT a full8direction sheet. Make each wholeplant includingALLroots fit the CENTER40%ofits512pixelwide cell andCENTER60%ofits307pixelhighcell. Thus fullbody max200pixelswide and180pixelshigh. Atleast100transparentpixels HORIZONTALLY between allfigures and60pixels VERTICALLY. Place figures on exactequal2×5gridcenters. Keep wideblankouterborder. Do not makefiguresfillcells. ONLY ALPHA-TRANSPARENT emptybackground: removeALLpink/brownbackgroundhaze,fog,matte,groundandsoftshadow. Everypixeloutsidebodycontourisalpha0; bodyisopaque paintedcutout, antialiasnarrowedgesonly. Eachbody isONE visiblyconnectedcreature; thickconnectedroots, no separatedrootfragments orparticles.\\nCOLUMN1 E=trueRIGHTsideprofile, mouth/toestalktowardRIGHT. COLUMN2 SE=front-right, mouthpointingdiagonallydown-right. These twodirectionsstayexactlyfixedintheircolumn throughall5rows.\\nROW1 neutralidle. ROW2 visiblydifferentstalkbend/petal/tonguebreathing withrootsplanted. ROW3 rootcrawlA: onegroupofrootsreachesforwardwhileoppositerootspushback. ROW4 passing: rootjointsfoldunderstalkandpullthrough, visiblydifferentkneelikebends. ROW5 rootcrawlB: oppositegrouprootsreachesforwardwhileformerreachingrootspushback. Everyphasechangesactualrootjointpositions/overlaps; nobodyslidingortranslatedstill. Rootcontactsupportsthebodyoneverystep; noprintedfloorline. Preserve completeblossom,pinktongue,stalkandallrootlimbs; deepmouthonlyonfront/sideviews, neverback.\\n\",\n  \"idle-walk-N-NE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and FIVE ROWS, exactly TEN whole plant figures on a PORTRAIT1024×1536canvas. This is NOT a full8direction sheet. Make each wholeplant includingALLroots fit the CENTER40%ofits512pixelwide cell andCENTER60%ofits307pixelhighcell. Thus fullbody max200pixelswide and180pixelshigh. Atleast100transparentpixels HORIZONTALLY between allfigures and60pixels VERTICALLY. Place figures on exactequal2×5gridcenters. Keep wideblankouterborder. Do not makefiguresfillcells. ONLY ALPHA-TRANSPARENT emptybackground: removeALLpink/brownbackgroundhaze,fog,matte,groundandsoftshadow. Everypixeloutsidebodycontourisalpha0; bodyisopaque paintedcutout, antialiasnarrowedgesonly. Eachbody isONE visiblyconnectedcreature; thickconnectedroots, no separatedrootfragments orparticles.\\nCOLUMN1 N=fullBACK, NO frontmouth/teeth/tongue, showgreenrear sepalsandpale rearpetals. COLUMN2 NE=rear-right, chieflygreenbackandrearpetals, neverfrontface. These twodirectionsstayexactlyfixedintheircolumn throughall5rows.\\nROW1 neutralidle. ROW2 visiblydifferentstalkbend/petal/tonguebreathing withrootsplanted. ROW3 rootcrawlA: onegroupofrootsreachesforwardwhileoppositerootspushback. ROW4 passing: rootjointsfoldunderstalkandpullthrough, visiblydifferentkneelikebends. ROW5 rootcrawlB: oppositegrouprootsreachesforwardwhileformerreachingrootspushback. Everyphasechangesactualrootjointpositions/overlaps; nobodyslidingortranslatedstill. Rootcontactsupportsthebodyoneverystep; noprintedfloorline. Preserve completeblossom,pinktongue,stalkandallrootlimbs; deepmouthonlyonfront/sideviews, neverback.\\n\",\n  \"idle-walk-S-SW-facingfix-exact-prompt.txt\": \"EDIT THIS EXISTING2COLUMN×5ROW TEN-POSE FLOWERATLAS. Keep alltencompleteattachedflower/rootposes,exactcharacterdesign,ivoryredveinedpetals,deepmouth,teeth,tongue,greenstalkandrootlimbs. Fix directioncontinuity: LEFTCOLUMNisS FULLFRONT inALL5rows, mouthcenterfacingviewer. RIGHTCOLUMNisSW FRONT-LEFT inALL5rows: mouth/headalwayspointsdiagonallyLOWERLEFT, tongueprojectsleft/downleft, neverright. Inparticular TOPRIGHTFIGURE currentlyfacesRIGHT whichisWRONG; repaintthatfigureasfrontLEFT breathingidleneutral withoutmirroringpixels, sameanatomyandscale. Do notturnrecovery/stepbacktowardright. Rowsneutralidle,breathingidle,rootcrawlA,rootpassing,OPPOSITErootcrawlB withgenuine rootjointchanges. Preserveallrootsattachedandgroundcontact. Keep exactly2columns5rows10poses andallmotionphases. Repacksmallerwithlargeemptyalphagutters,completefiguresmax40%cellwidth55%cellheight,100pxhorizontal60pxverticalgaps,largeoutermargin. EVERYBACKGROUNDPIXELalpha0, nobrown/pinkmatte,haze,ground,shadow,labelsorgrid. Do not remove/change sourcefeaturesorbodyparts.\\n\",\n  \"idle-walk-S-SW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 S=fullFRONT mouth/teeth/tonguefacingviewer. COLUMN2 SW=frontLEFT, mouthdiagonallydown-left. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 neutralidle. ROW2 differentstalk/petal/tonguebreathing rootsplanted. ROW3 rootcrawlA one rootbundle reachesforward opposite roots pushback. ROW4 passing rootsfold under stalk andpullthroughwithdifferentbends. ROW5 rootcrawlB OPPOSITEbundle reachesforward formerroots pushback. Differentrootjointposes/overlaps, nottranslatedstill.\\n\",\n  \"idle-walk-W-NW-N-NE-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: W PURE LEFT profile, flower mouth pointsLEFT, NW back-left, rear green sepals, NO frontmouth, N FULL BACK, rear green sepals andpale rearpetals, NO teeth/tonguefront, NE back-right, rear green sepals, NO frontmouth. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 idle neutral, jaws slightly open and supporting rootclusters planted. ROW2 genuinely different breathing: stalk curves andpetals/tongue flex with rootsanchored. ROW3 rootcrawlA: one rootbundle reaches forward while opposite roots pushback, stalk leans forward. ROW4 passing: reaching rootjoints fold under stalk, rear roots pullthrough visibly bent. ROW5 rootcrawlB: OPPOSITE rootbundle reachesforward and former reaching roots pushback, withdifferent rootjoint shapes andoverlaps. Actual articulated rootmotion, not bodytranslation/rotation or petalonlysway. Roots are attached and some roottoes supportground in everyphase.\\n\",\n  \"idle-walk-W-NW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 W=trueLEFTprofile, mouth/tonguepointsLEFT. COLUMN2 NW=rearLEFT, showgreenrearsepalsandpale rearpetals,NO frontmouth. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 neutralidle. ROW2 differentstalk/petal/tonguebreathing rootsplanted. ROW3 rootcrawlA one rootbundle reachesforward opposite roots pushback. ROW4 passing rootsfold under stalk andpullthroughwithdifferentbends. ROW5 rootcrawlB OPPOSITEbundle reachesforward formerroots pushback. Differentrootjointposes/overlaps, nottranslatedstill.\\n\",\n  \"idle-walk-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by FIVE rows = FORTY complete separated plant bodies. Landscape or square atlas with large transparent gutters. ROW1 idle neutral, jaws slightly open and supporting root clusters planted. ROW2 genuinely different gentle breathing: stalk softly bends, petals and attached tongue flex, root toes grip ground; no rootbase translation. ROW3 root-crawl phaseA: one group of woody roots reaches ahead in facing direction while opposite roots push behind; stalk leans forward slightly. ROW4 root-crawl passing: reaching root joints fold under the stalk, rear roots pull through with altered bends and ground support. ROW5 root-crawl phaseB: the opposite root group now reaches forward, former reaching roots push back, with clearly DIFFERENT ROOT JOINT SHAPES and root overlap below the stalk. These are three distinct organic root locomotion phases, not three body translations or petal sways. Keep complete attached roots and flowerhead in every cell.\\n\"\n}\n\nINDEPENDENT CORRECTION EXACT ISSUED PROMPTS:\n{\n  \"prompt-idle-correction.txt\": \"Create a focused DIRECTION CORRECTION of the attached existing albino carnivorous flower animation sheet. Preserve the exact source creature and existing quality: huge IVORY/cream layered curling flower petals with pink/red branching veins, dark toothed central mouth with two arcs of pale yellow pointed teeth, long attached pink tongue, tangled green/brown short stalk, and the same broad branching woody ROOT LIMBS and connected fine roottoes. Source image is authoritative for design. No added eyes, human body, new legs, feet, weapons, props, pot, beams or magic. This is a GROUNDED MELEE BITE flower: all root support tips remain on a common implied groundplane, stalk/root/body continuously attached, no levitation, no detached body parts.\\nPreserve detailed handpainted 2D game style, compact head/root proportions, fixed slightly elevated isometric camera and original cream/pink/green/brown palette. Actual root, stalk, petal and tongue articulation in each phase; never the same shifted/scaled/mirrored still. All attached body parts and roottoes fully visible in each cell.\\nOutput a sparse true TRANSPARENT RGBA atlas, NO background, floor, shadow, haze, aura, particles, text or grid. Make figures safely SMALL within equal cells with enormous transparent gutters and safe outermargin. Complete silhouettes including extendedtongue/roots must not enter another cell or intersect any other figure boundingrectangle. No cropped tip, erased body part, missing frame or added pose.\\nEXACTLY TWO COLUMNS x FIVE ROWS =10 complete poses on PORTRAIT1024x1536 canvas. Leftcolumn is S direct FRONT toward viewer/screenDOWN in ALL5rows. Rightcolumn is SW FRONT-LEFT toward screenDOWN-LEFT in ALL5rows.\\nCRITICAL FIX: Existing rightcolumn row1 androw5 wrongly faceRIGHT, unlike rightcolumn middleposes. Make EVERY SW figure's mouth opening, two tootharcs and tongue project unmistakably toward screenLEFT/downLEFT; the visible green rear stalk lies on the head's screenRIGHT/rear side. NO SW head may faceRIGHT even while breathing or coiling. SW is neither E/SE nor fullWprofile: show real FRONT-LEFT3/4 mouth depth, with far right petalback occluding the far side of the mouth. Do not horizontally flip S or duplicate a pose.\\nRows topbottom:1 neutralidle rootclusters planted,mouth slightlyopen,tonguesoftlyleft inSW;2 distinctbreathingidle withactualstalk/petal/tonguebend,stillSWleft;3 rootcrawlA withone woodyrootcluster reachingforward andopposite roots pushingbehind;4 rootcrawlpassing withjointsbentunderstalk andotherrootclusterpullingthrough;5 rootcrawlB withOPPOSITErootclusterreachingforward andformerrootclusterpushingbehind. All10 wholebodyarticulatedposes, with threevisiblydifferentrootcrawlphases. Keep S directfront,SW downLEFT consistently in EVERY row. Same scale, same planted supportbaseline, allrootlimbs connected.\\n\",\n  \"prompt-swattack-correction.txt\": \"Create a focused DIRECTION CORRECTION of the attached existing albino carnivorous flower animation sheet. Preserve the exact source creature and existing quality: huge IVORY/cream layered curling flower petals with pink/red branching veins, dark toothed central mouth with two arcs of pale yellow pointed teeth, long attached pink tongue, tangled green/brown short stalk, and the same broad branching woody ROOT LIMBS and connected fine roottoes. Source image is authoritative for design. No added eyes, human body, new legs, feet, weapons, props, pot, beams or magic. This is a GROUNDED MELEE BITE flower: all root support tips remain on a common implied groundplane, stalk/root/body continuously attached, no levitation, no detached body parts.\\nPreserve detailed handpainted 2D game style, compact head/root proportions, fixed slightly elevated isometric camera and original cream/pink/green/brown palette. Actual root, stalk, petal and tongue articulation in each phase; never the same shifted/scaled/mirrored still. All attached body parts and roottoes fully visible in each cell.\\nOutput a sparse true TRANSPARENT RGBA atlas, NO background, floor, shadow, haze, aura, particles, text or grid. Make figures safely SMALL within equal cells with enormous transparent gutters and safe outermargin. Complete silhouettes including extendedtongue/roots must not enter another cell or intersect any other figure boundingrectangle. No cropped tip, erased body part, missing frame or added pose.\\nEXACTLY TWO COLUMNS x THREE ROWS =6 complete poses on PORTRAIT1024x1536 canvas. Leftcolumn S directFRONT toward screenDOWN/viewer inALL3rows. Rightcolumn SW FRONT-LEFT aiming screenDOWN-LEFT inALL3rows.\\nCRITICAL FIX: Existing SW windup and recovery faceRIGHT while contactfacesLEFT. Keep SW mouth/tongue/teeth always facing LEFT/downLEFT, even during windup/recovery. Bodycoiling changes stalkcurvature, not compassheading. SW visible green rearsepalback stays screenRIGHT of mouth. Show genuine frontLEFT3/4 mouth depth, no RIGHTfacing eye ormouth. S mouth and teethdirectlyfront, not shiftedsideways.\\nRows topbottom:1 MELEE WINDUP: jaws tense halfclosed,tonguefoldsIN LEFT inSW, stalkcoilsbackoverbracedgroundedroots WITHOUT turningheadright;2 CONTACTBITE: completehead/jawlunges DOWN-leftinSW or DOWNtowardviewer inS, teethopen,tonguereachesLEFT/downLEFTinSW, stalkextendsbutrootsfirmlyplanted;3 RECOVERY: jawretracts still LEFT/downLEFTinSW, mouthpartlycloses,tonguefoldsbackLEFT notRIGHT, stalk/rootjointsrelax into differentbends. Sixdistinctwholebodyposes,no detachedprojectile,effect,missingroot orclippedtongue.\\n\",\n  \"prompt-backattack-correction.txt\": \"Create a focused DIRECTION CORRECTION of the attached existing albino carnivorous flower animation sheet. Preserve the exact source creature and existing quality: huge IVORY/cream layered curling flower petals with pink/red branching veins, dark toothed central mouth with two arcs of pale yellow pointed teeth, long attached pink tongue, tangled green/brown short stalk, and the same broad branching woody ROOT LIMBS and connected fine roottoes. Source image is authoritative for design. No added eyes, human body, new legs, feet, weapons, props, pot, beams or magic. This is a GROUNDED MELEE BITE flower: all root support tips remain on a common implied groundplane, stalk/root/body continuously attached, no levitation, no detached body parts.\\nPreserve detailed handpainted 2D game style, compact head/root proportions, fixed slightly elevated isometric camera and original cream/pink/green/brown palette. Actual root, stalk, petal and tongue articulation in each phase; never the same shifted/scaled/mirrored still. All attached body parts and roottoes fully visible in each cell.\\nOutput a sparse true TRANSPARENT RGBA atlas, NO background, floor, shadow, haze, aura, particles, text or grid. Make figures safely SMALL within equal cells with enormous transparent gutters and safe outermargin. Complete silhouettes including extendedtongue/roots must not enter another cell or intersect any other figure boundingrectangle. No cropped tip, erased body part, missing frame or added pose.\\nEXACTLY TWO COLUMNS x THREE ROWS =6 complete poses on PORTRAIT1024x1536 canvas. Leftcolumn N fullBACK facing AWAY/screenUP inALL3rows. Rightcolumn NE BACK-RIGHT facing AWAY/screenUP-RIGHT inALL3rows.\\nCRITICAL FIX: Existing CONTACTrow wrongly turns blossom into a RIGHT-facing sideprofile and shows a tongue reachingRIGHT. This is not a rearward melee attack. Keep ALLSIXfigures REARFACING, including contact. Show broad GREEN REARSEPALS attached to back of ivoryflower and back surfacesof pale petals. In N NO frontal mouth, NO teeth, NO pinktongue visible. In NE mostlygreenback/rearpetals; NO frontal teethor tongue, no right-facing openmouth. The frontmouth still exists on the hidden far side, occluded by the complete rear blossom; do not remove petals or replacehead by a greenorb.\\nMeleepose direction is conveyed through rootedstalk articulation and headposition: row1 WINDUP rearflowerheaddraws slightlyback/TOWARDCAMERA towardrootbase,stalkcoils; row2 CONTACT entireblossom reaches strongly AWAY/UP fromplantedroots inN and AWAY/UP-RIGHTinNE, stalkbowsintoawaybite, rearheadforeshortens and backs ofpetalsmoveforwardintoawaydirection, rootsbracefirmlyonthesamegroundplane; row3 RECOVERY rearflowerheadretracts slightlybacktowardrootbase, stalkrecoils. Actual threephasebite withchanged stalk/root/petalbends, notthreebackstills shiftedup. In contact, never rotatefrontmouth towardcameraorright; backpetalsmustcontinueoccludingfrontface. Same compactsourcebodysize, no longthinnewstem.\\n\",\n  \"prompt-idle-spacing-correction.txt\": \"Edit the attached ten-pose transparent flower atlas for a STRICT SPACING CORRECTION plus one remaining SW tongue/heading correction. Keep exactly2columns x5rows,10completearticulatedflowerbodies, sourcecreaturedesign, root/crawlposes, ivoryredveinedpetals, mouth/teeth, attachedtongue, greenbrownrootstalk, and rootedgroundsupport. OutputPORTRAIT1024x1536.\\nCURRENTROOTBOUNDINGRECTANGLES OVERLAPNEIGHBORS. Make EVERY complete flower+allrootlimbs+wholeattachedtongue uniformly MUCHSMALLER withinthesamecells: eachfullsilhouetteMAX180pixelswide x150pixelshigh, centeredinsideits512x307cell. Tiny complete detailed sprites in immense blankalpha. At least180pixels transparentHORIZONTALgap betweenwholebodyBOUNDINGBOXES; at least100pixels VERTICALgap betweenwholebodies. No sourcefigurepixels in anotherfigureboundingrectangle, no croportrim, no disconnectedtoes, do NOTfixspacingbydeletingbodyparts.\\nLEFTcolumn S stays directFRONT inall5rows. RIGHTcolumn SW stays FRONT-LEFT/downLEFT inall5rows. ExistinglastrowRIGHT tonguecurlsRIGHT: change it to projectLEFT/downLEFT and make mouth/tootharcs unmistakablyfrontLEFT. Greenrearstalk/sepal remainsRIGHTbehindmouth. Do notpointaSWmouthRIGHTinanyphase, includingidleorrootcrawlB. EverySWposeatleastslightly3/4frontLEFT,neverE/SEorfrontRIGHT. Preservehead/root proportionsandtrueattachedroots. No mirrors/copies.\\nFive rows remainidleA,idleB,rootcrawlA,passing,oppositerootcrawlB. Eachrootclusterreach/return visiblydifferentanatomy,notmovedstills. Keep all10genuineposes. Alpha0backgroundwithopaque bodyinteriors+narrowantialiasingonly, nofloor/shadow/haze/matte/detachedparticles/labels/grid.\\n\"\n}",
+  "prompt_record_kind": "exact_prompts_for_initial_failed_sheets_narrow_subsets_and_focused_corrections; four exact independent correction prompts including retained geometry-failed firstidle correction",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 640,
+      "source_anchors": [
+        [
+          290,
+          301
+        ],
+        [
+          747,
+          302
+        ],
+        [
+          290,
+          607
+        ],
+        [
+          747,
+          612
+        ],
+        [
+          290,
+          897
+        ],
+        [
+          747,
+          913
+        ],
+        [
+          290,
+          1189
+        ],
+        [
+          747,
+          1201
+        ],
+        [
+          290,
+          1473
+        ],
+        [
+          747,
+          1490
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated640, safe-foot-fit640. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 528,
+      "source_anchors": [
+        [
+          296,
+          321
+        ],
+        [
+          769,
+          341
+        ],
+        [
+          296,
+          614
+        ],
+        [
+          769,
+          629
+        ],
+        [
+          296,
+          910
+        ],
+        [
+          769,
+          913
+        ],
+        [
+          296,
+          1182
+        ],
+        [
+          769,
+          1190
+        ],
+        [
+          296,
+          1471
+        ],
+        [
+          769,
+          1478
+        ]
+      ],
+      "scale_review_note": "Independent static correction: normalized neutral/recovery height 113.455 on explicit528 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 616,
+      "source_anchors": [
+        [
+          297,
+          288
+        ],
+        [
+          755,
+          292
+        ],
+        [
+          297,
+          601
+        ],
+        [
+          755,
+          598
+        ],
+        [
+          297,
+          885
+        ],
+        [
+          755,
+          886
+        ],
+        [
+          297,
+          1182
+        ],
+        [
+          755,
+          1182
+        ],
+        [
+          297,
+          1481
+        ],
+        [
+          755,
+          1481
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated616, safe-foot-fit616. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 608,
+      "source_anchors": [
+        [
+          307,
+          305
+        ],
+        [
+          755,
+          305
+        ],
+        [
+          307,
+          606
+        ],
+        [
+          755,
+          608
+        ],
+        [
+          307,
+          912
+        ],
+        [
+          755,
+          912
+        ],
+        [
+          307,
+          1204
+        ],
+        [
+          755,
+          1207
+        ],
+        [
+          307,
+          1504
+        ],
+        [
+          755,
+          1498
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated608, safe-foot-fit608. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-4.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 664,
+      "source_anchors": [
+        [
+          250,
+          471
+        ],
+        [
+          750,
+          484
+        ],
+        [
+          250,
+          908
+        ],
+        [
+          750,
+          917
+        ],
+        [
+          250,
+          1349
+        ],
+        [
+          750,
+          1358
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated664, safe-foot-fit664. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-5.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 976,
+      "source_anchors": [
+        [
+          272,
+          503
+        ],
+        [
+          780,
+          509
+        ],
+        [
+          272,
+          1001
+        ],
+        [
+          780,
+          998
+        ],
+        [
+          272,
+          1482
+        ],
+        [
+          780,
+          1489
+        ]
+      ],
+      "scale_review_note": "Independent static correction: normalized neutral/recovery height 114.230 on explicit976 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-6.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 576,
+      "source_anchors": [
+        [
+          314,
+          423
+        ],
+        [
+          773,
+          427
+        ],
+        [
+          314,
+          908
+        ],
+        [
+          773,
+          912
+        ],
+        [
+          314,
+          1356
+        ],
+        [
+          773,
+          1358
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated576, safe-foot-fit576. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-7.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 968,
+      "source_anchors": [
+        [
+          274,
+          486
+        ],
+        [
+          772,
+          496
+        ],
+        [
+          274,
+          1006
+        ],
+        [
+          772,
+          1005
+        ],
+        [
+          274,
+          1481
+        ],
+        [
+          772,
+          1482
+        ]
+      ],
+      "scale_review_note": "Independent static correction: normalized neutral/recovery height 114.116 on explicit968 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 688,
+      "source_anchors": [
+        [
+          298,
+          333
+        ],
+        [
+          770,
+          331
+        ],
+        [
+          298,
+          668
+        ],
+        [
+          770,
+          674
+        ],
+        [
+          298,
+          995
+        ],
+        [
+          770,
+          998
+        ],
+        [
+          298,
+          1263
+        ],
+        [
+          770,
+          1251
+        ],
+        [
+          298,
+          1490
+        ],
+        [
+          770,
+          1493
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated688, safe-foot-fit688. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 648,
+      "source_anchors": [
+        [
+          272,
+          309
+        ],
+        [
+          770,
+          315
+        ],
+        [
+          272,
+          632
+        ],
+        [
+          770,
+          631
+        ],
+        [
+          272,
+          939
+        ],
+        [
+          770,
+          934
+        ],
+        [
+          272,
+          1202
+        ],
+        [
+          770,
+          1199
+        ],
+        [
+          272,
+          1467
+        ],
+        [
+          770,
+          1472
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated648, safe-foot-fit648. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 712,
+      "source_anchors": [
+        [
+          274,
+          342
+        ],
+        [
+          778,
+          334
+        ],
+        [
+          274,
+          676
+        ],
+        [
+          778,
+          676
+        ],
+        [
+          274,
+          976
+        ],
+        [
+          778,
+          989
+        ],
+        [
+          274,
+          1257
+        ],
+        [
+          778,
+          1263
+        ],
+        [
+          274,
+          1494
+        ],
+        [
+          778,
+          1506
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated712, safe-foot-fit712. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 680,
+      "source_anchors": [
+        [
+          258,
+          315
+        ],
+        [
+          763,
+          319
+        ],
+        [
+          258,
+          640
+        ],
+        [
+          763,
+          645
+        ],
+        [
+          258,
+          972
+        ],
+        [
+          763,
+          973
+        ],
+        [
+          258,
+          1252
+        ],
+        [
+          763,
+          1249
+        ],
+        [
+          258,
+          1492
+        ],
+        [
+          763,
+          1492
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated680, safe-foot-fit680. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval."
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Independent reviewer inspected source fullbody context and all104 normalized root-groundline composites, plus black/white alpha composites. Source ivory/red-veined toothed flower, attached pink tongue and branching woody supporting roots are preserved; slash/melee, attack_hit_ratio0.44, floatingfalse and visual_height86 must remain source flags. Corrected S/SW idlewalk10, S/SWattack6 and N/NEattack6 replace direction failures; original candidate and every originalPNG remain unchanged. SW now maintains frontLEFT mouth/back-sepal orientation across idle/rootcrawl/windup/contact/recovery; tongue may curl locally during recovery without rotating the blossom to frontRIGHT. N/NE attack remains rearfacing through contact: green rear-sepals occlude front mouth/teeth/tongue, with actual stalk bend away/up or away/upRIGHT and firmly braced root base. All8 static compass views and all5 motions pass independent review: different rootjoint reach/passing/opposite reach, threephase directional rooted bite, recoil, and attached wilt/collapse ending low on ground. Allselected104 source poses pass original strict geometry/complete-region checks and raw+visibleunique104. Alpha outside all complete regions stays <=5, no alpha>25outside; preview matte is hiddenRGB/tinyalpha, not an opaque rectangle. Virtualcanvas neutralheight113.26..114.45 is consistent; source pixels are unchanged. Projected support anchors align with lowest attached root/contact parts on a common perframe groundline; actual Main AI/attack target contact/8directionplayback/death/drop/pickup, motion smoothness and final scale regression remain required before completion."
+  },
+  "status": "INDEPENDENT_STATIC_PASS_PENDING_MAIN",
+  "source_claim": "New2D artwork from existing project atlas; not extracted original animation. Exact original region and SHA remain unchanged; same-atlas wholebody-context supplemental reference only.",
+  "actual_Main": "not_run",
+  "completed_added": 0,
+  "independent_static_review": {
+    "approved": true,
+    "path": "/workspace/scratch/pr100-continuation/albino-flower-authoring/independent-review.json",
+    "actual_Main": "not_run"
+  },
+  "source_presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 5,
+      "body": "flower",
+      "variant": 3,
+      "width": 0.998,
+      "weapon": "sword",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "source_original_reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      318,
+      308,
+      319,
+      309
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 5,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "7851f235ee86d376e3e635b14a04efdcb80cbdd584290901126e254c586c02dc"
+  }
+}

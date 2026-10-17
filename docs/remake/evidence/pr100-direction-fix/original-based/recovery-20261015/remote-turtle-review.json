@@ -1,0 +1,156 @@
+{
+  "target_key": "transform:349",
+  "name": "알비노 악어거북",
+  "review_kind": "Recovered remote WIP asset static review; actual Main review pending",
+  "source_claim": "Newly authored motion derived from existing catalog portrait; not original recovered game animation",
+  "source_reference": "/workspace/twilight/assets/catalog/3b9b22970c8e33b6dddc37e9.png",
+  "source_sha256": "26087ad720005c102cc458ecc30dbf6cb33799264c4f89e608710b82991a6308",
+  "source_sha_matches": true,
+  "start_asset_sha256": {
+    "SpriteFrames.tres": "4fec75be110fdcafe7e0ad651b00467a49be99d0c3d9c60abd3833bf197370a5",
+    "poses-0.png": "10ab3bcb2c5a9a249008ba6c3242579eebc75b451094e43a66dd5e0f0218d056",
+    "poses-0.png.import": "7b0a5864cfba1ae22f2e0440ea659b14c3e0129db098115225d64191220398c8",
+    "poses-1.png": "22f3fc46575fc679380ff2781f11798408725ec4e1d19346dc9689dbaec1a796",
+    "poses-1.png.import": "5b75bcdd513662162142c32d019af245741700eb9186ca5ebc39e0e0f504527b",
+    "poses-2.png": "d7127d8da5c9056994b2b266b02771fb19f2f65e52a3e3855f6e04add91354a7",
+    "poses-2.png.import": "4216645a274c5f518bdd30ff487ff348d573a2d262ed494e2bafeab3a19e295a",
+    "provenance.json": "f347db96c4590d235fa47ae4c74a6d6108becc0609e487802878dbe0d7949a7f"
+  },
+  "end_asset_sha256": {
+    "SpriteFrames.tres": "4fec75be110fdcafe7e0ad651b00467a49be99d0c3d9c60abd3833bf197370a5",
+    "poses-0.png": "10ab3bcb2c5a9a249008ba6c3242579eebc75b451094e43a66dd5e0f0218d056",
+    "poses-0.png.import": "7b0a5864cfba1ae22f2e0440ea659b14c3e0129db098115225d64191220398c8",
+    "poses-1.png": "22f3fc46575fc679380ff2781f11798408725ec4e1d19346dc9689dbaec1a796",
+    "poses-1.png.import": "5b75bcdd513662162142c32d019af245741700eb9186ca5ebc39e0e0f504527b",
+    "poses-2.png": "d7127d8da5c9056994b2b266b02771fb19f2f65e52a3e3855f6e04add91354a7",
+    "poses-2.png.import": "4216645a274c5f518bdd30ff487ff348d573a2d262ed494e2bafeab3a19e295a",
+    "provenance.json": "f347db96c4590d235fa47ae4c74a6d6108becc0609e487802878dbe0d7949a7f"
+  },
+  "asset_bytes_unchanged": true,
+  "frames": 104,
+  "unique_frame_hashes": 104,
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "roles": {
+    "idle": {
+      "frames_per_direction": 2,
+      "duration_seconds": 1.2
+    },
+    "walk": {
+      "frames_per_direction": 3,
+      "duration_seconds": 0.48
+    },
+    "attack": {
+      "frames_per_direction": 3,
+      "duration_seconds": 0.42
+    },
+    "hit": {
+      "frames_per_direction": 2,
+      "duration_seconds": 0.22
+    },
+    "death": {
+      "frames_per_direction": 3,
+      "duration_seconds": 0.65
+    }
+  },
+  "sheets": [
+    {
+      "path": "/workspace/twilight/assets/actors/eight_direction/original_based/albino_snapping_turtle_transform/poses-0.png",
+      "bytes": 2471665,
+      "sha256": "10ab3bcb2c5a9a249008ba6c3242579eebc75b451094e43a66dd5e0f0218d056",
+      "mode": "RGBA",
+      "size": [
+        1586,
+        992
+      ],
+      "pose_count": 40,
+      "distinct_rgba_crops": 40,
+      "large_connected_bodies": 40,
+      "visible_pixels_outside_regions": 0,
+      "foreign_body_regions": [],
+      "anchor_error_indices": [],
+      "visible_canvas_edge": false,
+      "alpha_range": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 750196,
+      "low_alpha_edge_or_background_pixels": 213978
+    },
+    {
+      "path": "/workspace/twilight/assets/actors/eight_direction/original_based/albino_snapping_turtle_transform/poses-1.png",
+      "bytes": 2272357,
+      "sha256": "22f3fc46575fc679380ff2781f11798408725ec4e1d19346dc9689dbaec1a796",
+      "mode": "RGBA",
+      "size": [
+        1024,
+        1536
+      ],
+      "pose_count": 24,
+      "distinct_rgba_crops": 24,
+      "large_connected_bodies": 24,
+      "visible_pixels_outside_regions": 0,
+      "foreign_body_regions": [],
+      "anchor_error_indices": [],
+      "visible_canvas_edge": false,
+      "alpha_range": [
+        0,
+        254
+      ],
+      "fully_transparent_pixels": 1009958,
+      "low_alpha_edge_or_background_pixels": 133759
+    },
+    {
+      "path": "/workspace/twilight/assets/actors/eight_direction/original_based/albino_snapping_turtle_transform/poses-2.png",
+      "bytes": 2349869,
+      "sha256": "d7127d8da5c9056994b2b266b02771fb19f2f65e52a3e3855f6e04add91354a7",
+      "mode": "RGBA",
+      "size": [
+        1586,
+        992
+      ],
+      "pose_count": 40,
+      "distinct_rgba_crops": 40,
+      "large_connected_bodies": 40,
+      "visible_pixels_outside_regions": 0,
+      "foreign_body_regions": [],
+      "anchor_error_indices": [],
+      "visible_canvas_edge": false,
+      "alpha_range": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 720542,
+      "low_alpha_edge_or_background_pixels": 194343
+    }
+  ],
+  "visual_review": {
+    "identity_preserved": true,
+    "identity_evidence": "Compared exact 108x132 catalog source: pale armored reptile body, brown spiked shell, red/white upper-body detailing, green waist cloth, short asymmetrically held blade retained.",
+    "eight_views": true,
+    "direction_evidence": "Idle/walk/hit/death columns E,SE,S,SW,W,NW,N,NE. Attack atlas uses the same order in eight rows and three chronological columns; all views inspected.",
+    "body_connections": true,
+    "attack_hit_death_roles": true,
+    "motion_evidence": "Idle breathing and three heavy stride phases visible. Attack has connected sword windup, extension/contact, lowered recovery. Hit two flinches. Death progresses kneeling/slumping to fully grounded low corpse in all directions.",
+    "no_observed_clipping_or_frame_intrusion": true,
+    "mirroring_review": "Front/side/back views show appropriate occlusion of blade and shell rather than wholesale duplicated reflection; no pixel-identical crops.",
+    "transparency": "RGBA with genuinely alpha-zero gutters. Low-alpha antialias/background pixels remain; production rendering must confirm edge appearance."
+  },
+  "static_review_passed": true,
+  "eligible_for_Main_batch_validation": true,
+  "final_runtime_approval": false,
+  "pending": [
+    "Actual Main.tscn eight-direction transform combat and weapon contact positions",
+    "Rendered Main foot stability and atlas-to-atlas scale continuity",
+    "Actual battle and ground-drop preservation"
+  ],
+  "errors": []
+}

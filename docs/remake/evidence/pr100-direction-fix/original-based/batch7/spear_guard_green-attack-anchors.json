@@ -1,0 +1,112 @@
+{
+  "directions_axis": "rows",
+  "logical_order": "phase-major E,SE,S,SW,W,NW,N,NE",
+  "canvas_size": 224,
+  "source_anchors": [
+    [
+      219,
+      156
+    ],
+    [
+      221,
+      302
+    ],
+    [
+      238,
+      459
+    ],
+    [
+      211,
+      607
+    ],
+    [
+      211,
+      766
+    ],
+    [
+      250,
+      946
+    ],
+    [
+      239,
+      1120
+    ],
+    [
+      197,
+      1291
+    ],
+    [
+      570,
+      156
+    ],
+    [
+      573,
+      303
+    ],
+    [
+      576,
+      459
+    ],
+    [
+      561,
+      607
+    ],
+    [
+      580,
+      765
+    ],
+    [
+      600,
+      941
+    ],
+    [
+      591,
+      1118
+    ],
+    [
+      555,
+      1292
+    ],
+    [
+      932,
+      156
+    ],
+    [
+      942,
+      303
+    ],
+    [
+      948,
+      460
+    ],
+    [
+      923,
+      607
+    ],
+    [
+      941,
+      765
+    ],
+    [
+      975,
+      940
+    ],
+    [
+      949,
+      1120
+    ],
+    [
+      913,
+      1292
+    ]
+  ],
+  "method": "median alpha X in bottom20% of each connected pose with lowest occupied baseline; review in actual Main before counting",
+  "body_measurements_for_scale": {
+    "idle_helmet_to_boots_px": 137,
+    "attack_E_helmet_to_boots_px": [
+      81,
+      77,
+      79
+    ]
+  }
+}

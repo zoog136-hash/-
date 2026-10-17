@@ -1,0 +1,241 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+					"sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7",
+					"size": [
+						1024,
+						348
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				348
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+					"sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa",
+					"size": [
+						1024,
+						356
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				356
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+					"sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b",
+					"size": [
+						1024,
+						344
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				344
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+					"sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca",
+					"size": [
+						1024,
+						176
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				176
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "play_once",
+			"sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+					"sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99",
+					"size": [
+						1024,
+						268
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				268
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+					"sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7",
+					"size": [
+						1024,
+						572
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				572
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

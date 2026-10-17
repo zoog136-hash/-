@@ -1,0 +1,273 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "shoot",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"ranged_attack": "shoot",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/attack.png",
+					"sha256": "09a86306f7f3a4f6008404d45e6050617fbb56fb7681907f5d4999ef005ea60a",
+					"size": [
+						1024,
+						316
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				316
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "09a86306f7f3a4f6008404d45e6050617fbb56fb7681907f5d4999ef005ea60a",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/cast.png",
+					"sha256": "35763b944f9d3cd23457caf6d073ca61bdf0a005a651a9da2c2d242fb59dee1a",
+					"size": [
+						1024,
+						328
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				328
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "35763b944f9d3cd23457caf6d073ca61bdf0a005a651a9da2c2d242fb59dee1a",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/death.png",
+					"sha256": "a78c44ac58a1fd5bf9b101b97bd55cc34e15546a82470de0e6dbe8c6fc5cf795",
+					"size": [
+						1024,
+						332
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				332
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "a78c44ac58a1fd5bf9b101b97bd55cc34e15546a82470de0e6dbe8c6fc5cf795",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/hit.png",
+					"sha256": "fb62008466215e6745dc10ada1495d291949cddbe6557063cf86733278c17971",
+					"size": [
+						1024,
+						164
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				164
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "play_once",
+			"sha256": "fb62008466215e6745dc10ada1495d291949cddbe6557063cf86733278c17971",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/idle.png",
+					"sha256": "f86338a24de3b67f46d60ad6a47dd2193a80a70e1b42bbfe9e6ab098bf78dd8f",
+					"size": [
+						1024,
+						264
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				264
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "f86338a24de3b67f46d60ad6a47dd2193a80a70e1b42bbfe9e6ab098bf78dd8f",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"ranged_attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/ranged_attack.png",
+					"sha256": "09a86306f7f3a4f6008404d45e6050617fbb56fb7681907f5d4999ef005ea60a",
+					"size": [
+						1024,
+						316
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				316
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "09a86306f7f3a4f6008404d45e6050617fbb56fb7681907f5d4999ef005ea60a",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/walk.png",
+					"sha256": "4d371482f257534b0d285743145578b17281485afe820b05ae1b09e557980a19",
+					"size": [
+						1024,
+						476
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				476
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "4d371482f257534b0d285743145578b17281485afe820b05ae1b09e557980a19",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

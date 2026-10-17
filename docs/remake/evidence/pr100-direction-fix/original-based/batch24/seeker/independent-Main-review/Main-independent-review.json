@@ -1,0 +1,111 @@
+{
+  "status": "APPROVED_ACTUAL_MAIN_VISUAL_AND_RECORDED_GAMEPLAY_GATE",
+  "reviewer": "Root assistant, independently from the artwork-authoring agents",
+  "visual_review": {
+    "observed": "All104pose screenshots shown in actual production Main, five labeled all-direction contactimages; eight actualAI fullviewport captures; fireN release originalfull1280x720 additionally viewed",
+    "notes": "Source purple/plum orb, orangeverticalsliteye, teeth, curled eyestalks preserved. FrontcentraleYE visible S/SE/SW, hidden N/NW/NE, E/W leading sideprofiles. Three locomotion phases change stalk/bodyflex, strike extends facing eyestalk; no detachedorb or additional particles. Main-role core size stable. Closedeye flatterminalbody and stalks remain coherent onground.",
+    "world_support": "Allpose body-rootlowercontour sits at approximately screen(702.4,443.2), derived from actualcamera/worldposition. Groundandterrainunchanged; sameoffrootyellowterrainpatch isnotbodyshadow. Sourcefloatingstatepreserved.",
+    "comparison": "Viewed existing completed seer_boss-authored-S-attack-1.png and ghost-authored-S-death-2.png from repository actualMain evidence. Newactors preserve source-specificpaintedbodydetail, stableground, front/backdistinction and coherentlowcorpse. Exact8sourcecontextcontact alsoviewed.",
+    "artwork_edited_during_review": false
+  },
+  "separate_automatic_evidence": {
+    "headless": {
+      "checks": 1353,
+      "failures": [],
+      "AI_directions": 8,
+      "magic_projectile_directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792076747.69418,
+            "expires_at": 1792077347.69418,
+            "grade": "일반",
+            "hunt_batch": "baa290a4e9998b1af6f9e9b5aa7d3bd6",
+            "id": "3f76fd6b8d783ca5aeaf6b052e41025c",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              29704.0,
+              14688.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 2000,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 35
+      }
+    },
+    "render": {
+      "checks": 1467,
+      "failures": [],
+      "AI_directions": 8,
+      "magic_projectile_directions": 8,
+      "pose_samples": 104,
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792076985.90339,
+            "expires_at": 1792077585.90339,
+            "grade": "일반",
+            "hunt_batch": "616988795960b3c6568a54629dbac7e9",
+            "id": "f1d15d03d067092b65c28260e40f9b7b",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              29704.0,
+              14688.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 2000,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 35
+      }
+    }
+  },
+  "scope_precision": "104all-roleposeimages are explicitly sampled productiontextures in Main. Real AI pursuit/attacks run inall8directions; lifecycle is actualweaponhit/death/drop/pickup. The contactsheets do not represent a separately recorded realtime8directionhit/deathmovie.",
+  "review_derivative_images": [
+    {
+      "file": "actual-AI-all-directions-full-viewport.png",
+      "sha256": "165b3e7d343f8ba2f6afae8e5f0930787d1231fd9fb1fd24e6238258d200a60f"
+    },
+    {
+      "file": "attack-all-directions-all-poses.png",
+      "sha256": "f02005bf77fdbf0ee9cff509381547ec228f223528aefdeeaeb51a1878fd812e"
+    },
+    {
+      "file": "death-all-directions-all-poses.png",
+      "sha256": "ee0fc9d13a36107b24cc6f348e49a31b8e25a8ea4114578a446c31c577720d46"
+    },
+    {
+      "file": "hit-all-directions-all-poses.png",
+      "sha256": "335defa505e148ed6f038a242fdfe85832f24e8cb9da098744927cea7d93b7ca"
+    },
+    {
+      "file": "idle-all-directions-all-poses.png",
+      "sha256": "1157f46f73755647b391296c821197507d757e01b8248e755b0b1c0f9a8de625"
+    },
+    {
+      "file": "walk-all-directions-all-poses.png",
+      "sha256": "33f7324667962ce41d0766af8e06da35ba38f3c84957a57b225e758d3ab60d25"
+    }
+  ],
+  "blockers": []
+}

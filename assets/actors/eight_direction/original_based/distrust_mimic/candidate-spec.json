@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "display_height_basis": "max_living_frame",
+  "prompt": "mimicMain EXACT PROMPT:\nExact original ornate treasure-chest MIMIC from attached existing game sprite: compact dark brown wooden chest, barrel-arched lid, gold bronze framing/scrollwork, pale silver elaborate curved band across the lid, gold latch, tiny short dark corner feet. Match silhouette/materials/colors; no new arms, giant legs or skull. Detailed painted 2D isometric game sprites with fixed camera. True transparent RGBA, NO floor/shadow/glow/text/grid/background/effects. EXACT8 columns with column compass E pure right profile, SE front-right, S straight FRONT with latch centered, SW front-left, W pure left profile, NW back-left with hinges and back boards instead of front latch, N full BACK with hinges NO front latch, NE back-right. Compass differs in45-degree increments; all rows keep same column orientation. Each whole chest SMALL, only45percent cell width and50percent cell height; very generous transparent gutters and OUTSIDE margins so no bounding rectangles overlap. All body/lid/feet/contents connected, nothing detached. EXACT8columns by8rows=64 separated figures. Rows1/2 idle breathing lid closed, second tiny lid creak still closed mouth; rows3/4/5 locomotion using tiny corner feet, alternating left/right foot shuffle and body lean but chest stays grounded; rows6/7/8 ATTACK:6 lid opens halfway windup showing dark mouth;7 lid hinged wide open and lunges along column facing, pale small teeth lining connected chest rim, tongue attached inside mouth, keep distinctive silver band on open lid;8 lid snaps mostly shut recovering. Full rear views retain back/hinge side; never show front latch inN. Real distinct articulated lid angles/foot stride, no copies/mirrors or body resizes. No projectile.\n\nmimicReaction EXACT PROMPT:\nExact original ornate treasure-chest MIMIC from attached existing game sprite: compact dark brown wooden chest, barrel-arched lid, gold bronze framing/scrollwork, pale silver elaborate curved band across the lid, gold latch, tiny short dark corner feet. Match silhouette/materials/colors; no new arms, giant legs or skull. Detailed painted 2D isometric game sprites with fixed camera. True transparent RGBA, NO floor/shadow/glow/text/grid/background/effects. EXACT8 columns with column compass E pure right profile, SE front-right, S straight FRONT with latch centered, SW front-left, W pure left profile, NW back-left with hinges and back boards instead of front latch, N full BACK with hinges NO front latch, NE back-right. Compass differs in45-degree increments; all rows keep same column orientation. Each whole chest SMALL, only45percent cell width and50percent cell height; very generous transparent gutters and OUTSIDE margins so no bounding rectangles overlap. All body/lid/feet/contents connected, nothing detached. EXACT8columns by5rows=40 separated figures. Rows1/2 HIT two distinct recoil poses: lid shudders slightly open, then body hunches and lid tilts settling. Rows3/4/5 DEATH collapse:3 cornerfeet buckle and lid slack open;4 chest slumps low on side still fully connected hinges;5 chest tipped fully on its side, flattened inactive shape with lid hanging down against main box, no loose separate coins/particles/planks. Character retains ornate gold/silver/brown original identity and facing axis throughout. Eight views remain distinct even in corpse. Weight settles to floor, never floating/levitating. Whole mouth/lid/body/feet remain connected and inside generous margins.\n\nmimicReactionPerspective EXACT PROMPT:\nEdit this REACTION sprite atlas while KEEPING ITS EXISTING FIVE POSE ROWS. Do not replace death poses with standing or attack poses. Keep last two rows tipped dead chests lying on side exactly as currently staged. Only correct VIEW ANGLES in columns1and5. There are8columns,5rows. Column1 must be EAST pure right side profile showing the chest's NARROW right end rather than broad frontal panel; opening/latch plane faces horizontallyRIGHT. Column5 must be WEST pure left side profile showing narrow left end, opening/latch faces horizontallyLEFT. No broad FRONT latch panel facing viewer in1or5. Redraw those perspectives in ALL5 rows including low tipped dead chest, preserve pose phase. Column2 stays front-right diagonal,3 front,4 front-left diagonal,6 back-left hinges,7 fullBACK hinges,8 back-right hinges. Character remains exactly ornate brown wooden chest with gold trim, curved dark lid, pale silver ornamental band, gold latch and tiny feet. Row1 hitshudder with lid slightly open;row2 recovering different creak;row3 tiny feet buckle and chest sinking;row4 fallen tipped toside;row5 fully dead chestlying flat onside withlidattached. Never substitute an open biting ATTACK for row4or5. Match original colors and sprite detail. Exact40whole connected figures, SMALL and widely spaced equal8x5grid. True transparent RGBA, no background, floor, glow, shadows, labels or grid. All complete sprites includinglidandfeet inside generous transparent margins.",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_mimic/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_mimic/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original dark wooden curved chest, gold ornament, silver lid band, latch and stubby feet retained. Pure narrow end E/W views distinguish frontal diagonals, S shows front latch, N rear hinges; rear attacks retain hinge side without frontal tongue. Idle creak, grounded foot shuffle, hinged lid windup/bite/recovery; hit creak and tipped grounded inactive death. Rejected first perspective correction lost the death roles; final correction uses reaction-only conditioning and retains collapse. All40 reaction rectangles and eight viewpoints visually reviewed. Actual Main validation pending."
+  }
+}

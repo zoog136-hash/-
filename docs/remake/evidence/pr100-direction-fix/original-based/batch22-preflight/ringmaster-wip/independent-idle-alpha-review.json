@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "target_key": "transform:357",
+  "source": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2.png",
+  "source_sha256": "f4a7a3c5b7fc494786be00a5a580f116bea7c0070f7bbd5c01a248dd93fc2854",
+  "decision": "PASS_ALPHA_NO_BROAD_MATTE_FOUND",
+  "alpha_zero_fraction": 0.7509498596191406,
+  "alpha_gt100_fraction": 0.17868550618489584,
+  "whole_sheet_farther_than3px_from_alpha_gt100_body": {
+    "counts_alpha_above": {
+      "0": 66058,
+      "1": 18124,
+      "2": 6357,
+      "3": 2798,
+      "5": 791,
+      "10": 60,
+      "25": 0,
+      "50": 0,
+      "75": 0,
+      "100": 0
+    },
+    "max_alpha": 21
+  },
+  "hidden_RGB_pixels_with_alpha0": 1156766,
+  "example_invisible_gutter_RGBA": [
+    [
+      33,
+      15,
+      19,
+      0
+    ],
+    [
+      36,
+      18,
+      19,
+      0
+    ]
+  ],
+  "visual_evidence": "Full sheet independently composited over white, black and checker; alpha channel displayed separately. No broad fog/rectangle/colored matte appears with correct alpha.",
+  "interpretation": "Colored RGB under alpha0 can appear as a brown/purple background if a viewer ignores alpha. Those pixels are fully invisible in normal RGBA compositing; no alpha thresholding, deletion or pixel editing is needed or authorized by this review. Sparse low-alpha fringe is retained unchanged.",
+  "diagnostic_path": "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-idle-v2-alpha-investigation.jpg",
+  "guards_relaxed": false,
+  "source_PNG_edited": false,
+  "source_sha_after": "f4a7a3c5b7fc494786be00a5a580f116bea7c0070f7bbd5c01a248dd93fc2854",
+  "scope_limit": "Alpha review only; does not itself approve all poses, cross-role scale, runtime import or Main."
+}

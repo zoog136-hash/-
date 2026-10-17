@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "display_height_basis": "max_living_frame",
+  "prompt": "MAIN:\nUse attached ORIGINAL existing game sprite as exact identity reference for a small GOLDEN EARTH ELEMENTAL. Original is an arched hunched construct of pale ivory/gray massive irregular jagged mineral slabs with ochre-gold inner joins, two massive stone forearms/fists and stubby lower limbs. No human head, beard, tree trunk or leaves. Preserve ORIGINAL squat arch silhouette and crystalline plates. It is named a tree spirit in game but do NOT change original depicted stone/crystal design. Fixed high-angle isometric detailed painted 2D RPG sprite art. Real transparent RGBA, no floor/shadows/glow clouds/particles/grid/text. Body must be ONE connected figure, joints between stone plates visible. Exactly8column orientations E pure RIGHT profile,SE front-right,S FRONT with open arch/chest facingviewer,SW front-left,W pureLEFT,NW BACK-LEFT, N BACK showing solid curved back plates without front arch opening,NE BACK-RIGHT. Pose columns rotate45degrees, directions consistent EVERYROW. Each full sprite SMALL, at most50percent cell width and55percent cell height, huge transparent gutters and all outer margins. EXACT8columns8rows=64 whole connected separate figures. Rows1/2 idle, lowered fists then torso breath flex with plates shifted;rows3/4/5 heavy grounded WALK alternating short legs and opposite arm swings leftstride/pass/rightstride;rows6/7/8 MAGICAL ATTACK windup/contact/recovery using physical stone arm action with no painted magic effects:6 draws both fists close to arch/body;7 pushes both joined fists FORWARD along facing compass, S foreshortened hands towardviewer below center, N reaches away above back with hands partly occluded, E pushesRIGHT,WLEFT,NWupperLEFT,NEupperRIGHT;8 retracts forearms, shoulders settle. Body maintains scale and orientation, no jumps/float, no recycled stills/mirrors. Exact original ivory gray stone with subtle golden joins. All fingers/plates physically connected, no loose rubble.\n\nREACTION DRAFT:\nUse attached ORIGINAL existing game sprite as exact identity reference for a small GOLDEN EARTH ELEMENTAL. Original is an arched hunched construct of pale ivory/gray massive irregular jagged mineral slabs with ochre-gold inner joins, two massive stone forearms/fists and stubby lower limbs. No human head, beard, tree trunk or leaves. Preserve ORIGINAL squat arch silhouette and crystalline plates. It is named a tree spirit in game but do NOT change original depicted stone/crystal design. Fixed high-angle isometric detailed painted 2D RPG sprite art. Real transparent RGBA, no floor/shadows/glow clouds/particles/grid/text. Body must be ONE connected figure, joints between stone plates visible. Exactly8column orientations E pure RIGHT profile,SE front-right,S FRONT with open arch/chest facingviewer,SW front-left,W pureLEFT,NW BACK-LEFT, N BACK showing solid curved back plates without front arch opening,NE BACK-RIGHT. Pose columns rotate45degrees, directions consistent EVERYROW. Each full sprite SMALL, at most50percent cell width and55percent cell height, huge transparent gutters and all outer margins. EXACT8columns5rows=40 whole separated figures. Rows1/2 two HIT recoils:1 forearms lift guard and arch leans backward;2 one knee buckles and fists lower. Rows3/4/5 DEATH3phasecollapse:3 both knees buckle with archfolding;4 falls forward using fists for support;5 lies entirely flat low collapsed pile of JOINED body plates, arms attached, headless original arch compressed, never an upright rock. No detached stones/flyingdebris. Same identity/direction for everycolumn through collapse. Rearviews continue showing curved back and shoulders instead of frontal arch. Weight onground, clear articulation in all40poses, lastdeadbodyflat.\n\nREACTION CORRECTION:\nRedraw the FIRST reaction atlas to match the EXACT squat original stone elemental silhouette in SECOND reference (its approved main sprites) and THIRD original portrait. FIRST currently exposes a new humanoid black torso and long separate legs which DO NOT MATCH. Remove that invented humanoid anatomy. The character is a LOW HUNCHED inverted-U ARCH of large ivory-gray slabs with gold seams, giant attached stone forearms/fists, dark joints mostly occluded under arch, squat tiny rear supports, no human torso/head/waist or long legs. Keep same short compact original proportions even duringhit; never stand upright. Preserve the FIRST atlas's exact8columns by5rows and reaction roles: row1flinch raises one forearm slightly withoutstraighteningtorso;row2recoil slumpsarch;row3knees/supports buckle withfistslow;row4archdescends nearlyflat;row5joined stonebodyliesentirelyflat onground. Keep death all last3rows, no attack rows. Columns E rightprofile,SE front-right,S frontopenarch,SW front-left,W leftprofile,NW backLEFT,N fullBACK solid curvedplates,NE backRIGHT. E/WandNW/NE pointopposite; rearneverturnsfront. Same ORIGINAL pale ivorygranite andgoldseams, no brightnew spikes or glowinghazes. Exactly40 complete connected smallposes, eachatmost50%cellwidth/height, broadgaps/margins, transparentRGBA nofloor/shadows/particles/text/grid. Fixedisometriccamera matchingsecondreference; allstonepartsattached, fullfistsinsidecell.",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/forest_tree_spirit/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/forest_tree_spirit/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Reviewed against actual existing 15665.png: although named tree spirit, original is an ivory/gold squat stone arch; no trees or leaves invented. First reaction draft exposed a humanoid torso/long legs and was rejected. Accepted reaction retains same low stone arch, connected massive forearms, tiny rear supports and texture as main. E/W opposite side profiles; S open arch and N solid plated back; rear diagonals opposite. Grounded alternating supports, forward fist attack, recoil, three-stage low collapsed corpse. Geometry and complete pixel-region coverage pass; actual Main validation pending."
+  }
+}

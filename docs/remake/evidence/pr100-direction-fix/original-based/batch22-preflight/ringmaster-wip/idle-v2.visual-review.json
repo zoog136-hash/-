@@ -1,0 +1,40 @@
+{
+  "target_key": "transform:357",
+  "role": "idle",
+  "status": "PASS_STATIC_IDLE_PENDING_INDEPENDENT_MAIN",
+  "identity_source_big_shapes_preserved": true,
+  "eight_views": true,
+  "same_anatomical_wand_hand": true,
+  "connected_mask_torso_breeches_arms_wand_red_legs_black_shoes": true,
+  "two_real_breathing_phases": true,
+  "canvas_size": [
+    640,
+    640
+  ],
+  "neutral_body_height_pixels": 264.0,
+  "display_reference_height_virtual256": 105.6,
+  "geometry": {
+    "actual_poses": 16,
+    "distinct_rgba_crops": 16,
+    "foreign_body_regions": 0,
+    "visible_pixels_omitted": 0,
+    "visible_canvas_edge": false,
+    "raw_PNG_pixels_edited": false
+  },
+  "visual_notes": "All16 inspected for source purple/gold shortcoat/puffed above-knee breeches, asymmetrical white/gray mask with high curved shapes, red leg anatomy, black shoes, attached short wand/orb. Row1/2 show small shoulder/elbow/breathing-settle changes with grounded boots. Front/profile/back and correct held side preserved.",
+  "source_detail_claim_limit": "New hidden-view mask/face/symbol details are authoring inferences of low-resolution catalog artwork; not verified original-game facts.",
+  "scale_rationale": "640virtualcanvas gives264px idle medianheight an unscaled105.6virtualpx reference at256normalization. Use this stable idle anatomical head/torso reference for other role canvas choices; do not normalize collapsed deathheight to standing height. Large Epilot requires independent head/torso based canvas rather than blindly640.",
+  "foot_anchor_evidence": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2-foot-anchors.json",
+  "independent_and_Main_validation": "PENDING; no fullactor completion claim",
+  "full_actor_completion_increment": 0,
+  "independent_alpha_review": {
+    "status": "PASS_WITHOUT_PIXEL_OR_THRESHOLD_CHANGES",
+    "evidence": "/workspace/twilight-run/recovery/ringmaster-idle-v2-alpha-independent-review.json",
+    "alpha_zero_fraction": 0.75095,
+    "outside_opaque_body_3px_alpha_gt25_pixels": 0,
+    "outside_opaque_body_3px_max_alpha": 21,
+    "outside_opaque_body_3px_alpha_gt10_pixels": 60,
+    "invisible_RGB_only_pixels": 1156766,
+    "interpretation": "Wide purple/black appearance is RGB content atalpha0, not visible matte; proper checker/white/black compositions are clean."
+  }
+}

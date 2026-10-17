@@ -1,0 +1,38 @@
+{
+  "count_as_completion": false,
+  "runs": [
+    {
+      "folder": "batch21-headless",
+      "status": "failed",
+      "scope": "Original full five: QA clearing rejected all five before artwork/gameplay validation",
+      "exit_code": 1,
+      "completed_case_reports": 5,
+      "success_marker": false,
+      "failure_lines": 5,
+      "log_bytes": 2060,
+      "log_sha256": "bc67ff5c13d2c41bb13ed6ff3849adb385966b8f204c1ba1f2e85f249896c513"
+    },
+    {
+      "folder": "batch21-headless-expanded",
+      "status": "interrupted_quality_hold",
+      "scope": "Full five interrupted when fire-ent artwork was placed on HOLD",
+      "exit_code": 130,
+      "completed_case_reports": 1,
+      "success_marker": false,
+      "failure_lines": 0,
+      "log_bytes": 5619,
+      "log_sha256": "5001782867d7d699e0ac79c89fcd170fa15f524384293f75733e72679bd38f10"
+    },
+    {
+      "folder": "batch21-accepted-headless",
+      "status": "interrupted_quality_hold",
+      "scope": "Four candidates interrupted when frog alpha haze was placed on HOLD",
+      "exit_code": 130,
+      "completed_case_reports": 1,
+      "success_marker": false,
+      "failure_lines": 0,
+      "log_bytes": 5627,
+      "log_sha256": "aa380cd351d115fe8571af3cd31d3dcdc4fe785084251eb238225b75ec023d4b"
+    }
+  ]
+}

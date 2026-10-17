@@ -1,0 +1,241 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/zombie/attack.png",
+					"sha256": "567d3c048a0e68c77ac075bb47aec512a01703b42db0a205f221ac7dd45b3428",
+					"size": [
+						1024,
+						292
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				292
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "567d3c048a0e68c77ac075bb47aec512a01703b42db0a205f221ac7dd45b3428",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/zombie/cast.png",
+					"sha256": "95e85d81adbaff3c223510f7cc258ef5c4c9734bc153f8963dcddf83763935dd",
+					"size": [
+						1024,
+						264
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				264
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "95e85d81adbaff3c223510f7cc258ef5c4c9734bc153f8963dcddf83763935dd",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/zombie/death.png",
+					"sha256": "9f1b963a4555a5739cdbd1a950ec336a0e5a8d2700d10024766f33ef7a05f963",
+					"size": [
+						1024,
+						320
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				320
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "9f1b963a4555a5739cdbd1a950ec336a0e5a8d2700d10024766f33ef7a05f963",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/zombie/hit.png",
+					"sha256": "5cb59af33b465819896272ff62d967731fbdaffcebe5f1dd7e33122527cdd5aa",
+					"size": [
+						1024,
+						92
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				92
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "play_once",
+			"sha256": "5cb59af33b465819896272ff62d967731fbdaffcebe5f1dd7e33122527cdd5aa",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/zombie/idle.png",
+					"sha256": "edf1d4119defed6c196e7f455778bb2563aa38cb0732e7f90a770d14e586457a",
+					"size": [
+						1024,
+						184
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				184
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "edf1d4119defed6c196e7f455778bb2563aa38cb0732e7f90a770d14e586457a",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/zombie/walk.png",
+					"sha256": "9795c26ea0f31b87224c8d9935d4c0ed8695891c019c4a56d907c79168a22ca5",
+					"size": [
+						1024,
+						456
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				456
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "9795c26ea0f31b87224c8d9935d4c0ed8695891c019c4a56d907c79168a22ca5",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

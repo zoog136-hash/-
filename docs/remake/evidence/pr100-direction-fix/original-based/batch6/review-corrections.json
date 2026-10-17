@@ -1,0 +1,25 @@
+{
+  "foreground": "Initial Main runs passed AI/lifecycle but a rock covered part of explicit pose inspection. A QA-only helper finds nearby walkable ground using real streamed foreground bounds. Terrain is never hidden or modified. Final representative renders include foreground_clear proof.",
+  "lizard_scale": {
+    "before_pixel_scale": 0.988506,
+    "after_pixel_scale": 0.661538,
+    "reason": "Median idle height allowed long N/S living silhouettes to exceed the existing 86px visible-height budget and overlap the nameplate. One uniform per-asset scale now bounds all living poses; PNGs and frame count are unchanged.",
+    "before": "original_based_lizard_clear_pose-opengl (preserved locally)",
+    "final": "original_based_lizard_sized-opengl.json"
+  },
+  "not_applied": [
+    {
+      "actor": "lamia",
+      "reason": "Image generation returned moderation_blocked at output; no image delivered. Original preserved and unfinished count retained."
+    },
+    {
+      "actor": "bone_dragon",
+      "reason": "Generated candidates failed canvas/compass review. W/NW errors were rejected; no profiles bound."
+    }
+  ],
+  "older_apk": {
+    "sha256": "668f5bc618e7e041429272f790684c4a7ec478f2a49810142116dbe16da8c1d7",
+    "status": "superseded before lizard scale correction; retained locally, not final validation"
+  },
+  "final_apk_sha256": "fc443e74a31192b2cac44de548444f8a5cb864462eba81b9237e09be69c3beb4"
+}

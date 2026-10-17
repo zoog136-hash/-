@@ -1,0 +1,439 @@
+{
+  "head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
+  "fixture": "res://tests/fixtures/pr100_batch21_accepted.json",
+  "runner": "res://tests/run_original_based_transform_batch.gd",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "started_utc": "2026-10-15T13:25:19.345406+00:00",
+  "full_original_tests_unchanged": true,
+  "modes": {
+    "headless": {
+      "exit_code": 0,
+      "elapsed_seconds": 186.51,
+      "log": "/workspace/scratch/pr100-resume/baseline/main-headless.log",
+      "log_sha256": "10083ef756ef5ffb70ee3d900ccd631737e6a36d5493bf162fbe9d69a81e59f3",
+      "ok_marker": true,
+      "engine_error_lines": [],
+      "report": "/workspace/scratch/pr100-resume/baseline/main-headless.json",
+      "report_sha256": "72b1447d943212c94bc5974cda335c9391074472377524ec0d6087859cbb9754",
+      "checks": 7631,
+      "failures": [],
+      "scene_per_case": "Main.tscn",
+      "cases": [
+        {
+          "checks": 2420,
+          "failures": [],
+          "folder": "albino_snapping_turtle_transform",
+          "full_pose_capture": false,
+          "incoming_directions": 8,
+          "lifecycle": {
+            "attempt_limit": 200,
+            "death_callbacks": 1,
+            "death_track": "death_7",
+            "ground_drops": [
+              {
+                "created_at": 1792070791.11554,
+                "expires_at": 1792071391.11554,
+                "grade": "일반",
+                "hunt_batch": "c43247c8e37f83509ff6d7a3b678240b",
+                "id": "8bed4cccf8e1de277f8d3f07259adc79",
+                "item_name": "HP 물약",
+                "map_id": "aden_world",
+                "position": [
+                  16081.0966796875,
+                  774.9033203125
+                ],
+                "quantity": 1,
+                "state": "ground"
+              }
+            ],
+            "hit_pose": true,
+            "hp_end": 0,
+            "hp_start": 300,
+            "manual_pickup": true,
+            "player_hp": 1636,
+            "weapon_attempts": 6
+          },
+          "monster_directions": 8,
+          "name": "알비노 악어거북",
+          "physics_ticks": 1921,
+          "player_directions": 8,
+          "pose_samples": 104,
+          "preserved_saves": [],
+          "report": "/workspace/scratch/pr100-resume/baseline/main-headless-cases/albino-snapping-turtle-transform.json",
+          "screenshots": 0,
+          "slug": "albino-snapping-turtle-transform",
+          "transform_id": "349"
+        },
+        {
+          "checks": 2881,
+          "failures": [],
+          "folder": "nightmare_jack_transform",
+          "full_pose_capture": false,
+          "incoming_directions": 8,
+          "lifecycle": {
+            "attempt_limit": 200,
+            "death_callbacks": 1,
+            "death_track": "death_7",
+            "ground_drops": [
+              {
+                "created_at": 1792070850.62714,
+                "expires_at": 1792071450.62714,
+                "grade": "일반",
+                "hunt_batch": "5775bdd3021d2ca2ca82afd6fc9cb0a2",
+                "id": "60b4a65820115e34ac6de61e5bd02e55",
+                "item_name": "HP 물약",
+                "map_id": "aden_world",
+                "position": [
+                  16081.0966796875,
+                  774.9033203125
+                ],
+                "quantity": 1,
+                "state": "ground"
+              }
+            ],
+            "hit_pose": true,
+            "hp_end": 0,
+            "hp_start": 300,
+            "manual_pickup": true,
+            "player_hp": 1622,
+            "weapon_attempts": 6
+          },
+          "monster_directions": 8,
+          "name": "악몽의 잭 오 랜턴",
+          "physics_ticks": 2146,
+          "player_directions": 8,
+          "pose_samples": 104,
+          "preserved_saves": [
+            "user://pr100-transform-batch-preserved/nightmare-jack-transform/twilight_v20_save.json"
+          ],
+          "report": "/workspace/scratch/pr100-resume/baseline/main-headless-cases/nightmare-jack-transform.json",
+          "screenshots": 0,
+          "slug": "nightmare-jack-transform",
+          "transform_id": "173"
+        },
+        {
+          "checks": 2330,
+          "failures": [],
+          "folder": "doguri_transform",
+          "full_pose_capture": false,
+          "incoming_directions": 8,
+          "lifecycle": {
+            "attempt_limit": 200,
+            "death_callbacks": 1,
+            "death_track": "death_7",
+            "ground_drops": [
+              {
+                "created_at": 1792070902.78015,
+                "expires_at": 1792071502.78015,
+                "grade": "일반",
+                "hunt_batch": "4ccf2f7790e391fe940f5d0678452e0b",
+                "id": "3609866db18fded67513a45af7a5faa6",
+                "item_name": "HP 물약",
+                "map_id": "aden_world",
+                "position": [
+                  16081.0966796875,
+                  774.9033203125
+                ],
+                "quantity": 1,
+                "state": "ground"
+              }
+            ],
+            "hit_pose": true,
+            "hp_end": 0,
+            "hp_start": 300,
+            "manual_pickup": true,
+            "player_hp": 1622,
+            "weapon_attempts": 6
+          },
+          "monster_directions": 8,
+          "name": "도구리",
+          "physics_ticks": 1903,
+          "player_directions": 8,
+          "pose_samples": 104,
+          "preserved_saves": [],
+          "report": "/workspace/scratch/pr100-resume/baseline/main-headless-cases/doguri_transform.json",
+          "screenshots": 0,
+          "slug": "doguri_transform",
+          "transform_id": "288"
+        }
+      ],
+      "player_directions": 24,
+      "incoming_directions": 24,
+      "monster_directions": 24,
+      "pose_samples": 312,
+      "manual_pickups": 3,
+      "screenshots": 0
+    },
+    "render": {
+      "exit_code": 0,
+      "elapsed_seconds": 637.006,
+      "log": "/workspace/scratch/pr100-resume/baseline/main-render.log",
+      "log_sha256": "92a34d1c5be60229e14dbd9ac03ead4891987f8c7d1ff33d95e6bd9d70fb0683",
+      "ok_marker": true,
+      "engine_error_lines": [],
+      "report": "/workspace/scratch/pr100-resume/baseline/main-render.json",
+      "report_sha256": "c3faad36184ad6ede1a4be444ae55c92e2033994be48adf5c37db78e7caaf61c",
+      "checks": 6650,
+      "failures": [],
+      "scene_per_case": "Main.tscn",
+      "cases": [
+        {
+          "checks": 2089,
+          "failures": [],
+          "folder": "albino_snapping_turtle_transform",
+          "full_pose_capture": true,
+          "incoming_directions": 8,
+          "lifecycle": {
+            "attempt_limit": 200,
+            "death_callbacks": 1,
+            "death_track": "death_7",
+            "ground_drops": [
+              {
+                "created_at": 1792071090.37013,
+                "expires_at": 1792071690.37013,
+                "grade": "일반",
+                "hunt_batch": "2e182180a926c8d3d424bad61d2b5440",
+                "id": "0062832a61fe3b228ee2500931379956",
+                "item_name": "HP 물약",
+                "map_id": "aden_world",
+                "position": [
+                  16081.0966796875,
+                  774.9033203125
+                ],
+                "quantity": 1,
+                "state": "ground"
+              }
+            ],
+            "hit_pose": true,
+            "hp_end": 0,
+            "hp_start": 300,
+            "manual_pickup": true,
+            "player_hp": 1636,
+            "weapon_attempts": 6
+          },
+          "monster_directions": 8,
+          "name": "알비노 악어거북",
+          "physics_ticks": 1903,
+          "player_directions": 8,
+          "pose_samples": 104,
+          "preserved_saves": [
+            "user://pr100-transform-batch-preserved/albino-snapping-turtle-transform/twilight_v20_save.json"
+          ],
+          "report": "/workspace/scratch/pr100-resume/baseline/main-render-cases/albino-snapping-turtle-transform.json",
+          "screenshots": 160,
+          "slug": "albino-snapping-turtle-transform",
+          "transform_id": "349"
+        },
+        {
+          "checks": 2530,
+          "failures": [],
+          "folder": "nightmare_jack_transform",
+          "full_pose_capture": true,
+          "incoming_directions": 8,
+          "lifecycle": {
+            "attempt_limit": 200,
+            "death_callbacks": 1,
+            "death_track": "death_7",
+            "ground_drops": [
+              {
+                "created_at": 1792071286.1078,
+                "expires_at": 1792071886.1078,
+                "grade": "일반",
+                "hunt_batch": "7d2ad7f5708f1d6690b7b4c5a23dc39b",
+                "id": "189a8f5e7228b2024971cbc71f3f83f6",
+                "item_name": "HP 물약",
+                "map_id": "aden_world",
+                "position": [
+                  16081.0966796875,
+                  774.9033203125
+                ],
+                "quantity": 1,
+                "state": "ground"
+              }
+            ],
+            "hit_pose": true,
+            "hp_end": 0,
+            "hp_start": 300,
+            "manual_pickup": true,
+            "player_hp": 1622,
+            "weapon_attempts": 6
+          },
+          "monster_directions": 8,
+          "name": "악몽의 잭 오 랜턴",
+          "physics_ticks": 2137,
+          "player_directions": 8,
+          "pose_samples": 104,
+          "preserved_saves": [
+            "user://pr100-transform-batch-preserved/nightmare-jack-transform/twilight_v20_save.json"
+          ],
+          "report": "/workspace/scratch/pr100-resume/baseline/main-render-cases/nightmare-jack-transform.json",
+          "screenshots": 160,
+          "slug": "nightmare-jack-transform",
+          "transform_id": "173"
+        },
+        {
+          "checks": 2031,
+          "failures": [],
+          "folder": "doguri_transform",
+          "full_pose_capture": true,
+          "incoming_directions": 8,
+          "lifecycle": {
+            "attempt_limit": 200,
+            "death_callbacks": 1,
+            "death_track": "death_7",
+            "ground_drops": [
+              {
+                "created_at": 1792071536.62189,
+                "expires_at": 1792072136.62189,
+                "grade": "일반",
+                "hunt_batch": "521b604c381716c6e8f3939618372fd9",
+                "id": "888c91a621165346334de4b9698be8c9",
+                "item_name": "HP 물약",
+                "map_id": "aden_world",
+                "position": [
+                  16081.0966796875,
+                  774.9033203125
+                ],
+                "quantity": 1,
+                "state": "ground"
+              }
+            ],
+            "hit_pose": true,
+            "hp_end": 0,
+            "hp_start": 300,
+            "manual_pickup": true,
+            "player_hp": 1622,
+            "weapon_attempts": 6
+          },
+          "monster_directions": 8,
+          "name": "도구리",
+          "physics_ticks": 1912,
+          "player_directions": 8,
+          "pose_samples": 104,
+          "preserved_saves": [
+            "user://pr100-transform-batch-preserved/doguri_transform/twilight_v20_save.json"
+          ],
+          "report": "/workspace/scratch/pr100-resume/baseline/main-render-cases/doguri_transform.json",
+          "screenshots": 160,
+          "slug": "doguri_transform",
+          "transform_id": "288"
+        }
+      ],
+      "player_directions": 24,
+      "incoming_directions": 24,
+      "monster_directions": 24,
+      "pose_samples": 312,
+      "manual_pickups": 3,
+      "screenshots": 480
+    }
+  },
+  "captures": {
+    "count": 480,
+    "bytes": 751136998,
+    "manifest": "/workspace/scratch/pr100-resume/baseline/main-render-capture-inventory.json",
+    "manifest_sha256": "c9ff697b3349fcb47bff097fff74e5f2f751ba5ec50cf77e3b829166890e2896",
+    "representative_count": 18,
+    "representatives": [
+      {
+        "path": "main-render-representative/albino-snapping-turtle-transform/authored-N-idle-0.png",
+        "bytes": 1566691,
+        "sha256": "eeabf9541746aaea91bfbbf446cf7a936eb49a8a510e59447a75d04aa38f7205"
+      },
+      {
+        "path": "main-render-representative/albino-snapping-turtle-transform/authored-N-attack-1.png",
+        "bytes": 1571876,
+        "sha256": "d51b7a2e8d5c2f67f470e1ce7e339b4cf040b68a0820222e1dabfd79fed691df"
+      },
+      {
+        "path": "main-render-representative/albino-snapping-turtle-transform/authored-N-death-2.png",
+        "bytes": 1562715,
+        "sha256": "da88df6e7106649398425a0648216fcdf86c0b9b419bdba80bfb5eb424bb953a"
+      },
+      {
+        "path": "main-render-representative/albino-snapping-turtle-transform/authored-S-idle-0.png",
+        "bytes": 1580776,
+        "sha256": "301146fb18ade90ccdac59aecee488e9dff9b021e0d86b608c529889c7c3b8bf"
+      },
+      {
+        "path": "main-render-representative/albino-snapping-turtle-transform/authored-S-attack-1.png",
+        "bytes": 1576855,
+        "sha256": "ccb711856017764a4d6cda6451a71f6e4584bffed9e760e0eecf1a8785fb5fd1"
+      },
+      {
+        "path": "main-render-representative/albino-snapping-turtle-transform/authored-S-death-2.png",
+        "bytes": 1569504,
+        "sha256": "f0c5a7cabcbe453a42774fd692799840d20e456a41e21d1e892d6680e1819c7c"
+      },
+      {
+        "path": "main-render-representative/nightmare-jack-transform/authored-N-idle-0.png",
+        "bytes": 1559751,
+        "sha256": "05c6a43ae848fef295f0c3f79f0e6450070e09814199f15b29801e86f49de90c"
+      },
+      {
+        "path": "main-render-representative/nightmare-jack-transform/authored-N-attack-1.png",
+        "bytes": 1555577,
+        "sha256": "d6e169b836d45940d3dc0d82bd404b8cd8782b4a789734b1898527ab54100c00"
+      },
+      {
+        "path": "main-render-representative/nightmare-jack-transform/authored-N-death-2.png",
+        "bytes": 1557125,
+        "sha256": "445b3873dc51215441aaf54a5cc12c5d9d4d488143cd3e3652128402846d442c"
+      },
+      {
+        "path": "main-render-representative/nightmare-jack-transform/authored-S-idle-0.png",
+        "bytes": 1562868,
+        "sha256": "49a29609ce8e9da6e2e0a38c7e6d065e8aa0db32fc3c6df14f8a475827cc80e6"
+      },
+      {
+        "path": "main-render-representative/nightmare-jack-transform/authored-S-attack-1.png",
+        "bytes": 1561200,
+        "sha256": "93ccbe12b26377eb41382443945ffce9de6d1817fee74602282259d3fde0c204"
+      },
+      {
+        "path": "main-render-representative/nightmare-jack-transform/authored-S-death-2.png",
+        "bytes": 1559629,
+        "sha256": "3c58bce30a3a9fe2b72cfe4a62ade585e83eff8c8d43bb36779169d1795b9692"
+      },
+      {
+        "path": "main-render-representative/doguri_transform/authored-N-idle-0.png",
+        "bytes": 1553603,
+        "sha256": "25e4efc29bb8a2d8c035308a22b23cbaa39eed89def72cd0a7e851da4b60b291"
+      },
+      {
+        "path": "main-render-representative/doguri_transform/authored-N-attack-1.png",
+        "bytes": 1554700,
+        "sha256": "764df77bfe29e99f2370fa24c720ecc761967b3f25f38b93a36471f8437e4eea"
+      },
+      {
+        "path": "main-render-representative/doguri_transform/authored-N-death-2.png",
+        "bytes": 1551804,
+        "sha256": "050ddc4b61e257008f62525fbc213ba87cb8b7a1190d20ae7b39d503d06c1354"
+      },
+      {
+        "path": "main-render-representative/doguri_transform/authored-S-idle-0.png",
+        "bytes": 1559375,
+        "sha256": "d4543449a22fcdee6ff48fa67dfe5f5e176a561f99d7ef1f63944b0c78d22684"
+      },
+      {
+        "path": "main-render-representative/doguri_transform/authored-S-attack-1.png",
+        "bytes": 1560432,
+        "sha256": "f47d2f035f264693099bbdba7dd490b127414131fad7874ec14e3e92fa26633c"
+      },
+      {
+        "path": "main-render-representative/doguri_transform/authored-S-death-2.png",
+        "bytes": 1558131,
+        "sha256": "9379335bb95db78b6d5203e099ffe71a614ef0b90b5267f601e635e58bf027c5"
+      }
+    ]
+  },
+  "finished_utc": "2026-10-15T13:39:04.905118+00:00",
+  "all_modes_passed": true,
+  "source_preservation": "/workspace/scratch/pr100-resume/baseline/source-preservation.json",
+  "source_files_unchanged": true,
+  "capture_dimensions": {
+    "(1280, 720)": 480
+  },
+  "visual_spot_review": "/workspace/scratch/pr100-resume/baseline/visual-review.json",
+  "initial_import_failure_history": "/workspace/scratch/pr100-resume/baseline/import-history.json",
+  "all_mode_engine_error_lines_empty": true
+}

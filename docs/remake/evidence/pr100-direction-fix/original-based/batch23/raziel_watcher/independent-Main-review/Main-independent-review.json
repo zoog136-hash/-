@@ -1,0 +1,52 @@
+{
+  "actor": "raziel_watcher",
+  "target": "monster:분노의 주시자 라즈엘",
+  "verdict": "APPROVED_ACTUAL_MAIN_VISUAL_AND_RECORDED_GAMEPLAY_GATE",
+  "blocking_visual_failures": [],
+  "actual_scene": "Main.tscn",
+  "map": "aden_world",
+  "visual_review": {
+    "authored_pose_captures_inspected": 104,
+    "actual_AI_captures_inspected": 8,
+    "boss_beam_captures_inspected": 8,
+    "full_frames_inspected": ["captures/authored-N-idle-0.png","captures/authored-S-death-2.png","captures/monster-N.png","captures/boss-beam-S.png"],
+    "pose_contacts": ["Main-independent-idle-all-poses.png","Main-independent-walk-all-poses.png","Main-independent-attack-all-poses.png","Main-independent-hit-all-poses.png","Main-independent-death-all-poses.png"],
+    "combat_contacts": ["Main-independent-monster-all-directions.png","Main-independent-boss-beam-all-directions.png"],
+    "capture_manifest": "Main-independent-contact-manifest.json",
+    "method": "Contacts contain exact source screenshot crops with diagnostic labels; no actor pixels recolored, reconstructed, mirrored or resized. The full screenshots remain unchanged. All104 phases were viewed by role and direction, and all16 AI/beam screenshots were viewed as full-frame contacts."
+  },
+  "identity_and_direction": "PASS: ivory/lavender mantle, small gold/purple eyes, central vertical pink frontal eye and complete attached tendrils remain clear in the real forest scene. E/W profiles and SE/S/SW front headings are distinct; NW/N/NE retain rear anatomy without the frontal central eye. No body separation, clipped meaningful tendril, wrong heading or degraded source identity found.",
+  "role_quality": "PASS: two idle and three travel configurations remain articulated and grounded to a stable root; attack extends and recovers coherently, and hit configurations differ visibly. Three-stage death lowers the entire connected mantle into a flat low corpse. Normalized face/body size is coherent across roles; changing curl/lean does not create a gross model-size jump.",
+  "floor_resolution": {
+    "status": "PASS_NO_MATERIAL_HOVER",
+    "observed_full_frame": "captures/authored-S-death-2.png",
+    "projected_actor_root_xy": [702.4,443.2],
+    "derivation": "The real sampler places the actor at clearing+(24,0), player at clearing+(-100,0), camera local offset(100,-32), viewport1280x720 and zoom2.6. Root projects to(640,360)+(24,32)*2.6. Authored bottom source anchors project to this same root because virtual foot160/256 contributes32*pixel_scale and profile sprite_offset=-32*pixel_scale cancels it.",
+    "visual_evidence": "The flat corpse lower contour reaches approximatelyy443 around this projected root. It reads as a complete resting heap on the map, without a detached floating upper body. The yellow patch around(625,490) is substantially left/below the actor root and is not its grounding reference. It therefore does not establish corpse hover.",
+    "living_float": "Living floating anatomy is source-established and remains coherent; no feet or new levitation accessory was invented."
+  },
+  "attack_and_boss": {
+    "status": "PASS_VISUAL_AND_REPORT",
+    "evidence": "All eight beam full-frame captures align warning/release corridor with the target direction and the visible body heading. E/SE/S/SW/W/NW/N/NE axes are distinct. Recorded projectile directions point toward the player, and every real AI/magic and boss-beam direction records contact.",
+    "AI_directions": 8,
+    "projectile_directions": 8,
+    "boss_beam_directions": 8
+  },
+  "recorded_gameplay": {
+    "render_checks": 2985,
+    "render_failures": 0,
+    "headless_checks_reported": 2863,
+    "headless_failures_reported": 0,
+    "hp_start": 26500,
+    "hp_end": 0,
+    "real_weapon_attempts": 445,
+    "death_callbacks": 1,
+    "ground_drops": 2,
+    "manual_pickup": true,
+    "evidence": "report.json contains actual production AI/combat/lifecycle observations; these are separate from the manually selected authored-pose captures in Main."
+  },
+  "quality_reference": "Prior static review compared the complete approved werewolf and seer_boss atlases. The real Main captures retain their structural standards: readable body and directions, attached articulated actions, intact progressively lowered corpse, and readable placement beside the existing player/map. No existing approved actor/assets were replaced for this review.",
+  "scope_limits": ["This is the per-actor actual Main gate; repository CI, APK/static Android checks and overall coverage remain root-managed gates.","Android real-device execution is not verified by these desktop Main captures."],
+  "source_or_runtime_pixels_modified": false,
+  "map_modified": false
+}

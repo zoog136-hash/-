@@ -1,0 +1,18 @@
+{
+  "first_runs": "All 3 bosses completed normal attacks, eight real special directions and 104 pose samples, but actual HP remained after the inherited 200 weapon attempts. Death and drop assertions failed as intended.",
+  "remaining_hp_after_200": {
+    "mummy_lord": 10367,
+    "seer_boss": 8298,
+    "salah": 16095
+  },
+  "change": "Only the 3 new boss tests allow up to 768 real weapon attempts. Per-case wall clock for these boss CI groups is450seconds; other cases retain300seconds.",
+  "unchanged": [
+    "production boss HP and armor",
+    "actual equipment and weapon damage",
+    "special skill data and AI",
+    "death callback and corpse assertions",
+    "ground-drop and manual-pickup requirements",
+    "all previous test limits"
+  ],
+  "prior_reports": "before-boss-fight-budget; final reports are a fresh execution"
+}

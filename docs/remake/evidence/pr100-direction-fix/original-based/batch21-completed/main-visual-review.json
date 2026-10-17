@@ -1,0 +1,484 @@
+{
+  "schema": 1,
+  "review_kind": "Independent qualitative actual-Main OpenGL visual review",
+  "repository_head_at_review": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+  "source_capture_directory": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures",
+  "scope": "Only transform:349, transform:173 and transform:288; excluded held frog and unpublished new imagegen candidates.",
+  "entities": [
+    {
+      "transform_id": "349",
+      "entity": "albino_snapping_turtle_transform",
+      "decision": "pass_visual",
+      "scope": "N/S authored idle_0, attack_1 and final death_2 in actual rendered Main, plus N/S real normal-weapon attack marker screenshots. Turtle additionally reviewed N attack 0→1→2 sequence. This is not an all-160-screenshot visual review.",
+      "reference": {
+        "path": "res://assets/catalog/3b9b22970c8e33b6dddc37e9.png",
+        "sha256": "26087ad720005c102cc458ecc30dbf6cb33799264c4f89e608710b82991a6308",
+        "expected_sha_match": true
+      },
+      "screenshots": [
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "idle",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-N-idle-0.png",
+          "bytes": 1566691,
+          "sha256": "eeabf9541746aaea91bfbbf446cf7a936eb49a8a510e59447a75d04aa38f7205"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "attack",
+          "phase": 1,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-N-attack-1.png",
+          "bytes": 1571876,
+          "sha256": "d51b7a2e8d5c2f67f470e1ce7e339b4cf040b68a0820222e1dabfd79fed691df"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "death",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-N-death-2.png",
+          "bytes": 1562715,
+          "sha256": "da88df6e7106649398425a0648216fcdf86c0b9b419bdba80bfb5eb424bb953a"
+        },
+        {
+          "kind": "real_attack_marker_in_production_Main",
+          "direction": "N",
+          "weapon": "한손검",
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/attack-한손검-transform-N.png",
+          "bytes": 1547665,
+          "sha256": "62b2132b073480d7fb9a6fb4570cfa8270c5bdb7cc7169dfa1b67f5d8cef7a07"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "idle",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-S-idle-0.png",
+          "bytes": 1580776,
+          "sha256": "301146fb18ade90ccdac59aecee488e9dff9b021e0d86b608c529889c7c3b8bf"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "attack",
+          "phase": 1,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-S-attack-1.png",
+          "bytes": 1576855,
+          "sha256": "ccb711856017764a4d6cda6451a71f6e4584bffed9e760e0eecf1a8785fb5fd1"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "death",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-S-death-2.png",
+          "bytes": 1569504,
+          "sha256": "f0c5a7cabcbe453a42774fd692799840d20e456a41e21d1e892d6680e1819c7c"
+        },
+        {
+          "kind": "real_attack_marker_in_production_Main",
+          "direction": "S",
+          "weapon": "한손검",
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/attack-한손검-transform-S.png",
+          "bytes": 1538411,
+          "sha256": "e1b427cc1ff3532f1754a4bdc59010a84e441cc198f4f73ac99aa478b2188572"
+        },
+        {
+          "kind": "north_blade_arc_context",
+          "direction": "N",
+          "role": "attack",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-N-attack-0.png",
+          "bytes": 1569965,
+          "sha256": "56dc0f91b07283f13fae9d2e3b5c54096a0bbc9a2ed7a27e057255e5c0382129"
+        },
+        {
+          "kind": "north_blade_arc_context",
+          "direction": "N",
+          "role": "attack",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/albino-snapping-turtle-transform/authored-N-attack-2.png",
+          "bytes": 1569768,
+          "sha256": "896b6855a110de13e8e6e1953e51710f4d651f990e7bc7569d61ee33b6ce8dd0"
+        }
+      ],
+      "runtime_report": {
+        "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/report-cases/albino-snapping-turtle-transform.json",
+        "sha256": "d4e92914ad25b46e1d744256a2411529ffbc54a53d0932fe797b1101f4616549",
+        "checks": 2236,
+        "failures": [],
+        "N_S_player_checks": [
+          {
+            "attack_visible": true,
+            "authored_attack_track": "attack_2",
+            "compass": "S",
+            "facing": 2,
+            "form": "transform:349",
+            "hit_count": 1,
+            "hp_after": 3938,
+            "hp_before": 3992,
+            "idle": "idle_2",
+            "movement": "(0.0, 39.27008)",
+            "projectile_delta": "(0.0, 0.0)",
+            "projectile_visible": false,
+            "style": "slash",
+            "weapon": "한손검"
+          },
+          {
+            "attack_visible": true,
+            "authored_attack_track": "attack_6",
+            "compass": "N",
+            "facing": 6,
+            "form": "transform:349",
+            "hit_count": 1,
+            "hp_after": 3722,
+            "hp_before": 3776,
+            "idle": "idle_6",
+            "movement": "(0.0, -39.27008)",
+            "projectile_delta": "(0.0, 0.0)",
+            "projectile_visible": false,
+            "style": "slash",
+            "weapon": "한손검"
+          }
+        ]
+      },
+      "common_visual_findings": {
+        "silhouette_and_identity": "Matches the exact installed portrait and independently inspected authored sprite appearance.",
+        "N_S_facing": "N shows the back and S the front; no copied frontal face was visible in N.",
+        "feet_and_death": "No obvious foot slide/sinking in sampled held poses; final corpse lies visibly on the terrain rather than standing. Nightmare uses the source-authorized floating legless robe.",
+        "clipping": "Whole actor is inside the full original 1280×720 screenshots. The small turtle inspection crop cuts a far sword tip; the original full N attack screenshot does not.",
+        "transparency": "Production terrain is visible around the sprite and through empty canvas; no broad atlas rectangle, matte, detached body piece or visible background halo in the sampled frames. Runtime magic effects are separate from atlas alpha.",
+        "anatomy": "Limbs/robe, torso and held/source accessories remain connected in the sampled poses."
+      },
+      "limitations": [
+        "Static screenshots and a three-pose sequence cannot establish continuous swept blade/target pixel-mask collision.",
+        "The runtime report establishes game hit timing/counts; this visual review does not replace gameplay tests.",
+        "No exact live world-to-screen actor anchors or target alpha masks were recorded, so visual contact bounds are qualitative unless explicitly labeled as manual screen-pixel estimates."
+      ],
+      "attack_contact_review": {
+        "decision": "pass_visual_with_precision_limit",
+        "finding": "N target is visibly north of the attacker. Its lower-right cape/arm overlaps the turtle right hand/blade-root area at the real marker. The three N poses show an occluded forward windup, outward transverse slash and lowered recovery, so an eastward blade tip alone does not imply wrong-facing contact. S real marker and S attack pose likewise preserve front-facing slash and target overlap.",
+        "manual_screen_pixel_estimates_from_original_N_screenshot": {
+          "target_lower_right_visible_region": [
+            710,
+            280,
+            750,
+            335
+          ],
+          "attacker_right_hand_and_blade_root": [
+            704,
+            304,
+            752,
+            338
+          ],
+          "classification": "Approximate visual estimates from 40px diagnostic grid; not engine hitboxes or exact alpha bounds."
+        },
+        "configured_melee_target_offset": {
+          "direction": "N",
+          "world_units": 40,
+          "evidence": "tests/pr100_direction_gameplay_test.gd player_case target setup; exact live positions were not recorded in the JSON."
+        },
+        "diagnostic_paths": [
+          "/workspace/twilight-run/recovery/remote-three-contact/turtle-N-arc-and-contact.jpg",
+          "/workspace/twilight-run/recovery/remote-three-contact/turtle-contact-N-screen-grid.jpg",
+          "/workspace/twilight-run/recovery/remote-three-contact/turtle-main-N-attack-full.jpg"
+        ]
+      },
+      "inspection_panel_path": "/workspace/twilight-run/recovery/remote-three-contact/albino-snapping-turtle-transform-main-review.jpg"
+    },
+    {
+      "transform_id": "173",
+      "entity": "nightmare_jack_transform",
+      "decision": "pass_visual",
+      "scope": "N/S authored idle_0, attack_1 and final death_2 in actual rendered Main, plus N/S real normal-weapon attack marker screenshots. Turtle additionally reviewed N attack 0→1→2 sequence. This is not an all-160-screenshot visual review.",
+      "reference": {
+        "path": "res://assets/catalog/0eb12938f27a9aea00efc7f2.png",
+        "sha256": "b0c4a733b1b1a32e7e648f1c8f0175f0bc5e1464dfe220e6a298548febf51436",
+        "expected_sha_match": true
+      },
+      "screenshots": [
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "idle",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/authored-N-idle-0.png",
+          "bytes": 1559751,
+          "sha256": "05c6a43ae848fef295f0c3f79f0e6450070e09814199f15b29801e86f49de90c"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "attack",
+          "phase": 1,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/authored-N-attack-1.png",
+          "bytes": 1555577,
+          "sha256": "d6e169b836d45940d3dc0d82bd404b8cd8782b4a789734b1898527ab54100c00"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "death",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/authored-N-death-2.png",
+          "bytes": 1557125,
+          "sha256": "445b3873dc51215441aaf54a5cc12c5d9d4d488143cd3e3652128402846d442c"
+        },
+        {
+          "kind": "real_attack_marker_in_production_Main",
+          "direction": "N",
+          "weapon": "지팡이",
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/attack-지팡이-transform-N.png",
+          "bytes": 1525763,
+          "sha256": "e1737f92581466e5ed2ddd1d2bfb533a0d9fd0d55a50931df8cee4d78ce64e3f"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "idle",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/authored-S-idle-0.png",
+          "bytes": 1562868,
+          "sha256": "49a29609ce8e9da6e2e0a38c7e6d065e8aa0db32fc3c6df14f8a475827cc80e6"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "attack",
+          "phase": 1,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/authored-S-attack-1.png",
+          "bytes": 1561200,
+          "sha256": "93ccbe12b26377eb41382443945ffce9de6d1817fee74602282259d3fde0c204"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "death",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/authored-S-death-2.png",
+          "bytes": 1559629,
+          "sha256": "3c58bce30a3a9fe2b72cfe4a62ade585e83eff8c8d43bb36779169d1795b9692"
+        },
+        {
+          "kind": "real_attack_marker_in_production_Main",
+          "direction": "S",
+          "weapon": "지팡이",
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/nightmare-jack-transform/attack-지팡이-transform-S.png",
+          "bytes": 1540610,
+          "sha256": "9096da69cebae5e6ce1696960dbe8e227456dbdf4b5d93ed70807867ef2eeebe"
+        }
+      ],
+      "runtime_report": {
+        "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/report-cases/nightmare-jack-transform.json",
+        "sha256": "c3f5160144f8270c0d162812cbd36e7237f9f1e8a4abf1c1c89abe0072c7d917",
+        "checks": 2697,
+        "failures": [],
+        "N_S_player_checks": [
+          {
+            "attack_visible": true,
+            "authored_attack_track": "cast_2",
+            "compass": "S",
+            "facing": 2,
+            "form": "transform:173",
+            "hit_count": 1,
+            "hp_after": 3909,
+            "hp_before": 3936,
+            "idle": "idle_2",
+            "movement": "(0.0, 42.84009)",
+            "projectile_delta": "(0.0, 15.0)",
+            "projectile_visible": true,
+            "style": "magic",
+            "weapon": "지팡이"
+          },
+          {
+            "attack_visible": true,
+            "authored_attack_track": "cast_6",
+            "compass": "N",
+            "facing": 6,
+            "form": "transform:173",
+            "hit_count": 1,
+            "hp_after": 3581,
+            "hp_before": 3608,
+            "idle": "idle_6",
+            "movement": "(0.0, -42.84009)",
+            "projectile_delta": "(0.0, -15.0)",
+            "projectile_visible": true,
+            "style": "magic",
+            "weapon": "지팡이"
+          }
+        ]
+      },
+      "common_visual_findings": {
+        "silhouette_and_identity": "Matches the exact installed portrait and independently inspected authored sprite appearance.",
+        "N_S_facing": "N shows the back and S the front; no copied frontal face was visible in N.",
+        "feet_and_death": "No obvious foot slide/sinking in sampled held poses; final corpse lies visibly on the terrain rather than standing. Nightmare uses the source-authorized floating legless robe.",
+        "clipping": "Whole actor is inside the full original 1280×720 screenshots. The small turtle inspection crop cuts a far sword tip; the original full N attack screenshot does not.",
+        "transparency": "Production terrain is visible around the sprite and through empty canvas; no broad atlas rectangle, matte, detached body piece or visible background halo in the sampled frames. Runtime magic effects are separate from atlas alpha.",
+        "anatomy": "Limbs/robe, torso and held/source accessories remain connected in the sampled poses."
+      },
+      "limitations": [
+        "Static screenshots and a three-pose sequence cannot establish continuous swept blade/target pixel-mask collision.",
+        "The runtime report establishes game hit timing/counts; this visual review does not replace gameplay tests.",
+        "No exact live world-to-screen actor anchors or target alpha masks were recorded, so visual contact bounds are qualitative unless explicitly labeled as manual screen-pixel estimates."
+      ],
+      "attack_contact_review": {
+        "decision": "pass_visual",
+        "finding": "N cast uses a rear-facing robe/head and visible outgoing magic toward the north target; S cast faces forward with the outgoing magic toward the south target. The hand gesture and cast/attack alias retain the authored source poses. The attack screenshot is a marker/launch snapshot rather than a photograph of the later projectile arrival; arrival/hit counts are supplied by the separate runtime report."
+      },
+      "inspection_panel_path": "/workspace/twilight-run/recovery/remote-three-contact/nightmare-jack-transform-main-review.jpg"
+    },
+    {
+      "transform_id": "288",
+      "entity": "doguri_transform",
+      "decision": "pass_visual",
+      "scope": "N/S authored idle_0, attack_1 and final death_2 in actual rendered Main, plus N/S real normal-weapon attack marker screenshots. Turtle additionally reviewed N attack 0→1→2 sequence. This is not an all-160-screenshot visual review.",
+      "reference": {
+        "path": "res://assets/catalog/103fc704c444ace82ff91235.png",
+        "sha256": "a48d6b0f65498379d0bb8188b2ffceb5dcec38a9e4233abd056e38f1c36ee244",
+        "expected_sha_match": true
+      },
+      "screenshots": [
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "idle",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/authored-N-idle-0.png",
+          "bytes": 1553603,
+          "sha256": "25e4efc29bb8a2d8c035308a22b23cbaa39eed89def72cd0a7e851da4b60b291"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "attack",
+          "phase": 1,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/authored-N-attack-1.png",
+          "bytes": 1554700,
+          "sha256": "764df77bfe29e99f2370fa24c720ecc761967b3f25f38b93a36471f8437e4eea"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "N",
+          "role": "death",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/authored-N-death-2.png",
+          "bytes": 1551804,
+          "sha256": "050ddc4b61e257008f62525fbc213ba87cb8b7a1190d20ae7b39d503d06c1354"
+        },
+        {
+          "kind": "real_attack_marker_in_production_Main",
+          "direction": "N",
+          "weapon": "한손검",
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/attack-한손검-transform-N.png",
+          "bytes": 1529839,
+          "sha256": "c5510fad3bc1b3dcad8d820e8261c0b45cd6e1bc950a76a0cdb276ac7f51794c"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "idle",
+          "phase": 0,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/authored-S-idle-0.png",
+          "bytes": 1559375,
+          "sha256": "d4543449a22fcdee6ff48fa67dfe5f5e176a561f99d7ef1f63944b0c78d22684"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "attack",
+          "phase": 1,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/authored-S-attack-1.png",
+          "bytes": 1560432,
+          "sha256": "f47d2f035f264693099bbdba7dd490b127414131fad7874ec14e3e92fa26633c"
+        },
+        {
+          "kind": "authored_pose_in_production_Main",
+          "direction": "S",
+          "role": "death",
+          "phase": 2,
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/authored-S-death-2.png",
+          "bytes": 1558131,
+          "sha256": "9379335bb95db78b6d5203e099ffe71a614ef0b90b5267f601e635e58bf027c5"
+        },
+        {
+          "kind": "real_attack_marker_in_production_Main",
+          "direction": "S",
+          "weapon": "한손검",
+          "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/captures/doguri_transform/attack-한손검-transform-S.png",
+          "bytes": 1533673,
+          "sha256": "e1e2a57497c7fe67a48477ad51489dbaa51732a871fc5d6b9a4b1461adecf0d5"
+        }
+      ],
+      "runtime_report": {
+        "path": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/report-cases/doguri_transform.json",
+        "sha256": "dcdea24a3628f50fbcd4e1cd852d29d2d089d831a09668349a8230fd0c84733e",
+        "checks": 2206,
+        "failures": [],
+        "N_S_player_checks": [
+          {
+            "attack_visible": true,
+            "authored_attack_track": "attack_2",
+            "compass": "S",
+            "facing": 2,
+            "form": "transform:288",
+            "hit_count": 1,
+            "hp_after": 3941,
+            "hp_before": 3994,
+            "idle": "idle_2",
+            "movement": "(0.0, 40.42487)",
+            "projectile_delta": "(0.0, 0.0)",
+            "projectile_visible": false,
+            "style": "slash",
+            "weapon": "한손검"
+          },
+          {
+            "attack_visible": true,
+            "authored_attack_track": "attack_6",
+            "compass": "N",
+            "facing": 6,
+            "form": "transform:288",
+            "hit_count": 1,
+            "hp_after": 3729,
+            "hp_before": 3782,
+            "idle": "idle_6",
+            "movement": "(0.0, -40.42487)",
+            "projectile_delta": "(0.0, 0.0)",
+            "projectile_visible": false,
+            "style": "slash",
+            "weapon": "한손검"
+          }
+        ]
+      },
+      "common_visual_findings": {
+        "silhouette_and_identity": "Matches the exact installed portrait and independently inspected authored sprite appearance.",
+        "N_S_facing": "N shows the back and S the front; no copied frontal face was visible in N.",
+        "feet_and_death": "No obvious foot slide/sinking in sampled held poses; final corpse lies visibly on the terrain rather than standing. Nightmare uses the source-authorized floating legless robe.",
+        "clipping": "Whole actor is inside the full original 1280×720 screenshots. The small turtle inspection crop cuts a far sword tip; the original full N attack screenshot does not.",
+        "transparency": "Production terrain is visible around the sprite and through empty canvas; no broad atlas rectangle, matte, detached body piece or visible background halo in the sampled frames. Runtime magic effects are separate from atlas alpha.",
+        "anatomy": "Limbs/robe, torso and held/source accessories remain connected in the sampled poses."
+      },
+      "limitations": [
+        "Static screenshots and a three-pose sequence cannot establish continuous swept blade/target pixel-mask collision.",
+        "The runtime report establishes game hit timing/counts; this visual review does not replace gameplay tests.",
+        "No exact live world-to-screen actor anchors or target alpha masks were recorded, so visual contact bounds are qualitative unless explicitly labeled as manual screen-pixel estimates."
+      ],
+      "attack_contact_review": {
+        "decision": "pass_visual",
+        "finding": "N and S real marker screenshots put the target in the respective facing hemisphere and overlapping the short-paw attack range. The south target naturally occludes part of Doguri because it is in front. Clear authored attack_1 screenshots confirm connected forward paw reach without a sideways body reversal."
+      },
+      "inspection_panel_path": "/workspace/twilight-run/recovery/remote-three-contact/doguri_transform-main-review.jpg"
+    }
+  ],
+  "summary": {
+    "pass_visual": 3,
+    "hold": 0,
+    "new_completed_count_claimed": false,
+    "existing_project_files_modified": 0,
+    "source_PNGs_modified": 0,
+    "new_image_generation": 0
+  },
+  "limits": "All decisions are scoped to inspected screenshots. No synthetic claim of exact original animation or continuous pixel-perfect contact is made."
+}

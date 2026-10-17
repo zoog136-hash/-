@@ -1,6 +1,16 @@
 # Preserve actual Godot logs byte-for-byte, including their trailing blank lines.
 docs/world-structure-20261011/evidence/validation-logs/*.txt -whitespace
 docs/object-placement-20261011/evidence/validation-logs/*.txt -whitespace
+docs/remake/evidence/pr100-direction-fix/**/*.log -whitespace
 # Archived verification output is data; retain the original log bytes.
 docs/map-remake-20261015/expansion25/**/*.log -whitespace
 docs/map-remake-20261015/expansion25/**/validation-logs/*.txt -whitespace
+
+# Navigation source definition/index are SHA-256-verified as exact bytes.
+# Windows checkout must not rewrite LF/CRLF for these immutable pack records.
+data/map_remake/private/aden/*.json -text
+data/map_remake/private/aden/definitions/*.json -text
+
+# Route graph JSON is authenticated by SHA-256 at runtime. Prevent Windows
+# autocrlf from converting its single LF terminator to CRLF.
+data/aden_world_visuals/routes/*.json -text

@@ -1,0 +1,392 @@
+{
+	"direction_guides": "QA only: arrows show actual position changes; captions identify selected runtime track and reviewed source index",
+	"events": [
+		{
+			"enemy_position": "(14304.0, 2976.0)",
+			"event": "route_setup",
+			"landing": "(13984.0, 2976.0)",
+			"seconds": 0.0,
+			"stride": 103.95
+		},
+		{
+			"event": "eight_directions_done",
+			"seconds": 10.533
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 11.6
+		},
+		{
+			"allowed_cells": 10,
+			"cells": 5,
+			"event": "weapon_range_reached",
+			"seconds": 11.617
+		},
+		{
+			"cycle": 1,
+			"enemy_hp_before_callback": 520,
+			"event": "player_strike",
+			"seconds": 11.717
+		},
+		{
+			"cycle": 2,
+			"enemy_hp_before_callback": 520,
+			"event": "player_strike",
+			"seconds": 12.15
+		},
+		{
+			"cycle": 3,
+			"enemy_hp_before_callback": 462,
+			"event": "player_strike",
+			"seconds": 12.583
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 12.95
+		},
+		{
+			"cycle": 4,
+			"enemy_hp_before_callback": 397,
+			"event": "player_strike",
+			"seconds": 13.017
+		},
+		{
+			"cycle": 5,
+			"enemy_hp_before_callback": 345,
+			"event": "player_strike",
+			"seconds": 13.45
+		},
+		{
+			"cycle": 6,
+			"enemy_hp_before_callback": 292,
+			"event": "player_strike",
+			"seconds": 13.883
+		},
+		{
+			"cycle": 7,
+			"enemy_hp_before_callback": 233,
+			"event": "player_strike",
+			"seconds": 14.317
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 14.517
+		},
+		{
+			"cycle": 8,
+			"enemy_hp_before_callback": 182,
+			"event": "player_strike",
+			"seconds": 14.75
+		},
+		{
+			"cycle": 9,
+			"enemy_hp_before_callback": 132,
+			"event": "player_strike",
+			"seconds": 15.183
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 15.433
+		},
+		{
+			"cycle": 10,
+			"enemy_hp_before_callback": 75,
+			"event": "player_strike",
+			"seconds": 15.617
+		},
+		{
+			"cycle": 11,
+			"enemy_hp_before_callback": 75,
+			"event": "player_strike",
+			"seconds": 16.05
+		},
+		{
+			"cycle": 12,
+			"enemy_hp_before_callback": 13,
+			"event": "player_strike",
+			"seconds": 16.483
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 16.55
+		},
+		{
+			"cycle": 13,
+			"enemy_hp_before_callback": 13,
+			"event": "player_strike",
+			"seconds": 16.917
+		},
+		{
+			"event": "death",
+			"floor_drops": 1,
+			"seconds": 17.15
+		}
+	],
+	"failures": [],
+	"floor_drops": [
+		{
+			"created_at": 1791872859.42546,
+			"expires_at": 1791873459.42546,
+			"grade": "고급",
+			"hunt_batch": "f4713e12ea102b72c610851927ed6f64",
+			"id": "f94352343df422c1a641856fa726ec07",
+			"item_name": "강력 HP 물약",
+			"map_id": "aden_world",
+			"position": [
+				14292.330078125,
+				2976.0
+			],
+			"quantity": 1,
+			"state": "ground"
+		}
+	],
+	"initial_hp": 1832,
+	"lowest_hp": 1690,
+	"monster_poses": {
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_353):<AtlasTexture#-9223371596889043233>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_354):<AtlasTexture#-9223371596872266016>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_355):<AtlasTexture#-9223371596855488799>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_356):<AtlasTexture#-9223371596838711582>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_357):<AtlasTexture#-9223371596821934365>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_358):<AtlasTexture#-9223371596805157148>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_417):<AtlasTexture#-9223371595815301345>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_418):<AtlasTexture#-9223371595798524128>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_419):<AtlasTexture#-9223371595781746911>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_420):<AtlasTexture#-9223371595764969694>": true,
+		"attack:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_421):<AtlasTexture#-9223371595748192477>": true,
+		"corpse:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_296):<AtlasTexture#-9223371597845344602>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_289):<AtlasTexture#-9223371597962785121>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_290):<AtlasTexture#-9223371597946007904>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_291):<AtlasTexture#-9223371597929230687>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_292):<AtlasTexture#-9223371597912453470>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_293):<AtlasTexture#-9223371597895676253>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_294):<AtlasTexture#-9223371597878899036>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_295):<AtlasTexture#-9223371597862121819>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_296):<AtlasTexture#-9223371597845344602>": true,
+		"death:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_355):<AtlasTexture#-9223371596855488799>": true,
+		"hit:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_226):<AtlasTexture#-9223371599019749792>": true,
+		"hit:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_228):<AtlasTexture#-9223371598986195358>": true,
+		"hit:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_229):<AtlasTexture#-9223371598969418141>": true,
+		"hit:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_231):<AtlasTexture#-9223371598935863707>": true,
+		"hit:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_232):<AtlasTexture#-9223371598919086490>": true,
+		"idle:2:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_17):<AtlasTexture#-9223371602526188145>": true,
+		"idle:2:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_18):<AtlasTexture#-9223371602509410928>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_33):<AtlasTexture#-9223371602257752673>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_34):<AtlasTexture#-9223371602240975456>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_35):<AtlasTexture#-9223371602224198239>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_36):<AtlasTexture#-9223371602207421022>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_37):<AtlasTexture#-9223371602190643805>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_38):<AtlasTexture#-9223371602173866588>": true,
+		"idle:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_39):<AtlasTexture#-9223371602157089371>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_358):<AtlasTexture#-9223371596805157148>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_359):<AtlasTexture#-9223371596788379931>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_360):<AtlasTexture#-9223371596771602714>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_421):<AtlasTexture#-9223371595748192477>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_422):<AtlasTexture#-9223371595731415260>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_423):<AtlasTexture#-9223371595714638043>": true,
+		"recovery:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_424):<AtlasTexture#-9223371595697860826>": true,
+		"walk:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_97):<AtlasTexture#-9223371601184010785>": true,
+		"walk:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_98):<AtlasTexture#-9223371601167233568>": true,
+		"walk:4:(res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres::Frame_99):<AtlasTexture#-9223371601150456351>": true
+	},
+	"monster_strikes": 5,
+	"movement": [
+		{
+			"compass": "E",
+			"direction": 0,
+			"distance": 103.939453125,
+			"facing": 0,
+			"source_view": 4
+		},
+		{
+			"compass": "SE",
+			"direction": 1,
+			"distance": 103.956611633301,
+			"facing": 1,
+			"source_view": 3
+		},
+		{
+			"compass": "S",
+			"direction": 2,
+			"distance": 103.95263671875,
+			"facing": 2,
+			"source_view": 2
+		},
+		{
+			"compass": "SW",
+			"direction": 3,
+			"distance": 103.956611633301,
+			"facing": 3,
+			"source_view": 1
+		},
+		{
+			"compass": "W",
+			"direction": 4,
+			"distance": 103.939453125,
+			"facing": 4,
+			"source_view": 0
+		},
+		{
+			"compass": "NW",
+			"direction": 5,
+			"distance": 103.956611633301,
+			"facing": 5,
+			"source_view": 7
+		},
+		{
+			"compass": "N",
+			"direction": 6,
+			"distance": 103.95263671875,
+			"facing": 6,
+			"source_view": 6
+		},
+		{
+			"compass": "NE",
+			"direction": 7,
+			"distance": 103.956611633301,
+			"facing": 7,
+			"source_view": 5
+		}
+	],
+	"player_poses": {
+		"hit_0:0": true,
+		"hit_0:1": true,
+		"hit_3:0": true,
+		"idle_0:0": true,
+		"idle_0:1": true,
+		"idle_0:2": true,
+		"idle_0:3": true,
+		"idle_0:4": true,
+		"idle_0:5": true,
+		"idle_1:0": true,
+		"idle_1:1": true,
+		"idle_2:0": true,
+		"idle_2:1": true,
+		"idle_2:2": true,
+		"idle_3:0": true,
+		"idle_3:1": true,
+		"idle_3:2": true,
+		"idle_3:3": true,
+		"idle_3:4": true,
+		"idle_3:5": true,
+		"idle_4:0": true,
+		"idle_4:1": true,
+		"idle_5:0": true,
+		"idle_5:1": true,
+		"idle_6:0": true,
+		"idle_6:1": true,
+		"idle_7:0": true,
+		"idle_7:1": true,
+		"idle_right:0": true,
+		"idle_right:1": true,
+		"idle_right:2": true,
+		"ranged_attack_0:0": true,
+		"ranged_attack_0:1": true,
+		"ranged_attack_0:2": true,
+		"ranged_attack_0:3": true,
+		"walk_0:0": true,
+		"walk_0:1": true,
+		"walk_0:2": true,
+		"walk_0:3": true,
+		"walk_0:4": true,
+		"walk_0:5": true,
+		"walk_0:6": true,
+		"walk_0:7": true,
+		"walk_1:0": true,
+		"walk_1:1": true,
+		"walk_1:2": true,
+		"walk_1:3": true,
+		"walk_1:4": true,
+		"walk_1:5": true,
+		"walk_1:6": true,
+		"walk_1:7": true,
+		"walk_2:0": true,
+		"walk_2:1": true,
+		"walk_2:2": true,
+		"walk_2:3": true,
+		"walk_2:4": true,
+		"walk_2:5": true,
+		"walk_2:6": true,
+		"walk_2:7": true,
+		"walk_3:0": true,
+		"walk_3:1": true,
+		"walk_3:2": true,
+		"walk_3:3": true,
+		"walk_3:4": true,
+		"walk_3:5": true,
+		"walk_3:6": true,
+		"walk_3:7": true,
+		"walk_4:0": true,
+		"walk_4:1": true,
+		"walk_4:2": true,
+		"walk_4:3": true,
+		"walk_4:4": true,
+		"walk_4:5": true,
+		"walk_4:6": true,
+		"walk_4:7": true,
+		"walk_5:0": true,
+		"walk_5:1": true,
+		"walk_5:2": true,
+		"walk_5:3": true,
+		"walk_5:4": true,
+		"walk_5:5": true,
+		"walk_5:6": true,
+		"walk_5:7": true,
+		"walk_6:0": true,
+		"walk_6:1": true,
+		"walk_6:2": true,
+		"walk_6:3": true,
+		"walk_6:4": true,
+		"walk_6:5": true,
+		"walk_6:6": true,
+		"walk_6:7": true,
+		"walk_7:0": true,
+		"walk_7:1": true,
+		"walk_7:2": true,
+		"walk_7:3": true,
+		"walk_7:4": true,
+		"walk_7:5": true,
+		"walk_7:6": true,
+		"walk_7:7": true
+	},
+	"player_strikes": 13,
+	"screenshots": [
+		"00-before-movement.png",
+		"moving-0.png",
+		"walk-0.png",
+		"moving-1.png",
+		"walk-1.png",
+		"moving-2.png",
+		"walk-2.png",
+		"moving-3.png",
+		"walk-3.png",
+		"moving-4.png",
+		"walk-4.png",
+		"moving-5.png",
+		"walk-5.png",
+		"moving-6.png",
+		"walk-6.png",
+		"moving-7.png",
+		"walk-7.png",
+		"09-monster-attack.png",
+		"10-continuous-combat.png",
+		"11-death-floor-drop.png",
+		"12-pickup.png",
+		"13-transform-restored.png"
+	],
+	"seconds": 20.3666666666668,
+	"setup": {
+		"attack": 42,
+		"background_paused": 136,
+		"camera_zoom": 1.8,
+		"existing_magic_action": false,
+		"job": "요정",
+		"map": "aden_world",
+		"max_hp": 520,
+		"monster": "드레이크",
+		"performance_test": false,
+		"qa_db_weapon": "훈련용 활",
+		"stats_overridden": false,
+		"transform": "135"
+	}
+}

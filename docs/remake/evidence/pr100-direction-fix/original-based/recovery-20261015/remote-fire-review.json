@@ -1,0 +1,318 @@
+{
+  "target_key": "transform:407",
+  "name": "화염의 엔트",
+  "decision": "HOLD",
+  "eligible_for_new_runtime_binding": false,
+  "final_runtime_approval": false,
+  "review_scope": "Independent source-to-atlas visual identity and eight-view direction review of all 104 recovered WIP poses. Does not replace actual Main combat/ground-drop/foot inspection.",
+  "source_claim": "Newly generated motion derived from catalog portrait; not recovered original game animation",
+  "source_path": "/workspace/twilight/assets/catalog/e452df267006c1029bae8dde.png",
+  "source_sha256": "e81a288db6310eb0ef312f2e0b8accd52816301828269d8c404bd69344e292db",
+  "source_sha_matches": true,
+  "start_asset_sha256": {
+    "SpriteFrames.tres": "c2912eed1e4940220005e3c742affb66de29d48f6c307f60cdb8f85ce436cc22",
+    "poses-0.png": "b583843c69d585111066a38fa2a33e830c56d7ab8a385e16c93cd92d03feaec4",
+    "poses-1.png": "8ab5576b2dfe3fba8c6cee28b6df8eaccc655a9c4eb28663bf4ee742882d9d2c",
+    "poses-2.png": "555baa547079f6c39d67b1ef1ae9cdfe11ee01b41ed2f3203d697acf5934586e",
+    "provenance.json": "9c904ba23b84893c54a4ebdde427d121e625342fb988131ca2be11885c1dac7f"
+  },
+  "end_asset_sha256": {
+    "SpriteFrames.tres": "c2912eed1e4940220005e3c742affb66de29d48f6c307f60cdb8f85ce436cc22",
+    "poses-0.png": "b583843c69d585111066a38fa2a33e830c56d7ab8a385e16c93cd92d03feaec4",
+    "poses-1.png": "8ab5576b2dfe3fba8c6cee28b6df8eaccc655a9c4eb28663bf4ee742882d9d2c",
+    "poses-2.png": "555baa547079f6c39d67b1ef1ae9cdfe11ee01b41ed2f3203d697acf5934586e",
+    "provenance.json": "9c904ba23b84893c54a4ebdde427d121e625342fb988131ca2be11885c1dac7f"
+  },
+  "asset_bytes_unchanged": true,
+  "identity_review": {
+    "result": "hold",
+    "reason": "The attack atlas introduces prominent bead-like glowing eyes, a pointed chin/mouth/jaw expression and a shorter squat head/trunk silhouette, visibly different from the narrow dark tree-head in the exact catalog reference and idle/walk/hit/death atlases. Source pixels are too small/dark to prove an original face is absent; these newly inferred prominent facial traits are unverified and cross-role identity continuity is not accepted.",
+    "affected_frames": {
+      "atlas": "poses-1.png",
+      "count": 24,
+      "global_indices_zero_based": [
+        40,
+        63
+      ]
+    },
+    "specific_evidence": [
+      {
+        "global_frame_index_zero_based": 40,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "E",
+        "source_region_xywh": [
+          217,
+          35,
+          135,
+          158
+        ],
+        "rgba_sha256": "a246731c7ef619302ebfbd4c3d9436127afd712f4a0f81a959b78f3306c392dc"
+      },
+      {
+        "global_frame_index_zero_based": 42,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "S",
+        "source_region_xywh": [
+          204,
+          378,
+          150,
+          166
+        ],
+        "rgba_sha256": "b74a163f3de41a5c5d44c271741eac57edd38ca3364c7b3edb0d1d3384e2afdc"
+      },
+      {
+        "global_frame_index_zero_based": 44,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "W",
+        "source_region_xywh": [
+          183,
+          745,
+          144,
+          163
+        ],
+        "rgba_sha256": "ae46111e0e1383f5efb5590b598f6dabe06df8a549925824c9acf018c4def2a3"
+      },
+      {
+        "global_frame_index_zero_based": 50,
+        "atlas": "poses-1.png",
+        "phase": 1,
+        "direction": "S",
+        "source_region_xywh": [
+          438,
+          377,
+          188,
+          167
+        ],
+        "rgba_sha256": "3c8e038f45b0a5454e72423a29b3097c5f783310e0fefa2c6d5d564ce8c7cd16"
+      },
+      {
+        "global_frame_index_zero_based": 58,
+        "atlas": "poses-1.png",
+        "phase": 2,
+        "direction": "S",
+        "source_region_xywh": [
+          716,
+          377,
+          160,
+          167
+        ],
+        "rgba_sha256": "708c7b763d68d20e12aae03eefe3a65e71c495e34a6517fe4bb4ab6a53a1bf61"
+      }
+    ],
+    "comparison_frames": [
+      {
+        "global_frame_index_zero_based": 0,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "E",
+        "source_region_xywh": [
+          46,
+          12,
+          99,
+          177
+        ],
+        "rgba_sha256": "823c0780afffdc7114800b2e71bfc8669840e9617bfb28a2af158ba9af9a5377"
+      },
+      {
+        "global_frame_index_zero_based": 2,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "S",
+        "source_region_xywh": [
+          426,
+          13,
+          134,
+          179
+        ],
+        "rgba_sha256": "7547fc8fc3a147de948d4c4b7a3b8cb3edcffb4735f72ba5564b1e61c17c3122"
+      },
+      {
+        "global_frame_index_zero_based": 4,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "W",
+        "source_region_xywh": [
+          830,
+          13,
+          100,
+          182
+        ],
+        "rgba_sha256": "1c4bc668404991afd2ddd363870e4c3cd8a4db3ed5e1f84630ffedfee76ab37e"
+      },
+      {
+        "global_frame_index_zero_based": 64,
+        "atlas": "poses-2.png",
+        "phase": 0,
+        "direction": "E",
+        "source_region_xywh": [
+          54,
+          59,
+          143,
+          187
+        ],
+        "rgba_sha256": "97cbf8cdf674faf812e11e5766501ae24ade84bb81a98ab8b220463a9fcd0533"
+      },
+      {
+        "global_frame_index_zero_based": 66,
+        "atlas": "poses-2.png",
+        "phase": 0,
+        "direction": "S",
+        "source_region_xywh": [
+          429,
+          63,
+          138,
+          184
+        ],
+        "rgba_sha256": "241ddb5268395b75d2a6b04f8e263d64bfa0e2fb31073fbb540dfd021937c8d1"
+      }
+    ]
+  },
+  "direction_review": {
+    "result": "broadly_consistent_with_eight_views_but_identity_hold_overrides",
+    "order": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "atlas_layout": "poses-0 and poses-2 have directions in columns; poses-1 attack has directions in rows and phases in columns",
+    "NW_NE_assessment": "Back-three-quarter interpretation is supported: central front spiral seen at S is obscured in NW/NE, while the dark rear crown and back branching dominate. N hides the spiral and presents the back crown. No definite NW/NE front-view duplication was found, but attack identity remains unapproved.",
+    "NW_NE_reference_frames": [
+      {
+        "global_frame_index_zero_based": 2,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "S",
+        "source_region_xywh": [
+          426,
+          13,
+          134,
+          179
+        ],
+        "rgba_sha256": "7547fc8fc3a147de948d4c4b7a3b8cb3edcffb4735f72ba5564b1e61c17c3122"
+      },
+      {
+        "global_frame_index_zero_based": 5,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "NW",
+        "source_region_xywh": [
+          1028,
+          14,
+          131,
+          179
+        ],
+        "rgba_sha256": "1b04a4be67a1fd246a26585c0f09912cbb079e01440ac73da577e4ffecd678ae"
+      },
+      {
+        "global_frame_index_zero_based": 6,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "N",
+        "source_region_xywh": [
+          1222,
+          13,
+          136,
+          183
+        ],
+        "rgba_sha256": "b6c0c3cce2174c47c1ef68e654e4cc39cd505bffdac772cd06f3c138ce4c12c9"
+      },
+      {
+        "global_frame_index_zero_based": 7,
+        "atlas": "poses-0.png",
+        "phase": 0,
+        "direction": "NE",
+        "source_region_xywh": [
+          1430,
+          12,
+          113,
+          178
+        ],
+        "rgba_sha256": "3dbaee5904ee825ccb73f74d91cea339d28048815301ec869ea6c065e68f6302"
+      },
+      {
+        "global_frame_index_zero_based": 42,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "S",
+        "source_region_xywh": [
+          204,
+          378,
+          150,
+          166
+        ],
+        "rgba_sha256": "b74a163f3de41a5c5d44c271741eac57edd38ca3364c7b3edb0d1d3384e2afdc"
+      },
+      {
+        "global_frame_index_zero_based": 45,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "NW",
+        "source_region_xywh": [
+          161,
+          919,
+          178,
+          170
+        ],
+        "rgba_sha256": "916f9154db233ee1cfb7f49b72847aa5f14181c1bfc1323c52a62d790022093d"
+      },
+      {
+        "global_frame_index_zero_based": 46,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "N",
+        "source_region_xywh": [
+          203,
+          1096,
+          154,
+          185
+        ],
+        "rgba_sha256": "4e0869d6d7638b0fd234e5ff1d4c3c92b176dde45335508eb3d5f54e890550f6"
+      },
+      {
+        "global_frame_index_zero_based": 47,
+        "atlas": "poses-1.png",
+        "phase": 0,
+        "direction": "NE",
+        "source_region_xywh": [
+          202,
+          1305,
+          165,
+          168
+        ],
+        "rgba_sha256": "dcc7e7e42b61fa0bd6d0485945146a892deceeffa87b8eaaaf31d753774b4896"
+      }
+    ]
+  },
+  "other_visual_findings": {
+    "body_connection": "Tree limbs/roots appear attached in the inspected poses; no conspicuous detached torso/leg found",
+    "death": "Three-stage lowering and grounded flattened corpse present; review is not runtime approval",
+    "clipping": "No conspicuous neighboring-body intrusion seen; root automated geometry checks remain separate",
+    "transparency": "RGBA sheets use alpha-zero gutters, with low-alpha antialias pixels; inspect actual Main edges before any approval"
+  },
+  "evidence_artifacts": [
+    {
+      "path": "/workspace/twilight-run/recovery/fire-ent-source-contact.png",
+      "bytes": 2217463,
+      "sha256": "99f5881b34b00eeb09934387b4aceb329a124df98773768679ae9a8d0cb46c25"
+    },
+    {
+      "path": "/workspace/twilight-run/recovery/fire-source-idle-attack-detail.png",
+      "bytes": 142229,
+      "sha256": "589d422d0766c07183126cc589e233b8571afbd74bc0d2c307d42c69b1f21c14"
+    }
+  ],
+  "required_before_approval": [
+    "Revise or independently substantiate the attack-head design to preserve source and cross-role identity; keep current PNG/TRES unchanged as WIP evidence",
+    "Repeat full eight-view/role review after a separately versioned corrected attack sheet",
+    "Actual Main.tscn rendered transform batch combat, contact, foot stability and ground-drop verification"
+  ],
+  "completed_count_increment": 0
+}

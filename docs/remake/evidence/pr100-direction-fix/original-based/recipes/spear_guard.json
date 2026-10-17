@@ -1,0 +1,169 @@
+{
+  "prompt": "LOCOMOTION EXACT PROMPT:\nRe-layout and re-author this animation atlas with MUCH SMALLER FIGURES AND HUGE EMPTY GUTTERS. The first attached image is the authoritative original identity; the second is the draft sheet to correct. Preserve all forty poses and exact costume/colors from this draft, but each COMPLETE soldier including spear must be ONLY HALF its current height and width relative to the full canvas. Each pose occupies less than 50% of its cell in BOTH axes. WIDE COMPLETELY EMPTY HORIZONTAL BANDS must separate each of the FIVE rows: a spear point from a lower row must stay far below the bottom of every soldier in the row above. Especially row4 and row5: leave at least one full head height of clear transparency above each spear tip. No pose bounding rectangle can contain any part of another pose. Leave equally huge side gutters. The final atlas should look like forty tiny, widely spaced figures surrounded by mostly empty transparent space, never large figures filling each cell. Exactly8 columns and5 rows,40 full poses. Rows are two idle breathing poses and three distinct walking steps. Columns E right profile,SE front-right,S front down toward viewer,SW front-left,W left profile,NW back-left,N back up away,NE back-right. Preserve exactly ONE continuous wooden spear with steel tip per soldier, one helmet, original white surcoat and dark indigo-purple trim, gray armor and brown boots. Keep distinct articulated phases. Fully transparent RGBA, no shadows/floor/text/grid/particles. Separate new atlas, never modify the original portrait.\nATTACK EXACT PROMPT:\nRe-author the SECOND attached animation sheet for the soldier shown in the FIRST attached original portrait. That first portrait is the authoritative character identity and palette. Preserve its closed dark steel helmet, gray metal shoulders/sleeves, white split surcoat, dark indigo-purple side panels/trim and diagonal chest marking, brown belt/trousers/boots, and ONE wooden spear with steel tip. Follow the original's exact cloth colors and simple markings. The second sheet is an animation/spacing guide; reproduce its distinct articulated poses, consistent scale and raised 2D painted game viewpoint with this original soldier's appearance. Exactly3 columns and8 rows,24 TINY widely separated poses. Each row is one compass direction, in order E right,SE down-right,S down,SW down-left,W left,NW up-left,N up/fullback,NE up-right. Each row's columns are spear windup,contact,withdrawal. Keep the guide's CORRECT spearhead direction and exactly one continuous spear in every pose. Especially E points RIGHT, S points DOWN below hands, N points UP away. Preserve the guide's HUGE clear gutters in both axes; no tip can enter any adjacent rectangular pose bounds. Fully transparent RGBA; no floor, background, shadows, labels, grid or particles. Keep generous transparent outer borders, no clipping, overlap, extra rows or extra weapons. Every actual frame must remain present; never replace animated phases with duplicated standing poses. Preserve the original source portrait and produce a separate new atlas.\nHIT EXACT PROMPT:\nRe-layout and re-author this animation atlas with MUCH SMALLER FIGURES AND HUGE EMPTY GUTTERS. The first attached image is the authoritative original identity; the second is the draft sheet to correct. Preserve all forty poses and exact costume/colors from this draft, but each COMPLETE soldier including spear must be ONLY HALF its current height and width relative to the full canvas. Each pose occupies less than 50% of its cell in BOTH axes. WIDE COMPLETELY EMPTY HORIZONTAL BANDS must separate each of the FIVE rows: a spear point from a lower row must stay far below the bottom of every soldier in the row above. Especially row4 and row5: leave at least one full head height of clear transparency above each spear tip. No pose bounding rectangle can contain any part of another pose. Leave equally huge side gutters. The final atlas should look like forty tiny, widely spaced figures surrounded by mostly empty transparent space, never large figures filling each cell. Exactly8 columns and5 rows,40 full poses. Rows hit recoil,hit recovery,death buckling,death collapse,terminal fully FLAT corpse still holding the single spear. Columns E right profile,SE front-right,S front,SW front-left,W left profile,NW back-left,N fullback,NE back-right. Preserve collapse articulation and the flat final row, with complete connected spear/body and safe clear gutters. Preserve exactly ONE continuous wooden spear with steel tip per soldier, one helmet, original white surcoat and dark indigo-purple trim, gray armor and brown boots. Keep distinct articulated phases. Fully transparent RGBA, no shadows/floor/text/grid/particles. Separate new atlas, never modify the original portrait.",
+  "prompt_record_kind": "exact per-sheet prompts, source portrait first; spacing rejects preserved outside repository",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_guard/poses-0.png",
+      "rows": 5,
+      "canvas_size": 256,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_guard/poses-1.png",
+      "rows": 3,
+      "canvas_size": 352,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "rows",
+      "source_anchors": [
+        [
+          216,
+          162
+        ],
+        [
+          215,
+          309
+        ],
+        [
+          227,
+          469
+        ],
+        [
+          230,
+          619
+        ],
+        [
+          241,
+          776
+        ],
+        [
+          246,
+          952
+        ],
+        [
+          224,
+          1129
+        ],
+        [
+          216,
+          1295
+        ],
+        [
+          563,
+          162
+        ],
+        [
+          568,
+          308
+        ],
+        [
+          583,
+          468
+        ],
+        [
+          579,
+          619
+        ],
+        [
+          613,
+          775
+        ],
+        [
+          606,
+          951
+        ],
+        [
+          592,
+          1130
+        ],
+        [
+          582,
+          1295
+        ],
+        [
+          927,
+          162
+        ],
+        [
+          958,
+          308
+        ],
+        [
+          946,
+          468
+        ],
+        [
+          944,
+          619
+        ],
+        [
+          974,
+          776
+        ],
+        [
+          978,
+          951
+        ],
+        [
+          950,
+          1131
+        ],
+        [
+          947,
+          1295
+        ]
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_guard/poses-2.png",
+      "rows": 5,
+      "canvas_size": 264,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    }
+  ],
+  "review": {
+    "status": "atlas_review_passed_pending_actual_Main",
+    "directions": "E,SE,S,SW,W,NW,N,NE",
+    "geometry": "40 locomotion +24 attacks +40 hit/death, safe separated RGBA",
+    "normalization": "Per-sheet virtual canvases matched to helmet-to-boots height; actual Main scale review still required",
+    "original_unchanged": true,
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Reviewed each authoritative original portrait and final three sheets: original closed steel helmet, white tunic with own indigo/red panels, brown boots, one spear. Idle/breathing and three planted walking phases, three spear attack phases in eight physical direction rows, two recoil phases and three collapse phases ending flat. E/S/N spearheads point right/down/up respectively; N shows back, S front. V2 movement/death has large transparent row gutters; rejected V1 overlap candidates remain outside project. Explicit canvas metadata aligns body scale across separate sheets without altering image bytes. Actual Main scale and gameplay review still pending. First actual Main review showed overlarge attack bodies. The attack virtual canvas is now 352 pixels and each origin is the midpoint between the supporting boots, excluding any lower spear tip. All original and atlas pixels stay byte-identical. This correction requires a fresh full Main run."
+  }
+}

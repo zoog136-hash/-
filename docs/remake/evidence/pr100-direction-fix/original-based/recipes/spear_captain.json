@@ -1,0 +1,56 @@
+{
+  "key": "transform:176",
+  "prompt": "{\"spear-captain-main-v2\": \"Create a production 2D isometric RPG sprite atlas from the attached ORIGINAL portrait, preserving the exact character design, silhouette, palette, face and equipment. Detailed small painted pixel-compatible sprite style matching the original. Real transparent RGBA background. Exactly 8 columns and 8 rows = 64 separate whole articulated poses. Each complete sprite INCLUDING weapon is at most 55% of cell width and height, large transparent gutters and outer border. No text, no grid, no scenery, no shadows crossing cells. The eight columns MUST face E, SE, S, SW, W, NW, N, NE, in this exact order. E is a STRICT RIGHT profile with face/nose pointing directly right. SE is front-right. S looks straight down toward viewer, centered face and both shoulders. SW is front-left, nose/weapon pointing lower LEFT. W is STRICT LEFT profile, face/nose directly left. NW back-left, N centered FULL BACK with NO FACE visible, NE back-right. Do not repeat the same three-quarter front view across directions. Every row must keep the same compass. Rows 1 neutral idle; 2 distinct breathing idle; 3 walking first step; 4 passing stance; 5 opposite step; 6 strong attack windup; 7 actual contact striking in its column facing direction; 8 recovery. Real articulated limbs, not displaced duplicates. Body scale constant and weapon fully connected in every cell. All frames separated by at least 25px transparent padding. This is the original silver/white armored spear captain. Preserve the fully closed pointed helmet, white/silver armor plates and black joints, deep dark purple cape and ONE long lavender-purple bladed polearm in his original hand. No shield, sword, axe, facial skin, wings or added horns. Attack is a thrust with that same long polearm: drawn back windup, forward thrust contact, retract recovery, aimed exactly in each column facing. The modest lavender weapon edge may glow tightly but no large circular aura, lightning cloud, particles or trails. Keep ALL spear tip and butt inside each cell.\", \"spear-captain-main-spaced\": \"Edit the layout of this transparent sprite sheet: MAKE EVERY SPEAR CAPTAIN SPRITE SIXTY PERCENT OF ITS CURRENT SIZE RELATIVE TO ITS CELL. The sprites must become noticeably smaller on the overall sheet, leaving MUCH more empty transparent space. Keep the same total canvas size and exact 8-column by 8-row grid, exactly 64 poses; each pose stays at the same cell center, but is visibly smaller. Do not preserve the present crowded packing. Preserve the exact original character design, details and colors, face/helmet, single weapon, viewing directions and all eight different actions; ONLY relative sprite size and spacing should change. Each complete sprite including extended weapon occupies at most sixty percent of cell width and height, never touches neighboring sprites, with at least twenty-five empty transparent pixels between bodies and weapons in every row and column. Fully transparent background with no labels, grid, effects or scenery. Every character and weapon remains entirely inside the cell. Preserve E, SE, S, SW, W, NW, N, NE columns and idle2 / walk3 / attack3 row order, keeping the full back facing and full front facing correct.\", \"spear-captain-hit-death\": \"Create ONLY the hit and death continuation atlas for the SAME original character in the attached portrait and the matching movement atlas. Preserve exact design, palette, silhouette, weapon, outfit and original style; do not redesign. Fully transparent RGBA, exactly EIGHT COLUMNS and FIVE ROWS = 40 whole separated poses. Make every whole sprite and weapon SMALL, occupying only half of its cell width and height, with 30+ empty transparent pixels between all neighbors and outside borders. Same elevated 2D isometric view. Columns left to right STRICT E screen-right profile, SE front-right, S directly front toward viewer, SW front-left, W screen-left profile, NW back-left, N full back with NO face visible, NE back-right. Each direction must stay consistent in ALL five rows. Row1 HIT RECOIL, clearly jerked back; row2 recover from hit, distinct bracing pose; row3 DEATH BEGIN knees buckle; row4 DEATH FALL body lowering almost horizontal; row5 final completely collapsed flat dead body with connected recognizable limbs and weapon lying alongside still inside the cell. No detached pieces, no particles, no extra weapons, no explosion. Use real distinct articulated poses; never shifted duplicates. The final body is prone/sideways and flat rather than kneeling or standing. Body/weapon size stays consistent across the five rows. Retain the exact silver-white closed pointed helmet and armor, black joints, deep purple cape, and ONE lavender bladed polearm. No exposed face or skin, no shield/sword/new horns. The polearm's entire shaft/tip must stay well inside every cell even for flat corpses. Minimal tightly bounded edge glow only, no aura clouds. Flat death ends as collapsed silver armor and folded purple cape with polearm lying beside it.\"}",
+  "prompt_record_kind": "exact_main_spacing_and_hit_death_prompts",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared catalog original 4954db6f65010804b3185b7a.png: closed silver-white pointed helmet and armor, dark joints, purple cape and one lavender bladed polearm are retained. All eight front/side/rear views and directional thrusts remain in the corrected spaced sheet. Hit continuation includes recoil and recovery; three collapse phases retain armor, cape and the same polearm. Initial crowded candidates were rejected with no binding; final two sheets contain 104 distinct separated bodies. Actual Main gameplay validation is required separately before counting completion."
+  }
+}

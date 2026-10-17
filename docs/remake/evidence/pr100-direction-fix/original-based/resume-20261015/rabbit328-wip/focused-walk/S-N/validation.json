@@ -1,0 +1,124 @@
+{
+  "observed_at_utc": "2026-10-15T13:38:41.353045+00:00",
+  "candidate": {
+    "path": "/workspace/scratch/pr100-resume/focused-walk/S-N/candidate.png",
+    "generation_original_path": "/workspace/generated_images/exec-29cdfb6c-9fd2-4a32-a2f4-7cc1869ef668.png",
+    "sha256": "128e68918a0a55de5f75716fa4401df4664d169a1ddb3778babb7e9fa1926f85",
+    "original_sha256": "128e68918a0a55de5f75716fa4401df4664d169a1ddb3778babb7e9fa1926f85",
+    "bytes_unchanged": true
+  },
+  "references": [
+    {
+      "path": "/workspace/scratch/pr100-resume/transform328-source.png",
+      "sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db"
+    },
+    {
+      "path": "/workspace/generated_images/exec-715ba4a8-2acd-463c-b27c-54f0367e93ce.png",
+      "sha256": "081769ef2a777d352a670ce1cf04efc83493d8aa16d92cdf47f20cb7dd8cc62d"
+    }
+  ],
+  "prompt": {
+    "path": "/workspace/scratch/pr100-resume/focused-walk/S-N/prompt.txt",
+    "sha256": "579c183efa192d278be8f89c231c65cffb4e788cbe331ead58b30dcf25ca8868"
+  },
+  "analyze_arguments": {
+    "rows_count": 3,
+    "reference_rows": [
+      0,
+      1,
+      2
+    ],
+    "directions_axis": "rows",
+    "directions": [
+      "S",
+      "N"
+    ],
+    "canvas_size": 1024
+  },
+  "diagnostic_canvas_note": "Explicit 1024x1024 diagnostic canvas only; no game-scale approval or asset output. No thresholds relaxed.",
+  "strict_analyze": {
+    "status": "PASS",
+    "distinct_pixel_frames": 6
+  },
+  "require_complete_pose_regions": {
+    "status": "PASS"
+  },
+  "runtime_modified": false,
+  "repository_modified": false,
+  "full_eight_direction_claim": false,
+  "image": {
+    "mode": "RGBA",
+    "size": [
+      1536,
+      1024
+    ],
+    "bands": [
+      "R",
+      "G",
+      "B",
+      "A"
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "transparent_pixels": 1112318,
+    "visible_pixels": 398620,
+    "connected_bodies_area_ge_200": [
+      {
+        "area": 66638,
+        "box": [
+          162,
+          16,
+          429,
+          510
+        ]
+      },
+      {
+        "area": 65604,
+        "box": [
+          1108,
+          16,
+          1352,
+          510
+        ]
+      },
+      {
+        "area": 66403,
+        "box": [
+          636,
+          17,
+          891,
+          508
+        ]
+      },
+      {
+        "area": 67575,
+        "box": [
+          630,
+          516,
+          896,
+          993
+        ]
+      },
+      {
+        "area": 66267,
+        "box": [
+          167,
+          520,
+          429,
+          1006
+        ]
+      },
+      {
+        "area": 66133,
+        "box": [
+          1075,
+          520,
+          1345,
+          1001
+        ]
+      }
+    ]
+  }
+}

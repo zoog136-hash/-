@@ -1,0 +1,121 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 116521757094,
+      "run_id": 38763828238,
+      "workflow_name": "TWILIGHT Android ARM64 APK Playtest",
+      "head_branch": "feature/twilight-animation-20261013",
+      "run_url": "https://api.github.com/repos/zoog136-hash/-/actions/runs/38763828238",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOU9dKDs8AAAAbITzppg",
+      "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+      "url": "https://api.github.com/repos/zoog136-hash/-/actions/jobs/116521757094",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763828238/job/116521757094",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T15:50:20Z",
+      "started_at": "2026-10-15T15:51:23Z",
+      "completed_at": "2026-10-15T15:58:37Z",
+      "name": "build-android-apk",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T15:51:24Z",
+          "completed_at": "2026-10-15T15:51:25Z"
+        },
+        {
+          "name": "Checkout isolated validated playtest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T15:51:25Z",
+          "completed_at": "2026-10-15T15:53:10Z"
+        },
+        {
+          "name": "Install Godot 4.7.2 and export templates",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T15:53:10Z",
+          "completed_at": "2026-10-15T15:53:35Z"
+        },
+        {
+          "name": "Set up Android SDK and Java",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T15:53:35Z",
+          "completed_at": "2026-10-15T15:53:46Z"
+        },
+        {
+          "name": "Import Android game resources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T15:53:46Z",
+          "completed_at": "2026-10-15T15:57:22Z"
+        },
+        {
+          "name": "Configure Android SDK in Godot editor settings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T15:57:22Z",
+          "completed_at": "2026-10-15T15:57:22Z"
+        },
+        {
+          "name": "Build and inspect APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T15:57:22Z",
+          "completed_at": "2026-10-15T15:58:19Z"
+        },
+        {
+          "name": "Upload signed Android debug APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-15T15:58:19Z",
+          "completed_at": "2026-10-15T15:58:32Z"
+        },
+        {
+          "name": "Upload build diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-15T15:58:32Z",
+          "completed_at": "2026-10-15T15:58:34Z"
+        },
+        {
+          "name": "Post Checkout isolated validated playtest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-15T15:58:34Z",
+          "completed_at": "2026-10-15T15:58:34Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-15T15:58:34Z",
+          "completed_at": "2026-10-15T15:58:34Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/zoog136-hash/-/check-runs/116521757094",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000007807,
+      "runner_name": "GitHub Actions 1000007807",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+	"events": [
+		{
+			"enemy_position": "(15008.0, 2528.0)",
+			"event": "route_setup",
+			"landing": "(15328.0, 2528.0)",
+			"seconds": 0.0,
+			"stride": 94.5
+		},
+		{
+			"event": "eight_directions_done",
+			"seconds": 10.533
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 15.5
+		},
+		{
+			"cycle": 1,
+			"enemy_hp_before_callback": 300,
+			"event": "player_strike",
+			"seconds": 15.767
+		},
+		{
+			"cycle": 2,
+			"enemy_hp_before_callback": 252,
+			"event": "player_strike",
+			"seconds": 16.45
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 16.867
+		},
+		{
+			"cycle": 3,
+			"enemy_hp_before_callback": 252,
+			"event": "player_strike",
+			"seconds": 17.133
+		},
+		{
+			"cycle": 4,
+			"enemy_hp_before_callback": 208,
+			"event": "player_strike",
+			"seconds": 17.817
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 18.233
+		},
+		{
+			"cycle": 5,
+			"enemy_hp_before_callback": 162,
+			"event": "player_strike",
+			"seconds": 18.5
+		},
+		{
+			"cycle": 6,
+			"enemy_hp_before_callback": 113,
+			"event": "player_strike",
+			"seconds": 19.183
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 19.6
+		},
+		{
+			"cycle": 7,
+			"enemy_hp_before_callback": 60,
+			"event": "player_strike",
+			"seconds": 19.867
+		},
+		{
+			"cycle": 8,
+			"enemy_hp_before_callback": 6,
+			"event": "player_strike",
+			"seconds": 20.55
+		},
+		{
+			"event": "monster_strike",
+			"seconds": 20.967
+		},
+		{
+			"event": "death",
+			"floor_drops": 2,
+			"seconds": 21.233
+		},
+		{
+			"cycle": 9,
+			"enemy_hp_before_callback": 0,
+			"event": "player_strike",
+			"seconds": 21.233
+		}
+	],
+	"failures": [],
+	"floor_drops": [
+		{
+			"created_at": 1791862871.79322,
+			"expires_at": 1791863471.79322,
+			"grade": "일반",
+			"hunt_batch": "80c9ee23db27f5b298ed0e725f41e8f7",
+			"id": "30e052937f02279cc0112cb4258d964c",
+			"item_name": "HP 물약",
+			"map_id": "aden_world",
+			"position": [
+				15276.0,
+				2528.0
+			],
+			"quantity": 1,
+			"state": "ground"
+		},
+		{
+			"created_at": 1791862871.79382,
+			"expires_at": 1791863471.79382,
+			"grade": "일반",
+			"hunt_batch": "80c9ee23db27f5b298ed0e725f41e8f7",
+			"id": "24a6e992209d1bda050a9c8551bae4db",
+			"item_name": "동 광석",
+			"map_id": "aden_world",
+			"position": [
+				15314.0,
+				2528.0
+			],
+			"quantity": 1,
+			"state": "ground"
+		}
+	],
+	"monster_poses": {
+		"attack:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"corpse:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"death:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"hit:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"idle:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"idle:2:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"recovery:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true,
+		"walk:0:(res://assets/external_l1j/monsters/15723.png):<CompressedTexture2D#-9223371699498500783>": true
+	},
+	"monster_strikes": 5,
+	"movement": [
+		{
+			"direction": 0,
+			"distance": 91.0,
+			"facing": 0
+		},
+		{
+			"direction": 1,
+			"distance": 94.4945678710938,
+			"facing": 1
+		},
+		{
+			"direction": 2,
+			"distance": 94.5,
+			"facing": 2
+		},
+		{
+			"direction": 3,
+			"distance": 94.4945678710938,
+			"facing": 3
+		},
+		{
+			"direction": 4,
+			"distance": 94.5,
+			"facing": 4
+		},
+		{
+			"direction": 5,
+			"distance": 94.4945678710938,
+			"facing": 5
+		},
+		{
+			"direction": 6,
+			"distance": 94.5,
+			"facing": 6
+		},
+		{
+			"direction": 7,
+			"distance": 94.4945678710938,
+			"facing": 7
+		}
+	],
+	"player_poses": {
+		"attack:0": true,
+		"attack:1": true,
+		"attack:2": true,
+		"attack:3": true,
+		"attack:4": true,
+		"attack:5": true,
+		"hit:1": true,
+		"hit:2": true,
+		"idle:0": true,
+		"idle:1": true,
+		"idle:2": true,
+		"idle:3": true,
+		"idle:4": true,
+		"idle:5": true,
+		"idle_left:0": true,
+		"idle_left:4": true,
+		"idle_left:5": true,
+		"run:0": true,
+		"run:1": true,
+		"run:2": true,
+		"run:3": true,
+		"run:4": true,
+		"run:5": true
+	},
+	"player_strikes": 9,
+	"screenshots": [
+		"00-before-movement.png",
+		"walk-0.png",
+		"walk-1.png",
+		"walk-2.png",
+		"walk-3.png",
+		"walk-4.png",
+		"walk-5.png",
+		"walk-6.png",
+		"walk-7.png",
+		"09-monster-attack.png",
+		"10-continuous-combat.png",
+		"11-death-floor-drop.png",
+		"12-pickup.png",
+		"13-transform-restored.png"
+	],
+	"seconds": 23.7666666666666,
+	"setup": {
+		"attack": 28,
+		"background_paused": 136,
+		"camera_zoom": 1.8,
+		"map": "aden_world",
+		"max_hp": 300,
+		"monster": "해골 근위병",
+		"performance_test": false,
+		"stats_overridden": false,
+		"transform": "46"
+	}
+}

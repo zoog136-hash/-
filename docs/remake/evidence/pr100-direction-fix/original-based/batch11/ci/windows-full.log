@@ -1,0 +1,490 @@
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	﻿2026-10-14T02:20:23.2459526Z Current runner version: '2.337.0'
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2500325Z ##[group]Runner Image Provisioner
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2501089Z Hosted Compute Agent
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2501610Z Version: 20260901.588
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2502153Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2502750Z Build Date: 2026-09-01T19:56:44Z
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2503326Z Worker ID: {61f65ba5-62d7-46da-a94b-edaa3dfecdca}
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2504110Z Azure Region: westus3
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2504720Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2505974Z ##[group]Operating System
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2506568Z Microsoft Windows Server 2025
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2507089Z 10.0.26100
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2507523Z Datacenter
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2507978Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2508425Z ##[group]Runner Image
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2508921Z Image: windows-2025-vs2026
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2509506Z Version: 20260925.250.1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2510800Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260925.250/images/windows/Windows2025-VS2026-Readme.md
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2512649Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260925.250
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2513481Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2514514Z ##[group]GITHUB_TOKEN Permissions
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2516214Z Contents: read
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2516702Z Metadata: read
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2517201Z Packages: read
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2517665Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2519343Z Secret source: Actions
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2520083Z Cache mode: write
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2520662Z Prepare workflow directory
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2879758Z Prepare all required actions
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.2932899Z Getting action download info
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.5834320Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.6859874Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:23.8418865Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Set up job	2026-10-14T02:20:24.1520269Z Complete job name: regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	﻿2026-10-14T02:20:24.3921008Z ##[group]Run actions/checkout@v4
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3922305Z with:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3922775Z   repository: zoog136-hash/-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3926635Z   token: ***
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3927063Z   ssh-strict: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3927461Z   ssh-user: git
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3927849Z   persist-credentials: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3928300Z   clean: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3928707Z   sparse-checkout-cone-mode: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3929224Z   fetch-depth: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3929615Z   fetch-tags: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3930009Z   show-progress: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3930427Z   lfs: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3930909Z   submodules: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3931296Z   set-safe-directory: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3931785Z   allow-unsafe-pr-checkout: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3932525Z env:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3932897Z   PYTHONUTF8: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.3933296Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.5239954Z Syncing repository: zoog136-hash/-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.5242604Z ##[group]Getting Git version info
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.5243532Z Working directory is 'D:\a\-\-'
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:24.6230065Z [command]"C:\Program Files\Git\bin\git.exe" version
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.0647735Z git version 2.55.0.windows.5
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.0687929Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.0705586Z Temporarily overriding HOME='D:\a\_temp\2428c9d2-ba37-41bc-a250-4290ff753939' before making global git config changes
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.0707134Z Adding repository directory to the temporary git global config as a safe directory
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.0714177Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\-\-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.1414736Z Deleting the contents of 'D:\a\-\-'
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.1420547Z ##[group]Initializing the repository
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.1428402Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\-\-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.2246559Z Initialized empty Git repository in D:/a/-/-/.git/
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.2287842Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/zoog136-hash/-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.2908388Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.2909242Z ##[group]Disabling automatic garbage collection
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.2919293Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.3219019Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.3221312Z ##[group]Setting up auth
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.3226184Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:25.3507308Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:26.8603922Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:26.8861020Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:27.3578053Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:27.3846090Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:27.8814474Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:27.9084356Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:27.9085113Z ##[group]Fetching the repository
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:27.9099858Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39:refs/remotes/origin/feature/twilight-animation-20261013
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0308617Z From https://github.com/zoog136-hash/-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0312535Z  * [new ref]         c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39 -> origin/feature/twilight-animation-20261013
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0354269Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0355258Z ##[group]Determining the checkout info
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0356788Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0368470Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.0780383Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.1050771Z ##[group]Checking out the ref
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:51.1059115Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/twilight-animation-20261013 refs/remotes/origin/feature/twilight-animation-20261013
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.2103095Z Updating files:   5% (454/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.2917821Z Updating files:   6% (467/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3041638Z Updating files:   7% (544/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3167420Z Updating files:   8% (622/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3301720Z Updating files:   9% (700/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3427982Z Updating files:  10% (777/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3537047Z Updating files:  11% (855/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3646932Z Updating files:  12% (933/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3771747Z Updating files:  13% (1010/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3881701Z Updating files:  14% (1088/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.3989002Z Updating files:  15% (1166/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4094157Z Updating files:  16% (1243/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4219794Z Updating files:  17% (1321/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4375184Z Updating files:  18% (1399/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4503371Z Updating files:  19% (1476/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4625470Z Updating files:  20% (1554/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4740954Z Updating files:  21% (1632/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4860528Z Updating files:  22% (1709/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.4988384Z Updating files:  23% (1787/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.5106300Z Updating files:  24% (1865/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.5225444Z Updating files:  25% (1942/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.5839318Z Updating files:  26% (2020/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.5961615Z Updating files:  27% (2098/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.6074054Z Updating files:  28% (2175/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.6203049Z Updating files:  29% (2253/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.6333755Z Updating files:  30% (2331/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.6459576Z Updating files:  31% (2408/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.6577302Z Updating files:  32% (2486/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.6715494Z Updating files:  33% (2564/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:52.8887393Z Updating files:  34% (2641/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:53.0232249Z Updating files:  35% (2719/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:53.1192185Z Updating files:  36% (2797/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:53.1537603Z Updating files:  37% (2874/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:53.2012178Z Updating files:  37% (2908/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:53.5046296Z Updating files:  38% (2952/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:53.8250872Z Updating files:  39% (3030/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.0735632Z Updating files:  40% (3107/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.1616178Z Updating files:  41% (3185/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.3139396Z Updating files:  41% (3222/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.5507607Z Updating files:  42% (3263/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.6729467Z Updating files:  43% (3340/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.8009039Z Updating files:  44% (3418/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.8406388Z Updating files:  45% (3496/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.8600325Z Updating files:  46% (3573/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.8791917Z Updating files:  47% (3651/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.9000002Z Updating files:  48% (3729/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.9227212Z Updating files:  49% (3806/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:54.9408285Z Updating files:  50% (3884/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.1457147Z Updating files:  51% (3962/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.1600790Z Updating files:  52% (4039/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.4515505Z Updating files:  52% (4041/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.4636192Z Updating files:  53% (4117/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.4720457Z Updating files:  54% (4195/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.4887073Z Updating files:  55% (4272/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.5610171Z Updating files:  56% (4350/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.6791914Z Updating files:  57% (4428/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.7400792Z Updating files:  58% (4505/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.8523926Z Updating files:  59% (4583/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:55.9863945Z Updating files:  60% (4661/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.1506843Z Updating files:  61% (4738/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.1633597Z Updating files:  62% (4816/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.2807120Z Updating files:  62% (4824/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.4572825Z Updating files:  63% (4894/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.5186553Z Updating files:  64% (4971/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.5271962Z Updating files:  65% (5049/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.7952014Z Updating files:  66% (5127/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:56.9045296Z Updating files:  67% (5204/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.0299595Z Updating files:  68% (5282/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.1645242Z Updating files:  69% (5360/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.1910423Z Updating files:  69% (5423/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.2268430Z Updating files:  70% (5437/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.2837447Z Updating files:  71% (5515/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.4171473Z Updating files:  72% (5593/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.4241411Z Updating files:  73% (5670/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.6651211Z Updating files:  74% (5748/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.8021447Z Updating files:  75% (5826/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:57.9106658Z Updating files:  76% (5903/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.0017406Z Updating files:  77% (5981/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.0571145Z Updating files:  78% (6059/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.1413106Z Updating files:  79% (6136/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.1654707Z Updating files:  80% (6214/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.3402980Z Updating files:  80% (6270/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.5154403Z Updating files:  81% (6292/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.5851254Z Updating files:  82% (6369/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.6802895Z Updating files:  83% (6447/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.8156611Z Updating files:  84% (6525/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:58.8778839Z Updating files:  85% (6602/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.1548105Z Updating files:  86% (6680/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.1720968Z Updating files:  87% (6758/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.2036375Z Updating files:  87% (6761/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.2110659Z Updating files:  88% (6835/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.2197991Z Updating files:  89% (6913/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.4497766Z Updating files:  90% (6991/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.4925072Z Updating files:  91% (7068/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8089583Z Updating files:  92% (7146/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8300920Z Updating files:  93% (7224/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8426228Z Updating files:  94% (7301/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8574325Z Updating files:  95% (7379/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8704420Z Updating files:  96% (7457/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8811200Z Updating files:  97% (7534/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.8932634Z Updating files:  98% (7612/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.9052581Z Updating files:  99% (7690/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.9053246Z Updating files: 100% (7767/7767)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.9053534Z Updating files: 100% (7767/7767), done.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.9222716Z Switched to a new branch 'feature/twilight-animation-20261013'
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:20:59.9234925Z branch 'feature/twilight-animation-20261013' set up to track 'origin/feature/twilight-animation-20261013'.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:21:00.0595656Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:21:00.0879919Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/checkout@v4	2026-10-14T02:21:00.1131957Z c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	﻿2026-10-14T02:21:00.1561421Z ##[group]Run actions/setup-python@v5
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1562011Z with:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1562426Z   python-version: 3.12
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1562774Z   check-latest: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1565547Z   token: ***
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1565844Z   update-environment: true
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1566175Z   allow-prereleases: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1566809Z   freethreaded: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1567109Z env:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1567376Z   PYTHONUTF8: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.1567661Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.3075810Z ##[group]Installed versions
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.3282207Z (node:4312) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.3283709Z (Use `node --trace-deprecation ...` to show where the warning was created)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.3284420Z Successfully set up CPython (3.12.10)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Run actions/setup-python@v5	2026-10-14T02:21:00.3285315Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	﻿2026-10-14T02:21:00.3566649Z ##[group]Run import pathlib, urllib.request, zipfile
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3567286Z [36;1mimport pathlib, urllib.request, zipfile[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3567921Z [36;1murl = 'https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip'[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3568544Z [36;1murllib.request.urlretrieve(url, 'godot.zip')[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3569008Z [36;1mwith zipfile.ZipFile('godot.zip') as z: z.extractall('engine')[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3569478Z [36;1mexe = pathlib.Path('engine/Godot_v4.7.2-stable_win64_console.exe')[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3569890Z [36;1mexe.chmod(0o755)[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3647682Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3648089Z env:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3648332Z   PYTHONUTF8: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3648681Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3649168Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3649747Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3650179Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3650820Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Download official Godot 4.7.2	2026-10-14T02:21:00.3651246Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	﻿2026-10-14T02:21:04.2108625Z ##[group]Run python tools/l1j_ci_make_fixture.py --root .
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2109213Z [36;1mpython tools/l1j_ci_make_fixture.py --root .[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2109643Z [36;1mpython tools/l1j/make_live_fixture.py --root .[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2745710Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2746206Z env:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2746482Z   PYTHONUTF8: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2746873Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2747438Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2748006Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2748484Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2748978Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.2749366Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.6402153Z synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 tile_grid=4x3 third_party_assets=0
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:21:04.7107155Z Synthetic live-binding fixture: 5 items, 4 monsters, no original art
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	﻿2026-10-14T02:21:04.8334928Z ##[group]Run python tools/test_project.py --godot engine/Godot_v4.7.2-stable_win64_console.exe --logs l1j-test-results --timeout 450
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8335937Z [36;1mpython tools/test_project.py --godot engine/Godot_v4.7.2-stable_win64_console.exe --logs l1j-test-results --timeout 450[0m
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8396594Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8397019Z env:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8397294Z   PYTHONUTF8: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8397638Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8398130Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8398653Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8399106Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8399607Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:21:04.8399970Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:24:18.2966798Z PASS import
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:24:28.2652942Z PASS boot
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:24:29.7792301Z PASS actor_motion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:24:39.5624227Z PASS aden_boss_special_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:10.6017184Z PASS aden_building_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:23.8782456Z PASS aden_courtyard_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:27.8780465Z PASS aden_ground_continuity_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:40.9432524Z PASS aden_shoreline_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:06.5640761Z PASS aden_terrain_polish_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:15.7019753Z PASS ainhasad_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:22.4147602Z PASS animation_catalog_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:36.4713351Z PASS animation_presentation_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:49.9231224Z PASS animation_restore_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:51.4349664Z PASS authored_frames_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:52.9415948Z PASS authored_state_motion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:26:55.3936926Z PASS boss_presentation_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:04.9128549Z PASS card_special_policy_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:14.0609466Z PASS catalog_effects_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:26.1695013Z PASS catalog_full_browser_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:36.6036457Z PASS combat_hud_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:36.9150125Z PASS combat_resolution_equivalence_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:38.4205691Z PASS combat_timeline_lifecycle_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:50.3359757Z PASS combat_timing_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:27:50.7273453Z PASS combat_vfx_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:03.2143096Z PASS consumable_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:03.6126266Z PASS crafting_atomic_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:04.3497629Z PASS crafting_material_drop_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:04.8433569Z PASS crafting_scroll_grade_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:05.5264202Z PASS eight_direction_animation_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:18.2943590Z PASS equipment_blessing_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:29.2898764Z PASS equipment_slot_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:29.6873382Z PASS external_a2_bridge_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:31.3094031Z PASS external_spx_actor_runtime_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:52.2501992Z PASS field_world_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:53.5693711Z PASS flight_lifecycle_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:56.9328778Z PASS follower_motion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:05.6038718Z PASS full_inven_catalog_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:16.6754594Z PASS full_visual_manifest_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:26.2793819Z PASS ground_drop_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:50.7476916Z PASS ground_loot_system_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:54.4083853Z PASS hit_feedback_render_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:54.8039948Z PASS hit_feedback_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:03.5677748Z PASS hp_mp_unique_effects_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:17.2419874Z PASS hunting_navigation_cache_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:16.3992362Z PASS hunting_paths_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:13.9642025Z PASS hunting_world_capture_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:24.3776039Z PASS input_routing_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:33.8849632Z PASS inventory_db_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:43.2933551Z PASS item_buff_description_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:43.6860631Z PASS item_db_slot_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:43.9847163Z PASS item_icon_art_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:52.9308511Z PASS item_options_runtime_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:57.9931592Z PASS item_rarity_render_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:58.7694201Z PASS item_visual_repair_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:00.5584090Z PASS item_visual_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:00.8642499Z PASS item_weight_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:11.5788770Z PASS job_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:11.8874358Z PASS l1j_full_source_data_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:12.1946659Z PASS l1j_map_grid_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:12.4992240Z PASS l1j_map_recovery_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:12.8107299Z PASS l1j_optional_bridge_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:13.3945446Z PASS l1j_packed_assets_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:13.6998672Z PASS l1j_png_load_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:28.7374247Z PASS l1j_reviewed_shop_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:47.9968921Z PASS l1j_runtime_game_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:48.2967918Z PASS l1j_source_map_catalog_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:48.6028491Z PASS l1j_source_navigation_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:48.9043381Z PASS l1j_spx_frames_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:49.2026401Z PASS l1j_visual_link_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:49.8819562Z PASS lineage_inventory_ui_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:50.2767554Z PASS lineage_side_ui_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:50.7661946Z PASS lineagem_ui_visual_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:51.1680320Z PASS local_crafting_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:52.2100961Z PASS loot_balance_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:52.5095103Z PASS main_debug_crafting_blessing_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:53.9243638Z PASS main_debug_failed_load_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:54.2271465Z PASS main_debug_input_bindings_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:54.6252212Z PASS map_visual_toggle_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:34:03.7585294Z PASS mobile_scroll_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:34:05.1786030Z PASS monster_ai_leash_path_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:34:16.3562310Z PASS monster_attack_profiles_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:34:22.1413417Z PASS monster_motion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:03.6913518Z PASS monster_world_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:13.7535183Z PASS native_animation_expansion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:22.7014560Z PASS non_skill_options_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:23.0965786Z PASS npc_dialogue_branching_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:23.4904163Z PASS npc_teleport_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:32.6258080Z PASS option_finalize_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:04.9770442Z PASS original_based_albino_frog_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:50.7007471Z PASS original_based_asitagio_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:17.1967931Z PASS original_based_bugbear_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:17.4939318Z PASS original_based_canvas_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:52.7962539Z PASS original_based_cockatrice_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:24.6687074Z PASS original_based_crabman_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:39:02.9504522Z PASS original_based_cyclops_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:39:51.6413233Z PASS original_based_fire_egg_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:40:19.7998413Z PASS original_based_ghost_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:40:49.6217078Z PASS original_based_ghoul_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:41:30.7090988Z PASS original_based_harpy_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:42:17.5312915Z PASS original_based_horn_cerberus_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:42:59.1799882Z PASS original_based_ice_golem_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:43:38.7098977Z PASS original_based_iron_golem_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:44:11.4297698Z PASS original_based_lava_golem_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:44:44.2672449Z PASS original_based_lizard_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:45:17.3790984Z PASS original_based_lycanthrope_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:45:45.4627279Z PASS original_based_monster_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:46:17.9348876Z PASS original_based_ogre_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:46:47.2280185Z PASS original_based_reaper_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:47:16.5352363Z PASS original_based_reaper_male_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:48:24.6973476Z PASS original_based_sand_worm_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:48:57.0488085Z FAIL original_based_spear_captain_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:49:26.6397949Z PASS original_based_spear_guard_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:49:56.5034280Z PASS original_based_spear_guard_green_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:50:26.4497618Z PASS original_based_spear_guard_red_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:03.3601500Z PASS original_based_succubus_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:04.9720174Z PASS original_counter_probability_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:14.2995659Z PASS original_lineagem_effects_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:14.7030906Z SKIP original_map_catalog_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:23.9410543Z PASS original_skill_audio_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:45.1660587Z PASS original_skill_catalog_runtime_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:54:52.0863894Z PASS original_skill_learning_conditions_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:01.1378862Z PASS original_skill_provenance_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:09.5307289Z PASS original_skill_reduction_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:18.9490907Z PASS original_skill_restore_guard_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:26.9684236Z PASS original_skill_status_coexistence_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:36.8481587Z PASS original_skill_summon_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:49.7954621Z PASS original_skill_system_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:55:57.6275695Z PASS original_skill_target_state_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:11.7896557Z PASS original_skill_warehouse_migration_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:22.1356744Z PASS original_turn_undead_rewards_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:34.6166513Z PASS original_turn_undead_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:35.0166905Z PASS original_world_coordinates_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:36.4354122Z SKIP original_world_runtime_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:45.7551842Z PASS passive_skill_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:56.9345341Z PASS per_instance_enchantments_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:10.3446898Z PASS playtest_catalog_drag_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:55.0666247Z PASS pr100_direction_gameplay_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:56.3916921Z PASS pr80_original_resources_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:56.9690190Z PASS pr80_resource_assets_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:58.3783585Z PASS pr93_landing_bounds_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:59:07.7879859Z PASS quickslot_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T02:59:45.5270731Z PASS reference_expansion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:36.9438339Z PASS reference_object_capture_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:47.9370262Z PASS reference_object_placement_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:50.3774918Z PASS relic_motion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:51.9754427Z PASS remake_map_inventory_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:01.2000460Z PASS remake_map_population_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:07.1848043Z PASS remake_map_readability_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:21.0236697Z PASS remake_ui_local_item_icons_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:30.4472207Z PASS remake_ui_presentation_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:38.0008038Z PASS remake_world_lifecycle_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:41.8284125Z PASS renewed_map_spawn_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:46.2116296Z PASS road_surface_mesh_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:26.7736069Z PASS road_surface_render_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:36.6589255Z PASS shield_rules_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:36.9599098Z PASS shop_authority_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:37.3560502Z PASS shop_buyback_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:47.7855308Z PASS skill_element_integration_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:58.8683414Z PASS skill_mechanism_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:03.1307849Z SKIP source_first_map_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:03.5304231Z PASS source_pack_guard_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:12.6717760Z PASS speed_option_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:25.7078379Z PASS stage5_save_compatibility_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:26.4719382Z PASS terrain_surface_geometry_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:38.7338562Z PASS terrain_surface_render_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:39.0403029Z PASS terrain_variation_texture_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:49.7432413Z PASS ui_fidelity_regression_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:59.9917655Z PASS ui_navigation_preservation_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:21.3883544Z PASS ui_pointer_transfer_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:31.7385575Z PASS ui_renewal_integration_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:41.2427617Z PASS ui_stage4_item_instance_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:43.1228448Z PASS visible_gameplay_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:52.7191597Z PASS volley_motion_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:53.1156767Z PASS warehouse_persistence_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:02.6215183Z PASS weapon_rules_smoke_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:30.7086542Z PASS world_region_portals_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:09:39.7942737Z PASS world_regions_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:10:23.2955609Z PASS world_structure_capture_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:10:52.8621964Z PASS world_structure_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:11:31.8655396Z PASS world_terrain_coverage_test
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:11:31.8745976Z 176/180 checks passed; 3 skipped; 0 not run
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Import, boot and all regression checks with isolated saves	2026-10-14T03:11:32.0819909Z ##[error]Process completed with exit code 1.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	﻿2026-10-14T03:11:32.1209192Z ##[group]Run actions/upload-artifact@v4
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1209688Z with:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1210018Z   name: l1j-runtime-Windows-synthetic
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1210428Z   path: l1j-test-results/
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	l1j-render-userdata/
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	l1j-render.log
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1210807Z   if-no-files-found: warn
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1211111Z   compression-level: 6
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1211407Z   overwrite: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1211706Z   include-hidden-files: false
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1212020Z env:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1212250Z   PYTHONUTF8: 1
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1212597Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1213060Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1213513Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1213942Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1214394Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:32.1214842Z ##[endgroup]
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0017682Z (node:8360) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0018591Z (Use `node --trace-deprecation ...` to show where the warning was created)
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0456076Z Multiple search paths detected. Calculating the least common ancestor of all paths
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0458330Z The least common ancestor is D:\a\-\-. This will be the root directory of the artifact
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0459023Z With the provided path, there will be 181 files uploaded
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0463126Z Artifact name is valid!
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.0464861Z Root directory input is valid!
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.4346386Z Beginning upload of artifact content to blob storage
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.6486635Z (node:8360) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:33.9784202Z Uploaded bytes 166302
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:34.0341739Z Finished uploading artifact content to blob storage!
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:34.0342805Z SHA256 digest of uploaded artifact zip is 5c3ae700921b4bc6121e689c5fddc2e4f9537d7504bd08bac6272badfc07291f
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:34.0345626Z Finalizing artifact upload
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:34.3109029Z Artifact l1j-runtime-Windows-synthetic.zip successfully finalized. Artifact ID 11867507366
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:34.3110490Z Artifact l1j-runtime-Windows-synthetic has been successfully uploaded! Final size is 166302 bytes. Artifact ID is 11867507366
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Preserve evidence	2026-10-14T03:11:34.3123551Z Artifact download URL: https://github.com/zoog136-hash/-/actions/runs/38499830475/artifacts/11867507366
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	﻿2026-10-14T03:11:34.3774026Z Post job cleanup.
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.5611406Z [command]"C:\Program Files\Git\bin\git.exe" version
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.6275582Z git version 2.55.0.windows.5
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.6340939Z Temporarily overriding HOME='D:\a\_temp\6fc417a8-5f76-4a61-9dc7-a7b19904f230' before making global git config changes
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.6342065Z Adding repository directory to the temporary git global config as a safe directory
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.6350343Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\-\-
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.6641296Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:34.6940982Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:35.2936935Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:35.3166093Z http.https://github.com/.extraheader
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:35.3208878Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:35.3483659Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:35.8307744Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Post Run actions/checkout@v4	2026-10-14T03:11:35.8588884Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Complete job	﻿2026-10-14T03:11:36.3905463Z Cleaning up orphan processes
+regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)	Complete job	2026-10-14T03:11:36.4488954Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

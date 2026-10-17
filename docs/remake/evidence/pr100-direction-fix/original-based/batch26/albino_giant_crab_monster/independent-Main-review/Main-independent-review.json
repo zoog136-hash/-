@@ -1,0 +1,40 @@
+{
+  "observed_at_utc": "2026-10-15T17:01:56.571445+00:00",
+  "reviewer": "ROOT independent of author and correcting reviewer",
+  "status": "APPROVED",
+  "automatic_gate": {
+    "headless_checks": 848,
+    "OpenGL_checks": 962,
+    "failures": 0
+  },
+  "actual_Main_visual_gate": {
+    "all_authored_pose_samples_reviewed": 104,
+    "actual_AI_direction_full_viewports_reviewed": 8,
+    "roles": [
+      "idle",
+      "walk",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "headings": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "findings": {
+      "identity": "Exact ivory spiky/red-eye crab, anatomicalRIGHT giantclaw retained: W far upper giant versus near LEFT smallerclaw. Existingtransform351 crab assets preserved unchanged; separate monster resource.",
+      "ground": "Actual walkingfeet support, not pincertip. median_idle retains native78standingheight while raisedgiantclaw extends naturally. Body/legs connected and death complete onterrain.",
+      "motion": "Walk legarticulation/support changes across24poses; eightviews/frontback distinguished. Nraisedclaw contact pointsUP, no simplemirror. All104 actualMain poses approved."
+    }
+  },
+  "source_and_quality_comparison": "Individually compared originalcontext + authorednormalizedposes; establishedPR100seer/ghost attack/death quality references independently inspected thisresumption. No existinggoodasset/map/gamechange.",
+  "scope_precision": "All104 actual production Main pose samples and8realAIwalk/attack captures reviewed; not a separate realtime8directionhit/deathmovie. Realweaponhit/death/drop/manualpickup validated through unchanged fullMain probes.",
+  "art_provenance": "New authored2D source-reference-based motion; not original animation extraction.",
+  "HOLD": false
+}

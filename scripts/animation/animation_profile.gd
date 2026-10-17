@@ -11,6 +11,9 @@ class_name TwilightAnimationProfile
 @export var reference_speed: float = 210.0
 @export_range(0.1, 0.85) var attack_hit_ratio: float = 0.45
 @export var attack_hit_frame: int = 3
+## Different authored attacks can release on different source poses.
+@export var action_hit_frames: Dictionary = {}
+@export var color_tint: Color = Color.WHITE
 @export var use_profile_hit_ratio: bool = false
 @export var attack_animation_speed: float = 1.0
 @export var sprite_offset: Vector2 = Vector2(0, -46)
@@ -20,6 +23,11 @@ class_name TwilightAnimationProfile
 @export var shadow_size: Vector2 = Vector2(19, 6)
 @export var floating: bool = false
 @export var dedicated_attack: bool = false
+## Optional explicit scale for padded, foot-anchored native sprite frames.
+## Zero keeps the existing automatic sizing of portraits / legacy sheets.
+@export var pixel_scale: float = 0.0
+@export var embedded_shadow: bool = false
+@export var death_duration: float = 0.35
 @export var animation_names: Dictionary = {}
 ## Presentation amplitudes; never used by attack clocks or damage calculations.
 @export var body_kind: String = "humanoid"
@@ -34,6 +42,18 @@ class_name TwilightAnimationProfile
 
 func marker_for(style: String) -> float:
 	return clampf(attack_hit_ratio, 0.1, 0.85) if use_profile_hit_ratio else hit_ratio(style)
+
+func hit_frame_for(role: String) -> int:
+	return int(action_hit_frames.get(role, attack_hit_frame))
+
+func projectile_offset(aim: Vector2) -> Vector2:
+	# The Y anchor is torso height, not a screen-space aim component. Native
+	# eight-view weapons release ahead of that anchor in the actual facing.
+	# East/west retain their existing offsets; legacy art keeps its old anchor.
+	if layout == "directional8":
+		var direction_value: Vector2 = aim.normalized() if not aim.is_zero_approx() else Vector2.DOWN
+		return Vector2(0, projectile_origin.y) + direction_value * absf(projectile_origin.x)
+	return Vector2(projectile_origin.x * (-1.0 if aim.x < 0.0 else 1.0), projectile_origin.y)
 
 static func weapon_style(weapon: String, attack_kind: String = "melee") -> String:
 	if attack_kind == "magic": return "magic"

@@ -1,0 +1,58 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCorrect the SECOND attached draft atlas, using FIRST image as character-identity authority. Deliver a NEW clean 8 columns by 8 rows atlas with exactly 64 complete articulated poses, TRANSPARENT RGBA. The draft failed because adjacent figures are too close and attack fists invade neighboring cells. NEW LAYOUT MUST HAVE HUGE EMPTY GUTTERS: every sprite maximum 75 pixels wide and 75 pixels tall on a 160 x160 pixel cell; a full body's width of empty transparent space between adjacent figures. Target square sheet 1280 x1280 or larger. All figures deliberately SMALL within their cell. The margins around ALL four sides of every complete sprite must be at least 40 pixels. Only attached anatomy, NO detached magic, mist, particles, shadows or glow outside silhouette. Do not fill the empty gaps. Preserve source's hunched squat indigo navy hulking beast, recessed small pale ice face, massive heavy arms and fists, short legs, lavender crystal/ice shoulder and back fins, glossy blue-black skin. No weapons/clothing, no generic humanoid. Fixed high-angle 2D RPG camera. Keep columns EXACT: E true right profile, SE front-right, S direct frontal face toward viewer, SW front-left, W true left profile, NW back-left, N direct BACK no face, NE back-right. Keep direction across all rows. Eight rows exact: 2 breathing idle, 3 distinct articulated walking strides with alternate planted feet, attack windup, attack contact, attack recovery. All64 poses different articulated limb/torso/leg positions. CRITICAL attack compass fix: contact row7 must punch in its column direction, S fist toward viewer/DOWN in image and N fist UP toward top of image. N should have symmetrical full BACK torso, arm projects forward ABOVE shoulder rather than sideways RIGHT. Row7 E fist to right, W fist to left. S and N NEVER rotate to a diagonal view during strike. Breathing/walk/attack preserve body size and grounded feet. No labels/borders/grid or scene. Every complete pose fully separated with giant transparent gutters, no overlapping figures, no clipped fists. This is sprite content production: spaciousness and exact 8-view animation phases take priority over filling the canvas.\nREACTION EXACT PROMPT:\nCreate a matching 2D RPG HIT and DEATH sprite atlas. FIRST attached image is the identity authority; SECOND is the approved movement/attack atlas for palette, scale, high-angle camera and orientation. Preserve this exact squat hunched indigo-blue hulking creature: small recessed pale icy face below lavender jagged crystal shoulder/upper-back crest, deep glossy navy massive torso, HUGE long thick arms/fists, very short bent legs and broad feet. Not a robot, not a generic watery human, no clothes/weapons. FULL TRANSPARENT RGBA background. Exactly EIGHT equal columns and FIVE equal rows =40 COMPLETE connected separate poses. Maintain VERY GENEROUS transparent gutters: every figure (including completely fallen body) fits within central 50 percent of cell width and 65 percent of cell height, with one whole body-width of blank transparency separating horizontal neighbors. NO overlap, NO clipped parts, NO particles, puddles, shadow, ground, labels, lettering or grid. Body glow stays on skin, no detached specks. Direction columns STRICT:1 E true RIGHT side profile;2 SE front-right diagonal;3 S direct FRONT facing viewer/downscreen;4 SW front-left diagonal;5 W true LEFT side profile;6 NW back-left diagonal;7 N direct BACK facing away/upscreen, no face or chest;8 NE back-right diagonal. Every phase in every column retains that view, including collapsed dead poses. Do not rotate all corpses into same side profile. FIVE ROWS exact: row1 hit recoil with torso drawn sharply back and fists recoiling inward; row2 distinct hit recovery leaning back into ready posture; row3 death begins, legs BUCKLE, shoulders sag, arm folds inward; row4 clearly lower falling pose with torso falling close to ground, supported by a bent forearm/knee; row5 terminal DEAD fully prone flattened entire body resting horizontally on the ground, visibly lower than previous phases, head slumped, limbs relaxed and folded, motionless corpse, no upright crouch. All40 genuinely different articulated poses rather than translated/scaled copies. Death collapses anatomy: DO NOT shrink character, lose legs, remove head, disconnect fists, detach crystal shoulders or dissolve into fragments. It is one whole heavy beast. Keep consistent body proportions, colors and camera with second atlas. Living hit poses about110px tall on a sheet roughly1280px wide, fallen bodies lower but similar whole-body volume. Preserve all8 exact front/side/back perspectives and make end-state flat silhouette unambiguous.",
+  "prompt_record_kind": "exact_final_prompts; first spacing draft rejected and retained in authoring_history",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/water_spirit/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "canvas_size": 256
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/water_spirit/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared original15663.png and all64main+40reaction poses. Preserved squat hunched deep-navy bulky anatomy, small recessed pale face, giant thick arms/fists, short legs, purple-lavender crystal shoulder/back crest. E/W true side, SE/SW frontal diagonals, S frontal face, NW/NE rear diagonals and N only back remain distinct. Walk has3 different articulated planted strides, attack has windup/contact/recovery including Sdownscreen and Nupscreen contact. Hit2 distinct recoil/recovery, death3 lower the connected whole body from buckle to supported fall to prone/slumped broad terminal corpse; no detached crystals, missing limbs or clipped bodies. Pixel analysis independently confirms exactly64/40 main components and no omitted alpha>100 pixels. This is source-art visual review; actual Main gameplay/render remains for root validation."
+  },
+  "display_height_basis": "max_living_frame"
+}

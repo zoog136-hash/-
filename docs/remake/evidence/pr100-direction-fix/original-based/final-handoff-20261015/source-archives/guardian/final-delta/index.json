@@ -1,0 +1,347 @@
+{
+  "schema": "guardian-final-user-stop-delta-index-v1",
+  "user_stop": true,
+  "new_production_running": false,
+  "restore_base_then_delta": true,
+  "restore_root": "/workspace/scratch/pr100-continuation",
+  "base_index": {
+    "path": "/workspace/scratch/pr100-continuation/guardian-iron-monster-authoring/portable-guardian-pilot-v01/index.json",
+    "sha256": "bd916beeeaef95f854e389fc5c6d6868c564dd9adf49e44a77528e6923b70eda"
+  },
+  "base_zip": {
+    "path": "/workspace/scratch/pr100-continuation/guardian-iron-monster-authoring/portable-guardian-pilot-v01/guardian-all-pilot-history-v01.zip",
+    "bytes": 30356366,
+    "sha256": "88a3b2b798fbaa3449f91efcbbe0ad6f59b9fca7b8bf7a6ab45ce1d33947a5db",
+    "verified_entries": 82
+  },
+  "delta_zip": {
+    "path": "/workspace/scratch/pr100-continuation/guardian-iron-monster-authoring/portable-guardian-final-stop-delta-v01/guardian-final-user-stop-delta-v01.zip",
+    "bytes": 7797569,
+    "sha256": "cfb7cccdaae03af9a21f9fcd4b0e45f14079a7107b312004420dd131b19dc305",
+    "verified_entries": 32
+  },
+  "all_raw_png_sourcepins": {
+    "E-true-side-model-pilot1.png": {
+      "bytes": 937108,
+      "sha256": "b48cc0133ab4d38ed606294cffa231157c821a7ca11eb894c579f55d57e60586",
+      "generation_record": "E-true-side-model-pilot1-generation.json",
+      "prompt_record": "E-true-side-model-pilot1-prompt.txt",
+      "request_record": "E-true-side-model-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "idle-E-two-pilot1.png": {
+      "bytes": 2343669,
+      "sha256": "615304cf3e5a4e4d40244363a5b99867ec95e24f50144cca959f424c7a607a6f",
+      "generation_record": "idle-E-two-pilot1-generation.json",
+      "prompt_record": "idle-E-two-pilot1-prompt.txt",
+      "request_record": "idle-E-two-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "idle-N-two-pilot1.png": {
+      "bytes": 2333726,
+      "sha256": "ec89f66b3b144e386efeab9a430e476acf3249819ef0be2f99bd9a33650659e8",
+      "generation_record": "idle-N-two-pilot1-generation.json",
+      "prompt_record": "idle-N-two-pilot1-prompt.txt",
+      "request_record": "idle-N-two-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "idle-N-two-proportion-pilot2.png": {
+      "bytes": 2385376,
+      "sha256": "d1e527789b42c606d4affec6bcb492613e0a2a3065fbb7996970fcde2ce3b66b",
+      "generation_record": "idle-N-two-proportion-pilot2-generation.json",
+      "prompt_record": "idle-N-two-proportion-pilot2-prompt.txt",
+      "request_record": "idle-N-two-proportion-pilot2-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-A-single-pilot1.png": {
+      "bytes": 1498180,
+      "sha256": "7af5a133d78415bc83755aee8ab09ec0d55c4558e5c7f1d36b0ce2889e748aa4",
+      "generation_record": "walk-E-A-single-pilot1-generation.json",
+      "prompt_record": "walk-E-A-single-pilot1-prompt.txt",
+      "request_record": "walk-E-A-single-pilot1-request.json",
+      "state": "SOURCE_PHYSICAL_PILOT_PARENT_APPROVED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-B-single-pilot1.png": {
+      "bytes": 1638635,
+      "sha256": "a106599b4d1eb49cc1cfbc2efd109bb97621811c451823087c1bf218b142ee06",
+      "generation_record": "walk-E-B-single-pilot1-generation.json",
+      "prompt_record": "walk-E-B-single-pilot1-prompt.txt",
+      "request_record": "walk-E-B-single-pilot1-request.json",
+      "state": "SOURCE_PHYSICAL_PILOT_PARENT_APPROVED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-PASS1-single-pilot1.png": {
+      "bytes": 1355983,
+      "sha256": "b032d22b7ec2f0e329f2c6010205190d4d4ce99abc8606bc7279c619b8dd2df6",
+      "generation_record": "walk-E-PASS1-single-pilot1-generation.json",
+      "prompt_record": "walk-E-PASS1-single-pilot1-prompt.txt",
+      "request_record": "walk-E-PASS1-single-pilot1-request.json",
+      "state": "SOURCE_PHYSICAL_PILOT_PARENT_APPROVED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-PASS2-single-pilot1.png": {
+      "bytes": 1645371,
+      "sha256": "98348d86dd807839e067e55704f5718c2d498a286f6c014b0a363dcda249bf69",
+      "generation_record": "walk-E-PASS2-single-pilot1-generation.json",
+      "prompt_record": "walk-E-PASS2-single-pilot1-prompt.txt",
+      "request_record": "walk-E-PASS2-single-pilot1-request.json",
+      "state": "SOURCE_PHYSICAL_PILOT_PARENT_APPROVED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-fourphase-pilot1.png": {
+      "bytes": 1812767,
+      "sha256": "c22bbda2550a19fb3420212ed8153d3438a3ce72dda3ec9a8c1de0c2f733f93e",
+      "generation_record": "walk-E-fourphase-pilot1-generation.json",
+      "prompt_record": "walk-E-fourphase-pilot1-prompt.txt",
+      "request_record": "walk-E-fourphase-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-fourphase-pilot2.png": {
+      "bytes": 1816959,
+      "sha256": "b5d1a65aafa7a69d84798e5bc0b707dc5b2e8d536722b7941b593776f0b77c39",
+      "generation_record": "walk-E-fourphase-pilot2-generation.json",
+      "prompt_record": "walk-E-fourphase-pilot2-prompt.txt",
+      "request_record": "walk-E-fourphase-pilot2-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-E-fourphase-pilot3.png": {
+      "bytes": 1813361,
+      "sha256": "bc9459c0c62ce839fde121ed3948235a38308de58dc9b6df288b823fa6b6f9ff",
+      "generation_record": "walk-E-fourphase-pilot3-generation.json",
+      "prompt_record": "walk-E-fourphase-pilot3-prompt.txt",
+      "request_record": "walk-E-fourphase-pilot3-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-N-A-single-pilot1.png": {
+      "bytes": 1697222,
+      "sha256": "2dbb5550d57a99663f27e0f6429557c4a9b73517c3010b215095902182060ea6",
+      "generation_record": "walk-N-A-single-pilot1-generation.json",
+      "prompt_record": "walk-N-A-single-pilot1-prompt.txt",
+      "request_record": "walk-N-A-single-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-N-B-single-pilot1.png": {
+      "bytes": 1687572,
+      "sha256": "e5b204ae02d5ad68cdbb2044175e86ed559aedb875a57f18966b59c621568b01",
+      "generation_record": "walk-N-B-single-pilot1-generation.json",
+      "prompt_record": "walk-N-B-single-pilot1-prompt.txt",
+      "request_record": "walk-N-B-single-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-N-PASS1-single-pilot1.png": {
+      "bytes": 1733212,
+      "sha256": "3aa62669a71d3bef04d00f5ebeb252a31028b975ab4a075e1692dcf6d49f0ad2",
+      "generation_record": "walk-N-PASS1-single-pilot1-generation.json",
+      "prompt_record": "walk-N-PASS1-single-pilot1-prompt.txt",
+      "request_record": "walk-N-PASS1-single-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-N-PASS2-single-pilot1.png": {
+      "bytes": 1660378,
+      "sha256": "068421589498d25296145e8796ca5328584b3c516db5cb91121fb7af3acc8478",
+      "generation_record": "walk-N-PASS2-single-pilot1-generation.json",
+      "prompt_record": "walk-N-PASS2-single-pilot1-prompt.txt",
+      "request_record": "walk-N-PASS2-single-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    },
+    "walk-N-fourphase-pilot1.png": {
+      "bytes": 1995569,
+      "sha256": "189a29b55d9f002b8d8fd52a00614f43918b320205c21203b97c78519ef7f51f",
+      "generation_record": "walk-N-fourphase-pilot1-generation.json",
+      "prompt_record": "walk-N-fourphase-pilot1-prompt.txt",
+      "request_record": "walk-N-fourphase-pilot1-request.json",
+      "state": "HOLD__SOURCE_REFERENCE_OR_UNREVIEWED_OR_FAILED__NO_MAIN__NOT_COMPLETE"
+    }
+  },
+  "entries": {
+    "FINAL_USER_STOP_RESTART.txt": {
+      "bytes": 3004,
+      "sha256": "8a36aee263037badf60f3d9a626ff3b4f0a0e5704f8045839a5cc0e32fdc07e9",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "FINAL_USER_STOP_SOURCE_PINS.json": {
+      "bytes": 8222,
+      "sha256": "11c074f16dcb5863eb625a921d48141c7c45ee2a6b8d7e56d7345c428c431d70",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "LATEST_GUARDIAN_CHECKPOINT.json": {
+      "bytes": 2251,
+      "sha256": "697de3000cdc07e0732c98421c3a00418d003d6a9fadba98b57b428a1962e657",
+      "change": "updated",
+      "expected_previous_sha256": "739527350131b79d102af96d9453a879ad196ef2b98672cf3b4265c8c26963a3"
+    },
+    "N-A-single-legchain-DIAGNOSTIC.png": {
+      "bytes": 18364,
+      "sha256": "e758b4cdb9e26ae52a85c09672fdc3aeffde9586863e3bee365a05236ccd9f20",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "N-B-single-legchain-DIAGNOSTIC.png": {
+      "bytes": 18329,
+      "sha256": "5e7159de1c94300663dcfdf61a3fac77730f3feba302d443873dd8bcb935c4b5",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "N-PASS1-single-legchain-DIAGNOSTIC.png": {
+      "bytes": 13581,
+      "sha256": "17bea4c6c508c29f5f90fa0afbd24a4dff9a81b8280b6507edff301e86a3ba43",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "N-PASS2-single-legchain-DIAGNOSTIC.png": {
+      "bytes": 13673,
+      "sha256": "d95d8f8cfd37bf0055c63cb47a9e238236021bddb93ceff09d9ceba2a5dc5918",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "N-fourphase-physical-pilot-v1.json": {
+      "bytes": 12274,
+      "sha256": "3b3084a09ea96c95ab4f61727bd5191bd2804aa19785a91d6da2a8899436ff40",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "N-fourphase-pilot-v1-fixed-root-DIAGNOSTIC.png": {
+      "bytes": 522269,
+      "sha256": "9859ff125049152d8166ec46c56f8ef0059dba7140e679a2aa816f8a6a026872",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "N-fourphase-pilot-v1-joint-trace-DIAGNOSTIC.png": {
+      "bytes": 519311,
+      "sha256": "3e3f8b3b12b578f69ee59e0fb3582b98598fa98745535db47e710bada3585e98",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "build_N_pilot_diagnostics.py": {
+      "bytes": 5651,
+      "sha256": "f1f9841ed2a7e3e7b7e1078fb3fa2508fa880c827c86545d1d18cd113d26aa36",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "freeze_user_stop_artifacts.py": {
+      "bytes": 8164,
+      "sha256": "3d0c2ba8b8069dab73126e66fb8657bf6aa56eaba297506926675c5afd64b13e",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-A-single-pilot1-audit.json": {
+      "bytes": 876,
+      "sha256": "56c3e132cc8b523ccba23eb03f81264af646f929ce439cc066f5b70f3502e84f",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-A-single-pilot1-generation.json": {
+      "bytes": 536,
+      "sha256": "0e0f528d60656b10bb15105bd32ab351ecf841c28d91113dfb0b8cea42b436f7",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-A-single-pilot1-prompt.txt": {
+      "bytes": 2394,
+      "sha256": "0b3fa8254a12bcfc24ae5bfc4c109ee7979d0d88ca98284ac1b2bbb5788827b2",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-A-single-pilot1-request.json": {
+      "bytes": 2706,
+      "sha256": "5ada5f8684a6bb5e0160d29e7c6a1513bc1e98e53f4ddc8e622590b0760746a3",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-A-single-pilot1.png": {
+      "bytes": 1697222,
+      "sha256": "2dbb5550d57a99663f27e0f6429557c4a9b73517c3010b215095902182060ea6",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-B-single-pilot1-audit.json": {
+      "bytes": 876,
+      "sha256": "80c824df9bbad9cd00b03516d4da4ff283820dd94851ac7d4b4cc7139efd3b1d",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-B-single-pilot1-generation.json": {
+      "bytes": 536,
+      "sha256": "7e6d220b630c619e32cc32002ad69e53c6ad368371dbcefc6996b4e6ae2729c9",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-B-single-pilot1-prompt.txt": {
+      "bytes": 2275,
+      "sha256": "db7d39cf0f3d0db1ee126efe63c198ad7120f8dcfd073be5448581de939d06db",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-B-single-pilot1-request.json": {
+      "bytes": 2689,
+      "sha256": "e4e145a73db8c3858fb498f3e5b23267745e916480aa102f78987d3c1cef8e4f",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-B-single-pilot1.png": {
+      "bytes": 1687572,
+      "sha256": "e5b204ae02d5ad68cdbb2044175e86ed559aedb875a57f18966b59c621568b01",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS1-single-pilot1-audit.json": {
+      "bytes": 880,
+      "sha256": "973fa43e04c2643c0d8a0b075316fe0fc85135d8f43f6b7cf326ac8f8b7bf683",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS1-single-pilot1-generation.json": {
+      "bytes": 536,
+      "sha256": "74a808c227128bceb376fdc4c7b92871965c86acfeffc395ab99b0386c35c42e",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS1-single-pilot1-prompt.txt": {
+      "bytes": 2152,
+      "sha256": "4e43f637fbc4ea4d8091e2f08783a6edff61b6f0c6b9c59784a77fbc94a47f69",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS1-single-pilot1-request.json": {
+      "bytes": 2468,
+      "sha256": "4066b99b6a610ab82519aafe371c317cecde9c39f93df84a6038777567add3aa",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS1-single-pilot1.png": {
+      "bytes": 1733212,
+      "sha256": "3aa62669a71d3bef04d00f5ebeb252a31028b975ab4a075e1692dcf6d49f0ad2",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS2-single-pilot1-audit.json": {
+      "bytes": 880,
+      "sha256": "876a0388a175bb1a072d5635b01131990773a9f677e4c37039e9e244992a1a5e",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS2-single-pilot1-generation.json": {
+      "bytes": 536,
+      "sha256": "f08e1a8ece4196ab8fecf9aefd598e90cc7b169a6705d01e4194c7b272249afc",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS2-single-pilot1-prompt.txt": {
+      "bytes": 2157,
+      "sha256": "21ebd6cada6d85c732dc12c830009bb806c23e00edb69fba34cab479d914aaaf",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS2-single-pilot1-request.json": {
+      "bytes": 2575,
+      "sha256": "73a966ad90b0af787feef90d758e53fc8034c43e145d4d9db98295cd2fa9e832",
+      "change": "new",
+      "expected_previous_sha256": null
+    },
+    "walk-N-PASS2-single-pilot1.png": {
+      "bytes": 1660378,
+      "sha256": "068421589498d25296145e8796ca5328584b3c516db5cb91121fb7af3acc8478",
+      "change": "new",
+      "expected_previous_sha256": null
+    }
+  }
+}

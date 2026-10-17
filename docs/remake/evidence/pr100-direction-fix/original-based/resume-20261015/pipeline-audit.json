@@ -1,0 +1,94 @@
+{
+  "head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
+  "read_only_audit": true,
+  "importer": "tools/import_original_based_motion.py",
+  "importer_notes": [
+    "CLI --analyze assumes full8×13 and is unsuitable for a single-direction pilot. Import module and call analyze with rows_count, reference_rows, directions_axis, canvas_size, source_anchors, directions explicitly.",
+    "columns packing: logical phases in rows; rows packing: logical phases in columns, selected directions in rows. blocks4x2 uses4 columns and2 rows per phase and requires all8 directions.",
+    "Subset sheets require explicit canvas_size (integer64..2048) and nonempty scale_review_note. Canonical direction order E,SE,S,SW,W,NW,N,NE.",
+    "source_anchors is one integer[x,y] per pose, phase-major then selected-direction order, each inside the cropped pose. Review actual supporting foot/ground contact, especially death; automatic bottommost-pixel anchor can be wrong for weapons/skirts.",
+    "all5 mandatory roles must cover all8 directions before import; each role needs at least2 distinct phases; typical established standard is2idle+3walk+3attack+2hit+3death=104 unique poses.",
+    "candidate review requires identity_preserved/eight_views/motion_roles/no_clipping true and substantive notes after actual visual review.",
+    "IMPORTANT: omitting --apply still writes new assets/SpriteFrames/provenance; --apply additionally binds production profiles. For pilot geometry use analyze only.",
+    "Importer rejects visible duplicates including transparent-padding/RGB disguises, crop spill, omitted visible pixels, existing authored/native profile replacement, incomplete role/direction sets. Preserve all existing bytes."
+  ],
+  "recipe_exemplar": "docs/remake/evidence/pr100-direction-fix/original-based/recipes/reaper_female.json",
+  "diagnostic_subset_exemplar": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/subset-importer/ringmaster-E-preview.json",
+  "candidate_schema_example_not_approved": {
+    "key": "transform:328",
+    "prompt": "EXACT PROMPTS MUST BE RECORDED",
+    "prompt_record_kind": "exact_prompts",
+    "sheets": [
+      {
+        "output_path": "ABSOLUTE_GENERATED_PNG_PATH",
+        "rows": 2,
+        "roles": {
+          "idle": [
+            0,
+            1
+          ]
+        },
+        "directions_axis": "columns",
+        "directions": [
+          "E"
+        ],
+        "canvas_size": 512,
+        "scale_review_note": "Actual measured anatomy/head/torso scale versus approved idle for this direction; review before import.",
+        "source_anchors": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "review": {
+      "identity_preserved": false,
+      "eight_views": false,
+      "motion_roles": false,
+      "no_clipping": false,
+      "notes": "Unapproved schema only; requires remaining directions and roles before import."
+    }
+  },
+  "production_Main": {
+    "transform_runner": "tests/run_original_based_transform_batch.gd",
+    "normal_boss_runner": "tests/run_original_based_batch.gd",
+    "example_fixture": "tests/fixtures/pr100_batch21_accepted.json",
+    "required_env": [
+      "TWILIGHT_PR100_BATCH_CONFIG=res://tests/fixtures/<new_fixture>.json",
+      "TWILIGHT_PR100_BATCH_REPORT=<absolute_report_path>",
+      "XDG_DATA_HOME=<isolated_writable_data>",
+      "XDG_CACHE_HOME=<isolated_writable_cache>",
+      "XDG_CONFIG_HOME=<isolated_writable_config>"
+    ],
+    "headless_args": "Godot4.7.2 --headless --audio-driver Dummy --path . --script res://tests/run_original_based_transform_batch.gd",
+    "opengl_extra_env": [
+      "LIBGL_ALWAYS_SOFTWARE=1",
+      "TWILIGHT_PR100_BATCH_CAPTURE_DIR=<absolute_capture_dir>"
+    ],
+    "opengl_args": "xvfb-run -a -s '-screen 0 1280x720x24' Godot4.7.2 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_transform_batch.gd",
+    "marker": "PR100_TRANSFORM_BATCH_OK",
+    "max_cases": 20,
+    "quality_note": "Reports/engine success alone do not prove visual quality. Inspect all8 direction5-role playback, anchor/scale/contact, compare completed exemplar. Keep maps unchanged."
+  },
+  "completed_exemplars": [
+    {
+      "folder": "assets/actors/eight_direction/original_based/reaper_female",
+      "recipe": "docs/remake/evidence/pr100-direction-fix/original-based/recipes/reaper_female.json",
+      "main_report": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/local-full10-regression/report-cases/reaper-female.json"
+    },
+    {
+      "folder": "assets/actors/eight_direction/original_based/doguri_transform",
+      "tracked_Main_PNG_prefix": "docs/remake/evidence/pr100-direction-fix/original-based/batch21-completed/captures/doguri_transform/"
+    },
+    {
+      "folder": "assets/actors/eight_direction/original_based/nightmare_jack_transform",
+      "tracked_Main_PNG_prefix": "docs/remake/evidence/pr100-direction-fix/original-based/batch21-completed/captures/nightmare-jack-transform/"
+    }
+  ],
+  "tests_not_run": "This audit did not run fullCI/Godot or modify repository files."
+}

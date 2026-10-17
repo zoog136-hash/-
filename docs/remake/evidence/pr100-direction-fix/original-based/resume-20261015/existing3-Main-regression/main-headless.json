@@ -1,0 +1,170 @@
+{
+	"cases": [
+		{
+			"checks": 2420,
+			"failures": [],
+			"folder": "albino_snapping_turtle_transform",
+			"full_pose_capture": false,
+			"incoming_directions": 8,
+			"lifecycle": {
+				"attempt_limit": 200,
+				"death_callbacks": 1,
+				"death_track": "death_7",
+				"ground_drops": [
+					{
+						"created_at": 1792070791.11554,
+						"expires_at": 1792071391.11554,
+						"grade": "일반",
+						"hunt_batch": "c43247c8e37f83509ff6d7a3b678240b",
+						"id": "8bed4cccf8e1de277f8d3f07259adc79",
+						"item_name": "HP 물약",
+						"map_id": "aden_world",
+						"position": [
+							16081.0966796875,
+							774.9033203125
+						],
+						"quantity": 1,
+						"state": "ground"
+					}
+				],
+				"hit_pose": true,
+				"hp_end": 0,
+				"hp_start": 300,
+				"manual_pickup": true,
+				"player_hp": 1636,
+				"weapon_attempts": 6
+			},
+			"monster_directions": 8,
+			"name": "알비노 악어거북",
+			"physics_ticks": 1921,
+			"player_directions": 8,
+			"pose_samples": 104,
+			"preserved_saves": [],
+			"report": "/workspace/scratch/pr100-resume/baseline/main-headless-cases/albino-snapping-turtle-transform.json",
+			"screenshots": 0,
+			"slug": "albino-snapping-turtle-transform",
+			"transform_id": "349"
+		},
+		{
+			"checks": 2881,
+			"failures": [],
+			"folder": "nightmare_jack_transform",
+			"full_pose_capture": false,
+			"incoming_directions": 8,
+			"lifecycle": {
+				"attempt_limit": 200,
+				"death_callbacks": 1,
+				"death_track": "death_7",
+				"ground_drops": [
+					{
+						"created_at": 1792070850.62714,
+						"expires_at": 1792071450.62714,
+						"grade": "일반",
+						"hunt_batch": "5775bdd3021d2ca2ca82afd6fc9cb0a2",
+						"id": "60b4a65820115e34ac6de61e5bd02e55",
+						"item_name": "HP 물약",
+						"map_id": "aden_world",
+						"position": [
+							16081.0966796875,
+							774.9033203125
+						],
+						"quantity": 1,
+						"state": "ground"
+					}
+				],
+				"hit_pose": true,
+				"hp_end": 0,
+				"hp_start": 300,
+				"manual_pickup": true,
+				"player_hp": 1622,
+				"weapon_attempts": 6
+			},
+			"monster_directions": 8,
+			"name": "악몽의 잭 오 랜턴",
+			"physics_ticks": 2146,
+			"player_directions": 8,
+			"pose_samples": 104,
+			"preserved_saves": [
+				"user://pr100-transform-batch-preserved/nightmare-jack-transform/twilight_v20_save.json"
+			],
+			"report": "/workspace/scratch/pr100-resume/baseline/main-headless-cases/nightmare-jack-transform.json",
+			"screenshots": 0,
+			"slug": "nightmare-jack-transform",
+			"transform_id": "173"
+		},
+		{
+			"checks": 2330,
+			"failures": [],
+			"folder": "doguri_transform",
+			"full_pose_capture": false,
+			"incoming_directions": 8,
+			"lifecycle": {
+				"attempt_limit": 200,
+				"death_callbacks": 1,
+				"death_track": "death_7",
+				"ground_drops": [
+					{
+						"created_at": 1792070902.78015,
+						"expires_at": 1792071502.78015,
+						"grade": "일반",
+						"hunt_batch": "4ccf2f7790e391fe940f5d0678452e0b",
+						"id": "3609866db18fded67513a45af7a5faa6",
+						"item_name": "HP 물약",
+						"map_id": "aden_world",
+						"position": [
+							16081.0966796875,
+							774.9033203125
+						],
+						"quantity": 1,
+						"state": "ground"
+					}
+				],
+				"hit_pose": true,
+				"hp_end": 0,
+				"hp_start": 300,
+				"manual_pickup": true,
+				"player_hp": 1622,
+				"weapon_attempts": 6
+			},
+			"monster_directions": 8,
+			"name": "도구리",
+			"physics_ticks": 1903,
+			"player_directions": 8,
+			"pose_samples": 104,
+			"preserved_saves": [],
+			"report": "/workspace/scratch/pr100-resume/baseline/main-headless-cases/doguri_transform.json",
+			"screenshots": 0,
+			"slug": "doguri_transform",
+			"transform_id": "288"
+		}
+	],
+	"checks": 7631,
+	"config": "res://tests/fixtures/pr100_batch21_accepted.json",
+	"engine_processes": 1,
+	"failures": [],
+	"metadata": {
+		"batch": "pr100-batch21-accepted",
+		"held": [
+			{
+				"folder": "fire_ent_transform",
+				"name": "화염의 엔트",
+				"reason": "Quality HOLD: attack poses add bright orb eyes and a jaw shape absent from the reviewed original and idle silhouette",
+				"required_runtime_binding": "Retain the previous production profile until original identity review passes; preserve all WIP artwork",
+				"transform_id": "407"
+			},
+			{
+				"folder": "albino_horn_frog_transform",
+				"name": "알비노 뿔 개구리",
+				"reason": "Quality HOLD: attack crops contain a visible low-alpha background haze outside the body silhouette, failing strict transparent-background review",
+				"required_runtime_binding": "Retain the previous production profile until alpha cleanup passes; preserve all WIP artwork",
+				"transform_id": "352"
+			}
+		],
+		"kind": "transform",
+		"scope": "Candidate Main validation excluding quality-HOLD art; validation alone does not count as completed artwork",
+		"source_fixture": "res://tests/fixtures/pr100_batch21.json"
+	},
+	"process_id": 2788,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/scratch/pr100-resume/baseline/main-headless-user/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

@@ -1,0 +1,69 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_full_direction_walk_risk_sheet_visual_and_strict_geometry_qa",
+  "candidate": "/workspace/generated_images/exec-7a7ba67f-10b0-4c07-8a9e-b9bf4281cb24.png",
+  "candidate_sha256": "2e9d414ea9121abe8a9bcef297dc5a05e16609ef7085ca71480a0308091705ba",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "verdict": "FAIL_FULL_EIGHT_DIRECTION_WALK_PILOT",
+  "entity_status": "HOLD",
+  "partial_import_allowed": false,
+  "counts": {
+    "required_rows": 8,
+    "observed_visual_rows": 7,
+    "required_poses": 24,
+    "observed_visual_figures": 21,
+    "strict_separated_body_components": 19
+  },
+  "row_directions": [
+    {"visual_row": 1,"observed": "E","evidence": "Right-facing profile with forward bodice side, nose and toes to the right."},
+    {"visual_row": 2,"observed": "SE","evidence": "Front-right three-quarter face/bodice and lower-right feet."},
+    {"visual_row": 3,"observed": "S","evidence": "Frontal face, chest and front skirt panel."},
+    {"visual_row": 4,"observed": "SW","evidence": "Left-facing front three-quarter view; front bodice and front pale skirt panel remain visible."},
+    {"visual_row": 5,"observed": "NW","evidence": "Rear-left view with large back bow/back skirt and narrow left-facing cheek. This is not a strict W profile."},
+    {"visual_row": 6,"observed": "N","evidence": "Direct cap/hair/bodice back and rear heels; face hidden."},
+    {"visual_row": 7,"observed": "NE","evidence": "Rear-right body with narrow right cheek edge and rightward feet."}
+  ],
+  "missing_directions": ["W"],
+  "gait": {
+    "status": "fail_opposite_support_requirement",
+    "observation": "Column 1 and column 3 repeatedly retain the same screen-side extended/raised foot arrangement rather than a readable opposite-leg half-cycle. Frontal row 3 clearly keeps the same viewer-left foot extended down and viewer-right foot raised in both endpoints; rear row 6 likewise does not swap its endpoint leg extension. E/SE/SW/NW/NE endpoints also look like repeated contact stances, with no convincing reversed near/far overlap. The useful opposite-stride cue from the corrected E2 pilot is not consistently preserved here.",
+    "passing": "Several middle poses lift a knee or tuck the feet, but that alone does not establish a complete alternating step when the endpoints repeat. Row 1's passing phase is particularly close to its contact phases.",
+    "pixel_uniqueness": "Unique rendering/shading pixels would not cure this anatomical failure; they are not counted as distinct support phases."
+  },
+  "attachment_crop_and_spacing": {
+    "body_attachment": "No obvious extra limb or detached torso within individual visible figures, but adjacent figures touch in the atlas.",
+    "boundary": "No alpha>100 pixel touches any image boundary; ears and shoes appear complete.",
+    "gutter_failure": "The middle-column figures in visual rows 3, 4 and 5 join into one connected component spanning y477..1192. Multiple adjacent rows nearly touch. The requested 12 percent safety margins and separated pose regions are not met.",
+    "scale_consistency": "Rear rows are visibly taller than upper rows: roughly 263-308px bodies versus about 234-249px in upper rows. Matching body/camera proportions require review, not automatic acceptance."
+  },
+  "identity": {
+    "status": "recognizable_new_reference_art",
+    "observation": "The compact rabbit cap, pale bob, purple puff sleeves, dark bodice, pale gold-edged skirt, compact rear bow, cuffs and shoes broadly follow the unified guide. No giant rear loops or new weapon. Recognizable identity does not compensate for missing direction, merged regions or repeated gait endpoints.",
+    "provenance": "New reference-based art, not extracted original animation."
+  },
+  "strict_automation": {
+    "report": "/workspace/scratch/pr100-resume/rabbit328-eight-direction-walk1-geometry-failure.json",
+    "call": "analyze(path, rows_count=3, directions_axis='rows', directions=DIRECTIONS)",
+    "status": "fail",
+    "error": "Expected exactly 24 separated poses, found 19; review/re-author, never invent slots",
+    "existing_thresholds": "alpha>100, component area>=200",
+    "canvas": "default, unmodified",
+    "relaxed_thresholds_or_canvas": false,
+    "source_pixels_modified": false
+  },
+  "required_before_retry_pass": [
+    "Author all eight actual directions, including strict W, with exactly three readable phases per direction.",
+    "Re-author genuine endpoint leg alternation and keep anatomical costume details on the same leg; do not mirror or relabel the repeated contact poses.",
+    "Provide generous blank gutters so every pose passes the existing strict separated-body import checks.",
+    "Review matched body scale and camera, then inspect actual registered playback and Main."
+  ],
+  "scope": {
+    "walk_only_risk_trial": true,
+    "actual_Main": false,
+    "other_required_roles_verified": false,
+    "production_import_performed": false,
+    "completed_added": 0
+  },
+  "counts_as_completed_entity": false
+}

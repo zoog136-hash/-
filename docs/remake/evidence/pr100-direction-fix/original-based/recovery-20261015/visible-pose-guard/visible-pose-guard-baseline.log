@@ -1,0 +1,42 @@
+FFFF.
+======================================================================
+FAIL: test_invisible_rgb_cannot_disguise_repeated_visible_pose_in_analysis_or_import (visible_guard_tests.OriginalBasedImportTest.test_invisible_rgb_cannot_disguise_repeated_visible_pose_in_analysis_or_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 82, in test_invisible_rgb_cannot_disguise_repeated_visible_pose_in_analysis_or_import
+    with self.assertRaisesRegex(ValueError, "repeated visible pose"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes (visible_guard_tests.OriginalBasedImportTest.test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes) (apply=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 97, in test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes
+    with self.subTest(apply=apply), self.assertRaisesRegex(ValueError, "Duplicate visible pose across source sheets"):
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes (visible_guard_tests.OriginalBasedImportTest.test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 99, in test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes
+    self.assertEqual(self.import_snapshot(root), before)
+AssertionError: {'syn[203 chars]sets/actors': None, 'assets/reference.png': 'd[985 chars]1d7'} != {'syn[203 chars]sets/reference.png': 'd149c0dba0ce5bd20553538c[253 chars]d01'}
+Diff is 1289 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_different_transparent_border_widths_cannot_disguise_visible_duplicates (visible_guard_tests.OriginalBasedImportTest.test_different_transparent_border_widths_cannot_disguise_visible_duplicates)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 116, in test_different_transparent_border_widths_cannot_disguise_visible_duplicates
+    with self.assertRaisesRegex(ValueError, "repeated visible pose"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.242s
+
+FAILED (failures=4)
+BASELINE_VISIBLE_GUARD_SUMMARY 4 4 0

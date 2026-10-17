@@ -15,6 +15,9 @@ func _initialize() -> void: call_deferred("_run")
 func _clear(world: TwilightWorld) -> void:
 	world.player.set_auto_enabled(false)
 	world.player.clear_click_path()
+	# Retire the sample's damage sources before testing pool return. Poison
+	# and bleed otherwise create new number VFX on the following physics tick.
+	world.player.clear_status_effects()
 	world._clear_combat_actions()
 	world.selected_monster = null
 	world.auto_target = null
@@ -25,6 +28,18 @@ func _clear(world: TwilightWorld) -> void:
 		world.field_population.release(mob)
 		world.monsters_root.remove_child(mob)
 		mob.queue_free()
+
+func _verify_cleanup(world: TwilightWorld) -> bool:
+	# A crowd can leave poison/bleed on the player. Exercise a real pending
+	# status tick at the sample boundary, not just an already-empty VFX pool.
+	world.player.apply_poison(1., 1, .1)
+	world.player.apply_bleed(1., 1, .1)
+	_clear(world)
+	for _frame: int in range(12): await physics_frame
+	await process_frame
+	var clean: bool = world.combat_vfx.active.is_empty() and world.combat_vfx.available.size() == world.combat_vfx.CAPACITY
+	if not clean: print("CROWD_CLEANUP_REMAINING ", JSON.stringify(world.combat_vfx.active))
+	return clean
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
@@ -48,6 +63,18 @@ func _run() -> void:
 		world.rng.seed = 20261009
 		world._set_map("aden_world", false)
 		world.field_population.set_process(false)
+		if not await _verify_cleanup(world):
+			push_error("Crowd cleanup left an active damage source after retiring the sample")
+			world.queue_free()
+			await process_frame
+			quit(1)
+			return
+		if OS.get_environment("TWILIGHT_BENCHMARK_CLEANUP_ONLY") == "1":
+			print("PRESENTATION_BENCHMARK_CLEANUP_OK")
+			world.queue_free()
+			await process_frame
+			quit(0)
+			return
 		var combat_pair: Dictionary = ADEN_COMBAT_QA.find_source_combat_pair(world.field_map as RemakePlayableField, world.rng)
 		if combat_pair.is_empty():
 			push_error("No real reachable, non-safe source-grid combat pair for 32/96/192 crowd verification")
@@ -198,6 +225,9 @@ func _run() -> void:
 		sample["vfx_settle_frames"] = vfx_settle_frames
 		sample["vfx_returned"] = world.combat_vfx.active.is_empty() and world.combat_vfx.available.size() == world.combat_vfx.CAPACITY
 		sample["flights_returned"] = world.combat_flights.flights.is_empty() and world.combat_flights.available.size() <= world.combat_flights.MAX_POOL
+		if not sample.vfx_returned:
+			sample["remaining_vfx"] = world.combat_vfx.active.duplicate(true)
+			sample["available_vfx"] = world.combat_vfx.available.size()
 		if not sample.vfx_returned or not sample.flights_returned: failed = true
 		report.samples.append(sample)
 		print("CROWD_SAMPLE ", JSON.stringify(sample))

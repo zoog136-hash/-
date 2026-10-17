@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "change_scope": [
+    "tools/import_original_based_motion.py",
+    "tests/original_based_motion_import_test.py"
+  ],
+  "finding": "Confirmed: differentRGB underalpha0 could make identical visible poses pass the previous rawRGBA-only duplicate check.",
+  "implementation": "Private comparison only: trim toalpha>0 bounds, zeroRGBA only wherealpha==0 in a temporary copy, hash dimensions+exact remainingRGBA. OriginalrawSHA checks/provenance/crops/resources/default output fields unchanged. Apply locally in analyze and globally across every sheet before any filesystem writes.",
+  "tests": {
+    "all_importer_cases": 50,
+    "passed": 50,
+    "failed": 0,
+    "runtime_seconds": 10.89,
+    "existing_regressions_retained": 46,
+    "new_cases": 4,
+    "new_coverage": [
+      "Same visible body and transparent interior hole with differentalpha0RGB: analyze+applyFalse/True reject without byte/mtime changes.",
+      "Global idle/hit cross-sheet invisible duplicate: reject before writes.",
+      "Different fully transparent crop border widths nearimageedge: reject.",
+      "Visible articulated arm or retainedalpha1 change: import succeeds, sourcebytes/rawrgba_sha256 preserved, identicalrerun preservesbytes/mtime."
+    ],
+    "legacy_geometry_provenance_SpriteFrames_mtime": "Existing regressions passed. No extra public metadata fields emitted.",
+    "py_compile": "pass",
+    "git_diff_check": "pass"
+  },
+  "baseline_reproduction": {
+    "selected_new_tests": 4,
+    "expected_failures_on_previous_HEAD": 4,
+    "errors": 0,
+    "meaning": "Three negative regression scenarios expose unsafe acceptance under the old implementation (global case has subtest+snapshot failures); positive visible-change case still passes. This is an intentional baseline reproduction log, not a passingCI claim."
+  },
+  "logs": [
+    {
+      "path": "/workspace/twilight-run/recovery/visible-pose-guard-tests.log",
+      "bytes": 150,
+      "sha256": "cae86a997bc9f38508c7e34cea4d69461c32e92e22210f79d5442cd5e5abd37d"
+    },
+    {
+      "path": "/workspace/twilight-run/recovery/visible-pose-guard-baseline.log",
+      "bytes": 3276,
+      "sha256": "8e81bf68a07935b298ef6e5a6d7b31ba159425c75a65572c2f5ceabd3f4fa091"
+    }
+  ],
+  "production_assets_or_PNGs_modified": 0,
+  "new_completed_actors": 0,
+  "git_stage_commit_push_performed": false
+}

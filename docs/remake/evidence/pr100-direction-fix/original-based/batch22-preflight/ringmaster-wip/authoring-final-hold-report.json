@@ -1,0 +1,405 @@
+{
+  "target_key": "transform:357",
+  "name": "서커스단 단장",
+  "status": "WHOLE_ACTOR_HOLD_AFTER_ATTACK_TWO_FAILURES",
+  "snapshot_utc": "2026-10-15T12:30:28.734961+00:00",
+  "stop_source": "Explicitrootglobalstop: attackv1NcontactdirectionFAIL followedby attackv2foreignbodycropFAIL exhausts2attempts",
+  "source_claim": "Existing external-origin catalog portrait with recorded Inven metadata. Generated guides/motion are new2D authoring, not recovered original animation or verified unknown mask details.",
+  "source_sha_at_stop": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
+  "source_unchanged": true,
+  "approved_reference_guide": "rotation-v1.png:8viewguide only",
+  "own_work_status": {
+    "E_walk": "Root independent finalPASS_E_ONLY_THREE_PHASE_GAIT_PILOT,3actual poses only. Historicalauthorpendingnote preserved inmetadata.",
+    "idle": "idle-v2geometry16PASS/authorvisualPASS/independentalphaPASS; fullrenderedMain/scaleindependentreviewstillpending",
+    "idle_v1": "6foreigncropFAIL; exactraw retained",
+    "SE_S_SW_walk": "No imagegen toolcall: referencecrops/unusedSEprompt only, globalstopbeforegeneration",
+    "foot_anchors": "16black-shoe-basedidleanchorproposals geometryvalidated atcanvas640; finalanatomical/head/torso/groundrenderreviewpending"
+  },
+  "other_agent_status_snapshots": {
+    "W-walk-v1.visual-review.json": {
+      "status": "HOLD_NOT_ACCEPTED",
+      "role": "walk"
+    },
+    "attack-v1.independent-hold.json": {
+      "decision": "HOLD_FAIL_N_CONTACT",
+      "role": "attack"
+    },
+    "attack-v2.visual-review.json": {
+      "status": "HOLD_CROP_FOREIGN_BODY_FINAL_ATTEMPT",
+      "role": "attack"
+    },
+    "hit-v2.visual-review.json": {
+      "status": "PASS_LIGHTWEIGHT_REQUIRES_INDEPENDENT_REVIEW",
+      "role": "hit"
+    },
+    "death-v2.visual-review.json": {
+      "status": "GEOMETRY_PASS_VISUAL_REVIEW_PENDING_INDEPENDENT",
+      "pass_geometry": true
+    }
+  },
+  "inflight_imagegen_by_this_agent": 0,
+  "further_generation": "STOPPED_ALL357_WORK, includingnewSE/S/SW andotherroles",
+  "full104_recipe": "NOT_CREATED/NOT_ALLOWED: incompleteorunapprovedroles/directions; no frame duplication or guessed mapping",
+  "production_binding_or_profile_changes": false,
+  "actual_Main_validation": "NOT_RUN_FOR357_PARTIAL_WIP",
+  "completed_count_increment": 0,
+  "PNG_pixels_edited_or_resized_to_force_pass": false,
+  "files": [
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/E-approved-view-reference-proof.json",
+      "bytes": 642,
+      "sha256": "a74625c3811465c86c4fc5dc6f976f5ff757de16171a2b65159a6813cbee04ba"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/E-approved-view-reference.png",
+      "bytes": 104729,
+      "sha256": "efb58d50d905ca56c6c03132fd2eaaaa9cbd304b8c7a2caec82be56a1bbbb1a0"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/E-walk-v1.geometry.json",
+      "bytes": 1465,
+      "sha256": "cd6fe0974b34df84a2b6d912e3b20df40079e8cc3a1cc8aef32ece777d2e5dc7"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/E-walk-v1.png",
+      "bytes": 885521,
+      "sha256": "f74ee6a97586c21515ac56bb0f5812b75f6f7dde2755d9548da01581f6c520aa"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/E-walk-v1.prompt.txt",
+      "bytes": 2662,
+      "sha256": "db27bb871dbde80103667603ff37015bd4259cfaecbbd0d8c6c1559311e4bcb4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/E-walk-v1.visual-review.json",
+      "bytes": 1675,
+      "sha256": "13473277a4033253959911c7c89fc3760aaf91dcad3a0c1f4f32ed69aed89441"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/IDLE_CHECKPOINT.json",
+      "bytes": 2763,
+      "sha256": "443788e746007bc43c3c67337cb662feda744378ec8b1cb50abcd22484ff9df7"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/PILOT_REVIEW_PENDING.json",
+      "bytes": 2950,
+      "sha256": "4f4ee268e3925e74894a33b70ac52fff4311c915de0493eb43d746c5b577a06d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/S-approved-view-reference.png",
+      "bytes": 149122,
+      "sha256": "7f0ed6915a08a1df131d50d5d89e414a29fa30ec512dd02267e9e7164ca577e3"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/SE-S-SW-STOP_STATUS.json",
+      "bytes": 634,
+      "sha256": "ca0aa695ea6cfca956f3fd99cca8e8d6642b9f6c637c6f83ca4147723c912589"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/SE-S-SW-reference-crops.json",
+      "bytes": 1738,
+      "sha256": "1f912546ce5dd3cd42a4cca8c154ec52ca507527765d6447e471d566afca7fea"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/SE-approved-view-reference.png",
+      "bytes": 137153,
+      "sha256": "4bdcf8d9026b86855535ea34b49e54c4269cc605c8b529b2c288ecb567764fa7"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/SE-walk-v1.prompt.txt",
+      "bytes": 2502,
+      "sha256": "c1923b7f096dc230bf7110a3d68be1d703c506fb9d79488e5e01bbbfaaafbce2"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/SW-approved-view-reference.png",
+      "bytes": 131274,
+      "sha256": "3e36c0fe0ccf91fa774757e1a74bda6542484ada0a0deaf76f1c8128d031dd8d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/W-walk-v1.geometry.json",
+      "bytes": 2108,
+      "sha256": "e3aa8eabf589556838c995e6427160454687d5f7a676b96320b24ed13cd1496e"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/W-walk-v1.metadata.json",
+      "bytes": 1118,
+      "sha256": "f189843331bef96802e99e0fbf54beda006040f3ef09ad6a1bde8149a2d9c4f4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/W-walk-v1.png",
+      "bytes": 843825,
+      "sha256": "73f2749d16214da87722a12b2317ba8c951a8ad0a406ae98ca37b2fb30522e08"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/W-walk-v1.prompt.txt",
+      "bytes": 3807,
+      "sha256": "98584c2aec8a2a93033970fb74a8ba89f9e0cf9b5495f9b42005c589d34e0170"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/W-walk-v1.visual-review.json",
+      "bytes": 2695,
+      "sha256": "e19294127436354fba9345a88d95a453ce894d2cab4ffc5e8235111e3c146ca6"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-geometry-check.py",
+      "bytes": 2376,
+      "sha256": "ac586b1ddb2e70b2f7b6a833291b9798dfe5ad6ec38ac8832fd06575f041c797"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-hold-manifest.json",
+      "bytes": 3290,
+      "sha256": "23f40e265320c1ec1e05ce0eb8602211b971577f7f676ec2aa6fb6d62da411e2"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.black-inspection.png",
+      "bytes": 970675,
+      "sha256": "5763660690d753b3a23b2df4b5da732a515f1f4954f362a4d1256622fc54ca46"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.geometry.json",
+      "bytes": 10569,
+      "sha256": "f1b4aa4ff921391006f5165cf35b1dd6d9634bb37d9d1e51cde53c2577574e70"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.independent-hold.json",
+      "bytes": 705,
+      "sha256": "ff15a9ed32664dbfec5d7cc9b262ae2fb4cdea79b1969a9d2cc646843fc1c0c3"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.png",
+      "bytes": 2230595,
+      "sha256": "f476119a70479b2a5e0ff6cc12cdc6085fd822dbdf21693eae64c5070ae1feac"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.prompt.txt",
+      "bytes": 3528,
+      "sha256": "246ea83241fa404f51e23ee0c715d52725e53d553c13d997105f9dce75e7bd67"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.visual-review.json",
+      "bytes": 3713,
+      "sha256": "3d9a96be3bb2526a4cfdbbaa3ecd611b122ba813652a4795e86456168ece6059"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v1.white-inspection.png",
+      "bytes": 1068977,
+      "sha256": "65a86ec5eb05710314c0d94b382d743ad25f52080b2f7190bfe0de8c45542c1b"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.black-inspection.png",
+      "bytes": 929227,
+      "sha256": "a419f4c1950f72cdf960760e9c46d3b15940845d36748fd03c72f13076c10f25"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.crop-conflicts.json",
+      "bytes": 1645,
+      "sha256": "bb38c5d8a10c995443b7d13b41a54abbacb2e144b3349ca5bfb49c6f518d6649"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.geometry.json",
+      "bytes": 810,
+      "sha256": "916cdca927b6b821818ef76e2330cc010e0a9545aa9ea315022daf0268880481"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.png",
+      "bytes": 2180926,
+      "sha256": "adc57a2d8cfbf1ab89f947d5cc7c5c7c401d3bfe583744eeb17cac2621c54102"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.prompt.txt",
+      "bytes": 3337,
+      "sha256": "4450bd7736a45f89dc14cab8387f71a0fde957b521c1aae8339c238fd6358187"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.visual-review.json",
+      "bytes": 3593,
+      "sha256": "436530ec39be943c3a8e374b6910b93dedb9f33ca3dda39dae42f2817e5015c4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.white-inspection.png",
+      "bytes": 1025577,
+      "sha256": "812f3137cd6b53e623e7f7ff8428410f16e43ba4c94d1cdae95a870cfd71e4d3"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/authoring-reference.png",
+      "bytes": 16166,
+      "sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v1.geometry.json",
+      "bytes": 1658,
+      "sha256": "d86f218097967a1252980a2f9d3fe8271db8b7eb389cdb4ce87327264a3de6ec"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v1.png",
+      "bytes": 1769550,
+      "sha256": "1930648e1bbf59b672ee52e3d5d9712540527ab15b107623378d27461e1ed0fb"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v1.prompt.txt",
+      "bytes": 3223,
+      "sha256": "c1ce677220373164ac393b0db53e57fa03a6d94d9bc996a65849f8d2adca90fe"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v1.visual-review.json",
+      "bytes": 870,
+      "sha256": "d7b0c48eef59c0fbe4fefa7d1b06f05353785346c0d2fd8b0fd0373bef6abb00"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v2.canvas-fit.json",
+      "bytes": 919,
+      "sha256": "19fbffb6330546c091c7bdff5d86b34552f63019684c7bd0b5a61129b9331a51"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v2.geometry.json",
+      "bytes": 9942,
+      "sha256": "1ee5cb71f67712ab40a641cc7c7dd4919fe59ad8ee93793796dfc2bdd41e9c85"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v2.png",
+      "bytes": 1297876,
+      "sha256": "1b37a0e89564fe6aa079c3a1f437f29e4ee6712c88ca7ca7fed9fad54ce7ed6e"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v2.prompt.txt",
+      "bytes": 4463,
+      "sha256": "7e0cec57fff4e1f06287e835c00945366b44ea4073f6b71fecce345c68033f1e"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v2.visual-review.json",
+      "bytes": 1914,
+      "sha256": "442d2246bfac056270b2e65870f6556c8d3408726433765b61fbeab8ce05c7fe"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v1.geometry.json",
+      "bytes": 509,
+      "sha256": "c5b894c0b6bdb6ecb97c3fdb27c46536f09d54f30aef1c4149f0a1b685011c37"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v1.png",
+      "bytes": 1758089,
+      "sha256": "0dddd1c63c7de3e57337b5b29ce3d265d0934b1544f389b0f8cd4c126dd164cb"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v1.prompt.txt",
+      "bytes": 3324,
+      "sha256": "a263cd33b13963d3a7fdfa94dbe7300a81032a8c9246367629fa91c8ee726dcd"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v1.reference-proof.json",
+      "bytes": 1083,
+      "sha256": "6c3d8a52fac38c86b74beb6d548a70724577cdffa9ddb9231693033eff21b009"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v1.visual-review.json",
+      "bytes": 1714,
+      "sha256": "672223ff020e875cf60de7396d61c5372ce919353bd053c47dbbee72f7386ca0"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.geometry.json",
+      "bytes": 7266,
+      "sha256": "58081dafe1f1841f0487e321615bbd2de3da5ad0ef9452df683f7868683ae823"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.png",
+      "bytes": 1406040,
+      "sha256": "ea75b44d447df7d835f462bdf25ef38468575db956f15f02258234fcc29d89a4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.prompt.txt",
+      "bytes": 3595,
+      "sha256": "f564129d1f8f988b669cb26be797a199c1de275c1deda66a00dc9ef94c58eb62"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.reference-proof.json",
+      "bytes": 1269,
+      "sha256": "fb4b65c779330e73cbf7be60801f2c8c332328403f35a7a78f0737b86dc961a4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.visual-review.json",
+      "bytes": 3657,
+      "sha256": "157f3c6d22a9bee18a4995e15804bd8146477928dd179bd0c9017d2bf49c117f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-sheet-proposal.json",
+      "bytes": 1538,
+      "sha256": "a6188f9b4f766d248c0cc81421898b51deeb9e38b8924b245565170e3963ac12"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v1-foreign-diagnostic.json",
+      "bytes": 1491,
+      "sha256": "9ee15a63fee370292f5c015e637360761bc4194fe29b175d6c8203177048f6dd"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v1.geometry.json",
+      "bytes": 274,
+      "sha256": "bc9dcd452861713bbc0e52c11d8d472fc87e2340f96e531a0fd27ce04b6ccf9f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v1.png",
+      "bytes": 2300706,
+      "sha256": "ee7bf63ac62daa2697804aac5434fa84660942679f4bfd5daa338d7ae2fd53ea"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v1.prompt.txt",
+      "bytes": 2759,
+      "sha256": "4368bbbdeefe9d312f5e19776424154f1d2e4ceb462febc0370033794d1ef629"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v1.visual-review.json",
+      "bytes": 392,
+      "sha256": "5775f3d34ffda59eec6165ffb74290e7127a0e097e53692154dce3e4365261e2"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2-foot-anchors.json",
+      "bytes": 8424,
+      "sha256": "ccfffdcad411519d599d7a9c9142ba3432f7769e3fe976def843609702984770"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2.geometry.json",
+      "bytes": 287,
+      "sha256": "f8fb3a1fec7e224eb48d05ce9c047f9ed5ed26726ee9cb5399dd716f4cb81146"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2.png",
+      "bytes": 1868826,
+      "sha256": "f4a7a3c5b7fc494786be00a5a580f116bea7c0070f7bbd5c01a248dd93fc2854"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2.prompt.txt",
+      "bytes": 2097,
+      "sha256": "7298943416aef22135e4641d32a8d1a6038ed5c30d835f9ea979006e02e07150"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2.visual-review.json",
+      "bytes": 2315,
+      "sha256": "763d53edd32d6f1974c711c2d7375e2a606b29a429163ad41d2e7fd7265be923"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/reference-proof.json",
+      "bytes": 2055,
+      "sha256": "78d8afe0ede4acdf314f3a7909917735bcc4bb4d5304caf1c1e2ab2da2496c46"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/rotation-v1.geometry.json",
+      "bytes": 289,
+      "sha256": "4da6a589facfdb231337491516236f3c437ec1e1eb4013c9625e62e4d516836c"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/rotation-v1.png",
+      "bytes": 1126608,
+      "sha256": "ed2bfe20b6b2e415d7bf07ac8dda0cc874c7c88801080b3ab61656555a3bf245"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/rotation-v1.prompt.txt",
+      "bytes": 2142,
+      "sha256": "b383273804d6b09226a83cf62da9613c9e83659c7c0575fccb70992adcef9b2b"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/rotation-v1.visual-review.json",
+      "bytes": 562,
+      "sha256": "fed6f072b630c27db5a77ea2e6930428fad69e096d6fbb5346e7dab5e7ad44ba"
+    }
+  ],
+  "metadata_consistency_note": "IDLE_CHECKPOINT currentfilehashes refreshed after independentalpha annotation; rawPNGs unchanged."
+}

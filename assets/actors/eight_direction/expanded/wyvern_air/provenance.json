@@ -1,0 +1,305 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 384,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"ranged_attack": "shoot",
+		"special": "cast",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/attack.png",
+					"sha256": "4570d2086ec2f545f73eb2032eb00ce13b89797cb935ea56690c64ec98b5bd62",
+					"size": [
+						1024,
+						1096
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1096
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "play_once",
+			"sha256": "4570d2086ec2f545f73eb2032eb00ce13b89797cb935ea56690c64ec98b5bd62",
+			"source_duration_seconds": 1.066,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/cast.png",
+					"sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
+					"size": [
+						1024,
+						1040
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1040
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "play_once",
+			"sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/death.png",
+					"sha256": "a7bbf7ae2c4f89f9d4381f03f1655637a9a757a48d1a355113b998bf6b2076b6",
+					"size": [
+						1024,
+						812
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				812
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "play_once",
+			"sha256": "a7bbf7ae2c4f89f9d4381f03f1655637a9a757a48d1a355113b998bf6b2076b6",
+			"source_duration_seconds": 1.066,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/hit.png",
+					"sha256": "1d4b49b6d80560c5bc300edf47b3dc074e03097466200059bf0b0089abbc6716",
+					"size": [
+						1024,
+						924
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				924
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "play_once",
+			"sha256": "1d4b49b6d80560c5bc300edf47b3dc074e03097466200059bf0b0089abbc6716",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/idle.png",
+					"sha256": "d397b3735db68ead42f75132fa3dad2eab92ad3522a2b02d9ff4689edbb9650b",
+					"size": [
+						1024,
+						1164
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1164
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "d397b3735db68ead42f75132fa3dad2eab92ad3522a2b02d9ff4689edbb9650b",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"ranged_attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/ranged_attack.png",
+					"sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
+					"size": [
+						1024,
+						1040
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1040
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "play_once",
+			"sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"special": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/special.png",
+					"sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
+					"size": [
+						1024,
+						1040
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1040
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "play_once",
+			"sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/wyvern_air/walk.png",
+					"sha256": "e583853b8a5e684b5c710b56c61405dc390255fdc10f0ef176e994dd41036936",
+					"size": [
+						1024,
+						1192
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1192
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "e583853b8a5e684b5c710b56c61405dc390255fdc10f0ef176e994dd41036936",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "Test fixture only; no production or art changes.",
+  "observed_failure": "Original ground-loot regression stalled after check 103 when awaiting the first viewport frame after synchronous map/save reloads.",
+  "finding": "Map/save reloads repopulate ambient actors after the initial isolated fixture clears them. Disabling all physics callbacks during the fixed-position GUI phase completed all 166 checks; pausing sprites, disabling only regular process callbacks, and lifecycle yields did not reliably complete.",
+  "change": "Clear ambient monsters and pause player physics only during native mouse/touch GUI hit testing. Restore player physics before the existing real boss death, AUTO walking pickup, and attack-resumption checks.",
+  "coverage": "All original assertions retained, plus one actual class-entry assertion. Physical manual/AUTO movement before GUI; 3 resolutions x 2 camera zooms x mouse/touch; real ranged kill/drop/walk/combat resumption after GUI.",
+  "limits": "Callback traces returned from move_and_slide and actor_motion.apply. No deterministic production script loop or engine defect was proved; this change isolates the existing GUI fixture.",
+  "diagnostic_result": {
+    "exit_code": 0,
+    "elapsed_seconds": 29.91,
+    "checks": 166
+  },
+  "resource_preflight": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "result": "RESOURCE_SOURCE_CHECKOUT_OK"
+  },
+  "delivered_validation": [
+    "headless.log",
+    "headless.json",
+    "opengl.log",
+    "opengl.json"
+  ],
+  "rendered_fixture_failure": "The original ground test did not confirm the first-run class picker. OpenGL validation therefore left movement disabled and the modal intercepted pointer input (47 original assertion failures).",
+  "class_entry_change": "Use the existing tests/qa_class_selection.gd helper and assert actual class selection enters gameplay before the unchanged loot tests."
+}

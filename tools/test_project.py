@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS
+from test_project_support import classify_result, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -61,7 +61,7 @@ scopes={}
 for name,extra in tests:
     executed.append(name)
     source=root/'tests'/(name+'.gd')
-    needs_draw=source.is_file() and 'RenderingServer.frame_post_draw' in source.read_text(encoding='utf-8')
+    needs_draw=source.is_file() and requires_renderer(source.read_text(encoding='utf-8'),os.environ)
     # A headless RenderingServer never emits frame_post_draw. Historically
     # these tests silently ran for 150 seconds each before timing out.
     visual=needs_draw # Never block awaiting draw events under the headless renderer.
@@ -79,6 +79,16 @@ for name,extra in tests:
         # the PCK probe child, must inherit its own empty save/config directory.
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
+        if name.startswith('original_based_') or name == 'pr100_direction_gameplay_test':
+            # Keep the real directional/lifecycle report after isolated saves
+            # are cleaned up, including diagnostics from a failed CI case.
+            env['TWILIGHT_PR100_REPORT']=str(logs/(name+'.gameplay.json'))
+        if name == 'original_based_transform_temporal_main_test':
+            # The runner already owns a fresh temporary Godot user directory.
+            # Explicitly authorize this inherited full 10-case batch and keep
+            # its separate case/report evidence outside the temporary home.
+            env['TWILIGHT_PR100_BATCH_ISOLATED']='1'
+            env['TWILIGHT_PR100_BATCH_REPORT']=str(logs/(name+'.batch.json'))
         if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
         try:
             budget=timeout_budget(name,args.timeout,args.import_timeout)
@@ -111,6 +121,9 @@ for name,extra in tests:
         print(('SKIP ' if name in skipped else ('PASS ' if ok else 'FAIL '))+name,flush=True)
         if not ok:
             failed.append(name)
+            # Artifact delivery may fail independently of the test. Retain the
+            # bounded failure detail in ordinary job logs as well as the file.
+            print('FAILED_OUTPUT_BEGIN '+name+'\n'+output[-16000:]+'\nFAILED_OUTPUT_END '+name,flush=True)
             if name in ('import','bake_navigation'):
                 # Do not manufacture unrelated failures after broken preparation.
                 not_run=[remaining for remaining,_ in tests[len(executed):]]

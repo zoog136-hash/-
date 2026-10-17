@@ -1,0 +1,42 @@
+{
+  "entity": "transform:328",
+  "pilot_scope": "E/W threephase gait only",
+  "verdict": "HOLD",
+  "generation_calls_used": 1,
+  "generation_call_limit": 1,
+  "further_generation": "not_performed",
+  "candidate": {
+    "generator_path": "/workspace/generated_images/exec-cd342a5f-ce5a-4042-a4fa-57b3b7530889.png",
+    "preserved_copy": "/workspace/scratch/pr100-resume/focused-walk/E-W/generated-E-W-walk.png",
+    "bytes": 1803334,
+    "sha256": "97bda06aef6a6f094644d0cfec748166fbb7aeaee046d04a9b75eb000a8d7a76",
+    "copied_sha256": "97bda06aef6a6f094644d0cfec748166fbb7aeaee046d04a9b75eb000a8d7a76",
+    "bytes_unchanged": true
+  },
+  "exact_prompt": "/workspace/scratch/pr100-resume/focused-walk/E-W/exact-prompt.txt",
+  "prompt_sha256": "07687f120df663f20c0d40d9b0ccf575026b7d9ccd352baf5abd5a3e4d51a0bf",
+  "geometry": {
+    "strict_geometry": "pass",
+    "complete_pose_regions": "pass"
+  },
+  "static_checks": {
+    "pose_count": "Six separated full bodies in3columns×2rows.",
+    "direction": "Top row facesE/right; bottom row facesW/left.",
+    "identity": "Compact chibi head, purple puff sleeves, short pleated skirt and small backbow mostly retain guide design. This is not full source-fidelity approval.",
+    "leg_overlap_reversal": "FAIL: In E contact1 and contact3 the same near/front outlined thigh still extends down-right and same rear silhouette down-left. W shows the corresponding repeated near/front down-left thigh. Pose3 changes ankle/stride extent rather than clearly swapping near/far thigh/knee/ankle depth.",
+    "passing": "Middle column has a bent raised forward knee, different from contact poses; this does not repair missing opposite contact.",
+    "ground": "Contact3 forward toes are visibly raised compared with contact1. Metadata anchors could align bottoms but cannot prove natural heelstrike or reverse anatomical legs.",
+    "attachment": "No obvious detached torso, extra limb, disconnected shin or cropped ear/foot in static view.",
+    "spacing": "Requested15%cell margins and70%height occupancy are not visually achieved: figures nearly fill each512px row. No geometry thresholds were relaxed."
+  },
+  "claim_limits": [
+    "Static geometry pass is separate from motion quality.",
+    "Only2directions and walk role attempted; no full8direction approval.",
+    "Diagnostic canvas1024 does not approve final gameplay scale.",
+    "No registered playback or actual Main in this focused task."
+  ],
+  "actual_Main": false,
+  "final_scale_approved": false,
+  "production_files_modified": false,
+  "completed_added": 0
+}

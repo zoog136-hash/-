@@ -1,0 +1,2626 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/external_l1j/monsters/15753.png",
+    "kind": "existing_family_portrait",
+    "family_binding": {
+      "family_id": "불신의 비홀더",
+      "source_sprite_id": "15753",
+      "path": "res://assets/external_l1j/monsters/15753.png",
+      "source_npc_ids": [
+        "7310019"
+      ],
+      "source_name": "불신의 비홀더",
+      "original_animation": false,
+      "mapping": "explicit same-species regional alias"
+    },
+    "sha256": "5cf0babe719dce09421b9a8cc2bab4d62739f5ae93aa258f2c8ddc0a8ff0d6c1",
+    "image_size": [
+      82,
+      123
+    ]
+  },
+  "target_keys": [
+    "monster:불신의 비홀더"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 1,
+      "cell": 8,
+      "body": "eye",
+      "variant": 4,
+      "width": 1.05,
+      "weapon": "staff",
+      "crest": 0,
+      "accent": "c4aa64"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": true
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:불신의 비홀더": {
+      "path": "res://assets/external_l1j/monsters/15753.png",
+      "kind": "existing_family_portrait",
+      "family_binding": {
+        "family_id": "불신의 비홀더",
+        "source_sprite_id": "15753",
+        "path": "res://assets/external_l1j/monsters/15753.png",
+        "source_npc_ids": [
+          "7310019"
+        ],
+        "source_name": "불신의 비홀더",
+        "original_animation": false,
+        "mapping": "explicit same-species regional alias"
+      },
+      "sha256": "5cf0babe719dce09421b9a8cc2bab4d62739f5ae93aa258f2c8ddc0a8ff0d6c1",
+      "image_size": [
+        82,
+        123
+      ]
+    }
+  },
+  "target_presentations": {
+    "monster:불신의 비홀더": {
+      "visual": {
+        "atlas": 1,
+        "cell": 8,
+        "body": "eye",
+        "variant": 4,
+        "width": 1.05,
+        "weapon": "staff",
+        "crest": 0,
+        "accent": "c4aa64"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "beholderMain EXACT PROMPT:\nProduction 2D isometric RPG sprite atlas of the EXACT creature in attached original: small spherical BROWN leathery beholder with huge round golden-yellow single eye and vertical dark slit pupil, short stubby curling eye-stalk appendages with little amber ends, original spiky ridged brown texture, no mouth of teeth, no humanoid limbs/weapons/clothes. Preserve original small stubby stalks and asymmetrical rough silhouette, not generic D&D many-long-tentacles. Fixed high-angle isometric camera. TRANSPARENT RGBA, no ground/shadow/glow/effects/labels/grid. 8columns compass left-to-right E true RIGHT profile with eye on RIGHT rim; SE front-right; S direct FRONT centered round iris; SW front-left; W true LEFT profile eye on LEFT rim; NW rear-left NO central eye, rough BACK surface; N straight BACK NO EYE; NE rear-right NO central eye, BACK surface. Distinct45degree orientations. Whole creature including every stalk connected, at most50%cell width andheight, big EMPTY transparent gutters and margins. Never crop a tentacle, never paint detached eye fragments. EXACT8columns8rows=64 separated full creatures. Rows1/2 idle with eye open then half-blink and stalks gently curling. Rows3/4/5 movement: body leans into each facing direction and short stalks sweep back/pass/sweep front, maintain fixed size and stable vertical origin, no arbitrary hopping. Rows6/7/8 MAGICAL ATTACK:6 central eye narrows and stalks curl inward windup;7 eye wide open and stalks flex OUT/FORWARD in facing compass as body braces, NO beam/particles painted;8 eyelid relaxes and stalks retract. Back-facing attacks show only wrinkled back and moving stalks pointing away, never central iris onN/NW/NE. Distinct articulated eyelids/bodyfolds/stalk phases, not translations/mirrors/copies.\n\nbeholderReaction EXACT PROMPT:\nProduction 2D isometric RPG sprite atlas of the EXACT creature in attached original: small spherical BROWN leathery beholder with huge round golden-yellow single eye and vertical dark slit pupil, short stubby curling eye-stalk appendages with little amber ends, original spiky ridged brown texture, no mouth of teeth, no humanoid limbs/weapons/clothes. Preserve original small stubby stalks and asymmetrical rough silhouette, not generic D&D many-long-tentacles. Fixed high-angle isometric camera. TRANSPARENT RGBA, no ground/shadow/glow/effects/labels/grid. 8columns compass left-to-right E true RIGHT profile with eye on RIGHT rim; SE front-right; S direct FRONT centered round iris; SW front-left; W true LEFT profile eye on LEFT rim; NW rear-left NO central eye, rough BACK surface; N straight BACK NO EYE; NE rear-right NO central eye, BACK surface. Distinct45degree orientations. Whole creature including every stalk connected, at most50%cell width andheight, big EMPTY transparent gutters and margins. Never crop a tentacle, never paint detached eye fragments. EXACT8columns5rows=40 separated full creatures. Rows1/2 two HIT phases:eye winces shut/stalks pull back then reopens partially with distinct body crumple. Rows3/4/5 DEATH:3 body sags and stalks droop;4 creature collapses low, folds leathery body onto ground;5 entirely flat shrivelled brown corpse with centraleye closed and all short stalks folded around/against the body, no floating parts. Back rows continue showing back, no centraliris. Maintain same anatomical facing and texture through collapse. Each complete frame is one connected creature, no blood, no effects. Last death must visibly be flat and grounded.",
+  "instruction_record_kind": "exact_prompt",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original brown spherical body, gold slit pupil and short curled stalks preserved. E/W eye at opposite silhouette edge, S centered eye and N rough back without iris; rear diagonals stay on opposite sides. Blink/stalk walk and attack phases articulate. Hit recoil then three-stage sag to flattened corpse with closed eye, no detached limbs. Floating is the existing production trait, not a new ground offset. Actual Main validation pending."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        83,
+        32,
+        93,
+        108
+      ],
+      "margin": [
+        82,
+        56,
+        163,
+        148
+      ],
+      "source_anchor": [
+        129,
+        136
+      ],
+      "rgba_sha256": "bafa4bcbc4b08b9e7c0fd9f9cd94e2660e53d2dc7e6b32d0d8862ed418ffec70",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        268,
+        30,
+        97,
+        109
+      ],
+      "margin": [
+        82,
+        55,
+        159,
+        147
+      ],
+      "source_anchor": [
+        314,
+        135
+      ],
+      "rgba_sha256": "a8eda1a29d0909772b2e992773887f808cc3675a11385c514b320365d61b271c",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        440,
+        29,
+        101,
+        102
+      ],
+      "margin": [
+        78,
+        62,
+        155,
+        154
+      ],
+      "source_anchor": [
+        490,
+        127
+      ],
+      "rgba_sha256": "ce220cfdb10b0971f115dad597557a4e35a16a5211dcdecdd2cba5e86c799e84",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        622,
+        29,
+        101,
+        108
+      ],
+      "margin": [
+        75,
+        56,
+        155,
+        148
+      ],
+      "source_anchor": [
+        675,
+        133
+      ],
+      "rgba_sha256": "24a77517675e16b956aae37c79a602301b148008d28d69f5f6b91b6b60afade0",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        814,
+        28,
+        91,
+        112
+      ],
+      "margin": [
+        83,
+        52,
+        165,
+        144
+      ],
+      "source_anchor": [
+        859,
+        136
+      ],
+      "rgba_sha256": "3c5cb89d51763ab7db1f2f0a579c6502b0a71b4888bcd09163fd976a74ebc69b",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1000,
+        33,
+        93,
+        97
+      ],
+      "margin": [
+        82,
+        67,
+        163,
+        159
+      ],
+      "source_anchor": [
+        1046,
+        126
+      ],
+      "rgba_sha256": "6ed395e929af3cd58d473e9e084ae700f33813541405d1b24830772b4a9d9405",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1175,
+        33,
+        93,
+        96
+      ],
+      "margin": [
+        81,
+        68,
+        163,
+        160
+      ],
+      "source_anchor": [
+        1222,
+        125
+      ],
+      "rgba_sha256": "9598f3d0da8bdb8b267bc496678c0852a59fd5b852744c874c16b6e19b9ce8ed",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1352,
+        32,
+        93,
+        99
+      ],
+      "margin": [
+        82,
+        65,
+        163,
+        157
+      ],
+      "source_anchor": [
+        1398,
+        127
+      ],
+      "rgba_sha256": "f7c0e5d8f553150ccdfd15712d0b2be39236119d08c2ee63379ac8624af795a6",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        82,
+        158,
+        94,
+        106
+      ],
+      "margin": [
+        81,
+        58,
+        162,
+        150
+      ],
+      "source_anchor": [
+        129,
+        260
+      ],
+      "rgba_sha256": "c8348f0d1a542bef915afe869e9e10b0930b229a3cc4af9298a4e861961cc1f3",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        263,
+        159,
+        99,
+        103
+      ],
+      "margin": [
+        77,
+        61,
+        157,
+        153
+      ],
+      "source_anchor": [
+        314,
+        258
+      ],
+      "rgba_sha256": "34bc163d1a5eb18030946909c7739b003d0e6017ff577f959e66a8739232527e",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        441,
+        160,
+        99,
+        100
+      ],
+      "margin": [
+        79,
+        64,
+        157,
+        156
+      ],
+      "source_anchor": [
+        490,
+        256
+      ],
+      "rgba_sha256": "50aebc02b3b45ee0eeab8fedeec2597b8b824939ceefaf065f1889ccea5c994f",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        627,
+        159,
+        101,
+        102
+      ],
+      "margin": [
+        80,
+        62,
+        155,
+        154
+      ],
+      "source_anchor": [
+        675,
+        257
+      ],
+      "rgba_sha256": "5a97259ac1cc9b2a2fce7a998f171e378180d8635fb8511fdd267b959c6280b3",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        813,
+        158,
+        92,
+        107
+      ],
+      "margin": [
+        82,
+        57,
+        164,
+        149
+      ],
+      "source_anchor": [
+        859,
+        261
+      ],
+      "rgba_sha256": "9394be29bcffe8bd668459b843627b349f9bc0015bcce504dd6a7eadb58084b7",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1000,
+        163,
+        93,
+        97
+      ],
+      "margin": [
+        82,
+        67,
+        163,
+        159
+      ],
+      "source_anchor": [
+        1046,
+        256
+      ],
+      "rgba_sha256": "65572325758874795dec3de6a0af682bbed0aca8ff17c2aae68bda429c15fb5b",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1174,
+        164,
+        96,
+        94
+      ],
+      "margin": [
+        80,
+        70,
+        160,
+        162
+      ],
+      "source_anchor": [
+        1222,
+        254
+      ],
+      "rgba_sha256": "6f2c8f74d3a9d67d6f2be9355dd5bb1a61661b85095b2e9c32b758b1b1947b3b",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1352,
+        159,
+        91,
+        101
+      ],
+      "margin": [
+        82,
+        63,
+        165,
+        155
+      ],
+      "source_anchor": [
+        1398,
+        256
+      ],
+      "rgba_sha256": "dc1643628235a2b46a4394359bfc29070e068e13c0ce2c55663a0fad5d745e07",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        85,
+        291,
+        95,
+        102
+      ],
+      "margin": [
+        84,
+        62,
+        161,
+        154
+      ],
+      "source_anchor": [
+        129,
+        389
+      ],
+      "rgba_sha256": "4346cb4b148fe2061eb6faa34cbb4d750842a68bcf1b8b202b88549fc3fd3bf0",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        262,
+        289,
+        102,
+        100
+      ],
+      "margin": [
+        76,
+        64,
+        154,
+        156
+      ],
+      "source_anchor": [
+        314,
+        385
+      ],
+      "rgba_sha256": "f385e437f63b80ad0e7dacd7b7b2449e879d600e04dd34006a598db575bbcb65",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        444,
+        293,
+        99,
+        101
+      ],
+      "margin": [
+        82,
+        63,
+        157,
+        155
+      ],
+      "source_anchor": [
+        490,
+        390
+      ],
+      "rgba_sha256": "c77aa4c37b79ff5bf8a9053752eea01cbd95df1ab6497024524443ac3a8ec26f",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        621,
+        289,
+        107,
+        100
+      ],
+      "margin": [
+        74,
+        64,
+        149,
+        156
+      ],
+      "source_anchor": [
+        675,
+        385
+      ],
+      "rgba_sha256": "4353c09c84f0bf35c7c095399df90db125a6e598b08cb7354258a51944bc04e8",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        806,
+        293,
+        92,
+        101
+      ],
+      "margin": [
+        75,
+        63,
+        164,
+        155
+      ],
+      "source_anchor": [
+        859,
+        390
+      ],
+      "rgba_sha256": "3b0c1a617ef1dbc6df819c73f4aec163898e1602575167ff009cfdc808e0b716",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        996,
+        298,
+        92,
+        90
+      ],
+      "margin": [
+        78,
+        74,
+        164,
+        166
+      ],
+      "source_anchor": [
+        1046,
+        384
+      ],
+      "rgba_sha256": "456d502750677b19307778495bb8da230a156e9935f30627e6b4f6f7d65a0b73",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1175,
+        292,
+        96,
+        95
+      ],
+      "margin": [
+        81,
+        69,
+        160,
+        161
+      ],
+      "source_anchor": [
+        1222,
+        383
+      ],
+      "rgba_sha256": "0d559e2664ecb550f5af86dbce4d43ab67a1cc8b3ca8dfebaaf2b03dade33488",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1359,
+        289,
+        99,
+        98
+      ],
+      "margin": [
+        89,
+        66,
+        157,
+        158
+      ],
+      "source_anchor": [
+        1398,
+        383
+      ],
+      "rgba_sha256": "378e5e933529836adf887aa445966ad7cc9177de9cecbf9037bb8a21a4e28e80",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        85,
+        418,
+        98,
+        101
+      ],
+      "margin": [
+        84,
+        63,
+        158,
+        155
+      ],
+      "source_anchor": [
+        129,
+        515
+      ],
+      "rgba_sha256": "6fddf342a67d20e21e7132fd0dc7fef87082cfc9ece604105440db783ce8406c",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        260,
+        416,
+        107,
+        102
+      ],
+      "margin": [
+        74,
+        62,
+        149,
+        154
+      ],
+      "source_anchor": [
+        314,
+        514
+      ],
+      "rgba_sha256": "e2d95bcbe9e3c7d649b1870742ce6dc2c218847313696779e22cce1cd78bfdae",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        442,
+        422,
+        100,
+        102
+      ],
+      "margin": [
+        80,
+        62,
+        156,
+        154
+      ],
+      "source_anchor": [
+        490,
+        520
+      ],
+      "rgba_sha256": "c5871520b33eca243fc3613f464190236fcd6d347e56f638f347425d44d7a564",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        625,
+        419,
+        106,
+        101
+      ],
+      "margin": [
+        78,
+        63,
+        150,
+        155
+      ],
+      "source_anchor": [
+        675,
+        516
+      ],
+      "rgba_sha256": "ef7270bf73cbbb09abbc232696e7731648eb3402779c8b5af7e0307dbb8bb33d",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        808,
+        423,
+        94,
+        99
+      ],
+      "margin": [
+        77,
+        65,
+        162,
+        157
+      ],
+      "source_anchor": [
+        859,
+        518
+      ],
+      "rgba_sha256": "d5a006416f8405ebb0f175c053335fa0f33c33a104ed6b3bcfb70823dcf9b46a",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        998,
+        420,
+        96,
+        98
+      ],
+      "margin": [
+        80,
+        66,
+        160,
+        158
+      ],
+      "source_anchor": [
+        1046,
+        514
+      ],
+      "rgba_sha256": "ec37aa54ea2172c4bb2a37e0b5d2905247a181d9da36145653baea6610325915",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1174,
+        426,
+        96,
+        91
+      ],
+      "margin": [
+        80,
+        73,
+        160,
+        165
+      ],
+      "source_anchor": [
+        1222,
+        513
+      ],
+      "rgba_sha256": "d30cfead21304eddf152e8914cb14ae9d2017c9eb43bb7f7bd14363ffd7ca89f",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1361,
+        423,
+        100,
+        94
+      ],
+      "margin": [
+        91,
+        70,
+        156,
+        162
+      ],
+      "source_anchor": [
+        1398,
+        513
+      ],
+      "rgba_sha256": "15ba172f63f5fc7817c1d623e3a69f38d0a9ee7119eed2f3af29bb832f57b633",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        84,
+        554,
+        93,
+        102
+      ],
+      "margin": [
+        83,
+        62,
+        163,
+        154
+      ],
+      "source_anchor": [
+        129,
+        652
+      ],
+      "rgba_sha256": "fa173a3fca52057c1fbe11964ac2ce937fb18f21b9a45ad6aec55cf342aa9c97",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        266,
+        557,
+        104,
+        99
+      ],
+      "margin": [
+        80,
+        65,
+        152,
+        157
+      ],
+      "source_anchor": [
+        314,
+        652
+      ],
+      "rgba_sha256": "231b0e546127cac5cc915c786e382defc8e9dd99fd541d67c9e2cfc7f8218fbc",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        441,
+        552,
+        99,
+        102
+      ],
+      "margin": [
+        79,
+        62,
+        157,
+        154
+      ],
+      "source_anchor": [
+        490,
+        650
+      ],
+      "rgba_sha256": "3ca9cf87de6f7ec7bee765518ce7a4fdc92175dfeb7e356819d19b14f0209f98",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        617,
+        554,
+        102,
+        97
+      ],
+      "margin": [
+        70,
+        67,
+        154,
+        159
+      ],
+      "source_anchor": [
+        675,
+        647
+      ],
+      "rgba_sha256": "8be63377e228d40312732e3eb1be3dccd2d906eb612111cb375725b08f1cd8d9",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        811,
+        556,
+        92,
+        101
+      ],
+      "margin": [
+        80,
+        63,
+        164,
+        155
+      ],
+      "source_anchor": [
+        859,
+        653
+      ],
+      "rgba_sha256": "9e731f6703a29868a94a5ba85139f04a0ba8bae2b859f036b30edab4b9407a08",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        1003,
+        551,
+        91,
+        95
+      ],
+      "margin": [
+        85,
+        69,
+        165,
+        161
+      ],
+      "source_anchor": [
+        1046,
+        642
+      ],
+      "rgba_sha256": "23566063bcb2b0ce3342676f379ffca398e93ff66f074e63579b4d36332b39ca",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1173,
+        556,
+        97,
+        94
+      ],
+      "margin": [
+        79,
+        70,
+        159,
+        162
+      ],
+      "source_anchor": [
+        1222,
+        646
+      ],
+      "rgba_sha256": "50e4afb7db6a373220008123af7ba9156132abd2428930d01c650485a8ac66eb",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1355,
+        553,
+        90,
+        97
+      ],
+      "margin": [
+        85,
+        67,
+        166,
+        159
+      ],
+      "source_anchor": [
+        1398,
+        646
+      ],
+      "rgba_sha256": "14ce82f76fbd3940a53e3f1bf7dac5417fdef5b7a5e6b0ee69147be189d670da",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "E",
+      "region": [
+        79,
+        682,
+        102,
+        100
+      ],
+      "margin": [
+        78,
+        64,
+        154,
+        156
+      ],
+      "source_anchor": [
+        129,
+        778
+      ],
+      "rgba_sha256": "86a128d8be3d6424f1ab4772ac02d6c4954391d643054f392f00bb7cfa4cbf57",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "SE",
+      "region": [
+        260,
+        678,
+        119,
+        105
+      ],
+      "margin": [
+        74,
+        59,
+        137,
+        151
+      ],
+      "source_anchor": [
+        314,
+        779
+      ],
+      "rgba_sha256": "d83f598bbc10a389d6493e8ef1474257bb8b839e17dae8aea14eeb23c6bcdea6",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "S",
+      "region": [
+        434,
+        690,
+        115,
+        85
+      ],
+      "margin": [
+        72,
+        79,
+        141,
+        171
+      ],
+      "source_anchor": [
+        490,
+        771
+      ],
+      "rgba_sha256": "76353bb57286a667d5d9973c2321388101887006026e489593a231b7c531fd79",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        606,
+        678,
+        119,
+        104
+      ],
+      "margin": [
+        59,
+        60,
+        137,
+        152
+      ],
+      "source_anchor": [
+        675,
+        778
+      ],
+      "rgba_sha256": "b8fbf0b4fdca56009709f3873c534b68744ab68b9ad3338e3aa460068998cd73",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "W",
+      "region": [
+        806,
+        680,
+        100,
+        100
+      ],
+      "margin": [
+        75,
+        64,
+        156,
+        156
+      ],
+      "source_anchor": [
+        859,
+        776
+      ],
+      "rgba_sha256": "936ab6d379a41a79f0dba7616102a36750911bd7f1987bd9ccc3532dc25895fb",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "NW",
+      "region": [
+        993,
+        681,
+        107,
+        101
+      ],
+      "margin": [
+        75,
+        63,
+        149,
+        155
+      ],
+      "source_anchor": [
+        1046,
+        778
+      ],
+      "rgba_sha256": "86a49189db6d4189d143719311560ce2a5f916d4aa009261e039c7e2edfe9b7d",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "N",
+      "region": [
+        1176,
+        685,
+        92,
+        96
+      ],
+      "margin": [
+        82,
+        68,
+        164,
+        160
+      ],
+      "source_anchor": [
+        1222,
+        777
+      ],
+      "rgba_sha256": "5e065c4298dc7bc495601835f3021ee0a1f959e0996e3955d93de9ff279b3729",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "NE",
+      "region": [
+        1351,
+        680,
+        103,
+        101
+      ],
+      "margin": [
+        81,
+        63,
+        153,
+        155
+      ],
+      "source_anchor": [
+        1398,
+        777
+      ],
+      "rgba_sha256": "f6c3e412677bdebc25bdfa1e8b034b2e5c5ecda8a6fe65fdbd8b6d804001552f",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "E",
+      "region": [
+        78,
+        798,
+        117,
+        100
+      ],
+      "margin": [
+        77,
+        64,
+        139,
+        156
+      ],
+      "source_anchor": [
+        129,
+        894
+      ],
+      "rgba_sha256": "e448b9382316a17d0bc86ef9180cb0c8d06bd32fabc2dac5d40c48ef45348fe5",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "SE",
+      "region": [
+        266,
+        798,
+        110,
+        95
+      ],
+      "margin": [
+        80,
+        69,
+        146,
+        161
+      ],
+      "source_anchor": [
+        314,
+        889
+      ],
+      "rgba_sha256": "a6d7ee01edba4f69d99681cb634b3301dbb403cef03f31dc65c036d32c9007f2",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "S",
+      "region": [
+        429,
+        798,
+        123,
+        96
+      ],
+      "margin": [
+        67,
+        68,
+        133,
+        160
+      ],
+      "source_anchor": [
+        490,
+        890
+      ],
+      "rgba_sha256": "3c2eb27ae67f0eb5a372486a55de2cabae2c4beab5db45334593b6415ed67978",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "SW",
+      "region": [
+        608,
+        798,
+        116,
+        96
+      ],
+      "margin": [
+        61,
+        68,
+        140,
+        160
+      ],
+      "source_anchor": [
+        675,
+        890
+      ],
+      "rgba_sha256": "f131dac43c67f10cfea3c4a2eee0b91ee30e39a693a59857bcf51bf6c850f35b",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "W",
+      "region": [
+        793,
+        797,
+        116,
+        101
+      ],
+      "margin": [
+        62,
+        63,
+        140,
+        155
+      ],
+      "source_anchor": [
+        859,
+        894
+      ],
+      "rgba_sha256": "0093eb125eec85b5324b56a50162a7912ccd94da97888ba4a2849be9da26f7fd",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "NW",
+      "region": [
+        978,
+        801,
+        117,
+        92
+      ],
+      "margin": [
+        60,
+        72,
+        139,
+        164
+      ],
+      "source_anchor": [
+        1046,
+        889
+      ],
+      "rgba_sha256": "b06332dc39abc6c3593f5184d05e25c03d44c71b739184f498202d653f1a0b53",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "N",
+      "region": [
+        1170,
+        802,
+        102,
+        91
+      ],
+      "margin": [
+        76,
+        73,
+        154,
+        165
+      ],
+      "source_anchor": [
+        1222,
+        889
+      ],
+      "rgba_sha256": "9e03e3e6eefc4abbde2c837e6ed0d4c43919ef84195bace3ab6a7fce727291b2",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "NE",
+      "region": [
+        1353,
+        800,
+        115,
+        93
+      ],
+      "margin": [
+        83,
+        71,
+        141,
+        163
+      ],
+      "source_anchor": [
+        1398,
+        889
+      ],
+      "rgba_sha256": "4bb09758359e71e1d2ce2bf619c5b73ae349390b83aca851823fcbeff369ea46",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "E",
+      "region": [
+        82,
+        910,
+        93,
+        100
+      ],
+      "margin": [
+        81,
+        64,
+        163,
+        156
+      ],
+      "source_anchor": [
+        129,
+        1006
+      ],
+      "rgba_sha256": "09a056b3d815095a8e29eb6e0d6df2f08ea64c791ab70aebae3b68a9334a7f5c",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "SE",
+      "region": [
+        264,
+        908,
+        98,
+        100
+      ],
+      "margin": [
+        78,
+        64,
+        158,
+        156
+      ],
+      "source_anchor": [
+        314,
+        1004
+      ],
+      "rgba_sha256": "4b06e11fa593d36c70ea630398ab2c671fb1d11fb7ee265c9da065ec4171430f",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "S",
+      "region": [
+        441,
+        912,
+        98,
+        90
+      ],
+      "margin": [
+        79,
+        74,
+        158,
+        166
+      ],
+      "source_anchor": [
+        490,
+        998
+      ],
+      "rgba_sha256": "c98685eea96db20a9003e7f5c0078e6915744a4fbeb6937f6eb0d9f2dbfdc190",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "SW",
+      "region": [
+        623,
+        908,
+        99,
+        99
+      ],
+      "margin": [
+        76,
+        65,
+        157,
+        157
+      ],
+      "source_anchor": [
+        675,
+        1003
+      ],
+      "rgba_sha256": "b6e7c80d465202e9934253afbd609608a0660cfd1be7588fd95a7778bf01db3b",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "W",
+      "region": [
+        812,
+        909,
+        93,
+        100
+      ],
+      "margin": [
+        81,
+        64,
+        163,
+        156
+      ],
+      "source_anchor": [
+        859,
+        1005
+      ],
+      "rgba_sha256": "fef3d0a2535871140856f574ab2fb38f184656a3b15313299de9d00648ad3d3a",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "NW",
+      "region": [
+        1002,
+        912,
+        94,
+        93
+      ],
+      "margin": [
+        84,
+        71,
+        162,
+        163
+      ],
+      "source_anchor": [
+        1046,
+        1001
+      ],
+      "rgba_sha256": "54a390196281d84ea708cabd5453f3ecb940188598fd0ba189faa7f7e67b2d10",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "N",
+      "region": [
+        1173,
+        913,
+        96,
+        91
+      ],
+      "margin": [
+        79,
+        73,
+        160,
+        165
+      ],
+      "source_anchor": [
+        1222,
+        1000
+      ],
+      "rgba_sha256": "75c92e01206ea64dca8ebbfc75b727e7d92bf1144a2c77f5832f0f0a316fc463",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "NE",
+      "region": [
+        1348,
+        912,
+        95,
+        93
+      ],
+      "margin": [
+        78,
+        71,
+        161,
+        163
+      ],
+      "source_anchor": [
+        1398,
+        1001
+      ],
+      "rgba_sha256": "f2b1e9259021db409b0640059cedc82c3dda7f2420700875a0b43f29a4568892",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        42,
+        74,
+        131,
+        155
+      ],
+      "margin": [
+        135,
+        99,
+        269,
+        245
+      ],
+      "source_anchor": [
+        107,
+        225
+      ],
+      "rgba_sha256": "a29602b4df43b27c410ae75fbc94f70368e1a31c097e1349294df6dc7ea11f7b",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        246,
+        74,
+        135,
+        157
+      ],
+      "margin": [
+        134,
+        97,
+        265,
+        243
+      ],
+      "source_anchor": [
+        312,
+        227
+      ],
+      "rgba_sha256": "0b34ea20aa2cd8e862a042e4876bde6b047387968c72a0796709547c4f2d0ec4",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        435,
+        82,
+        142,
+        146
+      ],
+      "margin": [
+        129,
+        108,
+        258,
+        254
+      ],
+      "source_anchor": [
+        506,
+        224
+      ],
+      "rgba_sha256": "6d579db246ee29cf68cd8c77f15ae132c6f22a55b588854bae16845b6eef3039",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        633,
+        74,
+        134,
+        157
+      ],
+      "margin": [
+        133,
+        97,
+        266,
+        243
+      ],
+      "source_anchor": [
+        700,
+        227
+      ],
+      "rgba_sha256": "11bea9f906b70f8c1ecad1ae13aafe3862393f5bd23bd872b5ecc5792eae941f",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        818,
+        74,
+        136,
+        161
+      ],
+      "margin": [
+        131,
+        93,
+        264,
+        239
+      ],
+      "source_anchor": [
+        887,
+        231
+      ],
+      "rgba_sha256": "8c86199003e13fb62648ccd58170154d797c22f9c500a100e6ad70b9c16e1a30",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1022,
+        77,
+        134,
+        156
+      ],
+      "margin": [
+        133,
+        98,
+        266,
+        244
+      ],
+      "source_anchor": [
+        1089,
+        229
+      ],
+      "rgba_sha256": "0db9bd81cd79351d96db6455cb9e9259761224a2feeb39b32c64884b38a5de24",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1216,
+        79,
+        134,
+        147
+      ],
+      "margin": [
+        132,
+        107,
+        266,
+        253
+      ],
+      "source_anchor": [
+        1284,
+        222
+      ],
+      "rgba_sha256": "e8a0430bd597203ce10173629bd21c1e39ffda9efc4a2ec8f064426b277543fb",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1407,
+        77,
+        139,
+        161
+      ],
+      "margin": [
+        131,
+        93,
+        261,
+        239
+      ],
+      "source_anchor": [
+        1476,
+        234
+      ],
+      "rgba_sha256": "2b7f9a757e7f8c03be0fefdcda3ac58d744fd3a6ce7c900f02e7d4d441187820",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        41,
+        271,
+        132,
+        152
+      ],
+      "margin": [
+        134,
+        102,
+        268,
+        248
+      ],
+      "source_anchor": [
+        107,
+        419
+      ],
+      "rgba_sha256": "6249ed625b27ecb32ee09502fa12f30cfa8d5bc16fe5589908bb6bbbf64c6bf2",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        242,
+        270,
+        139,
+        157
+      ],
+      "margin": [
+        130,
+        97,
+        261,
+        243
+      ],
+      "source_anchor": [
+        312,
+        423
+      ],
+      "rgba_sha256": "60cd55b3abbca3253884b76c833b314b13036cdcd1308e17d3d7d9776353dcf7",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        435,
+        277,
+        142,
+        145
+      ],
+      "margin": [
+        129,
+        109,
+        258,
+        255
+      ],
+      "source_anchor": [
+        506,
+        418
+      ],
+      "rgba_sha256": "802d4fcb748e76f35cbb790690c6fcbca67e2a61a9a7584df228fb5619a42993",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        632,
+        272,
+        135,
+        155
+      ],
+      "margin": [
+        132,
+        99,
+        265,
+        245
+      ],
+      "source_anchor": [
+        700,
+        423
+      ],
+      "rgba_sha256": "47a09ee24e4c0dea3776b2f176718052b1b6c0b434d8b07697b8f2d2d2b69203",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        817,
+        270,
+        141,
+        156
+      ],
+      "margin": [
+        130,
+        98,
+        259,
+        244
+      ],
+      "source_anchor": [
+        887,
+        422
+      ],
+      "rgba_sha256": "04cf4a4a355d4a553bb0f542781165e69eff06b5b1f72e52988f6d56ce4f3287",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1022,
+        273,
+        135,
+        156
+      ],
+      "margin": [
+        133,
+        98,
+        265,
+        244
+      ],
+      "source_anchor": [
+        1089,
+        425
+      ],
+      "rgba_sha256": "614f523a05324eaf6af0695d3e09afa1b5c489e745d93f86a089702c7b1f9d62",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1217,
+        274,
+        134,
+        146
+      ],
+      "margin": [
+        133,
+        108,
+        266,
+        254
+      ],
+      "source_anchor": [
+        1284,
+        416
+      ],
+      "rgba_sha256": "865410100443d8f352cc27a01111f73bd794de486f3122e82c197054c794755a",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1408,
+        275,
+        137,
+        159
+      ],
+      "margin": [
+        132,
+        95,
+        263,
+        241
+      ],
+      "source_anchor": [
+        1476,
+        430
+      ],
+      "rgba_sha256": "f6a7226ef0fe24b718151f3d73e59e290cdd486b6571c48bb246f546c22b8206",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        37,
+        473,
+        148,
+        139
+      ],
+      "margin": [
+        130,
+        115,
+        252,
+        261
+      ],
+      "source_anchor": [
+        107,
+        608
+      ],
+      "rgba_sha256": "8466a0ae26e8a5565a215d9bf4e7fedd8a27103280b3859c4a5404a18d0391ad",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        230,
+        476,
+        157,
+        135
+      ],
+      "margin": [
+        118,
+        119,
+        243,
+        265
+      ],
+      "source_anchor": [
+        312,
+        607
+      ],
+      "rgba_sha256": "21679ecc65b3ff5c7b17bc8d33e00805ee92d32e58de74b0b9e2799dc1b9b02b",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        431,
+        483,
+        151,
+        128
+      ],
+      "margin": [
+        125,
+        126,
+        249,
+        272
+      ],
+      "source_anchor": [
+        506,
+        607
+      ],
+      "rgba_sha256": "e92d4ab046a3814c102797d8367815f3f7b2fdf18947e089320e42db8929a706",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        624,
+        477,
+        152,
+        134
+      ],
+      "margin": [
+        124,
+        120,
+        248,
+        266
+      ],
+      "source_anchor": [
+        700,
+        607
+      ],
+      "rgba_sha256": "2d1e929624117ff34a346e6ec537ba8e9e6221502970fe25e71dc6fa78e997a3",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        809,
+        475,
+        160,
+        139
+      ],
+      "margin": [
+        122,
+        115,
+        240,
+        261
+      ],
+      "source_anchor": [
+        887,
+        610
+      ],
+      "rgba_sha256": "72eb292cd83783cbcb9db9248525dec21f947ae1c05b35b526cba34747ef2eef",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1016,
+        479,
+        149,
+        140
+      ],
+      "margin": [
+        127,
+        114,
+        251,
+        260
+      ],
+      "source_anchor": [
+        1089,
+        615
+      ],
+      "rgba_sha256": "6726aadaa39860b0633c13cc5b8e117e2adf129a0849ebf03b66c7b01fc30ce7",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1211,
+        483,
+        148,
+        130
+      ],
+      "margin": [
+        127,
+        124,
+        252,
+        270
+      ],
+      "source_anchor": [
+        1284,
+        609
+      ],
+      "rgba_sha256": "54d460b4dc0c741e99f4d0ae619ccc0bc66307d9d83cdf9182ce94d7dab86515",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1397,
+        482,
+        160,
+        143
+      ],
+      "margin": [
+        121,
+        111,
+        240,
+        257
+      ],
+      "source_anchor": [
+        1476,
+        621
+      ],
+      "rgba_sha256": "561a9f0f1bcda32f9a43ff1095541b1e61b399a2047fdcf8d15b0683b9a65714",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        28,
+        693,
+        167,
+        106
+      ],
+      "margin": [
+        121,
+        148,
+        233,
+        294
+      ],
+      "source_anchor": [
+        107,
+        795
+      ],
+      "rgba_sha256": "09ae67342c80b9cf25c88abd8eafeb4b16ddc8405fc9006b2c1d7e98a787c588",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        223,
+        703,
+        175,
+        94
+      ],
+      "margin": [
+        111,
+        160,
+        225,
+        306
+      ],
+      "source_anchor": [
+        312,
+        793
+      ],
+      "rgba_sha256": "a8e39e156a9d7f7b5eefc2dffbb3d44dc77d4cb082410400d4dc83abfc0acfd5",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        427,
+        711,
+        158,
+        88
+      ],
+      "margin": [
+        121,
+        166,
+        242,
+        312
+      ],
+      "source_anchor": [
+        506,
+        795
+      ],
+      "rgba_sha256": "8760e02034f1a34f0146498f41dec29f967df768a62ca5d37880ff77bc6a5c6c",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        614,
+        710,
+        168,
+        90
+      ],
+      "margin": [
+        114,
+        164,
+        232,
+        310
+      ],
+      "source_anchor": [
+        700,
+        796
+      ],
+      "rgba_sha256": "c345f972fd3cd7c1b40b0857b036a562edbf4722c41960e58f4899abe315b015",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        802,
+        706,
+        176,
+        95
+      ],
+      "margin": [
+        115,
+        159,
+        224,
+        305
+      ],
+      "source_anchor": [
+        887,
+        797
+      ],
+      "rgba_sha256": "ece1fe630ea6b6d59e47e1e70c6a07f1c75397e6ae5f4b5169d3cdd786ad4a41",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        1005,
+        707,
+        160,
+        96
+      ],
+      "margin": [
+        116,
+        158,
+        240,
+        304
+      ],
+      "source_anchor": [
+        1089,
+        799
+      ],
+      "rgba_sha256": "428be033473033c726acedb368638e169873d3effc6f882b15256fdc70f06827",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1198,
+        710,
+        162,
+        90
+      ],
+      "margin": [
+        114,
+        164,
+        238,
+        310
+      ],
+      "source_anchor": [
+        1284,
+        796
+      ],
+      "rgba_sha256": "b6c37699210e37fbd65323d2cc25d19f3daefc1f1a00570aaf614227cc15ae85",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1391,
+        704,
+        165,
+        98
+      ],
+      "margin": [
+        115,
+        156,
+        235,
+        302
+      ],
+      "source_anchor": [
+        1476,
+        798
+      ],
+      "rgba_sha256": "3db93b791c7fa5f6217aa90fe81ff437469414926276f79f611e14d4e0f0798a",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        27,
+        872,
+        175,
+        73
+      ],
+      "margin": [
+        120,
+        181,
+        225,
+        327
+      ],
+      "source_anchor": [
+        107,
+        941
+      ],
+      "rgba_sha256": "aa66738af2fc21b0646499ab0748eade5d9db3ad8abf1e8640d4e12c72c4aea3",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        222,
+        871,
+        176,
+        72
+      ],
+      "margin": [
+        110,
+        182,
+        224,
+        328
+      ],
+      "source_anchor": [
+        312,
+        939
+      ],
+      "rgba_sha256": "736b3fe76b7647ea9f59bba48d0a3ba7648137916378d4531faddbbf05b54638",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        419,
+        872,
+        169,
+        74
+      ],
+      "margin": [
+        113,
+        180,
+        231,
+        326
+      ],
+      "source_anchor": [
+        506,
+        942
+      ],
+      "rgba_sha256": "71405fa2ca6dce7880d9d87d0ed89ceeb981e9ba7a50537dc657d22177744afd",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        608,
+        872,
+        174,
+        73
+      ],
+      "margin": [
+        108,
+        181,
+        226,
+        327
+      ],
+      "source_anchor": [
+        700,
+        941
+      ],
+      "rgba_sha256": "8ef5a09b328e34241c937bd5fc4182bc10afe77d3f2a12e08703ae6638f3f09a",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        800,
+        869,
+        173,
+        76
+      ],
+      "margin": [
+        113,
+        178,
+        227,
+        324
+      ],
+      "source_anchor": [
+        887,
+        941
+      ],
+      "rgba_sha256": "81c2477ffef6a4e689970d5325814cbc4594e84a6a5aa73773995e8fb7bf18b2",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        998,
+        869,
+        172,
+        77
+      ],
+      "margin": [
+        109,
+        177,
+        228,
+        323
+      ],
+      "source_anchor": [
+        1089,
+        942
+      ],
+      "rgba_sha256": "ab34c036b71c98d886025ba5467c9b28e38dcaf2a039ec1e18a512f5b36dfc17",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1198,
+        866,
+        166,
+        76
+      ],
+      "margin": [
+        114,
+        178,
+        234,
+        324
+      ],
+      "source_anchor": [
+        1284,
+        938
+      ],
+      "rgba_sha256": "0f1f4251d80fc1ed3c6f90429d9965b315a6aa66725e927e64032f2f9f68f817",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1389,
+        869,
+        168,
+        77
+      ],
+      "margin": [
+        113,
+        177,
+        232,
+        323
+      ],
+      "source_anchor": [
+        1476,
+        942
+      ],
+      "rgba_sha256": "0d13e95458b275bf93051fcac9eeb729277d051b2b5f91d48ab119b2dcc3388c",
+      "sheet": 1
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-0.png",
+          "sha256": "95666bebe47088ec941b1def5f9d019a11519186658592dd0c6cb261e59169a2",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            256,
+            256
+          ],
+          "foot": [
+            128,
+            160
+          ]
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-0.png",
+          "sha256": "95666bebe47088ec941b1def5f9d019a11519186658592dd0c6cb261e59169a2",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            256,
+            256
+          ],
+          "foot": [
+            128,
+            160
+          ]
+        }
+      ],
+      "source_rows": [
+        2,
+        3,
+        4
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-0.png",
+          "sha256": "95666bebe47088ec941b1def5f9d019a11519186658592dd0c6cb261e59169a2",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            256,
+            256
+          ],
+          "foot": [
+            128,
+            160
+          ]
+        }
+      ],
+      "source_rows": [
+        5,
+        6,
+        7
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-1.png",
+          "sha256": "1b9e2b575483e2b8b45c72cbc1261f1a8fd5d1a3c00971f5a19b4735fe9dc1be",
+          "size": [
+            1586,
+            992
+          ],
+          "canvas_size": [
+            400,
+            400
+          ],
+          "foot": [
+            200,
+            250
+          ]
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-1.png",
+          "sha256": "1b9e2b575483e2b8b45c72cbc1261f1a8fd5d1a3c00971f5a19b4735fe9dc1be",
+          "size": [
+            1586,
+            992
+          ],
+          "canvas_size": [
+            400,
+            400
+          ],
+          "foot": [
+            200,
+            250
+          ]
+        }
+      ],
+      "source_rows": [
+        2,
+        3,
+        4
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 112.0
+}

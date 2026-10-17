@@ -1,0 +1,38 @@
+{
+  "observed_failed_commit": "62ad60ae118c28f6f11bfc6facb3d5564e2ba929",
+  "failed_run_id": 38520072649,
+  "failed_job_id": 115707517174,
+  "failed_job_url": "https://github.com/zoog136-hash/-/actions/runs/38520072649/job/115707517174",
+  "cause": "Linker created a per-target reference map containing only the new alias. Existing target keys became absent from that nonempty map, violating unchanged Main reference verification.",
+  "fix": "Validate original files/presentation for every already-bound identity, then backfill the complete source map while applying profiles only to requested aliases. Existing provenance mismatches fail before writes.",
+  "art_or_production_profile_changes": false,
+  "repaired_source_maps": [
+    {
+      "actor": "asitagio",
+      "complete_reference_keys": [
+        "monster:아시타지오",
+        "monster:오만한 아시타지오",
+        "monster:잔혹한 아시타지오"
+      ],
+      "png_tres_preserved": true
+    },
+    {
+      "actor": "harpy",
+      "complete_reference_keys": [
+        "monster:하피",
+        "monster:풍룡의 둥지 하피",
+        "monster:블루 하피"
+      ],
+      "png_tres_preserved": true
+    }
+  ],
+  "linker_unit_tests": 9,
+  "actual_Main_headless": {
+    "cases": 4,
+    "checks": 3886,
+    "failures": []
+  },
+  "render_scope": "Prior rendered screenshots remain valid because PNG/TRES and production profiles are byte-identical; this metadata repair uses the focused Main reference regression instead of repeating unchanged capture sets.",
+  "complete_per_target_map_audit": "No partially populated reference maps remain in any authored resource.",
+  "ci_scope": "Superseded own CI cancelled after the cause was known; final corrected commit will run integration, animation and Android workflows. The earlier62ad60a Android success is retained, not promoted to final-head success."
+}

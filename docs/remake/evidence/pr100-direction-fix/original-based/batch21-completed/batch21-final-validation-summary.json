@@ -1,0 +1,74 @@
+{
+  "scope": "PR100 batch21: three quality-accepted candidate transforms validated in actual Main; two WIP identities held and excluded",
+  "accepted_ids": [
+    "349",
+    "173",
+    "288"
+  ],
+  "held_ids": [
+    "407",
+    "352"
+  ],
+  "original_full_fixture_cases_preserved": 5,
+  "guard": {
+    "checks": 24,
+    "failures": 0
+  },
+  "modes": {
+    "headless": {
+      "report": "/workspace/twilight-run/recovery/transform-runner/batch21-final-headless/report.json",
+      "report_bytes": 5123,
+      "report_sha256": "95faed211787ac9cb2d17106960cc7ce48a4e6fed0c070419572e7d826d44af1",
+      "checks": 7819,
+      "failures": 0,
+      "scene_per_case": "Main.tscn",
+      "player_directions": 24,
+      "incoming_death_respawn_directions": 24,
+      "real_ai_directions": 24,
+      "manual_pickups": 3,
+      "pose_samples": 312,
+      "screenshots": 0,
+      "preserved_generated_saves": 1
+    },
+    "opengl": {
+      "report": "/workspace/twilight-run/recovery/transform-runner/batch21-final-opengl/report.json",
+      "report_bytes": 5312,
+      "report_sha256": "765d83f6ffd799359059443e161b3d5a9ce7ec3b12911682291270d45fe26a18",
+      "checks": 7142,
+      "failures": 0,
+      "scene_per_case": "Main.tscn",
+      "player_directions": 24,
+      "incoming_death_respawn_directions": 24,
+      "real_ai_directions": 24,
+      "manual_pickups": 3,
+      "pose_samples": 312,
+      "screenshots": 480,
+      "preserved_generated_saves": 3
+    }
+  },
+  "source_files": {
+    "tests/run_original_based_transform_batch.gd": {
+      "bytes": 15851,
+      "sha256": "1b7f0463389a0a8eea5ec964d40dc101b2a027a29a30200608673dd017f76643"
+    },
+    "tests/original_based_transform_batch_test.gd": {
+      "bytes": 4404,
+      "sha256": "f7bf2fb7e2ccc08bce4765d6ebe4f31ddd657706bb91f79c2503a7cee5a85dc1"
+    },
+    "tests/fixtures/pr100_batch21_accepted.json": {
+      "bytes": 2164,
+      "sha256": "86de95e4fbe41109d30d82af16095937d2b178515867df5ef3358f36e1dacebf"
+    },
+    ".github/workflows/animation-presentation-validate.yml": {
+      "bytes": 22839,
+      "sha256": "c3aa6a6c64c0d1341e506e6e85c92327cf09117d64ef45105c23c6d2c7a68479"
+    }
+  },
+  "captures": {
+    "count": 480,
+    "bytes": 751102064,
+    "manifest": "/workspace/twilight-run/recovery/transform-runner/batch21-final-capture-manifest.json",
+    "manifest_sha256": "02a9fa89e903608e9eebbe6681e1942b72e523cbc474478fffccd72f9e8db5f6"
+  },
+  "earlier_failures_and_interruptions": "batch21-failed-and-held-history.json"
+}

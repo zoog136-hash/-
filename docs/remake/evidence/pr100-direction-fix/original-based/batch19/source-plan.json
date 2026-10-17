@@ -1,0 +1,335 @@
+{
+  "base_commit": "8b93a700f7e2bf0cbe99299b1b6751aab9db9c63",
+  "requested_initial_batch": [
+    "기란 평원 도마뱀전사",
+    "독침 킬러비",
+    "사악한 셸로브",
+    "사라만다",
+    "불신의 댄싱 소드"
+  ],
+  "replacements_for_blocked": [
+    "왜곡의 웅골리언트",
+    "공포의 이프리트"
+  ],
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "targets": [
+    {
+      "key": "monster:기란 평원 도마뱀전사",
+      "name": "기란 평원 도마뱀전사",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/4151.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "도마뱀전사",
+          "source_sprite_id": "4151",
+          "path": "res://assets/external_l1j/monsters/4151.png",
+          "source_npc_ids": [
+            "46508",
+            "7220002"
+          ],
+          "source_name": "리자드맨 전사",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "187a55905fc402e9f7c8d4cc91e5d29a402e247a6b0a03f4307ac142a8aebb41",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 2,
+          "cell": 8,
+          "body": "lizard",
+          "variant": 9,
+          "width": 1.076,
+          "weapon": "sword",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:공포의 이프리트",
+      "name": "공포의 이프리트",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15759.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "공포의 이프리트",
+          "source_sprite_id": "15759",
+          "path": "res://assets/external_l1j/monsters/15759.png",
+          "source_npc_ids": [
+            "7310026"
+          ],
+          "source_name": "공포의 이프리트",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "13715ec2d076d72e9998f59b66326fdb47decf104cf8885e28432c57fbc322b6",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 2,
+          "cell": 4,
+          "body": "fire",
+          "variant": 2,
+          "width": 1.05,
+          "weapon": "staff",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "magic",
+          "attack_hit_ratio": 0.52,
+          "floating": true
+        },
+        "attack_type": "magic",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:독침 킬러비",
+      "name": "독침 킬러비",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15641.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "독침 킬러비",
+          "source_sprite_id": "15641",
+          "path": "res://assets/external_l1j/monsters/15641.png",
+          "source_npc_ids": [
+            "450792"
+          ],
+          "source_name": "독침 킬러비",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "23f87b6b59cdbf4f9980e950602b69ea251e7009fe039cc1db23a880fa080341",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 5,
+          "cell": 7,
+          "body": "bee",
+          "variant": 8,
+          "width": 1.05,
+          "weapon": "claws",
+          "crest": 1,
+          "accent": "b76d5a"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": true
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      }
+    },
+    {
+      "key": "monster:불신의 댄싱 소드",
+      "name": "불신의 댄싱 소드",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/11319.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "댄싱 소드",
+          "source_sprite_id": "11319",
+          "path": "res://assets/external_l1j/monsters/11319.png",
+          "source_npc_ids": [
+            "900064"
+          ],
+          "source_name": "댄싱 소드",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "37b68430cb7bc5d2de057b49bc1d7098fceab34e2c98ee7ca363e8c06c190333",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 1,
+          "body": "living_sword",
+          "variant": 5,
+          "width": 0.972,
+          "weapon": "sword",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:사라만다",
+      "name": "사라만다",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15561.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "사라만다",
+          "source_sprite_id": "15561",
+          "path": "res://assets/external_l1j/monsters/15561.png",
+          "source_npc_ids": [
+            "45203"
+          ],
+          "source_name": "사라만다",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "db6a8edb128094b279c4539b04a8beeb6a24c80c4430f5fa5668762cf08b02f3",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 5,
+          "cell": 8,
+          "body": "salamander",
+          "variant": 3,
+          "width": 0.972,
+          "weapon": "claws",
+          "crest": 1,
+          "accent": "b76d5a"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      }
+    },
+    {
+      "key": "monster:사악한 셸로브",
+      "name": "사악한 셸로브",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15554.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "사악한 셸로브",
+          "source_sprite_id": "15554",
+          "path": "res://assets/external_l1j/monsters/15554.png",
+          "source_npc_ids": [
+            "7311122"
+          ],
+          "source_name": "사악한 셸로브",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "c9392fff7ad517bdb9725cc1e750241e5ef0276ed21f3adc5fbbd4d9d1501b3a",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 0,
+          "cell": 10,
+          "body": "dark_knight",
+          "variant": 1,
+          "width": 0.946,
+          "weapon": "sword",
+          "crest": 1,
+          "accent": "b76d5a"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:왜곡의 웅골리언트",
+      "name": "왜곡의 웅골리언트",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15576.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "웅골리언트",
+          "source_sprite_id": "15576",
+          "path": "res://assets/external_l1j/monsters/15576.png",
+          "source_npc_ids": [
+            "7000063"
+          ],
+          "source_name": "칠흑의 웅골리언트",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "99a1f006c11b3b3e2fe18ff6025c9248568c45cd2f8d02a722aca680e47467f1",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 0,
+          "body": "spider",
+          "variant": 6,
+          "width": 0.972,
+          "weapon": "claws",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "crawl",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      }
+    }
+  ]
+}

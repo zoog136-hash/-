@@ -1,0 +1,24 @@
+{
+  "initial_import": {
+    "path": "/workspace/scratch/pr100-resume/baseline/import.log",
+    "bytes": 929671,
+    "sha256": "ba71737f622197203f87cce55eae9834ffd009e9ee9055c473bbd71a82cd4485",
+    "clean_pass": false,
+    "exit_code": "Parent-owned session; not re-collected by this baseline worker",
+    "engine_errors": [
+      "ERROR: Condition \"_sock == -1\" is true. Returning: FAILED",
+      "ERROR: Condition \"err != OK\" is true. Returning: ERR_CANT_CREATE",
+      "ERROR: Condition \"_sock == -1\" is true. Returning: FAILED",
+      "ERROR: Condition \"err != OK\" is true. Returning: ERR_CANT_CREATE"
+    ]
+  },
+  "network_enabled_retry": {
+    "exit_code": 0,
+    "seconds": 10.677,
+    "log": "/workspace/scratch/pr100-resume/baseline/import-network.log",
+    "network_enabled": true,
+    "errors": [],
+    "original_import_log_preserved": "/workspace/scratch/pr100-resume/baseline/import.log",
+    "original_import_clean_pass": false
+  }
+}

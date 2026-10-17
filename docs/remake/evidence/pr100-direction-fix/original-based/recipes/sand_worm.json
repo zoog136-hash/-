@@ -1,0 +1,74 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nRepack the exact 64 articulated sand worm poses in this 8-column by 8-row transparent sprite atlas with MUCH MORE EMPTY SPACE. Do not change their compass, shapes, action, original beige/brown worm texture, tooth-lined mouth, or back-facing columns6/7/8. REDUCE EACH individual full worm and its connected base to HALF its current pixel height and width, keeping same overall image canvas size. Center each smaller whole pose inside its original cell. At least 35 fully transparent pixels between every pair of neighboring bodies in BOTH axes and around outer image edges. Each pose must be a separate connected island. In particular no vertical touching between rows. Keep exactly8columns8rows, no added/deleted poses. All8directions and all8action rows preserved, upper three rear directions keep mouth hidden as currently drawn. Empty background full alpha0, no fuzzy clouds/shadow/noise/guides. This is a spacing correction of these actual poses, not new design or duplicate stills.\nHIT/DEATH EXACT PROMPT:\nRepack the exact40 articulated sand worm hit/death poses from this8-column5-row transparent atlas with MUCH MORE EMPTY SPACE. Keep8columns5rows, same original worm design, body bends, five hit/death stages, compass, shapes, colors and back-facing columns6/7/8 with hidden mouth. Reduce every whole character plus attached base to HALF its current pixel width and height, keeping overall canvas size. Center in same cell with at least35 FULLY TRANSPARENT pixels between all bodies in both axes and outer image edges. Every pose separate connected island. No inter-frame overlap at wide collapsed death bodies. All40 actual articulated poses preserved, no duplication/extra rows/deletion. Background entirely transparent alpha0 without shadow/noise/haze. No labels/grids.",
+  "prompt_record_kind": "exact_final_prompts; preceding original-reference generation retained in recipe history",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/sand_worm/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/sand_worm/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Uses only existing project atlas_3.png cell 15, not verified external original Lineage game art. The same beige annulated spined body, tooth-lined red mouth and attached sandy base are retained. NW/N/NE were redrawn to show the rear head instead of a front-facing mouth, then all poses were spaced apart. Eight articulated undulating/lunging/recoiling/collapsing views; no invented limbs or body reuse across distinct metadata. Original atlas bytes and region preserved."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create a complete production 2D isometric RPG animation atlas STRICTLY based on the specified ORIGINAL character in the attached reference. Preserve its design, silhouette, proportions, palette, face, equipment and anatomy. Same detailed painted game-sprite style and elevated isometric viewpoint. Fully transparent RGBA background. EXACTLY EIGHT COLUMNS and THIRTEEN ROWS = 104 separate whole articulated poses. Each complete character must occupy at most 50 percent of cell width and height. Leave large fully transparent gutters at least 25 pixels all around each pose and outer border, never touch neighbors or crop body. Exact column direction order E, SE, S, SW, W, NW, N, NE. E strict right profile, SE front-right, S DIRECT FRONT toward viewer, SW front-left, W strict left profile, NW back-left, N FULL BACK no face visible, NE back-right. Retain these compass views in every action. Rows exactly: 1 neutral idle; 2 visibly different breathing idle; 3 locomotion phase one; 4 locomotion phase two; 5 locomotion phase three; 6 attack windup; 7 attack CONTACT in facing direction; 8 attack recovery; 9 hit recoil; 10 hit recovery; 11 death begins; 12 falling close to ground; 13 final flat collapsed recognizable body. All 104 poses must be physically articulated and distinct, not repeated or merely translated. Keep body scale consistent throughout. No captions, grid lines, scenes, cast shadows or disconnected particles. The ONLY reference character to animate is the sand worm in BOTTOM ROW, RIGHTMOST COLUMN of the attached 4-by-4 original character atlas, pixel region x=984 y=899 width=328 height=300 in the 1312x1199 image. Do NOT include or borrow anatomy from any other character. Preserve that beige/brown annulated worm with segmented ridges, small dorsal spines, and a huge circular red-brown tooth-lined opening at the front end. No limbs, eyes, weapons, armor or humanoid parts. Its long thick lower body remains partially emerged from a small connected beige rock base, as in the original, and bends to face each direction. The N column shows the convex BACK of the head and ridged back, no front-facing mouth. S shows circular mouth facing directly toward viewer. Movement is real worm undulation with different contractions, raised head and segment bends, not sliding stills. Attack winds head back, lunges the wide tooth-lined mouth forward, then recoils; the same contact pose can align with the game's existing radial slam. Hit recoils neck/body, death bends, buckles and ends with collapsed body and mouth against the ground. No disconnected dust or rocks. Keep each full connected silhouette inside its cell.",
+      "output_path": "/workspace/generated_images/exec-8c5f9a5c-de59-48a7-ae3e-7067e25985ef.png"
+    },
+    {
+      "prompt": "Create matching production hit/death animation atlas for ONLY the original sand worm in bottom-right cell of FIRST attached 4x4 creature atlas, pixel region x984,y899,w328,h300. The second attached sheet gives main animation style, use original reference for exact identity. Transparent RGBA. EXACTLY EIGHT COLUMNS and FIVE ROWS=40 separate whole articulated poses, each small at most45% of cell dimensions and with large blank gutters, no clipping/overlap/particles. Same beige-brown spined ridged segmented worm, round red tooth-lined mouth at front, small CONNECTED rock base, NO eyes/limbs/armor/weapons. Column directions E,SE,S,SW,W,NW,N,NE: right profile, front-right, direct front, front-left, left profile, BACK-left, FULL BACK, BACK-right. Crucial NW/N/NE show the convex ridged BACK of head with mouth on FAR side, never a front-facing round red opening; E/W show mouth edge-on. Rows: 1 incoming hit recoil through bent neck/segments, 2 distinct recoil recovery, 3 death begins with buckled neck toward ground, 4 falling body slumped low, 5 FINAL flat limp collapsed worm. Not five standing worms! Physically bend/contract body, don't translate/repeat still. Maintain facing direction during collapse, consistent body thickness/length/spines/palette and original painted isometric RPG art. Every complete body plus connected tiny base inside cell.",
+      "output_path": "/workspace/generated_images/exec-75ebfa2f-910f-40ee-b0b0-f768f87aea4f.png"
+    },
+    {
+      "prompt": "Correct ONLY direction column SIX (NW) of the first attached 8-column by 8-row sand worm animation sheet. Preserve all other cells, layout, size, pose roles, colors, transparency and original worm design. The second attachment's bottom-right character is the original identity reference. Column SIX must face AWAY from viewer and to screen upper-left, halfway between column FIVE pure left profile and column SEVEN full back. Across ALL eight rows show the ridged convex BACK LEFT of the head/neck; the mouth opening is on the FAR SIDE pointing away upper-left, so its round red interior MUST NOT be visible. Do NOT use front-left or face viewer in column SIX. In attack contact row SEVEN bend/lunge head toward upper-left without exposing front mouth. All 64 poses retain anatomical articulation. Completely transparent RGBA, no background, grid or particles; maintain gutters and no clipping.",
+      "output_path": "/workspace/generated_images/exec-da1762ba-9f94-43f7-9b8b-7a967f1ef2ab.png"
+    },
+    {
+      "prompt": "Edit ONLY column EIGHT, the RIGHTMOST column, of this transparent sand worm 8-column by 8-row animation atlas. Keep every other column and cell unchanged and preserve layout, scale, original beige ridged worm identity and transparent gutters. Rightmost column must be NORTHEAST/BACK-RIGHT in ALL eight rows. Show the convex spined BACK-RIGHT of the worm head/neck, looking AWAY from viewer toward UPPER-RIGHT. Mouth points toward upper-right FAR side and is entirely occluded: NO visible red circular mouth or inner teeth in any rightmost cell. Use column SIX's rear-facing anatomy as guidance, but draw the correct back-RIGHT view instead of mirroring pixels. Different undulation/recoil/lunge phases remain. Row7 attack extends head AWAY to upper-right while still showing its back; never turn to face viewer. Rows7 and8 currently show a front mouth; correct them. Full alpha background, no added shadows/particles, no change to other 56 poses, no touching or clipping.",
+      "output_path": "/workspace/generated_images/exec-8e2328e9-46e6-469f-a681-4c6bc4b31a74.png"
+    },
+    {
+      "prompt": "Edit ONLY columns SIX (NW back-left) and EIGHT (NE back-right) in this EIGHT-column FIVE-row transparent sand worm hit/death atlas. Preserve every other cell, original worm identity, beige-brown spined segmented texture, row actions, scale, layout, transparent gutters and small connected sand base. All cells in column6 show convex BACK-LEFT of head pointing AWAY toward UPPER-LEFT; all column8 show BACK-RIGHT pointing AWAY toward UPPER-RIGHT. The tooth-lined red mouth is on the FAR side fully hidden in BOTH rear columns, including the second hit/recovery row and all death rows. No red circular opening or inner teeth visible in either rear column. N column7 remains full back. The dead worm buckles/flattens while staying in that compass; do not turn its mouth toward viewer. Draw correct rear anatomy rather than mirroring a front face or removing its whole head. Do not change first five columns, column7, pixel scale, body thickness, palette or style. Transparent background, no added effects or disconnected parts.",
+      "output_path": "/workspace/generated_images/exec-26fe08c3-be0a-40b1-af2c-e7ec401e261f.png"
+    }
+  ]
+}

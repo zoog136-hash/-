@@ -1,0 +1,116 @@
+{
+  "headless": {
+    "checks": 2515,
+    "failures": [],
+    "cases": [
+      {
+        "checks": 865,
+        "failures": [],
+        "folder": "albino_iguana_monster_authored",
+        "full_pose_capture": false,
+        "monster_directions": 8,
+        "name": "알비노 이구아나",
+        "physics_ticks": 1172,
+        "pose_samples": 112,
+        "preserved_saves": [],
+        "report": "/workspace/scratch/pr100-continuation/main-batch32/headless/report-cases/albino-iguana-monster-authored.json",
+        "screenshots": 0,
+        "slug": "albino-iguana-monster-authored"
+      },
+      {
+        "checks": 1650,
+        "failures": [],
+        "folder": "fear_agni_monster_authored_v2",
+        "full_pose_capture": false,
+        "monster_directions": 8,
+        "name": "공포의 아그니",
+        "physics_ticks": 3378,
+        "pose_samples": 104,
+        "preserved_saves": [],
+        "report": "/workspace/scratch/pr100-continuation/main-batch32/headless/report-cases/fear-agni-monster-authored.json",
+        "screenshots": 0,
+        "slug": "fear-agni-monster-authored"
+      }
+    ]
+  },
+  "render": {
+    "checks": 2765,
+    "failures": [],
+    "cases": [
+      {
+        "checks": 987,
+        "failures": [],
+        "folder": "albino_iguana_monster_authored",
+        "full_pose_capture": true,
+        "monster_directions": 8,
+        "name": "알비노 이구아나",
+        "physics_ticks": 1221,
+        "pose_samples": 112,
+        "preserved_saves": [
+          "user://pr100-batch-preserved/albino-iguana-monster-authored/twilight_v20_save.json"
+        ],
+        "report": "/workspace/scratch/pr100-continuation/main-batch32/render/report-cases/albino-iguana-monster-authored.json",
+        "screenshots": 120,
+        "slug": "albino-iguana-monster-authored"
+      },
+      {
+        "checks": 1778,
+        "failures": [],
+        "folder": "fear_agni_monster_authored_v2",
+        "full_pose_capture": true,
+        "monster_directions": 8,
+        "name": "공포의 아그니",
+        "physics_ticks": 3483,
+        "pose_samples": 104,
+        "preserved_saves": [
+          "user://pr100-batch-preserved/fear-agni-monster-authored/twilight_v20_save.json"
+        ],
+        "report": "/workspace/scratch/pr100-continuation/main-batch32/render/report-cases/fear-agni-monster-authored.json",
+        "screenshots": 112,
+        "slug": "fear-agni-monster-authored"
+      }
+    ]
+  },
+  "temporal": {
+    "checks": 80793,
+    "native_phases": 216,
+    "cases": [
+      {
+        "name": "알비노 이구아나",
+        "native_phases": 112,
+        "reference_binding": {
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "original": "res://assets/monsters/original/atlas_2.png",
+          "reference_kind": "existing_project_atlas",
+          "resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+          "synthetic_fixture": false
+        },
+        "rendered_native_phases": 112,
+        "report": "/workspace/scratch/pr100-continuation/temporal-batch32-render/summary-cases/albino-iguana-monster-authored.json",
+        "report_sha256": "be929cca0e31565965f64d4f47becbf2d05dea81b2c32e0ee9494eba4f1952a7",
+        "roles": 40,
+        "slug": "albino-iguana-monster-authored"
+      },
+      {
+        "name": "공포의 아그니",
+        "native_phases": 104,
+        "reference_binding": {
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "original": "res://assets/monsters/original/atlas_2.png",
+          "reference_kind": "existing_project_atlas",
+          "resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+          "synthetic_fixture": false
+        },
+        "rendered_native_phases": 104,
+        "report": "/workspace/scratch/pr100-continuation/temporal-batch32-render/summary-cases/fear-agni-monster-authored.json",
+        "report_sha256": "c417b9bd36e86ad0957e9a36ed1017e3d4b370031a55f3afeed2ebd48d49cd14",
+        "roles": 40,
+        "slug": "fear-agni-monster-authored"
+      }
+    ],
+    "failures": [],
+    "wall_microseconds": 169057620
+  },
+  "status": "HOLD_final_actualMain_visual_review_pending_NOT_COMPLETED",
+  "completed_added": 0
+}

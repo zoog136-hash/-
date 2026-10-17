@@ -1,0 +1,241 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/attack.png",
+					"sha256": "8e16a6b5517ca208c5cb0cf2f0da5d244f06c5588b2b38854e68b9897a999280",
+					"size": [
+						1024,
+						372
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				372
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "8e16a6b5517ca208c5cb0cf2f0da5d244f06c5588b2b38854e68b9897a999280",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/cast.png",
+					"sha256": "e1418b87e5b806e77896bdc14096e53a09db6bfefdd17d3533673817feb2dca6",
+					"size": [
+						1024,
+						352
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				352
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "e1418b87e5b806e77896bdc14096e53a09db6bfefdd17d3533673817feb2dca6",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/death.png",
+					"sha256": "d8dca15b112f7d50de4c92b44d455fcde64a352fb040ee89a51feb629ca0982e",
+					"size": [
+						1024,
+						352
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				352
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "d8dca15b112f7d50de4c92b44d455fcde64a352fb040ee89a51feb629ca0982e",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/hit.png",
+					"sha256": "fdcd434a73d508be15e6a3f1f4ce1344eb204c3845b8e23a7309ccd4bb647b1f",
+					"size": [
+						1024,
+						180
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				180
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "play_once",
+			"sha256": "fdcd434a73d508be15e6a3f1f4ce1344eb204c3845b8e23a7309ccd4bb647b1f",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/idle.png",
+					"sha256": "6ab9cef2c72e796d81349860e87e1765664d004a596c409d331f11719064dc4d",
+					"size": [
+						1024,
+						272
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				272
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "6ab9cef2c72e796d81349860e87e1765664d004a596c409d331f11719064dc4d",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/walk.png",
+					"sha256": "2fcca0b7890e9aadcf589cd01518730b4b5577510c48bd863483cf9deef1019d",
+					"size": [
+						1024,
+						492
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				492
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "2fcca0b7890e9aadcf589cd01518730b4b5577510c48bd863483cf9deef1019d",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

@@ -1,0 +1,65 @@
+{
+  "before_metrics": [
+    {
+      "bounds": [
+        0.0,
+        0.0,
+        12288.0,
+        8192.0
+      ],
+      "map_id": "aden_world",
+      "reachable_area_world_pixels": 65313792,
+      "reachable_cells": 63783
+    },
+    {
+      "bounds": [
+        0.0,
+        0.0,
+        7168.0,
+        6656.0
+      ],
+      "map_id": "oman_01",
+      "reachable_area_world_pixels": 14647296,
+      "reachable_cells": 14304
+    }
+  ],
+  "checks": 994,
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "metrics": [
+    {
+      "absolute_scale_status": "provisional_not_server_calibrated",
+      "actual_walk_distance_pixels": 17396.8765778542,
+      "bounds": [
+        0.0,
+        0.0,
+        48000.0,
+        25120.0
+      ],
+      "load_ms": 3279,
+      "map_id": "aden_world",
+      "physics_frames": 426,
+      "reachable_area_world_pixels": 728641536,
+      "reachable_cells": 177891,
+      "source_server_map_id": null,
+      "walk_game_time_scale": 10
+    },
+    {
+      "absolute_scale_status": "provisional_not_server_calibrated",
+      "actual_walk_distance_pixels": 5897.74404239655,
+      "bounds": [
+        0.0,
+        0.0,
+        9600.0,
+        4800.0
+      ],
+      "load_ms": 1485,
+      "map_id": "oman_01",
+      "physics_frames": 148,
+      "reachable_area_world_pixels": 15869952,
+      "reachable_cells": 15498,
+      "source_server_map_id": null,
+      "walk_game_time_scale": 10
+    }
+  ]
+}

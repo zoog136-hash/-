@@ -1,0 +1,74 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nRe-author the SECOND attached draft atlas using the FIRST attached original portrait as the authoritative identity. Keep the exact original design and the draft's painted sprite style, scale, transparency and generous spacing. Produce exactly 8 columns x 8 rows, 64 separate full articulated poses, transparent RGBA background. Keep complete poses within 50% of each cell, no overlap or clipping, no labels/grid/shadows/particles. Rows remain idle 1, idle 2, three different walking steps, attack windup, attack CONTACT, attack recovery. Correct compass orientation: columns E right true side-profile, SE front-right diagonal, S directly frontal, SW front-left diagonal, W left true side-profile, NW back-left diagonal, N directly rear with no face or front chest, NE back-right diagonal. E and SE must clearly differ, likewise W versus SW. Every row keeps its own column compass. CRITICAL FIX: In draft row7 the SOUTH contact turned sideways and attacked horizontally. Re-draw row7 so torso/skull/facing stay in their column direction and the strike projects in that EXACT direction: E right, SE down-right, S down toward viewer, SW down-left, W left, NW up-left, N up away, NE up-right. Do not rotate S/N contact into diagonal or side pose. A foreshortened frontal/rear reach is essential. Leave anatomical body proportions unchanged and articulate true different footsteps and attack phases. Never duplicate stills. The original ghoul is gaunt pale-gray rotting flesh with dark brown ragged waistcloth, red wounds, small gaunt bald skull and thin long connected limbs/claw hands. No armor or weapon. At S contact its skull and chest face DIRECTLY viewer, the reaching claw thrusts DOWNWARD below the chest toward image bottom with foreshortened arm, not stretched sideways. At N contact show only rear skull and spine while claw reaches UP beyond shoulder toward image top.\nHIT/DEATH EXACT PROMPT:\nCreate the matching HIT and DEATH animation atlas for the FIRST attached ORIGINAL game portrait. Use the SECOND attached movement/attack atlas for consistent painted 2D RPG style, palette, proportions and compass convention. FULLY TRANSPARENT RGBA background, no black/white fill, no shadows, text, grids or detached particles. Exactly EIGHT COLUMNS and FIVE ROWS, forty separate complete articulated full bodies. Each whole body in both upright and fallen poses fits within 45 percent of cell width/height, with very generous transparent gutters and no overlap/clipping. Eight columns STRICTLY E true right profile, SE front-right, S direct FRONT, SW front-left, W true left profile, NW back-left, N full BACK without face, NE back-right. Preserve each column's camera view while collapsing; do not turn all fallen bodies into a side view. Five rows exactly: row1 pronounced hit recoil, row2 distinct hit recovery, row3 death starts with knees/body buckling, row4 falling very low near ground, row5 terminal fully flat dead body. All40 are genuinely different articulated poses, no duplicate stills or simple scaled/translated versions. Same body size and material throughout. The exact original gaunt ghoul: pale gray decayed flesh, red wound markings on chest/shoulders/limbs, small bald gaunt head, hunched skinny upper body, thin long attached claw arms, dark shredded brown waistcloth, long bony bare feet. No armor/weapons/new outfit. Hit flinches upper body with claw arms drawn inward. Death buckles at knees, then falls onto hands and side close to ground, then lies completely flat with skull, limbs and brown rags recognizable and attached. No severed parts or detached blood effects.",
+  "prompt_record_kind": "exact_final_prompts; preceding rejected compass draft retained in authoring_history",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ghoul/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ghoul/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared 15772.png with all 64 main and 40 hit/death poses: preserved thin decayed gray flesh, red wounds, small bald gaunt skull, ragged brown waistcloth and long clawed limbs. Distinct profile/front/rear views and steps; frontal contact corrected to face down toward viewer, rear contact reaches away. Two recoil and three connected falling/flat corpse poses. Existing base ghoul appearance is not replaced; only the explicitly equivalent regional original-portrait bindings are targeted."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create a production 2D isometric RPG sprite animation atlas STRICTLY based on the attached ORIGINAL game portrait. Preserve that exact character design, anatomy, silhouette, proportions, colors and material in every pose. Match its detailed painted game-sprite style and elevated viewing angle. Fully transparent RGBA; exclude the portrait's black background and floor shadow. Exactly EIGHT COLUMNS and EIGHT ROWS, 64 separate complete articulated bodies. Occupy at most 45 percent of each cell in width and height, with large transparent gutters and outer border, no touching/overlap/clipping. No text, grid lines, background, cast shadows or disconnected particles. Column directions in EVERY row: E true RIGHT PROFILE; SE front-right; S DIRECT FRONT toward viewer; SW front-left; W true LEFT PROFILE; NW back-left; N FULL BACK facing away with no face; NE back-right. Strictly keep all eight compass views and body orientation, especially S front versus N rear. Row 1 idle neutral; row 2 visibly different breathing idle; rows 3,4,5 three distinct articulated locomotion phases; row 6 attack WINDUP; row 7 attack CONTACT directed along the column compass; row 8 attack RECOVERY. All 64 poses genuinely differ through articulation, not translated/scaled/repeated stills. Maintain same body scale and consistent anatomy. Animate only this exact GHOUL: a very lean rotting undead humanoid, pale bone-gray mottled exposed flesh, visible red wounds on chest/shoulders/limbs, small bald partly skeletal head with gaunt face, hunched shoulders, long thin arms and claw hands, dark shredded brown waistcloth and scraps on lower body, long bare bony feet. Preserve its exact decayed anatomy and reddish injury markings; no armor, helmet, sword or added clothes. Walk with articulated stalking uneven steps and upper-body hunch. Attack draws one claw arm back, lunges the connected claw toward the facing direction, recovers to hunch. At N show spine and rear skull, no frontal face or frontal chest. Feet and hands remain anatomically attached in every frame. Keep complete thin limbs distinct and visible, not detached gore or particles.",
+      "output_path": "/workspace/generated_images/exec-19b177e8-1cd5-4a29-b7b6-c54989c412a2.png",
+      "status": "candidate_not_counted",
+      "review_concerns": [
+        "South attack contact appears to turn sideways; re-author compass-correct contact before approval.",
+        "Side and adjacent diagonal views need closer review."
+      ]
+    },
+    {
+      "prompt": "Re-author the SECOND attached draft atlas using the FIRST attached original portrait as the authoritative identity. Keep the exact original design and the draft's painted sprite style, scale, transparency and generous spacing. Produce exactly 8 columns x 8 rows, 64 separate full articulated poses, transparent RGBA background. Keep complete poses within 50% of each cell, no overlap or clipping, no labels/grid/shadows/particles. Rows remain idle 1, idle 2, three different walking steps, attack windup, attack CONTACT, attack recovery. Correct compass orientation: columns E right true side-profile, SE front-right diagonal, S directly frontal, SW front-left diagonal, W left true side-profile, NW back-left diagonal, N directly rear with no face or front chest, NE back-right diagonal. E and SE must clearly differ, likewise W versus SW. Every row keeps its own column compass. CRITICAL FIX: In draft row7 the SOUTH contact turned sideways and attacked horizontally. Re-draw row7 so torso/skull/facing stay in their column direction and the strike projects in that EXACT direction: E right, SE down-right, S down toward viewer, SW down-left, W left, NW up-left, N up away, NE up-right. Do not rotate S/N contact into diagonal or side pose. A foreshortened frontal/rear reach is essential. Leave anatomical body proportions unchanged and articulate true different footsteps and attack phases. Never duplicate stills. The original ghoul is gaunt pale-gray rotting flesh with dark brown ragged waistcloth, red wounds, small gaunt bald skull and thin long connected limbs/claw hands. No armor or weapon. At S contact its skull and chest face DIRECTLY viewer, the reaching claw thrusts DOWNWARD below the chest toward image bottom with foreshortened arm, not stretched sideways. At N contact show only rear skull and spine while claw reaches UP beyond shoulder toward image top.",
+      "output_path": "/workspace/generated_images/exec-5a897262-6d07-46ad-af73-953cece7d20f.png",
+      "status": "candidate_pending_complete_role_set",
+      "previous_candidate": "/workspace/generated_images/exec-19b177e8-1cd5-4a29-b7b6-c54989c412a2.png"
+    },
+    {
+      "prompt": "Create the matching HIT and DEATH animation atlas for the FIRST attached ORIGINAL game portrait. Use the SECOND attached movement/attack atlas for consistent painted 2D RPG style, palette, proportions and compass convention. FULLY TRANSPARENT RGBA background, no black/white fill, no shadows, text, grids or detached particles. Exactly EIGHT COLUMNS and FIVE ROWS, forty separate complete articulated full bodies. Each whole body in both upright and fallen poses fits within 45 percent of cell width/height, with very generous transparent gutters and no overlap/clipping. Eight columns STRICTLY E true right profile, SE front-right, S direct FRONT, SW front-left, W true left profile, NW back-left, N full BACK without face, NE back-right. Preserve each column's camera view while collapsing; do not turn all fallen bodies into a side view. Five rows exactly: row1 pronounced hit recoil, row2 distinct hit recovery, row3 death starts with knees/body buckling, row4 falling very low near ground, row5 terminal fully flat dead body. All40 are genuinely different articulated poses, no duplicate stills or simple scaled/translated versions. Same body size and material throughout. The exact original gaunt ghoul: pale gray decayed flesh, red wound markings on chest/shoulders/limbs, small bald gaunt head, hunched skinny upper body, thin long attached claw arms, dark shredded brown waistcloth, long bony bare feet. No armor/weapons/new outfit. Hit flinches upper body with claw arms drawn inward. Death buckles at knees, then falls onto hands and side close to ground, then lies completely flat with skull, limbs and brown rags recognizable and attached. No severed parts or detached blood effects.",
+      "output_path": "/workspace/generated_images/exec-2fbf1f25-1665-446c-b959-dcdef40a854a.png",
+      "status": "candidate_pending_geometry_and_gameplay"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "checks": [
+    {
+      "name": "navigation_bake",
+      "exit_code": 0,
+      "maps": 25,
+      "log": "navigation-bake.log"
+    },
+    {
+      "name": "hunting_navigation_cache_test",
+      "exit_code": 0,
+      "assertions": 225,
+      "failures": 0,
+      "log": "hunting_navigation_cache_test.log"
+    },
+    {
+      "name": "hunting_navigation_pack",
+      "exit_code": 0,
+      "maps": 25,
+      "log": "hunting_navigation_pack_test.log"
+    },
+    {
+      "name": "renewed_map_spawn_test",
+      "exit_code": 0,
+      "assertions": 9694,
+      "failures": 0,
+      "log": "renewed_map_spawn_test.log"
+    },
+    {
+      "name": "test_renewed_map_spawn_rules",
+      "exit_code": 0,
+      "tests": 7
+    }
+  ]
+}

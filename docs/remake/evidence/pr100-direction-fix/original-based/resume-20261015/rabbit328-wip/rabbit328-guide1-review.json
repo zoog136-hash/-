@@ -1,0 +1,42 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_static_direction_guide_visual_qa",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "candidate": "/workspace/generated_images/exec-db1b5ac8-ef59-4597-919e-84868d9eae8d.png",
+  "candidate_sha256": "d3582cfc44e34e7e12f3a62e91938876a6568903a9b94dfd31e3649dea4cea21",
+  "verdict": "HOLD",
+  "direction_slots": [
+    {"slot": 1, "expected": "E", "observed": "E", "pass": true},
+    {"slot": 2, "expected": "SE", "observed": "SE", "pass": true},
+    {"slot": 3, "expected": "S", "observed": "S", "pass": true},
+    {"slot": 4, "expected": "SW", "observed": "SE", "pass": false, "reason": "Face, torso and feet turn screen-right; closely repeats slot 2 instead of facing screen-left."},
+    {"slot": 5, "expected": "W", "observed": "W", "pass": true},
+    {"slot": 6, "expected": "NW", "observed": "NW", "pass": true},
+    {"slot": 7, "expected": "N", "observed": "N", "pass": true},
+    {"slot": 8, "expected": "NE", "observed": "NW", "pass": false, "reason": "Head and body turn back toward screen-left; closely repeats slot 6 instead of turning screen-right."}
+  ],
+  "identity": {
+    "status": "partial",
+    "preserved": ["short pale lavender hair", "black rabbit ears/headwear", "black and white short dress with gold hem", "dark stockings and footwear"],
+    "limitations": ["The 108x132 source does not establish the candidate's elaborate glove rings, long rear bow tails and costume seam details with confidence.", "The candidate is a newly drawn directional interpretation; it is not original animation extraction."]
+  },
+  "continuity_and_feet": {
+    "status": "static_only",
+    "observed": "All eight figures have connected torsos and legs, visible feet and uncropped ears. No obvious broken limbs or floating body pieces in this static guide.",
+    "unverified": ["motion continuity", "shared frame anchors", "floor contact in Main", "attack timing and hit position"]
+  },
+  "alpha_and_crop": {
+    "size": [1536, 1024],
+    "mode": "RGBA",
+    "alpha_extrema": [0, 254],
+    "transparent_pixel_count": 1147051,
+    "observation": "Transparent background exists. Colored RGB data remains under zero alpha and there is a broad low-alpha fringe; inspect compositing before import. No visible slot-edge cropping."
+  },
+  "required_before_passing": [
+    "Redraw slots 4 and 8 with the correct opposite diagonal orientations without mirroring the existing slots.",
+    "Check distinctive source features and avoid treating newly inferred accessories as source-established details.",
+    "Complete and verify actual animation and Main runtime evidence separately; this static guide is insufficient for completion."
+  ],
+  "counts_as_completed_entity": false
+}

@@ -1,0 +1,49 @@
+{
+  "actor": "wind_lair_storm_guardian",
+  "target": "monster:풍룡의 둥지 태풍수호자",
+  "verdict": "APPROVED_ACTUAL_MAIN_VISUAL_AND_RECORDED_GAMEPLAY_GATE",
+  "blocking_visual_failures": [],
+  "actual_scene": "Main.tscn",
+  "map": "aden_world",
+  "visual_review": {
+    "authored_pose_captures_inspected": 104,
+    "actual_AI_captures_inspected": 8,
+    "full_frames_inspected": ["authored-N-idle-0.png","authored-S-death-2.png","authored-S-attack-1.png","monster-N.png"],
+    "contacts": ["Main-independent-idle-all-poses.png","Main-independent-walk-all-poses.png","Main-independent-attack-all-poses.png","Main-independent-hit-all-poses.png","Main-independent-death-all-poses.png","Main-independent-AI-all-directions.png"],
+    "capture_manifest": "Main-independent-contact-manifest.json",
+    "method": "Exact screenshot crops and full-frame contacts, with diagnostic labels only. All104 actual Main role phases and eight AI screenshots viewed; source screenshots/art remain unchanged."
+  },
+  "identity_and_direction": "PASS: pale mint/white swept wind crown, angular face, attached clawed arms and continuous wind torso/vortex remain legible on the forest map. True opposing E/W profiles, frontal SE/S/SW and rear NW/N/NE remain distinct. N hides the frontal face. No body split, clipped meaningful claw/strand, opaque background, or wrong heading found.",
+  "role_quality": "PASS: arm/wrist/torso/vortex changes survive Main rendering and form distinct idle, travel, magical extension/retraction and recoil poses. Anatomically normalized face/upper-body size stays coherent; crouched casting and raised recoil change height without a gross head/model-size jump. The three death poses descend to an attached low complete wind mass with claws resting beside it.",
+  "floor_and_source_fringe": {
+    "status": "PASS",
+    "projected_sample_root_xy": [702.4,443.2],
+    "evidence": "The real sampler's camera/actor projection and virtual-foot/profile-offset cancellation place the root at approximately(702.4,443.2). Living vortex bases and the terminal corpse lower contour reach this same map baseline in the inspected full frames and all-direction contacts. The terminal body is flat and supported, with no separated floating torso.",
+    "outside_alpha_note": "Previously documented low-opacity edge strips were inspected in source white composites and now in all rendered role contacts. No visible severed claw, hard body cut or detached meaningful fragment appears in Main; no source pixel or guard was changed."
+  },
+  "attack_alignment": {
+    "status": "PASS_VISUAL_AND_REPORT",
+    "evidence": "The authored release faces its displayed heading, including rear directions. Production AI pursues/attacks all eight directions and every magic projectile is recorded traveling toward the player with damage contact. The source magic behavior was exercised rather than inferred from a pose label.",
+    "AI_directions": 8,
+    "magic_projectile_directions": 8
+  },
+  "recorded_gameplay": {
+    "case_report": "../../report-cases/wind-lair-storm-guardian.json",
+    "render_case_summary_checks": 1560,
+    "render_case_report_checks": 1559,
+    "render_failures": 0,
+    "headless_case_summary_checks": 1446,
+    "headless_failures": 0,
+    "hp_start": 1698,
+    "hp_end": 0,
+    "real_weapon_attempts": 31,
+    "death_callbacks": 1,
+    "ground_drops": 1,
+    "manual_pickup": true,
+    "authored_pose_samples": 104
+  },
+  "quality_reference": "Prior source/static quality review used the established werewolf/seer articulation and intact-corpse standards. In actual Main the new wind body remains complete and readable beside the existing player/map, with coherent direction, action and terminal floor support. No existing actor or map was replaced.",
+  "scope_limits": ["Per-actor Main visual/gameplay approval; overall CI/APK/coverage remains root-managed.","Android real-device execution is unverified by these desktop captures."],
+  "source_or_runtime_pixels_modified": false,
+  "map_modified": false
+}

@@ -421,7 +421,17 @@
         "social_radius": 0,
         "social_group": "mage",
         "preferred_range": 210,
-        "retreat_distance": 120
+        "retreat_distance": 120,
+        "special": {
+          "kind": "beam",
+          "cooldown": 13,
+          "windup": 1.15,
+          "radius": 200,
+          "multiplier": 1.6,
+          "element": "dark",
+          "label": "직선 마법",
+          "evidence": "local_adaptation_not_verified_original_skill"
+        }
       },
       "evidence": {
         "name_region": "legacy",
@@ -1043,7 +1053,17 @@
         "social_radius": 180,
         "social_group": "dark_knight",
         "preferred_range": 0,
-        "retreat_distance": 0
+        "retreat_distance": 0,
+        "special": {
+          "kind": "cone",
+          "cooldown": 13,
+          "windup": 1.15,
+          "radius": 200,
+          "multiplier": 1.6,
+          "element": "physical",
+          "label": "부채꼴 강타",
+          "evidence": "local_adaptation_not_verified_original_skill"
+        }
       },
       "evidence": {
         "name_region": "legacy",

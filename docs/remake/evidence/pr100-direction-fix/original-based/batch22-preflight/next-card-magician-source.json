@@ -1,0 +1,66 @@
+{
+  "candidate_key": "transform:360",
+  "name": "서커스단 카드 마술사",
+  "decision": "RECOMMEND_SMALL_EIGHT_VIEW_RISK_TRIAL",
+  "generation_status": "NOT_STARTED",
+  "source_classification": "External-origin existing catalog portrait already in repository; recorded Inven URL is provenance metadata, not an independently verified original-game pack or original animation claim",
+  "reference": {
+    "path": "res://assets/catalog/e3588916ce3e7e64dff4cae3.png",
+    "kind": "existing_catalog_portrait",
+    "catalog_source_id": "360",
+    "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/360.png?v=261001c",
+    "sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+    "image_size": [
+      108,
+      132
+    ]
+  },
+  "source_file_sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+  "source_sha_matches": true,
+  "source_image_size": [
+    108,
+    132
+  ],
+  "current_reference_and_presentation_match": true,
+  "full_body_review": {
+    "passed": true,
+    "visible_alpha_gt100_bbox_xywh": [
+      26,
+      8,
+      58,
+      117
+    ],
+    "canvas_margins_left_top_right_bottom": [
+      26,
+      8,
+      24,
+      7
+    ],
+    "visual_evidence": "Entire top hat, face, both shoulders/arms/gloved hands with a small card, long purple/gold coat tails, two legs and both boots visible with clear border margins. No neighboring atlas creature or long spear/sword. No new crop, masking or restoration needed.",
+    "claim_limit": "Small portrait details remain low resolution; do not invent hidden face/clothing details and claim them as original facts."
+  },
+  "appearance_to_preserve": {
+    "body": "humanoid",
+    "source_options": [
+      "이동 속도 +2%",
+      "공격 속도 +98%",
+      "스킬 쿨타임 감소 +15%",
+      "PVE 마법 추가 대미지 +2",
+      "마법 대미지 +1"
+    ]
+  },
+  "expected_motion_structure": {
+    "type": "Upright humanoid biped, compact card-hand gesture",
+    "views": "E,SE,S,SW,W,NW,N,NE with correct coat-tail and card-hand occlusion",
+    "roles": "idle2 real breathing, walk3 actual alternating knees/passing stance, attack3 compact card/hand gesture with contact direction, hit2 recoil, death3 grounded connected collapse; newly authored actions only",
+    "risk_controls": "No long held weapon. First test turntable only; after it passes, independent compact role sheets with real eight-view counts and broad gutters. Two repeated failures then HOLD. Watch top-hat/coat/hand identity and avoid card detachment."
+  },
+  "existing_work_overlap": {
+    "currently_linked_original_based": false,
+    "existing_asset_provenance_for_target": [],
+    "same_source_sha_as_completed_authoring_targets": [],
+    "duplicate_work_found": false
+  },
+  "production_changes": false,
+  "completed_count_increment": 0
+}

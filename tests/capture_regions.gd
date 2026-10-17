@@ -15,12 +15,16 @@ var failed: bool = false
 func _initialize() -> void:
 	call_deferred("_run")
 
-func _save_view(directory: String, filename: String) -> void:
+func _save_view(directory: String, filename: String, world: TwilightWorld, expected_map: String) -> void:
 	if captured_files.has(filename):
 		push_error("Duplicate gameplay capture: " + filename)
 		failed = true
 		return
 	await RenderingServer.frame_post_draw
+	if world.active_map_id != expected_map:
+		push_error("Gameplay capture left "+expected_map+": "+filename+" is in "+world.active_map_id)
+		failed = true
+		return
 	var screenshot: Image = root.get_texture().get_image()
 	if screenshot == null or screenshot.is_empty():
 		push_error("Empty gameplay capture: "+filename)
@@ -58,6 +62,25 @@ func _validate_cache(renderer: FieldRenderer) -> void:
 	if renderer.landmark_cache.render_target_update_mode != SubViewport.UPDATE_DISABLED:
 		push_error("Landmark atlas continues rendering after its initial frame")
 		failed = true
+
+func _aden_combat_point(world: TwilightWorld, preferred: Vector2) -> Vector2:
+	# The old fixed point can be over 1000 px from every awake actor. A fast
+	# renderer finishes its 180-frame sample while AUTO is still travelling.
+	# Place this active-combat probe near a real spawned normal monster, with
+	# valid terrain/line of sight, then let normal population waking and AI run.
+	var candidates: Array[TwilightMonster] = []
+	for monster: TwilightMonster in world.monsters_root.get_children():
+		if not monster.dead and not monster.is_boss: candidates.append(monster)
+	candidates.sort_custom(func(a: TwilightMonster, b: TwilightMonster) -> bool:
+		return a.global_position.distance_squared_to(preferred) < b.global_position.distance_squared_to(preferred))
+	for monster: TwilightMonster in candidates:
+		for direction: int in range(8):
+			var point: Vector2 = monster.global_position + Vector2.RIGHT.rotated(float(direction) * PI / 4.) * 180.
+			point = world.field_map.cell_to_world(world.field_map.nearest_cell(point))
+			if world.field_map.walkable(point) and world.field_map.point_clear(point) and not world.field_map.is_safe(point) and world.field_map.line_clear(point, monster.global_position):
+				print("REGION_COMBAT_START ", monster.monster_name, " point=", point, " monster=", monster.global_position)
+				return point
+	return Vector2.INF
 
 func _active_play_anchor(world: TwilightWorld, map_id: String) -> Vector2:
 	if map_id != "aden_world":
@@ -103,6 +126,12 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	# Keep population, AI, physics, combat, HUD and chunk streaming active here.
 	# The static screenshot phase above intentionally freezes monster AI.
 	var point: Vector2 = _active_play_anchor(world, map_id)
+	if map_id == "aden_world":
+		point = _aden_combat_point(world, point)
+		if not point.is_finite():
+			push_error("No real spawned Aden monster has a valid combat probe approach")
+			failed = true
+			return {"map":map_id, "setup_failed":true}
 	_aim(world,point)
 	if map_id == "aden_world":
 		var wake_distance: float = float(world.field_map.data["streaming"]["monster_sleep_distance"])
@@ -144,7 +173,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 					awake += 1
 			active_monsters = maxi(active_monsters,awake)
 		previous = world.player.global_position
-	await _save_view(directory,map_id+"-active-play")
+	await _save_view(directory,map_id+"-active-play",world,map_id)
 	if active_monsters == 0 or world.active_map_id != map_id:
 		push_error("Active-play probe did not remain active in "+map_id+" current_map="+world.active_map_id+" live_physics="+str(active_monsters)+" population_processing="+str(world.field_population.is_processing()))
 		failed = true
@@ -161,6 +190,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	process_ms.sort()
 	physics_ms.sort()
 	var report: Dictionary = {"map":map_id, "mode":"active_auto_hunt", "frames":frames.size(),
+		"initial_position":str(point), "aden_setup":"existing_spawn_approach" if map_id == "aden_world" else "existing_review_point",
 		"median_ms":frames[frames.size()/2], "p95_ms":frames[int(frames.size()*.95)],
 		"process_p95_ms":process_ms[int(process_ms.size()*.95)], "physics_p95_ms":physics_ms[int(physics_ms.size()*.95)],
 		"peak_draw_calls":peak_calls, "active_monsters":active_monsters,
@@ -192,6 +222,9 @@ func _run() -> void:
 	for id: String in ["oman_01","oman_10","domination_summit","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05","albino_01","albino_02","albino_03","albino_04","faith_01","faith_04"]:
 		world.rng.seed = 20261008
 		world._set_map(id,false)
+		# Review points can overlap travel markers. Keep static shots on this
+		# map; active-play probes below restore normal travel via _set_map.
+		world.portal_cooldown = 10000
 		if world.field_renderer.landmark_cache != null:
 			print("LANDMARK_CACHE ",id," cells=",world.field_renderer.landmark_textures.size()," size=",world.field_renderer.landmark_cache.size)
 		world.field_population.set_process(false)
@@ -205,7 +238,7 @@ func _run() -> void:
 				await process_frame
 				if i>6:
 					timing.append(float(Time.get_ticks_usec()-start)/1000.0)
-			await _save_view(directory,id+"-"+review)
+			await _save_view(directory,id+"-"+review,world,id)
 			if review == "entrance":
 				_validate_cache(world.field_renderer)
 				if id == "oman_01":
@@ -244,7 +277,7 @@ func _run() -> void:
 					push_error("Missing current rendered boss landmark floor: " + id + "/" + str(DETAIL_ANCHORS[id]))
 					failed = true
 				else:
-					await _save_view(directory,id+"-landmark")
+					await _save_view(directory,id+"-landmark",world,id)
 		elif DETAIL_KINDS.has(id):
 			var original_kind: String = str(DETAIL_KINDS[id])
 			var expected_kind: String = original_kind
@@ -275,7 +308,7 @@ func _run() -> void:
 					if rendered: break
 				if not rendered: continue
 				landmark_found = true
-				await _save_view(directory,id+"-landmark")
+				await _save_view(directory,id+"-landmark",world,id)
 				break
 			if not landmark_found:
 				push_error("Missing actual streamed gameplay landmark in "+id+": "+original_kind+" / current "+expected_kind)

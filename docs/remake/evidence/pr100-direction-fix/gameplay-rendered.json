@@ -1,0 +1,2153 @@
+{
+	"boss": [
+		{
+			"compass": "E",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(1.0, 0.0)",
+			"facing": 0,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1566,
+			"player_hp_before": 1668,
+			"warning": true,
+			"warning_aim": "(1.0, 0.0)"
+		},
+		{
+			"compass": "SE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707105, 0.707108)",
+			"facing": 1,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1464,
+			"player_hp_before": 1566,
+			"warning": true,
+			"warning_aim": "(0.707105, 0.707108)"
+		},
+		{
+			"compass": "S",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, 1.0)",
+			"facing": 2,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1362,
+			"player_hp_before": 1464,
+			"warning": true,
+			"warning_aim": "(0.0, 1.0)"
+		},
+		{
+			"compass": "SW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707105, 0.707108)",
+			"facing": 3,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1260,
+			"player_hp_before": 1362,
+			"warning": true,
+			"warning_aim": "(-0.707105, 0.707108)"
+		},
+		{
+			"compass": "W",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-1.0, 0.0)",
+			"facing": 4,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1158,
+			"player_hp_before": 1260,
+			"warning": true,
+			"warning_aim": "(-1.0, 0.0)"
+		},
+		{
+			"compass": "NW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707105, -0.707108)",
+			"facing": 5,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1056,
+			"player_hp_before": 1158,
+			"warning": true,
+			"warning_aim": "(-0.707105, -0.707108)"
+		},
+		{
+			"compass": "N",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, -1.0)",
+			"facing": 6,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 1056,
+			"player_hp_before": 1056,
+			"warning": true,
+			"warning_aim": "(0.0, -1.0)"
+		},
+		{
+			"compass": "NE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707105, -0.707108)",
+			"facing": 7,
+			"kind": "beam",
+			"name": "그라디움",
+			"player_hp_after": 954,
+			"player_hp_before": 1056,
+			"warning": true,
+			"warning_aim": "(0.707105, -0.707108)"
+		}
+	],
+	"checks": 7617,
+	"failures": [],
+	"flight_physics_observations": {
+		"17": {
+			"delta": "(21.61133, 1.549683)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"18": {
+			"delta": "(14.56445, 16.04138)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"19": {
+			"delta": "(0.0, 21.66663)",
+			"kind": "ranged",
+			"samples": 5
+		},
+		"20": {
+			"delta": "(-14.56445, 16.04138)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"21": {
+			"delta": "(-21.61133, 1.549683)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"22": {
+			"delta": "(-16.11621, -14.48181)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"23": {
+			"delta": "(0.0, -21.66663)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"24": {
+			"delta": "(16.11621, -14.48181)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"25": {
+			"delta": "(21.61133, 1.549683)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"26": {
+			"delta": "(14.56445, 16.04138)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"27": {
+			"delta": "(0.0, 21.66663)",
+			"kind": "ranged",
+			"samples": 5
+		},
+		"28": {
+			"delta": "(-14.56445, 16.04138)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"29": {
+			"delta": "(-21.61133, 1.549683)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"30": {
+			"delta": "(-16.11621, -14.48181)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"31": {
+			"delta": "(0.0, -21.66663)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"32": {
+			"delta": "(16.11621, -14.48181)",
+			"kind": "ranged",
+			"samples": 4
+		},
+		"33": {
+			"delta": "(14.9834, 0.699219)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"35": {
+			"delta": "(10.2627, 10.94006)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"37": {
+			"delta": "(0.0, 15.0)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"39": {
+			"delta": "(-10.2627, 10.94006)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"41": {
+			"delta": "(-14.9834, 0.699219)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"43": {
+			"delta": "(-10.96191, -10.23865)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"45": {
+			"delta": "(0.0, -15.0)",
+			"kind": "magic",
+			"samples": 8
+		},
+		"47": {
+			"delta": "(10.96191, -10.23865)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"49": {
+			"delta": "(14.9834, 0.699219)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"51": {
+			"delta": "(10.2627, 10.94006)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"53": {
+			"delta": "(0.0, 15.0)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"55": {
+			"delta": "(-10.2627, 10.94006)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"57": {
+			"delta": "(-14.9834, 0.699219)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"59": {
+			"delta": "(-10.96191, -10.23865)",
+			"kind": "magic",
+			"samples": 9
+		},
+		"61": {
+			"delta": "(0.0, -15.0)",
+			"kind": "magic",
+			"samples": 8
+		},
+		"63": {
+			"delta": "(10.96191, -10.23865)",
+			"kind": "magic",
+			"samples": 9
+		}
+	},
+	"lifecycle": {
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1791878978.99968,
+				"expires_at": 1791879578.99968,
+				"grade": "일반",
+				"hunt_batch": "b191330fa62f0d35997208701dbf7971",
+				"id": "62595c606c0e05a958977cdabc9dd5d1",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					15176.0,
+					1680.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_start": 300,
+		"manual_pickup": true,
+		"player_hp": 954,
+		"weapon_attempts": 5
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(90.0, 0.0)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(63.63281, 63.63623)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 90.0)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-63.63281, 63.63623)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-90.0, 0.0)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-63.63281, -63.63623)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -90.0)",
+			"name": "해골 근위병",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(63.63281, -63.63623)",
+			"name": "해골 근위병",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 28,
+			"facing": 0,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 1,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 2,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 3,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 4,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 5,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 6,
+			"kind": "melee",
+			"name": "해골 근위병"
+		},
+		{
+			"damage": 28,
+			"facing": 7,
+			"kind": "melee",
+			"name": "해골 근위병"
+		}
+	],
+	"physics_ticks": 5482,
+	"player": [
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_0",
+			"compass": "E",
+			"facing": 0,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 4047,
+			"hp_before": 4100,
+			"idle": "idle_0",
+			"movement": "(42.0, 0.0)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_1",
+			"compass": "SE",
+			"facing": 1,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3994,
+			"hp_before": 4047,
+			"idle": "idle_1",
+			"movement": "(27.2207, 27.22339)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_2",
+			"compass": "S",
+			"facing": 2,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3941,
+			"hp_before": 3994,
+			"idle": "idle_2",
+			"movement": "(0.0, 38.5)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_3",
+			"compass": "SW",
+			"facing": 3,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3888,
+			"hp_before": 3941,
+			"idle": "idle_3",
+			"movement": "(-27.2207, 27.22339)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_4",
+			"compass": "W",
+			"facing": 4,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3835,
+			"hp_before": 3888,
+			"idle": "idle_4",
+			"movement": "(-38.5, 0.0)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_5",
+			"compass": "NW",
+			"facing": 5,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3782,
+			"hp_before": 3835,
+			"idle": "idle_5",
+			"movement": "(-27.2207, -27.22339)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_6",
+			"compass": "N",
+			"facing": 6,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3729,
+			"hp_before": 3782,
+			"idle": "idle_6",
+			"movement": "(0.0, -38.5)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_7",
+			"compass": "NE",
+			"facing": 7,
+			"form": "class:0",
+			"hit_count": 1,
+			"hp_after": 3676,
+			"hp_before": 3729,
+			"idle": "idle_7",
+			"movement": "(27.2207, -27.22339)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_0",
+			"compass": "E",
+			"facing": 0,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 4042,
+			"hp_before": 4100,
+			"idle": "idle_0",
+			"movement": "(46.19531, 0.0)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_1",
+			"compass": "SE",
+			"facing": 1,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3984,
+			"hp_before": 4042,
+			"idle": "idle_1",
+			"movement": "(29.94922, 29.94653)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_2",
+			"compass": "S",
+			"facing": 2,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3926,
+			"hp_before": 3984,
+			"idle": "idle_2",
+			"movement": "(0.0, 42.34973)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_3",
+			"compass": "SW",
+			"facing": 3,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3868,
+			"hp_before": 3926,
+			"idle": "idle_3",
+			"movement": "(-29.94922, 29.94653)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_4",
+			"compass": "W",
+			"facing": 4,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3810,
+			"hp_before": 3868,
+			"idle": "idle_4",
+			"movement": "(-42.3457, 0.0)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_5",
+			"compass": "NW",
+			"facing": 5,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3752,
+			"hp_before": 3810,
+			"idle": "idle_5",
+			"movement": "(-29.94922, -29.94653)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_6",
+			"compass": "N",
+			"facing": 6,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3694,
+			"hp_before": 3752,
+			"idle": "idle_6",
+			"movement": "(0.0, -42.34973)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "attack_7",
+			"compass": "NE",
+			"facing": 7,
+			"form": "transform:131",
+			"hit_count": 1,
+			"hp_after": 3636,
+			"hp_before": 3694,
+			"idle": "idle_7",
+			"movement": "(29.94922, -29.94653)",
+			"projectile_delta": "(0.0, 0.0)",
+			"projectile_visible": false,
+			"style": "slash",
+			"weapon": "한손검"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_0",
+			"compass": "E",
+			"facing": 0,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 4050,
+			"hp_before": 4100,
+			"idle": "idle_0",
+			"movement": "(42.0, 0.0)",
+			"projectile_delta": "(21.61133, 1.549683)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_1",
+			"compass": "SE",
+			"facing": 1,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 4000,
+			"hp_before": 4050,
+			"idle": "idle_1",
+			"movement": "(27.2207, 27.22339)",
+			"projectile_delta": "(14.56445, 16.04138)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_2",
+			"compass": "S",
+			"facing": 2,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 3950,
+			"hp_before": 4000,
+			"idle": "idle_2",
+			"movement": "(0.0, 38.5)",
+			"projectile_delta": "(0.0, 21.66663)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_3",
+			"compass": "SW",
+			"facing": 3,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 3900,
+			"hp_before": 3950,
+			"idle": "idle_3",
+			"movement": "(-27.2207, 27.22339)",
+			"projectile_delta": "(-14.56445, 16.04138)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_4",
+			"compass": "W",
+			"facing": 4,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 3850,
+			"hp_before": 3900,
+			"idle": "idle_4",
+			"movement": "(-38.5, 0.0)",
+			"projectile_delta": "(-21.61133, 1.549683)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_5",
+			"compass": "NW",
+			"facing": 5,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 3800,
+			"hp_before": 3850,
+			"idle": "idle_5",
+			"movement": "(-27.2207, -27.22339)",
+			"projectile_delta": "(-16.11621, -14.48181)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_6",
+			"compass": "N",
+			"facing": 6,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 3750,
+			"hp_before": 3800,
+			"idle": "idle_6",
+			"movement": "(0.0, -38.5)",
+			"projectile_delta": "(0.0, -21.66663)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_7",
+			"compass": "NE",
+			"facing": 7,
+			"form": "class:2",
+			"hit_count": 1,
+			"hp_after": 3700,
+			"hp_before": 3750,
+			"idle": "idle_7",
+			"movement": "(27.2207, -27.22339)",
+			"projectile_delta": "(16.11621, -14.48181)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_0",
+			"compass": "E",
+			"facing": 0,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 4045,
+			"hp_before": 4100,
+			"idle": "idle_0",
+			"movement": "(46.19531, 0.0)",
+			"projectile_delta": "(21.61133, 1.549683)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_1",
+			"compass": "SE",
+			"facing": 1,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3990,
+			"hp_before": 4045,
+			"idle": "idle_1",
+			"movement": "(29.94922, 29.94653)",
+			"projectile_delta": "(14.56445, 16.04138)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_2",
+			"compass": "S",
+			"facing": 2,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3935,
+			"hp_before": 3990,
+			"idle": "idle_2",
+			"movement": "(0.0, 42.34973)",
+			"projectile_delta": "(0.0, 21.66663)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_3",
+			"compass": "SW",
+			"facing": 3,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3880,
+			"hp_before": 3935,
+			"idle": "idle_3",
+			"movement": "(-29.94922, 29.94653)",
+			"projectile_delta": "(-14.56445, 16.04138)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_4",
+			"compass": "W",
+			"facing": 4,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3825,
+			"hp_before": 3880,
+			"idle": "idle_4",
+			"movement": "(-42.3457, 0.0)",
+			"projectile_delta": "(-21.61133, 1.549683)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_5",
+			"compass": "NW",
+			"facing": 5,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3770,
+			"hp_before": 3825,
+			"idle": "idle_5",
+			"movement": "(-29.94922, -29.94653)",
+			"projectile_delta": "(-16.11621, -14.48181)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_6",
+			"compass": "N",
+			"facing": 6,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3715,
+			"hp_before": 3770,
+			"idle": "idle_6",
+			"movement": "(0.0, -42.34973)",
+			"projectile_delta": "(0.0, -21.66663)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "ranged_attack_7",
+			"compass": "NE",
+			"facing": 7,
+			"form": "transform:135",
+			"hit_count": 1,
+			"hp_after": 3660,
+			"hp_before": 3715,
+			"idle": "idle_7",
+			"movement": "(29.94922, -29.94653)",
+			"projectile_delta": "(16.11621, -14.48181)",
+			"projectile_visible": true,
+			"style": "bow",
+			"weapon": "활"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_0",
+			"compass": "E",
+			"facing": 0,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 4073,
+			"hp_before": 4100,
+			"idle": "idle_0",
+			"movement": "(42.0, 0.0)",
+			"projectile_delta": "(14.9834, 0.699219)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_1",
+			"compass": "SE",
+			"facing": 1,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3991,
+			"hp_before": 4018,
+			"idle": "idle_1",
+			"movement": "(29.69531, 29.69824)",
+			"projectile_delta": "(10.2627, 10.94006)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_2",
+			"compass": "S",
+			"facing": 2,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3909,
+			"hp_before": 3936,
+			"idle": "idle_2",
+			"movement": "(0.0, 42.0)",
+			"projectile_delta": "(0.0, 15.0)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_3",
+			"compass": "SW",
+			"facing": 3,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3827,
+			"hp_before": 3854,
+			"idle": "idle_3",
+			"movement": "(-29.69531, 29.69824)",
+			"projectile_delta": "(-10.2627, 10.94006)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_4",
+			"compass": "W",
+			"facing": 4,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3745,
+			"hp_before": 3772,
+			"idle": "idle_4",
+			"movement": "(-42.0, 0.0)",
+			"projectile_delta": "(-14.9834, 0.699219)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_5",
+			"compass": "NW",
+			"facing": 5,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3663,
+			"hp_before": 3690,
+			"idle": "idle_5",
+			"movement": "(-29.69531, -29.69824)",
+			"projectile_delta": "(-10.96191, -10.23865)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_6",
+			"compass": "N",
+			"facing": 6,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3581,
+			"hp_before": 3608,
+			"idle": "idle_6",
+			"movement": "(0.0, -42.0)",
+			"projectile_delta": "(0.0, -15.0)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_7",
+			"compass": "NE",
+			"facing": 7,
+			"form": "class:1",
+			"hit_count": 1,
+			"hp_after": 3499,
+			"hp_before": 3526,
+			"idle": "idle_7",
+			"movement": "(29.69531, -29.69824)",
+			"projectile_delta": "(10.96191, -10.23865)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_0",
+			"compass": "E",
+			"facing": 0,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 4073,
+			"hp_before": 4100,
+			"idle": "idle_0",
+			"movement": "(46.19531, 0.0)",
+			"projectile_delta": "(14.9834, 0.699219)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_1",
+			"compass": "SE",
+			"facing": 1,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3986,
+			"hp_before": 4013,
+			"idle": "idle_1",
+			"movement": "(32.67188, 32.66895)",
+			"projectile_delta": "(10.2627, 10.94006)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_2",
+			"compass": "S",
+			"facing": 2,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3899,
+			"hp_before": 3926,
+			"idle": "idle_2",
+			"movement": "(0.0, 46.19971)",
+			"projectile_delta": "(0.0, 15.0)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_3",
+			"compass": "SW",
+			"facing": 3,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3812,
+			"hp_before": 3839,
+			"idle": "idle_3",
+			"movement": "(-32.67188, 32.66895)",
+			"projectile_delta": "(-10.2627, 10.94006)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_4",
+			"compass": "W",
+			"facing": 4,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3725,
+			"hp_before": 3752,
+			"idle": "idle_4",
+			"movement": "(-46.19531, 0.0)",
+			"projectile_delta": "(-14.9834, 0.699219)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_5",
+			"compass": "NW",
+			"facing": 5,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3638,
+			"hp_before": 3665,
+			"idle": "idle_5",
+			"movement": "(-32.67188, -32.66895)",
+			"projectile_delta": "(-10.96191, -10.23865)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_6",
+			"compass": "N",
+			"facing": 6,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3551,
+			"hp_before": 3578,
+			"idle": "idle_6",
+			"movement": "(0.0, -46.19971)",
+			"projectile_delta": "(0.0, -15.0)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		},
+		{
+			"attack_visible": true,
+			"authored_attack_track": "cast_7",
+			"compass": "NE",
+			"facing": 7,
+			"form": "transform:137",
+			"hit_count": 1,
+			"hp_after": 3464,
+			"hp_before": 3491,
+			"idle": "idle_7",
+			"movement": "(32.67188, -32.66895)",
+			"projectile_delta": "(10.96191, -10.23865)",
+			"projectile_visible": true,
+			"style": "magic",
+			"weapon": "지팡이"
+		}
+	],
+	"player_strikes": [
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 1,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 55
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 1,
+			"flights": 0,
+			"id": 2,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 129
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 2,
+			"flights": 0,
+			"id": 3,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 201
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 3,
+			"flights": 0,
+			"id": 4,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 276
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 4,
+			"flights": 0,
+			"id": 5,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 349
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 5,
+			"flights": 0,
+			"id": 6,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 423
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 6,
+			"flights": 0,
+			"id": 7,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 495
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 7,
+			"flights": 0,
+			"id": 8,
+			"launch_origins": [],
+			"marker_seconds": 0.253927540878487,
+			"tick": 569
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 9,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 648
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 1,
+			"flights": 0,
+			"id": 10,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 700
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 2,
+			"flights": 0,
+			"id": 11,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 747
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 3,
+			"flights": 0,
+			"id": 12,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 794
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 4,
+			"flights": 0,
+			"id": 13,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 849
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 5,
+			"flights": 0,
+			"id": 14,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 904
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 6,
+			"flights": 0,
+			"id": 15,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 959
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 7,
+			"flights": 0,
+			"id": 16,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 1012
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 0,
+			"flights": 1,
+			"id": 17,
+			"launch_origins": [
+				"(15150.0, 1638.0)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1117
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 1,
+			"flights": 1,
+			"id": 18,
+			"launch_origins": [
+				"(15145.9, 1647.9)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1190
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 2,
+			"flights": 1,
+			"id": 19,
+			"launch_origins": [
+				"(15136.0, 1652.0)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1261
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 3,
+			"flights": 1,
+			"id": 20,
+			"launch_origins": [
+				"(15126.1, 1647.9)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1334
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 4,
+			"flights": 1,
+			"id": 21,
+			"launch_origins": [
+				"(15122.0, 1638.0)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1407
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 5,
+			"flights": 1,
+			"id": 22,
+			"launch_origins": [
+				"(15126.1, 1628.1)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1480
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 6,
+			"flights": 1,
+			"id": 23,
+			"launch_origins": [
+				"(15136.0, 1624.0)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1554
+		},
+		{
+			"elapsed": 0.216666666666667,
+			"facing": 7,
+			"flights": 1,
+			"id": 24,
+			"launch_origins": [
+				"(15145.9, 1628.1)"
+			],
+			"marker_seconds": 0.214790390956194,
+			"tick": 1627
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 0,
+			"flights": 1,
+			"id": 25,
+			"launch_origins": [
+				"(15150.0, 1638.0)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 1710
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 1,
+			"flights": 1,
+			"id": 26,
+			"launch_origins": [
+				"(15145.9, 1647.9)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 1762
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 2,
+			"flights": 1,
+			"id": 27,
+			"launch_origins": [
+				"(15136.0, 1652.0)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 1813
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 3,
+			"flights": 1,
+			"id": 28,
+			"launch_origins": [
+				"(15126.1, 1647.9)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 1866
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 4,
+			"flights": 1,
+			"id": 29,
+			"launch_origins": [
+				"(15122.0, 1638.0)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 1919
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 5,
+			"flights": 1,
+			"id": 30,
+			"launch_origins": [
+				"(15126.1, 1628.1)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 1970
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 6,
+			"flights": 1,
+			"id": 31,
+			"launch_origins": [
+				"(15136.0, 1624.0)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 2023
+		},
+		{
+			"elapsed": 0.1,
+			"facing": 7,
+			"flights": 1,
+			"id": 32,
+			"launch_origins": [
+				"(15145.9, 1628.1)"
+			],
+			"marker_seconds": 0.0920034972089582,
+			"tick": 2076
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 0,
+			"flights": 1,
+			"id": 33,
+			"launch_origins": [
+				"(15150.0, 1638.0)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2178
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 34,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2219
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 1,
+			"flights": 1,
+			"id": 35,
+			"launch_origins": [
+				"(15145.9, 1647.9)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2290
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 1,
+			"flights": 0,
+			"id": 36,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2330
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 2,
+			"flights": 1,
+			"id": 37,
+			"launch_origins": [
+				"(15136.0, 1652.0)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2401
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 2,
+			"flights": 0,
+			"id": 38,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2442
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 3,
+			"flights": 1,
+			"id": 39,
+			"launch_origins": [
+				"(15126.1, 1647.9)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2513
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 3,
+			"flights": 0,
+			"id": 40,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2553
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 4,
+			"flights": 1,
+			"id": 41,
+			"launch_origins": [
+				"(15122.0, 1638.0)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2624
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 4,
+			"flights": 0,
+			"id": 42,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2663
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 5,
+			"flights": 1,
+			"id": 43,
+			"launch_origins": [
+				"(15126.1, 1628.1)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2734
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 5,
+			"flights": 0,
+			"id": 44,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2774
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 6,
+			"flights": 1,
+			"id": 45,
+			"launch_origins": [
+				"(15136.0, 1624.0)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2845
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 6,
+			"flights": 0,
+			"id": 46,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2885
+		},
+		{
+			"elapsed": 0.183333333333333,
+			"facing": 7,
+			"flights": 1,
+			"id": 47,
+			"launch_origins": [
+				"(15145.9, 1628.1)"
+			],
+			"marker_seconds": 0.181169639153878,
+			"tick": 2956
+		},
+		{
+			"elapsed": 0.266666666666667,
+			"facing": 7,
+			"flights": 0,
+			"id": 48,
+			"launch_origins": [],
+			"marker_seconds": 0.2627955205309,
+			"tick": 2995
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 0,
+			"flights": 1,
+			"id": 49,
+			"launch_origins": [
+				"(15150.0, 1638.0)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3076
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 50,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3107
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 1,
+			"flights": 1,
+			"id": 51,
+			"launch_origins": [
+				"(15145.9, 1647.9)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3160
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 1,
+			"flights": 0,
+			"id": 52,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3189
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 2,
+			"flights": 1,
+			"id": 53,
+			"launch_origins": [
+				"(15136.0, 1652.0)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3242
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 2,
+			"flights": 0,
+			"id": 54,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3273
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 3,
+			"flights": 1,
+			"id": 55,
+			"launch_origins": [
+				"(15126.1, 1647.9)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3326
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 3,
+			"flights": 0,
+			"id": 56,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3355
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 4,
+			"flights": 1,
+			"id": 57,
+			"launch_origins": [
+				"(15122.0, 1638.0)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3408
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 4,
+			"flights": 0,
+			"id": 58,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3439
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 5,
+			"flights": 1,
+			"id": 59,
+			"launch_origins": [
+				"(15126.1, 1628.1)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3492
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 5,
+			"flights": 0,
+			"id": 60,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3523
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 6,
+			"flights": 1,
+			"id": 61,
+			"launch_origins": [
+				"(15136.0, 1624.0)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3576
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 6,
+			"flights": 0,
+			"id": 62,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3604
+		},
+		{
+			"elapsed": 0.0833333333333333,
+			"facing": 7,
+			"flights": 1,
+			"id": 63,
+			"launch_origins": [
+				"(15145.9, 1628.1)"
+			],
+			"marker_seconds": 0.0751677852348993,
+			"tick": 3657
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 7,
+			"flights": 0,
+			"id": 64,
+			"launch_origins": [],
+			"marker_seconds": 0.109034589571502,
+			"tick": 3687
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 65,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 5285
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 66,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 5302
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 67,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 5319
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 68,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 5334
+		},
+		{
+			"elapsed": 0.116666666666667,
+			"facing": 0,
+			"flights": 0,
+			"id": 69,
+			"launch_origins": [],
+			"marker_seconds": 0.107477269643099,
+			"tick": 5350
+		}
+	],
+	"scope": "full",
+	"screenshots": [
+		"attack-한손검-base-E.png",
+		"player-한손검-base-E.png",
+		"attack-한손검-base-SE.png",
+		"player-한손검-base-SE.png",
+		"attack-한손검-base-S.png",
+		"player-한손검-base-S.png",
+		"attack-한손검-base-SW.png",
+		"player-한손검-base-SW.png",
+		"attack-한손검-base-W.png",
+		"player-한손검-base-W.png",
+		"attack-한손검-base-NW.png",
+		"player-한손검-base-NW.png",
+		"attack-한손검-base-N.png",
+		"player-한손검-base-N.png",
+		"attack-한손검-base-NE.png",
+		"player-한손검-base-NE.png",
+		"attack-한손검-transform-E.png",
+		"player-한손검-transform-E.png",
+		"attack-한손검-transform-SE.png",
+		"player-한손검-transform-SE.png",
+		"attack-한손검-transform-S.png",
+		"player-한손검-transform-S.png",
+		"attack-한손검-transform-SW.png",
+		"player-한손검-transform-SW.png",
+		"attack-한손검-transform-W.png",
+		"player-한손검-transform-W.png",
+		"attack-한손검-transform-NW.png",
+		"player-한손검-transform-NW.png",
+		"attack-한손검-transform-N.png",
+		"player-한손검-transform-N.png",
+		"attack-한손검-transform-NE.png",
+		"player-한손검-transform-NE.png",
+		"attack-활-base-E.png",
+		"player-활-base-E.png",
+		"attack-활-base-SE.png",
+		"player-활-base-SE.png",
+		"attack-활-base-S.png",
+		"player-활-base-S.png",
+		"attack-활-base-SW.png",
+		"player-활-base-SW.png",
+		"attack-활-base-W.png",
+		"player-활-base-W.png",
+		"attack-활-base-NW.png",
+		"player-활-base-NW.png",
+		"attack-활-base-N.png",
+		"player-활-base-N.png",
+		"attack-활-base-NE.png",
+		"player-활-base-NE.png",
+		"attack-활-transform-E.png",
+		"player-활-transform-E.png",
+		"attack-활-transform-SE.png",
+		"player-활-transform-SE.png",
+		"attack-활-transform-S.png",
+		"player-활-transform-S.png",
+		"attack-활-transform-SW.png",
+		"player-활-transform-SW.png",
+		"attack-활-transform-W.png",
+		"player-활-transform-W.png",
+		"attack-활-transform-NW.png",
+		"player-활-transform-NW.png",
+		"attack-활-transform-N.png",
+		"player-활-transform-N.png",
+		"attack-활-transform-NE.png",
+		"player-활-transform-NE.png",
+		"attack-지팡이-base-E.png",
+		"player-지팡이-base-E.png",
+		"attack-지팡이-base-SE.png",
+		"player-지팡이-base-SE.png",
+		"attack-지팡이-base-S.png",
+		"player-지팡이-base-S.png",
+		"attack-지팡이-base-SW.png",
+		"player-지팡이-base-SW.png",
+		"attack-지팡이-base-W.png",
+		"player-지팡이-base-W.png",
+		"attack-지팡이-base-NW.png",
+		"player-지팡이-base-NW.png",
+		"attack-지팡이-base-N.png",
+		"player-지팡이-base-N.png",
+		"attack-지팡이-base-NE.png",
+		"player-지팡이-base-NE.png",
+		"attack-지팡이-transform-E.png",
+		"player-지팡이-transform-E.png",
+		"attack-지팡이-transform-SE.png",
+		"player-지팡이-transform-SE.png",
+		"attack-지팡이-transform-S.png",
+		"player-지팡이-transform-S.png",
+		"attack-지팡이-transform-SW.png",
+		"player-지팡이-transform-SW.png",
+		"attack-지팡이-transform-W.png",
+		"player-지팡이-transform-W.png",
+		"attack-지팡이-transform-NW.png",
+		"player-지팡이-transform-NW.png",
+		"attack-지팡이-transform-N.png",
+		"player-지팡이-transform-N.png",
+		"attack-지팡이-transform-NE.png",
+		"player-지팡이-transform-NE.png",
+		"monster-E.png",
+		"monster-SE.png",
+		"monster-S.png",
+		"monster-SW.png",
+		"monster-W.png",
+		"monster-NW.png",
+		"monster-N.png",
+		"monster-NE.png",
+		"boss-E.png",
+		"boss-SE.png",
+		"boss-S.png",
+		"boss-SW.png",
+		"boss-W.png",
+		"boss-NW.png",
+		"boss-N.png",
+		"boss-NE.png"
+	],
+	"setup": {
+		"attack_target": "데스나이트",
+		"background_spawn_slots_paused": true,
+		"boss": "그라디움",
+		"clearing": "(15136.0, 1680.0)",
+		"map": "aden_world",
+		"normal": "해골 근위병",
+		"normal_is_existing_population_actor": true,
+		"qa_positioning": true,
+		"scene": "Main.tscn",
+		"stats_overridden": false
+	},
+	"staff_normal": [
+		{
+			"compass": "E",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 4018,
+			"hp_before": 4073,
+			"track": "attack_0",
+			"visible": true
+		},
+		{
+			"compass": "SE",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3936,
+			"hp_before": 3991,
+			"track": "attack_1",
+			"visible": true
+		},
+		{
+			"compass": "S",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3854,
+			"hp_before": 3909,
+			"track": "attack_2",
+			"visible": true
+		},
+		{
+			"compass": "SW",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3772,
+			"hp_before": 3827,
+			"track": "attack_3",
+			"visible": true
+		},
+		{
+			"compass": "W",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3690,
+			"hp_before": 3745,
+			"track": "attack_4",
+			"visible": true
+		},
+		{
+			"compass": "NW",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3608,
+			"hp_before": 3663,
+			"track": "attack_5",
+			"visible": true
+		},
+		{
+			"compass": "N",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3526,
+			"hp_before": 3581,
+			"track": "attack_6",
+			"visible": true
+		},
+		{
+			"compass": "NE",
+			"form": "class:1",
+			"hits": 1,
+			"hp_after": 3444,
+			"hp_before": 3499,
+			"track": "attack_7",
+			"visible": true
+		},
+		{
+			"compass": "E",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 4013,
+			"hp_before": 4073,
+			"track": "attack_0",
+			"visible": true
+		},
+		{
+			"compass": "SE",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3926,
+			"hp_before": 3986,
+			"track": "attack_1",
+			"visible": true
+		},
+		{
+			"compass": "S",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3839,
+			"hp_before": 3899,
+			"track": "attack_2",
+			"visible": true
+		},
+		{
+			"compass": "SW",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3752,
+			"hp_before": 3812,
+			"track": "attack_3",
+			"visible": true
+		},
+		{
+			"compass": "W",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3665,
+			"hp_before": 3725,
+			"track": "attack_4",
+			"visible": true
+		},
+		{
+			"compass": "NW",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3578,
+			"hp_before": 3638,
+			"track": "attack_5",
+			"visible": true
+		},
+		{
+			"compass": "N",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3491,
+			"hp_before": 3551,
+			"track": "attack_6",
+			"visible": true
+		},
+		{
+			"compass": "NE",
+			"form": "transform:137",
+			"hits": 1,
+			"hp_after": 3404,
+			"hp_before": 3464,
+			"track": "attack_7",
+			"visible": true
+		}
+	]
+}

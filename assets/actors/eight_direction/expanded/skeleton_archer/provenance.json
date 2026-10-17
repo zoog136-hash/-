@@ -1,0 +1,273 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		5,
+		6,
+		7,
+		0,
+		1,
+		2,
+		3
+	],
+	"source_directions": [
+		"W",
+		"NW",
+		"N",
+		"NE",
+		"E",
+		"SE",
+		"S",
+		"SW"
+	],
+	"source_roles": {
+		"attack": "shoot",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"ranged_attack": "shoot",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/attack.png",
+					"sha256": "60ef4865b699e9995b6327cdd76e5b6d33ee572fad0dc2b4ee5e39e53c7c70cc",
+					"size": [
+						1024,
+						336
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				336
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "60ef4865b699e9995b6327cdd76e5b6d33ee572fad0dc2b4ee5e39e53c7c70cc",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/cast.png",
+					"sha256": "7c1aaa9c69051c5b7fcd1aeb5b63b46c5bcedafdd194e71ab2823e81706d40a9",
+					"size": [
+						1024,
+						336
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				336
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "7c1aaa9c69051c5b7fcd1aeb5b63b46c5bcedafdd194e71ab2823e81706d40a9",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/death.png",
+					"sha256": "03ab7aa51d0f71af0d0cf37b5eccb6fbc26cf303afbc320c9103c15f3d76a2ea",
+					"size": [
+						1024,
+						408
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				408
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"SE": 6,
+				"S": 6,
+				"SW": 6,
+				"W": 6,
+				"NW": 6,
+				"N": 6,
+				"NE": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "03ab7aa51d0f71af0d0cf37b5eccb6fbc26cf303afbc320c9103c15f3d76a2ea",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/hit.png",
+					"sha256": "a04e71d00d1d0bb59d9b8eadef479b188b88c815180a1708d23d3ab2856fa8d1",
+					"size": [
+						1024,
+						208
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				208
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"SE": 2,
+				"S": 2,
+				"SW": 2,
+				"W": 2,
+				"NW": 2,
+				"N": 2,
+				"NE": 2
+			},
+			"loop_type": "back_forth",
+			"sha256": "a04e71d00d1d0bb59d9b8eadef479b188b88c815180a1708d23d3ab2856fa8d1",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/idle.png",
+					"sha256": "83428ca2bbabb2766a7d2d05bceefc686cae607df48b9ac6a704b67007459628",
+					"size": [
+						1024,
+						308
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				308
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "83428ca2bbabb2766a7d2d05bceefc686cae607df48b9ac6a704b67007459628",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"ranged_attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/ranged_attack.png",
+					"sha256": "60ef4865b699e9995b6327cdd76e5b6d33ee572fad0dc2b4ee5e39e53c7c70cc",
+					"size": [
+						1024,
+						336
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				336
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"SE": 4,
+				"S": 4,
+				"SW": 4,
+				"W": 4,
+				"NW": 4,
+				"N": 4,
+				"NE": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "60ef4865b699e9995b6327cdd76e5b6d33ee572fad0dc2b4ee5e39e53c7c70cc",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_archer/walk.png",
+					"sha256": "7a1db7d09aba46d666a51ab25a0222b33cf6803a4c1921b82c42f789318d7236",
+					"size": [
+						1024,
+						528
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				528
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"SE": 8,
+				"S": 8,
+				"SW": 8,
+				"W": 8,
+				"NW": 8,
+				"N": 8,
+				"NE": 8
+			},
+			"loop_type": "looped",
+			"sha256": "7a1db7d09aba46d666a51ab25a0222b33cf6803a4c1921b82c42f789318d7236",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

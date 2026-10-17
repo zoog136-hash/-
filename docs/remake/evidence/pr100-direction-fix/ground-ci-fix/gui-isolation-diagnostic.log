@@ -1,0 +1,269 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+GROUND_LOOT_PROGRESS: 1 spawn creates an authoritative world record
+GROUND_LOOT_PROGRESS: 2 spawn never grants inventory
+GROUND_LOOT_PROGRESS: 3 minimum visual lifetime prevents instant collection
+GROUND_LOOT_PROGRESS: 4 first click selects ID
+GROUND_LOOT_PROGRESS: 5 selection shows name and grade without grant
+GROUND_LOOT_PROGRESS: 6 pickup button grants nearby item
+GROUND_LOOT_PROGRESS: 7 collection removes sprite and effects synchronously
+GROUND_LOOT_PROGRESS: 8 stale ID cannot grant twice
+GROUND_LOOT_PROGRESS: 9 available equipment grade 일반
+GROUND_LOOT_PROGRESS: 10 grade uses drop catalog 일반
+GROUND_LOOT_PROGRESS: 11 correct beam threshold 일반
+GROUND_LOOT_PROGRESS: 12 uses actual image or fallback 일반
+GROUND_LOOT_PROGRESS: 13 drop is on walkable terrain 일반
+GROUND_LOOT_PROGRESS: 14 available equipment grade 고급
+GROUND_LOOT_PROGRESS: 15 grade uses drop catalog 고급
+GROUND_LOOT_PROGRESS: 16 correct beam threshold 고급
+GROUND_LOOT_PROGRESS: 17 uses actual image or fallback 고급
+GROUND_LOOT_PROGRESS: 18 drop is on walkable terrain 고급
+GROUND_LOOT_PROGRESS: 19 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 20 available equipment grade 희귀
+GROUND_LOOT_PROGRESS: 21 grade uses drop catalog 희귀
+GROUND_LOOT_PROGRESS: 22 correct beam threshold 희귀
+GROUND_LOOT_PROGRESS: 23 uses actual image or fallback 희귀
+GROUND_LOOT_PROGRESS: 24 drop is on walkable terrain 희귀
+GROUND_LOOT_PROGRESS: 25 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 26 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 27 available equipment grade 영웅
+GROUND_LOOT_PROGRESS: 28 grade uses drop catalog 영웅
+GROUND_LOOT_PROGRESS: 29 correct beam threshold 영웅
+GROUND_LOOT_PROGRESS: 30 uses actual image or fallback 영웅
+GROUND_LOOT_PROGRESS: 31 drop is on walkable terrain 영웅
+GROUND_LOOT_PROGRESS: 32 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 33 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 34 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 35 available equipment grade 전설
+GROUND_LOOT_PROGRESS: 36 grade uses drop catalog 전설
+GROUND_LOOT_PROGRESS: 37 correct beam threshold 전설
+GROUND_LOOT_PROGRESS: 38 uses actual image or fallback 전설
+GROUND_LOOT_PROGRESS: 39 drop is on walkable terrain 전설
+GROUND_LOOT_PROGRESS: 40 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 41 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 42 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 43 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 44 available equipment grade 신화
+GROUND_LOOT_PROGRESS: 45 grade uses drop catalog 신화
+GROUND_LOOT_PROGRESS: 46 correct beam threshold 신화
+GROUND_LOOT_PROGRESS: 47 uses actual image or fallback 신화
+GROUND_LOOT_PROGRESS: 48 drop is on walkable terrain 신화
+GROUND_LOOT_PROGRESS: 49 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 50 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 51 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 52 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 53 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 54 available equipment grade 유일
+GROUND_LOOT_PROGRESS: 55 grade uses drop catalog 유일
+GROUND_LOOT_PROGRESS: 56 correct beam threshold 유일
+GROUND_LOOT_PROGRESS: 57 uses actual image or fallback 유일
+GROUND_LOOT_PROGRESS: 58 drop is on walkable terrain 유일
+GROUND_LOOT_PROGRESS: 59 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 60 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 61 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 62 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 63 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 64 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 65 Rare blue
+GROUND_LOOT_PROGRESS: 66 Hero red
+GROUND_LOOT_PROGRESS: 67 Legendary purple
+GROUND_LOOT_PROGRESS: 68 Mythic gold
+GROUND_LOOT_PROGRESS: 69 Unique emerald
+GROUND_LOOT_PROGRESS: 70 reclick starts manual path
+GROUND_LOOT_PROGRESS: 71 distant reclick cannot bypass radius
+GROUND_LOOT_PROGRESS: 72 manual pickup physically walks
+GROUND_LOOT_PROGRESS: 73 quantity granted after real manual walk
+GROUND_LOOT_PROGRESS: 74 manual path finishes cleanly
+GROUND_LOOT_PROGRESS: 75 AUTO starts collection
+GROUND_LOOT_PROGRESS: 76 current kill batch takes precedence
+GROUND_LOOT_PROGRESS: 77 AUTO OFF immediately clears pickup path
+GROUND_LOOT_PROGRESS: 78 AUTO acquires first distant drop
+GROUND_LOOT_PROGRESS: 79 nearest item first without kill batch
+GROUND_LOOT_PROGRESS: 80 AUTO sequentially collects all three
+GROUND_LOOT_PROGRESS: 81 three drops produce exactly three inventory grants
+GROUND_LOOT_PROGRESS: 82 AUTO walks using existing physics
+GROUND_LOOT_PROGRESS: 83 AUTO remains on for combat resumption
+GROUND_LOOT_PROGRESS: 84 scan frequency is bounded during movement
+GROUND_LOOT_PROGRESS: 85 stuck target does not hold AUTO forever
+GROUND_LOOT_PROGRESS: 86 stuck ID receives a retry cooldown
+GROUND_LOOT_PROGRESS: 87 skipping unreachable loot leaves it on the ground
+GROUND_LOOT_PROGRESS: 88 manual move cancels automatic pickup
+GROUND_LOOT_PROGRESS: 89 unknown ID cannot grant inventory
+GROUND_LOOT_PROGRESS: 90 expired selection cancels and hides pickup panel
+GROUND_LOOT_PROGRESS: 91 inaccessible endpoint is skipped
+GROUND_LOOT_PROGRESS: 92 inaccessible ID is throttled
+GROUND_LOOT_PROGRESS: 93 same-distance priority favors higher grade
+GROUND_LOOT_PROGRESS: 94 map change hides old loot while retaining record
+GROUND_LOOT_PROGRESS: 95 snapshot covers two maps
+GROUND_LOOT_PROGRESS: 96 real save file restores two maps without grant
+GROUND_LOOT_PROGRESS: 97 returning to region restores same ID
+GROUND_LOOT_PROGRESS: 98 travel/load do not reset expiry
+GROUND_LOOT_PROGRESS: 99 restored item can be picked up once
+GROUND_LOOT_PROGRESS: 100 collected item does not resurrect after save/load
+GROUND_LOOT_PROGRESS: 101 restore ignores collected and expired entries
+GROUND_LOOT_PROGRESS: 102 duplicate persisted IDs deduplicate
+GROUND_LOOT_PROGRESS: 103 10-minute expiry removes item and effects
+VIEWPORT_BEFORE_SIZE (1280, 720)
+VIEWPORT_AFTER_SIZE (1280, 720)
+VIEWPORT_AFTER_FRAME (1280, 720)
+CAMERA_READY 0.8
+INPUT_BEGIN (1280, 720) 0.8 false
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 104 input selects at viewport (1280, 720) zoom 0.8 touch false
+GROUND_LOOT_PROGRESS: 105 first pointer interaction only selects
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 106 second pointer interaction collects once
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 107 pickup button supports viewport (1280, 720) zoom 0.8 touch false
+INPUT_BEGIN (1280, 720) 0.8 true
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 108 input selects at viewport (1280, 720) zoom 0.8 touch true
+GROUND_LOOT_PROGRESS: 109 first pointer interaction only selects
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 110 second pointer interaction collects once
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 111 pickup button supports viewport (1280, 720) zoom 0.8 touch true
+CAMERA_READY 1.3
+INPUT_BEGIN (1280, 720) 1.3 false
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 112 input selects at viewport (1280, 720) zoom 1.3 touch false
+GROUND_LOOT_PROGRESS: 113 first pointer interaction only selects
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 114 second pointer interaction collects once
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 115 pickup button supports viewport (1280, 720) zoom 1.3 touch false
+INPUT_BEGIN (1280, 720) 1.3 true
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 116 input selects at viewport (1280, 720) zoom 1.3 touch true
+GROUND_LOOT_PROGRESS: 117 first pointer interaction only selects
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 118 second pointer interaction collects once
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 119 pickup button supports viewport (1280, 720) zoom 1.3 touch true
+VIEWPORT_BEFORE_SIZE (960, 540)
+VIEWPORT_AFTER_SIZE (960, 540)
+VIEWPORT_AFTER_FRAME (960, 540)
+CAMERA_READY 0.8
+INPUT_BEGIN (960, 540) 0.8 false
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 120 input selects at viewport (960, 540) zoom 0.8 touch false
+GROUND_LOOT_PROGRESS: 121 first pointer interaction only selects
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 122 second pointer interaction collects once
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 123 pickup button supports viewport (960, 540) zoom 0.8 touch false
+INPUT_BEGIN (960, 540) 0.8 true
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 124 input selects at viewport (960, 540) zoom 0.8 touch true
+GROUND_LOOT_PROGRESS: 125 first pointer interaction only selects
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 126 second pointer interaction collects once
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 127 pickup button supports viewport (960, 540) zoom 0.8 touch true
+CAMERA_READY 1.3
+INPUT_BEGIN (960, 540) 1.3 false
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 128 input selects at viewport (960, 540) zoom 1.3 touch false
+GROUND_LOOT_PROGRESS: 129 first pointer interaction only selects
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 130 second pointer interaction collects once
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 131 pickup button supports viewport (960, 540) zoom 1.3 touch false
+INPUT_BEGIN (960, 540) 1.3 true
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 132 input selects at viewport (960, 540) zoom 1.3 touch true
+GROUND_LOOT_PROGRESS: 133 first pointer interaction only selects
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 134 second pointer interaction collects once
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 135 pickup button supports viewport (960, 540) zoom 1.3 touch true
+VIEWPORT_BEFORE_SIZE (1920, 1080)
+VIEWPORT_AFTER_SIZE (1920, 1080)
+VIEWPORT_AFTER_FRAME (1920, 1080)
+CAMERA_READY 0.8
+INPUT_BEGIN (1920, 1080) 0.8 false
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 136 input selects at viewport (1920, 1080) zoom 0.8 touch false
+GROUND_LOOT_PROGRESS: 137 first pointer interaction only selects
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 138 second pointer interaction collects once
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 139 pickup button supports viewport (1920, 1080) zoom 0.8 touch false
+INPUT_BEGIN (1920, 1080) 0.8 true
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 140 input selects at viewport (1920, 1080) zoom 0.8 touch true
+GROUND_LOOT_PROGRESS: 141 first pointer interaction only selects
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 142 second pointer interaction collects once
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 143 pickup button supports viewport (1920, 1080) zoom 0.8 touch true
+CAMERA_READY 1.3
+INPUT_BEGIN (1920, 1080) 1.3 false
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 144 input selects at viewport (1920, 1080) zoom 1.3 touch false
+GROUND_LOOT_PROGRESS: 145 first pointer interaction only selects
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 146 second pointer interaction collects once
+POINTER_BEFORE false
+POINTER_AFTER false
+GROUND_LOOT_PROGRESS: 147 pickup button supports viewport (1920, 1080) zoom 1.3 touch false
+INPUT_BEGIN (1920, 1080) 1.3 true
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 148 input selects at viewport (1920, 1080) zoom 1.3 touch true
+GROUND_LOOT_PROGRESS: 149 first pointer interaction only selects
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 150 second pointer interaction collects once
+POINTER_BEFORE true
+POINTER_AFTER true
+GROUND_LOOT_PROGRESS: 151 pickup button supports viewport (1920, 1080) zoom 1.3 touch true
+GROUND_LOOT_PROGRESS: 152 boss original-rate rolls spawn no more than 3 equipment plus 1 potion
+GROUND_LOOT_PROGRESS: 153 boss roll deposits only on ground
+GROUND_LOOT_PROGRESS: 154 real ranged AUTO attack kills and creates ground loot
+GROUND_LOOT_PROGRESS: 155 real ranged kill does not grant before pickup
+GROUND_LOOT_PROGRESS: 156 real death respects up to three equipment rolls and a separate potion roll
+GROUND_LOOT_PROGRESS: 157 real death retains experience and adena
+GROUND_LOOT_PROGRESS: 158 real drop remains ungranted before walking HP 물약
+GROUND_LOOT_PROGRESS: 159 real drop creates a visible ID-backed view
+GROUND_LOOT_PROGRESS: 160 real drop remains ungranted before walking 론드의 이도류
+GROUND_LOOT_PROGRESS: 161 real drop creates a visible ID-backed view
+GROUND_LOOT_PROGRESS: 162 real kill loot is collected by walking
+GROUND_LOOT_PROGRESS: 163 all remaining drops precede the next attack
+GROUND_LOOT_PROGRESS: 164 real AUTO batch grants exactly once HP 물약
+GROUND_LOOT_PROGRESS: 165 real AUTO batch grants exactly once 론드의 이도류
+GROUND_LOOT_PROGRESS: 166 AUTO resumes attack against next monster after pickup
+GROUND_LOOT_SYSTEM checks=166
+GROUND_LOOT_SYSTEM_OK: movement, GUI input, effects, IDs, AUTO, save and maps

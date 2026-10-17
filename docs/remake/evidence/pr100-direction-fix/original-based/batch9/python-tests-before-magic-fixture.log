@@ -1,0 +1,13 @@
+....F......
+======================================================================
+FAIL: test_existing_family_aliases_share_only_the_same_rendered_original (__main__.OriginalBasedImportTest.test_existing_family_aliases_share_only_the_same_rendered_original)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/TWILIGHT/tests/original_based_motion_import_test.py", line 32, in test_existing_family_aliases_share_only_the_same_rendered_original
+    self.assertNotEqual(importer.sharing_identity(first), importer.sharing_identity(other))
+AssertionError: ({'path': 'res://assets/external_l1j/monsters/1820.png', 'kind': 'existing_family_portrait', 'family_binding': {'family_id': '파이어 에그', 'source_sprite_id': '1820', 'path': 'res://assets/external_l1j/monsters/1820.png', 'source_npc_ids': ['45555', '46068'], 'source_name': '파이어 에그', 'original_animation': False, 'mapping': 'explicit same-species regional alias'}, 'sha256': '104a6b7454c2ad2a704e4e3a8ec5fc6a6dd5fdec078ae255048d7c7cbec14263', 'image_size': [60, 86]}, {'visual': {'body': 'fire_egg'}, 'animation_profile': {'motion_style': 'magic', 'attack_hit_ratio': 0.52, 'floating': False}, 'attack_type': 'magic', 'visual_height': 86}) == ({'path': 'res://assets/external_l1j/monsters/1820.png', 'kind': 'existing_family_portrait', 'family_binding': {'family_id': '파이어 에그', 'source_sprite_id': '1820', 'path': 'res://assets/external_l1j/monsters/1820.png', 'source_npc_ids': ['45555', '46068'], 'source_name': '파이어 에그', 'original_animation': False, 'mapping': 'explicit same-species regional alias'}, 'sha256': '104a6b7454c2ad2a704e4e3a8ec5fc6a6dd5fdec078ae255048d7c7cbec14263', 'image_size': [60, 86]}, {'visual': {'body': 'fire_egg'}, 'animation_profile': {'motion_style': 'magic', 'attack_hit_ratio': 0.52, 'floating': False}, 'attack_type': 'magic', 'visual_height': 86})
+
+----------------------------------------------------------------------
+Ran 11 tests in 5.242s
+
+FAILED (failures=1)

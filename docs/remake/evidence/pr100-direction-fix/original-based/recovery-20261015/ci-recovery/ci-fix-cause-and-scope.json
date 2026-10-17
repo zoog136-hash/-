@@ -1,0 +1,61 @@
+{
+  "status": "Minimal YAML fix validated; full local reproduction continues; not claiming failed CI passed",
+  "confirmed_failure": {
+    "run_id": 38725467814,
+    "job_id": 116390206661,
+    "head": "dce5048f17712c6c6d7a7ce97414e2f45e6756a4",
+    "exit_code": 124,
+    "old_timeout_seconds": 1200,
+    "assertion_failure_not_established": true,
+    "metadata_evidence": "/workspace/twilight-run/recovery/ci-38725467814-job116390206661-result.json"
+  },
+  "artifact_blocker": {
+    "original_zip_bytes": 2419916993,
+    "connector_limit_bytes": 536870912,
+    "downloaded": false,
+    "source_case_count_from_old_archive": "unavailable; not inferred"
+  },
+  "exact_local_reproduction": {
+    "directory": "/workspace/twilight-run/recovery/ci-transform-regression/run-20261015T122046605395Z",
+    "timeout_seconds": 2700,
+    "same_runner_fixture_profiles": true,
+    "current_progress": {
+      "utc": "2026-10-15T12:30:46.655413+00:00",
+      "elapsed_seconds": 600.05,
+      "completed_case_reports": 5,
+      "last_completed_case": "albino-giant-crab",
+      "current_capture_case": "albino-giant-crab",
+      "captures": 792,
+      "capture_bytes": 1241571557,
+      "log_bytes": 15126,
+      "gameplay_failure_lines": 0,
+      "engine_error_lines": 0,
+      "process_running": true
+    }
+  },
+  "fix": {
+    "only_repository_file": ".github/workflows/animation-presentation-validate.yml",
+    "transform_regression_headless_timeout_seconds": 1200,
+    "transform_regression_OpenGL_timeout_seconds": 2400,
+    "batch21_both_mode_timeout_seconds": 1200,
+    "monster_mode_timeout_seconds": 600,
+    "job_timeout_minutes": 60,
+    "timing_budget": "Observed headless7m34s + maximum OpenGL40m =47m34s; leaves12m26s for pinned-engine setup, ledger/import and artifact uploads within60m. A headless timeout still fails immediately and skips rendering.",
+    "artifacts": "Upload explicit JSON/JSONL/txt/log/case reports and existing preserved generated saves first as -diagnostics; full unchanged render-captures separately as -captures.",
+    "full_scope_preserved": [
+      "All PNG files are still written",
+      "All frame readbacks/pose samples remain",
+      "Every Main assertion and success marker remains",
+      "No game code, QA runner/test, fixture, production image or animation profile changed",
+      "Representative PNG retention is explicitly deferred"
+    ]
+  },
+  "verification": {
+    "yaml_parse": "passed",
+    "targeted_matrix_mode_and_artifact_checks": "passed",
+    "log": "/workspace/twilight-run/recovery/ci-transform-regression/workflow-validation.log",
+    "log_bytes": 237,
+    "log_sha256": "fa1baeda3e0e2e906455289e9563656d69b60f5b33f76793e0cd2d163f8b3a9a"
+  },
+  "git_actions": "No staging, commit or push performed; root owns publishing"
+}

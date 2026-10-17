@@ -1,0 +1,44 @@
+{
+  "status": "verified; implementation and tests only; no production artwork/profile edits or Git staging/commit/push",
+  "tests": {
+    "count": 46,
+    "failures": 0,
+    "duration_seconds": 9.004,
+    "py_compile": "passed",
+    "log": "/workspace/twilight-run/subset-importer/verified-tests.log",
+    "log_bytes": 145,
+    "log_sha256": "ee88304b40a2a14622ad719f474001af499f862ee4068c93e4ca6dbbae7b21f4"
+  },
+  "coverage_integration": {
+    "synthetic_complete_variants": [
+      "mixed ordered direction subsets with columns/rows packing",
+      "eight singleton-direction sheets",
+      "forty role-by-direction sheets with cast alias"
+    ],
+    "mandatory_tracks_per_actor": 40,
+    "actual_distinct_mandatory_poses": 104,
+    "per_direction_actual_frames_equal_distinct_rgba": true,
+    "existing_auditor": "audit_eight_direction_coverage.audit_resource"
+  },
+  "safety": [
+    "Partial/missing/overlapping/unequal-phase/invalid-direction/scale-review/pixel-failure candidates reject before file creation and preserve complete file SHA and mtime snapshots for apply=False and apply=True.",
+    "Legacy omitted and explicit full-eight columns, rows and blocks4x2 preserve geometry, SpriteFrames/provenance bytes and mtimes.",
+    "Reviewed cast aliases retain merged attack sources; every contributing atlas and direction-local source row is recorded.",
+    "Existing immutable output, original SHA and completed native profile protection tests remain passing."
+  ],
+  "initial_test_development_note": "One new rows-packing anchor expectation was corrected from28 to the established legacy32-pixel cell center; importer coordinates were preserved. The complete final suite passes.",
+  "source_files": {
+    "tools/import_original_based_motion.py": {
+      "bytes": 34164,
+      "sha256": "724e3a382991e452bb4c5712578b8c5c3f50f3c96d9a51752d39f015d01f9dcf"
+    },
+    "tests/original_based_motion_import_test.py": {
+      "bytes": 81903,
+      "sha256": "7a53752ce10060247352ae6ef520c47bf71ec1e2e9192ef058c76f10dc97ea23"
+    }
+  },
+  "example": {
+    "analysis": "g = analyze(path, 3, reference_rows=[0, 1], directions_axis=\"rows\", canvas_size=reviewed_canvas, directions=[\"E\"]); require_complete_pose_regions(path, g)",
+    "note": "Horizontal E/three-phase sheet uses rows packing; canvas_size is an explicit reviewed value. For import, each subset spec also needs a nonblank scale_review_note. This partial walk-only candidate must remain unimportable until all five roles cover all eight directions."
+  }
+}
