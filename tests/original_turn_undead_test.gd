@@ -66,7 +66,10 @@ func run() -> void:
 	world._clear_monsters()
 	world.job_class = "마법사"
 	world.level = 90
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300, 4370)))
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0)])
+	check(arena.is_finite(),"turn undead uses actual walkable A3 combat ground")
+	if not arena.is_finite(): quit(1); return
+	world.player.global_position = arena
 	world.equipped_items.clear()
 	world.equipped_catalog.clear()
 	var service := world.original_skills

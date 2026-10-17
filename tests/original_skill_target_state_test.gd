@@ -28,7 +28,10 @@ func run() -> void:
 	world.player.set_physics_process(false)
 	world.player.set_auto_enabled(false)
 	world._clear_monsters()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300, 4370)))
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0)])
+	check(arena.is_finite(),"target state uses actual walkable A3 combat ground")
+	if not arena.is_finite(): quit(1); return
+	world.player.global_position = arena
 	world.level = 90
 	world._on_job_class_selected("암흑기사")
 	var service := world.original_skills

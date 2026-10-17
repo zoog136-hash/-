@@ -38,11 +38,43 @@ func spawn(record: Dictionary) -> bool:
 	actor.tint = owner_service.vfx.color_for(str(skill.id))
 	actor.z_index = 10
 	world.add_child(actor)
-	actor.global_position = world._random_walkable_position(world.player.global_position,30,72)
+	var landing: Vector2 = safe_landing(world.player.global_position,30,72)
+	if not landing.is_finite(): clear(); return false
+	actor.global_position = landing
 	owner_service.apply_buff(skill)
 	world.active_skill_buffs[str(skill.name)]["summon_stage"] = "creature"
 	owner_service.vfx.emit_skill(str(skill.id),"summon",actor.global_position)
 	return true
+
+## This source-grid remake inherits OriginalPlayableField but must NOT use
+## global chunk sampling for close guardian placements. Work from the actual
+## A3 walkable cells, active collision clearance, edges and reachable paths.
+func safe_landing(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
+	if not world.field_map is RemakePlayableField:
+		return world._random_walkable_position(near,min_distance,max_distance)
+	var field: RemakePlayableField = world.field_map as RemakePlayableField
+	if not near.is_finite(): return Vector2.INF
+	var start_angle: float = world.rng.randf() * TAU
+	var indirect: Array[Vector2] = []
+	for heading: int in range(32):
+		for band: int in range(4):
+			var angle: float = start_angle + TAU * float(heading) / 32.0
+			var radius: float = lerpf(min_distance,max_distance,float(band+1)/5.0)
+			var cell: Vector2i = field.nearest_cell(near+Vector2.from_angle(angle)*radius)
+			if not field.in_bounds(cell): continue
+			var point: Vector2 = field.cell_to_world(cell)
+			var actual: float = point.distance_to(near)
+			if actual < min_distance or actual > max_distance: continue
+			if not field.point_clear(point,4.0) or field.is_safe(point): continue
+			if field.line_clear(near,point): return point
+			if indirect.size() < 3 and not indirect.has(point): indirect.append(point)
+	for candidate: Vector2 in indirect:
+		if not field.path(near,candidate).is_empty(): return candidate
+	var owner_cell: Vector2i = field.nearest_cell(near)
+	if field.in_bounds(owner_cell):
+		var last_resort: Vector2 = field.cell_to_world(owner_cell)
+		if field.point_clear(last_resort,4.0): return last_resort
+	return Vector2.INF
 
 func clear() -> void:
 	pending_hit.clear();route.clear()
@@ -119,7 +151,9 @@ func tick(delta: float) -> void:
 	if order == "stay": destination = actor.global_position
 	if enemy != null: destination = enemy.global_position
 	if actor.global_position.distance_to(world.player.global_position) > float(skill.summon_leash):
-		actor.global_position = world._random_walkable_position(world.player.global_position,30,72)
+		var landing: Vector2 = safe_landing(world.player.global_position,30,72)
+		if not landing.is_finite(): clear(); return
+		actor.global_position = landing
 		pending_hit.clear();route.clear()
 		owner_service.vfx.emit_skill(str(skill.id),"summon",actor.global_position)
 	var can_strike: bool = enemy != null and actor.global_position.distance_to(enemy.global_position) <= float(skill.summon_attack_range) and world._has_line_of_sight_world(actor.global_position,enemy.global_position)

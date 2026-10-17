@@ -1,6 +1,7 @@
 extends SceneTree
 
 const VFX = preload("res://scripts/animation/combat_vfx.gd")
+const IMPACT = preload("res://scripts/animation/impact_visuals.gd")
 var failures: int = 0
 func _initialize() -> void: call_deferred("_run")
 func check(ok: bool, detail: String) -> void:
@@ -9,6 +10,13 @@ func check(ok: bool, detail: String) -> void:
 		print("VFX FAIL: " + detail)
 
 func _run() -> void:
+	# Ensure slash geometry is truly valid for all eight directions and phases.
+	# Drawing translates local polygons, preserving precision far across Aden.
+	for heading: int in range(8):
+		for phase: float in [0.0,0.5,1.0]:
+			var poly: PackedVector2Array = IMPACT.crescent_points(Vector2.from_angle(TAU*float(heading)/8.0),32.0,phase)
+			check(poly.size() >= 3 and Geometry2D.triangulate_polygon(poly).size() == (poly.size()-2)*3,
+				"local slash polygon triangulation %d %s" % [heading,str(phase)])
 	var fx: TwilightCombatVFX = VFX.new()
 	root.add_child(fx)
 	await process_frame

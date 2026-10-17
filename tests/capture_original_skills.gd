@@ -1,5 +1,6 @@
 extends SceneTree
 const QA = preload("res://tests/qa_class_selection.gd")
+const ADEN_COMBAT_QA = preload("res://tests/qa_aden_source_combat_positions.gd")
 var capture_dir: String = "res://docs/skills/previews"
 
 func _initialize() -> void:
@@ -31,7 +32,14 @@ func run() -> void:
 	for entry: Dictionary in world.quickslots: entry["auto"] = false
 	world.level = 90
 	world.gold = 10000000
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300,4370)))
+	# Use actual source-grid coordinates. The old fixed pixel (3300,4370)
+	# was outside Aden's 2048x1536 isometric walkable polygon, preventing
+	# the real guardian from finding a valid non-safe source landing cell.
+	var combat_pair: Dictionary = ADEN_COMBAT_QA.find_source_combat_pair(world.field_map as RemakePlayableField, world.rng)
+	if combat_pair.is_empty():
+		push_error("Original skills GL capture requires a real source-walkable summon/combat pair")
+		quit(1); return
+	world.player.global_position = combat_pair["player"]
 	world.player.camera.reset_smoothing()
 	world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
@@ -105,8 +113,9 @@ func run() -> void:
 	world.monsters_root.add_child(dummy)
 	dummy.setup({"name":"가디언 실제 타격 검사","hp":1000000,"lv":1,"ac":0,"mr":0},world.player,world,null)
 	dummy.set_physics_process(false)
-	dummy.global_position = world.player.global_position+Vector2(56,0)
-	summons.actor.global_position = world.player.global_position+Vector2(24,0)
+	dummy.global_position = combat_pair["monster"]
+	# Keep the actual guardian where safe_landing spawned it; do not
+	# teleport it to an unverified coordinate for an artificial capture.
 	summons.command("attack",dummy)
 	var hits := dummy.damage_hit_count
 	var struck := false
