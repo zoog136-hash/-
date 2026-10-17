@@ -68,15 +68,37 @@ func route_clear(point: Vector2, radius: float) -> bool:
 	return true
 
 func find_clearing() -> Vector2:
+	# Prefer a live skeleton for the base game regression. On source-pack
+	# mainland and isolated Windows fixtures its spawn may not be near an
+	# unobstructed arena. Search other real actor/source cells with identical
+	# collision, safe-zone and eight-way LOS requirements.
+	var anchors: Array[Vector2] = []
+	var existing_skeleton: TwilightMonster = null
 	for slot: Dictionary in world.field_population.slots:
-		var actor: Variant = slot.monster
-		if not is_instance_valid(actor) or actor.monster_name != "해골 근위병": continue
-		for radius: float in [0.,80.,160.,240.,320.,400.,560.,720.]:
+		var actor: Variant = slot.get("monster")
+		if not is_instance_valid(actor) or actor.dead or actor.monster_name != "해골 근위병": continue
+		if existing_skeleton == null: existing_skeleton = actor as TwilightMonster
+		if anchors.size() < 20: anchors.append(actor.global_position)
+	normal = existing_skeleton
+	for slot: Dictionary in world.field_population.slots:
+		var actor: Variant = slot.get("monster")
+		if not is_instance_valid(actor) or actor.dead: continue
+		if anchors.size() >= 68: break
+		anchors.append(actor.global_position)
+	anchors.append(world.player.global_position)
+	if world.field_map is RemakePlayableField:
+		var source: RemakePlayableField = world.field_map as RemakePlayableField
+		for region_id: String in ["meadow", "forest", "dragon_valley", "ruins", "western_approach"]:
+			var cells: PackedInt32Array = source.region_cells.get(region_id, PackedInt32Array())
+			if cells.is_empty(): continue
+			for index: int in range(0, cells.size(), maxi(1, int(cells.size() / 16))):
+				var flat: int = cells[index]
+				anchors.append(source.cell_to_world(Vector2i(flat % source.width, int(flat / source.width))))
+	for anchor: Vector2 in anchors:
+		for radius: float in [0., 80., 160., 240., 320., 400., 560., 720., 960., 1280.]:
 			for direction: int in range(8):
-				var point: Vector2 = actor.position + screen_direction(direction) * radius
-				if route_clear(point,150.):
-					normal = actor
-					return point
+				var point: Vector2 = anchor + screen_direction(direction) * radius
+				if route_clear(point, 150.): return point
 	return Vector2.INF
 
 func record_for(name_value: String) -> Dictionary:
@@ -156,7 +178,18 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 		check(sprite.animation == "idle_" + str(direction),prefix + " native idle track after movement")
 		world.player.position = center
 		var attack_distance: float = 140. if bool(spec.magic) else 96. if str(spec.type) == "활" else 40.
-		target.position = center + screen_direction(direction)*attack_distance
+		# 40 screen pixels can cross two native isometric grid cells in only
+		# some facings. Never bypass weapon range or map line of sight.
+		var legal_attack_position: bool = false
+		for distance: float in [attack_distance, attack_distance * .75, attack_distance * .5, attack_distance * .25]:
+			var candidate: Vector2 = center + screen_direction(direction) * distance
+			target.position = candidate
+			var native_range_ok: bool = (world.player.global_position.distance_to(candidate) <= attack_distance + 1.0) if bool(spec.magic) else world._target_in_current_weapon_range(target)
+			if world.field_map.walkable(candidate) and world.field_map.point_clear(candidate) and not world.field_map.is_safe(candidate) and native_range_ok and world._has_line_of_sight_world(world.player.global_position, candidate):
+				legal_attack_position = true
+				break
+		check(legal_attack_position, prefix + " real original-grid weapon reach and line of sight")
+		if not legal_attack_position: continue
 		target.motion.cancel_attack()
 		world._select_monster(target)
 		# Wait for the real cooldown; do not bypass the production cadence.
@@ -315,7 +348,10 @@ func monster_case() -> void:
 			await tick()
 			if normal.motion.state in ["walk","run"]:
 				saw_walk = true
-				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "walk_"+str(direction),"existing skeleton pursuit " + COMPASS[direction])
+				# Real A3 obstacles can steer a chasing actor onto a detour.
+				# The visible walk must follow the actual steered heading;
+				# net approach and attack facing are still checked below.
+				check(normal.motion._resolved_key == "walk_"+str(normal.motion.facing8),"existing skeleton pursuit " + COMPASS[direction])
 			if normal.motion.presenting_attack:
 				saw_attack = true
 				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "attack_"+str(direction),"existing skeleton attack " + COMPASS[direction])

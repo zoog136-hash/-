@@ -75,6 +75,22 @@ static func exercise(qa: SceneTree, expected_kind: String) -> void:
 		var warned: Vector2 = Vector2.ZERO
 		var sequence: int = -1
 		var rig: TwilightMonsterVisual = boss.species_visual
+		if expected_kind != "summon":
+			# A valid real contact can MISS against the player's AC/MR.
+			# Select a reproducible success-capable seed using the actual
+			# combat hit probability. Production roll and damage are untouched.
+			var hit_type: String = "melee" if expected_kind in ["charge", "cone"] else "magic"
+			var chance: float = world._monster_hit_chance(boss, hit_type)
+			qa.check(chance > 0.0, label + " production special hit chance")
+			var probe := RandomNumberGenerator.new()
+			var hit_seed: int = -1
+			for candidate_seed: int in range(1, 4097):
+				probe.seed = candidate_seed
+				if probe.randf() < chance:
+					hit_seed = candidate_seed
+					break
+			qa.check(hit_seed > 0, label + " real special-hit RNG seed exists")
+			if hit_seed > 0: world.rng.seed = hit_seed
 		boss.set_physics_process(true)
 		for _wait: int in range(180):
 			await qa.tick()
