@@ -27,6 +27,19 @@ func run() -> void:
 	world=load("res://Main.tscn").instantiate();root.add_child(world);check(QA.enter_game(world),"real Main")
 	world.save_timer=-100000;world.set_process(false);world.field_population.set_process(false)
 	var field: RemakePlayableField = world.field_map
+	# Verify the exact immutable route files before any cross-platform search.
+	# In particular, Windows core.autocrlf used to turn graph.json's LF into
+	# CRLF and invalidate its SHA-256, silently selecting the bounded fallback.
+	var route_root: String = "res://data/aden_world_visuals/routes/"
+	var route_manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(route_root + "manifest.json"))
+	var route_valid: bool = route_manifest is Dictionary
+	check(route_valid, "route index manifest loads")
+	if route_valid:
+		var meta: Dictionary = route_manifest as Dictionary
+		check(FileAccess.get_sha256(route_root + "graph.json") == str(meta.get("graph_sha256", "")),
+			"route graph exact source bytes on this operating system")
+		check(FileAccess.get_sha256("res://data/map_remake/private/aden/definitions/aden_world.json") == str(meta.get("source_definition_sha256", "")),
+			"immutable Aden source definition exact SHA-256")
 	var start: Vector2 = field.cell_to_world(Vector2i(180,743))
 	for item: Array in [["giran",981,740],["heine",1156,1173],["aden",1514,1190],["oren",1605,220],["elf",603,279],["woodbec",164,1124]]:
 		var target: Vector2 = field.cell_to_world(field.nearest_cell(field.cell_to_world(Vector2i(item[1],item[2]))))
