@@ -41,6 +41,8 @@ const CLASS_SHEETS: Array[String] = [
 	"res://assets/sprites/classes/assassin.png"
 ]
 const CELL_SIZE: Vector2 = Vector2(148, 116)
+# Visual-only width correction for transformed player sprites; no physics or base class changes.
+const TRANSFORM_WIDTH_SCALE: float = 0.90
 
 var touch_vector: Vector2 = Vector2.ZERO
 var click_path: PackedVector2Array = PackedVector2Array()
@@ -265,14 +267,14 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	transform_sprite.sprite_frames = frames
 	transform_sprite.animation = names[0]
 	var scale_value: float = transform_profile.pixel_scale if transform_profile.pixel_scale > 0.0 else 120.0 / maxf(1.0, texture.get_height())
-	transform_sprite.set_meta("base_scale", Vector2.ONE * scale_value)
+	transform_sprite.set_meta("base_scale", Vector2(scale_value * TRANSFORM_WIDTH_SCALE, scale_value))
 	transform_active = true
 	motion.profile = transform_profile
 	class_sprite.stop()
 	class_sprite.visible = false
 	transform_sprite.visible = true
 	# Keep position, current attack sequence, AUTO and all combat stats intact.
-	motion.apply(transform_sprite, Vector2.ONE * scale_value)
+	motion.apply(transform_sprite, transform_sprite.get_meta("base_scale", Vector2.ONE))
 
 # Returns false if no complete local-only 8-direction pack is installed.
 # This changes presentation only; transform, collisions, stats and combat stay authoritative.
