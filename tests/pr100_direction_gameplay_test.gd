@@ -61,6 +61,9 @@ func attack_track(key: String, direction: int) -> bool:
 	return key.ends_with("_"+str(direction)) and (key.begins_with("attack") or key.begins_with("cast") or key.begins_with("ranged_attack") or key.begins_with("special"))
 
 func route_clear(point: Vector2, radius: float) -> bool:
+	# Fail closed if the source pack was unavailable on this platform.
+	# Do not dereference a null field thousands of times on Windows.
+	if world.field_map == null: return false
 	if not world.field_map.walkable(point) or not world.field_map.point_clear(point) or world.field_map.is_safe(point): return false
 	for direction: int in range(8):
 		var spoke: Vector2 = point + screen_direction(direction) * radius
@@ -68,6 +71,15 @@ func route_clear(point: Vector2, radius: float) -> bool:
 	return true
 
 func find_clearing() -> Vector2:
+	if world.field_map == null:
+		var pack_index: String = "res://data/map_remake/private/aden/index.json"
+		var definition_path: String = "res://data/map_remake/private/aden/definitions/aden_world.json"
+		var pack: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(pack_index)) as Dictionary if FileAccess.file_exists(pack_index) else {}
+		var entry: Dictionary = pack.get("maps", {}).get("aden_world", {})
+		check(false, "production Aden field missing; index_exists=" + str(FileAccess.file_exists(pack_index)) +
+			" definition_exists=" + str(FileAccess.file_exists(definition_path)) +
+			" definition_sha_matches=" + str(FileAccess.file_exists(definition_path) and FileAccess.get_sha256(definition_path) == str(entry.get("sha256", ""))))
+		return Vector2.INF
 	# Prefer a live skeleton for the base game regression. On source-pack
 	# mainland and isolated Windows fixtures its spawn may not be near an
 	# unobstructed arena. Search other real actor/source cells with identical
@@ -282,7 +294,19 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 func staff_normal_attack(target: TwilightMonster, spec: Dictionary, transformed: bool, direction: int) -> void:
 	var form: String = "transform:"+str(spec.transform_id) if transformed else "class:"+str(world.player.class_index)
 	var prefix := "staff normal %s %s" % [form,COMPASS[direction]]
-	target.position = center+screen_direction(direction)*40.
+	# The normal melee swing of a staff uses *native weapon grid cells*, not
+	# the 140px magic cast range. The A3 isometric basis makes a fixed 40px
+	# offset two cells away in S/SW/NW/N even though east/west works.
+	# Choose the farthest clear candidate that the real combat rules accept.
+	var valid_reach: bool = false
+	for attack_distance: float in [40.0, 30.0, 20.0, 12.0, 0.0]:
+		var point: Vector2 = center + screen_direction(direction) * attack_distance
+		target.position = point
+		if world.field_map != null and world.field_map.walkable(point) and world.field_map.point_clear(point) and not world.field_map.is_safe(point) and world._target_in_current_weapon_range(target) and world._has_line_of_sight_world(world.player.global_position, point):
+			valid_reach = true
+			break
+	check(valid_reach, prefix + " real source-grid melee reach with terrain and LOS")
+	if not valid_reach: return
 	world._select_monster(target)
 	for _wait: int in range(100):
 		if world.auto_attack_timer <= 0. and not world.player.motion.presenting_attack: break
@@ -365,7 +389,10 @@ func monster_case() -> void:
 			"movement":str(normal.position-before),"facing":normal.motion.facing8,"contacts":monster_strikes.size()-count_before})
 		normal.motion.cancel_attack()
 		await capture("monster-"+COMPASS[direction])
-		await tick(12)
+		# A prior magic projectile can leave the player in a native hit pose
+		# for more than twelve physics ticks. Let it resolve before launching
+		# the next-direction moving-projectile contact, with real clocks only.
+		await tick(36 if normal.attack_type == "magic" else 12)
 
 func boss_case() -> void:
 	var boss := db_actor("그라디움")

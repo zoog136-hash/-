@@ -5,3 +5,8 @@ docs/remake/evidence/pr100-direction-fix/**/*.log -whitespace
 # Archived verification output is data; retain the original log bytes.
 docs/map-remake-20261015/expansion25/**/*.log -whitespace
 docs/map-remake-20261015/expansion25/**/validation-logs/*.txt -whitespace
+
+# Navigation source definition/index are SHA-256-verified as exact bytes.
+# Windows checkout must not rewrite LF/CRLF for these immutable pack records.
+data/map_remake/private/aden/*.json -text
+data/map_remake/private/aden/definitions/*.json -text
