@@ -1,0 +1,518 @@
+{
+  "schema": 1,
+  "policy_UTC": "2026-10-18T15:35:07.022781+00:00",
+  "authorization": "Latest user directive: continue production and validate locally; integrated CI at the end; no main merge.",
+  "baseline_completed_preserved": 392,
+  "new_completed": 8,
+  "completed": 400,
+  "remaining": 98,
+  "final_release_or_merge_approved": false,
+  "decisions": [
+    {
+      "id": "monster:알비노 이구아나",
+      "name": "알비노 이구아나",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T13:19:47.679314+00:00",
+      "scope": "Per-species local completion under latest user production-first directive; final exact-HEAD integration CI and APK remain pending",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "PASS; preserved separate post-authoring resuming-agent review, not a claim of independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 4,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 112,
+        "run": "Not separately defined by this monster contract; no walk speed-up presented as a run"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+      "reviewed_profile_sha256": "95c0c40161a09ab159630feb581cdc382e0881d61106993a8667cedfcbb6a541",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/albino_iguana_monster_authored-independent-review.json",
+          "sha256": "e0b19e57b139759e672717774d8ba0ddf8f04ce2f658cd2aa9228c92876a2c29"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+          "sha256": "bbaca723ca45683de1867a1a5668123e773a911e1be37bfe15171abea6839fdc"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch06/checkpoint.json",
+          "sha256": "3726eaddf91ab8ca607f95dc1d2bfeec849242487f71998426d6e23aa5be4cbd"
+        },
+        {
+          "path": "assets/actors/eight_direction/original_based/albino_iguana_monster_authored/provenance.json",
+          "sha256": "cd7c40e9ea67acb3c568e5364f19f76bcf4ebf6de162bdedc2d9e1118b120c3c"
+        }
+      ],
+      "latest_production_byte_comparison": {
+        "reviewed_Main_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
+        "compared_HEAD": "e840f0ef7ee0b44f3d972a43745ad1fc5aefdae2",
+        "changed_paths_in_assets_data_scripts_scenes_Main_project": [],
+        "checked_source_and_SpriteFrames_files": 49,
+        "all49_SHA_equal": true
+      },
+      "integration_CI": "DEFERRED_TO_FINAL_INTEGRATION",
+      "Android_APK": "FINAL_BUILD_PENDING",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:공포의 아그니",
+      "name": "공포의 아그니",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T13:19:47.679314+00:00",
+      "scope": "Per-species local completion under latest user production-first directive; final exact-HEAD integration CI and APK remain pending",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "PASS; preserved separate post-authoring resuming-agent review, not a claim of independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 104,
+        "run": "Not separately defined by this monster contract; no walk speed-up presented as a run"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+      "reviewed_profile_sha256": "322d68f8b9964cd4a8536d753fee074e58632aa7c343eba72db3ae2f85f32bf3",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/fear_agni_monster_authored_v2-independent-review.json",
+          "sha256": "2f159f1b2764e6e1c57fd92e86882de562620f4b5f0c66b6588df94bb79c1f8c"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+          "sha256": "bbaca723ca45683de1867a1a5668123e773a911e1be37bfe15171abea6839fdc"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch06/checkpoint.json",
+          "sha256": "3726eaddf91ab8ca607f95dc1d2bfeec849242487f71998426d6e23aa5be4cbd"
+        },
+        {
+          "path": "assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/provenance.json",
+          "sha256": "75710bcdcf1a53f2cf738e66ab0b9da352280fbe6e819146dccca5853f68fadd"
+        }
+      ],
+      "latest_production_byte_comparison": {
+        "reviewed_Main_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
+        "compared_HEAD": "e840f0ef7ee0b44f3d972a43745ad1fc5aefdae2",
+        "changed_paths_in_assets_data_scripts_scenes_Main_project": [],
+        "checked_source_and_SpriteFrames_files": 49,
+        "all49_SHA_equal": true
+      },
+      "integration_CI": "DEFERRED_TO_FINAL_INTEGRATION",
+      "Android_APK": "FINAL_BUILD_PENDING",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:바포메트",
+      "name": "바포메트",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T15:35:07.022781+00:00",
+      "scope": "Local completion of the existing project-native idle/walk/attack/hit/death contract; no new source pictures; final integrated CI/APK separate",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming-agent post-source-authoring actual Main walk-frame review; not independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 104,
+        "run": "Not separately defined; no new run claimed"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch15/approved-source-preservation.json",
+      "reviewed_profile_sha256": "18078d4162ffeacf102b452b6de9ac2d68509068ea49cdf483804143d5ac7e5d",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/baphomet-independent-review.json",
+          "sha256": "8a394d1d5c393c6bb19cf953618956eecb0c89e5c58edadb7b96b2fb7de1e430"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/baphomet.json",
+          "sha256": "d9559a27243e07a905f4e7bf06416fe814a2e973a7e04552534fbaf05706274e"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+          "sha256": "9d17a66e91532cb34c583028ff0291719da27dd3ac21a206ad8afa36b8fe99a7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/cadence.json",
+          "sha256": "975cdc77d33c5b293373f99762cc243aa5c1c033591575cbad927f3013673c36"
+        }
+      ],
+      "integration_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:베레스",
+      "name": "베레스",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T15:35:07.022781+00:00",
+      "scope": "Local completion of the existing project-native idle/walk/attack/hit/death contract; no new source pictures; final integrated CI/APK separate",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming-agent post-source-authoring actual Main walk-frame review; not independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 104,
+        "run": "Not separately defined; no new run claimed"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch15/approved-source-preservation.json",
+      "reviewed_profile_sha256": "a3f586d0b10bce3683f1d4135a3264b4ddeb1aa7e565d4f16816f97584c7468a",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/beres-independent-review.json",
+          "sha256": "aba11c03cd2de304f4e9fa00089a71e70b76e3ec2ed5d10b888e0c127b95d61d"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/beres.json",
+          "sha256": "0da2cea3581428d5123dbd205a9a30bf4725a4f76090f728a16e020b958e6b33"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+          "sha256": "9d17a66e91532cb34c583028ff0291719da27dd3ac21a206ad8afa36b8fe99a7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/cadence.json",
+          "sha256": "975cdc77d33c5b293373f99762cc243aa5c1c033591575cbad927f3013673c36"
+        }
+      ],
+      "integration_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:질투의 아타바크",
+      "name": "질투의 아타바크",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T15:35:07.022781+00:00",
+      "scope": "Local completion of the existing project-native idle/walk/attack/hit/death contract; no new source pictures; final integrated CI/APK separate",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming-agent post-source-authoring actual Main walk-frame review; not independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 104,
+        "run": "Not separately defined; no new run claimed"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch15/approved-source-preservation.json",
+      "reviewed_profile_sha256": "c0465d9f735d64a0b1d56c9e40aa2e972f9598eae0f6a7b510e6af4e83917ca4",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/atabark-independent-review.json",
+          "sha256": "9ae12ab0a3511857a1938dbc3243d946cbec6ce8ef17e607cb06e56640c7195b"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/atabark.json",
+          "sha256": "c7fc291167508a3eda4c23758ee4188a58e1b288b08ff6c312c74b321679e809"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+          "sha256": "9d17a66e91532cb34c583028ff0291719da27dd3ac21a206ad8afa36b8fe99a7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/cadence.json",
+          "sha256": "975cdc77d33c5b293373f99762cc243aa5c1c033591575cbad927f3013673c36"
+        }
+      ],
+      "integration_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:알비노 피닉스",
+      "name": "알비노 피닉스",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T15:35:07.022781+00:00",
+      "scope": "Local completion of the existing project-native idle/walk/attack/hit/death contract; no new source pictures; final integrated CI/APK separate",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming-agent post-source-authoring actual Main walk-frame review; not independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 104,
+        "run": "Not separately defined; no new run claimed"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch15/approved-source-preservation.json",
+      "reviewed_profile_sha256": "eedb84a43901eda385ecec3ac74f766f2fcefa73b63938ad90c7a4681fd9e9cb",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/albino-phoenix-independent-review.json",
+          "sha256": "8ca416376d94f8999f8427ff598e391acd2f92a9ca2c1059fad6386ea824a742"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/albino-phoenix.json",
+          "sha256": "4af760ab9ea56e8fe398cb62ec88cd5cac7d4b103d700943823e794623151c76"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+          "sha256": "9d17a66e91532cb34c583028ff0291719da27dd3ac21a206ad8afa36b8fe99a7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/cadence.json",
+          "sha256": "975cdc77d33c5b293373f99762cc243aa5c1c033591575cbad927f3013673c36"
+        }
+      ],
+      "integration_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:에바 왕국 상어전사",
+      "name": "에바 왕국 상어전사",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T15:35:07.022781+00:00",
+      "scope": "Local completion of the existing project-native idle/walk/attack/hit/death contract; no new source pictures; final integrated CI/APK separate",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming-agent post-source-authoring actual Main walk-frame review; not independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 4,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 112,
+        "run": "Not separately defined; no new run claimed"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch15/approved-source-preservation.json",
+      "reviewed_profile_sha256": "0b19f270ad0ebc44517318a860a97926d5e718bfce60472701a5784606245fbb",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/eva-sharkwarrior-independent-review.json",
+          "sha256": "c30336fb8040e94133e972403e450185897805cac4a1362b8c3b5a6232c1be3e"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/eva-sharkwarrior.json",
+          "sha256": "b9a0ed54ce99afd5afcf034e6086bf52896e618841a776b9080abbdb73ce70b6"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+          "sha256": "9d17a66e91532cb34c583028ff0291719da27dd3ac21a206ad8afa36b8fe99a7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch15/cadence.json",
+          "sha256": "975cdc77d33c5b293373f99762cc243aa5c1c033591575cbad927f3013673c36"
+        }
+      ],
+      "integration_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:알비노 변이된 골렘",
+      "name": "알비노 변이된 골렘",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T22:55:15.359798+00:00",
+      "scope": "Local reference-based newly drawn native completion; final integrated CI pending; not recovered SPX and not independent human approval",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Post-authoring raw sheets plus actual Main side/front/back/attack/death reviewed by resuming agent; no independent human claim",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 8,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 144,
+        "run": "No separately defined run; none invented by speed-up"
+      },
+      "newly_drawn_poses": 112,
+      "preserved_prior_poses": 32,
+      "runtime_connected": true,
+      "new_raw_PNG": 16,
+      "total_pack_PNG": 18,
+      "actual_Main_checks": 1883,
+      "with_baseline_gameplay_checks": 3368,
+      "continuous_with_baseline_checks": 81417,
+      "source_reference_SHA256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "visual_notes": "Full-height side/front/back poses retain connected fists/head/legs and ground anchors, original crystal model and palette. Whole-sheet resolution canvases preserve model scale; no clipped strike or direction flip in W/NW preparation. No original movement speed, combat intervals, damage, AI, collision or save data changes.",
+      "final_CI": "PENDING_BATCH",
+      "Android_device": "NOT_RUN",
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch16/golem-source-preservation.json",
+      "reviewed_profile_sha256": "d4915fac2fe555c447c59794b4d84aa7c79cabfbc205a691d56b831d93fab70a",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/golem-source-preservation.json",
+          "sha256": "9341d1a5bce31cb4fc81625c0ea4287c62fa869a86bd7bb34263d50e16eabca7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/golem-candidate.json",
+          "sha256": "5ea921fab29050a1676a884afef579b0b177e163d0ac204f5225289f1c6f624e"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Main-reports/gameplay.json",
+          "sha256": "20038bcbd6699fde39283e5d866e0566f2c68f324efd3769f8b58faceb5781a6"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Main-reports/gameplay-cases/albino-mutated-golem.json",
+          "sha256": "420cb9baa05ceda310cdc3295bfda8eb6d3463c955e8805021e80326681bf4cf"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Temporal-reports/report.json",
+          "sha256": "e5aaab01df9f477625ced72efc7d5697af529a3b535d5137d125704efc0f6470"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Temporal-reports/report-cases/albino-mutated-golem.json",
+          "sha256": "e26f4faeed941a254c22041b7802b4a3cd1ea7668060b137ad79308ad74aa8a0"
+        }
+      ]
+    }
+  ],
+  "session_added": 6,
+  "batch16_added": 1
+}
