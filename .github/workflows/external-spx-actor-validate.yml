@@ -18,7 +18,7 @@ on:
 jobs:
   synthetic-actor:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Create clean synthetic local actors (no third-party art)

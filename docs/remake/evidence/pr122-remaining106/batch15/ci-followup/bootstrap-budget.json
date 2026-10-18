@@ -1,0 +1,79 @@
+{
+  "source_head": "755360cea8428dd71140da80590ca209767e1a7c",
+  "interrupted_head": "690d22b76a0c8da5df9219b3e1a65a0f1dfe09d2",
+  "run_id": 39158472743,
+  "job_id": 117766541203,
+  "conclusion": "cancelled",
+  "reason": "The job has exceeded the maximum execution time of 15m0s",
+  "interrupted_step": "Import all resources",
+  "gameplay_simulations_started": 0,
+  "public_log_utf8_bytes": 22424,
+  "public_log_utf8_sha256": "53cf8d304fce07bf2a3189b34788c0cb697160c31fc82d654e595353987a364c",
+  "policy": "Only full-project import job budgets are increased to 45 minutes. Existing triggers, steps, assertions, per-test timeouts, artifacts and other job budgets are unchanged. No gameplay failure is suppressed.",
+  "changes": [
+    {
+      "path": ".github/workflows/remaining106-animation-validate.yml",
+      "job": "source-family-five",
+      "from_minutes": 35,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/remaining106-animation-validate.yml",
+      "job": "actual-main-pair",
+      "from_minutes": 35,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/pr122-tomb269-actual-main.yml",
+      "job": "actual-main",
+      "from_minutes": 40,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/pr122-locomotion-source-preview.yml",
+      "job": "source-main-preview",
+      "from_minutes": 25,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/pr122-tomb269-probe-parse.yml",
+      "job": "static-godot-script-parse",
+      "from_minutes": 25,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/auto-hunt-reliability.yml",
+      "job": "deterministic-pursuit",
+      "from_minutes": 15,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/external-spx-actor-validate.yml",
+      "job": "synthetic-actor",
+      "from_minutes": 15,
+      "to_minutes": 45
+    },
+    {
+      "path": ".github/workflows/visible-gameplay-validate.yml",
+      "job": "smoke",
+      "from_minutes": 15,
+      "to_minutes": 45
+    }
+  ],
+  "reuse": "Completed game-source checks remain reusable because no game, data, assets, tools or tests have changed since source_head. The authenticated scoped Linux completion and full Windows regression remain required separately.",
+  "game_tree_identity": {
+    "sha256": "4eb0fa3ff9fd323742bee5cd9a2cf40bb070c92b26f017d37151604d4b832f95",
+    "entries": 15025,
+    "excluded": [
+      ".gitattributes",
+      ".github/workflows/",
+      "docs/remake/evidence/pr122-remaining106/batch15/ci-followup/"
+    ],
+    "verified_commits": [
+      "755360cea8428dd71140da80590ca209767e1a7c",
+      "bfdbeda4a98d10529e57a46b42d28d9f25af334d",
+      "f1247a0d3bdfe66fa011ab7d540e34ae782f2fe5",
+      "690d22b76a0c8da5df9219b3e1a65a0f1dfe09d2"
+    ]
+  }
+}
