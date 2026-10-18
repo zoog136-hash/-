@@ -160,6 +160,18 @@ func configure(controller: Node) -> void:
 	if not SPX.available("21624") and not SPX.available("21653"):
 		stack.add_child(UI.section("팩 미설치: twilight_external_spx_actor_pack.zip 의 assets/를 프로젝트에 복사한 후 다시 실행하세요.",12))
 	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("PR122 투사 변신 SPX 비교 · 미승인",18,UI.GOLD))
+	stack.add_child(UI.section("비공개 원본 팩 설치 시에만 사용합니다. 원작 외형·재배포 권한은 미확정이며 기본값은 꺼짐입니다.",12))
+	for transform_id: String in ["142", "411"]:
+		var spx_id: String = "21624" if transform_id == "142" else "21653"
+		var preview_toggle := CheckButton.new()
+		preview_toggle.name = "SPXTransformPreview" + transform_id
+		preview_toggle.text = ("신화-투사(남) · 21624" if transform_id == "142" else "신화-투사(여) · 21653") + " (비공개 비교)"
+		preview_toggle.disabled = not SPX.chain_review_available(spx_id)
+		preview_toggle.button_pressed = not preview_toggle.disabled and bool(config.get_value("visual","spx_transform_preview_" + transform_id,false))
+		preview_toggle.toggled.connect(_spx_transform_preview_changed.bind(transform_id))
+		stack.add_child(preview_toggle)
+	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("게임 데이터",18,UI.GOLD))
 	var actions := HBoxContainer.new()
 	stack.add_child(actions)
@@ -181,6 +193,16 @@ func _spx_actor_changed(index: int) -> void:
 		spx_actor_mode.select(0)
 		return
 	_store("visual","spx_actor",id)
+
+func _spx_transform_preview_changed(enabled: bool, transform_id: String) -> void:
+	_store("visual", "spx_transform_preview_" + transform_id, enabled)
+	var world: Node = hud.get_parent()
+	if world == null or not world.has_method("_apply_transform_visual"): return
+	var equipped: Variant = world.get("equipped_catalog")
+	if not (equipped is Dictionary): return
+	var record: Variant = (equipped as Dictionary).get("변신", {})
+	if record is Dictionary and str((record as Dictionary).get("sourceId", "")) == transform_id:
+		world.call("_apply_transform_visual", record)
 
 func _map_visual_mode_changed(index: int) -> void:
 	var mode: String = "classic" if index == 1 else "twilight"
