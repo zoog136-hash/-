@@ -88,6 +88,50 @@ func _run() -> void:
 		var record: Dictionary = {"sourceId":split[1]} if split[0] == "transform" else {"name":split[1]}
 		var target_profile: TwilightAnimationProfile = CATALOG.for_record(split[0], record)
 		check(target_profile.frames_path == source_path and target_profile.layout == "directional8", "real actor profile uses shared source " + target)
+	# PR122 palette reuses: paths are in-project shared frames; no new PNGs.
+	# Every mapped identity keeps its own catalog/combat data and prior QA state.
+	var color_ledger_path: String = "res://data/pr122_palette_reuse_20261019.json"
+	check(FileAccess.file_exists(color_ledger_path), "PR122 palette reuse ledger")
+	if FileAccess.file_exists(color_ledger_path):
+		var ledger_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(color_ledger_path))
+		check(ledger_value is Dictionary, "PR122 palette reuse JSON")
+		if ledger_value is Dictionary:
+			var ledger: Dictionary = ledger_value as Dictionary
+			var entries: Array = ledger.get("entries", [])
+			check(entries.size() == 41, "PR122 exact palette candidate count")
+			var data_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/combat_animation_profiles.json"))
+			check(data_value is Dictionary, "PR122 source profiles JSON")
+			if data_value is Dictionary:
+				var all_profiles: Dictionary = (data_value as Dictionary).get("profiles", {})
+				for entry_value: Variant in entries:
+					if not (entry_value is Dictionary):
+						check(false, "PR122 entry dictionary")
+						continue
+					var entry: Dictionary = entry_value as Dictionary
+					var target: String = str(entry.get("target", ""))
+					var donor: String = str(entry.get("source", ""))
+					var target_data: Dictionary = all_profiles.get(target, {})
+					var donor_data: Dictionary = all_profiles.get(donor, {})
+					var native_path: String = str(target_data.get("frames_path", ""))
+					check(not target_data.is_empty() and not donor_data.is_empty(), "PR122 pair profiles: " + target)
+					check(native_path == str(donor_data.get("frames_path","")), "PR122 same original source: " + target)
+					check(str(target_data.get("shared_visual_source","")) == donor, "PR122 explicit donor: " + target)
+					check(str(target_data.get("color_tint","")) == str(entry.get("color_tint","")), "PR122 exact tint: " + target)
+					check(bool(entry.get("identity_verified",true)) == false, "PR122 cannot promote proxy identity " + target)
+					if native_path.is_empty() or not ResourceLoader.exists(native_path):
+						check(false, "PR122 resource exists: " + target)
+						continue
+					var frames_shared: SpriteFrames = CATALOG.frames(native_path, "directional8")
+					for direction: int in range(8):
+						for role: String in ["idle","walk","attack","hit","death"]:
+							var anim: String = role + "_" + str(direction)
+							check(frames_shared.has_animation(anim) and frames_shared.get_frame_count(anim) >= 2, "PR122 shared 8-way animation: " + target + ":" + anim)
+					var parts: PackedStringArray = target.split(":", false, 1)
+					check(parts.size() == 2, "PR122 explicit ID " + target)
+					if parts.size() != 2: continue
+					var card: Dictionary = {"sourceId":parts[1]} if parts[0] == "transform" else {"name":parts[1]}
+					var actual_profile: TwilightAnimationProfile = CATALOG.for_record(parts[0], card)
+					check(actual_profile.frames_path == native_path and actual_profile.layout == "directional8", "PR122 source used by runtime lookup: " + target)
 	check(directional_count == 78, "directional coverage changed")
 	check(CATALOG.frame_cache.size() <= CATALOG.MAX_FRAME_CACHE, "unbounded frame cache")
 	actor.clear_transform_visual()
