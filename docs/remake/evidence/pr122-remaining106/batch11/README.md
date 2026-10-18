@@ -3,6 +3,20 @@
 This batch does **not** complete the remaining 106 species. New final approvals:
 **0**. The historical 392 completions and 394 runtime bindings are preserved.
 
+`all498-roster.csv` is the complete human-readable roster;
+`all498-current-evidence-ledger.json` contains source/provenance/SHA and motion
+details for the same498 IDs. Its CI observation names the exact preceding source
+commit, not a later checkpoint commit. Required-CI missing/queued results do not
+become passes. The current-evidence HOLD column does not revoke historical
+approval or authorize re-authoring an approved asset; historical completion is a
+separate retained column. Actual remaining: CI-wait2 + sourceHOLD18 + not-started86
+=106. No worker is represented as actively authoring a blocked candidate.
+
+394 in-scope runtime bindings plus4 base-class bindings outside180+258+60 can
+arithmetically produce398 connections. This is a possible counting explanation,
+not evidence that398 target species passed final approval. The extra required
+transform2 locomotion task also stays recorded outside the498 numerical scope.
+
 Albino Monk was independently authored from its existing project atlas reference
 while Deer, Servant and the earlier HOLD subjects remained separate. Its planned
 contract is idle2/walk6/attack3/hit2/death3 × eight directions = **128** poses.
