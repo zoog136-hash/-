@@ -30,6 +30,7 @@ func _position_visible_pose_review() -> bool:
 			# Conservative visible-body bounds include the long lizard's tail
 			# and all reviewed collapse poses. Inspect actual streamed prop rects.
 			var body := Rect2(actor_point + Vector2(-128, -160), Vector2(256, 176))
+			if not preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body): continue
 			var covered: bool = false
 			# A paused production monster may still render behind the subject.
 			# Magic approach selection can start at that monster's spawn point.

@@ -1,0 +1,100 @@
+name: PR122 restored Tomb269 actual Main
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tests/*tomb269*'
+      - 'tests/qa_rendered_prop_clearance*'
+      - 'tests/original_based_transform_temporal_main_test.gd'
+      - 'tests/run_original_based_transform_batch.gd'
+      - 'tools/*pr122*tomb269*'
+      - 'tools/restore_pr122_batch03.py'
+      - '.github/workflows/pr122-tomb269-actual-main.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  actual-main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        trial: [source01, ground02]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/**
+            /docs/*.md
+            /docs/remake/*.md
+            /docs/remake/*.json
+            /docs/remake/evidence/**/*.json
+            /docs/remake/evidence/**/*.md
+            /docs/remake/evidence/**/*.py
+            /docs/remake/evidence/pr100-direction-fix/original-based/final-handoff-20261015/source-archives/tomb269/**
+            /docs/remake/evidence/pr122-remaining106/batch03/lossless-evidence/**
+            /docs/remake/evidence/pr122-remaining106/batch02/tomb269-local-repair01/**
+      - name: Install pinned Godot and software OpenGL
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 -o /tmp/pr122-godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo 'cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  /tmp/pr122-godot.zip' | sha256sum -c -
+          unzip -q /tmp/pr122-godot.zip -d /tmp
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri zstd
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
+      - name: Verify Git delivery and restore exact HOLD source bytes
+        env:
+          REVIEW_ROOT: ${{ runner.temp }}/pr122-tomb269-${{ matrix.trial }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$REVIEW_ROOT"
+          python3 tools/check_resource_integrity.py --root .
+          python3 tools/audit_pr122_recovery.py --root . --output "$REVIEW_ROOT/392-reconciliation.json"
+          python3 tools/restore_pr122_batch03.py docs/remake/evidence/pr122-remaining106/batch03/lossless-evidence "$REVIEW_ROOT/batch03"
+          BASE=docs/remake/evidence/pr100-direction-fix/original-based/final-handoff-20261015/source-archives/tomb269
+          python3 "$BASE/base/restore.py" "$REVIEW_ROOT/authoring" --proof-output "$REVIEW_ROOT/base-restore.json"
+          python3 "$BASE/final-delta/restore-final-delta.py" "$REVIEW_ROOT/authoring" --proof-output "$REVIEW_ROOT/delta-restore.json"
+          python3 - "$REVIEW_ROOT/project" <<'PY'
+          from pathlib import Path
+          import shutil,sys
+          shutil.copytree(Path.cwd(),sys.argv[1],ignore=shutil.ignore_patterns('.git','.godot','docs','test-results','__pycache__'))
+          PY
+          python3 tools/stage_pr122_tomb269_review.py --project "$REVIEW_ROOT/project" --bundle "$REVIEW_ROOT/batch03" --source-root "$REVIEW_ROOT/authoring" --source-root docs/remake/evidence/pr122-remaining106/batch02/tomb269-local-repair01 --trial '${{ matrix.trial }}' --receipt "$REVIEW_ROOT/stage.json"
+      - name: Import and execute every original native/gameplay check plus SW and baseline
+        env:
+          REVIEW_ROOT: ${{ runner.temp }}/pr122-tomb269-${{ matrix.trial }}
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          export XDG_DATA_HOME="$REVIEW_ROOT/import-user/data"
+          export XDG_CONFIG_HOME="$REVIEW_ROOT/import-user/config"
+          export XDG_CACHE_HOME="$REVIEW_ROOT/import-user/cache"
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+          timeout 900 "$ENGINE" --headless --path "$REVIEW_ROOT/project" --import > "$REVIEW_ROOT/import.log" 2>&1
+          python3 - "$REVIEW_ROOT/import.log" <<'PY'
+          from pathlib import Path
+          import sys
+          sys.path.insert(0,'tools')
+          from test_project_support import classify_result
+          assert classify_result('import',0,Path(sys.argv[1]).read_text()) == (True,False)
+          PY
+          xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_pr122_tomb269_review.py --project "$REVIEW_ROOT/project" --fixture 'res://tests/fixtures/pr122_tomb269_${{ matrix.trial }}.json' --output "$REVIEW_ROOT/actual-Main" --godot "$ENGINE"
+          echo 'Automatic actual Main evidence only; all source approval flags remain false.'
+      - name: Preserve actual PNG/report bytes, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr122-tomb269-${{ matrix.trial }}-${{ github.sha }}
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/pr122-tomb269-${{ matrix.trial }}/*.json
+            ${{ runner.temp }}/pr122-tomb269-${{ matrix.trial }}/*.log
+            ${{ runner.temp }}/pr122-tomb269-${{ matrix.trial }}/actual-Main

@@ -162,6 +162,8 @@ func temporal_capture(actor: TwilightMonster, sample: Dictionary, slug: String, 
 	check(Rect2(crop_rect).encloses(visible_rect), "complete rendered body is inside diagnostic crop " + stem)
 	var body_world: Rect2 = actor.sprite.global_transform * content_rect
 	check(not temporal_player_bounds.intersects(body_world), "QA player cannot occlude actual temporal body " + stem)
+	check(preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body_world),
+		"actual streamed terrain cannot occlude any native temporal body " + stem)
 	var path := directory.path_join(stem + ".png")
 	check(not FileAccess.file_exists(path), "temporal evidence does not overwrite " + stem)
 	if FileAccess.file_exists(path): return {}

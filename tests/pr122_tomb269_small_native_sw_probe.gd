@@ -32,10 +32,29 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 	world.player.cancel_attack()
 	world.player.clear_click_path()
 	world.player.motion.face(screen_direction(PR122_SW_INDEX))
-	native.position = center + screen_direction(PR122_SW_INDEX) * 40.0
+	# The current A3 map uses native isometric cells for weapon range. Keep
+	# the farthest genuinely reachable SW position; never bypass those rules.
+	var legal_distance := -1.0
+	for distance: float in [40.0, 30.0, 20.0, 10.0]:
+		native.position = center + screen_direction(PR122_SW_INDEX) * distance
+		if world.field_map.walkable(native.position) and world.field_map.point_clear(native.position) \
+				and not world.field_map.is_safe(native.position) \
+				and world._target_in_current_weapon_range(native) \
+				and world._has_line_of_sight_world(world.player.global_position, native.position):
+			legal_distance = distance
+			break
+	check(legal_distance > 0.0, "PR122 SW small target is on legal original-grid weapon cells")
+	if legal_distance <= 0.0:
+		native.queue_free()
+		world.player.position = player_prior
+		return
 	native.home_position = native.position
 	native.motion.cancel_attack()
+	# The inherited case has just queue_free'd its Death Knight. Run the
+	# existing production prune callback before appending the next QA target.
+	world._update_target_hud()
 	world._select_monster(native)
+	check(world.selected_monster == native, "PR122 SW production selection binds the live small target")
 	for _wait in range(160):
 		if world.auto_attack_timer <= 0.0 and not world.player.motion.presenting_attack:
 			break
@@ -95,6 +114,7 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 		"opponent": PR122_SMALL_NATIVE_TARGET,
 		"unchanged_original_8_direction_cases": true,
 		"direction": "SW",
+		"legal_original_grid_distance": legal_distance,
 		"real_hit_count": native.damage_hit_count - previous_hit_count,
 		"actual_hp_delta": previous_hp - native.hp,
 		"attack_phase1_captured": saw_attack_one,

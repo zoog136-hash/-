@@ -29,6 +29,7 @@ func monster_case() -> void:
 
 func review_body_clear(point: Vector2) -> bool:
 	var body := Rect2(point + Vector2(-128, -160), Vector2(256, 176))
+	if not preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body): return false
 	for actor: Node in world.monsters_root.get_children():
 		if actor == normal or not actor is Node2D or not (actor as Node2D).is_visible_in_tree(): continue
 		if point.distance_squared_to((actor as Node2D).position) < 192.0 * 192.0: return false

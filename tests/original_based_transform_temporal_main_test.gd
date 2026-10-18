@@ -12,6 +12,7 @@ extends "res://tests/run_original_based_transform_batch.gd"
 
 const TRANSFORM_TEMPORAL_MOTION = preload("res://scripts/animation/actor_motion.gd")
 const SOURCE_FRAME_QA = preload("res://tests/qa_original_source_frame.gd")
+const RENDERED_PROP_QA = preload("res://tests/qa_rendered_prop_clearance.gd")
 const TRANSFORM_TEMPORAL_STEP := 1.0 / 120.0
 const TRANSFORM_TEMPORAL_ROLES := ["idle", "walk", "attack", "hit", "death"]
 var transform_temporal_wall_start: int = 0
@@ -78,6 +79,7 @@ func transform_temporal_position_clear() -> bool:
 			world.player.camera.reset_smoothing()
 			world.player.camera.force_update_scroll()
 			world.field_renderer.refresh_visible()
+			if not RENDERED_PROP_QA.clear_bounds(world.field_renderer, envelope): continue
 			for prop: Node2D in world.field_renderer.faded:
 				if prop is Sprite2D and prop.global_position.y + 16.0 > point.y - 160.0:
 					if (prop.global_transform * (prop as Sprite2D).get_rect()).intersects(envelope):
@@ -93,6 +95,7 @@ func transform_temporal_position_clear() -> bool:
 	return false
 
 func transform_temporal_unoccluded(bounds: Rect2) -> bool:
+	if not RENDERED_PROP_QA.clear_bounds(world.field_renderer, bounds): return false
 	for actor: Node in world.monsters_root.get_children():
 		if not actor is TwilightMonster or not (actor as TwilightMonster).is_visible_in_tree(): continue
 		var monster := actor as TwilightMonster
