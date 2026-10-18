@@ -15,7 +15,7 @@ jobs:
           sparse-checkout: |
             docs
           sparse-checkout-cone-mode: true
-      - name: Split documentation PNG into <=220 MiB original-byte ZIPs
+      - name: Split documentation PNG into <=72 MiB original-byte ZIPs
         shell: bash
         run: |
           python3 - <<'PY'
@@ -26,7 +26,7 @@ jobs:
               raise SystemExit("No docs PNG found")
           dest=Path("archive-output")
           dest.mkdir(exist_ok=True)
-          limit=220*1024*1024
+          limit=72*1024*1024
           parts=[]
           current=[]
           size=0
@@ -40,8 +40,8 @@ jobs:
               size+=n
           if current:
               parts.append(current)
-          if len(parts)>10:
-              raise SystemExit("More than ten archive parts required: "+str(len(parts)))
+          if len(parts)>35:
+              raise SystemExit("More than 35 archive parts required: "+str(len(parts)))
           for i, group in enumerate(parts, 1):
               path=dest/("TWILIGHT_docs_PNG_part_%02d.zip"%i)
               manifest={"part":i,"parts":len(parts),"source":"zoog136-hash/-",
@@ -65,7 +65,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-01
           path: archive-output/TWILIGHT_docs_PNG_part_01.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 02
         uses: actions/upload-artifact@v4
@@ -73,7 +73,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-02
           path: archive-output/TWILIGHT_docs_PNG_part_02.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 03
         uses: actions/upload-artifact@v4
@@ -81,7 +81,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-03
           path: archive-output/TWILIGHT_docs_PNG_part_03.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 04
         uses: actions/upload-artifact@v4
@@ -89,7 +89,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-04
           path: archive-output/TWILIGHT_docs_PNG_part_04.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 05
         uses: actions/upload-artifact@v4
@@ -97,7 +97,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-05
           path: archive-output/TWILIGHT_docs_PNG_part_05.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 06
         uses: actions/upload-artifact@v4
@@ -105,7 +105,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-06
           path: archive-output/TWILIGHT_docs_PNG_part_06.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 07
         uses: actions/upload-artifact@v4
@@ -113,7 +113,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-07
           path: archive-output/TWILIGHT_docs_PNG_part_07.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 08
         uses: actions/upload-artifact@v4
@@ -121,7 +121,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-08
           path: archive-output/TWILIGHT_docs_PNG_part_08.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 09
         uses: actions/upload-artifact@v4
@@ -129,7 +129,7 @@ jobs:
           name: TWILIGHT-docs-PNG-part-09
           path: archive-output/TWILIGHT_docs_PNG_part_09.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
           compression-level: 0
       - name: Upload PNG backup part 10
         uses: actions/upload-artifact@v4
@@ -137,5 +137,205 @@ jobs:
           name: TWILIGHT-docs-PNG-part-10
           path: archive-output/TWILIGHT_docs_PNG_part_10.zip
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 11
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-11
+          path: archive-output/TWILIGHT_docs_PNG_part_11.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 12
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-12
+          path: archive-output/TWILIGHT_docs_PNG_part_12.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 13
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-13
+          path: archive-output/TWILIGHT_docs_PNG_part_13.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 14
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-14
+          path: archive-output/TWILIGHT_docs_PNG_part_14.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 15
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-15
+          path: archive-output/TWILIGHT_docs_PNG_part_15.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 16
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-16
+          path: archive-output/TWILIGHT_docs_PNG_part_16.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 17
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-17
+          path: archive-output/TWILIGHT_docs_PNG_part_17.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 18
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-18
+          path: archive-output/TWILIGHT_docs_PNG_part_18.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 19
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-19
+          path: archive-output/TWILIGHT_docs_PNG_part_19.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 20
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-20
+          path: archive-output/TWILIGHT_docs_PNG_part_20.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 21
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-21
+          path: archive-output/TWILIGHT_docs_PNG_part_21.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 22
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-22
+          path: archive-output/TWILIGHT_docs_PNG_part_22.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 23
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-23
+          path: archive-output/TWILIGHT_docs_PNG_part_23.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 24
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-24
+          path: archive-output/TWILIGHT_docs_PNG_part_24.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 25
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-25
+          path: archive-output/TWILIGHT_docs_PNG_part_25.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 26
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-26
+          path: archive-output/TWILIGHT_docs_PNG_part_26.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 27
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-27
+          path: archive-output/TWILIGHT_docs_PNG_part_27.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 28
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-28
+          path: archive-output/TWILIGHT_docs_PNG_part_28.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 29
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-29
+          path: archive-output/TWILIGHT_docs_PNG_part_29.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 30
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-30
+          path: archive-output/TWILIGHT_docs_PNG_part_30.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 31
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-31
+          path: archive-output/TWILIGHT_docs_PNG_part_31.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 32
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-32
+          path: archive-output/TWILIGHT_docs_PNG_part_32.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 33
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-33
+          path: archive-output/TWILIGHT_docs_PNG_part_33.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 34
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-34
+          path: archive-output/TWILIGHT_docs_PNG_part_34.zip
+          retention-days: 7
+          if-no-files-found: ignore
+          compression-level: 0
+      - name: Upload PNG backup part 35
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-35
+          path: archive-output/TWILIGHT_docs_PNG_part_35.zip
+          retention-days: 7
+          if-no-files-found: ignore
           compression-level: 0
