@@ -6686,7 +6686,8 @@ func _notification(what: int) -> void:
 func constrain_original_motion(actor: CharacterBody2D) -> void:
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
 		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
-		if not field_map.line_clear(actor.global_position,target): actor.velocity = Vector2.ZERO
+		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)
+		if not source_clear: actor.velocity = Vector2.ZERO
 		elif field_map is RemakePlayableField and not field_map.point_clear(target):
 			# A streamed wall lets move_and_slide resolve the real circular foot
 			# and keep its tangent motion. Zeroing first deadlocks glancing paths.

@@ -7,9 +7,28 @@ import unittest
 
 from PIL import Image
 from build_png_review_pack import compile_map
+from png_layers import split_foreground
 
 
 class CompileContract(unittest.TestCase):
+    def test_foreground_owns_each_original_pixel_once(self):
+        image = Image.new('RGBA', (64, 64), (19, 47, 83, 255))
+        image.putpixel((25, 25), (201, 103, 41, 128))
+        cut = dict(id='pillar', polygon_image=[[20, 20], [30, 20], [30, 40], [20, 40]], foot_image=[25, 40])
+        ground, layers = split_foreground(image, [1, 0, 0, 0, 1, 0], [cut])
+        self.assertEqual(len(layers), 1)
+        layer = layers[0]
+        self.assertEqual(layer['foot_world'], [25, 40])
+        composite = ground.copy()
+        overlay = Image.new('RGBA', image.size)
+        overlay.paste(layer['image'], tuple(layer['image_origin']))
+        self.assertEqual(Image.alpha_composite(composite, overlay).tobytes(), image.tobytes())
+        self.assertEqual(ground.convert('RGB').tobytes(), image.convert('RGB').tobytes())
+        self.assertEqual(ground.getpixel((25, 25))[3], 0)
+        self.assertEqual(layer['image'].getpixel((25-layer['image_origin'][0],25-layer['image_origin'][1])), image.getpixel((25, 25)))
+        with self.assertRaisesRegex(ValueError, 'overlap'):
+            split_foreground(image, [1, 0, 0, 0, 1, 0], [cut, dict(cut, id='duplicate_pixels')])
+
     def test_integer_spawn_and_lossless_resume(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

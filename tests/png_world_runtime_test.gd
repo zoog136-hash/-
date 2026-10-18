@@ -71,7 +71,7 @@ func inspect_map(id: String) -> void:
 			for dx: int in range(-18,19):
 				var cell: Vector2i = focus+Vector2i(dx,dy)
 				var p: Vector2 = field.cell_to_world(cell)
-				if field.point_clear(p) and not field.can_step(cell,heading):
+				if field.point_clear(p) and not field.source_can_step(cell,heading):
 					if not start.is_finite() or spawn.distance_squared_to(p) < spawn.distance_squared_to(start):
 						start = p;end = field.cell_to_world(cell+field.DIRECTIONS[heading])
 		check(start.is_finite(),id+" original edge approach "+str(heading))

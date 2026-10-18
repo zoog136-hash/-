@@ -13,11 +13,12 @@ import numpy as np
 from PIL import Image, ImageChops
 
 from aden_png import ROOT, fit, sha, write
+from png_layers import split_foreground
 
 Image.MAX_IMAGE_PIXELS = 180_000_000
 
 
-def compile_map(png, definition, catalog, output, mapping, source_rect, provenance, transparent_padding=False, visual_void_mask=None):
+def compile_map(png, definition, catalog, output, mapping, source_rect, provenance, transparent_padding=False, visual_void_mask=None, review=None):
     if output.resolve().is_relative_to(ROOT):
         raise ValueError('Original PNG derivatives must remain outside the public repository')
     if sha(png) != catalog['png_sha256']:
@@ -30,10 +31,30 @@ def compile_map(png, definition, catalog, output, mapping, source_rect, provenan
             if mask.size != image.size or mask.mode != 'L':
                 raise ValueError('Visual void mask must match the original pixel canvas')
             image.putalpha(ImageChops.multiply(image.getchannel('A'), ImageChops.invert(mask)))
+    review = review or {}
+    image, foreground = split_foreground(image, mapping, review.get('cuts', []))
     output.mkdir(parents=True, exist_ok=True)
     bx, by = definition['coordinate_mapping']['basis_x'], definition['coordinate_mapping']['basis_y']
     translation = definition['coordinate_mapping']['translation']
     matrix = np.asarray(mapping).reshape(2, 3)
+    source_basis = np.column_stack((bx, by))
+    foreground_records = []
+    for cut in foreground:
+        path = output/('foreground-'+cut['id']+'.png')
+        layer = cut.pop('image')
+        if max(layer.size) > 2048:
+            raise ValueError('Foreground exceeds texture limit')
+        if path.exists():
+            with Image.open(path) as previous:
+                if previous.size != layer.size or any(c.getbbox() for c in ImageChops.difference(previous.convert('RGBA'), layer).split()):
+                    raise ValueError('Existing foreground differs; choose a new output')
+        else:
+            layer.save(path)
+        cell = np.linalg.solve(source_basis, np.asarray(cut['foot_world'])-translation)
+        if np.any(cell < 0) or np.any(cell >= definition['dimensions']):
+            raise ValueError('Foreground foot outside source field')
+        foreground_records.append(dict(cut, file=path.name, sha256=sha(path),
+            owner_chunk=[int(v) for v in np.floor(cell/32)]))
 
     def pixel(x, y):
         world = np.array(bx)*x + np.array(by)*y + translation
@@ -64,17 +85,33 @@ def compile_map(png, definition, catalog, output, mapping, source_rect, provenan
             else:
                 crop.save(output/name)
             regions.append(dict(source_rect=[x, y, 32, 32], world_to_image=list(mapping),
-                                image_origin=[int(left), int(top)], file=name, sha256=sha(output/name), cuts=[]))
+                                image_origin=[int(left), int(top)], file=name, sha256=sha(output/name),
+                                cuts=[c for c in foreground_records if c['owner_chunk'] == [x//32, y//32]]))
     value = dict(schema=2, map_id=definition['map_id'], source_map_id=definition['source_map_id'],
                  status='REVIEW_REQUIRED', collision_status='SOURCE_RULES_ACTIVE_PNG_CORRESPONDENCE_REVIEW_REQUIRED',
-                 occlusion_status='COMPOSITE_NOT_YET_SEPARATED', png_sha256=sha(png), png_size=list(image.size),
+                 occlusion_status='MANUAL_CUTS_PARTIAL' if foreground else 'COMPOSITE_NOT_YET_SEPARATED', png_sha256=sha(png), png_size=list(image.size),
                  source_grid_sha256=definition['source_sha256'], coordinate_evidence=provenance,
                  actor_scale_changed=False, navigation_regenerated=False, regions=regions)
     if visual_void_mask:
         value['visual_void_mask_sha256'] = sha(visual_void_mask)
         value['void_mask_scope'] = 'RENDER_ALPHA_ONLY_NOT_COLLISION'
-    value['review_spawn_cell'] = ([981, 740] if definition['map_id'] == 'aden_world' else
-                                 [int(v) for v in np.asarray(definition['spawn_source'])-definition['origin']])
+    value['review_spawn_cell'] = review.get('spawn_cell', ([981, 740] if definition['map_id'] == 'aden_world' else
+                                 [int(v) for v in np.asarray(definition['spawn_source'])-definition['origin']]))
+    value['review_placements'] = review.get('placements', {})
+    inverse = np.linalg.inv(matrix[:, :2])
+    value['manual_footprints'] = []
+    for footprint in review.get('manual_footprints', []):
+        polygon = np.asarray(footprint['polygon_image'], dtype=float)
+        if polygon.ndim != 2 or polygon.shape[1] != 2 or len(polygon)<3 or not np.isfinite(polygon).all():
+            raise ValueError('Invalid explicitly reviewed footprint')
+        world = (polygon-matrix[:, 2]) @ inverse.T
+        value['manual_footprints'].append(dict(footprint, polygon_world=world.tolist(),
+            provenance='MANUALLY_TRACED_GROUND_CONTACT_NOT_IMAGE_CLASSIFICATION', source_grid_unchanged=True))
+    value['ground_sampler'] = review.get('ground_sampler', 'nearest')
+    value['layer_provenance'] = dict(ground='COMPOSITE_MINUS_MANUAL_FOREGROUND',
+        water='STILL_COMPOSITE', foreground='MANUAL_MASKS_NO_INPAINTING', actors='EXISTING_GAME')
+    if len(foreground_records) != sum(len(r['cuts']) for r in regions):
+        raise ValueError('A foreground foot must belong to a compiled source chunk')
     write(output/'manifest.json', value)
     return dict(map_id=definition['map_id'], original_png=png.name, source_grid_sha256=definition['source_sha256'],
                 chunks=len(regions), status=value['status'], coordinate_evidence=provenance)
@@ -87,9 +124,14 @@ def main():
     p.add_argument('--topology', type=Path, help='Existing build_remake.py output; never rebuilt here')
     p.add_argument('--domination', type=Path, help='User-selected original 111.png')
     p.add_argument('--domination-void-mask', type=Path, help='Reviewed visual-only viewer-placeholder mask; never navigation')
+    p.add_argument('--reviews', type=Path, default=ROOT/'data/map_png_review/refinements.json', help='Manual pixel masks and source-cell review placements')
     p.add_argument('--output', type=Path, required=True)
     args = p.parse_args()
     catalog = json.loads((ROOT/'data/maps/png_map_sources.json').read_text())['maps']
+    reviews = json.loads(args.reviews.read_text())['maps'] if args.reviews.exists() else {}
+    for mid, review in reviews.items():
+        if mid not in catalog or review.get('png_sha256') != catalog[mid]['png_sha256'] or review.get('source_map_id') != catalog[mid]['source_map_id']:
+            raise ValueError('Manual review identity mismatch: '+mid)
     reports = []
     if args.aden:
         definition = json.loads((ROOT/'data/map_remake/private/aden/definitions/aden_world.json').read_text())
@@ -98,7 +140,7 @@ def main():
         reports.append(compile_map(args.aden, definition, catalog['aden_world'], args.output/'aden_world',
                        measured['world_to_image'], survey['source_rect'], dict(method='LOCAL_AFFINE_CANDIDATE',
                        control_points=measured['control_points'], max_error_world=measured['max_world'],
-                       rms_png=measured['rms_png'], verified=False)))
+                       rms_png=measured['rms_png'], verified=False), review=reviews.get('aden_world')))
     if args.towers:
         if not args.topology:
             p.error('--towers requires the already verified --topology pack')
@@ -108,7 +150,7 @@ def main():
             reports.append(compile_map(args.towers/f'{100+floor}.png', definition, catalog[mid], args.output/mid,
                            [1, 0, 0, 0, 1, 0], [0, 0, *definition['dimensions']],
                            dict(method='NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE', verified=False,
-                                reason='PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains')))
+                                reason='PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains'), review=reviews.get(mid)))
     if args.domination:
         if not args.topology:
             p.error('--domination requires the existing --topology pack containing map 111')
@@ -116,7 +158,7 @@ def main():
         calibration = json.loads((ROOT/'data/maps/domination_111_calibration.json').read_text())
         reports.append(compile_map(args.domination, definition, catalog['domination_summit'], args.output/'domination_summit',
                        calibration['world_to_image'], [0, 0, 256, 256], calibration['image_registration'],
-                       transparent_padding=True, visual_void_mask=args.domination_void_mask))
+                       transparent_padding=True, visual_void_mask=args.domination_void_mask, review=reviews.get('domination_summit')))
     args.output.mkdir(parents=True, exist_ok=True)
     built = {row['map_id']: row for row in reports}
     for manifest in args.output.glob('*/manifest.json'):

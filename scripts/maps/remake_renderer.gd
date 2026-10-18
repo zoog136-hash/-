@@ -30,6 +30,7 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	if review_root.is_empty(): review_root = "user://map_png"
 	var review: RefCounted = PNG_REVIEW_PACK.new()
 	if review.configure(review_root,source):
+		review.apply_layout(source)
 		png_pack = review
 		png_review_active = true
 		png_review_spawn = review.review_spawn

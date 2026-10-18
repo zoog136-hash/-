@@ -2,20 +2,29 @@ extends RefCounted
 ## Real source PNGs in a local pack. Candidate geometry is available only in an
 ## explicit, non-saving review session, never silently accepted as a restoration.
 const OLD_PACK = preload("res://scripts/maps/aden_png_pack.gd")
+const LAYOUT = preload("res://scripts/maps/png_review_layout.gd")
+const FOOTPRINTS = preload("res://scripts/maps/png_manual_footprints.gd")
 var regions: Array[Dictionary] = []
 var root_path: String = ""
 var textures: Dictionary = {}
 var rejection: String = "NOT_INSTALLED"
 var review_active: bool = false
 var review_spawn: Vector2 = Vector2.INF
+var review_layout: Dictionary = {}
+var ground_sampler: String = "nearest"
+var manual_footprints: RefCounted
 
 func reject(reason: String) -> bool:
 	regions.clear(); textures.clear(); rejection = reason
 	review_active = false; review_spawn = Vector2.INF
+	review_layout.clear()
+	manual_footprints = null
 	return false
 
 func configure(path: String, field: OriginalPlayableField) -> bool:
 	regions.clear();textures.clear();review_active = false;review_spawn = Vector2.INF
+	review_layout.clear()
+	manual_footprints = null
 	root_path = path.path_join(str(field.data.map_id))
 	var manifest: String = root_path.path_join("manifest.json")
 	if not FileAccess.file_exists(manifest): return reject("NOT_INSTALLED")
@@ -33,6 +42,19 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 	var cell := Vector2i(value.review_spawn_cell[0],value.review_spawn_cell[1])
 	review_spawn = field.cell_to_world(cell)
 	if not field.point_clear(review_spawn): return reject("BLOCKED_REVIEW_SPAWN")
+	if not value.get("manual_footprints",[]) is Array: return reject("INVALID_MANUAL_FOOTPRINTS")
+	var footprints: RefCounted = FOOTPRINTS.new()
+	if not footprints.configure(value.get("manual_footprints",[])): return reject("INVALID_MANUAL_FOOTPRINTS")
+	if not footprints.point_clear(review_spawn,4.0): return reject("BLOCKED_REVIEW_SPAWN")
+	ground_sampler = str(value.get("ground_sampler","nearest"))
+	if not ground_sampler in ["nearest","linear"]: return reject("INVALID_SAMPLER")
+	if not value.get("review_placements",{}) is Dictionary: return reject("INVALID_REVIEW_LAYOUT")
+	var prepared: Dictionary = LAYOUT.prepare(field,review_spawn,value.get("review_placements",{}))
+	if prepared.is_empty(): return reject("INVALID_REVIEW_LAYOUT")
+	for category: String in ["npc_spawn","portal"]:
+		for record: Dictionary in prepared[category]:
+			if not footprints.point_clear(Vector2(record.position[0],record.position[1]),4.0): return reject("REVIEW_LAYOUT_IN_MANUAL_FOOTPRINT")
+	var cut_ids: Dictionary = {}
 	for row: Variant in value.regions:
 		if not row is Dictionary or not OLD_PACK.safe_file(row.get("file")) or not OLD_PACK.pair(row.get("image_origin")): return reject("INVALID_REGION")
 		var rect: Variant = row.get("source_rect")
@@ -51,6 +73,14 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 			var image := Image.new()
 			if image.load(file) != OK or image.is_empty() or maxi(image.get_width(),image.get_height()) > 2048: return reject("INVALID_IMAGE")
 			if layer != row and not OLD_PACK.pair(layer.get("foot_world")): return reject("INVALID_CUT_FOOT")
+			if layer != row:
+				if not layer.get("id") is String or cut_ids.has(layer.id): return reject("DUPLICATE_CUT")
+				cut_ids[layer.id] = true
+				var foot := Vector2(layer.foot_world[0],layer.foot_world[1])
+				var owner: Vector2i = field.world_to_cell(foot)
+				if not bounds.has_point(owner): return reject("CUT_OWNER_MISMATCH")
+				if layer.has("foot_image"):
+					if not OLD_PACK.pair(layer.foot_image) or (mapping*foot).distance_to(Vector2(layer.foot_image[0],layer.foot_image[1])) > .05: return reject("CUT_FOOT_PROJECTION")
 			if layer == row:
 				var coverage := Rect2(Vector2(layer.image_origin[0],layer.image_origin[1]),image.get_size())
 				for corner: Vector2i in [bounds.position,Vector2i(bounds.end.x,bounds.position.y),bounds.end,Vector2i(bounds.position.x,bounds.end.y)]:
@@ -62,8 +92,16 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 	for row: Dictionary in regions:
 		spawn_covered = spawn_covered or row.bounds.has_point(cell)
 	if not spawn_covered: return reject("REVIEW_SPAWN_OUTSIDE_PNG")
+	review_layout = prepared
+	manual_footprints = footprints if not footprints.polygons.is_empty() else null
 	review_active = true; rejection = ""
 	return true
+
+func apply_layout(field: RemakePlayableField) -> void:
+	if not review_active: return
+	field.png_review_footprints = manual_footprints
+	LAYOUT.apply(field,review_spawn,review_layout)
+	if manual_footprints != null: field.collision_stream.add_png_review_footprints(manual_footprints)
 
 func region_for(key: Vector2i) -> Dictionary:
 	for row: Dictionary in regions:
