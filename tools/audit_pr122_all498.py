@@ -193,8 +193,12 @@ def build(root, ci_file):
                 'target_runtime_bindings': sum(x['runtime_connected'] for x in rows),
                 'additional_base_class_bindings_outside498': outside_classes,
                 'arithmetic_total': sum(x['runtime_connected'] for x in rows) + len(outside_classes),
-                'interpretation': '394 target bindings + 4 base classes can total398 connections. This is a scope/counting explanation candidate, not evidence of398 approved target species. Base classes are outside180+258+60; count explicit species decisions separately.'},
+                'interpretation': f'{sum(x["runtime_connected"] for x in rows)} target bindings plus {len(outside_classes)} base-class bindings are connections, not approved target species. Historical398 is not adopted as a completion baseline; base classes remain outside180+258+60.'},
             'identities': rows, 'resources': list(files.values()),
+            'audit_context': {'input_snapshot':'current working tree; audited_commit is the parent HEAD when changes are uncommitted',
+                              'production_mutated_flag_scope':'this read-only auditor, not earlier authorized changes in the session',
+                              'worktree_changes':subprocess.check_output(['git','-C',str(root),'status','--porcelain'],text=True).splitlines(),
+                              'report_commit_resolution':'git log -1 --format=%H -- <this report path>'},
             'production_mutated': False, 'prior_approval_assets_replaced': False}
 
 

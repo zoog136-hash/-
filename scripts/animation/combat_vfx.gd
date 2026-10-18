@@ -124,7 +124,7 @@ func play_source_effect(group: String, action: String, point: Vector2, preview: 
 	add_child(effect)
 	effect.global_position = point
 	effect.play_source_audio = true
-	effect.source_marker.connect(func(id: String, frame: int): source_frame_marker.emit(id,frame))
+	effect.raw_source_marker.connect(func(id: String, frame: int): source_frame_marker.emit(id,frame))
 	source_effects.append(effect)
 	effect.play()
 	return true

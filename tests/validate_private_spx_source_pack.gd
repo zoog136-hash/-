@@ -5,6 +5,7 @@ const SOURCE = preload("res://scripts/animation/source_spx_player.gd")
 var checks := 0
 var failures: Array[String] = []
 var markers := 0
+var raw_markers := 0
 var sound_ids: Dictionary = {}
 var tracks := 0
 
@@ -50,13 +51,16 @@ func run() -> void:
 						index += 1
 					check(at == float(action.total_ticks),"all positive ticks retained")
 					var before := markers
+					var raw_before := raw_markers
 					player.source_marker.connect(func(_id: String,_frame: int): markers += 1)
+					player.raw_source_marker.connect(func(_id: String,_frame: int): raw_markers += 1)
 					player.sound_requested.connect(func(sound_id: String): sound_ids[sound_id] = true)
 					player.play_source_audio = section == "effects"
 					player.play()
 					player.advance(at/float(manifest.tick_rate)+1.0)
 					check(not player._running,"finite playback terminates")
 					check(markers-before <= 1,"multiple source marks never multiply attacks")
+					check(raw_markers-raw_before == action.frames.filter(func(record: Dictionary): return record.hit_marker).size(),"all original visual markers retained")
 					player.free()
 	for id: String in ["10827","10828","10829","10830"]:
 		check(sound_ids.has(id),"actual source audio event "+id)
@@ -82,7 +86,7 @@ func run() -> void:
 
 func finish() -> void:
 	var report := {"engine":Engine.get_version_info().string,"checks":checks,"failures":failures,
-		"logical_tracks":tracks,"source_markers":markers,"sound_ids":sound_ids.keys(),
+		"logical_tracks":tracks,"source_markers":markers,"raw_visual_markers":raw_markers,"sound_ids":sound_ids.keys(),
 		"source_body_candidates":2,"effect_group_candidates":36,"CSB_candidates":3,
 		"production_skill_bindings":0,"visual_blend_approval":"HOLD","Main":"NOT_RUN"}
 	var path := OS.get_environment("TWILIGHT_SPX_REPORT")

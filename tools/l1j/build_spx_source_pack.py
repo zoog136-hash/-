@@ -44,7 +44,11 @@ def decoded(path, cache, expected):
     metadata = directory / 'frames.json'
     if metadata.is_file():
         saved = json.loads(metadata.read_text())
+        expected_matches = not expected or (len(saved['frames']) == len(expected['frames']) and all(
+            all(f.get(k) == old.get(k) for k in ['index','empty','xy_offset','size','rgba_sha256','source_types'])
+            for f,old in zip(saved['frames'],expected['frames'])))
         if (saved.get('schema') == CACHE_SCHEMA and saved.get('source_sha256') == digest
+                and expected_matches
                 and all((directory / f['image']).is_file() and sha(directory / f['image']) == f['png_sha256']
                         for f in saved['frames'] if f.get('image'))):
             return saved['frames'], directory, True
@@ -209,6 +213,12 @@ def build(args):
         except (ValueError, OSError, IndexError) as error:
             report['failures'].append({'file': path.name, 'reason': str(error)})
     entries = {}
+    rgba_counts = Counter((tuple(record['size']),record.get('rgba_sha256'))
+                          for sequences in decoded_groups.values() for records,_cache in sequences.values()
+                          for record in records if not record['empty'])
+    report['unique_RGBA_images'] = len(rgba_counts)
+    report['duplicate_RGBA_records'] = sum(count-1 for count in rgba_counts.values())
+    report['duplicate_policy'] = 'Identify duplicates; preserve every source record because offset, type and timing can differ'
     for group in decoded_groups:
         try:
             entries[group] = parse_entry(text, group)

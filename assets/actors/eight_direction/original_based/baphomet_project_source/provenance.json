@@ -2711,5 +2711,52 @@
     "source_actors_changed": false,
     "transform_global_scale_changed": false,
     "stats_speed_collision_AI_hitmarker_changed": false
+  },
+  "prior_candidate_review": {
+    "actual_Main": "NOT_RUN",
+    "independent_target_visual_review": "PENDING"
+  },
+  "current_local_completion": {
+    "status": "APPROVED",
+    "review": "docs/remake/evidence/pr122-remaining106/batch15/baphomet-independent-review.json",
+    "Main_report": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/baphomet.json",
+    "temporal_summary": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+    "current_profile": {
+      "action_hit_frames": {
+        "attack": 1
+      },
+      "attack_hit_frame": 1,
+      "authored_motion_weight": 0,
+      "authoring_reference": "res://assets/monsters/original/atlas_3.png",
+      "color_tint": [
+        0.9975666666666667,
+        0.9842835294117648,
+        0.9996421568627452,
+        1.0
+      ],
+      "death_duration": 0.65,
+      "embedded_shadow": false,
+      "frames_path": "res://assets/actors/eight_direction/original_based/baphomet_project_source/SpriteFrames.tres",
+      "hit_recoil": 0,
+      "layout": "directional8",
+      "movement_cadence_width_ratio": 1.054968287526427,
+      "movement_fps": 7.056936647955092,
+      "name": "바포메트",
+      "native_width_ratio": 1.054968287526427,
+      "pixel_scale": 0.5512821718750001,
+      "prior_visual_profile": {
+        "floating": false,
+        "layout": "still",
+        "motion_style": "slash",
+        "name": "바포메트"
+      },
+      "sprite_offset": [
+        0.0,
+        -17.641029500000002
+      ]
+    },
+    "new_source_frames": 0,
+    "final_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+    "Android_device": "NOT_RUN"
   }
 }

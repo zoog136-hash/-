@@ -3,6 +3,7 @@ extends SceneTree
 const PLAYER = preload("res://scripts/animation/source_spx_player.gd")
 var failures := 0
 var marks := 0
+var raw_marks := 0
 var sounds: Array[String] = []
 
 func check(value: bool, description: String) -> void:
@@ -26,6 +27,7 @@ func run() -> void:
 		{"frame":2,"ticks":1,"hit_marker":true},
 		{"frame":1,"ticks":3,"hit_marker":false,"sound_ids":["10831"]}]}
 	player.source_marker.connect(func(_id: String, _frame: int): marks += 1)
+	player.raw_source_marker.connect(func(_id: String, _frame: int): raw_marks += 1)
 	player.sound_requested.connect(func(id: String): sounds.append(id))
 	var frames := SpriteFrames.new()
 	frames.add_animation("fixture")
@@ -48,6 +50,7 @@ func run() -> void:
 	check(sprite.texture == frames.get_frame_texture("fixture",2),"last frame retains three ticks")
 	player.advance(2.)
 	check(not player._running and marks == 1,"long delta ends without extra marker or damage path")
+	check(raw_marks == 2,"all original visual markers retained separately from single-strike gate")
 	check(sounds == ["10827","10831"],"missing audio is only an optional event")
 	player.speed_scale = 2.0
 	player.play()
@@ -58,6 +61,6 @@ func run() -> void:
 	player.advance(9.)
 	check(marks == 2,"stopped effect has no stale events")
 	player.free()
-	print("SOURCE_SPX_TIMING checks=9 failures=",failures)
+	print("SOURCE_SPX_TIMING checks=10 failures=",failures)
 	if failures == 0: print("SOURCE_SPX_TIMING_OK")
 	quit(1 if failures else 0)

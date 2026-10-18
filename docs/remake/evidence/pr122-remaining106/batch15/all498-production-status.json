@@ -1,13 +1,15 @@
 {
   "target": 498,
   "unique_ids": 498,
-  "legacy_approval_preserved": 394,
+  "session_start_approval_preserved": 394,
+  "session_added": 5,
+  "approvals_total": 399,
   "status_counts": {
     "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 380,
+    "VERIFIED_COMPLETED": 385,
     "FRAME_INSUFFICIENT": 14,
     "SOURCE_HOLD": 19,
-    "IN_PROGRESS": 6
+    "IN_PROGRESS": 1
   },
   "species": [
     {
@@ -1541,9 +1543,9 @@
     {
       "id": "monster:바포메트",
       "name": "바포메트",
-      "approval_preserved": false,
-      "production_status": "IN_PROGRESS",
-      "reason": "Per-target gait cadence must match unchanged actual speed and height/width; current copied movement_fps has not been corrected. Independent visual and transition approval are pending. Failed Main evidence must be repaired without weakening assertions.",
+      "approval_preserved": true,
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Explicit per-species source/Main/independent visual decision, with unchanged pinned source and profile. Final integration CI/APK remain separate.",
       "frames_path": "res://assets/actors/eight_direction/original_based/baphomet_project_source/SpriteFrames.tres"
     },
     {
@@ -1757,9 +1759,9 @@
     {
       "id": "monster:베레스",
       "name": "베레스",
-      "approval_preserved": false,
-      "production_status": "IN_PROGRESS",
-      "reason": "Per-target gait cadence must match unchanged actual speed and height/width; current copied movement_fps has not been corrected. Independent visual and transition approval are pending. Failed Main evidence must be repaired without weakening assertions.",
+      "approval_preserved": true,
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Explicit per-species source/Main/independent visual decision, with unchanged pinned source and profile. Final integration CI/APK remain separate.",
       "frames_path": "res://assets/actors/eight_direction/original_based/beres_project_source/SpriteFrames.tres"
     },
     {
@@ -2005,9 +2007,9 @@
     {
       "id": "monster:에바 왕국 상어전사",
       "name": "에바 왕국 상어전사",
-      "approval_preserved": false,
-      "production_status": "IN_PROGRESS",
-      "reason": "Per-target gait cadence must match unchanged actual speed and height/width; current copied movement_fps has not been corrected. Independent visual and transition approval are pending.",
+      "approval_preserved": true,
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Explicit per-species source/Main/independent visual decision, with unchanged pinned source and profile. Final integration CI/APK remain separate.",
       "frames_path": "res://assets/actors/eight_direction/original_based/eva_sharkwarrior_project_source/SpriteFrames.tres"
     },
     {
@@ -3405,9 +3407,9 @@
     {
       "id": "monster:알비노 피닉스",
       "name": "알비노 피닉스",
-      "approval_preserved": false,
-      "production_status": "IN_PROGRESS",
-      "reason": "Per-target gait cadence must match unchanged actual speed and height/width; current copied movement_fps has not been corrected. Independent visual and transition approval are pending. Failed Main evidence must be repaired without weakening assertions.",
+      "approval_preserved": true,
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Explicit per-species source/Main/independent visual decision, with unchanged pinned source and profile. Final integration CI/APK remain separate.",
       "frames_path": "res://assets/actors/eight_direction/original_based/albino_phoenix_project_source/SpriteFrames.tres"
     },
     {
@@ -3821,9 +3823,9 @@
     {
       "id": "monster:질투의 아타바크",
       "name": "질투의 아타바크",
-      "approval_preserved": false,
-      "production_status": "IN_PROGRESS",
-      "reason": "Per-target gait cadence must match unchanged actual speed and height/width; current copied movement_fps has not been corrected. Independent visual and transition approval are pending.",
+      "approval_preserved": true,
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Explicit per-species source/Main/independent visual decision, with unchanged pinned source and profile. Final integration CI/APK remain separate.",
       "frames_path": "res://assets/actors/eight_direction/original_based/atabark_project_source/SpriteFrames.tres"
     },
     {
@@ -3995,5 +3997,5 @@
       "frames_path": "res://assets/actors/eight_direction/original_based/horn_cerberus/SpriteFrames.tres"
     }
   ],
-  "unrecovered_assets_note": "Previous Reaper PNG2 and QA draft remain UNRECOVERED, not extra missing species. Remote historical archives are preserved; large QA blobs are sparse REMOTE_ONLY."
+  "unrecovered_assets_note": "Previous Reaper PNG2 and QA draft remain UNRECOVERED, not additional lost species. Large QA archives preserved in start commit; all156 tracked PR122 PNG restored/SHA checked."
 }

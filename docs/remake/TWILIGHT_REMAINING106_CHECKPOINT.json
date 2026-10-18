@@ -1,22 +1,22 @@
 {
-  "observed_utc": "2026-10-18T14:15:21.092026+00:00",
+  "observed_utc": "2026-10-18T15:35:07.022781+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
   "base_sha": "746627abcf4498fca22c55948b8b34029265967b",
   "original_saved_commit": "a0ad979eb6325d72f7a36e9a24eaa1b7c439aaed",
   "carried_work_commit": "fe22e0b445980253c140ca654fe10a4e003ffb6c",
-  "user_directive": "Resume PR122 from actual latest safe Git commit in an isolated worktree; preserve existing392, normal Codex work, main and user saves; no reset/delete/force push.",
+  "user_directive": "Complete source-sufficient residuals on PR122; preserve all original approved/WIP data, use verified SPX, batch local validation and final integrated CI; no merge into main.",
   "pr100_merge": "Already merged by repository owner on2026-10-17 before this recovery; this session did not merge PR100 or merge into main.",
   "counts": {
     "target": 498,
-    "completed": 394,
-    "remaining": 104,
+    "completed": 399,
+    "remaining": 99,
     "HOLD": 19,
     "not_authored_or_not_connected": 79,
     "canonical_Main_reports": 255,
     "individual_Main_eight_direction": 121,
-    "completed_added": 2,
+    "completed_added": 7,
     "runtime_connected": 399,
     "locally_passed_pending_CI_APK": 0,
     "canonical_Main_reports_preserved_PR100": 255,
@@ -24,11 +24,12 @@
     "connected_coverage_Main_report_paths": 259,
     "current_source_HOLD_including_new": 19,
     "not_started_after_two_new_source_attempts": 79,
-    "new_approved": 2,
-    "fully_completed": 394,
-    "AUTHORING": 6,
+    "new_approved": 7,
+    "fully_completed": 399,
+    "AUTHORING": 1,
     "NOT_STARTED": 79,
-    "runtime_connected_unapproved": 5
+    "runtime_connected_unapproved": 0,
+    "session_added": 5
   },
   "protected_production_changed": true,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
@@ -136,7 +137,8 @@
       "completed_added": 0,
       "final_visual_quality": "HOLD; sevenotherwalk/eightrun perrepresentative remain BEFORE",
       "Android_real_device": "NOT_RUN"
-    }
+    },
+    "batch15": "Main six unique subjects PASS using explicit Phoenix lane/clearance repair; continuous Main202948 checks/all528 native phases PASS. SPX1700 source SHA and14304 pixel roundtrip;2body/36effect/3CSB private Main PASS. Final CI read from PR HEAD."
   },
   "priority": {
     "iguana": "APPROVED per explicit batch13 decision, unchanged49 source/resource SHA and reviewed profile, source/Main/independent visual PASS; final integration CI/APK pending separately.",
@@ -157,7 +159,7 @@
   "last_successful_pushed_code_commit": "a34e413b4c9d95f2198b4cf914fc70fcead742a0",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch14/save-checkpoint.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -203,7 +205,7 @@
   },
   "last_successful_pushed_code_commit_is_previous_checkpoint": true,
   "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD.",
-  "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch13/individual-approvals.json",
+  "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch15/individual-approvals.json",
   "observed_remote_main_at_save": "fc6cf088e90a273bfde38ce4807fb7b5c2a51afb",
   "remote_main_note": "Remote main advanced since prior56f552c8. This user-requested WIP save preserves current PR branch and does not merge main; reassess upstream changes when resuming production."
 }

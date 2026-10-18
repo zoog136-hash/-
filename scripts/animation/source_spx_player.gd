@@ -4,11 +4,15 @@ class_name TwilightSourceSPXPlayer
 ## One clock for body/shadow/clothing or effect layers. Events are cosmetic;
 ## combat damage remains exclusively owned by TwilightActorMotion.strike.
 signal source_marker(sprite_id: String, source_frame: int)
+signal raw_source_marker(sprite_id: String, source_frame: int)
 signal sound_requested(sound_id: String)
 signal finished
 
 const MANIFEST := "res://data/external_spx/source_motion.json"
 const PREFIX := "res://assets/external_spx/source_motion/"
+const VERIFIED_BLEND_MODES := {"mix":CanvasItemMaterial.BLEND_MODE_MIX,"add":CanvasItemMaterial.BLEND_MODE_ADD,
+	"multiply":CanvasItemMaterial.BLEND_MODE_MUL,"subtract":CanvasItemMaterial.BLEND_MODE_SUB,
+	"premult_alpha":CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA}
 static var _resources: Dictionary = {}
 static var _manifest_cache: Dictionary = {}
 const CACHE_LIMIT_BYTES := 96 * 1024 * 1024
@@ -99,6 +103,7 @@ func configure(sprite_id: String, action_id: String, direction: int = 0, preview
 		var id := str(layer_id)
 		var layer_data: Dictionary = manifest.get("groups",{}).get(id,{})
 		if not preview and not bool(layer_data.get("blend_verified",false)): return false
+		if not preview and not VERIFIED_BLEND_MODES.has(str(layer_data.get("blend",""))): return false
 		var resource := frames_for(id,track_name)
 		if resource == null or not resource.has_animation(track_name): return false
 		if resource.get_frame_count(track_name) == 0: return false
@@ -137,13 +142,10 @@ func configure(sprite_id: String, action_id: String, direction: int = 0, preview
 		sprite.set_meta("source_attributes", manifest.groups[sprite_ids[i]].attributes)
 		var layer_data: Dictionary = manifest.groups[sprite_ids[i]]
 		if bool(layer_data.get("blend_verified",false)):
-			var modes := {"mix":CanvasItemMaterial.BLEND_MODE_MIX,"add":CanvasItemMaterial.BLEND_MODE_ADD,
-				"multiply":CanvasItemMaterial.BLEND_MODE_MUL,"subtract":CanvasItemMaterial.BLEND_MODE_SUB,
-				"premult_alpha":CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA}
 			var mode: String = str(layer_data.get("blend",""))
-			if modes.has(mode):
+			if VERIFIED_BLEND_MODES.has(mode):
 				var material := CanvasItemMaterial.new()
-				material.blend_mode = modes[mode]
+				material.blend_mode = VERIFIED_BLEND_MODES[mode]
 				sprite.material = material
 		sprite.set_meta("source_sprite_id", sprite_ids[i])
 		sprite.set_meta("frames", resources[i])
@@ -201,9 +203,13 @@ func _dispatch_events(tick: float) -> void:
 		if i >= _event_cursor:
 			if at > tick: return
 			_event_cursor = i + 1
-			if record.hit_marker and not _marker_sent:
-				_marker_sent = true
-				source_marker.emit(_group, int(record.frame))
+			if record.hit_marker:
+				# Every original visual marker is available; a separate gated
+				# signal remains at most once per play for single-attack adapters.
+				raw_source_marker.emit(_group,int(record.frame))
+				if not _marker_sent:
+					_marker_sent = true
+					source_marker.emit(_group, int(record.frame))
 			for sound_id: Variant in record.get("sound_ids", []):
 				sound_requested.emit(str(sound_id))
 				if play_source_audio: _play_sound(str(sound_id))
