@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "map_id": "aden_world",
+  "png": {
+    "bytes": 107435138,
+    "size": [
+      15728,
+      7987
+    ],
+    "sha256": "9ce95ca285f9bee72bab355c5015779122dd354fd26e73d9664a355bf9c86be3",
+    "public_redistribution": "NOT_AUTHORIZED"
+  },
+  "source": {
+    "archive_sha256": "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20",
+    "grid_sha256": "c22aa61ed083a3680230c659202503d7afaef30cb41b86d4655e9f843c81a7c4",
+    "canonical_s32": 613,
+    "object_groups": 131138,
+    "nonempty_object_groups": 131104,
+    "selected_member_crc": "PASS",
+    "lossless_s32_roundtrip": "PASS"
+  },
+  "verified_navigation_chunks": 768,
+  "source_definition_sha256": "f681201ec1bb197b1046b2dd8cf3ec48573a1e095192872c2859751f05434050",
+  "source_grid_sha256": "c22aa61ed083a3680230c659202503d7afaef30cb41b86d4655e9f843c81a7c4",
+  "original_png_sha256": "9ce95ca285f9bee72bab355c5015779122dd354fd26e73d9664a355bf9c86be3",
+  "regions": [
+    {
+      "world_to_image": [
+        0.17207855149317858,
+        -0.008686130570616839,
+        914.7862626919713,
+        0.0005599140460513454,
+        0.1566058464216859,
+        -74.4322375826446
+      ],
+      "control_points": [
+        {
+          "id": "west_bed",
+          "source": [
+            33421.71052631579,
+            32804.71052631579
+          ],
+          "image": [
+            7808.667,
+            3360
+          ],
+          "status": "CANDIDATE",
+          "uncertainty_png": 3,
+          "world": [
+            41146.10526315775,
+            21780.0
+          ],
+          "residual_png": 2.751781154355851,
+          "residual_world": 16.199512953878767
+        },
+        {
+          "id": "northwest_bed",
+          "source": [
+            33437,
+            32802.5
+          ],
+          "image": [
+            7859.667,
+            3326.667
+          ],
+          "status": "CANDIDATE",
+          "uncertainty_png": 3,
+          "world": [
+            41460.0,
+            21570.0
+          ],
+          "residual_png": 2.1386484093555764,
+          "residual_world": 12.4599225819862
+        },
+        {
+          "id": "northeast_bed",
+          "source": [
+            33441.5,
+            32807
+          ],
+          "image": [
+            7899.333,
+            3326.667
+          ],
+          "status": "CANDIDATE",
+          "uncertainty_png": 3,
+          "world": [
+            41676.0,
+            21570.0
+          ],
+          "residual_png": 0.4246514657682976,
+          "residual_world": 2.4824742358554883
+        },
+        {
+          "id": "southwest_bed",
+          "source": [
+            33419.375,
+            32821.125
+          ],
+          "image": [
+            7858,
+            3393.667
+          ],
+          "status": "CANDIDATE",
+          "uncertainty_png": 3,
+          "world": [
+            41484.0,
+            22005.0
+          ],
+          "residual_png": 4.335658575422637,
+          "residual_world": 25.757582035802766
+        },
+        {
+          "id": "southeast_bed",
+          "source": [
+            33424,
+            32824.5
+          ],
+          "image": [
+            7898,
+            3393.667
+          ],
+          "status": "CANDIDATE",
+          "uncertainty_png": 3,
+          "world": [
+            41676.0,
+            21990.0
+          ],
+          "residual_png": 2.8573708793745176,
+          "residual_world": 17.09054233396149
+        },
+        {
+          "id": "east_bed",
+          "source": [
+            33439.28378378378,
+            32822.28378378378
+          ],
+          "image": [
+            7951.667,
+            3360
+          ],
+          "status": "CANDIDATE",
+          "uncertainty_png": 3,
+          "world": [
+            41989.62162162142,
+            21780.0
+          ],
+          "residual_png": 0.5533371798580077,
+          "residual_world": 3.231200832788305
+        }
+      ],
+      "rms_png": 2.5688885750856305,
+      "max_world": 25.757582035802766,
+      "singular_values": [
+        0.173145630850468,
+        0.15566878910965234
+      ],
+      "id": "giran_plaza",
+      "status": "REVIEW_REQUIRED",
+      "source_rect": [
+        928,
+        672,
+        128,
+        192
+      ],
+      "collision_status": "NOT_VERIFIED",
+      "occlusion_status": "NOT_VERIFIED",
+      "threshold_world": 4.0,
+      "numerical_fit": "FAIL"
+    }
+  ],
+  "global_transform_status": "NOT_ESTABLISHED_LOCAL_SURVEY_MUST_NOT_BE_EXTRAPOLATED",
+  "navigation_regenerated": false,
+  "actor_scale_changed": false,
+  "runtime_eligible_regions": 0,
+  "original_layers": "SINGLE_COMPOSITE"
+}

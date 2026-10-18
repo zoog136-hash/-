@@ -1,0 +1,194 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "display": "X11",
+  "renderer": "OpenGL llvmpipe",
+  "test_scope": "TARGETED_NOT_FULL_PROJECT_SUITE",
+  "results": {
+    "PNG_RUNTIME": {
+      "checks": 518,
+      "failures": [],
+      "result_file": "PNG_RUNTIME.json"
+    },
+    "REFINEMENT_RUNTIME": {
+      "checks": 281,
+      "failures": [],
+      "result_file": "REFINEMENT_RUNTIME.json"
+    },
+    "OVERLAY_RUNTIME": {
+      "checks": 101,
+      "failures": [],
+      "result_file": "OVERLAY_RUNTIME.json"
+    },
+    "OMAN_GAMEPLAY_REGRESSION": {
+      "checks": 5953,
+      "failures": [],
+      "result_file": "OMAN_GAMEPLAY_REGRESSION.json"
+    },
+    "ADEN_SOURCE_REGRESSION": {
+      "checks": 1695,
+      "failures": [],
+      "result_file": "ADEN_SOURCE_REGRESSION.json"
+    }
+  },
+  "public_regressions": {
+    "total": 20,
+    "passed": 18,
+    "failed": [],
+    "skipped": [
+      "png_refinement_runtime_test",
+      "png_world_runtime_test"
+    ],
+    "not_run": [],
+    "checks": [
+      "boot",
+      "actor_motion_test",
+      "aden_png_pack_test",
+      "aden_source_routes_test",
+      "aden_world_systems_test",
+      "animation_restore_test",
+      "combat_resolution_equivalence_test",
+      "ground_loot_system_test",
+      "hunting_paths_test",
+      "l1j_source_navigation_test",
+      "monster_motion_test",
+      "npc_teleport_test",
+      "png_refinement_runtime_test",
+      "png_world_runtime_test",
+      "remake_coordinates_and_state_test",
+      "remake_map_population_test",
+      "remake_world_lifecycle_test",
+      "road_surface_mesh_test",
+      "stage5_save_compatibility_test",
+      "ui_navigation_preservation_test"
+    ],
+    "validation_scopes": {
+      "boot": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "actor_motion_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "aden_png_pack_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "aden_source_routes_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "aden_world_systems_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "animation_restore_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "combat_resolution_equivalence_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "ground_loot_system_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "hunting_paths_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "l1j_source_navigation_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "monster_motion_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "npc_teleport_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "png_refinement_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "png_world_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "remake_coordinates_and_state_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "remake_map_population_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "remake_world_lifecycle_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "road_surface_mesh_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "stage5_save_compatibility_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "ui_navigation_preservation_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+    },
+    "selection": "boot,actor_motion_test,aden_png_pack_test,png_refinement_runtime_test,png_world_runtime_test,remake_coordinates_and_state_test,remake_map_population_test,l1j_source_navigation_test,remake_world_lifecycle_test,aden_world_systems_test,aden_source_routes_test,road_surface_mesh_test,stage5_save_compatibility_test,monster_motion_test,hunting_paths_test,ground_loot_system_test,ui_navigation_preservation_test,animation_restore_test,npc_teleport_test,combat_resolution_equivalence_test"
+  },
+  "python_numerical_tests": 3,
+  "python_mask_and_compile_tests": 2,
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "PASS"
+  },
+  "aden_delivery": {
+    "files": 1994,
+    "status": "PASS",
+    "original_third_party_art_integrated": false
+  },
+  "code_manifest_sha256": "f2da24f19e03c662e39d0059361ac670ac2be8557f64a21f897e0cab6553ac5a",
+  "logs": {
+    "png-refine-objects-final.log": {
+      "bytes": 1381,
+      "sha256": "ec4d7954e6fc6ee478dbecad6c03d576b5b5f075b9bbe19868d280ae2cebedc7"
+    },
+    "png-refine-source-regression.log": {
+      "bytes": 19524,
+      "sha256": "852cd719363f789830267cdd9d065fc865ddc2d5ac0a7e49740e7a12b363c0a7"
+    },
+    "png-refine-objects-v2.log": {
+      "bytes": 1525,
+      "sha256": "c2f6e6f125406e30de6b6050ded499bd34258f13db0c403ad75a46b57fcb759c"
+    },
+    "png-refine-contracts.log": {
+      "bytes": 167,
+      "sha256": "254d5c1be029334a03967ae58e532dbc33a032a97c96fe488c3825f1254f0306"
+    },
+    "png-refine-build-final.log": {
+      "bytes": 113,
+      "sha256": "804a28ad06faff4bdb08457da7ff82840f86e4849a5a5888511dd7ea43229881"
+    },
+    "png-refine-aden-physics.log": {
+      "bytes": 64238,
+      "sha256": "20484dd1e8a4ab4a73251382e3783e5eb50b940b36f123efc4098a8572303077"
+    },
+    "png-refine-dom-v2.log": {
+      "bytes": 1173,
+      "sha256": "11d6123e331829c1d0c6a7d7ee1a9b361f59d5ceb3d75c50de77448c00a02a01"
+    },
+    "png-refine-all.log": {
+      "bytes": 7915,
+      "sha256": "4204296fcebf3ce11d226bb2cd9c527e032a1186fab29986f31689e9cf8c895f"
+    },
+    "png-refine-import.log": {
+      "bytes": 1490,
+      "sha256": "dfe7fadf78002af455a5acf14543305bfc349234eca3560251d5f3eafa4873a2"
+    },
+    "png-refine-first-runtime.log": {
+      "bytes": 1366,
+      "sha256": "c925996a69fde1bd649d77b1132508eed812a4f9ba06c1a340a4d1a3b965bafe"
+    },
+    "png-refine-objects-video.log": {
+      "bytes": 1861,
+      "sha256": "8f02f0e21fa3498d7bc08b5a6bc6fea6350700cb6b11011f520bc66583c27883"
+    },
+    "png-refine-build.log": {
+      "bytes": 107,
+      "sha256": "cbd70d541459f95f38ecb97c6161d9f8ce67a539be2ab25d39782d2e83303f6b"
+    },
+    "png-refine-overlay.log": {
+      "bytes": 2416,
+      "sha256": "74d265194a0e7df8751be128e465db5e69d99e9491361c08caf6f9beff8c0e5e"
+    },
+    "png-refine-overlay-detail.log": {
+      "bytes": 368,
+      "sha256": "052211730d2e6bad1bb27d0ba1621ed54bb0ef792b898c4c8600ed8b3be20a67"
+    },
+    "png-refine-torch-v4.log": {
+      "bytes": 757,
+      "sha256": "765fbe53b5fa62641121d8f72ec85f45517bfbaba4fc855321bd9ed605a74655"
+    },
+    "png-refine-pack-check.log": {
+      "bytes": 143,
+      "sha256": "40bc986768f3edcac8c229063389db1316bae07b2b74b7be5adea6b0fddc1f66"
+    },
+    "png-refine-final-import.log": {
+      "bytes": 2626,
+      "sha256": "ebde8ec442b13544b5918cd758610bbd496f539768933c45d203fac71b42a5e8"
+    },
+    "png-refine-regressions.log": {
+      "bytes": 624,
+      "sha256": "1665975a23c93c0f73ed094d82e9b6da4a01308f889f1938c20563ad568ec87e"
+    }
+  },
+  "known_main_failures": "See ../aden-png-integration-20261018/BASELINE_REGRESSIONS.json; no full-suite claim",
+  "initial_new_failures_retained": [
+    "INITIAL_RUNTIME.json",
+    "OCCLUSION_RETEST_BEFORE_PROBE_FIX.json"
+  ],
+  "ci": "PENDING_NEW_COMMIT",
+  "android_build": "NOT_RUN",
+  "android_device": "NOT_RUN",
+  "global_png_registration": "REVIEW_REQUIRED",
+  "durable_resource_delivery": false,
+  "project_import": {
+    "status": "PASS",
+    "errors": [],
+    "log_sha256": "401b37fc5223bf108aa68163de7feae8073a148bdf29dd418816660bfac8a66b",
+    "first_attempt_environment_issue": "XDG config/cache defaults were outside writable roots; rerun with explicit /workspace paths passed"
+  },
+  "tested_code_commit": "0a6b329e25af4bb7c15f4fdbe319152292ca6454",
+  "private_archive_receipt": "LOCAL_ARCHIVE_RECEIPT.json"
+}

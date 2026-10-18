@@ -1,0 +1,26 @@
+{
+  "total": 7,
+  "passed": 7,
+  "failed": [],
+  "skipped": [],
+  "not_run": [],
+  "checks": [
+    "authored_state_motion_test",
+    "consumable_auto_safety_test",
+    "ground_loot_system_test",
+    "hunting_paths_test",
+    "l1j_source_navigation_test",
+    "monster_motion_test",
+    "ui_navigation_preservation_test"
+  ],
+  "validation_scopes": {
+    "authored_state_motion_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "consumable_auto_safety_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "ground_loot_system_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "hunting_paths_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "l1j_source_navigation_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "monster_motion_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "ui_navigation_preservation_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "ground_loot_system_test,hunting_paths_test,monster_motion_test,authored_state_motion_test,consumable_auto_safety_test,ui_navigation_preservation_test,l1j_source_navigation_test"
+}

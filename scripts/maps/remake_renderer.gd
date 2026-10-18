@@ -6,6 +6,13 @@ const CHUNK_SIZE: int = 32
 const MAX_CHUNKS: int = 49
 const GIRAN_REVIEW = preload("res://scripts/maps/aden_giran_review/chunk.gd")
 const ADEN_WORLD_VISUALS = preload("res://scripts/maps/aden_world_visuals/chunk.gd")
+const PNG_PACK = preload("res://scripts/maps/aden_png_pack.gd")
+const PNG_CHUNK = preload("res://scripts/maps/aden_png_chunk.gd")
+const PNG_REVIEW_PACK = preload("res://scripts/maps/source_png_review_pack.gd")
+var png_pack: RefCounted
+var png_textures: Dictionary = {}
+var png_review_active: bool = false
+var png_review_spawn: Vector2 = Vector2.INF
 var debug_collision: bool = false
 var render_profile: Dictionary = {}
 var floor_material: ShaderMaterial
@@ -19,6 +26,20 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	source = value as OriginalPlayableField
 	player = actor
 	y_sort_enabled = true
+	var review_root: String = OS.get_environment("TWILIGHT_MAP_PNG_PACK")
+	if review_root.is_empty(): review_root = "user://map_png"
+	var review: RefCounted = PNG_REVIEW_PACK.new()
+	if review.configure(review_root,source):
+		review.apply_layout(source)
+		png_pack = review
+		png_review_active = true
+		png_review_spawn = review.review_spawn
+	elif str(source.data.map_id) == "aden_world":
+		png_pack = PNG_PACK.new()
+		var pack_path: String = OS.get_environment("TWILIGHT_ADEN_PNG_PACK")
+		if pack_path.is_empty(): pack_path = "user://aden_png"
+		png_pack.configure(pack_path,source)
+	if png_pack != null: png_textures = png_pack.textures
 	var backdrop := Polygon2D.new()
 	backdrop.name = "MapVoid"
 	backdrop.z_index = -30
@@ -75,19 +96,28 @@ func refresh_visible() -> void:
 		# Source Aden has a separate visual layer. Other maps keep their renderer;
 		# all maps retain the verified collision/navigation stream.
 		var chunk: Node2D
-		if ADEN_WORLD_VISUALS.applies(source,key): chunk = ADEN_WORLD_VISUALS.new()
+		var png_region: Dictionary = png_pack.region_for(key) if png_pack != null and not debug_collision else {}
+		if not png_region.is_empty(): chunk = PNG_CHUNK.new()
+		elif png_review_active and not debug_collision: chunk = Node2D.new()
+		elif ADEN_WORLD_VISUALS.applies(source,key): chunk = ADEN_WORLD_VISUALS.new()
 		elif GIRAN_REVIEW.applies(source,key): chunk = GIRAN_REVIEW.new()
 		else: chunk = RemakeChunk.new()
 		chunk.name = "SourceChunk_%d_%d" % [key.x,key.y]
 		chunk.y_sort_enabled = true
 		add_child(chunk)
-		chunk.build(source,key,floor_material,render_profile,debug_collision)
+		if not png_region.is_empty():
+			chunk.texture_cache = png_textures
+			chunk.build_png(source,key,png_pack,png_region)
+		elif not png_review_active or debug_collision: chunk.build(source,key,floor_material,render_profile,debug_collision)
 		chunks[key] = chunk
 		built_chunks += 1
 	for key: Vector2i in chunks.keys():
 		if needed.has(key): continue
 		remove_child(chunks[key]); chunks[key].queue_free(); chunks.erase(key)
 		freed_chunks += 1
+	# Meshes retain textures while visible; the shared lookup need not retain
+	# every original PNG chunk visited during a long world journey.
+	if png_textures.size() > MAX_CHUNKS*2: png_textures.clear()
 	stream_build_usec = maxi(stream_build_usec,Time.get_ticks_usec()-start)
 	_refresh_markers()
 	if source is RemakePlayableField and is_instance_valid(source.collision_stream): source.collision_stream.refresh()

@@ -313,9 +313,18 @@ func _ready() -> void:
 	hud.refresh_maps(maps)
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
+	var requested_png_map: String = ""
+	if "--png-review" in OS.get_cmdline_user_args():
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--png-map="):
+				var candidate_png_map: String = argument.trim_prefix("--png-map=")
+				if maps_by_id.has(candidate_png_map) and REMAKE_REGISTRY.installed(candidate_png_map): requested_png_map = candidate_png_map;active_map_id = candidate_png_map
 	_set_map(active_map_id, false)
 	var creating_character: bool = not FileAccess.file_exists(SAVE_PATH)
 	_load_game(true)
+	# Restore character progress first; an explicit review destination wins over
+	# a different map in the isolated legacy save without reusing its pixels.
+	if not requested_png_map.is_empty() and requested_png_map != active_map_id: _set_map(requested_png_map, false)
 	_normalize_equipment_slots()
 	_ensure_job_class_visual()
 	_ensure_quickslots_seeded()
@@ -1244,6 +1253,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
+		if field_renderer is RemakeSourceRenderer and field_renderer.png_review_active:
+			hud.set_map_name(str(active_map.get("name",active_map_id))+" · PNG 검수")
+			player.global_position = field_renderer.png_review_spawn
+			player.camera.reset_smoothing();player.camera.force_update_scroll()
+			field_renderer.refresh_visible()
 		_apply_saved_visual_mode()
 		field_population.configure(self, field_map)
 	else:
@@ -3734,6 +3748,9 @@ func _refresh_combat_hud() -> void:
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func _save_game(quiet: bool) -> void:
+	if "--png-review" in OS.get_cmdline_user_args():
+		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
+		return
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
 		return
@@ -6669,7 +6686,13 @@ func _notification(what: int) -> void:
 func constrain_original_motion(actor: CharacterBody2D) -> void:
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
 		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
-		if not field_map.line_clear(actor.global_position,target): actor.velocity = Vector2.ZERO
+		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)
+		if not source_clear: actor.velocity = Vector2.ZERO
+		elif field_map is RemakePlayableField and not field_map.point_clear(target):
+			# A streamed wall lets move_and_slide resolve the real circular foot
+			# and keep its tangent motion. Zeroing first deadlocks glancing paths.
+			# Off-screen actors still stop at source edges absent from physics.
+			if not actor.test_move(actor.global_transform,target-actor.global_position): actor.velocity = Vector2.ZERO
 
 func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)

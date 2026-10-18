@@ -1,0 +1,90 @@
+{
+	"android_device": "NOT_RUN",
+	"checks": 277,
+	"failures": [
+		"oman_10 blue_torch_4872_2256 actual foreground pixels behind",
+		"domination_summit clear manual footprint approach (0.0, -1.0)"
+	],
+	"global_registration": "REVIEW_REQUIRED",
+	"occlusion": [
+		{
+			"cut": "giran_tree_939_822",
+			"map_id": "aden_world",
+			"states": [
+				{
+					"correct": 458,
+					"overlap": 465,
+					"source_foot": [
+						42312.0,
+						23112.0
+					],
+					"state": "behind",
+					"wrong": 0
+				},
+				{
+					"correct": 368,
+					"overlap": 491,
+					"source_foot": [
+						42312.0,
+						23256.0
+					],
+					"state": "front",
+					"wrong": 0
+				}
+			]
+		},
+		{
+			"cut": "blue_torch_4872_2256",
+			"map_id": "oman_10",
+			"states": [
+				{
+					"correct": 2,
+					"overlap": 46,
+					"source_foot": [
+						4872.0,
+						2208.0
+					],
+					"state": "behind",
+					"wrong": 0
+				},
+				{
+					"correct": 155,
+					"overlap": 163,
+					"source_foot": [
+						4872.0,
+						2280.0
+					],
+					"state": "front",
+					"wrong": 0
+				}
+			]
+		},
+		{
+			"cut": "central_crystal_column",
+			"map_id": "domination_summit",
+			"states": [
+				{
+					"correct": 360,
+					"overlap": 360,
+					"source_foot": [
+						6936.0,
+						2976.0
+					],
+					"state": "behind",
+					"wrong": 0
+				},
+				{
+					"correct": 518,
+					"overlap": 654,
+					"source_foot": [
+						6936.0,
+						3072.0
+					],
+					"state": "front",
+					"wrong": 2
+				}
+			]
+		}
+	],
+	"source_grids_preserved": true
+}

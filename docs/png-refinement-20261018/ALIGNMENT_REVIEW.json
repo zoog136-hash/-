@@ -1,0 +1,516 @@
+{
+  "status": "REVIEW_REQUIRED",
+  "global_affine_accepted": false,
+  "actor_scale": 1,
+  "base_move_speed": 210,
+  "source_foot_radius": 4,
+  "tile_basis": [
+    [
+      24,
+      -12
+    ],
+    [
+      24,
+      12
+    ]
+  ],
+  "original_layers": "SINGLE_COMPOSITE_ONLY_MANUAL_CUTS",
+  "maps": [
+    {
+      "map_id": "aden_world",
+      "source_grid_sha256": "c22aa61ed083a3680230c659202503d7afaef30cb41b86d4655e9f843c81a7c4",
+      "world_to_image": [
+        0.17207855149317858,
+        -0.008686130570616839,
+        914.7862626919713,
+        0.0005599140460513454,
+        0.1566058464216859,
+        -74.4322375826446
+      ],
+      "png_per_world_singular_values": [
+        0.173145630850468,
+        0.15566878910965234
+      ],
+      "coordinate_evidence": {
+        "method": "LOCAL_AFFINE_CANDIDATE",
+        "control_points": [
+          {
+            "id": "west_bed",
+            "source": [
+              33421.71052631579,
+              32804.71052631579
+            ],
+            "image": [
+              7808.667,
+              3360
+            ],
+            "status": "CANDIDATE",
+            "uncertainty_png": 3,
+            "world": [
+              41146.10526315775,
+              21780.0
+            ],
+            "residual_png": 2.751781154355851,
+            "residual_world": 16.199512953878767
+          },
+          {
+            "id": "northwest_bed",
+            "source": [
+              33437,
+              32802.5
+            ],
+            "image": [
+              7859.667,
+              3326.667
+            ],
+            "status": "CANDIDATE",
+            "uncertainty_png": 3,
+            "world": [
+              41460.0,
+              21570.0
+            ],
+            "residual_png": 2.1386484093555764,
+            "residual_world": 12.4599225819862
+          },
+          {
+            "id": "northeast_bed",
+            "source": [
+              33441.5,
+              32807
+            ],
+            "image": [
+              7899.333,
+              3326.667
+            ],
+            "status": "CANDIDATE",
+            "uncertainty_png": 3,
+            "world": [
+              41676.0,
+              21570.0
+            ],
+            "residual_png": 0.4246514657682976,
+            "residual_world": 2.4824742358554883
+          },
+          {
+            "id": "southwest_bed",
+            "source": [
+              33419.375,
+              32821.125
+            ],
+            "image": [
+              7858,
+              3393.667
+            ],
+            "status": "CANDIDATE",
+            "uncertainty_png": 3,
+            "world": [
+              41484.0,
+              22005.0
+            ],
+            "residual_png": 4.335658575422637,
+            "residual_world": 25.757582035802766
+          },
+          {
+            "id": "southeast_bed",
+            "source": [
+              33424,
+              32824.5
+            ],
+            "image": [
+              7898,
+              3393.667
+            ],
+            "status": "CANDIDATE",
+            "uncertainty_png": 3,
+            "world": [
+              41676.0,
+              21990.0
+            ],
+            "residual_png": 2.8573708793745176,
+            "residual_world": 17.09054233396149
+          },
+          {
+            "id": "east_bed",
+            "source": [
+              33439.28378378378,
+              32822.28378378378
+            ],
+            "image": [
+              7951.667,
+              3360
+            ],
+            "status": "CANDIDATE",
+            "uncertainty_png": 3,
+            "world": [
+              41989.62162162142,
+              21780.0
+            ],
+            "residual_png": 0.5533371798580077,
+            "residual_world": 3.231200832788305
+          }
+        ],
+        "max_error_world": 25.757582035802766,
+        "rms_png": 2.5688885750856305,
+        "verified": false
+      },
+      "verified": false,
+      "foreground_cuts": 1,
+      "manual_footprints": 1,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0.0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_01",
+      "source_grid_sha256": "5e0ea64c017c6d09a8df12d4e7aa267f48a4eb150f10cd6429a199d6625e1aca",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 0,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_02",
+      "source_grid_sha256": "d34325b72b8e74cfa13443f7f852a54577a91c2d2f3faf8c66cb5ba9052d0b0c",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 1,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0.0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_03",
+      "source_grid_sha256": "959e6fcb4239b995baea1492fe084842552b11547b61767ede80420cfc587138",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 1,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0.0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_04",
+      "source_grid_sha256": "e9aab60886066cec20de386fa4c745c4058a3f3b65c36b6edb933cdfb5805a1e",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 1,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0.0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_05",
+      "source_grid_sha256": "f8e2fe0611e4e0e2a3e1f51787c210db804c80fae4f7ebccfc32fb89d9734c70",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 0,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_06",
+      "source_grid_sha256": "f56c29e3643fd9090b57f45647bd1611e4ed8d09e401a75eca7c349cc4ad16ee",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 0,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_07",
+      "source_grid_sha256": "3fdd8035051e4b402ac4e9feea21e26c625b2a43e092cf83cd5d4d85dd06540d",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 0,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_08",
+      "source_grid_sha256": "729a177409bcca7cc6bb69957a3130d78b3f374b1c686413ac0993cca3458a43",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 0,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_09",
+      "source_grid_sha256": "c01412915550e4c5ca1f2a4616e7612bac6aa1fcd72ef4a525b202127472a5fa",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 1,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0.0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "oman_10",
+      "source_grid_sha256": "5e880e8a1e391bcc0a2e080db728041d96cfb23111ad0a88b70e0b7ab4d9284d",
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "png_per_world_singular_values": [
+        1.0,
+        1.0
+      ],
+      "coordinate_evidence": {
+        "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+        "verified": false,
+        "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+      },
+      "verified": false,
+      "foreground_cuts": 2,
+      "manual_footprints": 0,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 0.0,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    },
+    {
+      "map_id": "domination_summit",
+      "source_grid_sha256": "2fde4743bc2b6edc5551c62ef458a60298c9f2a099fba59094373a2e7e35c565",
+      "world_to_image": [
+        1.0352080365325127,
+        -0.05080669843503794,
+        1321.5337015045357,
+        0.0010517967172860563,
+        1.262994752696901,
+        -196.84424575702766
+      ],
+      "png_per_world_singular_values": [
+        1.2659725641905848,
+        1.032815238965966
+      ],
+      "coordinate_evidence": {
+        "status": "CANDIDATE_REVIEW_REQUIRED",
+        "method": "SOURCE_NAV_BOUNDARY_TO_VISUAL_SURFACE_REGISTRATION_ONLY",
+        "median_png": 144.76327922976583,
+        "p90_png": 358.7263589352835,
+        "collision_from_image_colors": false,
+        "source_geometry_immutable": true,
+        "verified": false,
+        "control_points_verified": 0
+      },
+      "verified": false,
+      "foreground_cuts": 1,
+      "manual_footprints": 1,
+      "original_grid_edited": false,
+      "collision_status": "ORIGINAL_RULES_PLUS_EXPLICIT_MANUAL_SAMPLE",
+      "max_cut_foot_roundtrip_png": 1.8749713606747085e-12,
+      "cut_foot_roundtrip_scope": "MATH_ONLY_NOT_TERRAIN_ALIGNMENT_ERROR"
+    }
+  ],
+  "held_regions": [
+    {
+      "id": "aden_town",
+      "world_to_image": null,
+      "status": "REVIEW_REQUIRED",
+      "reason": "Coast/palace/town identified visually; exact source/image wall and tree correspondences unverified."
+    },
+    {
+      "id": "kent",
+      "world_to_image": null,
+      "status": "REVIEW_REQUIRED",
+      "reason": "Provisional projection leaves castle wall offsets; cannot extrapolate Giran fit."
+    },
+    {
+      "id": "heine",
+      "world_to_image": null,
+      "status": "REVIEW_REQUIRED",
+      "reason": "A3 castle belongs to a separate map edition; map 4 town correspondence needs direct survey."
+    },
+    {
+      "id": "oren",
+      "world_to_image": null,
+      "status": "REVIEW_REQUIRED",
+      "reason": "Snow/town visible; no verified ground control points."
+    },
+    {
+      "id": "rune_pc",
+      "world_to_image": null,
+      "status": "VERSION_DIFFERENCE",
+      "reason": "A3 northern Rune extension not identified in PNG."
+    },
+    {
+      "id": "southern_island",
+      "world_to_image": null,
+      "status": "UNIDENTIFIED_MAP_ID",
+      "reason": "PNG includes southern island; not assumed to belong to source map 4."
+    }
+  ]
+}

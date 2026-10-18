@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/twilight/tools/map_restore/aden_png.py", line 217, in <module>
+    (survey if args.operation == 'survey' else build)(args)
+  File "/workspace/twilight/tools/map_restore/aden_png.py", line 162, in build
+    raise ValueError('Region lacks verified coordinate/collision/foreground review: '+row['id'])
+ValueError: Region lacks verified coordinate/collision/foreground review: giran_plaza

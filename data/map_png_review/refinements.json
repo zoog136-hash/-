@@ -1,0 +1,1079 @@
+{
+  "schema": 1,
+  "status": "MANUAL_REVIEW_SAMPLES_NOT_COMPLETE_MAPS",
+  "original_pixels_preserved": true,
+  "original_navigation_unchanged": true,
+  "collision_from_image_colors": false,
+  "ground_behind_objects": "NOT_INPAINTED",
+  "maps": {
+    "aden_world": {
+      "png_sha256": "9ce95ca285f9bee72bab355c5015779122dd354fd26e73d9664a355bf9c86be3",
+      "source_map_id": 4,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "giran_tree_939_822",
+          "kind": "tree",
+          "foot_image": [
+            7994.5,
+            3582.5
+          ],
+          "collision_correspondence": "MANUAL_TRUNK_WITH_ORIGINAL_GRID_REVIEW",
+          "polygon_image": [
+            [
+              7985,
+              3568
+            ],
+            [
+              7989,
+              3562
+            ],
+            [
+              7995,
+              3559
+            ],
+            [
+              7999,
+              3562
+            ],
+            [
+              8003,
+              3560
+            ],
+            [
+              8005,
+              3567
+            ],
+            [
+              8009,
+              3569
+            ],
+            [
+              8006,
+              3576
+            ],
+            [
+              8004,
+              3580
+            ],
+            [
+              7998,
+              3583
+            ],
+            [
+              7997,
+              3587
+            ],
+            [
+              7992,
+              3586
+            ],
+            [
+              7991,
+              3582
+            ],
+            [
+              7987,
+              3581
+            ],
+            [
+              7986,
+              3577
+            ],
+            [
+              7982,
+              3575
+            ]
+          ]
+        }
+      ],
+      "ground_sampler": "linear",
+      "manual_footprints": [
+        {
+          "id": "giran_tree_trunk",
+          "kind": "tree",
+          "status": "MANUAL_PNG_REVIEW_SAMPLE",
+          "polygon_image": [
+            [
+              7994.5,
+              3580.5
+            ],
+            [
+              7997,
+              3582
+            ],
+            [
+              7994.5,
+              3583.5
+            ],
+            [
+              7992,
+              3582
+            ]
+          ]
+        }
+      ]
+    },
+    "oman_01": {
+      "png_sha256": "0d91713248b22a4576f539e5d902af3c3652a1013902dd330ac6e5d6bab7c031",
+      "source_map_id": 101,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [],
+      "foreground_status": "NO_REVIEWED_MASK_YET"
+    },
+    "oman_02": {
+      "png_sha256": "6899fc7acb238e278454451d573a5296fa797d3c96824ea16a0ffcb53917f627",
+      "source_map_id": 102,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "stairs_front_trunk",
+          "kind": "structure",
+          "foot_image": [
+            4588,
+            2276
+          ],
+          "collision_correspondence": "SOURCE_STAIRS_REGION_LOCAL_REVIEW",
+          "polygon_image": [
+            [
+              4564,
+              2140
+            ],
+            [
+              4578,
+              2133
+            ],
+            [
+              4591,
+              2137
+            ],
+            [
+              4606,
+              2143
+            ],
+            [
+              4606,
+              2152
+            ],
+            [
+              4598,
+              2158
+            ],
+            [
+              4595,
+              2170
+            ],
+            [
+              4597,
+              2190
+            ],
+            [
+              4595,
+              2220
+            ],
+            [
+              4599,
+              2240
+            ],
+            [
+              4595,
+              2255
+            ],
+            [
+              4605,
+              2262
+            ],
+            [
+              4592,
+              2267
+            ],
+            [
+              4582,
+              2276
+            ],
+            [
+              4571,
+              2272
+            ],
+            [
+              4577,
+              2258
+            ],
+            [
+              4581,
+              2235
+            ],
+            [
+              4581,
+              2207
+            ],
+            [
+              4582,
+              2180
+            ],
+            [
+              4576,
+              2160
+            ],
+            [
+              4567,
+              2155
+            ]
+          ],
+          "texture_witness": {
+            "reference_png": "102.png",
+            "reference_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "matched_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "pixel_match": "EXACT_RGB"
+          }
+        }
+      ]
+    },
+    "oman_03": {
+      "png_sha256": "0dd54350ed407f06e1f4fae7fff6e70fe3d5640cef725de189e3a0b07a2d16fe",
+      "source_map_id": 103,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "stairs_front_trunk",
+          "kind": "structure",
+          "foot_image": [
+            4588,
+            2276
+          ],
+          "collision_correspondence": "SOURCE_STAIRS_REGION_LOCAL_REVIEW",
+          "polygon_image": [
+            [
+              4564,
+              2140
+            ],
+            [
+              4578,
+              2133
+            ],
+            [
+              4591,
+              2137
+            ],
+            [
+              4606,
+              2143
+            ],
+            [
+              4606,
+              2152
+            ],
+            [
+              4598,
+              2158
+            ],
+            [
+              4595,
+              2170
+            ],
+            [
+              4597,
+              2190
+            ],
+            [
+              4595,
+              2220
+            ],
+            [
+              4599,
+              2240
+            ],
+            [
+              4595,
+              2255
+            ],
+            [
+              4605,
+              2262
+            ],
+            [
+              4592,
+              2267
+            ],
+            [
+              4582,
+              2276
+            ],
+            [
+              4571,
+              2272
+            ],
+            [
+              4577,
+              2258
+            ],
+            [
+              4581,
+              2235
+            ],
+            [
+              4581,
+              2207
+            ],
+            [
+              4582,
+              2180
+            ],
+            [
+              4576,
+              2160
+            ],
+            [
+              4567,
+              2155
+            ]
+          ],
+          "texture_witness": {
+            "reference_png": "102.png",
+            "reference_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "matched_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "pixel_match": "EXACT_RGB"
+          }
+        }
+      ]
+    },
+    "oman_04": {
+      "png_sha256": "db889a3086fb3ba56b8e8dbd8a6583eebf875a560d594eed4ab70f9b57980dfd",
+      "source_map_id": 104,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "stairs_front_trunk",
+          "kind": "structure",
+          "foot_image": [
+            4588,
+            2300
+          ],
+          "collision_correspondence": "SOURCE_STAIRS_REGION_LOCAL_REVIEW",
+          "polygon_image": [
+            [
+              4564,
+              2164
+            ],
+            [
+              4578,
+              2157
+            ],
+            [
+              4591,
+              2161
+            ],
+            [
+              4606,
+              2167
+            ],
+            [
+              4606,
+              2176
+            ],
+            [
+              4598,
+              2182
+            ],
+            [
+              4595,
+              2194
+            ],
+            [
+              4597,
+              2214
+            ],
+            [
+              4595,
+              2244
+            ],
+            [
+              4599,
+              2264
+            ],
+            [
+              4595,
+              2279
+            ],
+            [
+              4605,
+              2286
+            ],
+            [
+              4592,
+              2291
+            ],
+            [
+              4582,
+              2300
+            ],
+            [
+              4571,
+              2296
+            ],
+            [
+              4577,
+              2282
+            ],
+            [
+              4581,
+              2259
+            ],
+            [
+              4581,
+              2231
+            ],
+            [
+              4582,
+              2204
+            ],
+            [
+              4576,
+              2184
+            ],
+            [
+              4567,
+              2179
+            ]
+          ],
+          "texture_witness": {
+            "reference_png": "102.png",
+            "reference_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "matched_patch": [
+              4588,
+              2214,
+              4598,
+              2224
+            ],
+            "pixel_match": "EXACT_RGB"
+          }
+        }
+      ]
+    },
+    "oman_05": {
+      "png_sha256": "2e01bd77a87630d2f1cdf5135f104f31260e87c2794008399ebf094bce6778a9",
+      "source_map_id": 105,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [],
+      "foreground_status": "NO_REVIEWED_MASK_YET"
+    },
+    "oman_06": {
+      "png_sha256": "675fa1c388bef7661b5d20894b006dfd75d3998981399ad09ff64527b018f59e",
+      "source_map_id": 106,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [],
+      "foreground_status": "NO_REVIEWED_MASK_YET"
+    },
+    "oman_07": {
+      "png_sha256": "05930a418c11e7dbd97119315d9f6e595c258301a5ae78e11defc7dde80c6d2d",
+      "source_map_id": 107,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [],
+      "foreground_status": "NO_REVIEWED_MASK_YET"
+    },
+    "oman_08": {
+      "png_sha256": "20ac085221b47fe665d737aaa19d3408ffaae517637e127f4238c3bf6daf3afd",
+      "source_map_id": 108,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [],
+      "foreground_status": "NO_REVIEWED_MASK_YET"
+    },
+    "oman_09": {
+      "png_sha256": "2380087a2b87d3a276897082af53bc71f6d06392fd10e0406a22d9e6ecf82db2",
+      "source_map_id": 109,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "stairs_front_trunk",
+          "kind": "structure",
+          "foot_image": [
+            4612,
+            2288
+          ],
+          "collision_correspondence": "SOURCE_STAIRS_REGION_LOCAL_REVIEW",
+          "polygon_image": [
+            [
+              4588,
+              2152
+            ],
+            [
+              4602,
+              2145
+            ],
+            [
+              4615,
+              2149
+            ],
+            [
+              4630,
+              2155
+            ],
+            [
+              4630,
+              2164
+            ],
+            [
+              4622,
+              2170
+            ],
+            [
+              4619,
+              2182
+            ],
+            [
+              4621,
+              2202
+            ],
+            [
+              4619,
+              2232
+            ],
+            [
+              4623,
+              2252
+            ],
+            [
+              4619,
+              2267
+            ],
+            [
+              4629,
+              2274
+            ],
+            [
+              4616,
+              2279
+            ],
+            [
+              4606,
+              2288
+            ],
+            [
+              4595,
+              2284
+            ],
+            [
+              4601,
+              2270
+            ],
+            [
+              4605,
+              2247
+            ],
+            [
+              4605,
+              2219
+            ],
+            [
+              4606,
+              2192
+            ],
+            [
+              4600,
+              2172
+            ],
+            [
+              4591,
+              2167
+            ]
+          ],
+          "texture_witness": {
+            "reference_png": "102.png",
+            "reference_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "matched_patch": [
+              4612,
+              2202,
+              4622,
+              2212
+            ],
+            "pixel_match": "EXACT_RGB"
+          }
+        }
+      ]
+    },
+    "oman_10": {
+      "png_sha256": "11bb598c8ff1dac34a01ae6915ecec8a2389c07d0a42016dd3434a58a610043f",
+      "source_map_id": 110,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "stairs_front_trunk",
+          "kind": "structure",
+          "foot_image": [
+            4588,
+            2276
+          ],
+          "collision_correspondence": "SOURCE_STAIRS_REGION_LOCAL_REVIEW",
+          "polygon_image": [
+            [
+              4564,
+              2140
+            ],
+            [
+              4578,
+              2133
+            ],
+            [
+              4591,
+              2137
+            ],
+            [
+              4606,
+              2143
+            ],
+            [
+              4606,
+              2152
+            ],
+            [
+              4598,
+              2158
+            ],
+            [
+              4595,
+              2170
+            ],
+            [
+              4597,
+              2190
+            ],
+            [
+              4595,
+              2220
+            ],
+            [
+              4599,
+              2240
+            ],
+            [
+              4595,
+              2255
+            ],
+            [
+              4605,
+              2262
+            ],
+            [
+              4592,
+              2267
+            ],
+            [
+              4582,
+              2276
+            ],
+            [
+              4571,
+              2272
+            ],
+            [
+              4577,
+              2258
+            ],
+            [
+              4581,
+              2235
+            ],
+            [
+              4581,
+              2207
+            ],
+            [
+              4582,
+              2180
+            ],
+            [
+              4576,
+              2160
+            ],
+            [
+              4567,
+              2155
+            ]
+          ],
+          "texture_witness": {
+            "reference_png": "102.png",
+            "reference_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "matched_patch": [
+              4588,
+              2190,
+              4598,
+              2200
+            ],
+            "pixel_match": "EXACT_RGB"
+          }
+        },
+        {
+          "id": "blue_torch_4872_2256",
+          "kind": "prop",
+          "foot_image": [
+            4872,
+            2256
+          ],
+          "collision_correspondence": "SOURCE_BLOCKED_CELL_LOCAL_REVIEW",
+          "polygon_image": [
+            [
+              4871,
+              2206
+            ],
+            [
+              4878,
+              2209
+            ],
+            [
+              4879,
+              2218
+            ],
+            [
+              4877,
+              2225
+            ],
+            [
+              4876,
+              2232
+            ],
+            [
+              4878,
+              2238
+            ],
+            [
+              4878,
+              2247
+            ],
+            [
+              4882,
+              2251
+            ],
+            [
+              4881,
+              2255
+            ],
+            [
+              4865,
+              2255
+            ],
+            [
+              4865,
+              2251
+            ],
+            [
+              4869,
+              2247
+            ],
+            [
+              4869,
+              2238
+            ],
+            [
+              4870,
+              2231
+            ],
+            [
+              4867,
+              2223
+            ],
+            [
+              4867,
+              2213
+            ]
+          ]
+        }
+      ]
+    },
+    "domination_summit": {
+      "png_sha256": "f5c4549298e586d3839246d736b61b6106851af07cde8c5a21522d046ff38f87",
+      "source_map_id": 111,
+      "alignment_status": "LOCAL_REVIEW_REQUIRED_NOT_GLOBAL_APPROVAL",
+      "cuts": [
+        {
+          "id": "central_crystal_column",
+          "kind": "structure",
+          "foot_image": [
+            8342,
+            3650
+          ],
+          "collision_correspondence": "MANUAL_SAMPLE_ORIGINAL_GRID_EDITION_MISMATCH_HELD",
+          "polygon_image": [
+            [
+              8336,
+              3378
+            ],
+            [
+              8351,
+              3383
+            ],
+            [
+              8351,
+              3389
+            ],
+            [
+              8366,
+              3394
+            ],
+            [
+              8363,
+              3412
+            ],
+            [
+              8358,
+              3416
+            ],
+            [
+              8365,
+              3428
+            ],
+            [
+              8357,
+              3440
+            ],
+            [
+              8362,
+              3450
+            ],
+            [
+              8352,
+              3469
+            ],
+            [
+              8362,
+              3478
+            ],
+            [
+              8354,
+              3490
+            ],
+            [
+              8365,
+              3500
+            ],
+            [
+              8358,
+              3517
+            ],
+            [
+              8365,
+              3526
+            ],
+            [
+              8356,
+              3540
+            ],
+            [
+              8367,
+              3553
+            ],
+            [
+              8358,
+              3575
+            ],
+            [
+              8364,
+              3589
+            ],
+            [
+              8378,
+              3605
+            ],
+            [
+              8384,
+              3638
+            ],
+            [
+              8391,
+              3651
+            ],
+            [
+              8375,
+              3662
+            ],
+            [
+              8340,
+              3673
+            ],
+            [
+              8280,
+              3645
+            ],
+            [
+              8289,
+              3617
+            ],
+            [
+              8300,
+              3601
+            ],
+            [
+              8305,
+              3577
+            ],
+            [
+              8307,
+              3541
+            ],
+            [
+              8303,
+              3517
+            ],
+            [
+              8309,
+              3477
+            ],
+            [
+              8305,
+              3432
+            ],
+            [
+              8313,
+              3406
+            ],
+            [
+              8303,
+              3392
+            ],
+            [
+              8318,
+              3383
+            ]
+          ]
+        }
+      ],
+      "manual_footprints": [
+        {
+          "id": "central_crystal_base",
+          "kind": "stone_column",
+          "status": "MANUAL_PNG_REVIEW_SAMPLE_SOURCE_EDITION_HELD",
+          "polygon_image": [
+            [
+              8342,
+              3622
+            ],
+            [
+              8394,
+              3648
+            ],
+            [
+              8342,
+              3674
+            ],
+            [
+              8290,
+              3648
+            ]
+          ]
+        }
+      ],
+      "spawn_cell": [
+        141,
+        129
+      ],
+      "reviewed_ground_polygon_image": [
+        [
+          7700,
+          3480
+        ],
+        [
+          8070,
+          3290
+        ],
+        [
+          8280,
+          3410
+        ],
+        [
+          7860,
+          3630
+        ]
+      ],
+      "placements": {
+        "npc_spawn": [
+          {
+            "id": "guide",
+            "source_cell": [
+              145,
+              125
+            ]
+          }
+        ],
+        "portal": [
+          {
+            "id": "previous",
+            "source_cell": [
+              139,
+              127
+            ]
+          },
+          {
+            "id": "aden_return",
+            "source_cell": [
+              142,
+              131
+            ]
+          },
+          {
+            "id": "advance_waystone",
+            "source_cell": [
+              148,
+              131
+            ],
+            "target_cell": [
+              143,
+              133
+            ]
+          },
+          {
+            "id": "next",
+            "source_cell": [
+              143,
+              133
+            ]
+          },
+          {
+            "id": "entry_waystone",
+            "source_cell": [
+              151,
+              128
+            ],
+            "target_cell": [
+              141,
+              129
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
