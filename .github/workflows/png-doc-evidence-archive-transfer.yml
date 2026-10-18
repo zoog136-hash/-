@@ -1,0 +1,71 @@
+name: PNG documentation evidence temporary archive
+on:
+  push:
+    branches:
+      - archive/png-drive-20261018
+permissions:
+  contents: read
+jobs:
+  archive-doc-png:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docs
+          sparse-checkout-cone-mode: true
+      - name: Archive non-runtime documentation PNG, preserve originals
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, zipfile
+          from pathlib import Path
+          docs=Path("docs")
+          all_images=sorted(p for p in docs.rglob("*.png") if p.is_file())
+          if not all_images:
+              raise SystemExit("No documentation PNG files found")
+          groups = {
+              "remake": [p for p in all_images if p.as_posix().startswith("docs/remake/evidence/")],
+              "other": [p for p in all_images if not p.as_posix().startswith("docs/remake/evidence/")],
+          }
+          Path("archive-output").mkdir(exist_ok=True)
+          for name, images in groups.items():
+              manifest = {
+                  "source": "zoog136-hash/-",
+                  "category": "documentation PNG evidence; not a declaration of unused status",
+                  "removal_approved": False,
+                  "source_paths_preserved": True,
+                  "files": [],
+              }
+              destination = Path("archive-output") / ("TWILIGHT_docs_png_" + name + ".zip")
+              with zipfile.ZipFile(destination, mode="w", compression=zipfile.ZIP_STORED, allowZip64=True) as z:
+                  for p in images:
+                      digest=hashlib.sha256()
+                      with p.open("rb") as handle:
+                          for chunk in iter(lambda: handle.read(1024*1024), b""):
+                              digest.update(chunk)
+                      stat=p.stat()
+                      z.write(p, arcname=p.as_posix())
+                      manifest["files"].append({"path":p.as_posix(),"size":stat.st_size,"sha256":digest.hexdigest()})
+                  z.writestr("MANIFEST.json",json.dumps(manifest,ensure_ascii=False,indent=2))
+              print(name, len(images), destination.stat().st_size, flush=True)
+              if not images:
+                  raise SystemExit("empty archive unexpected")
+          PY
+      - name: Publish remake PNG archive for Drive transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-doc-png-remake-transfer
+          path: archive-output/TWILIGHT_docs_png_remake.zip
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 0
+      - name: Publish other docs PNG archive for Drive transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-doc-png-other-transfer
+          path: archive-output/TWILIGHT_docs_png_other.zip
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 0
