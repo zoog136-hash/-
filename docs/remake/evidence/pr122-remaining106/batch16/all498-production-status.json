@@ -2,13 +2,13 @@
   "target": 498,
   "unique_ids": 498,
   "session_start_approval_preserved": 394,
-  "session_added": 7,
-  "approvals_total": 401,
+  "session_added": 8,
+  "approvals_total": 402,
   "status_counts": {
     "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 387,
+    "VERIFIED_COMPLETED": 388,
     "FRAME_INSUFFICIENT": 14,
-    "SOURCE_HOLD": 17,
+    "SOURCE_HOLD": 16,
     "IN_PROGRESS": 1
   },
   "species": [
@@ -960,9 +960,9 @@
       "id": "transform:269",
       "name": "거대한 무덤 가디언",
       "approval_preserved": false,
-      "production_status": "SOURCE_HOLD",
-      "reason": "거대한무덤가디언112/51원본초기기하PASS. 앵커·helmet/core·NE발/팔레트와장무기비율검토미완료. 새E3/NE-HD5수정본 및팔레트3원본은미선택/HOLD, 팔레트나머지3미실행.",
-      "frames_path": ""
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Batch16 repaired112 genuine motion poses, actual Main/continuous69875 checks,8 real direction hits+SW single-hit/40 preserved baseline samples. Device memory acceptance remains separate",
+      "frames_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/SpriteFrames.tres"
     },
     {
       "id": "transform:268",
@@ -3998,5 +3998,5 @@
     }
   ],
   "unrecovered_assets_note": "Previous Reaper PNG2 and QA draft remain UNRECOVERED, not additional lost species. Large QA archives preserved in start commit; all156 tracked PR122 PNG restored/SHA checked.",
-  "batch16_added": 2
+  "batch16_added": 3
 }

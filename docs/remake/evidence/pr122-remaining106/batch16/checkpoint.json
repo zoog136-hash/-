@@ -4,13 +4,13 @@
   "branch": "feature/twilight-remaining106-20261016",
   "PR": 122,
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
-  "last_safe_commit": "844a2633",
+  "last_safe_commit": "fb6b02c5",
   "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
   "counts": {
     "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 387,
+    "VERIFIED_COMPLETED": 388,
     "FRAME_INSUFFICIENT": 14,
-    "SOURCE_HOLD": 17,
+    "SOURCE_HOLD": 16,
     "IN_PROGRESS": 1
   },
   "approved_ids": [
@@ -414,10 +414,11 @@
     "monster:알비노 피닉스",
     "monster:에바 왕국 상어전사",
     "monster:알비노 변이된 골렘",
-    "monster:알비노 디어"
+    "monster:알비노 디어",
+    "transform:269"
   ],
   "current_ids": [
-    "transform:269",
+    "monster:스파이더",
     "monster:얼음 여왕"
   ],
   "remaining_ids": [
@@ -446,7 +447,6 @@
     "transform:357",
     "transform:352",
     "transform:276",
-    "transform:269",
     "transform:268",
     "transform:260",
     "transform:231",
@@ -545,10 +545,6 @@
       "reason": "메이드안나 이전15개는같은지지다리/총그립위치불명확으로HOLD. 16번째frontcarry몸체모델미검토. 기존원본108×132불변, 외부아트생산사용없음."
     },
     {
-      "id": "transform:269",
-      "reason": "거대한무덤가디언112/51원본초기기하PASS. 앵커·helmet/core·NE발/팔레트와장무기비율검토미완료. 새E3/NE-HD5수정본 및팔레트3원본은미선택/HOLD, 팔레트나머지3미실행."
-    },
-    {
       "id": "transform:7",
       "reason": "바포메트 변신7 기존HOLD. monster:바포메트와별도ID, 이번세션새모션/Main없음."
     },
@@ -605,7 +601,7 @@
     "tools/l1j/build_external_spx_actor_pack.py",
     "tools/l1j/spx_decode.py"
   ],
-  "next": "Repair only verified Tomb269 source defects after immutable archive restoration and actual Main/source comparison; continue production, final CI deferred",
+  "next": "Finish source-ground/cadence/Main review of new128 spider matrix, then explicitly verify two identical-reference adapters. Complete new Monk128 source; retain rejected gait/model outputs.",
   "source_SHA_ledger": "spx-source-ledger.json",
   "SPX_private_delivery": "NOT_PUBLICLY_DELIVERED; candidates rebuilt from accessible user Drive originals; redistribution permission HOLD",
   "Android_real_device": "NOT_RUN",
@@ -838,15 +834,21 @@
       "production_applied": false,
       "blocker": "Only first idle16 raw sheet is authored, source/body/direction/model review pending. All walk/attack/hit/death still unauthored.",
       "next": "Review idle16 strict geometry and actual left-hand staff/right-leg identity, then author remaining genuine full-body128 contract without frame copies."
+    },
+    "transform:269": {
+      "status": "APPROVED",
+      "runtime_connected": true,
+      "proof": "docs/remake/evidence/pr122-remaining106/batch16/tomb-completion-decision.json",
+      "remaining_device_limit": "Android device/VRAM not run; no device budget approval"
     }
   },
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
   "new_approved_this_batch": 5,
-  "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-deer.json",
+  "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-tomb.json",
   "final_CI": "PENDING_NEW_PRODUCTION_BATCH",
   "derived_navigation": "Local test bake outputs preserved in /workspace/qa/derived-navigation-before-restore; all26 original Git navigation files restored unchanged.",
-  "state": "GOLEM_AND_DEER_LOCALLY_COMPLETED; TOMB269_SOURCE_RESTORATION_CONTINUES",
-  "active": "transform:269",
+  "state": "GOLEM_DEER_TOMB269_LOCALLY_COMPLETED; SPIDER128_ACTUAL_MAIN_RUNNING",
+  "active": "monster:스파이더",
   "newly_drawn_poses": 168,
   "preserved_prior_poses": 32,
   "complete_native_matrix": 144,
@@ -854,11 +856,11 @@
   "total_pack_PNG": 18,
   "runtime_profile_applied": true,
   "actual_Main": "PASS",
-  "new_completed": 2,
+  "new_completed": 3,
   "remaining_ids_source": "../batch15/all498-production-status.json",
-  "normal_completed": 387,
-  "approvals_total": 401,
-  "remaining_unapproved": 97,
+  "normal_completed": 388,
+  "approvals_total": 402,
+  "remaining_unapproved": 96,
   "deer_source_failures": {
     "attack_v01": "Identity drift: antler rack shape; preserved outside pack",
     "attack_v02": "All4 six-pose sheets fail unchanged foreign-body rectangle guard; reframe as8 full-direction three-pose vertical sheets, never lower thresholds",

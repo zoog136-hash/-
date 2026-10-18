@@ -1,0 +1,61 @@
+{
+	"cases": [
+		{
+			"checks": 69875,
+			"failures": [],
+			"folder": "tomb_guardian269_batch16_repaired",
+			"full_pose_capture": true,
+			"incoming_directions": 8,
+			"lifecycle": {
+				"attempt_limit": 200,
+				"death_callbacks": 1,
+				"death_track": "death_7",
+				"ground_drops": [
+					{
+						"created_at": 1792366395.7686,
+						"expires_at": 1792366995.7686,
+						"grade": "일반",
+						"hunt_batch": "a323ef3b857963ea68a00373079e157b",
+						"id": "1c45bd99fcd105e88578caa7fe632b0e",
+						"item_name": "HP 물약",
+						"map_id": "aden_world",
+						"position": [
+							25512.0,
+							22844.0
+						],
+						"quantity": 1,
+						"state": "ground"
+					}
+				],
+				"hit_pose": true,
+				"hp_end": 0,
+				"hp_start": 300,
+				"manual_pickup": true,
+				"player_hp": 1749,
+				"weapon_attempts": 6
+			},
+			"monster_directions": 8,
+			"name": "거대한 무덤 가디언",
+			"physics_ticks": 2018,
+			"player_directions": 8,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-transform-batch-preserved/tomb-guardian269-batch16-repaired/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/report-cases/tomb-guardian269-batch16-repaired.json",
+			"screenshots": 250,
+			"slug": "tomb-guardian269-batch16-repaired",
+			"transform_id": "269"
+		}
+	],
+	"checks": 69875,
+	"config": "res://tests/fixtures/pr122_tomb269_batch16.json",
+	"engine_processes": 1,
+	"failures": [],
+	"metadata": {
+		"scope": "Batch16 repaired reference-based Tomb269112 actual Main, source approval pending"
+	},
+	"process_id": 18214,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/platform/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

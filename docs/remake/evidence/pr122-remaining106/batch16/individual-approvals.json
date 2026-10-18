@@ -3,9 +3,9 @@
   "policy_UTC": "2026-10-18T15:35:07.022781+00:00",
   "authorization": "Latest user directive: continue production and validate locally; integrated CI at the end; no main merge.",
   "baseline_completed_preserved": 392,
-  "new_completed": 9,
-  "completed": 401,
-  "remaining": 97,
+  "new_completed": 10,
+  "completed": 402,
+  "remaining": 96,
   "final_release_or_merge_approved": false,
   "decisions": [
     {
@@ -586,8 +586,97 @@
           "sha256": "4ab4256a7ff7a65694049bb38fe739bde9e9a1f3dbcd15d423f9f2d65dba524a"
         }
       ]
+    },
+    {
+      "id": "transform:269",
+      "name": "거대한 무덤 가디언",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T23:42:37.349473+00:00",
+      "scope": "Local repaired reference-based native completion; no new original-animation recovery or independent human/device approval",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming agent reviewed actual Main E idle/walk/strike, NE idle/gait/recoil, N gait, S recoil, NW terminal collapse; source biomechanical and baseline evidence retained. No human claim.",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 4,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 112,
+        "run": "No separate verified source run; none invented or claimed"
+      },
+      "newly_drawn_poses": 0,
+      "preserved_prior_genuine_motion_poses": 112,
+      "repaired_existing_poses": 14,
+      "new_palette_image_edits": 3,
+      "observed_hit_collapse_root_corrections": 12,
+      "total_pack_PNG": 51,
+      "runtime_connected": true,
+      "actual_Main_and_continuous_checks": 69875,
+      "rendered_native_phases": 112,
+      "original_real_direction_contacts": 8,
+      "extra_SW_real_hits": 1,
+      "preserved_completed_baseline_samples": 40,
+      "memory": {
+        "source_logical_RGBA_bytes": 320860080,
+        "Main_child_max_RSS_KiB": 1586316,
+        "VRAM": "NOT_MEASURED",
+        "Android_device": "NOT_RUN",
+        "budget_acceptance": "Device acceptance pending; no Android memory PASS claim"
+      },
+      "visual_notes": "Corrected E heavy-cluster reach retains original dark shaft and connected grip; neutral silver/charcoal NE material, rear heel planes, projected foot roots and complete armor retained. Genuine alternating support, connected helmet/core and all eight directions inspected. Body hunch/foreshortening is retained without per-pose scale changes. No stats, AI, collision, actual attack interval/hit count or save changes.",
+      "final_CI": "PENDING_BATCH",
+      "Android_device": "NOT_RUN",
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch16/tomb-source-preservation.json",
+      "reviewed_profile_sha256": "86578180df7c5dbe3880395fbf6cb718e3369dd7dc57457ef3dc65b174b59dea",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/tomb-source-preservation.json",
+          "sha256": "a7528fd380e12d2e637ba7a8b13e82ffe501fd14a7de17912c66de349f309486"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/tomb-repaired-candidate.json",
+          "sha256": "8cffbad3fbb62a662367e6159ccc0256a70924cb84bcf759e478fefe8b73c1d4"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/tomb-source-restoration.json",
+          "sha256": "2aec162cccee5ce09f07909ff2be4abd74663da17b87119e00738ec5fda56475"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Tomb-Main-reports/report.json",
+          "sha256": "f44a79a3d3ae1a84a9bcd2328ba1c87c62fdcd7e41b212bef923f1bc271dbff7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Tomb-Main-reports/report-cases/tomb-guardian269-batch16-repaired.json",
+          "sha256": "f947afd72545c833a1d8946b410789f26d836fab0b5c6c4f95fc5e927efd062b"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Tomb-Main-reports/delivery-manifest.json",
+          "sha256": "a8cdee66670e771f3ed81e5000409755dca961391d3647a95805f07c266151d3"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/Tomb-Main-reports/process-result.json",
+          "sha256": "b616ca9fafbbd96f7711a8530bc3cfc904fa7fbb8ce489e0bea177047414399f"
+        }
+      ]
     }
   ],
-  "session_added": 7,
-  "batch16_added": 2
+  "session_added": 8,
+  "batch16_added": 3
 }

@@ -1,0 +1,1263 @@
+{
+  "status": "AUTOMATIC_MAIN_PASS_VISUAL_REVIEW_REQUIRED",
+  "checks": 69875,
+  "native_phases": 112,
+  "original_contacts": 8,
+  "extra_SW_real_hits": 1,
+  "baseline_samples": 40,
+  "PNG_files": [
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-E-walk.png",
+      "bytes": 1902712,
+      "sha256": "aa19d35b399b5cc15d495598f8c1ffbd60b2ac30cd568efd0fc8df44bb378623"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-E-attack-0.png",
+      "bytes": 1838428,
+      "sha256": "c48b0f92ad69b6c6ef39d0b218b3818e646cd4370b3aeac549a57e1d653d56bd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-E-attack-1.png",
+      "bytes": 1843796,
+      "sha256": "4812149c824aad44072e3fb01466356a7611bed700b2ac67b497833878c666fa"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-E-contact.png",
+      "bytes": 1843796,
+      "sha256": "4812149c824aad44072e3fb01466356a7611bed700b2ac67b497833878c666fa"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-E.png",
+      "bytes": 1843614,
+      "sha256": "791bbd9e2deccd8b48c2274acdf62d1e926f9693e603d0ebbbd1d57ad7d87a1b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-E-attack-2.png",
+      "bytes": 1843614,
+      "sha256": "791bbd9e2deccd8b48c2274acdf62d1e926f9693e603d0ebbbd1d57ad7d87a1b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-E.png",
+      "bytes": 1839482,
+      "sha256": "eb28574f096f371c23c8dce3f29edf863f902a8a66aa249782604a4618c38da4"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SE-walk.png",
+      "bytes": 1835726,
+      "sha256": "1282040fbc34fff4a4826f6a360deafb49fb84314c3c8d02ff7deb6c50ea4642"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SE-attack-0.png",
+      "bytes": 1831257,
+      "sha256": "2a6ebb09b0ba2fae53e9e607029a463e9e33147bb047e8a86487f0cf3c8ac60e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SE-attack-1.png",
+      "bytes": 1835818,
+      "sha256": "8b9a95f4ad442e04ead63f0b484c7ecbe2504c78cb774d38be3bbbaf45959c37"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SE-contact.png",
+      "bytes": 1835818,
+      "sha256": "8b9a95f4ad442e04ead63f0b484c7ecbe2504c78cb774d38be3bbbaf45959c37"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-SE.png",
+      "bytes": 1833116,
+      "sha256": "1abb48bd101bc0b396334d2f7592bdc37d0b73ada8e97f37dd480bf166c728eb"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SE-attack-2.png",
+      "bytes": 1833116,
+      "sha256": "1abb48bd101bc0b396334d2f7592bdc37d0b73ada8e97f37dd480bf166c728eb"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-SE.png",
+      "bytes": 1834658,
+      "sha256": "5635b70c1328bdd160d9a78812124085b525bd1c00ea57d5ca945ec88e2960ef"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-S-walk.png",
+      "bytes": 1845666,
+      "sha256": "4ec0068d41529a7946fa4cfb3f18108a0c903882b154a9d86f8b229708829d94"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-S-attack-0.png",
+      "bytes": 1827833,
+      "sha256": "7bd792983b6ff8677d8bb9bae26326df7f1cddecd905d7f0a3e19b4a58321a73"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-S-attack-1.png",
+      "bytes": 1824974,
+      "sha256": "cb9135d0d71ea9e7b640bebd11152e17322270ea67abb845d66770d3eb5fa7a3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-S-contact.png",
+      "bytes": 1824974,
+      "sha256": "cb9135d0d71ea9e7b640bebd11152e17322270ea67abb845d66770d3eb5fa7a3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-S.png",
+      "bytes": 1827292,
+      "sha256": "e5f2017991916528d6de3071d7fb51c4f8f10503caaa6993775dfb3bdbcf4622"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-S-attack-2.png",
+      "bytes": 1827292,
+      "sha256": "e5f2017991916528d6de3071d7fb51c4f8f10503caaa6993775dfb3bdbcf4622"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-S.png",
+      "bytes": 1825454,
+      "sha256": "b45fe61db208d3ea7bb04fccd3ea2c4eb57b6ef53043690139fc9ac83ff5e992"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SW-walk.png",
+      "bytes": 1837192,
+      "sha256": "b2d951af16d60e929bbb91c04df281270ec4be37a5f8cd6bc9f214389076d5f3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SW-attack-0.png",
+      "bytes": 1819010,
+      "sha256": "f1306d07def5645dd07cf39d59c63e257d78ae151abec8d6be785ae55f63d6be"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SW-attack-1.png",
+      "bytes": 1819912,
+      "sha256": "d72d2b13cf12c36a8673e4e22e9cf754dcad0b7e98aba865d56fd91139d3ec24"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SW-contact.png",
+      "bytes": 1819912,
+      "sha256": "d72d2b13cf12c36a8673e4e22e9cf754dcad0b7e98aba865d56fd91139d3ec24"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-SW.png",
+      "bytes": 1819985,
+      "sha256": "60249f53cba6018e9c165f4ae4678eebfc6486c108736fe6eb2867c58aeba2a2"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-SW-attack-2.png",
+      "bytes": 1819985,
+      "sha256": "60249f53cba6018e9c165f4ae4678eebfc6486c108736fe6eb2867c58aeba2a2"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-SW.png",
+      "bytes": 1821369,
+      "sha256": "9c8b434eda14f47f794bdf1b16e01d2ff5e03972c4be8af6b040feef411a7a07"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-W-walk.png",
+      "bytes": 1853464,
+      "sha256": "4ddc3a63f1a0fa92127ee0467b9015c133a420451557bc070e996b2c0ab8408f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-W-attack-0.png",
+      "bytes": 1837056,
+      "sha256": "d4e906dc8c3c210754cdbf46f6de8f7defb1e376fc22c5c357f71924ad324282"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-W-attack-1.png",
+      "bytes": 1826552,
+      "sha256": "1c488bcb04f8db6be94ea43618339293c70b7a5320f06dc00c61e193139e6620"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-W-contact.png",
+      "bytes": 1826552,
+      "sha256": "1c488bcb04f8db6be94ea43618339293c70b7a5320f06dc00c61e193139e6620"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-W.png",
+      "bytes": 1826671,
+      "sha256": "8423de350e2750229b563cc4ec9bf3f84cd28965d4a70eb3aa8bfd68b2349083"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-W-attack-2.png",
+      "bytes": 1826671,
+      "sha256": "8423de350e2750229b563cc4ec9bf3f84cd28965d4a70eb3aa8bfd68b2349083"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-W.png",
+      "bytes": 1828696,
+      "sha256": "cccfff7b555708827c2e2cc5bbed0f42b1d3860d286ddd4fc97e0f469ecad596"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NW-walk.png",
+      "bytes": 1861146,
+      "sha256": "f1e9888939d64d147da09702fba5fbe44969f4e6e036c18637a970c33629da5f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NW-attack-0.png",
+      "bytes": 1825459,
+      "sha256": "3e41765697994c595c261f5a3a394b97753af151d2049d3bf6078956a0529868"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NW-attack-1.png",
+      "bytes": 1828110,
+      "sha256": "a5ab089fc67922abac32ea52edf28d61a5b09f0812da5e360c5c348d1db215d0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NW-contact.png",
+      "bytes": 1828110,
+      "sha256": "a5ab089fc67922abac32ea52edf28d61a5b09f0812da5e360c5c348d1db215d0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-NW.png",
+      "bytes": 1827030,
+      "sha256": "3bbede1f4d2b831f623be5bf5286b2d55f95e033fa251a243915e1fc6c10cdd7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NW-attack-2.png",
+      "bytes": 1827030,
+      "sha256": "3bbede1f4d2b831f623be5bf5286b2d55f95e033fa251a243915e1fc6c10cdd7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-NW.png",
+      "bytes": 1829946,
+      "sha256": "0927fb5a2bc9591755a2e8523482d60b8eeee660bf34cfdbfa42598407bb2f33"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-N-walk.png",
+      "bytes": 1851710,
+      "sha256": "c10b5a845881336c1d7a3ba4faf95f40abb5cab1831dae2efb5aca40594b6dff"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-N-attack-0.png",
+      "bytes": 1826791,
+      "sha256": "edd2aab1b4c596c98134cde1aa584aa1b7ea3dfb5074a5047d635e91358c26b9"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-N-attack-1.png",
+      "bytes": 1825538,
+      "sha256": "30fcc11e756b569565026f9135db137a246360102b0eb0bab84f608f8f3cfed7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-N-contact.png",
+      "bytes": 1825538,
+      "sha256": "30fcc11e756b569565026f9135db137a246360102b0eb0bab84f608f8f3cfed7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-N.png",
+      "bytes": 1829097,
+      "sha256": "0691df31321fe5a4302b83bc6265f1d728feff5c230b7088ec8b587a4a367591"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-N-attack-2.png",
+      "bytes": 1829097,
+      "sha256": "0691df31321fe5a4302b83bc6265f1d728feff5c230b7088ec8b587a4a367591"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-N.png",
+      "bytes": 1828076,
+      "sha256": "176d1cdfafc0fd0c18ba94431cfc7e251f6a67aaaa362f6501d1917fc145f619"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NE-walk.png",
+      "bytes": 1836856,
+      "sha256": "569c7057e3ea4f5cc239184a53653a82f44859a164eed8dc6f0dc7d48ca6d9fc"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NE-attack-0.png",
+      "bytes": 1835197,
+      "sha256": "c835fb90da40a4489e279e2fbc177fd7fba5a5b66d43544534f0e7be4fc415c6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NE-attack-1.png",
+      "bytes": 1838246,
+      "sha256": "6cb77dbce27057abe4be0429fe7865c90321620b314350d745fd4170e8873d34"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NE-contact.png",
+      "bytes": 1838246,
+      "sha256": "6cb77dbce27057abe4be0429fe7865c90321620b314350d745fd4170e8873d34"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/attack-\ud55c\uc190\uac80-transform-NE.png",
+      "bytes": 1837857,
+      "sha256": "e9738bad4df83cae869d7d3497be82b99777b74cd0ae874da784be5f64bdad28"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/actual-player-NE-attack-2.png",
+      "bytes": 1837857,
+      "sha256": "e9738bad4df83cae869d7d3497be82b99777b74cd0ae874da784be5f64bdad28"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/player-\ud55c\uc190\uac80-transform-NE.png",
+      "bytes": 1842443,
+      "sha256": "9ed0cbb9c2a782f6d0f38465a44eb730089a6e8c6aa48e6d865a8b9a9d0c2e51"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-SW-small-native-attack-1.png",
+      "bytes": 1856019,
+      "sha256": "8ca08f18727b26bf493ab339c262a210833325a1c040afc7f34cf13fb3e7eb61"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-SW-small-native-contact.png",
+      "bytes": 1856019,
+      "sha256": "8ca08f18727b26bf493ab339c262a210833325a1c040afc7f34cf13fb3e7eb61"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-E-idle-0.png",
+      "bytes": 1952771,
+      "sha256": "50308f545cf8d77d5778da9c4f91b9dabf7fbe352d6663e04d035c4f24d5c3f7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-E-walk-0.png",
+      "bytes": 1955984,
+      "sha256": "536e47997f87ab786357f96be5c3dd04d5474ea4423ea402d02f74997dc200bd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-E-walk-1.png",
+      "bytes": 1954440,
+      "sha256": "9b610d8a908bd57d6029b37bb9673552d32fcf2a66686ae2e2bedf1eb2637650"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-E-walk-2.png",
+      "bytes": 1957025,
+      "sha256": "e7c02b90abc1aca47c88afa79c8431dfa2c19b24695a2250af269a3ce3bf36e3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-E-walk-3.png",
+      "bytes": 1955388,
+      "sha256": "7c11d1622d74d2d8744017554db41348ba77acf6228ad580cbcbbbfd090c23c1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SE-idle-0.png",
+      "bytes": 1955077,
+      "sha256": "58a6648c7bfff45420d4144e54eed8c6e79f1eb3770fdb16127881500b7cb0a6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SE-walk-0.png",
+      "bytes": 1955890,
+      "sha256": "8009cc9c0b243ad25f40ac91c6ac22e9b24ee6ac496cb0d90639923f758e25ac"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SE-walk-1.png",
+      "bytes": 1957770,
+      "sha256": "cd6eb092a3d06444500d1dbebdd108e96d2d19a6e0716a78ad91b2bba3afd033"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SE-walk-2.png",
+      "bytes": 1957711,
+      "sha256": "dae68c7e8247beaf30994b1e55af3dc0e2390a3fa090fb00477872946a752231"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SE-walk-3.png",
+      "bytes": 1959418,
+      "sha256": "748ecb079ab86fce7e6c7b9d3b9434f4c2fe05a686f400e2e930b49c861fe5a4"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-S-idle-0.png",
+      "bytes": 1954042,
+      "sha256": "9fbbc1d810016eaa62d9a0865cc71bb2eaba4c81b42637fd4463ae88b6803dc5"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-S-walk-0.png",
+      "bytes": 1954551,
+      "sha256": "58e1c95c1862dca16d049c61f078d8db79d36c492f3d6fa62e370589ba637af0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-S-walk-1.png",
+      "bytes": 1954955,
+      "sha256": "fa35480aec9e85d248fcf97a6db04844f9843bfa9ab9b2979b0f0375fa12ee9b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-S-walk-2.png",
+      "bytes": 1953914,
+      "sha256": "b5f030decb9c120c37581171f76c5be252c7b32fc27a67f2e50bde4318996f17"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-S-walk-3.png",
+      "bytes": 1953435,
+      "sha256": "7385ba73bcbb38274c609fda381ccb4e07088d22959cc1f5d1d6657919777c53"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SW-idle-0.png",
+      "bytes": 1953003,
+      "sha256": "10aa92b36494688040aea46278e540bfeab5bdadf7c2a2f7974df694c962b8ec"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SW-walk-0.png",
+      "bytes": 1956100,
+      "sha256": "264951175439879ab5c411d55500959a06c310fb0ed00a8f2ae1ab46367fa7ec"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SW-walk-1.png",
+      "bytes": 1955316,
+      "sha256": "efeb23e8195981e0f23dafca4e4a73538bcb1436e9fd4c751f22a3f3b36f3f3d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SW-walk-2.png",
+      "bytes": 1954608,
+      "sha256": "7ac9de2076c824185aec48c2c6d165aceb10a2e4eb0bd31bdb7b7f20b834a8ca"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-SW-walk-3.png",
+      "bytes": 1955129,
+      "sha256": "78d6b5c5172d81f00f1de4123c82ef58f1fbc42336afafb6901c0d8f172b5b7d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-W-idle-0.png",
+      "bytes": 1951914,
+      "sha256": "5fb27312a596ce0bc9ccfb9c77572f24840b7b52dbce5a959194ef669481fe51"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-W-walk-0.png",
+      "bytes": 1957284,
+      "sha256": "b54e7dcfd3b2c65764ff54d47d4833f3cc6ca32a854605241103e095c4d6af09"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-W-walk-1.png",
+      "bytes": 1955201,
+      "sha256": "2b21fe515ee4bd77bcdc39cdd1d3a613185efef8caefa78f80ac74b1b1e3251a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-W-walk-2.png",
+      "bytes": 1955441,
+      "sha256": "162bc2dcf063b45098fe3b4ec59325e8bc1bbd8a815733757e22353b6dac0b64"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-W-walk-3.png",
+      "bytes": 1953799,
+      "sha256": "29e5944a28f137951dec6324618e77e66cec6a3c1ad16485ecfd6e63ae70a715"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NW-idle-0.png",
+      "bytes": 1953777,
+      "sha256": "8eb1099675e8ef8600b7d87ac349458f5cd30ec6931e64560ec7a02a1a3cf3ab"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NW-walk-0.png",
+      "bytes": 1953933,
+      "sha256": "4f66c2ab6a9e3097c67a5c79acb27f8eed83284edfdf7620eb6af3e7ac4b85aa"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NW-walk-1.png",
+      "bytes": 1958239,
+      "sha256": "fcb179e5459f7487c2733011ec7185d4f33db2a59014d78a2f8ade0d5a8c1886"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NW-walk-2.png",
+      "bytes": 1955194,
+      "sha256": "bf32433f41dbd0e021f0bca2317874346d8e894acf97801b8dccda33a06efad1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NW-walk-3.png",
+      "bytes": 1955944,
+      "sha256": "cdd6ca95895cba9c200a257c76a7d99effb85c1872fa0a56457fd03d100eb8bf"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-N-idle-0.png",
+      "bytes": 1951162,
+      "sha256": "4d75a23c8a8dca6a58a501e559173a16246b36ac3ff435ecc30c7e64547bf73a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-N-walk-0.png",
+      "bytes": 1952625,
+      "sha256": "a0ee8ec4b31481eb8daeb03f38e425900ea673b3887c6258f6939068bd5c1a66"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-N-walk-1.png",
+      "bytes": 1955965,
+      "sha256": "ac20528604ceb96acde5a137fb67d15154cb5259b026e72d55073ad1e59adfaa"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-N-walk-2.png",
+      "bytes": 1952743,
+      "sha256": "2e99688b897111b83863f14ec2148bd7a7547386bbce90c189fe47c470dc4939"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-N-walk-3.png",
+      "bytes": 1955679,
+      "sha256": "911ede16c4202933660fbfb02b2bdd043079d7d6f42d5f8d54de352858436313"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NE-idle-0.png",
+      "bytes": 1955070,
+      "sha256": "c316248d3fc76e8720c7bf1e092f1f82971eaf969c8b387bbff04486ac930b09"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NE-walk-0.png",
+      "bytes": 1954103,
+      "sha256": "28439af102c6728ef930446f95ce4bed15b94a390fb2873acc4d92b707b81674"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NE-walk-1.png",
+      "bytes": 1955868,
+      "sha256": "5814edf112403f224160022ece4358338fb7c208e2d0487b16a0dca09664e78b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NE-walk-2.png",
+      "bytes": 1955853,
+      "sha256": "0bba58aa247414ec48771dd7901c2b59d8bac9185840701f898e4b4495e15e38"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/pr122-tomb269-iron-golem-NE-walk-3.png",
+      "bytes": 1954601,
+      "sha256": "ebbaf2d2a6745f2c4a310b1a11d7d95bec5e6ea27797a73d9a92dda84e5b8baf"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-idle-0.png",
+      "bytes": 1001372,
+      "sha256": "4a1a9b1c543372f2830842c077f4fbdab3af12f1140a567a776571895127e31d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-idle-1.png",
+      "bytes": 1001278,
+      "sha256": "b1fb1b0a3d16bf56676e847975ea3a6f3750fff6fa7722d06ad2855f6b7b8e72"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-walk-0.png",
+      "bytes": 1069630,
+      "sha256": "fc282fba7a819586fc425286180fc17717661be10d7a49f28eeb91c9b406211c"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-walk-1.png",
+      "bytes": 1054903,
+      "sha256": "6994ec7325e514acc9df6c7a8bb3b099b5fb1805306f6788e8844e3b6958172b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-walk-2.png",
+      "bytes": 1044682,
+      "sha256": "974f53af7012f83af46dd7b40cfc01f297c70efda780154e5112e7f7a53a2cd3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-walk-3.png",
+      "bytes": 1026412,
+      "sha256": "4034c68262fa8e075d1e4e73de32f248b149ba2ac886353fe4199c71d65a2e4a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-attack-0.png",
+      "bytes": 1003067,
+      "sha256": "fc17fe5dd9858955ee3aac27372dffe02d6e7f5f36e6cab3ac01966a484f3e91"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-attack-1.png",
+      "bytes": 1003488,
+      "sha256": "e7895865823f3552c41c7997fd1989fbf05ca03ffa42e0aee0aa2c0a11f33cca"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-attack-2.png",
+      "bytes": 1004481,
+      "sha256": "b252beac2131d15961385bf2e9625ab9cea5492cc207de060864fe2b3453b8b8"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-hit-0.png",
+      "bytes": 999735,
+      "sha256": "f463904f8f64ae27cbbeebe6d6bbc5e0e5ca218e9eae3d2487fcae4e940891a0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-hit-1.png",
+      "bytes": 1001057,
+      "sha256": "77add32e1cd8659a4ebd799f6a5a58ff221e5339226ab931ee12e2e1477c8481"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-death-0.png",
+      "bytes": 1000284,
+      "sha256": "c6ed8904e7e164d08c3e8f7b93624fbc31a09c5690361895c19598ee28e65e78"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-death-1.png",
+      "bytes": 998732,
+      "sha256": "44ff48335813812c97dc307525490ebda26f634b08fd5becc2d88d52079673c1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-E-death-2.png",
+      "bytes": 999726,
+      "sha256": "f0fa074b7ffc9f8b50a0e6883c1f24057969e1a749fb07b3c5559d57ed8cd258"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-idle-0.png",
+      "bytes": 1004647,
+      "sha256": "7aaeec896e2a8af3db35ce0dfdc591afa2405618732a64e4d22670b99a26ede1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-idle-1.png",
+      "bytes": 1003170,
+      "sha256": "8994e0810d9a1240fd6eb84028cc425d2f4640e3f4c9b018af469f4e1a16b984"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-walk-0.png",
+      "bytes": 1070775,
+      "sha256": "1f8df36c8305f8947c924f51bb395e0dff27ec27c91db7b05a4e6136eb533ff3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-walk-1.png",
+      "bytes": 1064418,
+      "sha256": "072031db28617584baf896c35cdcb5c4a0db74e366ecc93f313be9308ecdab36"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-walk-2.png",
+      "bytes": 1050810,
+      "sha256": "229fb35ccf49dff8702c9d6ab0396b1de66c6be0e4ae6672df054339c45e15cf"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-walk-3.png",
+      "bytes": 1036024,
+      "sha256": "b9fe8325cad6e9f7ef2fcb3531d527e246ab509bea1ddad32afe8c8ece270091"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-attack-0.png",
+      "bytes": 1006516,
+      "sha256": "8b6173d1aacdb742372b909ac1f691ab3cd0bff980879922d5f2a2c5e281fc1b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-attack-1.png",
+      "bytes": 1004313,
+      "sha256": "ce28549de292265995d29e235418b7140ba48e53365ca16e1e43739275081dd0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-attack-2.png",
+      "bytes": 1003660,
+      "sha256": "a57e6d1826ee9db019e434ef0f8ec225afe10cd9d33aea8ff7411bb67ef29adc"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-hit-0.png",
+      "bytes": 1000531,
+      "sha256": "7c145d7eba6f4e1289dcc26aede683f89e36edabab9f54bddcf41efea6bfb0ed"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-hit-1.png",
+      "bytes": 1001863,
+      "sha256": "e23d0022cbd2171d090e8852ac005d82db5a013a659657f97ee95849d22778fe"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-death-0.png",
+      "bytes": 1001128,
+      "sha256": "6ce541f13ce68bd044df672df6f42fddd795c0bd73f9a737f8bb379188a2b30f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-death-1.png",
+      "bytes": 1000611,
+      "sha256": "97c75a164d1dd0083f0e28de7b0175464444d7da12aa9b427f7ce5f3017eb331"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SE-death-2.png",
+      "bytes": 1002893,
+      "sha256": "3aeb719ee83dd0151d0dfb4028d58176d88f7b40e93a42eab64cb26eb0480d09"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-idle-0.png",
+      "bytes": 1002650,
+      "sha256": "4c6e9d6fc5b53e1d0638d8fa02263f90ef71e8c0b27d85f7fc60650b27c8381c"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-idle-1.png",
+      "bytes": 1002498,
+      "sha256": "79ac08dd010e70508be73b9f7a43af5ca2129f13bd4ddf8e318c8df7e485790f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-walk-0.png",
+      "bytes": 1057303,
+      "sha256": "ee6e1eb3e3b119adafa429f6ab110886b5c16d378a35bcd8b411053736e3656b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-walk-1.png",
+      "bytes": 1050482,
+      "sha256": "e0b515969b359c94ba344d5547d76c74fa61aaf562071762158295557b976bc8"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-walk-2.png",
+      "bytes": 1038956,
+      "sha256": "07b95c1a3bb35361547b3df44675682934d3e9deb6912a9a1c8c9c8c464d35bf"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-walk-3.png",
+      "bytes": 1025926,
+      "sha256": "9d82b6af7e65647fc35f8607be757e3cb67478be87cd0a7e7e6150d8d8e29ff3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-attack-0.png",
+      "bytes": 1005556,
+      "sha256": "e6e4bc14ecf89c09735d1d230d08b5b604062cc28e11b66eb3c8860f24f125d1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-attack-1.png",
+      "bytes": 1003506,
+      "sha256": "480ed9796886f2159bca436c645b3e992c2c46bc2dee0b7853e53265cfc06025"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-attack-2.png",
+      "bytes": 1004432,
+      "sha256": "64aafb72107c7c8695d84e0abf81bddeacee14e408b1b60d73cee3da0bc866f0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-hit-0.png",
+      "bytes": 1001448,
+      "sha256": "25718156dad9989b6ce3a2811456ba4842bb41d6132ec9115c65dc3078f912d6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-hit-1.png",
+      "bytes": 1001710,
+      "sha256": "5e767d8373da2162a681bf05cd755aa6554e19162be2c2612bc9d5c0e0dc7ed6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-death-0.png",
+      "bytes": 1001396,
+      "sha256": "73ef2ecef8072ecc736599afec29bef011cdbd8597e8be739e0bd9958d1fcb2c"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-death-1.png",
+      "bytes": 1000881,
+      "sha256": "25d6df3137d0e075ef86c34e76d8c36e1b3606556fc4d150a190083af4de89dd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-S-death-2.png",
+      "bytes": 1000457,
+      "sha256": "c17cd75fbdac555b6bfc96b43b356b8b30ffb26b0914f65d18265a699c1d0fca"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-idle-0.png",
+      "bytes": 1001505,
+      "sha256": "d6b5e66c3d676183bcae3210a2219d7c94716e6b5208e004fbc4ea9c3a28426e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-idle-1.png",
+      "bytes": 1001454,
+      "sha256": "e2a86a18892d66121de84968446383f934d94b5761867731b8874a1b4805ff2f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-walk-0.png",
+      "bytes": 1040417,
+      "sha256": "3e22dd81eb56071f548e45488b5f563064863d10fbac23cdd59452e87029a246"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-walk-1.png",
+      "bytes": 1030000,
+      "sha256": "8021ec5f71bfd125aef11c94c22920b97f4f9bd47f2fd001c952c9139f44b28e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-walk-2.png",
+      "bytes": 1017059,
+      "sha256": "cec9d0f2e3eeda8db60c83a27dbf1610029bead205c0248b55d1877842481a97"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-walk-3.png",
+      "bytes": 1009287,
+      "sha256": "197ad8841ab4cdaf6f814b1a7657f4768a5340d56b0c4553d7551acf3d5e4628"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-attack-0.png",
+      "bytes": 1000413,
+      "sha256": "d191a7fa0004aee8ab6010ffa4060e3b6281370c8bc5a3a834ceeb2f17aafd3f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-attack-1.png",
+      "bytes": 999689,
+      "sha256": "d45aac1933bb6beb9ff55099f48344e0647e6fed6b7018c96770b2a71d1a5dc4"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-attack-2.png",
+      "bytes": 999983,
+      "sha256": "c7696ad032c2dd2cd8518e01ff2d0b9df81fade3466347d56b335c5e2db1a0c5"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-hit-0.png",
+      "bytes": 998731,
+      "sha256": "8ad4f494641361b8702a34279a06933042cd44cf3b2a52f62ca2f2ababf3e665"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-hit-1.png",
+      "bytes": 1000518,
+      "sha256": "f7567be8a2a235b5cd82c27fe2d77142eeeda1b434876796824283c9b3fb6bcd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-death-0.png",
+      "bytes": 999692,
+      "sha256": "0fae6d5d52da0683d8cada52f9730eabc9bc8dd71e5181308bc66b543080843e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-death-1.png",
+      "bytes": 998830,
+      "sha256": "163ece7c8ae5e534571263b55ce0becc8af9b0351310606062c60354d838b4dd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-SW-death-2.png",
+      "bytes": 999546,
+      "sha256": "20e31c740ef0bc37f950e5d108e0fac243b5b67c6681bca5ff57b04f4fa8aa08"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-idle-0.png",
+      "bytes": 1001938,
+      "sha256": "e358e87c09ef24ec4805469cc97c3e4c21528df70cdb7dfe7c6c2e8f4b701c4b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-idle-1.png",
+      "bytes": 1001848,
+      "sha256": "e0e1db936233f4fe110ad5373713bf902d8414510fc4b830737f706c1ddb4259"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-walk-0.png",
+      "bytes": 974796,
+      "sha256": "24b31b5c26cdc621734cc44675bf20f678b8d9e1e330994a91f6a48e4c67e6b7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-walk-1.png",
+      "bytes": 980446,
+      "sha256": "285116a7fecf10b220741af0019af82afdecc33fff0850742c85e7fb3079063b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-walk-2.png",
+      "bytes": 982844,
+      "sha256": "6ef4ef2219a4f1d4f19ee3d2a39e1f56d16d20013c33e228cbc00bcdde7f1003"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-walk-3.png",
+      "bytes": 985908,
+      "sha256": "ad01f6d157414834ef7726bf1d4060bc77fc5997942cebd324d3d9528ec10ff3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-attack-0.png",
+      "bytes": 1002658,
+      "sha256": "092e2e00ffddde5f34c7f1a0b3388293fef601d720b51ee220b7cc2ad506cf39"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-attack-1.png",
+      "bytes": 1003919,
+      "sha256": "5eef726591314857be60f5cc3b1ec5111d856404b268311d8ccb2c015960dc9d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-attack-2.png",
+      "bytes": 1002221,
+      "sha256": "4ddb9afdb456605520fa771cb83e9119f75d4147ac5e95906c3a5c64cd7d3e41"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-hit-0.png",
+      "bytes": 1000547,
+      "sha256": "b01702ec19927282525ccb3b2d57c8b28359a877471ebcc8df9f412735c254b6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-hit-1.png",
+      "bytes": 1001133,
+      "sha256": "dcc3289c355fe8e4ae9a8f00a9d57a9e074719b9db38674f6a856bbe687c81d0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-death-0.png",
+      "bytes": 1000788,
+      "sha256": "9db3d88f956b82f2ed34a1dbcf6d64f0ad8dca0af3b1da659d6702000d5bcc22"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-death-1.png",
+      "bytes": 999636,
+      "sha256": "1ba62ec9651d3154b5ae9f3bfb0039a7ed848b802bbfa35aec8857863009f767"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-W-death-2.png",
+      "bytes": 1000848,
+      "sha256": "253b73c7b1ce767ab9e6f0ab977f4b3f43b2d9d88278f19c05c7227c3cfc4e20"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-idle-0.png",
+      "bytes": 1004542,
+      "sha256": "c739c6a5765c54c189c7f0c1816292b974fbc478ee7dc4f7db5bab1faed620dd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-idle-1.png",
+      "bytes": 1005502,
+      "sha256": "8479ef844227b28c138ea90ba67da7e63b4725e23eb84dc8731018157bb2821c"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-walk-0.png",
+      "bytes": 894278,
+      "sha256": "050a164c4f12424956306d3403deadbd8040015fcda9574be376f47b279cab38"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-walk-1.png",
+      "bytes": 930545,
+      "sha256": "3f8a56cd0beb7f7c12ddac566e16793c92eb6c4e368d847884066456e548ad59"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-walk-2.png",
+      "bytes": 953181,
+      "sha256": "8f63ed778cc9e5cc128e485fdde8912a6b128cbc2703b27cb342ebec52096fc7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-walk-3.png",
+      "bytes": 977352,
+      "sha256": "58542cd8308162eacdf4ae91954f04a42443b977da0a1269b55facb8fdd4c48b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-attack-0.png",
+      "bytes": 1002436,
+      "sha256": "b3e126ccf80a95b90616f7646c1ee50fb19d5ba0a4769986240bc1f32d1c175e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-attack-1.png",
+      "bytes": 1001434,
+      "sha256": "b793ba353e2c8092dccd2928222cc0aeb2a7ff5a6c5f6bdb07bac23ac1ce11f1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-attack-2.png",
+      "bytes": 1001377,
+      "sha256": "704e94ba759bef2aad8c864b18e1476cccb86c2a5ec56099cc6728f40c9cf67a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-hit-0.png",
+      "bytes": 1000240,
+      "sha256": "6fc518ecc9fab2658da449c7d05e15d6f1b5c1556690236b0f926360e68471a0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-hit-1.png",
+      "bytes": 1000641,
+      "sha256": "b19ba4264da02b1121ed49b5123a1e835214cc817515d5be0dc8a7aa9d533d4e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-death-0.png",
+      "bytes": 998831,
+      "sha256": "1a02e84eaa7baf1fbaabc289feb158e1c7515ccde2fbe42c01b37b0c612932a4"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-death-1.png",
+      "bytes": 998271,
+      "sha256": "bae9feb70554a81c0d354ded8a36670d85208bebf3081505d83ef03a6c1a591e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NW-death-2.png",
+      "bytes": 998460,
+      "sha256": "9cde2ac115d0c6cdc959090d72de8083df5f45123aefdbc319e20ecfb0c1ec51"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-idle-0.png",
+      "bytes": 1000351,
+      "sha256": "8971558c1708e21694f39a4151cc9188c6a738d58ab67ceeb3654c46ffecf0f0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-idle-1.png",
+      "bytes": 999882,
+      "sha256": "c19d55eea3346c8cc28ce1ba0ed05018b790dca4f0a1cb580f9eee6d0f86845b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-walk-0.png",
+      "bytes": 886695,
+      "sha256": "8a4d24ae6ab6a9fdb62a3fcf982e6c7e2581cc452d45354915496cc7318d85e1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-walk-1.png",
+      "bytes": 921795,
+      "sha256": "b07636190daca93fbb2efb0cf9664297639205338c30367220f290490676b839"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-walk-2.png",
+      "bytes": 952635,
+      "sha256": "c40c0e064fb96ab322fa561693f666670ac2b735c0b07e01f484a0d3aba1c214"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-walk-3.png",
+      "bytes": 980691,
+      "sha256": "2f693fde30c97d1eeb43f554b90e72c4dad9af4ea73cb194933cdbd8650f2338"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-attack-0.png",
+      "bytes": 1000738,
+      "sha256": "1538cc9f92b752af02538e55f44591e313df4ad539c502512a1afa0dea5e46d5"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-attack-1.png",
+      "bytes": 999972,
+      "sha256": "cb88df6bb28aec5e27b53a4d63b43a1a0818c9b0df8212e5761b932fd364d7ae"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-attack-2.png",
+      "bytes": 1000452,
+      "sha256": "fdc285651f163f47833c39ac992a297163c86f1d7d60cd57f98b3f75c986ffbd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-hit-0.png",
+      "bytes": 1000650,
+      "sha256": "01e7304217b3a54da63d1c7fcf0bd667e0c7ee8febebc84f644bd668373ca7f6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-hit-1.png",
+      "bytes": 1000850,
+      "sha256": "7aa4fe389fca0880971c291019f71038cb9663b481dd0cb4ab7c4cb520579707"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-death-0.png",
+      "bytes": 998979,
+      "sha256": "82c2ff821ef45790fbd93e3213f976138408bf67f8d55b9aaf6b8a0c629fae91"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-death-1.png",
+      "bytes": 998522,
+      "sha256": "dc79b93ee9d4c908b86bd85a60b90e92a9a7089257a9aaff96c88d9299ab9ca2"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-N-death-2.png",
+      "bytes": 997856,
+      "sha256": "064d833a960dc66cc0928aee19dee5c54cfd7a5510640eb5ef00cb05fa7e0e77"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-idle-0.png",
+      "bytes": 1007041,
+      "sha256": "d414309aabe45c5938324f1a7d0bd002ee0797c2d546d978f85f967d6b28de91"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-idle-1.png",
+      "bytes": 1006669,
+      "sha256": "6b8d534da8e33680d0ac9ebdde288a1ba00639403f4e981fdaf6341920bbccd5"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-walk-0.png",
+      "bytes": 991657,
+      "sha256": "6f9779f9ff44a0a3f1ad47cf4520b9d9fead9985bf4376f3bb3404ee87b10509"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-walk-1.png",
+      "bytes": 1000084,
+      "sha256": "95ff535372a15fc0ef58f4f22d4bdb4c033dab5bfe960601e1513a11fb3bad28"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-walk-2.png",
+      "bytes": 1005808,
+      "sha256": "21fcc93d895bd1bf1b006ddd52cbb091e0628a8512e5a913fed3bc447915c30d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-walk-3.png",
+      "bytes": 1005438,
+      "sha256": "dbc2f9e08b848c7bc5b2a6f6b7d76edbe7c07064d18fc891df80ca12464f523a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-attack-0.png",
+      "bytes": 1004067,
+      "sha256": "3feebf4197db53fba4353a077852827620f235fa8fddb56d2790aff1573ef0e1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-attack-1.png",
+      "bytes": 1003035,
+      "sha256": "45a075c053db4b69e8774aaef355139ebed4ba0766536d223d07629d5be29df7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-attack-2.png",
+      "bytes": 1001723,
+      "sha256": "012dd20017b4a47b1a14ff1bbd7b556bca15968773e2c31f6b5de501fa0a6ea3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-hit-0.png",
+      "bytes": 998497,
+      "sha256": "5b038d800b72015536273dd518b551a6b5f71b2f911d6c3574cacb10222822e9"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-hit-1.png",
+      "bytes": 999166,
+      "sha256": "6972a23149979cf4d55f3c13338b4254af0a55b35398f54c0dbcb6957fde589d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-death-0.png",
+      "bytes": 998843,
+      "sha256": "d5d62822164aac4ae22922ea4cdfbdd9c238d38aabc9bc15026016e2b60f1401"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-death-1.png",
+      "bytes": 998742,
+      "sha256": "7c14f39c41d8bb954bb1b8033e7656dd70b60eb5b3122cbefe74fe75a93952f6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/temporal-NE-death-2.png",
+      "bytes": 998680,
+      "sha256": "0a25208044730790a9feb51c6370be6f20694b3d32aab6c0212ee74c3b06e17d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-E.png",
+      "bytes": 1930014,
+      "sha256": "3ae0fb1905d3aa3c1cb58d70d71d8d5e855a69771c164193b8abfd0cd2734201"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-E-0.png",
+      "bytes": 1928157,
+      "sha256": "04144691ef3a007a9beceedbfe0da9b567e2928a1e464b08d82cb8440975a5aa"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-E-1.png",
+      "bytes": 1924032,
+      "sha256": "91d8893b2d690e3b6e2d9f22ef2f85d2ac4ee5df2b7bcaceb96cd4f23da6dc09"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-E-2.png",
+      "bytes": 1922520,
+      "sha256": "2a51708b740483025d289d617a37490519f3396ff8eb3c4e2b37bb7fa84eb2df"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-SE.png",
+      "bytes": 1939758,
+      "sha256": "2f435a353ad0627aaa5aeaa5a112171a289014cebe8912bc9fd1489a5f12452f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-SE-0.png",
+      "bytes": 1933992,
+      "sha256": "2d3ae2d2b0938e52a8acf537eceb0dc9f9dd4c319132e347eb6896e5fac93f1d"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-SE-1.png",
+      "bytes": 1931665,
+      "sha256": "98e7ab0812eb3795fb3dd6bb95ab5a9813c20762482916f0be070277193427a0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-SE-2.png",
+      "bytes": 1928880,
+      "sha256": "99c739cbb4ad7378f915e7af6516256ef7c5eb20ec70191c2d2d9ca7e2022e5f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-S.png",
+      "bytes": 1938468,
+      "sha256": "459c601643f850094f60055859bee5a47e05c5eba53a4fd03dc53fc8848a0e51"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-S-0.png",
+      "bytes": 1932871,
+      "sha256": "7898300830405c1197525a016817eae6a92292183af312d6d225a8dc6ee38fdd"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-S-1.png",
+      "bytes": 1928956,
+      "sha256": "c96ab217f81cdd2d9a15d637b64055c9a8d4c24a69ffad308f4d78670628cad9"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-S-2.png",
+      "bytes": 1925897,
+      "sha256": "8e93e0c0c8c4993af622029403f458c43d4258e55dee6bd74ab9601d77dccea5"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-SW.png",
+      "bytes": 1934159,
+      "sha256": "14057613fa25803482d106e60cc5f05e508b9f2fa0d4efebff140b5c69822197"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-SW-0.png",
+      "bytes": 1920900,
+      "sha256": "5c2e3a01256e1185ed6b066a588c311fd6041c46ce4e0322b674f6d282b31548"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-SW-1.png",
+      "bytes": 1915937,
+      "sha256": "2f71e15b4db29472f38d850c809aeec9d90774743f039948a9f57bc980fda6b9"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-SW-2.png",
+      "bytes": 1913421,
+      "sha256": "8a9ce8dafb4de4905e69cd4973cc849351347371aef12b60620f90b8c2c1a83c"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-W.png",
+      "bytes": 1927897,
+      "sha256": "c0cc37fc767bb05a2d2d3833acc366f5fd48b28a0f410d272ef1f5e37cda82d6"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-W-0.png",
+      "bytes": 1924790,
+      "sha256": "bb776c5be3b8dc41445ad7db0552b35b69cc09fce322e2d9734d2294f42233b9"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-W-1.png",
+      "bytes": 1920513,
+      "sha256": "60ad5f10ece3e07c617062e1d66a26c9351a6bb24d53ec88fbd4120f4a9b27e0"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-W-2.png",
+      "bytes": 1918804,
+      "sha256": "532a90e07767520b5111a4c3d5ef18ba8266b4e1034f9554d147937697bbfe9a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-NW.png",
+      "bytes": 1935914,
+      "sha256": "6521b0adf3396d7542686a039388541255e0d528706040f59f7fa56931bd8b5b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-NW-0.png",
+      "bytes": 1927514,
+      "sha256": "c7bc5e468d0875ac40b987c944d8a057fd73a13a877021281f406f3b432adc2b"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-NW-1.png",
+      "bytes": 1925018,
+      "sha256": "c37ae8820455aab2b83bc361822b40f5907459c9b70220510abf6891c61df070"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-NW-2.png",
+      "bytes": 1921416,
+      "sha256": "ced777f8d55c18cd8431d26236b6d966a616e60ff992afe60f9c3cd533e5dd54"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-N.png",
+      "bytes": 1935826,
+      "sha256": "a2780f8004a9c7e3e9fea29df0f79ca73ab75f78b66e4e138fd541f14db778b1"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-N-0.png",
+      "bytes": 1927499,
+      "sha256": "91210be109dc8dfc9f282391b678de993ef50fd2008481ee5f688383741a780a"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-N-1.png",
+      "bytes": 1923170,
+      "sha256": "5bea74b1f748603f9bb3b21d1cd7e76cad3802630e590887490dd2c123b320a7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-N-2.png",
+      "bytes": 1921108,
+      "sha256": "4983762a1e52b662eb5bad79ebe4b39fe2cac7640aa7dd93c00f89efab775a00"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/incoming-NE.png",
+      "bytes": 1934695,
+      "sha256": "15bb93f535eed5c99a745a5eddbee585c546576db03d6122987c6773f8d875a4"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-NE-0.png",
+      "bytes": 1923908,
+      "sha256": "ff353eaa24cb20faff7b102c29fdfef30affe0e9e7c39bff9a4ec774cedf6ff3"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-NE-1.png",
+      "bytes": 1920627,
+      "sha256": "78a26cbc3427c64cfd30a4ccc066942c303a1d99f04b2a04bfd50db38ac5a74f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/death-NE-2.png",
+      "bytes": 1917813,
+      "sha256": "599fa9dd28641f2bbc6ae7614ba060b6c2f911e8d14c67fba8b149e00e1c1443"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-E.png",
+      "bytes": 2080869,
+      "sha256": "e0378b2850b049b055522dfc58402b46d8e1d9225e4bdc517bb7cd4d82cba22e"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-SE.png",
+      "bytes": 2085610,
+      "sha256": "dfcb09db7cd7bf8f0d93f7a6d4422de2268a78f8751e24678cf7ff44039a52ba"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-S.png",
+      "bytes": 2087777,
+      "sha256": "875fe360e55ea7df6f0b67671c3321820b4dcf278c1f20c1eb917f58ed4b528f"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-SW.png",
+      "bytes": 2090315,
+      "sha256": "f154da28633c8b386c90045cfef02f72a2d4068f59569f15b4e4e87ad6a436b7"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-W.png",
+      "bytes": 2080431,
+      "sha256": "44dff560146594ad1c38f4d2745aa2fe1419264245d55d9b49b7417826ec3443"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-NW.png",
+      "bytes": 2083711,
+      "sha256": "9f697ebb398ce9d0118dd23469eab421a933ea3d41a0ef6cf2eaceafa9770284"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-N.png",
+      "bytes": 2083813,
+      "sha256": "22291414d8ae70a975ce27da694b62898467da6ee62ecd577a0d133640392781"
+    },
+    {
+      "path": "captures/tomb-guardian269-batch16-repaired/monster-NE.png",
+      "bytes": 2089125,
+      "sha256": "7da5826f437af1437db6185ed5ceff5748ce129cc3bcd90380ce970c40286744"
+    }
+  ],
+  "completed_added": 0,
+  "production_applied": false,
+  "Android_real_device": "NOT_RUN"
+}
