@@ -57,6 +57,36 @@ def comparable(presentation):
     return result
 
 
+def validated_native_contract(proof):
+    """Reuse only a complete approved matrix, including newly authored6/8 gait.
+
+    A larger frame count alone is insufficient: every mandatory role must
+    retain its full eight-direction count and every source pose stays unique.
+    """
+    native_count = proof.get('distinct_pixel_frames')
+    frames = proof.get('frames', [])
+    required(native_count in (104, 112, 128, 144) and len(frames) == native_count,
+             'A complete104/112/128/144 native contract is required')
+    counts = []
+    for role in ('idle', 'walk', 'attack', 'hit', 'death'):
+        track = proof.get('tracks', {}).get(role, {})
+        count = track.get('source_frames_per_direction')
+        required(type(count) is int and count >= 2, 'Missing actual source role: ' + role)
+        required(track.get('unique_frames_per_direction') == count,
+                 'A role must retain unique actual phases: ' + role)
+        required(track.get('direction_unique_frames') == dict.fromkeys(proof['directions'], count),
+                 'Every direction must retain every source phase: ' + role)
+        counts.append(count)
+    required(counts in ([2, 3, 3, 2, 3], [2, 4, 3, 2, 3],
+                        [2, 6, 3, 2, 3], [2, 8, 3, 2, 3])
+             and sum(counts) * 8 == native_count,
+             'Frame totals must agree with the complete five-role matrix')
+    hashes = [frame.get('rgba_sha256') for frame in frames]
+    required(all(isinstance(value, str) and re.fullmatch(r'[0-9a-f]{64}', value) for value in hashes)
+             and len(set(hashes)) == native_count, 'Every source pose must remain distinct')
+    return native_count
+
+
 def prepare(root, cases):
     read = lambda p: json.loads((root / p).read_text())
     targets = {r['key']: r for r in read('data/animation_authoring_sources.json')['targets']}
@@ -94,8 +124,7 @@ def prepare(root, cases):
         proof = json.loads(proof_path.read_text())
         required(source_key in proof['target_keys'] and proof['reference'] == target['reference'], 'Source provenance identity mismatch')
         required(proof['directions'] == ['E', 'SE', 'S', 'SW', 'W', 'NW', 'N', 'NE'], 'All independent source views required')
-        native_count = proof['distinct_pixel_frames']
-        required(native_count in (104,112) and len(proof['frames']) == native_count, 'Do not weaken the original104/112 contract')
+        native_count = validated_native_contract(proof)
         texture_pins = []
         for path in sorted(set(re.findall(r'path="(res://[^\"]+\.png)"', frames.read_text()))):
             relative = path.removeprefix('res://')
@@ -136,7 +165,7 @@ def prepare(root, cases):
                        independent_target_visual_review='PENDING')
         derived['source_visual_review_preserved'] = deepcopy(proof['visual_review'])
         derived['visual_review'] = {'identity_preserved':True,'eight_views':True,'motion_roles':True,'no_clipping':True,
-            'notes':'Source-only reuse: identical authoritative project image/cell/body/weapon and original full104/112 pose contract. Every source SpriteFrames/region/margin/PNG byte is unchanged. Per-target native display width, height and tint preserve its presentation. Actual target Main, unique boss skills, gait/model/contact and independent final visual judgment remain pending.'}
+            'notes':'Source-only reuse: identical authoritative project image/cell/body/weapon and complete approved five-role native matrix. Every source SpriteFrames/region/margin/PNG byte is unchanged. Per-target native display width, height and tint preserve its presentation. Actual target Main, unique boss skills, gait/model/contact and independent final visual judgment remain pending.'}
         derived['retargeting'] = {'source_id':source_key,'source_SpriteFrames':frames_path,
             'source_SpriteFrames_SHA256':case['source_frames_SHA256'],
             'source_provenance_SHA256':case['source_provenance_SHA256'],
