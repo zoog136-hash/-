@@ -48,7 +48,10 @@ def build(root, ci_file):
         latest.setdefault(run['workflow_id'], run)
     missing_ci = [{'workflow_id': i, 'name': name} for i, name in required.items() if i not in latest]
     full_ci_pass = not missing_ci and all(latest[i]['conclusion'] == 'success' for i in required)
-    active_path = root / 'docs/remake/evidence/pr122-remaining106/batch10/continuation-state.json'
+    checkpoint = read('docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json')
+    active_path = (root / checkpoint.get('active_batch_checkpoint',
+        'docs/remake/evidence/pr122-remaining106/batch10/continuation-state.json')).resolve()
+    assert active_path.is_relative_to(root), 'Active checkpoint must stay inside checkout'
     active = json.loads(active_path.read_text()).get('active_authoring', {}) if active_path.is_file() else {}
     files = {}
 
