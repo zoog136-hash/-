@@ -141,7 +141,7 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Read batch11 continuation-state and actual PR122 HEAD. Completed392/498 preserved; runtime394; source-HOLD18 inclnewDeer/Monk, CI-wait2, not-started86. Raw45 and Main70 PNGs preserved. No new approval; exact-HEAD CI and source/model/complete8-view failures remain.",
+  "resume": "Read actual remote PR122 HEAD and batch12 continuation-state. Legacy392/runtime394 remain; native donor2 are UNMAPPED qualityHOLD and not new species. Complete private delivery and target/source/chronology/layer validation, then continue missing source matrices without re-authoring approvals.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -150,10 +150,10 @@
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "f0395012488086699c6b22339e6881be8b790bd6",
+  "last_successful_pushed_code_commit": "0a81d5cc8ff3dbafb06a5378408512ee32e68579",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch11/continuation-state.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch12/continuation-state.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -178,5 +178,6 @@
     "private_source_kit_body_count": 2,
     "private_source_kit_exact_target_mapping": "UNCONFIRMED"
   },
-  "last_successful_pushed_code_commit_is_previous_checkpoint": true
+  "last_successful_pushed_code_commit_is_previous_checkpoint": true,
+  "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD."
 }
