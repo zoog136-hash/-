@@ -5400,11 +5400,11 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 
 func _directional_image_path(kind: String, record: Dictionary) -> String:
 	var source_id: String = str(record.get("sourceId", ""))
-	# PR122: exact requested shared visual identity, without changing equipment or stats.
-	# Mythic male Dark Elf/Gunner display the *female* source, and blue
-	# Lance Master displays the red source, with tint in animation profiles.
+	# PR122: explicit presentation-only source sharing; combat/catalog IDs remain distinct.
+	# Mythic male Dark Elf/Gunner use their female source; both colored
+	# Lance Masters use the ordinary transform:44 source with independent tints.
 	if kind == "transform":
-		var visual_donors: Dictionary = {"138":"139", "140":"141", "182":"179"}
+		var visual_donors: Dictionary = {"138":"139", "140":"141", "179":"44", "182":"44"}
 		if visual_donors.has(source_id):
 			var donor_id: String = str(visual_donors[source_id])
 			var donor_metadata: Dictionary = directional_art.get("transform:" + donor_id, {})
