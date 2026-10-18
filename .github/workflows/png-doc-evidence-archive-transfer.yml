@@ -15,57 +15,127 @@ jobs:
           sparse-checkout: |
             docs
           sparse-checkout-cone-mode: true
-      - name: Archive non-runtime documentation PNG, preserve originals
+      - name: Split documentation PNG into <=220 MiB original-byte ZIPs
         shell: bash
         run: |
           python3 - <<'PY'
-          import hashlib, json, zipfile
           from pathlib import Path
-          docs=Path("docs")
-          all_images=sorted(p for p in docs.rglob("*.png") if p.is_file())
-          if not all_images:
-              raise SystemExit("No documentation PNG files found")
-          groups = {
-              "remake": [p for p in all_images if p.as_posix().startswith("docs/remake/evidence/")],
-              "other": [p for p in all_images if not p.as_posix().startswith("docs/remake/evidence/")],
-          }
-          Path("archive-output").mkdir(exist_ok=True)
-          for name, images in groups.items():
-              manifest = {
-                  "source": "zoog136-hash/-",
-                  "category": "documentation PNG evidence; not a declaration of unused status",
-                  "removal_approved": False,
-                  "source_paths_preserved": True,
-                  "files": [],
-              }
-              destination = Path("archive-output") / ("TWILIGHT_docs_png_" + name + ".zip")
-              with zipfile.ZipFile(destination, mode="w", compression=zipfile.ZIP_STORED, allowZip64=True) as z:
-                  for p in images:
-                      digest=hashlib.sha256()
-                      with p.open("rb") as handle:
-                          for chunk in iter(lambda: handle.read(1024*1024), b""):
-                              digest.update(chunk)
-                      stat=p.stat()
-                      z.write(p, arcname=p.as_posix())
-                      manifest["files"].append({"path":p.as_posix(),"size":stat.st_size,"sha256":digest.hexdigest()})
-                  z.writestr("MANIFEST.json",json.dumps(manifest,ensure_ascii=False,indent=2))
-              print(name, len(images), destination.stat().st_size, flush=True)
-              if not images:
-                  raise SystemExit("empty archive unexpected")
+          import zipfile, hashlib, json
+          images=sorted(p for p in Path("docs").rglob("*.png") if p.is_file())
+          if not images:
+              raise SystemExit("No docs PNG found")
+          dest=Path("archive-output")
+          dest.mkdir(exist_ok=True)
+          limit=220*1024*1024
+          parts=[]
+          current=[]
+          size=0
+          for p in images:
+              n=p.stat().st_size
+              if current and size+n>limit:
+                  parts.append(current)
+                  current=[]
+                  size=0
+              current.append(p)
+              size+=n
+          if current:
+              parts.append(current)
+          if len(parts)>10:
+              raise SystemExit("More than ten archive parts required: "+str(len(parts)))
+          for i, group in enumerate(parts, 1):
+              path=dest/("TWILIGHT_docs_PNG_part_%02d.zip"%i)
+              manifest={"part":i,"parts":len(parts),"source":"zoog136-hash/-",
+                        "scope":"docs/**/*.png - documentation evidence, not proven unused",
+                        "source_paths_preserved":True,"removal_approved":False,"files":[]}
+              with zipfile.ZipFile(path,"w",compression=zipfile.ZIP_STORED,allowZip64=True) as out:
+                  for p in group:
+                      sha=hashlib.sha256()
+                      with p.open("rb") as stream:
+                          for b in iter(lambda:stream.read(1024*1024),b""):
+                              sha.update(b)
+                      out.write(p,arcname=p.as_posix())
+                      manifest["files"].append({"path":p.as_posix(),"size":p.stat().st_size,"sha256":sha.hexdigest()})
+                  out.writestr("MANIFEST.json",json.dumps(manifest,ensure_ascii=False,indent=2))
+              print(path, len(group), path.stat().st_size,flush=True)
+          print("PART_COUNT",len(parts),"PNG_COUNT",len(images),flush=True)
           PY
-      - name: Publish remake PNG archive for Drive transfer
+      - name: Upload PNG backup part 01
         uses: actions/upload-artifact@v4
         with:
-          name: TWILIGHT-doc-png-remake-transfer
-          path: archive-output/TWILIGHT_docs_png_remake.zip
+          name: TWILIGHT-docs-PNG-part-01
+          path: archive-output/TWILIGHT_docs_PNG_part_01.zip
           retention-days: 7
-          if-no-files-found: error
+          if-no-files-found: warn
           compression-level: 0
-      - name: Publish other docs PNG archive for Drive transfer
+      - name: Upload PNG backup part 02
         uses: actions/upload-artifact@v4
         with:
-          name: TWILIGHT-doc-png-other-transfer
-          path: archive-output/TWILIGHT_docs_png_other.zip
+          name: TWILIGHT-docs-PNG-part-02
+          path: archive-output/TWILIGHT_docs_PNG_part_02.zip
           retention-days: 7
-          if-no-files-found: error
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-03
+          path: archive-output/TWILIGHT_docs_PNG_part_03.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 04
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-04
+          path: archive-output/TWILIGHT_docs_PNG_part_04.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 05
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-05
+          path: archive-output/TWILIGHT_docs_PNG_part_05.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 06
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-06
+          path: archive-output/TWILIGHT_docs_PNG_part_06.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 07
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-07
+          path: archive-output/TWILIGHT_docs_PNG_part_07.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 08
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-08
+          path: archive-output/TWILIGHT_docs_PNG_part_08.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 09
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-09
+          path: archive-output/TWILIGHT_docs_PNG_part_09.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload PNG backup part 10
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT-docs-PNG-part-10
+          path: archive-output/TWILIGHT_docs_PNG_part_10.zip
+          retention-days: 7
+          if-no-files-found: warn
           compression-level: 0
