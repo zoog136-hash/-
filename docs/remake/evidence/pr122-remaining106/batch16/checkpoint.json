@@ -4,13 +4,13 @@
   "branch": "feature/twilight-remaining106-20261016",
   "PR": 122,
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
-  "last_safe_commit": "ed47d49e",
+  "last_safe_commit": "844a2633",
   "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
   "counts": {
     "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 386,
+    "VERIFIED_COMPLETED": 387,
     "FRAME_INSUFFICIENT": 14,
-    "SOURCE_HOLD": 18,
+    "SOURCE_HOLD": 17,
     "IN_PROGRESS": 1
   },
   "approved_ids": [
@@ -413,9 +413,11 @@
     "monster:질투의 아타바크",
     "monster:알비노 피닉스",
     "monster:에바 왕국 상어전사",
-    "monster:알비노 변이된 골렘"
+    "monster:알비노 변이된 골렘",
+    "monster:알비노 디어"
   ],
   "current_ids": [
+    "transform:269",
     "monster:얼음 여왕"
   ],
   "remaining_ids": [
@@ -498,7 +500,6 @@
     "monster:스파이더",
     "monster:알비노 데몬",
     "monster:알비노 드라이어드",
-    "monster:알비노 디어",
     "monster:알비노 몽크",
     "monster:알비노 심해어",
     "monster:알비노 유니콘",
@@ -572,10 +573,6 @@
       "reason": "N/NE10자세부분만존재, 새앞/측면출력4건이 도구 output moderation_blocked로 실패. 실패ID·정확프롬프트보존, 전체40/104성공아님."
     },
     {
-      "id": "monster:알비노 디어",
-      "reason": "Complete144 source matrix unavailable: E/SE/W/NW walk rectangles overlap neighboring bodies; attack-v03 contains21 rather than24 bodies. Gait/model/alpha/Main approval incomplete; no source omissions or threshold changes allowed."
-    },
-    {
       "id": "monster:알비노 몽크",
       "reason": "Whole128 matrix unavailable: six sheets fail unchanged ownership/body-count guards. All8 standalone E originals fail strict8-neighbor alpha>100 body rule; only3 qualify for unchanged3/11-pixel microrepair. Correct opposite support and stable model/camera remain unapproved."
     },
@@ -608,14 +605,14 @@
     "tools/l1j/build_external_spx_actor_pack.py",
     "tools/l1j/spx_decode.py"
   ],
-  "next": "Review actual Main and timing; create missing Deer walk32/attack24 while Golem validation runs; no intermediate remote push or CI.",
+  "next": "Repair only verified Tomb269 source defects after immutable archive restoration and actual Main/source comparison; continue production, final CI deferred",
   "source_SHA_ledger": "spx-source-ledger.json",
   "SPX_private_delivery": "NOT_PUBLICLY_DELIVERED; candidates rebuilt from accessible user Drive originals; redistribution permission HOLD",
   "Android_real_device": "NOT_RUN",
   "unrecovered": "Previous2 uncommitted Reaper PNG and QA draft remain UNRECOVERED. All156 tracked PR122 PNG are restored and SHA checked.",
   "active_authoring": {
     "monster:알비노 디어": {
-      "status": "HOLD",
+      "status": "APPROVED",
       "planned_contract": {
         "idle": 2,
         "walk": 8,
@@ -625,7 +622,7 @@
         "directions": 8,
         "unique_poses": 144
       },
-      "complete_approved_source_matrix": false,
+      "complete_approved_source_matrix": true,
       "currently_valid_source_parts": [
         "idle16",
         "walk64",
@@ -633,8 +630,10 @@
         "hit16",
         "death24"
       ],
-      "next": "Finish actual Main/baseline/temporal and visual transitions, approve only on full PASS",
-      "blocker": "Source144 complete; actual Main baseline and continuous QA running, local production profile not applied"
+      "next": "Retain approved whole-source pack and original raw failures",
+      "blocker": "None for local native five-motion contract; final integrated CI and Android device verification separate",
+      "runtime_connected": true,
+      "proof": "docs/remake/evidence/pr122-remaining106/batch16/deer-completion-decision.json"
     },
     "monster:알비노 몽크": {
       "status": "HOLD",
@@ -843,23 +842,23 @@
   },
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
   "new_approved_this_batch": 5,
-  "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-current-ledger.json",
+  "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-deer.json",
   "final_CI": "PENDING_NEW_PRODUCTION_BATCH",
   "derived_navigation": "Local test bake outputs preserved in /workspace/qa/derived-navigation-before-restore; all26 original Git navigation files restored unchanged.",
-  "state": "GOLEM_COMPLETED; DEER_144_RAW_PRESERVED_AND_ACTUAL_MAIN_REVIEW_RUNNING",
-  "active": "monster:알비노 디어",
-  "newly_drawn_poses": 112,
+  "state": "GOLEM_AND_DEER_LOCALLY_COMPLETED; TOMB269_SOURCE_RESTORATION_CONTINUES",
+  "active": "transform:269",
+  "newly_drawn_poses": 168,
   "preserved_prior_poses": 32,
   "complete_native_matrix": 144,
   "new_source_PNG": 16,
   "total_pack_PNG": 18,
   "runtime_profile_applied": true,
   "actual_Main": "PASS",
-  "new_completed": 1,
+  "new_completed": 2,
   "remaining_ids_source": "../batch15/all498-production-status.json",
-  "normal_completed": 386,
-  "approvals_total": 400,
-  "remaining_unapproved": 98,
+  "normal_completed": 387,
+  "approvals_total": 401,
+  "remaining_unapproved": 97,
   "deer_source_failures": {
     "attack_v01": "Identity drift: antler rack shape; preserved outside pack",
     "attack_v02": "All4 six-pose sheets fail unchanged foreign-body rectangle guard; reframe as8 full-direction three-pose vertical sheets, never lower thresholds",

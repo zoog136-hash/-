@@ -2,13 +2,13 @@
   "target": 498,
   "unique_ids": 498,
   "session_start_approval_preserved": 394,
-  "session_added": 6,
-  "approvals_total": 400,
+  "session_added": 7,
+  "approvals_total": 401,
   "status_counts": {
     "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 386,
+    "VERIFIED_COMPLETED": 387,
     "FRAME_INSUFFICIENT": 14,
-    "SOURCE_HOLD": 18,
+    "SOURCE_HOLD": 17,
     "IN_PROGRESS": 1
   },
   "species": [
@@ -3312,9 +3312,9 @@
       "id": "monster:알비노 디어",
       "name": "알비노 디어",
       "approval_preserved": false,
-      "production_status": "SOURCE_HOLD",
-      "reason": "Complete144 source matrix unavailable: E/SE/W/NW walk rectangles overlap neighboring bodies; attack-v03 contains21 rather than24 bodies. Gait/model/alpha/Main approval incomplete; no source omissions or threshold changes allowed.",
-      "frames_path": ""
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Batch16 full144 reference-based native pack, actual Main3272 with baseline and continuous81417 checks; new art56 preserved prior88, not SPX originals",
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/SpriteFrames.tres"
     },
     {
       "id": "monster:알비노 몽크",
@@ -3998,5 +3998,5 @@
     }
   ],
   "unrecovered_assets_note": "Previous Reaper PNG2 and QA draft remain UNRECOVERED, not additional lost species. Large QA archives preserved in start commit; all156 tracked PR122 PNG restored/SHA checked.",
-  "batch16_added": 1
+  "batch16_added": 2
 }
