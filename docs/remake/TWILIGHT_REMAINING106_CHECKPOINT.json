@@ -21,7 +21,10 @@
     "locally_passed_pending_CI_APK": 2,
     "canonical_Main_reports_preserved_PR100": 255,
     "new_local_PASS_Main_reports": 4,
-    "connected_coverage_Main_report_paths": 259
+    "connected_coverage_Main_report_paths": 259,
+    "current_source_HOLD_including_new": 18,
+    "not_started_after_two_new_source_attempts": 86,
+    "new_approved": 0
   },
   "protected_production_changed": true,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
@@ -138,7 +141,7 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Continue animation production from batch08: genuine run poses and missing directions; Doguri E6 and maleReaper E6 actual Main technical previews pass, final model/near-far chronology/full8views remain HOLD. GuardianW arm fixed but material HOLD; Tomb ground02 model/root/contact HOLD unchanged. Latest-head CI stays background; qualified392/498 unchanged.",
+  "resume": "Read batch11 continuation-state and actual PR122 HEAD. Completed392/498 preserved; runtime394; source-HOLD18 inclnewDeer/Monk, CI-wait2, not-started86. Raw45 and Main70 PNGs preserved. No new approval; exact-HEAD CI and source/model/complete8-view failures remain.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -147,10 +150,10 @@
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
+  "last_successful_pushed_code_commit": "f0395012488086699c6b22339e6881be8b790bd6",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch08/checkpoint.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch11/continuation-state.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -163,5 +166,17 @@
   },
   "historical_user_directive_before_recovery": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
   "protected_production_change_scope": "Batch05 repaired one existing female Reaper crop/margin/provenance only. Original PNGs,103otherframes, runtime stats/physics/markers preserved. Batch06 changes QA only. Batch07 authors18new wholePNG and actual E6 preview only; no production asset/runtime catalog changed.",
-  "latest_user_priority": "나머지 애니메이션 작업부터해: actual source production first; CI background, no stop at investigation/checkpoint/HOLD"
+  "latest_user_priority": "나머지 애니메이션 작업부터해: actual source production first; CI background, no stop at investigation/checkpoint/HOLD",
+  "latest_source_status": {
+    "new_approved": 0,
+    "raw_PNGs": 45,
+    "raw_PNG_bytes": 85840707,
+    "Main_technical_checks": 8786,
+    "Main_capture_PNGs": 70,
+    "source_HOLD18": true,
+    "Android": "NOT_RUN",
+    "private_source_kit_body_count": 2,
+    "private_source_kit_exact_target_mapping": "UNCONFIRMED"
+  },
+  "last_successful_pushed_code_commit_is_previous_checkpoint": true
 }

@@ -87,8 +87,11 @@ def build(root, ci_file):
         elif previous and previous['status'].startswith('HOLD'):
             row.update(status='HOLD', queue='EXISTING_HOLD', reason=previous['reason'])
         elif key in active or binding:
-            row.update(status='AUTHORING', queue='AUTHORING_UNAPPROVED',
-                       reason='Source work or a runtime binding exists; full required motion and visual/CI approval are not established.')
+            blocked = key in active and active[key].get('status') == 'HOLD'
+            row.update(status='HOLD' if blocked else 'AUTHORING',
+                       queue='SOURCE_HOLD' if blocked else 'AUTHORING_UNAPPROVED',
+                       reason=active.get(key, {}).get('blocker',
+                           'Source work or a runtime binding exists; full required motion and visual/CI approval are not established.'))
             if key in active:
                 row['active_authoring'] = active[key]
         else:
@@ -119,6 +122,12 @@ def build(root, ci_file):
             row['quality_work'] = 'Existing Android walking/running complaint; genuine 6-8 pose walk and distinct run, all eight directions and transitions. Count as quality repair, not a new species.'
         rows.append(row)
     counts = Counter(x['status'] for x in rows)
+    outside_classes = [{'id': x['key'], 'name': x['name'],
+                        'frames_path': profiles.get(x['key'], {}).get('frames_path', ''),
+                        'inside498': False}
+                       for x in coverage['identities'] if x['group'] == 'class'
+                       and profiles.get(x['key'], {}).get('layout') == 'directional8'
+                       and profiles.get(x['key'], {}).get('frames_path')]
     return {'schema': 1, 'observed_UTC': datetime.now(timezone.utc).isoformat(),
             'repository': 'zoog136-hash/-', 'PR': 122, 'audited_commit': head,
             'scope': '180 hero-plus transforms + 258 normal monsters + 60 bosses; fixed 498 unique identities',
@@ -141,6 +150,11 @@ def build(root, ci_file):
             'quality_followup14': [{'id': 'transform:' + n,
                                    'inside498': 'transform:' + n in {x['id'] for x in rows},
                                    'new_species_count': 0, 'Android_retest': 'NOT_RUN'} for n in FOLLOWUP14],
+            'reported398_scope_crosscheck': {
+                'target_runtime_bindings': sum(x['runtime_connected'] for x in rows),
+                'additional_base_class_bindings_outside498': outside_classes,
+                'arithmetic_total': sum(x['runtime_connected'] for x in rows) + len(outside_classes),
+                'interpretation': '394 target bindings + 4 base classes can total398 connections. This is a scope/counting explanation candidate, not evidence of398 approved target species; two target bindings still await CI and base classes are outside180+258+60.'},
             'identities': rows, 'resources': list(files.values()),
             'production_mutated': False, 'prior_approval_assets_replaced': False}
 

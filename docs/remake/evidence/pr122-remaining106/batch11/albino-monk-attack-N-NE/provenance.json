@@ -1,0 +1,24 @@
+{
+  "key": "monster:알비노 몽크",
+  "part": "attack-N-NE",
+  "request": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight-pr122/assets/monsters/original/atlas_3.png"
+    ],
+    "prompt": "Use ONLY the WHITE ALBINO APE at the BOTTOM ROW FIRST COLUMN of reference atlas (not any other creature). Exact original identity: huge hunched white shaggy ape/gorilla with long MASSIVE muscular arms, broad bluish-grey bare chest/belly and face, red eyes, black muzzle, protruding white fangs, short powerful bent legs, dark broad knuckles and toes with short claws. No clothing, armor, sword, horns, tail or new accessories. Same original white fur pattern, ape facial structure, arm-to-torso and leg proportions. Detailed painterly 2D RPG game sprite matching reference, NOT a cartoon or generic white yeti. One fully CONNECTED animal per cell; all limbs/knuckles/toes intact, no detached hands, no duplicated limbs, no isolated particles. Transparent alpha ZERO outside animal, no ground/floor/shadow/background/glow/text/guides. Character and every fingertip/foot comfortably inside cell with at least15% transparent margin on every side; complete rectangular bounds must NEVER touch or overlap neighboring figures. Same camera elevation and model scale across phases. Real new articulated anatomy, not translation/scaling/rotated/mirrored stills. Ground support and natural weight transfer must remain believable. E faces right profile, SE toward bottom-right, S true front toward bottom, SW bottom-left, W left profile, NW true rear toward top-left, N true rear straight away/top with no frontal eyes, NE true rear toward top-right.\nExactly TWO COLUMNS, LEFT column faces N and RIGHT column faces NE. Directions are COLUMNS, chronological phases are ROWS. THREE ROWS,6 complete poses total. Row0 windup: shift weight to hind feet, bend near elbow and pull fist/shoulder back, opposite knuckle supports. Row1 CONTACT: naturally rotate torso/shoulder and extend near arm in a forceful low forward knuckle/fist smash toward facing direction; wrist/fist remains attached and right at contact plane. Row2 recovery: bend elbow and draw shoulder/chest back toward crouch. Do not stretch arm into tentacle or enlarge fist unnaturally; original ape arm length and proportions stable. No weapon/effects."
+  },
+  "original_output": "/workspace/generated_images/exec-19037c69-9cd8-4bdb-a562-b0fbecf3e77b.png",
+  "rows": 3,
+  "directions": [
+    "N",
+    "NE"
+  ],
+  "directions_axis": "columns",
+  "role": "attack",
+  "production_applied": false,
+  "completed_added": 0,
+  "actual_Main": "NOT_RUN",
+  "final_model_approval": false,
+  "Android_real_device": "NOT_RUN"
+}
