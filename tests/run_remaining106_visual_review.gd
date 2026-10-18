@@ -151,9 +151,42 @@ func tick(count: int = 1) -> void:
 			elif review_had_drop: await review_capture("lifecycle-manual-pickup")
 
 func lifecycle_case() -> void:
+	# The inherited lifecycle resets the actors to center and center + (40, 0),
+	# after the separate pose inspection has selected another clear position.
+	# A clear long-range AI approach does not guarantee that this finishing
+	# position is clear. Select it before combat, keeping the inherited fight,
+	# death, drop and pickup code and every capture-time clearance check intact.
+	check(review_prepare_lifecycle_clear(), "lifecycle setup has no foreground/other actor cover")
 	review_stage = "lifecycle"
 	review_had_drop = false
 	await super.lifecycle_case()
 	review_stage = ""
 	for stem: String in ["lifecycle-hit","lifecycle-death-0","lifecycle-death-1","lifecycle-death-2", "lifecycle-ground-drop","lifecycle-manual-pickup"]:
 		check(review_seen.has(stem), "actual rendered lifecycle event " + stem)
+
+func review_prepare_lifecycle_clear() -> bool:
+	var prior_center := center
+	var prior_player: Vector2 = world.player.position
+	for radius: float in [0., 80., 160., 240., 320., 480., 640., 800., 1120., 1600., 2400., 3200.]:
+		for direction: int in range(8):
+			var player_point := prior_center + screen_direction(direction) * radius
+			var actor_point := player_point + Vector2(40, 0)
+			if not route_clear(player_point, 150.) or not route_clear(actor_point, 0.): continue
+			if not world.field_map.line_clear(player_point, actor_point): continue
+			world.player.position = player_point
+			world.player.camera.position = Vector2(0, -32)
+			world.player.camera.reset_smoothing()
+			world.player.camera.force_update_scroll()
+			world.field_renderer.refresh_visible()
+			if not review_body_clear(actor_point) or not review_body_clear(player_point): continue
+			center = player_point
+			report.setup.visual_lifecycle = {"player": [player_point.x, player_point.y],
+				"actor": [actor_point.x, actor_point.y], "original_actor_offset": [40, 0],
+				"foreground_and_other_actor_clear": true, "map_modified": false,
+				"stats_or_combat_changed": false}
+			return true
+	world.player.position = prior_player
+	world.player.camera.reset_smoothing()
+	world.player.camera.force_update_scroll()
+	world.field_renderer.refresh_visible()
+	return false

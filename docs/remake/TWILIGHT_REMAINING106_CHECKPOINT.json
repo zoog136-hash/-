@@ -1,13 +1,13 @@
 {
-  "observed_utc": "2026-10-18T02:40:27.054085+00:00",
+  "observed_utc": "2026-10-18T03:34:44.838355+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
-  "base_sha": "f43c22daa6e9967185465a98abd1b8840d7593a0",
+  "base_sha": "746627abcf4498fca22c55948b8b34029265967b",
   "original_saved_commit": "a0ad979eb6325d72f7a36e9a24eaa1b7c439aaed",
   "carried_work_commit": "fe22e0b445980253c140ca654fe10a4e003ffb6c",
-  "user_directive": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
-  "pr100_merge": "not_performed; stopped_by_user",
+  "user_directive": "Resume PR122 from actual latest safe Git commit in an isolated worktree; preserve existing392, normal Codex work, main and user saves; no reset/delete/force push.",
+  "pr100_merge": "Already merged by repository owner on2026-10-17 before this recovery; this session did not merge PR100 or merge into main.",
   "counts": {
     "target": 498,
     "completed": 392,
@@ -23,12 +23,12 @@
     "new_local_PASS_Main_reports": 4,
     "connected_coverage_Main_report_paths": 259
   },
-  "protected_production_changed": false,
+  "protected_production_changed": true,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
   "validation": {
     "runner_unit": "31 PASS; controlled subprocess behavior only",
     "full10_latest_replay": "PASS: complete10, 606800 actual Main checks, 1032 native phases, zero failures; headless temporal evidence, not OpenGL; strict wrapper PASS",
-    "exact_head_CI": "dcb21f0 resource and initial workflows PASS, full set still running; subsequent one-frame metadata fix requires fresh exact-HEAD dispatch. Previous successes do not approve latest.",
+    "exact_head_CI": "ea37605 resource integrity and Tomb source01/ground02 succeeded; two new conservative QA position fixes require fresh exact-next-HEAD CI/APK. Prior commit results are not promoted.",
     "Android_APK": "f244b71 official ARM64 signed debug APK build/static workflow38853944165 SUCCESS, artifact12029098252; current later HEAD not rebuilt yet. Device UNVERIFIED.",
     "Android_real_device": "unverified",
     "importer_legacy_and_safety": "54 PASS including four new read-only success/failure/profile/output/CLI tests",
@@ -42,11 +42,54 @@
     "new_pose_patch": "New optional1to1failed-slot input:8testsPASS incl16failure subcases, rollback, original103 preservation, complete unchanged baseline revalidation, CLI read-only and pinned final4evidence roles. Legacy54/pose29/direction13/runner31PASS; old6parser/guard/transaction function bodies byte-exact.",
     "tomb269_latest_actual_Main": "Source01 63169, ground02 63215 checks; full112 each, all8original contacts, extra SW1/HP61, clear completed-Iron-Golem comparison40; automatic PASS only, final source HOLD",
     "post_recovery_10_transform": "PASS:669518 checks/1032 phases; zero failures; new nested-terrain guard active; headless regression, not all-actor visual/device approval",
-    "female_reaper_crop": "PASS: restored53existing alpha>100 pixels with samePNG/canvas/root and103unchangedframes; actualOpenGL67638checks/104native/8realcontacts/AI/lifecycle; full14walk/run task remains incomplete"
+    "female_reaper_crop": "PASS: restored53existing alpha>100 pixels with samePNG/canvas/root and103unchangedframes; actualOpenGL67638checks/104native/8realcontacts/AI/lifecycle; full14walk/run task remains incomplete",
+    "latest_pair_complete_clearance": {
+      "actual": {
+        "checks": 3389,
+        "failures": [],
+        "AI_directions_per_subject": 8,
+        "manual_pickup_per_subject": true
+      },
+      "temporal": {
+        "checks": 81009,
+        "failures": [],
+        "native_phases": [
+          112,
+          104
+        ],
+        "rendered_native_phases": [
+          112,
+          104
+        ]
+      },
+      "comparison": {
+        "checks": 295,
+        "failures": [],
+        "completed_baseline": "지옥의 쿠거"
+      },
+      "transform": {
+        "checks": 69055,
+        "failures": [],
+        "native_phases": 112,
+        "actual_marker_contacts": 8
+      },
+      "QA_source_sha256": {
+        "tests/run_remaining106_visual_review.gd": "fedc25d71e940f63b9da7ed0f6ebe3543fb333388fabc330b200b8d324c71acf",
+        "tests/original_based_pose_review_helper.gd": "4fd72fdb476fc0cf2ff976db958153e13c09e5e3414451bb46287b57a5b8aa81",
+        "tests/original_based_temporal_main_test.gd": "210eaec4af65c7658b65e75e18a3b823fd699920cdf5b0005fa87a99a476a727",
+        "tests/run_remaining106_style_compare.gd": "f8b5cec46e67dcdc010ea386214798874b14ced21fcf10e7c6b78f7d0b94e549",
+        ".github/workflows/remaining106-animation-validate.yml": "f8faebdbb32bc4ec00ed945db6ac5c7a74519f5fa07b23a5c1d3155cce8ba993"
+      },
+      "engine": "4.7.2.stable.official.ed1daf0bf",
+      "renderer": "OpenGL3 compatibility, Mesa llvmpipe software; actual Main viewport",
+      "VRAM": "NOT_MEASURED",
+      "Android_real_device": "NOT_RUN",
+      "full_PNG_delivery": "Only two selected PNG bodies are in Git; other local PNG bodies are explicitly not delivered here. New remote CI artifacts are separate."
+    }
   },
   "priority": {
-    "iguana": "112 local static/temporal/actual Main OpenGL+AI+lifecycle+independent/baseline visual gates PASS; connected immutable source; CI/APK pending",
-    "agni": "104 local static/temporal/actual Main OpenGL+AI+lifecycle+independent/baseline visual gates PASS; unoccluded final views; connected immutable source; CI/APK pending",
+    "iguana": "Latest clear-map actual Main, full112native and completed-baseline comparison locally PASS; full latest CI/APK pending.",
+    "agni": "Reproduced6lifecycle-bound and2walk-endpoint failures; fixed QA location selection without weakening guards. Actual Main, full104native and completed-baseline comparison locally PASS; full latest CI/APK pending.",
     "unicorn": "8 of 9 standalone poses fail existing alpha>100 single-body rule; 2 selected walk source PNGs missing from preserved archives; HOLD",
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
@@ -58,12 +101,12 @@
     "url": "https://github.com/zoog136-hash/-/pull/122",
     "state": "draft",
     "base": "feature/twilight-animation-20261013",
-    "pushed_checkpoint": "Recovery code/evidence pending normal fast-forward; resolve current saved batch via checkpoint_commit_resolution and PR122 remote HEAD."
+    "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "dcb21f0b165eef1d1ca53efe9fbc07e40cf99ca2",
+  "last_successful_pushed_code_commit": "ea37605a1c35dac54eee4b1d400ce04ef631ba9e",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch05/checkpoint.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch06/checkpoint.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -73,5 +116,7 @@
     "latest_main_preserved_by_merge": "56f552c800dc031030a05b6e4125ed29a04aba62",
     "isolated_main_merge": "4828c5050e71c9bef4bb6c248b4d8e1b15ef83a2",
     "unrecovered_manifest": "docs/remake/evidence/pr122-remaining106/batch04/unrecovered-assets.json"
-  }
+  },
+  "historical_user_directive_before_recovery": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
+  "protected_production_change_scope": "Batch05 repaired one existing female Reaper crop/margin/provenance only. Original PNGs,103otherframes, runtime stats/physics/markers preserved. Batch06 changes QA only."
 }

@@ -51,15 +51,23 @@ func run() -> void:
 	world.player.set_auto_enabled(false)
 	center = find_clearing()
 	check(center.is_finite(), "real map comparison clearing")
+	# Two whole bodies need more clear ground than a single stationary pose.
+	# Sample between the original eight rays without hiding terrain or actors.
+	var review_radii: Array[float] = [0.,160.,320.,480.,800.,1120.,1600.,2400.]
+	for radius: int in range(0, 3280, 80):
+		if not review_radii.has(float(radius)): review_radii.append(float(radius))
+	var review_headings: Array[Vector2] = []
+	for direction: int in range(8): review_headings.append(screen_direction(direction))
+	for direction: int in range(64): review_headings.append(Vector2.from_angle(TAU * float(direction) / 64.0))
 	for subject: String in subjects:
 		normal = db_actor(subject)
 		var baseline: TwilightMonster = db_actor("지옥의 쿠거")
 		check(normal != null and baseline != null,"real subject and completed Hell Cougar v3")
 		if normal == null or baseline == null: continue
 		var placed := false
-		for radius: float in [0.,160.,320.,480.,800.,1120.,1600.,2400.]:
-			for heading: int in range(8):
-				var point := center + screen_direction(heading) * radius
+		for radius: float in review_radii:
+			for heading: Vector2 in review_headings:
+				var point := center + heading * radius
 				var left := point - Vector2(148,0)
 				var right := point + Vector2(148,0)
 				if not route_clear(left,0.) or not route_clear(right,0.): continue

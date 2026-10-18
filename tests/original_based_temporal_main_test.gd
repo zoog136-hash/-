@@ -26,6 +26,30 @@ var temporal_player_bounds := Rect2()
 func subject_name() -> String: return str(temporal_case.get("name", ""))
 func subject_folder() -> String: return str(temporal_case.get("folder", ""))
 
+func _pose_review_motion_clear(origin: Vector2) -> bool:
+	# A clear stationary pose can sit beside an impassable renewed-map cell.
+	# Select the location against the unchanged two-loop walk of every actual
+	# direction before playback; the endpoint and per-native draw assertions
+	# below remain mandatory. Never shorten the travel or bypass map physics.
+	var frames: SpriteFrames = normal.motion.frame_source
+	if frames == null or normal.motion.profile.movement_fps <= 0.0: return false
+	for direction: int in range(8):
+		var track := "walk_" + str(direction)
+		if not frames.has_animation(track): return false
+		var duration := float(frames.get_frame_count(track)) / (normal.motion.profile.movement_fps * 0.75) * 2.2
+		var half_travel := screen_direction(direction) * normal.motion.profile.reference_speed * 0.75 * duration * 0.5
+		var start := origin - half_travel
+		var finish := origin + half_travel
+		if not route_clear(start, 0.0) or not route_clear(finish, 0.0): return false
+		if not world.field_map.line_clear(start, finish): return false
+		for point: Vector2 in [start, origin, finish]:
+			var body := Rect2(point + Vector2(-128, -160), Vector2(256, 176))
+			if not preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body): return false
+			for other: Node in world.monsters_root.get_children():
+				if other == normal or not other is Node2D or not (other as Node2D).is_visible_in_tree(): continue
+				if point.distance_squared_to((other as Node2D).global_position) < 192.0 * 192.0: return false
+	return true
+
 func temporal_safe_name(value: String) -> bool:
 	if value.is_empty(): return false
 	for letter: String in value:

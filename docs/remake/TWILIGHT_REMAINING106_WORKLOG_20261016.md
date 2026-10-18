@@ -87,3 +87,8 @@ Recovered4650a1d into isolated feature/pr122-recovery-20261018; preserved curren
 ## 2026-10-18 batch05 — follow-up14 audit and real crop repair
 
 Read every14x8 existing walk source:2-4unique poses, no dedicatedrun. Female412 Ewalk2 region omitted53alpha>100 pixels of a130pixel gold-detail component. Restored width108→116 and complementary margin148→140 only; PNG6e24057f... remains exact, canvas256/root[78,775] and all103otherframes/attacks preserved. Actual Main OpenGL67638checks/104native/8contacts/8AI/lifecycle PASS, source-frame336/prop8 and independent40trackpixelaudit PASS. Batch05 delivers all195PNG in verifiedZIPs; newqualified0, full14gaitfix NOTcomplete. Latest nextcommit CI/APK must be assessed separately from dcb21f0 runs.
+
+
+## 2026-10-18 batch06 — actual full-path QA continuation
+
+Reproduced6Agni lifecycle conservative-bound failures and2temporal walk-endpoint failures on unchanged latest Aden. Select complete clear finishing/walking locations before inherited QA; retain all guards, speeds, durations, native poses and real combat/lifecycle. Fresh actualMain 3389, continuousOpenGL 81009/216native, completedHellCougar comparison 295, equippedtransform 69055/112native/8frame1contacts: failures0. Exact logs/reports and2before/after PNG bodies delivered; all other localPNG explicitly inventory-only. No qualified-count increase, AndroiddeviceNOT_RUN; nextcommit CI/APK separately pending. Corrected stale historical PR100 merge/base metadata against actual remote state.

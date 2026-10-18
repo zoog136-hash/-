@@ -115,6 +115,15 @@ jobs:
           assert case['transform_temporal']['native_phases']==112
           assert case['transform_temporal']['rendered_native_phases']==112
           PY
+      - name: Keep QA reports separately inspectable
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining106-reports-${{ github.sha }}
+          path: |
+            test-results/remaining106/**/*.json
+            test-results/remaining106/*.log
+          if-no-files-found: warn
       - name: Preserve actual frames and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
