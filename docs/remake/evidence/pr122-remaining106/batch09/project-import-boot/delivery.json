@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "checks": [
+    "import",
+    "boot"
+  ],
+  "skipped": 0,
+  "not_run": 0,
+  "files": [
+    {
+      "file": "boot.log.txt",
+      "bytes": 137,
+      "sha256": "03ec8cbb9bea0492319a3549ec61107699c4aec7919f0190c7564813cc5abee8"
+    },
+    {
+      "file": "import.log.txt",
+      "bytes": 12748,
+      "sha256": "868e00c72d81fb11821fdd763525f934ff45caf97e541f694cacf6c30fec4a69"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 311,
+      "sha256": "d75945bcc6f8245d78deece7484048dedd398116131d6cd9ce6e6e6b951541bd"
+    }
+  ]
+}

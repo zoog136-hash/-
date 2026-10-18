@@ -6,7 +6,9 @@ on:
     paths:
       - 'docs/remake/evidence/pr122-remaining106/batch07/**'
       - 'docs/remake/evidence/pr122-remaining106/batch08/**'
+      - 'docs/remake/evidence/pr122-remaining106/batch09/**'
       - 'tools/run_pr122_locomotion_source_preview.py'
+      - 'tools/check_pr122_locomotion_source_controls.py'
       - 'tests/pr122_reaper_locomotion_source_preview.gd'
       - '.github/workflows/pr122-locomotion-source-preview.yml'
 
@@ -20,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        actor: [reaper, doguri]
+        actor: [reaper, doguri, doguri-W, doguri-N, doguri-run-E]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,6 +38,10 @@ jobs:
             /docs/remake/evidence/**/*.md
             /docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-walk-standalone/*.png
             /docs/remake/evidence/pr122-remaining106/batch07/doguri-E-walk6-pilot02/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/*.png
       - name: Install pinned Godot and software OpenGL
         run: |
           set -euo pipefail
@@ -54,6 +60,7 @@ jobs:
           git rev-parse HEAD > "$REVIEW_ROOT/checkout-SHA.txt"
           python3 tools/check_resource_integrity.py --root .
           python3 tools/audit_pr122_recovery.py --root . --output "$REVIEW_ROOT/392-reconciliation.json"
+          python3 tools/check_pr122_locomotion_source_controls.py --root . --output "$REVIEW_ROOT/source-controls"
           export XDG_DATA_HOME="$REVIEW_ROOT/import-user/data"
           export XDG_CONFIG_HOME="$REVIEW_ROOT/import-user/config"
           export XDG_CACHE_HOME="$REVIEW_ROOT/import-user/cache"
@@ -76,6 +83,9 @@ jobs:
           case "$REVIEW_ACTOR" in
             reaper) FIXTURE=docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-preview.json ;;
             doguri) FIXTURE=docs/remake/evidence/pr122-remaining106/batch08/doguri-E-walk-preview.json ;;
+            doguri-W) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-preview-v03.json ;;
+            doguri-N) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-preview.json ;;
+            doguri-run-E) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-preview-v02.json ;;
             *) exit 1 ;;
           esac
           xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_pr122_locomotion_source_preview.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --fixture "$FIXTURE" --output "$REVIEW_ROOT/actual-Main"
@@ -92,6 +102,8 @@ jobs:
             ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/*.log
             ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/actual-Main/*.json
             ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/actual-Main/*.log
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/source-controls/*.json
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/source-controls/*.txt
       - name: Preserve every native actual Main PNG
         if: always()
         uses: actions/upload-artifact@v4

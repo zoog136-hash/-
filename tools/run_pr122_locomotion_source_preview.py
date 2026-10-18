@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict read-only source preflight and isolated actual Main E-gait preview."""
+"""Strict read-only source preflight and isolated actual Main directional gait preview."""
 import argparse
 import hashlib
 import json
@@ -29,28 +29,37 @@ def main():
     assert fixture_path.is_relative_to(root)
     fixture = json.loads(fixture_path.read_text())
     assert fixture['prototype_only'] and not fixture['production_applied'] and not fixture['final_model_approval']
+    direction = fixture['direction']
+    role = fixture['role']
+    assert direction in motion.DIRECTIONS and role in ('walk', 'run')
+    if role == 'run':
+        assert fixture['ground_registration_contract'] == 'QA_ONLY_BOUNDED_AIRBORNE_V1'
+        assert fixture['velocity_ratio'] == 1.5
     assert fixture['selected_distinct_sources'] == 6 and len(fixture['frames']) == 6
     fingerprints = set()
     verified = []
     sheets = {}
     ownership = {}
     for spec in fixture.get('whole_source_sheets', []):
-        assert spec['rows'] == 6 and spec['directions'] == ['E']
+        assert spec['rows'] == 6 and spec['directions'] == [direction]
         source = root / spec['file'].removeprefix('res://')
         assert spec['file'] not in sheets and motion.sha(source) == spec['source_sha256']
         geometry = spec['geometry']
         actual = motion.analyze(source, rows_count=6, reference_rows=spec['reference_rows'],
-            directions=['E'], canvas_size=geometry['canvas_size'][0],
+            directions=[direction], directions_axis=spec.get('directions_axis', 'columns'),
+            canvas_size=geometry['canvas_size'][0],
             source_anchors=[frame['source_anchor'] for frame in geometry['frames']])
         motion.require_complete_pose_regions(source, actual)
         assert actual == geometry and len(actual['frames']) == 6
         sheets[spec['file']] = spec
         ownership[spec['file']] = set()
-    for entry in fixture['frames']:
+    for phase, entry in enumerate(fixture['frames']):
         source = root / entry['file'].removeprefix('res://')
         assert motion.sha(source) == entry['source_sha256']
         geometry = entry['geometry']
+        assert entry['phase'] == phase and len(geometry['frames']) == 1
         frame = geometry['frames'][0]
+        assert frame['direction'] == direction
         if entry['file'] in sheets:
             # The complete whole sheet was checked above. Every analyzed body
             # must occur exactly once; no omitted/excluded pieces or slots.
@@ -62,11 +71,31 @@ def main():
             actual = {**sheet['geometry'], 'frames': [sheet['geometry']['frames'][row]],
                       'distinct_pixel_frames': 1}
         else:
-            actual = motion.analyze(source, rows_count=1, reference_rows=[0], directions=['E'],
+            actual = motion.analyze(source, rows_count=1, reference_rows=[0], directions=[direction],
                 canvas_size=geometry['canvas_size'][0], source_anchors=[frame['source_anchor']])
             motion.require_complete_pose_regions(source, actual)
         assert actual == geometry
         x, y, width, height = frame['region']
+        if role == 'run':
+            # Keep the importer's exact in-body geometry/complete-source guards.
+            # A separate QA-only origin represents the floor below an airborne
+            # body. It never changes the source or enters a production import.
+            ground = entry['ground_registration']
+            assert ground['candidate_only'] is True
+            assert ground['phase'] == ('contact', 'compression', 'flight', 'contact', 'compression', 'flight')[phase]
+            gx, gy = ground['source_anchor']
+            assert type(gx) is int and type(gy) is int
+            assert x <= gx < x + width and 0 <= gy < geometry['image_size'][1]
+            sole_y = y + height - 4  # Existing strict region has three pixels of padding.
+            gap = gy - sole_y
+            assert (16 <= gap <= 96) if ground['phase'] == 'flight' else gap == 0
+            canvas = geometry['canvas_size'][0]
+            fx, fy = geometry['foot']
+            expected_margin = [fx - (gx - x), fy - (gy - y), canvas - width, canvas - height]
+            assert ground['margin'] == expected_margin
+            assert min(expected_margin) >= 0 and expected_margin[0] + width <= canvas and expected_margin[1] + height <= canvas
+        else:
+            assert 'ground_registration' not in entry
         with Image.open(source) as image:
             fingerprint = motion._visible_pose_fingerprint(np.asarray(image)[y:y+height, x:x+width])
         assert fingerprint == entry['visible_pixel_fingerprint'] and fingerprint not in fingerprints
@@ -74,7 +103,8 @@ def main():
         verified.append({'file': entry['file'], 'sha256': motion.sha(source),
                          'bytes': source.stat().st_size, 'strict_geometry': 'PASS'})
     assert all(rows == set(range(6)) for rows in ownership.values())
-    (output / 'source-preflight.json').write_text(json.dumps({'sources': verified, 'distinct_visible_sources': 6,
+    (output / 'source-preflight.json').write_text(json.dumps({'sources': verified, 'direction': direction, 'role': role,
+        'distinct_visible_sources': 6,
         'source_pixels_changed': False, 'final_semantic_gait_approval': False}, indent=2) + '\n')
     version = subprocess.check_output([str(args.godot), '--version'], text=True).strip()
     assert version.startswith('4.7.2.stable.'), version
@@ -109,6 +139,8 @@ def main():
     assert not report['failures']
     preview = report['source_preview']
     assert preview['prototype_only'] and not preview['production_applied'] and preview['completed_added'] == 0
+    assert preview['direction'] == direction and preview['role'] == role
+    assert preview['track'] == role + '_' + str(motion.DIRECTIONS.index(direction))
     assert len(preview['modes']) == 6
     for item in preview['modes']:
         expected = preview['baseline_frames'] if item['mode'].startswith('original') else 6
@@ -120,7 +152,8 @@ def main():
     for path in sorted((output / 'captures').glob('*.png')):
         captures.append({'path': str(path), 'bytes': path.stat().st_size,
                          'sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
-    validation = {'technical_preview': 'PASS', 'checks': report['checks'], 'failures': [],
+    validation = {'technical_preview': 'PASS', 'direction': direction, 'role': role, 'track': preview['track'],
+        'checks': report['checks'], 'failures': [],
         'source_candidates': 6, 'speeds': [0.75, 1.0, 1.5], 'actual_keyboard_native_frames': 6,
         'actual_keyboard_displacement': preview['actual_input']['displacement'],
         'captures': captures, 'final_visual_quality': preview['visual_quality'],

@@ -2,12 +2,19 @@ extends "res://tests/original_based_transform_temporal_main_test.gd"
 
 # TWILIGHT_OPTIONAL_RENDER_CAPTURE
 # TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_PR122_GAIT_CAPTURE_DIR
-# Source-only, E-only authoring preview. This never invokes the production
+# Source-only, single-direction authoring preview. This never invokes the production
 # importer or approves source identity, opposite support, all8views or run.
 const PREVIEW_FIXTURE := "res://docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-preview.json"
 const PREVIEW_STEP := 1.0 / 120.0
 var preview_fixture: Dictionary = {}
 var preview_rows: Array[Dictionary] = []
+var preview_direction := 0
+
+func preview_track() -> String:
+	return str(preview_fixture.get("role", "walk")) + "_" + str(preview_direction)
+
+func preview_baseline_track() -> String:
+	return "walk_" + str(preview_direction)
 
 func transform_temporal_position_clear() -> bool:
 	if super.transform_temporal_position_clear(): return true
@@ -68,7 +75,12 @@ func preview_frames(original: SpriteFrames) -> SpriteFrames:
 		candidate.set_animation_speed(track, original.get_animation_speed(track))
 		for phase: int in range(original.get_frame_count(track)):
 			candidate.add_frame(track, original.get_frame_texture(track, phase), original.get_frame_duration(track, phase))
-	candidate.clear("walk_0")
+	if candidate.has_animation(preview_track()):
+		candidate.clear(preview_track())
+	else:
+		candidate.add_animation(preview_track())
+		candidate.set_animation_loop(preview_track(), true)
+		candidate.set_animation_speed(preview_track(), original.get_animation_speed(preview_baseline_track()))
 	var tokens: Dictionary = {}
 	for entry: Dictionary in preview_fixture.frames:
 		var path := str(entry.file)
@@ -86,6 +98,8 @@ func preview_frames(original: SpriteFrames) -> SpriteFrames:
 		var frame: Dictionary = geometry.frames[0]
 		var region: Array = frame.region
 		var margin: Array = frame.margin
+		if str(preview_fixture.role) == "run":
+			margin = entry.ground_registration.margin
 		var atlas := AtlasTexture.new()
 		atlas.atlas = texture
 		atlas.region = Rect2(float(region[0]), float(region[1]), float(region[2]), float(region[3]))
@@ -94,12 +108,12 @@ func preview_frames(original: SpriteFrames) -> SpriteFrames:
 		var token := preview_token(atlas)
 		check(not tokens.has(token), "each candidate frame binds a distinct real PNG/region")
 		tokens[token] = true
-		candidate.add_frame("walk_0", atlas)
-	check(candidate.get_frame_count("walk_0") == 6 and original.get_frame_count("walk_0") == int(preview_fixture.get("baseline_walk_frames", 2)), "six E candidates and unchanged original native track")
+		candidate.add_frame(preview_track(), atlas)
+	check(candidate.get_frame_count(preview_track()) == 6 and original.get_frame_count(preview_baseline_track()) == int(preview_fixture.get("baseline_walk_frames", 2)), "six directional candidates and unchanged original native track")
 	candidate.set_meta("twilight_canvas_size", Vector2(256, 256))
 	for track: String in original.get_animation_names():
-		if track == "walk_0": continue
-		check(candidate.get_frame_count(track) == original.get_frame_count(track), "all non-E-walk native counts preserved " + track)
+		if track == preview_track(): continue
+		check(candidate.get_frame_count(track) == original.get_frame_count(track), "all other native counts preserved " + track)
 		for phase: int in range(original.get_frame_count(track)):
 			check(candidate.get_frame_texture(track, phase) == original.get_frame_texture(track, phase)
 				and candidate.get_frame_duration(track, phase) == original.get_frame_duration(track, phase), "unchanged original texture and duration " + track + "/" + str(phase))
@@ -142,13 +156,16 @@ func preview_role(label: String, frames: SpriteFrames, profile: TwilightAnimatio
 	var motion := TRANSFORM_TEMPORAL_MOTION.new()
 	motion.profile = profile
 	world.player.motion = motion
-	motion.face(Vector2.RIGHT)
-	var count := frames.get_frame_count("walk_0")
-	var velocity_input := Vector2.RIGHT * profile.reference_speed * ratio
-	var duration := float(count) / (profile.movement_fps * ratio) * 2.2
+	motion.face(screen_direction(preview_direction))
+	var expected_track := preview_baseline_track() if label.begins_with("original") else preview_track()
+	var count := frames.get_frame_count(expected_track)
+	var velocity_ratio := ratio * float(preview_fixture.get("velocity_ratio", 1.0))
+	var velocity_input := screen_direction(preview_direction) * profile.reference_speed * velocity_ratio
+	var duration := float(count) / (profile.movement_fps * velocity_ratio) * 2.2
 	var start := center - velocity_input * duration * 0.5
 	var result := {"mode": label, "speed_ratio": ratio, "frames": count, "movement_fps": profile.movement_fps,
-		"cycle_seconds": float(count) / (profile.movement_fps * ratio), "samples": [], "native_sequence": [], "captures": []}
+		"cycle_seconds": float(count) / (profile.movement_fps * velocity_ratio), "velocity_ratio": velocity_ratio,
+		"expected_track": expected_track, "samples": [], "native_sequence": [], "captures": []}
 	var seen: Dictionary = {}
 	var prior := -1
 	for step: int in range(int(ceil(duration / PREVIEW_STEP)) + 1):
@@ -157,7 +174,8 @@ func preview_role(label: String, frames: SpriteFrames, profile: TwilightAnimatio
 		motion.advance(0.0 if step == 0 else PREVIEW_STEP, velocity_input)
 		motion.apply(sprite, base_scale)
 		var texture := transform_temporal_texture(sprite)
-		check(sprite.animation == "walk_0" and upright(sprite) and not sprite.is_playing(), "production controller owns E facing/frame clock " + label)
+		check(sprite.animation == expected_track and motion.facing8 == preview_direction and upright(sprite) and not sprite.is_playing(), "production controller owns source direction/frame clock " + label)
+		if str(preview_fixture.role) == "run": check(motion.state == "run", "production controller selects genuine run state " + label)
 		check(texture != null and texture is AtlasTexture, "real full source atlas selected " + label)
 		if texture == null: break
 		var canvas_error := (texture.get_size() * sprite.scale / base_scale).distance_to(Vector2(256, 256))
@@ -194,19 +212,21 @@ func preview_actual_input(candidate: SpriteFrames, profile: TwilightAnimationPro
 	world.player.motion = original_motion
 	world.player.cancel_attack()
 	world.player.clear_click_path()
-	world.player.position = center - Vector2(100, 0)
+	world.player.position = center - screen_direction(preview_direction) * 100.0
 	world.player.camera.reset_smoothing(); world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
 	var before := world.player.position
-	var result := {"scope": "real production Input/physics; isolated E-only candidate", "physics_ticks": 48,
+	var result := {"scope": "real production Input/physics; isolated " + str(COMPASS[preview_direction]) + " candidate", "physics_ticks": 48,
+		"input_actions": ACTIONS[preview_direction], "direction_index": preview_direction,
 		"samples": [], "captures": [], "native_sequence": [], "wall_time_performance_claim": false}
 	var seen: Dictionary = {}
 	var prior := -1
-	Input.action_press("move_right")
+	for action: String in ACTIONS[preview_direction]: Input.action_press(action)
 	for step: int in range(48):
 		await tick()
-		if sprite.animation != "walk_0": continue
-		check(upright(sprite) and world.player.motion.facing8 == 0, "real input keeps original E camera and upright source")
+		if sprite.animation != preview_track(): continue
+		check(upright(sprite) and world.player.motion.facing8 == preview_direction, "real input keeps selected direction and upright source")
+		if str(preview_fixture.role) == "run": check(world.player.motion.state == "run", "real keyboard selects dedicated run without gameplay speed changes")
 		check(route_clear(world.player.position, 0.0), "real input remains on unchanged walkable map")
 		result.samples.append({"tick": step, "phase": sprite.frame, "root": transform_temporal_vec(world.player.position),
 			"animation": str(sprite.animation), "token": preview_token(transform_temporal_texture(sprite))})
@@ -223,7 +243,7 @@ func preview_actual_input(candidate: SpriteFrames, profile: TwilightAnimationPro
 			world.process_mode = prior_mode as Node.ProcessMode
 	release_inputs()
 	var displacement := world.player.position - before
-	check(displacement.length() > 10.0 and displacement.normalized().dot(Vector2.RIGHT) > 0.995, "real production input moves physical player east")
+	check(displacement.length() > 10.0 and displacement.normalized().dot(screen_direction(preview_direction)) > 0.995, "real production input moves physical player in selected direction")
 	check(seen.size() == 6, "all six real source frames actually drawn during production keyboard movement")
 	result.displacement = transform_temporal_vec(displacement)
 	result.observed_native_frames = seen.size()
@@ -246,6 +266,12 @@ func run() -> void:
 	preview_fixture = JSON.parse_string(FileAccess.get_file_as_string(fixture_path))
 	check(bool(preview_fixture.prototype_only) and not bool(preview_fixture.production_applied) and not bool(preview_fixture.final_model_approval), "unapproved source preview cannot promote to production")
 	check(str(preview_fixture.key) in ["transform:258", "transform:288"], "only the two representative locomotion source identities")
+	preview_direction = COMPASS.find(str(preview_fixture.get("direction", "")))
+	check(preview_direction >= 0 and str(preview_fixture.get("role", "")) in ["walk", "run"], "explicit canonical locomotion direction")
+	if str(preview_fixture.role) == "run":
+		check(str(preview_fixture.get("ground_registration_contract", "")) == "QA_ONLY_BOUNDED_AIRBORNE_V1"
+			and float(preview_fixture.get("velocity_ratio", 0.0)) == 1.5, "explicit QA-only run ground registration and genuine run speed")
+	if not failures.is_empty(): print("PR122_REAPER_GAIT_PREVIEW_REFUSED " + JSON.stringify(failures)); quit(1); return
 	preview_preservation()
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
@@ -285,18 +311,19 @@ func run() -> void:
 	var candidate_profile := original_profile.duplicate(true) as TwilightAnimationProfile
 	# Six genuine source candidates share the original total cycle duration.
 	# This presentation-only local clone is never saved or applied to 7other views.
-	var baseline_frames := original_frames.get_frame_count("walk_0")
+	var baseline_frames := original_frames.get_frame_count(preview_baseline_track())
 	candidate_profile.movement_fps = original_profile.movement_fps * 6.0 / float(baseline_frames)
 	check(is_equal_approx(6.0 / candidate_profile.movement_fps, float(baseline_frames) / original_profile.movement_fps), "total cycle duration preserved with genuinely new phase inputs")
 	var original_stats := transform_temporal_invariants(original_profile, sprite)
 	var original_world_mode: int = world.process_mode
 	var original_player_mode: int = world.player.process_mode
 	var original_sprite_mode: int = sprite.process_mode
-	report.scope = str(preview_fixture.key) + " E-only source authoring: actual Main controller playback, not final identity/gait/8view/run/combat/device approval"
+	report.scope = str(preview_fixture.key) + " " + str(COMPASS[preview_direction]) + " " + str(preview_fixture.role) + " source authoring: actual Main controller playback, not final identity/gait/8view/combat/device approval"
 	report.source_preview = {"prototype_only": true, "production_applied": false, "completed_added": 0,
+		"direction": COMPASS[preview_direction], "role": preview_fixture.role, "direction_index": preview_direction, "track": preview_track(),
 		"scene": "Main.tscn", "map": "aden_world", "normal_camera_zoom": transform_temporal_vec(world.player.camera.zoom),
 		"QA_clock_hz": 120, "wall_time_performance_claim": false, "terrain_hidden_or_modified": false,
-		"visual_quality": "HOLD: original model/gear proportions, near-far cycle and7otherwalk/8run tracks not approved", "modes": [], "baseline_frames": baseline_frames}
+		"visual_quality": "HOLD: original model/gear proportions, near-far cycle, full8walk and8run tracks not approved", "modes": [], "baseline_frames": baseline_frames}
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	world.player.process_mode = Node.PROCESS_MODE_DISABLED
 	sprite.process_mode = Node.PROCESS_MODE_DISABLED

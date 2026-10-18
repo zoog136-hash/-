@@ -1,0 +1,403 @@
+{
+  "schema": 1,
+  "key": "transform:288",
+  "job": "사신",
+  "role": "run",
+  "direction": "E",
+  "prototype_only": true,
+  "production_applied": false,
+  "completed_added": 0,
+  "final_model_approval": false,
+  "source_physical_final_approval": false,
+  "baseline_walk_frames": 3,
+  "original_resource": "res://assets/actors/eight_direction/original_based/doguri_transform/SpriteFrames.tres",
+  "source_preservation_manifest": "res://docs/remake/evidence/pr122-remaining106/batch07/doguri-E-walk6-pilot01/original-preservation.json",
+  "selected_distinct_sources": 6,
+  "distinct_whole_source_PNGs": 6,
+  "whole_source_sheets": [],
+  "frames": [
+    {
+      "phase": 0,
+      "name": "near-contact-A",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-00-near-contact.png",
+      "source_sha256": "cf9d01414d4d0660dcf13cfb09f19c4905c6fcf77c6c3a0758b11efc3977c0c6",
+      "bytes": 1204611,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              331,
+              66,
+              884,
+              885
+            ],
+            "margin": [
+              555,
+              405,
+              1164,
+              1163
+            ],
+            "source_anchor": [
+              800,
+              941
+            ],
+            "rgba_sha256": "82b6e69ebdac9b4e086bed196c9c935a100222fb1e87874044ac7fb84200e4cc"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 879.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "strict_complete_region": "PASS_ONE_COMPLETE_BODY_UNCHANGED_SOURCE",
+      "visible_pixel_fingerprint": "cb1f507dd8bbd719790363cd7bffb2f06949b89397f8580d371c608a0ff2c628",
+      "ground_registration": {
+        "candidate_only": true,
+        "phase": "contact",
+        "source_anchor": [
+          800,
+          947
+        ],
+        "margin": [
+          555,
+          399,
+          1164,
+          1163
+        ],
+        "gap_below_lowest_opaque_body": 0
+      }
+    },
+    {
+      "phase": 1,
+      "name": "near-compression-A",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-01-near-compression.png",
+      "source_sha256": "387b4c7c64437a57fd678c38e6a1cb39c7d3bb0da595b726034f7ea2a74cb98b",
+      "bytes": 1211257,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              324,
+              63,
+              893,
+              871
+            ],
+            "margin": [
+              578,
+              413,
+              1155,
+              1177
+            ],
+            "source_anchor": [
+              770,
+              930
+            ],
+            "rgba_sha256": "f0def192e9902ab15b5e51a440befb78e55e88ee912a1d85d23a186d9048d802"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 865.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "strict_complete_region": "PASS_ONE_COMPLETE_BODY_UNCHANGED_SOURCE",
+      "visible_pixel_fingerprint": "eb0fa562b7d8a146dac3e6abd504d4b9ec58f9feaaa0e5b5bf17527567ef4448",
+      "ground_registration": {
+        "candidate_only": true,
+        "phase": "compression",
+        "source_anchor": [
+          800,
+          930
+        ],
+        "margin": [
+          548,
+          413,
+          1155,
+          1177
+        ],
+        "gap_below_lowest_opaque_body": 0
+      }
+    },
+    {
+      "phase": 2,
+      "name": "flight-A",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-02-flight-A.png",
+      "source_sha256": "7f7f705c94bd186c6217ab87197c552e772b5243cc5a300a62e3334682182687",
+      "bytes": 1126324,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              373,
+              116,
+              785,
+              777
+            ],
+            "margin": [
+              631,
+              507,
+              1263,
+              1271
+            ],
+            "source_anchor": [
+              766,
+              889
+            ],
+            "rgba_sha256": "676d4bf6476486b4896e7a2bf44adc1ef850809222c5c5291ac38f2c210ccc31"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 771.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "strict_complete_region": "PASS_ONE_COMPLETE_BODY_UNCHANGED_SOURCE",
+      "visible_pixel_fingerprint": "03c1f2ba092284b4ec95d779854ffa07837dc8a05efb5c77ba7017838bb137ef",
+      "ground_registration": {
+        "candidate_only": true,
+        "phase": "flight",
+        "source_anchor": [
+          800,
+          950
+        ],
+        "margin": [
+          597,
+          446,
+          1263,
+          1271
+        ],
+        "gap_below_lowest_opaque_body": 61
+      }
+    },
+    {
+      "phase": 3,
+      "name": "far-contact-B",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/doguri-E-run-far-contact-pilot01.png",
+      "source_sha256": "e7d38740ec8741db041e9c32d1b7183b9df5d4fec01ece19dd6d309e8917737a",
+      "bytes": 1217269,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              381,
+              115,
+              774,
+              809
+            ],
+            "margin": [
+              605,
+              481,
+              1274,
+              1239
+            ],
+            "source_anchor": [
+              800,
+              914
+            ],
+            "rgba_sha256": "1f19a608f79d9203635d9246acdc7da9e4ab8b23d9088fa9beab8c991ae51843"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 803.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "strict_complete_region": "PASS_ONE_COMPLETE_BODY_UNCHANGED_SOURCE",
+      "visible_pixel_fingerprint": "403aa331a654a1bfcc30240a2de316acbf6eef8e0e9d04c61a4eaeb07b5c430c",
+      "ground_registration": {
+        "candidate_only": true,
+        "phase": "contact",
+        "source_anchor": [
+          800,
+          920
+        ],
+        "margin": [
+          605,
+          475,
+          1274,
+          1239
+        ],
+        "gap_below_lowest_opaque_body": 0
+      }
+    },
+    {
+      "phase": 4,
+      "name": "far-compression-B",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression-v02.png",
+      "source_sha256": "85f4b211d897b5a52dc975687ef2364e27b79b7ef627c4213eefb61ea6f2ec7f",
+      "bytes": 1205480,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              325,
+              92,
+              857,
+              855
+            ],
+            "margin": [
+              595,
+              429,
+              1191,
+              1193
+            ],
+            "source_anchor": [
+              754,
+              943
+            ],
+            "rgba_sha256": "6c58b509ebdb7c8a449bf748bb8795c8558b7d915083434924459fe8a0be4ea7"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 849.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "strict_complete_region": "PASS_ONE_COMPLETE_BODY_UNCHANGED_SOURCE",
+      "visible_pixel_fingerprint": "581ed80736702f736305e73de9895235eeb7f04e531438698674d88dcc0d4162",
+      "ground_registration": {
+        "candidate_only": true,
+        "phase": "compression",
+        "source_anchor": [
+          800,
+          943
+        ],
+        "margin": [
+          549,
+          429,
+          1191,
+          1193
+        ],
+        "gap_below_lowest_opaque_body": 0
+      }
+    },
+    {
+      "phase": 5,
+      "name": "flight-B",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-05-flight-B.png",
+      "source_sha256": "1a89a8c1062a363ba082526427c80bf7b5c5ac06eb9ee7b7932191083d437488",
+      "bytes": 1284034,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              302,
+              62,
+              932,
+              874
+            ],
+            "margin": [
+              558,
+              410,
+              1116,
+              1174
+            ],
+            "source_anchor": [
+              768,
+              932
+            ],
+            "rgba_sha256": "e26001027dc78a11cae502cdebee19237ec8b9f062e30672b23888b52fc84f38"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 868.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "strict_complete_region": "PASS_ONE_COMPLETE_BODY_UNCHANGED_SOURCE",
+      "visible_pixel_fingerprint": "171235a6ef5d84dd05a736aa596bed97a3591fd90f4d503ecd142b20b6e76a3b",
+      "ground_registration": {
+        "candidate_only": true,
+        "phase": "flight",
+        "source_anchor": [
+          800,
+          1000
+        ],
+        "margin": [
+          526,
+          342,
+          1116,
+          1174
+        ],
+        "gap_below_lowest_opaque_body": 68
+      }
+    }
+  ],
+  "full_gait_identity_approval": "HOLD",
+  "other7walk_and8run": "BEFORE",
+  "physical_review": "Six independently authored joint-pose candidates including opposite support and two aerial phases. QA-only ground planes proposed separately from strict in-body source metadata; original model/scale and complete8view final approval remain HOLD.",
+  "velocity_ratio": 1.5,
+  "ground_registration_contract": "QA_ONLY_BOUNDED_AIRBORNE_V1"
+}

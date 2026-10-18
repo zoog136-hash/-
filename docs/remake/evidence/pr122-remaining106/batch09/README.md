@@ -1,27 +1,41 @@
-# Batch09 — next missing walking direction
+# PR122 batch09 — 도구리 W·N 보행 및 E 전용 달리기 후보
 
-Newly painted Doguri W6 source preserves left-facing camera/tail-right, original
-apple leaf facing upper-right and world lighting. It is not a source-pixel
-mirror of the prior E sheet. The exact raw PNG/request are retained.
+기존 PR HEAD `ac40a69`와 W 원본 백업 `abf1203`에서 별도 작업 브랜치로 계속 제작했다. 기존 392/498 완료와 runtime 연결 394건은 유지한다. 신규 최종 완료는 0건이다. 과거 미커밋 사신 이미지 2개 및 QA 초안은 여전히 UNRECOVERED이며, 이번 새 원본과 혼동하지 않는다.
 
-Physical quality remains **HOLD**: row3's far passing leg stays behind or is
-hidden instead of clearly advancing left. No6validWgait count, runtime install,
-actual Main approval or new qualified actor is claimed. The source is backed
-up separately while PR122@ac40a69's two E prototypes run their latest-head CI.
+## 실제 제작과 Main 결과
 
-Continue the single failed W passing pose and genuine separate run poses;
-never infer support/identity approval from pixel uniqueness or source geometry.
+| 대상 | 새 관절 자세 후보 | 실제 Main 검사 | 실제 키 입력 | 최종 상태 |
+|---|---:|---:|---|---|
+| 도구리 W walk | 6 | 4,393 PASS | 왼쪽, 6개 원본 모두 표시, -150.707px | 반대발 착지/압축 개선. 전체 지지 순서·외형 승인 HOLD |
+| 도구리 N walk | 6 | 4,393 PASS | 위쪽, 6개 원본 모두 표시, -150.707px | 잎 방향 수정. contact-B 및 꼬리에 가린 다리 연결 HOLD |
+| 도구리 E run | 전신 단일 원본 6개 | 3,701 PASS | 오른쪽, 실제 `run_0` 선택, 6개 원본 모두 표시, +150.707px | 착지/압축/공중 A·B 후보. 전체 외형·접지 품질 HOLD |
+| 사신(남) E walk 회귀 | 기존 후보 6 | 4,360 PASS | 오른쪽 +157.834px | 기존 HOLD 유지 |
+| 도구리 E walk 회귀 | 기존 후보 6 | 4,393 PASS | 오른쪽 +150.707px | 기존 HOLD 유지 |
 
-A new standalone W PASS-A correction now visibly plants the near support paw
-under the belly and advances the far short hip/knee/paw LEFT above ground,
-with both chains connected. It passes the unchanged one-body/complete-region
-source checks and a physical source pilot review only. Raw PNG and exact edit
-request are retained separately; the failed whole-sheet row was not silently
-removed or overwritten. Full W source/ground/model and actual Main remain
-unapproved. Continue a complete source sequence that uses the corrected pose.
+최종 코드에서 5개 실제 Main 실행의 기술 검사 합계 **21,240건**, 실패 0이다. 모든 후보를 0.75x/1x/1.5x 효과에서 2.2주기 재생하고, 방향·프레임 순서·원본 SHA·전신 영역·정상 카메라·실제 지도/프롭 가림·원본 복구를 확인했다. run 비교는 기존 실제 run 상태의 walk 폴백과 신규 전용 run을 비교하며, 기준 이동 비율 1.5에 효과 비율을 곱한 1.125/1.5/2.25에서 실행한다. 별도의 실제 키 입력은 기존 게임 이동 속도를 유지한다.
 
-The corrected passing reference was then used to author a new complete W6
-source in one horizontal row, with genuine source poses and unchanged world
-light/apple asymmetry. The new whole PNG is retained separately. Its structural
-result is recorded alongside it; full near/far sequence/landing/model and actual
-Main remain HOLD/NOT_RUN. Pixel uniqueness alone does not approve6gait phases.
+이 도구는 optional QA에서만 SpriteFrames와 프로필의 지역 복사본을 사용한다. production 자산/런타임 코드를 설치·수정하지 않는다. 기존 walk/공격/cast/hit/death 등 다른 텍스처·duration과 production PNG/tres/프로필 바이트를 보존하고 원래 컨트롤러·스탯·장비·인벤토리를 복구한다. 이 검사에는 전투/AI/습득 전체 회귀가 포함되지 않으며, batch04~06 및 필수 CI 증거를 별도로 유지한다.
+
+## 달리기 공중 기준점
+
+기존 importer의 원본 몸체·알파·완전 영역·중복 자세·몸체 내부 앵커 검사는 그대로 실행한다. 공중 프레임의 지면 기준점은 별도 **QA_ONLY_BOUNDED_AIRBORNE_V1** 메타데이터로 기록한다. 원본 발끝 앵커를 지면이라고 바꾸지 않는다. 두 공중 프레임은 원본 최하단 불투명 픽셀보다 61/68px 아래에 지면 후보를 두며, 허용 간격은 16~96px, 이미지 내부/원본 가로 영역/캔버스 범위/마진 계산을 모두 검사한다. 접촉·압축 프레임의 지면은 최하단 불투명 지지부와 일치해야 한다. production importer의 기준을 완화하지 않았다.
+
+첫 실제 run 실행에서 독립 원본의 크기 편차가 드러났다. `doguri-E-run-canvas-review.json`에 읽기 전용 머리 폭 측정과 새 캔버스 등록값을 기록했다. 원본 바이트와 완전 region/RGBA는 그대로이고, 균일한 캔버스 등록 후 머리 폭 편차는 **0.241 native pixel 미만**이다. `doguri-E-run-preview.json`은 첫 시도, `doguri-E-run-preview-v02.json`은 수정 후보다. 전체 원본 외형/지지발의 물리적 잠금까지 승인한 것은 아니다.
+
+## 원본 및 전달
+
+- batch09 전체 raw PNG **16개**: 이전 백업 3개 + 이번 연속 작업 13개. 누적 새 raw PNG는 batch07~09 **35개**이며 실패/HOLD도 포함한다. 유효 동작 수나 완료 종 수로 계산하지 않는다.
+- 모든 PNG는 image_gen 결과를 그대로 복사했고 SHA-256을 대조했다. 픽셀 재작성·보간·부분 몸체 삭제·강제 크롭 없이 원본/요청/실패 이유를 유지한다.
+- `authored-source-files.json`: PNG별 실제 파일·바이트·SHA·엄격 검사·시작 커밋 포함 여부.
+- W/N/E-run의 최종 실제 Main **105개 PNG 본문**을 6개 ZIP으로 전달한다. 각 ZIP CRC, 실제 각 멤버의 크기/SHA, 전체 ZIP SHA를 다시 확인했다. `actual-Main-delivery.json` 및 각 `delivery-proof.json` 참조.
+- 각 동작 폴더에 원본3/후보6 비교 MP4, W/N에는 GIF도 있다. 실제 Main 캡처의 진단 영역만 동일하게 2배 확대한 명목 주기 재생이다. 원본 PNG와 전체 Main 읽기 결과는 ZIP 안에 변경 없이 있다. 실시간 성능 영상으로 사용하지 않는다.
+- 앞선 시도·회귀 8회는 `earlier-and-regression-reports`에 보고서/정확한 로그를 전달한다. 그 폴더의 추가 PNG는 **목록만 있고 본문 미전달**이다. 이전 batch07/08의 실제 PNG 전달 패키지는 그대로 유지한다.
+- 첫 공중 자세 요청 한 건은 생성 도구의 output 단계에서 거절되어 이미지가 생성되지 않았다. 정확한 요청과 오류를 남겼고 성공한 후속 새 원본과 구분한다.
+
+## 게이트와 다음 제작
+
+알파/몸체/방향·가로 시트 축/순서/중복/생산 적용 오용 및 공중 등록 오용 등 **12개 음성 대조**는 모두 엔진 실행 전에 거부됐다. `tools/check_pr122_locomotion_source_controls.py`를 CI에도 연결했다. source preview CI는 사신 E, 도구리 E/W/N walk, 도구리 E run의 5개 실제 OpenGL 작업으로 확장했다.
+
+현재 단계는 **FIXED_CANDIDATE + ACTUAL_MAIN_TECHNICAL_PASS**이며 최종 아트/전체 gait CI/8방향/Android 승인 완료가 아니다. 정상 392건과 255개 기존 canonical 증거는 보존한다. Android 실제 기기 NOT_RUN, llvmpipe OpenGL 결과이며 VRAM은 측정하지 않았다.
+
+다음은 N의 반대발 착지·가려진 짧은 다리 수정, E run의 착지 잠금/전환/자동 이동, 대표 2종의 남은 방향과 전용 run 제작이다. 대표 2종의 전체 8방향 실게임 게이트 이전에 나머지 12종을 일괄 완료로 올리지 않는다. 무덤 가디언 269의 기존 OpenGL/SW 접촉 증거와 최종 외형·일부 가려진 무기 머리 접촉 HOLD는 유지한다. main 병합·기반 변경·초기화·삭제·강제 푸시는 수행하지 않는다.
