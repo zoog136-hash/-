@@ -4,7 +4,7 @@
   "branch": "feature/twilight-remaining106-20261016",
   "PR": 122,
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
-  "last_safe_commit": "213abb8c",
+  "last_safe_commit": "ed47d49e",
   "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
   "counts": {
     "NOT_AUTHORED": 79,
@@ -627,14 +627,14 @@
       },
       "complete_approved_source_matrix": false,
       "currently_valid_source_parts": [
-        "idle-pilot02:16",
-        "walk-N-NE:16",
-        "walk-S-SW-v02:16",
-        "hit-v02:16",
-        "death-pilot01:24"
+        "idle16",
+        "walk64",
+        "attack24",
+        "hit16",
+        "death24"
       ],
-      "next": "Re-author E,SE,W,NW walk and all8 attack with complete separated source bodies. Existing strict importer rejects overlapping source bounds and attack-v03 missing3 bodies. No copied/interpolated substitute.",
-      "blocker": "Complete144 source matrix unavailable: E/SE/W/NW walk rectangles overlap neighboring bodies; attack-v03 contains21 rather than24 bodies. Gait/model/alpha/Main approval incomplete; no source omissions or threshold changes allowed."
+      "next": "Finish actual Main/baseline/temporal and visual transitions, approve only on full PASS",
+      "blocker": "Source144 complete; actual Main baseline and continuous QA running, local production profile not applied"
     },
     "monster:알비노 몽크": {
       "status": "HOLD",
@@ -846,7 +846,7 @@
   "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-current-ledger.json",
   "final_CI": "PENDING_NEW_PRODUCTION_BATCH",
   "derived_navigation": "Local test bake outputs preserved in /workspace/qa/derived-navigation-before-restore; all26 original Git navigation files restored unchanged.",
-  "state": "GOLEM_LOCALLY_COMPLETED; DEER_REAL_SOURCE_AUTHORING_CONTINUES",
+  "state": "GOLEM_COMPLETED; DEER_144_RAW_PRESERVED_AND_ACTUAL_MAIN_REVIEW_RUNNING",
   "active": "monster:알비노 디어",
   "newly_drawn_poses": 112,
   "preserved_prior_poses": 32,
@@ -863,6 +863,7 @@
   "deer_source_failures": {
     "attack_v01": "Identity drift: antler rack shape; preserved outside pack",
     "attack_v02": "All4 six-pose sheets fail unchanged foreign-body rectangle guard; reframe as8 full-direction three-pose vertical sheets, never lower thresholds",
-    "next": "Complete direction-separated attacks, then full144 source preflight/Main/temporal checks"
+    "next": "Complete direction-separated attacks, then full144 source preflight/Main/temporal checks",
+    "attack_v03": "All8 direction-separated three-phase sources PASS unchanged whole-source guards;144 total source matrix preserved, Main/temporal approval pending"
   }
 }
