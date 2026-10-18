@@ -829,6 +829,8 @@ func _setup_animation(record: Dictionary) -> void:
 		animation_base_scale = Vector2.ONE
 	if motion.profile.pixel_scale > 0.0:
 		animation_base_scale = Vector2.ONE * motion.profile.pixel_scale
+	if motion.frame_source != null:
+		animation_base_scale.x *= motion.profile.native_width_ratio
 	# Foot anchor and hit point depend on visible body size, not one fixed offset.
 	motion.profile.sprite_offset = Vector2(0, -visual_height * 0.46)
 	motion.profile.hit_position = Vector2(0, -visual_height * 0.42)

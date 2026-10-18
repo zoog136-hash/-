@@ -14,6 +14,7 @@ class_name TwilightAnimationProfile
 ## Different authored attacks can release on different source poses.
 @export var action_hit_frames: Dictionary = {}
 @export var color_tint: Color = Color.WHITE
+@export var native_width_ratio: float = 1.0 # explicit per-monster native presentation; no collider change
 @export var use_profile_hit_ratio: bool = false
 @export var attack_animation_speed: float = 1.0
 @export var sprite_offset: Vector2 = Vector2(0, -46)

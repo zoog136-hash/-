@@ -114,3 +114,8 @@ Batch12 original-source continuation: recovered existing private A2002 four chun
 알비노 이구아나112자세와 공포의 아그니104자세의 기존 source·실제 Main·AI/접촉/피격/사망/드랍·동일 Main 완료개체 비교·별도 사후 시각 PASS를 대조했다. 검토 당시49개 PNG/SpriteFrames SHA와 현재 바이트, 두 프로필의 정규 JSON SHA가 모두 같고 dc20ab5→e840f0e 사이 assets/data/scripts/scenes/Main.tscn/project.godot 변경이 없다. 같은 성공 검사를 반복하지 않았다. 최신 사용자 지시로 전체 CI/APK를 최종 통합으로 분리하므로, 개체별 요구조건을 이미 충족한 두 종을 명시적으로 APPROVED에 반영한다. 신규 제작2종이라는 주장이 아니라 기존 제작·연결분의 실제 완료 승인2종이다.
 
 **기존392 +이번 완료2 =누적394/498. 실제 잔여104 =HOLD18 +골렘 제작중1 +미제작85.** 정확한 HEAD의 전체 CI/APK는 별도 최종 검증 대기이며 Android 실기 NOT_RUN이다. 원래 CI/APK 대기 장부는 당시 기록으로 보존하고 이 결정을 최신 장부로 사용한다. 골렘 원본9PNG와 요청/실패를 보존했다. idle16/hit16/공격24는 전신 영역 검사만 통과했고, 걷기8×8와사망3×8 및 전체 품질·Main은 아직 미완료라 수량에 넣지 않는다. 다음은 골렘 실제 제작이다.
+
+
+## 2026-10-18 user-requested safe save
+
+User requested all current work be committed and saved. Production paused. Completed394/498 remains (baseline392 + previously approved2); remaining104 =HOLD19 +AUTHORING6 +NOT_STARTED79. Runtime399 includes5 unapproved source-reuse candidates. Golem death24 and rig/components/failures, Queen first idle source, all candidate/runtime/tool code, complete failed Main output and exact resume are preserved under batch13/14. No new candidate approval, no full manual CI/APK rerun, Android NOT_RUN. Read `batch14/save-checkpoint.json`, full498 ledger and full-Main archive manifest. Private native source delivery has a final batch12 receipt. Resolve saved SHA via `git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch14/save-checkpoint.json`; remote delivery must be checked separately. No force push or main merge.
