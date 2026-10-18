@@ -76,6 +76,45 @@ class RenewedMapSpawnRulesTest(unittest.TestCase):
         self.assertEqual(policy['roster_sources'], ['albino_01', 'albino_02', 'albino_03'])
         self.assertNotIn('additional_bosses', policy)
 
+    def test_three_target_areas_keep_existing_local_monsters(self):
+        """Room-specific rosters must survive layout application for the requested maps."""
+        profiles = json.loads((ROOT / 'data/monsters/world_spawn_profiles.json').read_text(encoding='utf-8'))['maps']
+        tower_maps = [f'oman_{index:02}' for index in range(1, 11)] + ['domination_summit']
+        for map_id in ['aden_world'] + tower_maps:
+            with self.subTest(map=map_id):
+                policy = self.rules['maps'][map_id]
+                self.assertIs(policy.get('preserve_habitat_rosters'), True)
+                normal = [zone for zone in profiles[map_id]['monster_spawn']
+                          if zone['mode'] == 'normal']
+                bosses = [zone for zone in profiles[map_id]['monster_spawn']
+                          if zone['mode'] == 'boss']
+                self.assertTrue(normal)
+                self.assertEqual(len(bosses), 3 if map_id == 'aden_world' else 1)
+                self.assertEqual(len({zone['id'] for zone in profiles[map_id]['monster_spawn']}),
+                                 len(profiles[map_id]['monster_spawn']))
+                self.assertTrue(all(zone['monster_types'] and zone['max_count'] > 0
+                                    for zone in normal + bosses))
+                if map_id in tower_maps:
+                    # This is a current-map review point, not an old global pixel coordinate.
+                    definition = json.loads((ROOT / 'data/maps' / f'{map_id}.json')
+                                            .read_text(encoding='utf-8'))
+                    self.assertEqual(policy['boss_review_anchor'], 'boss')
+                    self.assertEqual(len(definition['review_points']['boss']), 2)
+                    self.assertEqual(len(policy['boss_half_size']), 2)
+                    self.assertTrue(all(0 < value <= 480 for value in policy['boss_half_size']))
+
+    def test_target_placement_budget_remains_unchanged(self):
+        profiles = json.loads((ROOT / 'data/monsters/world_spawn_profiles.json').read_text(encoding='utf-8'))['maps']
+        target_ids = ['aden_world'] + [f'oman_{index:02}' for index in range(1, 11)] + ['domination_summit']
+        def capacity(mode):
+            return sum(zone['max_count'] for map_id in target_ids
+                       for zone in profiles[map_id]['monster_spawn'] if zone['mode'] == mode)
+        self.assertEqual(capacity('normal'), 798)
+        self.assertEqual(capacity('dense'), 96)
+        self.assertEqual(capacity('boss'), 14)  # 3 Aden + 10 Oman + 1 Domination legacy IDs
+        self.assertEqual(len(self.rules['maps']['aden_world']['additional_bosses']), 2)
+        self.assertEqual(self.rules['revision'], 'renewed-maps-20261018-area-preserving-v2')
+
     def test_protected_spawn_buffers_are_positive(self):
         distances = self.rules['exclusion_distances']
         self.assertEqual(set(distances), {'entry', 'portal', 'npc', 'safe_margin', 'road_half_width', 'boss_margin', 'dense_margin'})
