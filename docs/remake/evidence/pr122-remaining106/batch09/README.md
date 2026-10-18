@@ -11,3 +11,11 @@ up separately while PR122@ac40a69's two E prototypes run their latest-head CI.
 
 Continue the single failed W passing pose and genuine separate run poses;
 never infer support/identity approval from pixel uniqueness or source geometry.
+
+A new standalone W PASS-A correction now visibly plants the near support paw
+under the belly and advances the far short hip/knee/paw LEFT above ground,
+with both chains connected. It passes the unchanged one-body/complete-region
+source checks and a physical source pilot review only. Raw PNG and exact edit
+request are retained separately; the failed whole-sheet row was not silently
+removed or overwritten. Full W source/ground/model and actual Main remain
+unapproved. Continue a complete source sequence that uses the corrected pose.
