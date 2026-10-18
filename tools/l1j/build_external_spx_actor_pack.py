@@ -10,6 +10,7 @@ from PIL import Image
 from spx_decode import decode_spx
 
 SOURCE_PATCH = 'appcenter/connector/patch/patch_1.zip'
+SOURCE_PATCHES = (SOURCE_PATCH, 'connector/patch/patch_1.zip')
 PREFIX = 'assets/external_spx/actors'
 ACTORS = {
     '21624': {'walk': 0, 'attack': 8, 'idle': 16, 'hit': 24},
@@ -36,7 +37,9 @@ def make_resource(mapping: dict[str, list[str]]) -> str:
 def generate(source: pathlib.Path, target: pathlib.Path) -> dict:
     if not source.is_file(): raise FileNotFoundError(source)
     with zipfile.ZipFile(source) as outer:
-        patch = outer.read(SOURCE_PATCH)
+        matches = [name for name in SOURCE_PATCHES if name in outer.namelist()]
+        if len(matches) != 1: raise ValueError('Expected one supported nested SPX patch path')
+        patch = outer.read(matches[0])
     with zipfile.ZipFile(io.BytesIO(patch)) as archive:
         names = set(archive.namelist())
         actors = {}
@@ -59,7 +62,8 @@ def generate(source: pathlib.Path, target: pathlib.Path) -> dict:
                         size[1]=max(size[1],image.height)
             if max(size)>512: raise ValueError('unusually large actor canvas '+str(size))
             actors[actor_id] = (tracks,size)
-    manifest = {'schema':1,'source':'local a2(1).zip/patch_1.zip',
+    manifest = {'schema':1,'source':source.name+'/'+matches[0],
+                'timing_mode':'legacy reviewed physical sequence order; use build_spx_source_pack.py with plaintext A3 for source ticks/markers/run',
                 'directions':'E SE S SW W NW N NE', 'optional_external_art':True,
                 'third_party_art_not_committed':True,'actors':{}}
     target.parent.mkdir(parents=True,exist_ok=True)

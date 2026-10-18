@@ -8,6 +8,7 @@ var review_direction := 0
 var review_contact_before := 0
 var review_seen: Dictionary = {}
 var review_had_drop := false
+var review_drop_records: Dictionary = {}
 
 func run() -> void:
 	if DisplayServer.get_name() == "headless":
@@ -51,6 +52,16 @@ func prepare_monster_direction(direction: int) -> bool:
 			var start := target - aim * distance
 			if not route_clear(target, 150.) or not route_clear(start, 0.): continue
 			if not world.field_map.line_clear(start, target): continue
+			if normal.test_move(Transform2D(0.,start), aim*travel): continue
+			var radius_value := (normal.get_node("CollisionShape2D").shape as CircleShape2D).radius+2.
+			var corridor_clear := true
+			for side: float in [-1.,1.]:
+				var shift := aim.orthogonal()*radius_value*side
+				if not world.field_map.line_clear(start+shift,start+aim*travel+shift): corridor_clear=false; break
+			if not corridor_clear: continue
+			# Preserve the inherited magic probe's ground-projected torso lane.
+			# This visual-clearance override used to bypass that existing guard.
+			if normal.attack_type == "magic" and not _magic_projectile_lane_clear(target, direction): continue
 			world.player.position = target
 			world.player.camera.zoom = Vector2.ONE * minf(1.6, 270. / distance)
 			world.player.camera.position = -aim * distance * .5 + Vector2(0, -32)
@@ -148,7 +159,17 @@ func tick(count: int = 1) -> void:
 			if not world.ground_loot.records.is_empty():
 				review_had_drop = true
 				await review_capture("lifecycle-ground-drop")
-			elif review_had_drop: await review_capture("lifecycle-manual-pickup")
+			# A real kill can produce several drops; the inherited UI test picks
+			# one selected record. Observe that record and its inventory award,
+			# rather than requiring unrelated drops to disappear as well.
+			for id: String in review_drop_records:
+				var saved: Dictionary = review_drop_records[id]
+				if not world.ground_loot.records.has(id) and int(world.inventory.get(saved.item_name, 0)) == int(saved.before) + int(saved.quantity):
+					await review_capture("lifecycle-manual-pickup")
+			for id: String in world.ground_loot.records:
+				if not review_drop_records.has(id):
+					var drop: Dictionary = world.ground_loot.records[id]
+					review_drop_records[id] = {"item_name":drop.item_name, "quantity":drop.quantity, "before":int(world.inventory.get(drop.item_name, 0))}
 
 func lifecycle_case() -> void:
 	# The inherited lifecycle resets the actors to center and center + (40, 0),
@@ -159,6 +180,7 @@ func lifecycle_case() -> void:
 	check(review_prepare_lifecycle_clear(), "lifecycle setup has no foreground/other actor cover")
 	review_stage = "lifecycle"
 	review_had_drop = false
+	review_drop_records.clear()
 	await super.lifecycle_case()
 	review_stage = ""
 	for stem: String in ["lifecycle-hit","lifecycle-death-0","lifecycle-death-1","lifecycle-death-2", "lifecycle-ground-drop","lifecycle-manual-pickup"]:

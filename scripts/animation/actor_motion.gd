@@ -151,7 +151,12 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		return
 	move_ratio = real_velocity.length() / maxf(1.0, profile.reference_speed)
 	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
-	gait += delta * profile.movement_fps * move_ratio
+	var cadence: float = profile.movement_fps
+	if not is_equal_approx(profile.movement_cadence_width_ratio, 1.0) and real_velocity.length_squared() > 0.001:
+		var movement_direction := real_velocity.normalized()
+		var stride_scale := Vector2(movement_direction.x * profile.movement_cadence_width_ratio, movement_direction.y).length()
+		cadence /= maxf(0.1, stride_scale)
+	gait += delta * cadence * move_ratio
 	if active:
 		var advancing_sequence: int = sequence
 		var struck_this_tick: bool = false
@@ -394,7 +399,12 @@ func apply_frames(sprite: Node2D) -> void:
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
-	if presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
+	var source_timed: bool = frames.has_meta("twilight_source_tracks")
+	if source_timed and presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
+		# Fit the whole source timeline to the existing combat interval, retaining
+		# every relative duration. The authoritative strike clock is untouched.
+		frame_value = _weighted_frame(track, attack_elapsed / maxf(.001, attack_duration))
+	elif presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
 		var marker_frame: int = clampi(profile.hit_frame_for(_resolved_role), 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))
@@ -408,7 +418,11 @@ func apply_frames(sprite: Node2D) -> void:
 	elif _resolved_role == "hit":
 		frame_value = _weighted_frame(track, 1.0 - hit_clock / hit_duration)
 	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:
-		frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
+		if source_timed:
+			var ends: PackedFloat64Array = track.ends
+			frame_value = _weighted_frame(track, fposmod(gait, ends[-1]) / ends[-1])
+		else:
+			frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
 	elif _resolved_role != "legacy":
 		var ends: PackedFloat64Array = track.ends
 		var progress: float = state_clock * float(track.fps) / ends[-1]

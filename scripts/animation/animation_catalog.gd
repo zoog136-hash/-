@@ -28,7 +28,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if record.get("animation_profile", {}) is Dictionary:
 		settings = settings.duplicate(true)
 		settings.merge(record.get("animation_profile", {}), true)
-	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
+	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "movement_cadence_width_ratio", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
 		if settings.has(property): result.set(property, settings[property])
 	result.use_profile_hit_ratio = settings.has("attack_hit_ratio")
 	for property: String in ["sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size"]:

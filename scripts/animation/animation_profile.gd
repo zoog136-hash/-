@@ -8,6 +8,9 @@ class_name TwilightAnimationProfile
 @export var layout: String = "still" # class5, directional4, directional8, still
 @export var motion_style: String = "slash"
 @export var movement_fps: float = 9.0
+## Presentation adapter for an explicitly reused, differently scaled body.
+## Physics speed remains on the actor. Default 1 preserves existing cadence.
+@export var movement_cadence_width_ratio: float = 1.0
 @export var reference_speed: float = 210.0
 @export_range(0.1, 0.85) var attack_hit_ratio: float = 0.45
 @export var attack_hit_frame: int = 3

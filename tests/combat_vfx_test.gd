@@ -63,6 +63,16 @@ func _run() -> void:
 	check(not slow.is_empty(), "long corpse vanished before its final hold")
 	fx._process(.20)
 	check(slow.is_empty() and fx.available.size() == VFX.CAPACITY, "long corpse failed to expire and return its pool record")
+	# A completed source effect leaves a freed reference until the next play.
+	# Pruning must handle it without typed-lambda conversion or array errors.
+	var retired := VFX.SOURCE_SPX.new()
+	fx.source_effects.append(retired)
+	retired.free()
+	var retired_csb := Node2D.new()
+	fx.source_csb_effects.append(retired_csb)
+	retired_csb.free()
+	check(not fx.play_source_effect("not-mapped","0",Vector2.ZERO),"unknown source group rejected")
+	check(fx.source_effects.is_empty() and fx.source_csb_effects.is_empty(),"completed source references safely pruned on replay")
 	fx.queue_free()
 	await process_frame
 	if failures == 0: print("COMBAT_VFX_OK stress=3000 pool=160 per_hit_nodes=0")

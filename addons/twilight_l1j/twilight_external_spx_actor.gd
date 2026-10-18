@@ -33,6 +33,10 @@ static func effects_frames(id: String) -> SpriteFrames:
 	if loaded == null or body == null: return null
 	for animation: String in body.get_animation_names():
 		if not loaded.has_animation(animation) or loaded.get_frame_count(animation) != body.get_frame_count(animation): return null
+		if not is_equal_approx(loaded.get_animation_speed(animation), body.get_animation_speed(animation)): return null
+		if loaded.get_animation_loop(animation) != body.get_animation_loop(animation): return null
+		for index in range(body.get_frame_count(animation)):
+			if not is_equal_approx(loaded.get_frame_duration(animation,index), body.get_frame_duration(animation,index)): return null
 	_cache[key] = loaded
 	return loaded
 

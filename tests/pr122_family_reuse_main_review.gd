@@ -32,10 +32,35 @@ func monster_case() -> void:
 	await super.monster_case()
 	var kind := str(current_case.get("special_kind",""))
 	if not kind.is_empty():
-		check(review_body_clear(center), "actual boss special origin clear of props")
+		check(prepare_clear_special_origin(kind), "actual boss special origin clear of props")
 		reuse_special_active = true
 		await BOSS_SKILL.exercise(self,kind)
 		reuse_special_active = false
+
+func prepare_clear_special_origin(kind: String) -> bool:
+	var distance := 150. if kind == "beam" else 80.
+	if normal.attack_type == "magic":
+		distance = maxf(distance,float(normal.ai.get("retreat_distance",0.))+30.)
+	var prior := center
+	for radius: float in [0.,80.,160.,240.,320.,480.,640.,800.,1120.,1600.,2400.,3200.]:
+		for heading in range(8):
+			var point := prior+screen_direction(heading)*radius
+			if not route_clear(point,distance): continue
+			world.player.position = point
+			world.player.camera.zoom = Vector2(1.6,1.6)
+			world.player.camera.position = Vector2(0,-32)
+			world.player.camera.reset_smoothing()
+			world.player.camera.force_update_scroll()
+			world.field_renderer.refresh_visible()
+			if not review_body_clear(point): continue
+			var clear := true
+			for direction in range(8):
+				if not review_body_clear(point+screen_direction(direction)*distance): clear=false; break
+			if not clear: continue
+			center = point
+			report.setup.special_visual_origin = {"point":[point.x,point.y],"all8_player_positions_clear":true,"map_modified":false}
+			return true
+	return false
 
 func tick(count: int = 1) -> void:
 	for index in range(count):
