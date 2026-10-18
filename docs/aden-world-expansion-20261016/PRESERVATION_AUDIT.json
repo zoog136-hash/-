@@ -1,0 +1,105 @@
+{
+  "status": "PASS",
+  "baseline": "8e888fe92a095166676755ae27a88240d32da49d",
+  "main_observed_at_start": "e2119c37293a783e93b421ee0055d1318271b071",
+  "existing_paths_changed": [
+    ".github/workflows/aden-giran-review.yml",
+    "scripts/maps/remake_field.gd",
+    "scripts/maps/remake_renderer.gd",
+    "tests/aden_remake_runtime_test.gd"
+  ],
+  "unexpected_existing_changes": [],
+  "pr100_protected_path_count": 2821,
+  "pr100_changed_paths": [],
+  "legacy_twilight_art_and_map_definitions": "UNCHANGED",
+  "original_aden_pack_and_approved_giran": [
+    {
+      "path": "assets/maps/aden_giran_review_v1/SOURCES.md",
+      "bytes": 1996,
+      "sha256": "2fae35f25486a5752eb97253722e1287f028c03bf86e6aedaf662c73ebcf87d1",
+      "unchanged": true
+    },
+    {
+      "path": "assets/maps/aden_giran_review_v1/ground.gdshader",
+      "bytes": 645,
+      "sha256": "3c68a6778e04846a53ed283f20edc98adfc9467bfe41ffa74f8c1713f781d519",
+      "unchanged": true
+    },
+    {
+      "path": "assets/maps/aden_giran_review_v1/props.png",
+      "bytes": 2663811,
+      "sha256": "f61aa0f580624eb140808dbf5eb3d10ae5038008a71a09c4c703902a3dd1a4be",
+      "unchanged": true
+    },
+    {
+      "path": "assets/maps/aden_giran_review_v1/sprites.json",
+      "bytes": 2599,
+      "sha256": "08cd784b807ca37aa37e62438ebcb12588c1011bb6f64857cf36d85a3fddd9b1",
+      "unchanged": true
+    },
+    {
+      "path": "assets/maps/aden_giran_review_v1/terrain.png",
+      "bytes": 4070973,
+      "sha256": "58cb142ca3b30d2d81d2dfc5eb958eeb8c5740df359ca5345270b7b8d44b0842",
+      "unchanged": true
+    },
+    {
+      "path": "data/aden_giran_review/layout.json",
+      "bytes": 60118,
+      "sha256": "dffbba0c6cd5ce8320fb3f4bec0c311fcff0547e7eec4cb20e2d8eea41eb9092",
+      "unchanged": true
+    },
+    {
+      "path": "data/aden_giran_review/surfaces.bin",
+      "bytes": 24576,
+      "sha256": "8d980e2fbd7e584ff6affc925bf19c7b3da7220691e787ae4e5f4fdcbab205c4",
+      "unchanged": true
+    },
+    {
+      "path": "data/map_remake/private/aden/NOTICE.md",
+      "bytes": 1212,
+      "sha256": "a087631a17e0a00036485c653b8d5f02594ce5484c6ffaee55100a93738da3b4",
+      "unchanged": true
+    },
+    {
+      "path": "data/map_remake/private/aden/build_report.json",
+      "bytes": 7448,
+      "sha256": "4428b9fe97f7334658e4811c5845e4527df7df6fc2517e3e4a9df5b7b07eb6b1",
+      "unchanged": true
+    },
+    {
+      "path": "data/map_remake/private/aden/definitions/aden_world.json",
+      "bytes": 543366,
+      "sha256": "f681201ec1bb197b1046b2dd8cf3ec48573a1e095192872c2859751f05434050",
+      "unchanged": true
+    },
+    {
+      "path": "data/map_remake/private/aden/effective_layouts_build.json",
+      "bytes": 9546404,
+      "sha256": "0b851faa5374e193008fc42721f4af32ec017b74a3774d0118d7321c4c41f7c8",
+      "unchanged": true
+    },
+    {
+      "path": "data/map_remake/private/aden/index.json",
+      "bytes": 451,
+      "sha256": "1b931b8c583b882b4477c43b46f901156ef62f47602c3c70fdc57f118148a3fe",
+      "unchanged": true
+    },
+    {
+      "path": "data/map_remake/private/aden/navigation-00.bin",
+      "bytes": 410178,
+      "sha256": "7d52176035de497d5b7c88bd8dee4c6a39c5512934322b6c5a54dbfc9d610cee",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/maps/aden_giran_review/chunk.gd",
+      "bytes": 6503,
+      "sha256": "bf170708353971f4c3e9b8751c0043c63ca3b17850f1376d59622ec2ae9192c8",
+      "unchanged": true
+    }
+  ],
+  "original_grid_regenerated": false,
+  "new_branches_created": false,
+  "new_pull_requests_created": false,
+  "main_merge_performed": false
+}

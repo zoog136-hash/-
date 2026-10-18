@@ -1,6 +1,7 @@
 extends SceneTree
 
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const SOURCE_QA = preload("res://tests/active_source_test_positions.gd")
 
 const OUTPUT: String = "user://ground-loot-review"
 var world: TwilightWorld
@@ -32,7 +33,13 @@ func _run() -> void:
 	world.field_population.set_process(false)
 	world._clear_monsters()
 	world._clear_drops()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
+	# Position this review in a genuinely walkable original-source combat arena.
+	var arena: Vector2 = SOURCE_QA.combat(world,[Vector2(-90,0),Vector2(90,0),Vector2(260,0)])
+	if not arena.is_finite():
+		push_error("GROUND_LOOT_RENDER_FAILED: no walkable A3 source arena")
+		quit(1)
+		return
+	world.player.global_position = arena
 	world.player.camera.zoom = Vector2.ONE
 	world.player.camera.position = Vector2(0,-110)
 	world.player.camera.position_smoothing_enabled = false
@@ -45,8 +52,12 @@ func _run() -> void:
 	for index: int in range(7):
 		var grade: String = TwilightDropVisual.GRADES[index]
 		var item_name: String = str(world.loot_catalog["equipment_by_grade"][grade][0])
-		var where: Vector2 = world.player.global_position + Vector2(float(index - 3) * 105, -20)
+		var where: Vector2 = world.player.global_position + Vector2(float(index - 3) * 30, 0)
 		var view: Button = world._spawn_ground_drop(item_name, where)
+		if view == null:
+			push_error("GROUND_LOOT_RENDER_FAILED: grade spawn returned null")
+			quit(1)
+			return
 		samples.append(view)
 	for i: int in range(20): await process_frame
 	for view: Button in samples:
@@ -65,6 +76,10 @@ func _run() -> void:
 	world._clear_drops()
 	var where: Vector2 = world.player.global_position + Vector2(260,0)
 	var view: Button = world._spawn_ground_drop(str(world.loot_catalog["equipment_by_grade"]["희귀"][0]), where)
+	if view == null:
+		push_error("GROUND_LOOT_RENDER_FAILED: AUTO source drop could not spawn")
+		quit(1)
+		return
 	world.player.set_auto_enabled(true)
 	for i: int in range(12):
 		world._process(1.0 / 60.0)

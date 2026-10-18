@@ -283,7 +283,12 @@ func _physics_process(delta: float) -> void:
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
 	if is_instance_valid(species_visual) and species_visual.warning_active:
 		species_visual.warning_progress = clampf(motion.attack_elapsed / maxf(.01, motion.attack_duration * motion.attack_hit_ratio), 0.0, 1.0)
-	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
+	# Boss warning geometry keeps ticking even at the camera fringe.
+	# Resolve its authored eight-direction pose too, or a previously sampled
+	# frame can persist across a live telegraph (notably NW). Ordinary remote
+	# mobs retain their previous offscreen animation budget.
+	var boss_telegraph: bool = is_boss and is_instance_valid(species_visual) and species_visual.warning_active
+	if boss_telegraph or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
 		motion.apply(sprite, animation_base_scale)
 		if is_instance_valid(species_visual): species_visual.update_pose()
 	animation_state = motion.state

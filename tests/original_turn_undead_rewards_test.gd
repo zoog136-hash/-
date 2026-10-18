@@ -60,7 +60,10 @@ func run() -> void:
 	world.exp_need = 100000
 	# Quests are intentionally excluded; validate the live reward pipeline only.
 	world._on_job_class_selected("마법사")
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300, 4370)))
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0)])
+	check(arena.is_finite(),"turn rewards uses actual walkable A3 combat ground")
+	if not arena.is_finite(): quit(1); return
+	world.player.global_position = arena
 	world.equipped_items.clear()
 	world.equipped_catalog.clear()
 	world._equip_catalog("마법인형", {"name":"즉사 흡수 검사 인형", "hpAbsorption":true})

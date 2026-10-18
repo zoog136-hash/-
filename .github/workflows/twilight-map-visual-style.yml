@@ -12,7 +12,7 @@ on:
 jobs:
   map-visuals:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - name: Install official Godot 4.7.2

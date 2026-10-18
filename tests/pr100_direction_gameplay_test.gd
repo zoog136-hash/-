@@ -61,6 +61,9 @@ func attack_track(key: String, direction: int) -> bool:
 	return key.ends_with("_"+str(direction)) and (key.begins_with("attack") or key.begins_with("cast") or key.begins_with("ranged_attack") or key.begins_with("special"))
 
 func route_clear(point: Vector2, radius: float) -> bool:
+	# Fail closed if the source pack was unavailable on this platform.
+	# Do not dereference a null field thousands of times on Windows.
+	if world.field_map == null: return false
 	if not world.field_map.walkable(point) or not world.field_map.point_clear(point) or world.field_map.is_safe(point): return false
 	for direction: int in range(8):
 		var spoke: Vector2 = point + screen_direction(direction) * radius
@@ -68,15 +71,46 @@ func route_clear(point: Vector2, radius: float) -> bool:
 	return true
 
 func find_clearing() -> Vector2:
+	if world.field_map == null:
+		var pack_index: String = "res://data/map_remake/private/aden/index.json"
+		var definition_path: String = "res://data/map_remake/private/aden/definitions/aden_world.json"
+		var pack: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(pack_index)) as Dictionary if FileAccess.file_exists(pack_index) else {}
+		var entry: Dictionary = pack.get("maps", {}).get("aden_world", {})
+		check(false, "production Aden field missing; index_exists=" + str(FileAccess.file_exists(pack_index)) +
+			" definition_exists=" + str(FileAccess.file_exists(definition_path)) +
+			" definition_sha_matches=" + str(FileAccess.file_exists(definition_path) and FileAccess.get_sha256(definition_path) == str(entry.get("sha256", ""))))
+		return Vector2.INF
+	# Prefer a live skeleton for the base game regression. On source-pack
+	# mainland and isolated Windows fixtures its spawn may not be near an
+	# unobstructed arena. Search other real actor/source cells with identical
+	# collision, safe-zone and eight-way LOS requirements.
+	var anchors: Array[Vector2] = []
+	var existing_skeleton: TwilightMonster = null
 	for slot: Dictionary in world.field_population.slots:
-		var actor: Variant = slot.monster
-		if not is_instance_valid(actor) or actor.monster_name != "해골 근위병": continue
-		for radius: float in [0.,80.,160.,240.,320.,400.,560.,720.]:
+		var actor: Variant = slot.get("monster")
+		if not is_instance_valid(actor) or actor.dead or actor.monster_name != "해골 근위병": continue
+		if existing_skeleton == null: existing_skeleton = actor as TwilightMonster
+		if anchors.size() < 20: anchors.append(actor.global_position)
+	normal = existing_skeleton
+	for slot: Dictionary in world.field_population.slots:
+		var actor: Variant = slot.get("monster")
+		if not is_instance_valid(actor) or actor.dead: continue
+		if anchors.size() >= 68: break
+		anchors.append(actor.global_position)
+	anchors.append(world.player.global_position)
+	if world.field_map is RemakePlayableField:
+		var source: RemakePlayableField = world.field_map as RemakePlayableField
+		for region_id: String in ["meadow", "forest", "dragon_valley", "ruins", "western_approach"]:
+			var cells: PackedInt32Array = source.region_cells.get(region_id, PackedInt32Array())
+			if cells.is_empty(): continue
+			for index: int in range(0, cells.size(), maxi(1, int(cells.size() / 16))):
+				var flat: int = cells[index]
+				anchors.append(source.cell_to_world(Vector2i(flat % source.width, int(flat / source.width))))
+	for anchor: Vector2 in anchors:
+		for radius: float in [0., 80., 160., 240., 320., 400., 560., 720., 960., 1280.]:
 			for direction: int in range(8):
-				var point: Vector2 = actor.position + screen_direction(direction) * radius
-				if route_clear(point,150.):
-					normal = actor
-					return point
+				var point: Vector2 = anchor + screen_direction(direction) * radius
+				if route_clear(point, 150.): return point
 	return Vector2.INF
 
 func record_for(name_value: String) -> Dictionary:
@@ -156,7 +190,18 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 		check(sprite.animation == "idle_" + str(direction),prefix + " native idle track after movement")
 		world.player.position = center
 		var attack_distance: float = 140. if bool(spec.magic) else 96. if str(spec.type) == "활" else 40.
-		target.position = center + screen_direction(direction)*attack_distance
+		# 40 screen pixels can cross two native isometric grid cells in only
+		# some facings. Never bypass weapon range or map line of sight.
+		var legal_attack_position: bool = false
+		for distance: float in [attack_distance, attack_distance * .75, attack_distance * .5, attack_distance * .25]:
+			var candidate: Vector2 = center + screen_direction(direction) * distance
+			target.position = candidate
+			var native_range_ok: bool = (world.player.global_position.distance_to(candidate) <= attack_distance + 1.0) if bool(spec.magic) else world._target_in_current_weapon_range(target)
+			if world.field_map.walkable(candidate) and world.field_map.point_clear(candidate) and not world.field_map.is_safe(candidate) and native_range_ok and world._has_line_of_sight_world(world.player.global_position, candidate):
+				legal_attack_position = true
+				break
+		check(legal_attack_position, prefix + " real original-grid weapon reach and line of sight")
+		if not legal_attack_position: continue
 		target.motion.cancel_attack()
 		world._select_monster(target)
 		# Wait for the real cooldown; do not bypass the production cadence.
@@ -249,7 +294,19 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 func staff_normal_attack(target: TwilightMonster, spec: Dictionary, transformed: bool, direction: int) -> void:
 	var form: String = "transform:"+str(spec.transform_id) if transformed else "class:"+str(world.player.class_index)
 	var prefix := "staff normal %s %s" % [form,COMPASS[direction]]
-	target.position = center+screen_direction(direction)*40.
+	# The normal melee swing of a staff uses *native weapon grid cells*, not
+	# the 140px magic cast range. The A3 isometric basis makes a fixed 40px
+	# offset two cells away in S/SW/NW/N even though east/west works.
+	# Choose the farthest clear candidate that the real combat rules accept.
+	var valid_reach: bool = false
+	for attack_distance: float in [40.0, 30.0, 20.0, 12.0, 0.0]:
+		var point: Vector2 = center + screen_direction(direction) * attack_distance
+		target.position = point
+		if world.field_map != null and world.field_map.walkable(point) and world.field_map.point_clear(point) and not world.field_map.is_safe(point) and world._target_in_current_weapon_range(target) and world._has_line_of_sight_world(world.player.global_position, point):
+			valid_reach = true
+			break
+	check(valid_reach, prefix + " real source-grid melee reach with terrain and LOS")
+	if not valid_reach: return
 	world._select_monster(target)
 	for _wait: int in range(100):
 		if world.auto_attack_timer <= 0. and not world.player.motion.presenting_attack: break
@@ -315,7 +372,10 @@ func monster_case() -> void:
 			await tick()
 			if normal.motion.state in ["walk","run"]:
 				saw_walk = true
-				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "walk_"+str(direction),"existing skeleton pursuit " + COMPASS[direction])
+				# Real A3 obstacles can steer a chasing actor onto a detour.
+				# The visible walk must follow the actual steered heading;
+				# net approach and attack facing are still checked below.
+				check(normal.motion._resolved_key == "walk_"+str(normal.motion.facing8),"existing skeleton pursuit " + COMPASS[direction])
 			if normal.motion.presenting_attack:
 				saw_attack = true
 				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "attack_"+str(direction),"existing skeleton attack " + COMPASS[direction])
@@ -329,7 +389,10 @@ func monster_case() -> void:
 			"movement":str(normal.position-before),"facing":normal.motion.facing8,"contacts":monster_strikes.size()-count_before})
 		normal.motion.cancel_attack()
 		await capture("monster-"+COMPASS[direction])
-		await tick(12)
+		# A prior magic projectile can leave the player in a native hit pose
+		# for more than twelve physics ticks. Let it resolve before launching
+		# the next-direction moving-projectile contact, with real clocks only.
+		await tick(36 if normal.attack_type == "magic" else 12)
 
 func boss_case() -> void:
 	var boss := db_actor("그라디움")
@@ -366,7 +429,7 @@ func boss_case() -> void:
 				check(rig.warning_center.is_equal_approx(center),"boss warning uses real world ground anchor " + COMPASS[direction])
 				special_sequence = boss.special_sequence
 				check(boss.motion.facing8 == direction and warning_aim.dot(screen_direction(direction)) > .995,"boss warns toward player " + COMPASS[direction])
-				check(attack_track(boss.motion._resolved_key,direction),"boss skill uses directional attack art " + COMPASS[direction])
+				check(attack_track(boss.motion._resolved_key,direction),"boss skill uses directional attack art " + COMPASS[direction] + " actual=" + boss.motion._resolved_key + " state=" + boss.motion.state)
 				check(boss.motion.active,"boss does not return idle during windup " + COMPASS[direction])
 			if rig.effect_age >= 0.:
 				effect = true
@@ -436,13 +499,32 @@ func lifecycle_case() -> void:
 		var name_value := str(drop.item_name)
 		var before: int = int(world.inventory.get(name_value,0))
 		check(before == int(inventory_before.get(name_value,0)),"drop is not immediately awarded")
+		# A genuine kill may leave production stun/fear/hold or weapon motion
+		# active. The manual pickup controller rightly rejects these states.
+		# Wait for the original live timers instead of bypassing their logic.
+		var recovery_ticks: int = 0
+		while recovery_ticks < 480 and (world.player.is_stunned() or world.player.is_feared()
+				or world.player.is_held() or world.player.movement_locked):
+			await tick()
+			recovery_ticks += 1
+		report.setup.pickup_recovery_ticks = recovery_ticks
+		check(not world.player.is_stunned() and not world.player.is_feared()
+			and not world.player.is_held() and not world.player.movement_locked,
+			"real combat control and movement lock recover before manual pickup")
 		(world.ground_loot.views[str(drop.id)] as Button).pressed.emit()
 		world.loot_pickup.pickup_button.pressed.emit()
 		for _wait: int in range(180):
 			await tick()
 			if not world.ground_loot.records.has(str(drop.id)): break
 		picked = int(world.inventory.get(name_value,0)) == before+int(drop.quantity)
-		check(picked and not world.ground_loot.records.has(str(drop.id)),"actual UI manual pickup awards once")
+		check(picked and not world.ground_loot.records.has(str(drop.id)),
+			"actual UI manual pickup awards once; mode=" + str(world.loot_pickup.mode)
+			+ " target=" + str(world.loot_pickup.target_id)
+			+ " stunned=" + str(world.player.is_stunned()) + " held=" + str(world.player.is_held())
+			+ " feared=" + str(world.player.is_feared()) + " locked=" + str(world.player.movement_locked)
+			+ " pending=" + str(world.ground_loot.records.has(str(drop.id)))
+			+ " owned=" + str(world.inventory.get(name_value, 0))
+			+ " expected=" + str(before + int(drop.quantity)))
 	await tick(90)
 	check(not is_instance_valid(normal) or not normal.is_physics_processing(),"corpse lifecycle terminates or enters dormant pool")
 	report.lifecycle = {"hp_start":hp_start,"hp_end":normal.hp if is_instance_valid(normal) else 0,"weapon_attempts":attempts,"attempt_limit":attempt_limit,"hit_pose":hit_seen,"death_callbacks":deaths.size(),

@@ -1,0 +1,92 @@
+name: Aden world source visuals and engine evidence
+on:
+  push:
+    branches: [feature/aden-source-topology-20261015]
+    paths:
+      - assets/maps/aden_world_visuals_v1/**
+      - data/aden_world_visuals/**
+      - scripts/maps/aden_world_visuals/**
+      - scripts/maps/remake_field.gd
+      - scripts/maps/remake_renderer.gd
+      - scripts/maps/field_population.gd
+      - tools/test_project_support.py
+      - tools/test_pr120_legacy_scope.py
+      - tests/aden_*test.gd
+      - .github/workflows/aden-world-visuals.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exact Godot and software graphics
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and original resource integrity
+        id: prepare
+        run: |
+          mkdir -p aden-evidence
+          python3 tools/check_resource_integrity.py --root . > aden-evidence/resource-integrity.log
+          XDG_DATA_HOME="$RUNNER_TEMP/aden-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > aden-evidence/import.log 2>&1
+          if rg 'SCRIPT ERROR:|ERROR:' aden-evidence/import.log; then exit 1; fi
+      - name: Actual regional views, all chunks, services, routes and entrance audit
+        shell: bash
+        run: |
+          set +e
+          engine=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          for kind in giran routes systems world entries; do
+            case "$kind" in
+              giran) script=aden_giran_review_test; args="--capture" ;;
+              routes) script=aden_source_routes_test; args="" ;;
+              systems) script=aden_world_systems_test; args="--capture" ;;
+              world) script=aden_world_visuals_test; args="--capture --overview" ;;
+              entries) script=aden_world_visuals_test; args="--capture --entrances-only" ;;
+            esac
+            mkdir -p "aden-evidence/$kind"
+            XDG_DATA_HOME="$RUNNER_TEMP/aden-$kind" LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1280x720x24' "$engine" --path . --rendering-driver opengl3 --audio-driver Dummy --script "res://tests/$script.gd" -- --output="$GITHUB_WORKSPACE/aden-evidence/$kind" $args > "aden-evidence/$kind/runtime.log" 2>&1
+            code=$?
+            echo "$code" > "aden-evidence/$kind/exit-code.txt"
+          done
+          python3 - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('aden-evidence');failed=[]
+          for kind in ['giran','routes','systems','world','entries']:
+              folder=root/kind
+              try:
+                  report=json.loads((folder/'runtime.json').read_text())
+                  ok=(folder/'exit-code.txt').read_text().strip()=='0' and report['status']=='PASS' and report['failures']==[]
+              except Exception:
+                  ok=False
+              print(kind,'PASS' if ok else 'FAIL')
+              if not ok: failed.append(kind)
+          # Unreachable source entries stay FAIL. Never rewrite that audit to PASS.
+          assert not failed, failed
+          PY
+      - name: Preserve all four legacy visual fixture suites
+        if: ${{ always() && steps.prepare.outcome == 'success' }}
+        shell: bash
+        run: |
+          python3 -m unittest discover -s tools -p 'test_pr120_legacy_scope.py' -v
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs aden-evidence/legacy-regressions --only aden_building_test,aden_courtyard_test,aden_shoreline_test,aden_terrain_polish_test
+          python3 - <<'PY'
+          import json,pathlib
+          report=json.loads(pathlib.Path('aden-evidence/legacy-regressions/summary.json').read_text())
+          expected={'aden_building_test','aden_courtyard_test','aden_shoreline_test','aden_terrain_polish_test'}
+          assert set(report['checks']) == expected, report
+          assert report['total'] == report['passed'] == 4, report
+          assert report['failed'] == report['skipped'] == report['not_run'] == [], report
+          assert set(report['validation_scopes'].values()) == {'EXISTING_TWILIGHT_GEOMETRY'}, report
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aden-world-${{ github.sha }}
+          path: aden-evidence/
+          if-no-files-found: error

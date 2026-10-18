@@ -1,0 +1,69 @@
+name: Aden Original World Screenshot
+
+on:
+  push:
+    branches: [feature/aden-source-topology-20261015]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-main-aden-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and software rendering display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          curl --fail --location --retry 2 --output /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Verify the actual Aden resource pack is present
+        run: |
+          test -s data/map_remake/private/aden/index.json
+          test -s data/map_remake/private/aden/navigation-00.bin
+          test -s data/map_remake/private/aden/definitions/aden_world.json
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          root=pathlib.Path('data/map_remake/private/aden')
+          index=json.loads((root/'index.json').read_text())
+          entry=index['maps']['aden_world']
+          actual=hashlib.sha256((root/'definitions/aden_world.json').read_bytes()).hexdigest()
+          assert actual==entry['sha256'], (actual,entry['sha256'])
+          print('ADEN_RESOURCES_VERIFIED', actual)
+          PY
+      - name: Import project under isolated player data
+        run: |
+          mkdir -p "$RUNNER_TEMP/aden-save" "$GITHUB_WORKSPACE/aden-captures"
+          export XDG_DATA_HOME="$RUNNER_TEMP/aden-save"
+          export APPDATA="$RUNNER_TEMP/aden-save"
+          export LOCALAPPDATA="$RUNNER_TEMP/aden-save"
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import 2>&1 | tee aden-captures/import.log
+      - name: Capture actual Main.tscn Aden world without legacy flag
+        run: |
+          export XDG_DATA_HOME="$RUNNER_TEMP/aden-save"
+          export APPDATA="$RUNNER_TEMP/aden-save"
+          export LOCALAPPDATA="$RUNNER_TEMP/aden-save"
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tools/map_restore/capture_maps.gd -- --maps=aden_world --output="$GITHUB_WORKSPACE/aden-captures" 2>&1 | tee aden-captures/capture.log
+          test -s aden-captures/aden_world-same-camera-detail.png
+          test -s aden-captures/aden_world-full-map.png
+          python3 - <<'PY'
+          import json
+          with open('aden-captures/captures.json',encoding='utf-8') as f:
+              x=json.load(f)
+          d=x['maps']['aden_world']
+          assert d['remake_topology'] is True and d['authored_remake'] is False, d
+          assert not x['failures'],x['failures']
+          print('ADEN_REAL_MAIN_SOURCE_CAPTURE_OK')
+          PY
+        shell: bash
+      - name: Upload real engine screenshots and failure logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aden-main-source-engine-preview
+          path: aden-captures/
+          if-no-files-found: error

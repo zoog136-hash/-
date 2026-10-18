@@ -12,6 +12,7 @@ var world: TwilightWorld
 var failures: Array[String] = []
 var report: Array[Dictionary] = []
 var checks: int = 0
+var qa_radius: float = 80.0
 
 func _initialize() -> void: call_deferred("run")
 
@@ -22,15 +23,32 @@ func check(ok: bool, label: String) -> void:
 		print("ADEN_BOSS_SPECIAL_FAIL " + label)
 
 func clearing(region: Dictionary) -> Vector2:
-	for cell: Vector2i in world.field_map.spawn_cells.get(str(region.id), []):
-		var point: Vector2 = world.field_map.cell_to_world(cell)
-		var clear: bool = true
-		for vector: Vector2 in VECTORS:
-			var target: Vector2 = point + vector.normalized() * 80.0
-			if not world.field_map.walkable(target) or not world.field_map.point_clear(target) or world.field_map.is_safe(target) or not world.field_map.line_clear(point,target):
-				clear = false
-				break
-		if clear: return point
+	# The installed A3-derived Aden field stores the authoritative playable
+	# source cells in region_cells, not the legacy authored spawn_cells.
+	var region_id: String = str(region.id)
+	var cells: Array[Vector2i] = []
+	if world.field_map is RemakePlayableField:
+		var source: RemakePlayableField = world.field_map as RemakePlayableField
+		var indices: PackedInt32Array = source.region_cells.get(region_id, PackedInt32Array())
+		for flat: int in indices:
+			cells.append(Vector2i(flat % source.width, int(flat / source.width)))
+	else:
+		for cell: Vector2i in world.field_map.spawn_cells.get(region_id, []): cells.append(cell)
+	# A narrow real boss zone need not have a 160px unobstructed circle.
+	# Sample nearby legal distances; keep all actual terrain and LOS checks.
+	for radius: float in [80.0, 64.0, 48.0, 32.0, 24.0]:
+		for cell: Vector2i in cells:
+			var point: Vector2 = world.field_map.cell_to_world(cell)
+			if not world.field_map.walkable(point) or not world.field_map.point_clear(point) or world.field_map.is_safe(point): continue
+			var clear: bool = true
+			for vector: Vector2 in VECTORS:
+				var target: Vector2 = point + vector.normalized() * radius
+				if not world.field_map.walkable(target) or not world.field_map.point_clear(target) or world.field_map.is_safe(target) or not world.field_map.line_clear(point, target):
+					clear = false
+					break
+			if clear:
+				qa_radius = radius
+				return point
 	return Vector2.INF
 
 func encounter(slot: Dictionary) -> void:
@@ -38,8 +56,12 @@ func encounter(slot: Dictionary) -> void:
 	var name_value: String = str(ENCOUNTERS[str(region.id)])
 	check(region.get("map_id", "") == "aden_world", name_value + " current-map metadata")
 	var verification: Dictionary = region.get("verification_status", {})
-	check(verification.get("exact_spawn_area", "") == "unverified" and verification.get("coordinates", "") == "local_only", name_value + " honest coordinate provenance")
-	check(region.get("respawn_policy", "") == "wall_clock" and int(region.respawn_time) == 28800 and verification.get("respawn", "") == "wall_clock_local_only", name_value + " eight-hour wall-clock policy")
+	# Both authored zones and the installed original-topology source pack
+	# explicitly declare local-only spawn coordinates and local respawns.
+	var locally_adapted: bool = str(verification.get("coordinates", "")) == "local_only" or (str(region.get("placement_status", "")) == "TWILIGHT_ADAPTED_NOT_ORIGINAL_SPAWNS" and str(region.get("coordinate_evidence", "")).begins_with("A3_STATIC_TOPOLOGY_WITH_PROVISIONAL_"))
+	check(str(verification.get("exact_spawn_area", "")) == "unverified" and locally_adapted, name_value + " honest coordinate provenance")
+	var local_respawn: bool = str(verification.get("respawn", "")) == "wall_clock_local_only" or str(region.get("placement_policy", "")) == "current_map_local_encounter"
+	check(region.get("respawn_policy", "") == "wall_clock" and int(region.respawn_time) == 28800 and local_respawn, name_value + " eight-hour wall-clock policy")
 	var boss: TwilightMonster = slot.monster as TwilightMonster
 	check(is_instance_valid(boss) and boss.monster_name == name_value and boss.is_boss, name_value + " actual generated encounter actor")
 	if not is_instance_valid(boss): return
@@ -57,7 +79,7 @@ func encounter(slot: Dictionary) -> void:
 		var label: String = name_value + " " + str(COMPASS[direction])
 		boss.position = center
 		boss.home_position = center
-		world.player.position = center + aim * 80.0
+		world.player.position = center + aim * qa_radius
 		# The production renderer culls offscreen actor poses. Move the actual
 		# gameplay camera with the QA player before sampling the attack track.
 		world.player.camera.reset_smoothing()
@@ -92,7 +114,7 @@ func encounter(slot: Dictionary) -> void:
 		boss.motion.apply(boss.sprite,boss.animation_base_scale)
 		rig.tick(.7)
 		check(hits.size() == before + 1 and not boss.motion.presenting_attack and boss.motion.state == "idle" and rig.effect_age < 0.0, label + " single hit, idle recovery and effect expiry")
-		report.append({"encounter":region.id,"name":name_value,"compass":COMPASS[direction],"kind":skill.kind,
+		report.append({"encounter":region.id,"name":name_value,"compass":COMPASS[direction],"qa_radius":qa_radius,"kind":skill.kind,
 			"facing":boss.motion.facing8,"warning_aim":[warning_aim.x,warning_aim.y],"contacts":hits.size()-before,
 			"attack_track":attack_track,"idle_track":boss.motion._resolved_key})
 	# The same actors cancel their warning when interrupted and when killed.

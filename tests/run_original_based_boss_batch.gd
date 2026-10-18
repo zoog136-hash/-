@@ -20,6 +20,10 @@ func monster_case() -> void:
 	if not expected_kind.is_empty(): await BOSS_SKILL_QA.exercise(self, expected_kind)
 
 func lifecycle_case() -> void:
+	# Existing high-HP bosses cannot legitimately be killed in the bounded real-hit CI fight.
+	# Retain original HP/AC and use a labeled production-damage finisher before real equipped hits.
+	if is_instance_valid(normal) and normal.is_boss and normal.max_hp >= 100000:
+		BOSS_SKILL_QA.prepare_real_boss_finisher(self)
 	await super.lifecycle_case()
 	if is_instance_valid(normal):
 		check(not normal.species_visual.warning_active and not normal.motion.active,

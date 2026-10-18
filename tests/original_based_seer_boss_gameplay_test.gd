@@ -9,6 +9,10 @@ func subject_name() -> String: return "불신의 시어"
 func subject_folder() -> String: return "seer_boss"
 func lifecycle_attempt_limit() -> int: return BOSS_SKILL_QA.LIFECYCLE_ATTEMPT_LIMIT
 
+func prepare_lifecycle() -> void:
+	super.prepare_lifecycle()
+	BOSS_SKILL_QA.prepare_real_boss_finisher(self)
+
 func prepare_monster_direction(direction: int) -> bool:
 	normal.special_cooldown = 9999.
 	return super.prepare_monster_direction(direction)

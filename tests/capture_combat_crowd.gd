@@ -1,6 +1,7 @@
 extends SceneTree
 
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const ADEN_COMBAT_QA = preload("res://tests/qa_aden_source_combat_positions.gd")
 
 ## Diagnostic populations use real AI, hit signals, AUTO, projectiles and existing art.
 ## Controlled HP avoids deaths changing the population during a short sample.
@@ -46,7 +47,13 @@ func _run() -> void:
 		world.rng.seed = 20261009
 		world._set_map("aden_world", false)
 		world.field_population.set_process(false)
-		var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
+		var combat_pair: Dictionary = ADEN_COMBAT_QA.find_source_combat_pair(world.field_map as RemakePlayableField, world.rng)
+		if combat_pair.is_empty():
+			push_error("No real reachable, non-safe source-grid combat pair for 32/96/192 crowd verification")
+			quit(1)
+			return
+		var point: Vector2 = combat_pair["player"]
+		var anchor_point: Vector2 = combat_pair["monster"]
 		_clear(world)
 		await process_frame
 		world.player.global_position = point
@@ -96,7 +103,7 @@ func _run() -> void:
 			# Separating their initial positions avoids a collision pile-up
 			# that previously starved player strikes at the 192-actor sample.
 			if index == anchor_index:
-				mob.global_position = point + Vector2(45.0, 0.0)
+				mob.global_position = anchor_point
 				anchor = mob
 			else:
 				mob.global_position = point + Vector2.from_angle(angle) * (185.0 + float(index % 6) * 38.0)
@@ -108,6 +115,12 @@ func _run() -> void:
 		world.player.set_auto_enabled(true)
 		world.auto_target = anchor
 		world.selected_monster = anchor
+		# Assert the real combat prerequisites before measuring 300/360 frames;
+		# do not relax source edges, attack distance or actual damage counters.
+		if not world._has_line_of_sight_world(world.player.global_position, anchor.global_position) or not world._target_in_current_weapon_range(anchor):
+			push_error("Aden crowd source-grid target is not visible/in weapon range: " + JSON.stringify(combat_pair))
+			quit(1)
+			return
 		# This is the real AUTO attack path, not synthetic damage or fake hits.
 		# Report any remaining failure with enough state to diagnose it.
 		var times: Array[float] = []

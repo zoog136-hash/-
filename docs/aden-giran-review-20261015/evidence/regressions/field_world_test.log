@@ -1,0 +1,14 @@
+TIMEOUT Command '['/workspace/runtime/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64', '--headless', '--path', '/workspace/twilight', '--script', 'res://tests/field_world_test.gd']' timed out after 150 seconds
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FIELD load_ms=4527
+FIELD FAIL: map load and actual field extent
+FIELD FAIL: authored player spawn
+FIELD FAIL: town safe zone
+FIELD FAIL: all authored blockers have physics shapes
+FIELD FAIL: navigation reaches ruins across river
+
+SCRIPT ERROR: Invalid access to property or key 'bridges' on a base object of type 'Dictionary'.
+          at: _run (res://tests/field_world_test.gd:46)
+          GDScript backtrace (most recent call first):
+              [0] _run (res://tests/field_world_test.gd:46)

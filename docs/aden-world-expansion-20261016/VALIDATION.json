@@ -1,0 +1,115 @@
+{
+  "overall_status": "FAIL",
+  "final_goal_complete": false,
+  "giran_first_region_user_approved": true,
+  "approval_date": "2026-10-16",
+  "full_scope_authorized": true,
+  "main_merge_authorized": false,
+  "source_grid": {
+    "status": "PASS",
+    "dimensions": [
+      2048,
+      1536
+    ],
+    "navigation_chunks": 768,
+    "sha256": "c22aa61ed083a3680230c659202503d7afaef30cb41b86d4655e9f843c81a7c4",
+    "regenerated": false
+  },
+  "full_visual_layer": {
+    "status": "PASS",
+    "visual_chunks": 3072,
+    "authored_placement_candidates": 20902,
+    "meaning": "entire source-grid renderer and separate art installed; not M object identification completion"
+  },
+  "engine_world": {
+    "status": "PASS",
+    "checks": 677,
+    "regions": 21,
+    "evidence": "WORLD_RUNTIME.json"
+  },
+  "giran": {
+    "status": "PASS",
+    "checks": 45,
+    "baseline_preserved": true,
+    "boundary_before_after_same_twilight_camera": true
+  },
+  "systems": {
+    "status": "PASS",
+    "checks": 123,
+    "npcs": 9,
+    "source_spawn_zones": 18,
+    "boss_zones": 5,
+    "existing_exits": 3,
+    "oman_return": true,
+    "respawn_deadlines": "SIMULATED_IN_ISOLATED_QA",
+    "manual_long_fight": "NOT_RUN"
+  },
+  "long_routes": {
+    "status": "PASS",
+    "checks": 23,
+    "routes": 7,
+    "every_returned_segment_source_clear": true,
+    "continuous_end_to_end_walk": "NOT_RUN"
+  },
+  "original_runtime": {
+    "status": "PASS",
+    "checks": 104
+  },
+  "source_entrance_audit": {
+    "status": "FAIL",
+    "checks": 200,
+    "failures": [
+      "source-entry-03-map-64 has no authoritative walking cell within source nearest-cell limit",
+      "source-entry-07-map-300 has no authoritative walking cell within source nearest-cell limit",
+      "source-entry-08-map-101 has no authoritative walking cell within source nearest-cell limit"
+    ],
+    "original_candidates": 9,
+    "new_active_portals": 0,
+    "target_scene_implementation": "FAIL_NOT_IMPLEMENTED"
+  },
+  "existing_selected_regressions": {
+    "status": "FAIL",
+    "passed": 14,
+    "failed": 8,
+    "total": 22,
+    "not_run_this_session": 139,
+    "evidence": "REGRESSIONS.json"
+  },
+  "visual_fidelity_to_actual_M": "FAIL",
+  "all_town_building_by_building_M_comparison": "NOT_RUN",
+  "minimum_quality_above_oman_every_region": "NOT_RUN",
+  "exact_original_camera_comparison": "NOT_RUN",
+  "android_functionality": "NOT_RUN",
+  "android_gpu_performance": "NOT_RUN",
+  "desktop_software_performance": {
+    "status": "MEASURED",
+    "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "region_median_ms_min": 19.519,
+    "region_median_ms_max": 27.943,
+    "max_region_p95_ms": 47.29,
+    "peak_stream_build_ms": 193.013,
+    "production_graphics_cap": 49,
+    "includes_startup_teleports_and_QA_zoom": true,
+    "all_chunk_overview_is_not_production_fps": true
+  },
+  "third_party_original_TIL_art": "NOT_AVAILABLE",
+  "all_original_resources_integrated": false,
+  "delivery": {
+    "status": "REMOTE_BYTES_VERIFIED",
+    "artifact_commit": "973ee8ab8f53fe175a6145d0b9e4f171c3389b9c",
+    "branch": "feature/aden-source-topology-20261015",
+    "pull_request": 120,
+    "remote_changed_git_blobs_verified": 2112,
+    "downloaded_binary_files": 45,
+    "downloaded_binary_bytes": 88348804,
+    "receipt": "REMOTE_DELIVERY.json",
+    "main_merged": false
+  },
+  "preservation_audit": "PASS",
+  "existing_723_resource_integrity": "PASS",
+  "new_tracked_art_and_data_integrity": {
+    "status": "PASS",
+    "files": 1994,
+    "bytes": 14311656
+  }
+}

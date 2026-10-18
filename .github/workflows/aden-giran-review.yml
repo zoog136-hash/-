@@ -1,0 +1,60 @@
+name: Aden Giran first review
+
+on:
+  push:
+    branches: [feature/aden-source-topology-20261015]
+    paths:
+      - assets/maps/aden_giran_review_v1/**
+      - data/aden_giran_review/**
+      - scripts/maps/aden_giran_review/**
+      - scripts/maps/aden_remake_registry.gd
+      - scripts/maps/remake_renderer.gd
+      - tests/aden_giran_review_test.gd
+      - .github/workflows/aden-giran-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  giran-main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact engine and software display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and verify existing resources
+        run: |
+          mkdir -p giran-evidence
+          python3 tools/check_resource_integrity.py --root . > giran-evidence/resource-integrity.log
+          XDG_DATA_HOME="$RUNNER_TEMP/giran-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > giran-evidence/import.log 2>&1
+          if rg 'SCRIPT ERROR:|ERROR:' giran-evidence/import.log; then exit 1; fi
+      - name: Actual Main services, source physics and PNGs
+        shell: bash
+        run: |
+          set -euo pipefail
+          XDG_DATA_HOME="$RUNNER_TEMP/giran-save" LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/aden_giran_review_test.gd -- --output="$GITHUB_WORKSPACE/giran-evidence" --capture > giran-evidence/runtime.log 2>&1
+          if rg 'SCRIPT ERROR:|ERROR:|GIRAN_FAIL' giran-evidence/runtime.log; then exit 1; fi
+          python3 - <<'PY'
+          import json, pathlib
+          root=pathlib.Path('giran-evidence')
+          result=json.loads((root/'runtime.json').read_text())
+          assert result['status']=='PASS' and not result['failures'], result
+          assert len(result['screenshots'])==7, result
+          for shot in result['screenshots']: assert (root/shot['file']).stat().st_size>10000
+          assert result['android_device']=='NOT_RUN'
+          assert result['exact_original_camera_calibration']=='NOT_RUN'
+          print('GIRAN_ENGINE_CHECKS_PASS__BASELINE_USER_APPROVED_20261016')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: giran-first-review-${{ github.sha }}
+          path: giran-evidence/
+          if-no-files-found: error

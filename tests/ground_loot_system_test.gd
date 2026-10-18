@@ -29,7 +29,8 @@ func point_at(radius: float) -> Vector2:
 		var point: Vector2 = world.player.global_position + Vector2.from_angle(float(i) * TAU / 32) * radius
 		if not world._is_walkable_world(point): continue
 		var path: PackedVector2Array = world.find_world_path(world.player.global_position, point)
-		if path.size() > 1 and path[path.size() - 1].distance_to(point) < 50: return point
+		# Direct source-grid routes legitimately contain one endpoint.
+		if not path.is_empty() and path[-1].distance_to(point) < 50: return point
 	return world.player.global_position
 
 func walk_until_empty(limit: int = 360) -> int:
@@ -74,8 +75,10 @@ func _run() -> void:
 	world.set_process(false)
 	world.save_timer = -10000
 	isolate_population()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
-	var origin: Vector2 = world.player.global_position
+	var origin: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0),Vector2(90,0),Vector2(-90,0),Vector2(260,0)])
+	check(origin.is_finite(),"loot arena has real walkable source paths")
+	if not origin.is_finite(): quit(1); return
+	world.player.global_position = origin
 	var before: int = int(world.inventory.get("HP 물약", 0))
 	var view: Button = world._spawn_ground_drop("HP 물약", origin)
 	check(view != null and world.ground_loot.records.size() == 1, "spawn creates an authoritative world record")
@@ -188,22 +191,35 @@ func _run() -> void:
 	world.loot_pickup.tick(0.1)
 	check(world.loot_pickup.selected_id.is_empty() and not world.loot_pickup.overlay.visible, "expired selection cancels and hides pickup panel")
 	clear()
-	var impossible: Button = world._spawn_ground_drop("HP 물약", point_at(220))
-	var impossible_id: String = str(impossible.get_meta("id"))
-	var impossible_point: Vector2 = impossible.get_meta("world_position")
-	var center_cell: Vector2i = world._world_to_cell(impossible_point)
+	var source_isolation: bool = world.field_map is RemakePlayableField
+	var impossible: Button = null
 	var changed_cells: Dictionary = {}
-	for y: int in range(-3,4):
-		for x: int in range(-3,4):
-			var cell: Vector2i = center_cell + Vector2i(x,y)
-			if world.astar.is_in_boundsv(cell):
-				changed_cells[cell] = world.astar.is_point_solid(cell)
-				world.astar.set_point_solid(cell, true)
+	if source_isolation:
+		# The A3 grid contains an independent, genuinely walkable island.
+		# Test a REAL disconnected item without modifying original move masks.
+		var pair: Array[Vector2] = preload("res://tests/active_source_test_positions.gd").disconnected_pair(world)
+		check(pair.size()==2,"A3 original topology has a verified isolated loot endpoint")
+		if pair.size()!=2: quit(1); return
+		world.player.global_position = pair[0]
+		impossible = world._spawn_ground_drop("HP 물약", pair[1])
+	else:
+		impossible = world._spawn_ground_drop("HP 물약", point_at(220))
+		var center_cell: Vector2i = world._world_to_cell(impossible.get_meta("world_position"))
+		for y: int in range(-3,4):
+			for x: int in range(-3,4):
+				var cell: Vector2i = center_cell + Vector2i(x,y)
+				if world.astar.is_in_boundsv(cell):
+					changed_cells[cell] = world.astar.is_point_solid(cell)
+					world.astar.set_point_solid(cell, true)
+	check(impossible!=null,"unreachable ground loot is an actual spawned world record")
+	if impossible==null: quit(1); return
+	var impossible_id: String = str(impossible.get_meta("id"))
 	world.player.set_auto_enabled(true)
 	check(not world._run_auto_ground_pickup(), "inaccessible endpoint is skipped")
 	check(world.loot_pickup.blocked.has(impossible_id), "inaccessible ID is throttled")
 	for cell: Vector2i in changed_cells.keys(): world.astar.set_point_solid(cell, changed_cells[cell])
 	clear()
+	if source_isolation: world.player.global_position = origin
 	var common_name: String = str(world.loot_catalog["equipment_by_grade"]["일반"][0])
 	var unique_name: String = str(world.loot_catalog["equipment_by_grade"]["유일"][0])
 	var lower: Button = world._spawn_ground_drop(common_name, origin + Vector2(90,0))

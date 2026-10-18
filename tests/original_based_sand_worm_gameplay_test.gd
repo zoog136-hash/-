@@ -45,6 +45,21 @@ func monster_case() -> void:
 		var warned := Vector2.ZERO
 		var sequence := -1
 		var rig: TwilightMonsterVisual = normal.species_visual
+		# A genuine nova releases a player_hit signal, but the production
+		# MR/AC resolution can legitimately MISS. Pick a deterministic
+		# hit-capable random seed (as in the common boss skill QA), then
+		# retain the exact real RNG, damage, geometry and contact checks.
+		var chance: float = world._monster_hit_chance(normal, "magic")
+		check(chance > 0.0, label + " native magic hit chance is nonzero")
+		var probe := RandomNumberGenerator.new()
+		var seed_value: int = -1
+		for candidate_seed: int in range(1, 4097):
+			probe.seed = candidate_seed
+			if probe.randf() < chance:
+				seed_value = candidate_seed
+				break
+		check(seed_value > 0, label + " reproducible native magic hit seed")
+		if seed_value > 0: world.rng.seed = seed_value
 		normal.set_physics_process(true)
 		for _wait: int in range(180):
 			await tick()
