@@ -16,3 +16,7 @@ data/map_remake/private/aden/definitions/*.json -text
 # Route graph JSON is authenticated by SHA-256 at runtime. Prevent Windows
 # autocrlf from converting its single LF terminator to CRLF.
 data/aden_world_visuals/routes/*.json -text
+
+# This approved provenance is authenticated as exact source bytes. Preserve
+# its pinned SHA on Windows instead of rewriting LF to CRLF at checkout.
+assets/actors/eight_direction/original_based/reaper_male/provenance.json -text

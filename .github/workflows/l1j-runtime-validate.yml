@@ -41,7 +41,9 @@ jobs:
           - os: windows-latest
             artifact: win64.exe
             executable: Godot_v4.7.2-stable_win64_console.exe
-            job_minutes: 90
+            # PR122 run 39142865334 reached 90m after the focused death-clock
+            # checks and full suite. Keep every check and its own deadline.
+            job_minutes: 120
     runs-on: ${{ matrix.os }}
     # c19b53a Linux reached the 45m job cap; Windows completed in 51m.
     # Keep every check and its deadline while allowing new boss lifecycle
