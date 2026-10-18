@@ -1,0 +1,28 @@
+{
+  "total": 8,
+  "passed": 8,
+  "failed": [],
+  "skipped": [],
+  "not_run": [],
+  "checks": [
+    "boot",
+    "aden_png_pack_test",
+    "aden_remake_runtime_test",
+    "npc_teleport_test",
+    "remake_coordinates_and_state_test",
+    "remake_map_population_test",
+    "remake_world_lifecycle_test",
+    "stage5_save_compatibility_test"
+  ],
+  "validation_scopes": {
+    "boot": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "aden_png_pack_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "aden_remake_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "npc_teleport_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "remake_coordinates_and_state_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "remake_map_population_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "remake_world_lifecycle_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "stage5_save_compatibility_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "boot,aden_png_pack_test,remake_coordinates_and_state_test,remake_map_population_test,remake_world_lifecycle_test,stage5_save_compatibility_test,npc_teleport_test,aden_remake_runtime_test"
+}

@@ -10,14 +10,14 @@ import json
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageChops
 
 from aden_png import ROOT, fit, sha, write
 
 Image.MAX_IMAGE_PIXELS = 180_000_000
 
 
-def compile_map(png, definition, catalog, output, mapping, source_rect, provenance):
+def compile_map(png, definition, catalog, output, mapping, source_rect, provenance, transparent_padding=False, visual_void_mask=None):
     if output.resolve().is_relative_to(ROOT):
         raise ValueError('Original PNG derivatives must remain outside the public repository')
     if sha(png) != catalog['png_sha256']:
@@ -25,6 +25,11 @@ def compile_map(png, definition, catalog, output, mapping, source_rect, provenan
     image = Image.open(png).convert('RGBA')
     if list(image.size) != catalog['png_size']:
         raise ValueError('Original PNG dimensions mismatch')
+    if visual_void_mask:
+        with Image.open(visual_void_mask) as mask:
+            if mask.size != image.size or mask.mode != 'L':
+                raise ValueError('Visual void mask must match the original pixel canvas')
+            image.putalpha(ImageChops.multiply(image.getchannel('A'), ImageChops.invert(mask)))
     output.mkdir(parents=True, exist_ok=True)
     bx, by = definition['coordinate_mapping']['basis_x'], definition['coordinate_mapping']['basis_y']
     translation = definition['coordinate_mapping']['translation']
@@ -41,14 +46,23 @@ def compile_map(png, definition, catalog, output, mapping, source_rect, provenan
     for y in range(y0, y0+height, 32):
         for x in range(x0, x0+width, 32):
             corners = np.array([pixel(x+dx, y+dy) for dx, dy in [(0, 0), (32, 0), (32, 32), (0, 32)]])
-            left, top = np.maximum([0, 0], np.floor(corners.min(axis=0))-1).astype(int)
-            right, bottom = np.minimum(image.size, np.ceil(corners.max(axis=0))+1).astype(int)
+            left, top = (np.floor(corners.min(axis=0))-1).astype(int)
+            right, bottom = (np.ceil(corners.max(axis=0))+1).astype(int)
+            if not transparent_padding:
+                left, top = np.maximum([0, 0], [left, top]).astype(int)
+                right, bottom = np.minimum(image.size, [right, bottom]).astype(int)
             if np.any(corners < [left-.01, top-.01]) or np.any(corners > [right+.01, bottom+.01]):
                 raise ValueError('Region projects outside the original PNG')
             if max(right-left, bottom-top) > 2048:
                 raise ValueError('A source chunk exceeds the texture limit')
             name = f'ground-{x//32}-{y//32}.png'
-            image.crop((left, top, right, bottom)).save(output/name)
+            crop = image.crop((left, top, right, bottom))
+            if (output/name).exists():
+                with Image.open(output/name) as existing:
+                    if existing.size != crop.size or any(c.getbbox() for c in ImageChops.difference(existing.convert('RGBA'), crop).split()):
+                        raise ValueError('Existing crop differs; preserve it and choose a new output: '+name)
+            else:
+                crop.save(output/name)
             regions.append(dict(source_rect=[x, y, 32, 32], world_to_image=list(mapping),
                                 image_origin=[int(left), int(top)], file=name, sha256=sha(output/name), cuts=[]))
     value = dict(schema=2, map_id=definition['map_id'], source_map_id=definition['source_map_id'],
@@ -56,8 +70,11 @@ def compile_map(png, definition, catalog, output, mapping, source_rect, provenan
                  occlusion_status='COMPOSITE_NOT_YET_SEPARATED', png_sha256=sha(png), png_size=list(image.size),
                  source_grid_sha256=definition['source_sha256'], coordinate_evidence=provenance,
                  actor_scale_changed=False, navigation_regenerated=False, regions=regions)
+    if visual_void_mask:
+        value['visual_void_mask_sha256'] = sha(visual_void_mask)
+        value['void_mask_scope'] = 'RENDER_ALPHA_ONLY_NOT_COLLISION'
     value['review_spawn_cell'] = ([981, 740] if definition['map_id'] == 'aden_world' else
-                                 list(np.asarray(definition['spawn_source'])-definition['origin']))
+                                 [int(v) for v in np.asarray(definition['spawn_source'])-definition['origin']])
     write(output/'manifest.json', value)
     return dict(map_id=definition['map_id'], original_png=png.name, source_grid_sha256=definition['source_sha256'],
                 chunks=len(regions), status=value['status'], coordinate_evidence=provenance)
@@ -68,6 +85,8 @@ def main():
     p.add_argument('--aden', type=Path)
     p.add_argument('--towers', type=Path)
     p.add_argument('--topology', type=Path, help='Existing build_remake.py output; never rebuilt here')
+    p.add_argument('--domination', type=Path, help='User-selected original 111.png')
+    p.add_argument('--domination-void-mask', type=Path, help='Reviewed visual-only viewer-placeholder mask; never navigation')
     p.add_argument('--output', type=Path, required=True)
     args = p.parse_args()
     catalog = json.loads((ROOT/'data/maps/png_map_sources.json').read_text())['maps']
@@ -90,10 +109,26 @@ def main():
                            [1, 0, 0, 0, 1, 0], [0, 0, *definition['dimensions']],
                            dict(method='NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE', verified=False,
                                 reason='PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains')))
+    if args.domination:
+        if not args.topology:
+            p.error('--domination requires the existing --topology pack containing map 111')
+        definition = json.loads((args.topology/'definitions/domination_summit.json').read_text())
+        calibration = json.loads((ROOT/'data/maps/domination_111_calibration.json').read_text())
+        reports.append(compile_map(args.domination, definition, catalog['domination_summit'], args.output/'domination_summit',
+                       calibration['world_to_image'], [0, 0, 256, 256], calibration['image_registration'],
+                       transparent_padding=True, visual_void_mask=args.domination_void_mask))
     args.output.mkdir(parents=True, exist_ok=True)
-    write(args.output/'build_report.json', dict(maps=reports, original_art_public=False,
+    built = {row['map_id']: row for row in reports}
+    for manifest in args.output.glob('*/manifest.json'):
+        existing = json.loads(manifest.read_text())
+        mid = existing['map_id']
+        if mid not in built:
+            built[mid] = dict(map_id=mid, original_png=catalog[mid]['file'],
+                source_grid_sha256=existing['source_grid_sha256'], chunks=len(existing['regions']),
+                status=existing['status'], coordinate_evidence=existing['coordinate_evidence'])
+    write(args.output/'build_report.json', dict(maps=list(built.values()), original_art_public=False,
           faithful_complete=0, saving_enabled=False, source_collision='ORIGINAL_DIRECTIONAL_EDGES',
-          domination_summit='NEEDS_IDENTIFIED_PNG_NOT_SUBSTITUTED_WITH_111'))
+          domination_summit='USER_SELECTED_111_PNG' if 'domination_summit' in built else 'NOT_BUILT'))
     print(json.dumps(dict(maps=len(reports), chunks=sum(r['chunks'] for r in reports), output=str(args.output))))
 
 

@@ -33,6 +33,9 @@ static func authored_field(definition: Dictionary) -> PlayableField:
 static func installed(map_id: String) -> bool:
 	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return false
 	if map_id == "aden_world": return ADEN.installed()
+	# 111.png is explicitly selected by the user as our Domination reference.
+	# Candidate source/PNG registration stays in the isolated review session.
+	if map_id == "domination_summit": return "--png-review" in OS.get_cmdline_user_args() and FileAccess.file_exists(pack_root()+"definitions/domination_summit.json")
 	# A corrupt or partial installed index must not silently load an old layout.
 	return map_id in ["oman_01","oman_02","oman_03","oman_04","oman_05","oman_06","oman_07","oman_08","oman_09","oman_10"] and FileAccess.file_exists(pack_root()+"index.json")
 
@@ -50,7 +53,7 @@ static func load_field(map_id: String) -> RemakePlayableField:
 	if not valid_definition(definition): return null
 	if definition.get("map_id") != map_id or definition.get("source_sha256") != entry.get("grid_sha256"): return null
 	if str(definition.get("pack_root",""))+"/" != ROOT or definition.get("source_archive_sha256") != index.get("source_archive_sha256"): return null
-	var expected: Dictionary = READ.read_object("res://data/maps/remake_calibrations.json").get("maps",{}).get(map_id,{})
+	var expected: Dictionary = READ.read_object("res://data/maps/domination_111_calibration.json") if map_id == "domination_summit" else READ.read_object("res://data/maps/remake_calibrations.json").get("maps",{}).get(map_id,{})
 	if expected.is_empty(): return null
 	for key: String in ["origin","dimensions","source_map_id"]:
 		if definition.get(key)!=expected.get(key): return null

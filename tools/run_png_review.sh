@@ -14,7 +14,8 @@ case "$png_review_version" in
     4.7.2.stable.official.*) ;;
     *) echo "Official Godot 4.7.2 required; found: $png_review_version" >&2; exit 2 ;;
 esac
-test -f "$png_review_root/map_png/aden_world/manifest.json"
+test -d "$png_review_root/map_png"
+test -n "$(find "$png_review_root/map_png" -name manifest.json -print -quit)"
 test -f "$png_review_root/topology/index.json"
 mkdir -p "$png_review_root/session-data" "$png_review_root/session-config" "$png_review_root/session-cache"
 export XDG_DATA_HOME="$png_review_root/session-data"

@@ -7,11 +7,16 @@ on:
       - 'scripts/world.gd'
       - 'tests/aden_png*'
       - 'tests/png_world_runtime_test.gd'
+      - 'tests/domination_111_runtime_test.gd'
       - 'data/maps/aden_png_alignment.json'
       - 'data/maps/png_map_sources.json'
+      - 'data/maps/domination_111_calibration.json'
       - 'tools/map_restore/aden_png.py'
       - 'tools/map_restore/test_aden_png.py'
       - 'tools/map_restore/build_png_review_pack.py'
+      - 'tools/map_restore/build_domination_111.py'
+      - 'tools/map_restore/make_domination_void_mask.py'
+      - 'tools/map_restore/test_png_review_compile.py'
       - '.github/workflows/aden-png-source-validate.yml'
   push:
     branches: [feature/aden-png-source-validation-20261018]
@@ -55,6 +60,9 @@ jobs:
           python3 tools/check_aden_world_delivery.py | tee aden-png-evidence/aden-delivery.log
           python3 tools/map_restore/test_aden_png.py
           python3 -m py_compile tools/map_restore/build_png_review_pack.py
+          python3 tools/map_restore/test_png_review_compile.py
+          python3 -m py_compile tools/map_restore/build_domination_111.py
+          python3 -m py_compile tools/map_restore/make_domination_void_mask.py
       - name: Import and parse all production scripts
         run: |
           XDG_DATA_HOME="$RUNNER_TEMP/aden-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > aden-png-evidence/import.log 2>&1
@@ -65,14 +73,14 @@ jobs:
           if rg 'SCRIPT ERROR:|ERROR:|ADEN_PNG_SOURCE_FAIL' aden-png-evidence/actual-main.log; then exit 1; fi
       - name: Relevant regression checks with isolated saves
         run: |
-          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs aden-png-evidence/regressions --only boot,actor_motion_test,aden_building_test,aden_courtyard_test,aden_ground_continuity_test,aden_remake_runtime_test,aden_shoreline_test,aden_terrain_polish_test,animation_restore_test,boss_presentation_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,consumable_smoke_test,crafting_atomic_test,eight_interactions_test,field_world_test,monster_world_test,npc_dialogue_branching_test,npc_teleport_test,remake_world_lifecycle_test,stage5_save_compatibility_test,warehouse_persistence_test,aden_giran_review_test,aden_world_systems_test,aden_world_visuals_test,aden_source_routes_test,remake_coordinates_and_state_test,remake_map_population_test,remake_source_runtime_test,aden_png_pack_test
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs aden-png-evidence/regressions --only boot,actor_motion_test,aden_building_test,aden_courtyard_test,aden_ground_continuity_test,aden_remake_runtime_test,aden_shoreline_test,aden_terrain_polish_test,animation_restore_test,boss_presentation_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,consumable_smoke_test,crafting_atomic_test,eight_interactions_test,field_world_test,monster_world_test,npc_dialogue_branching_test,npc_teleport_test,remake_world_lifecycle_test,stage5_save_compatibility_test,warehouse_persistence_test,aden_giran_review_test,aden_world_systems_test,aden_world_visuals_test,aden_source_routes_test,remake_coordinates_and_state_test,remake_map_population_test,remake_source_runtime_test,aden_png_pack_test,road_surface_mesh_test,png_world_runtime_test,domination_111_runtime_test
       - name: Drop, hunting, monster motion and HUD regressions
         run: |
           LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --timeout 300 --logs aden-png-evidence/gameplay-regressions --only ground_loot_system_test,hunting_paths_test,monster_motion_test,authored_state_motion_test,consumable_auto_safety_test,ui_navigation_preservation_test,l1j_source_navigation_test
       - name: State original-art scope explicitly
         if: always()
         run: |
-          echo 'Aden.png and Oman 101-110.png are local third-party resources, not downloaded or redistributed by public CI. Actual local PNG review gameplay is recorded separately; full image/collision/foreground correspondence remains REVIEW_REQUIRED. Domination PNG identity pending. Android device NOT_RUN.' > aden-png-evidence/SCOPE.txt
+          echo 'Aden.png and Oman 101-111.png are local third-party resources, not downloaded or redistributed by public CI. User selected Oman summit 111.png as the visual basis of game domination_summit. Actual local PNG review gameplay is recorded separately; full image/collision/foreground correspondence remains REVIEW_REQUIRED. Android device NOT_RUN.' > aden-png-evidence/SCOPE.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:

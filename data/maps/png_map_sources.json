@@ -111,19 +111,22 @@
       ],
       "png_bytes": 29481269,
       "source_map_id": 110
-    }
-  },
-  "unassigned_images": [
-    {
-      "name": "111.png",
-      "bytes": 42449419,
-      "size": [
+    },
+    "domination_summit": {
+      "file": "111.png",
+      "png_sha256": "f5c4549298e586d3839246d736b61b6106851af07cde8c5a21522d046ff38f87",
+      "png_size": [
         17694,
         7372
       ],
-      "sha256": "f5c4549298e586d3839246d736b61b6106851af07cde8c5a21522d046ff38f87",
-      "reason": "Oman summit; never assume Domination summit"
-    },
+      "png_bytes": 42449419,
+      "source_map_id": 111,
+      "source_name": "오만의 탑 정상",
+      "game_name": "지배의 탑 정상",
+      "assignment": "USER_EXPLICIT_2026_10_18_KST"
+    }
+  },
+  "unassigned_images": [
     {
       "name": "12851.png",
       "bytes": 21493823,
@@ -136,7 +139,9 @@
     }
   ],
   "domination_summit": {
-    "status": "PNG_NOT_IDENTIFIED",
-    "l1j_candidate": 12862
+    "status": "USER_SELECTED_REFERENCE",
+    "png": "111.png",
+    "source_map_id": 111,
+    "previous_l1j_candidate_not_used": 12862
   }
 }

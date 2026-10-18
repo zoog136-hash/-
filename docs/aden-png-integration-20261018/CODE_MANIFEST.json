@@ -3,18 +3,23 @@
   "files": [
     {
       "path": ".github/workflows/aden-png-source-validate.yml",
-      "bytes": 5288,
-      "sha256": "6bfdd48cb01081577dd82f6c183fde7211e6f00dbff0cd95d732295466ad5f03"
+      "bytes": 5889,
+      "sha256": "ba6440aa4b43ca29729981cf1d29796d5491c70d3aacbfb8c7c7aede1b786537"
     },
     {
       "path": "data/maps/aden_png_alignment.json",
-      "bytes": 2514,
-      "sha256": "b012cc2c837e51d44095ac560c89b871dea96afd792f8917859fa0071cd5b69e"
+      "bytes": 2519,
+      "sha256": "d87783faf0cc14d43563b661dba793cd463b639d9887d63250284853745eac2b"
+    },
+    {
+      "path": "data/maps/domination_111_calibration.json",
+      "bytes": 953,
+      "sha256": "b1d1ac59cd790468f962941d43fd2b6a431478d8710e0802baac1bbd49aa1d7d"
     },
     {
       "path": "data/maps/png_map_sources.json",
-      "bytes": 3494,
-      "sha256": "98005dbd6259de4b0fc539282adaa32b9272308a0a715d932b9c34ffe115e72e"
+      "bytes": 3703,
+      "sha256": "478f6499dba8b40d12f752b0ef2e5eb1b83b1dd4f21c02e5e55b4c26a865c86f"
     },
     {
       "path": "scripts/maps/aden_giran_review/chunk.gd",
@@ -48,8 +53,8 @@
     },
     {
       "path": "scripts/maps/remake_registry.gd",
-      "bytes": 5622,
-      "sha256": "6a38d3966f850edb973b71a46ee1c5e5cdd3c3e022c2ca1138b2a45146f4ed84"
+      "bytes": 6042,
+      "sha256": "4b921986a3037421ea844a3b3a81059e89178fe9746b4398d04140e1f217483e"
     },
     {
       "path": "scripts/maps/remake_renderer.gd",
@@ -73,8 +78,8 @@
     },
     {
       "path": "scripts/world.gd",
-      "bytes": 295319,
-      "sha256": "64349998b78ca80d091edd627af8116710a06fc31487f54ff780c4591534c4ca"
+      "bytes": 296297,
+      "sha256": "bd2e3c16b46522b6e6b0dde83cc37447691b08608cba753bbd92d89220d401e5"
     },
     {
       "path": "tests/aden_png_pack_test.gd",
@@ -87,9 +92,14 @@
       "sha256": "1cfc0add7b7d966bc7a7e6ec31470afa04851674c57c6864e152d1d88b5b24d8"
     },
     {
+      "path": "tests/domination_111_runtime_test.gd",
+      "bytes": 8379,
+      "sha256": "03c38c98f16d4c7379f6ebbbb4797c99d3be43ee5f1d14eaca5db8ce25197034"
+    },
+    {
       "path": "tests/png_world_runtime_test.gd",
-      "bytes": 9080,
-      "sha256": "ee9190b8d71d3b8cd408df5c210ba94411466b7f5db523ebd409a96cc5ab77ef"
+      "bytes": 9068,
+      "sha256": "0476dbc2cf4fe80df31f2072002493ec89126292f65d4dbc84a429ee5ac6010d"
     },
     {
       "path": "tests/remake_source_runtime_test.gd",
@@ -102,9 +112,19 @@
       "sha256": "9180511568b1b86bb662d4f09712f8b43cdf6556edc2aab12444efab476afd3c"
     },
     {
+      "path": "tools/map_restore/build_domination_111.py",
+      "bytes": 4941,
+      "sha256": "75871c1e66f97d615f075b9ea5a7bb3becb70a132382b9ce3aa6eeb72c0f3b31"
+    },
+    {
       "path": "tools/map_restore/build_png_review_pack.py",
-      "bytes": 5801,
-      "sha256": "9bee23e9952892e12567602c92ee8c9739d1a561df5ef43dc6b53f2f9061d20b"
+      "bytes": 8323,
+      "sha256": "a08c4d93a8ebf2960f0ab1f7f4988ffa4ac3bc10297f5ba49f28ebde13a62061"
+    },
+    {
+      "path": "tools/map_restore/make_domination_void_mask.py",
+      "bytes": 2792,
+      "sha256": "2d97de179574a83dabf68a17c10e71504a24f1c02dc11e619330bfd7d5c8e869"
     },
     {
       "path": "tools/map_restore/test_aden_png.py",
@@ -112,9 +132,14 @@
       "sha256": "6b829a2031c244b37b786b2352a6c53b9ea38dccf4b05c65ab9218607b6cd7ad"
     },
     {
+      "path": "tools/map_restore/test_png_review_compile.py",
+      "bytes": 1819,
+      "sha256": "5e1049d8c49a0d2186ec3c2072f01b356c206281efddf7399a14ca8f91391360"
+    },
+    {
       "path": "tools/run_png_review.sh",
-      "bytes": 1150,
-      "sha256": "82c0b66da094f1a768883fccb359d2e9bc873a57066cc2b0badf53397f42a3ac"
+      "bytes": 1203,
+      "sha256": "ab55d0a7fdf90b802de7492fccfb5298ac2a8ac343a9d4d0505a3af52a612ddc"
     }
   ]
 }

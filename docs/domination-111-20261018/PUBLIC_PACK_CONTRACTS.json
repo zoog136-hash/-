@@ -1,0 +1,21 @@
+{
+  "total": 3,
+  "passed": 1,
+  "failed": [],
+  "skipped": [
+    "domination_111_runtime_test",
+    "png_world_runtime_test"
+  ],
+  "not_run": [],
+  "checks": [
+    "domination_111_runtime_test",
+    "png_world_runtime_test",
+    "road_surface_mesh_test"
+  ],
+  "validation_scopes": {
+    "domination_111_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "png_world_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "road_surface_mesh_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "png_world_runtime_test,domination_111_runtime_test,road_surface_mesh_test"
+}

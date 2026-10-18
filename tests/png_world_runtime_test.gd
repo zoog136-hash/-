@@ -123,7 +123,7 @@ func inspect_map(id: String) -> void:
 
 func run() -> void:
 	if not "--png-review" in OS.get_cmdline_user_args() or OS.get_environment("TWILIGHT_MAP_PNG_PACK").is_empty():
-		print("PNG_WORLD_REVIEW_SKIP actual private PNG pack and --png-review required");quit();return
+		print("PNG_WORLD_REVIEW_SKIP: actual private PNG pack and --png-review required");quit();return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		if arg.begins_with("--maps="): selected = arg.trim_prefix("--maps=").split(",")
@@ -145,5 +145,5 @@ func run() -> void:
 	var report: Dictionary = {"checks":checks,"failures":failures,"maps":maps,"faithful_complete":0,
 		"original_png_rendered":true,"source_navigation_active":true,"normal_saves_preserved":before==after}
 	var file := FileAccess.open(output+"/runtime.json",FileAccess.WRITE);file.store_string(JSON.stringify(report,"\t"));file.close()
-	print("PNG_WORLD_REVIEW ",checks," checks failures=",failures.size())
+	print("PNG_WORLD_REVIEW_RESULT ",JSON.stringify(report))
 	world.queue_free();await ticks(2);quit(0 if failures.is_empty() else 1)
