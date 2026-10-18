@@ -43,7 +43,7 @@ func transform_temporal_position_clear() -> bool:
 	return false
 
 func subject_path() -> String:
-	return "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres"
+	return str(preview_fixture.get("original_resource", "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres"))
 
 func preview_token(texture: Texture2D) -> String:
 	if texture is AtlasTexture and (texture as AtlasTexture).atlas.has_meta("pr122_source_sha256"):
@@ -53,7 +53,9 @@ func preview_token(texture: Texture2D) -> String:
 
 func preview_preservation() -> void:
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(preview_fixture.source_preservation_manifest)))
-	for entry: Dictionary in proof.preserved_files:
+	var entries: Array = proof.get("preserved_files", proof.get("files", []))
+	check(not entries.is_empty(), "original production preservation manifest is nonempty")
+	for entry: Dictionary in entries:
 		var path := "res://" + str(entry.path)
 		check(FileAccess.file_exists(path) and FileAccess.get_sha256(path) == str(entry.sha256), "original production bytes preserved " + path)
 
@@ -93,7 +95,7 @@ func preview_frames(original: SpriteFrames) -> SpriteFrames:
 		check(not tokens.has(token), "each candidate frame binds a distinct real PNG/region")
 		tokens[token] = true
 		candidate.add_frame("walk_0", atlas)
-	check(candidate.get_frame_count("walk_0") == 6 and original.get_frame_count("walk_0") == 2, "six new E candidates and unchanged original two-frame track")
+	check(candidate.get_frame_count("walk_0") == 6 and original.get_frame_count("walk_0") == int(preview_fixture.get("baseline_walk_frames", 2)), "six E candidates and unchanged original native track")
 	candidate.set_meta("twilight_canvas_size", Vector2(256, 256))
 	for track: String in original.get_animation_names():
 		if track == "walk_0": continue
@@ -239,12 +241,15 @@ func run() -> void:
 	check(DisplayServer.get_name() != "headless", "actual OpenGL Main viewport required")
 	if not failures.is_empty(): print("PR122_REAPER_GAIT_PREVIEW_REFUSED " + JSON.stringify(failures)); quit(1); return
 	DirAccess.make_dir_recursive_absolute(captures)
-	preview_fixture = JSON.parse_string(FileAccess.get_file_as_string(PREVIEW_FIXTURE))
+	var fixture_path := OS.get_environment("TWILIGHT_PR122_GAIT_FIXTURE")
+	if fixture_path.is_empty(): fixture_path = PREVIEW_FIXTURE
+	preview_fixture = JSON.parse_string(FileAccess.get_file_as_string(fixture_path))
 	check(bool(preview_fixture.prototype_only) and not bool(preview_fixture.production_applied) and not bool(preview_fixture.final_model_approval), "unapproved source preview cannot promote to production")
+	check(str(preview_fixture.key) in ["transform:258", "transform:288"], "only the two representative locomotion source identities")
 	preview_preservation()
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
-	check(CLASS_QA.enter_game(world, "사신"), "real Main production class entry")
+	check(CLASS_QA.enter_game(world, str(preview_fixture.get("job", "사신"))), "real Main production class entry")
 	world.hud.class_selected.emit(3)
 	world.hud._hide_aux_panels()
 	world.save_timer = -10000.0
@@ -258,8 +263,8 @@ func run() -> void:
 	world._equip_or_acquire_item(weapon, true)
 	var transform: Dictionary = {}
 	for record: Dictionary in world.catalog_db["변신"]:
-		if str(record.get("sourceId", "")) == "258": transform = record; break
-	check(not transform.is_empty(), "existing transform258 DB identity")
+		if "transform:" + str(record.get("sourceId", "")) == str(preview_fixture.key): transform = record; break
+	check(not transform.is_empty(), "existing representative transformation DB identity")
 	world._equip_catalog("변신", transform)
 	await tick(14)
 	center = find_clearing()
@@ -275,29 +280,31 @@ func run() -> void:
 	var original_profile: TwilightAnimationProfile = original_motion.profile
 	var original_frames: SpriteFrames = sprite.sprite_frames
 	var original_transform_profile: TwilightAnimationProfile = world.player.transform_profile
-	check(original_profile.profile_id == "transform:258" and original_profile.frames_path == subject_path(), "real equipped original male Reaper")
+	check(original_profile.profile_id == str(preview_fixture.key) and original_profile.frames_path == subject_path(), "real equipped original representative body")
 	var candidate := preview_frames(original_frames)
 	var candidate_profile := original_profile.duplicate(true) as TwilightAnimationProfile
 	# Six genuine source candidates share the original total cycle duration.
 	# This presentation-only local clone is never saved or applied to 7other views.
-	candidate_profile.movement_fps = original_profile.movement_fps * 6.0 / 2.0
-	check(is_equal_approx(6.0 / candidate_profile.movement_fps, 2.0 / original_profile.movement_fps), "total cycle duration preserved with genuinely new phase inputs")
+	var baseline_frames := original_frames.get_frame_count("walk_0")
+	candidate_profile.movement_fps = original_profile.movement_fps * 6.0 / float(baseline_frames)
+	check(is_equal_approx(6.0 / candidate_profile.movement_fps, float(baseline_frames) / original_profile.movement_fps), "total cycle duration preserved with genuinely new phase inputs")
 	var original_stats := transform_temporal_invariants(original_profile, sprite)
 	var original_world_mode: int = world.process_mode
 	var original_player_mode: int = world.player.process_mode
 	var original_sprite_mode: int = sprite.process_mode
-	report.scope = "transform258 E-only source authoring: actual Main controller playback, not final identity/gait/8view/run/combat/device approval"
+	report.scope = str(preview_fixture.key) + " E-only source authoring: actual Main controller playback, not final identity/gait/8view/run/combat/device approval"
 	report.source_preview = {"prototype_only": true, "production_applied": false, "completed_added": 0,
 		"scene": "Main.tscn", "map": "aden_world", "normal_camera_zoom": transform_temporal_vec(world.player.camera.zoom),
 		"QA_clock_hz": 120, "wall_time_performance_claim": false, "terrain_hidden_or_modified": false,
-		"visual_quality": "HOLD: original model/weapon proportions, near-far cycle and7otherwalk/8run tracks not approved", "modes": []}
+		"visual_quality": "HOLD: original model/gear proportions, near-far cycle and7otherwalk/8run tracks not approved", "modes": [], "baseline_frames": baseline_frames}
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	world.player.process_mode = Node.PROCESS_MODE_DISABLED
 	sprite.process_mode = Node.PROCESS_MODE_DISABLED
-	for label: String in ["original2", "candidate6"]:
+	var original_label := "original" + str(baseline_frames)
+	for label: String in [original_label, "candidate6"]:
 		for ratio: float in [0.75, 1.0, 1.5]:
-			report.source_preview.modes.append(await preview_role(label, original_frames if label == "original2" else candidate,
-				original_profile if label == "original2" else candidate_profile, ratio))
+			report.source_preview.modes.append(await preview_role(label, original_frames if label == original_label else candidate,
+				original_profile if label == original_label else candidate_profile, ratio))
 	world.player.motion = original_motion
 	world.player.transform_profile = original_transform_profile
 	sprite.sprite_frames = original_frames

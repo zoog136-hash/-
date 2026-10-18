@@ -19,25 +19,52 @@ def main():
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--godot', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--fixture', type=Path, default=Path('docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-preview.json'))
     parser.add_argument('--display', default=os.environ.get('DISPLAY', ''))
     args = parser.parse_args()
     root = args.root.resolve()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
-    fixture_path = root / 'docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-preview.json'
+    fixture_path = (root / args.fixture).resolve()
+    assert fixture_path.is_relative_to(root)
     fixture = json.loads(fixture_path.read_text())
     assert fixture['prototype_only'] and not fixture['production_applied'] and not fixture['final_model_approval']
     assert fixture['selected_distinct_sources'] == 6 and len(fixture['frames']) == 6
     fingerprints = set()
     verified = []
+    sheets = {}
+    ownership = {}
+    for spec in fixture.get('whole_source_sheets', []):
+        assert spec['rows'] == 6 and spec['directions'] == ['E']
+        source = root / spec['file'].removeprefix('res://')
+        assert spec['file'] not in sheets and motion.sha(source) == spec['source_sha256']
+        geometry = spec['geometry']
+        actual = motion.analyze(source, rows_count=6, reference_rows=spec['reference_rows'],
+            directions=['E'], canvas_size=geometry['canvas_size'][0],
+            source_anchors=[frame['source_anchor'] for frame in geometry['frames']])
+        motion.require_complete_pose_regions(source, actual)
+        assert actual == geometry and len(actual['frames']) == 6
+        sheets[spec['file']] = spec
+        ownership[spec['file']] = set()
     for entry in fixture['frames']:
         source = root / entry['file'].removeprefix('res://')
         assert motion.sha(source) == entry['source_sha256']
         geometry = entry['geometry']
         frame = geometry['frames'][0]
-        actual = motion.analyze(source, rows_count=1, reference_rows=[0], directions=['E'],
-                                canvas_size=geometry['canvas_size'][0], source_anchors=[frame['source_anchor']])
-        motion.require_complete_pose_regions(source, actual)
+        if entry['file'] in sheets:
+            # The complete whole sheet was checked above. Every analyzed body
+            # must occur exactly once; no omitted/excluded pieces or slots.
+            sheet = sheets[entry['file']]
+            row = entry['source_frame_row']
+            assert row in range(6) and row not in ownership[entry['file']]
+            ownership[entry['file']].add(row)
+            assert entry['source_sha256'] == sheet['source_sha256']
+            actual = {**sheet['geometry'], 'frames': [sheet['geometry']['frames'][row]],
+                      'distinct_pixel_frames': 1}
+        else:
+            actual = motion.analyze(source, rows_count=1, reference_rows=[0], directions=['E'],
+                canvas_size=geometry['canvas_size'][0], source_anchors=[frame['source_anchor']])
+            motion.require_complete_pose_regions(source, actual)
         assert actual == geometry
         x, y, width, height = frame['region']
         with Image.open(source) as image:
@@ -46,6 +73,7 @@ def main():
         fingerprints.add(fingerprint)
         verified.append({'file': entry['file'], 'sha256': motion.sha(source),
                          'bytes': source.stat().st_size, 'strict_geometry': 'PASS'})
+    assert all(rows == set(range(6)) for rows in ownership.values())
     (output / 'source-preflight.json').write_text(json.dumps({'sources': verified, 'distinct_visible_sources': 6,
         'source_pixels_changed': False, 'final_semantic_gait_approval': False}, indent=2) + '\n')
     version = subprocess.check_output([str(args.godot), '--version'], text=True).strip()
@@ -55,6 +83,7 @@ def main():
         'XDG_DATA_HOME': str(output / 'user'), 'XDG_CONFIG_HOME': str(output / 'config'),
         'XDG_CACHE_HOME': str(output / 'cache'), 'TWILIGHT_PR122_GAIT_ISOLATED': '1',
         'TWILIGHT_PR122_GAIT_REPORT': str(output / 'report.json'),
+        'TWILIGHT_PR122_GAIT_FIXTURE': 'res://' + str(fixture_path.relative_to(root)),
         'TWILIGHT_PR122_GAIT_CAPTURE_DIR': str(output / 'captures')})
     for name in ('user', 'config', 'cache'):
         (output / name).mkdir()
@@ -82,7 +111,7 @@ def main():
     assert preview['prototype_only'] and not preview['production_applied'] and preview['completed_added'] == 0
     assert len(preview['modes']) == 6
     for item in preview['modes']:
-        expected = 2 if item['mode'] == 'original2' else 6
+        expected = preview['baseline_frames'] if item['mode'].startswith('original') else 6
         assert item['frames'] == expected and len(item['captures']) == expected
         assert set(item['native_sequence']) == set(range(expected))
     assert preview['actual_input']['observed_native_frames'] == 6

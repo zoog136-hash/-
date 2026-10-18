@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-18T04:48:58.464762+00:00",
+  "observed_utc": "2026-10-18T05:05:34.672070+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -98,6 +98,37 @@
       "production_applied": false,
       "visual_quality": "HOLD; original model/weapon ratios and full near/far timeline,7otherwalk and8run not approved",
       "completed_added": 0
+    },
+    "representative_locomotion_E_source_previews": {
+      "reaper258": {
+        "Main_technical_checks": 4359,
+        "original_walk_frames": 2,
+        "candidate_frames": 6,
+        "real_input_native_frames": 6,
+        "real_input_east_px": 157.833984375
+      },
+      "doguri288": {
+        "Main_technical_checks": 4392,
+        "original_walk_frames": 3,
+        "candidate_frames": 6,
+        "real_input_native_frames": 6,
+        "real_input_east_px": 150.70703125
+      },
+      "speeds": [
+        0.75,
+        1,
+        1.5
+      ],
+      "cycle_seconds": [
+        0.64,
+        0.48,
+        0.32
+      ],
+      "negative_source_controls": 4,
+      "production_applied": false,
+      "completed_added": 0,
+      "final_visual_quality": "HOLD; sevenotherwalk/eightrun perrepresentative remain BEFORE",
+      "Android_real_device": "NOT_RUN"
     }
   },
   "priority": {
@@ -107,7 +138,7 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Continue animation authoring first: Doguri E6 source Main preview, Reaper same-model/near-far corrections and genuine walk/run missing directions. Guardian W arm corrected but material HOLD; Tomb ground02 final model/root/contact HOLD preserved. Latest required CI stays background; no qualified count inflation.",
+  "resume": "Continue animation production from batch08: genuine run poses and missing directions; Doguri E6 and maleReaper E6 actual Main technical previews pass, final model/near-far chronology/full8views remain HOLD. GuardianW arm fixed but material HOLD; Tomb ground02 model/root/contact HOLD unchanged. Latest-head CI stays background; qualified392/498 unchanged.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -119,7 +150,7 @@
   "last_successful_pushed_code_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch07/checkpoint.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch08/checkpoint.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
