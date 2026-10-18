@@ -4,6 +4,7 @@ const ROOT := "res://data/aden_world_visuals/"
 const ART := "res://assets/maps/aden_world_visuals_v1/"
 const APPROVED := "res://assets/maps/aden_giran_review_v1/"
 const GIRAN_RECT := Rect2i(928,672,128,192)
+const PROP_ANCHOR = preload("res://scripts/maps/source_prop_anchor.gd")
 static var manifest: Dictionary = {}
 static var sprites: Array = []
 static var textures: Array[Texture2D] = []
@@ -101,9 +102,16 @@ func build(field: OriginalPlayableField, key: Vector2i, _mat: ShaderMaterial, _p
 		var records: Variant = JSON.parse_string(FileAccess.get_file_as_string(path));prop_reads += 1
 		if not records is Array: push_error("ADEN_VISUAL invalid prop chunk "+path);return
 		for p: Array in records:
-			var sprite: Sprite2D = add_sprite(int(p[0]),Vector2(p[1],p[2]),float(p[3]))
+			var point := Vector2(p[1],p[2])
+			# The review's former forward-edge heuristic can put a tree's
+			# trunk on an open road. Its blocked component already exists.
+			# Buildings retain their entrance/front-edge anchors unchanged.
+			if GIRAN_RECT.has_point(key*32) and str(p[6]) == "tree":
+				point = PROP_ANCHOR.tree_foot(field,p[5],point)
+			var sprite: Sprite2D = add_sprite(int(p[0]),point,float(p[3]))
 			if float(p[4])>0: sprite.scale.y = float(p[4])/sprite.texture.get_height()
 			sprite.set_meta("placement_kind",str(p[6]));sprite.set_meta("s32_tile_id",int(p[7]))
+			sprite.set_meta("source_box",p[5])
 			if str(p[6]) in ["building","hall","fortified_structure"]:
 				var b: Array = p[5]
 				roofs.append({"sprite":sprite,"box":Rect2i(int(b[0]),int(b[1]),int(b[2]),int(b[3]))})

@@ -6,6 +6,7 @@ var collision_stream: StaticBody2D
 var reservations: Array[Dictionary] = []
 var aden_routes: RefCounted
 var aden_routes_attempted: bool = false
+const BODY_PROFILE = preload("res://scripts/maps/source_body_profile.gd")
 
 func uses_original_gameplay_rules() -> bool:
 	# Only the terrain comes from A3. Current TWILIGHT travel/NPC services
@@ -95,7 +96,7 @@ func point_clear(p: Vector2, padding: float = 4.0) -> bool:
 	if not walkable(p): return false
 	# The feet use a small circle in this 48x24 source grid; character art and
 	# animation anchors are unchanged. Match the exact physical radius.
-	var radius: float = minf(padding,4.0)
+	var radius: float = minf(padding,BODY_PROFILE.FOOT_RADIUS)
 	var cell: Vector2i = world_to_cell(p)
 	for dy: int in range(-1,2):
 		for dx: int in range(-1,2):

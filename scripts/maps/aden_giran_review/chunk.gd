@@ -4,6 +4,7 @@ extends Node2D
 const ROOT: String = "res://data/aden_giran_review/"
 const ART: String = "res://assets/maps/aden_giran_review_v1/"
 const REVIEW_RECT := Rect2i(928,672,128,192)
+const PROP_ANCHOR = preload("res://scripts/maps/source_prop_anchor.gd")
 static var layout: Dictionary = {}
 static var surfaces: PackedByteArray = PackedByteArray()
 static var sprite_info: Array = []
@@ -99,6 +100,7 @@ func build(value: OriginalPlayableField, key: Vector2i, _mat: ShaderMaterial, _p
 		var p := Vector2(record.position[0],record.position[1])
 		var foot_cell: Vector2i = map.world_to_cell(p)
 		if Vector2i(floori(float(foot_cell.x)/32),floori(float(foot_cell.y)/32)) != key: continue
+		if str(record.kind) == "tree": p = PROP_ANCHOR.tree_foot(map,record.source_box,p)
 		var sprite: Sprite2D = _add_sprite(int(record.slot),p,float(record.width))
 		if record.has("height"): sprite.scale.y = float(record.height)/sprite.texture.get_height()
 		sprite.name = str(record.id)

@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "status": "PARTIAL_PNG_PLAYABLE_SAMPLE_BLOCKED",
+  "date": "2026-10-18",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "base_main": "56f552c800dc031030a05b6e4125ed29a04aba62",
+  "branch": "feature/aden-png-source-validation-20261018",
+  "actual_main": {
+    "checks": 1707,
+    "failures": [],
+    "obstacles": 62,
+    "buildings": 29,
+    "trees": 33,
+    "source_directions_per_obstacle": 4,
+    "approaches": 248,
+    "ray_and_two_real_actor_shape_queries": true,
+    "real_actor_pushes_and_per_tick_foot_clearance": true,
+    "source_coordinate_save_reload": "PASS",
+    "destination_click_movement": "PASS",
+    "attack_animation": "PASS",
+    "tree_occlusion_behind_correct_pixels": 716,
+    "tree_occlusion_front_correct_pixels": 247,
+    "opposite_order_pixels": 0,
+    "source_art": "EXISTING_TWILIGHT_REMAKE_NOT_ADEN_PNG"
+  },
+  "baseline_regressions": {
+    "total": 36,
+    "passed": 35,
+    "failed": [],
+    "skipped": [
+      "remake_source_runtime_test"
+    ]
+  },
+  "feature_regressions": {
+    "total": 37,
+    "passed": 36,
+    "failed": [],
+    "skipped": [
+      "remake_source_runtime_test"
+    ]
+  },
+  "new_existing_regressions": [],
+  "historical_pr120_failures": "NOT_REUSED_AS_CURRENT_FAILURES; latest main baseline reproduced separately",
+  "pack_loader_contract_checks": 20,
+  "pack_loader_contract_failures": [],
+  "pack_layer_positive_test": "SYNTHETIC_TEXTURE_CONTRACT_ONLY; no original imagery/collision fixture",
+  "numerical_survey_unit_tests": 3,
+  "resource_integrity": "PASS_723_ATLASES_41442_FRAMES",
+  "aden_delivery": "PASS_1994_FILES_14311656_BYTES",
+  "navigation_regenerated": false,
+  "physical_actor_scale": 1,
+  "runtime_move_speed": 210,
+  "runtime_player_radius": 4,
+  "runtime_monster_radius": 4,
+  "initial_knight_visible_height_world": 80,
+  "actual_capture_sizes": [
+    [
+      1280,
+      720
+    ],
+    [
+      1560,
+      720
+    ]
+  ],
+  "mobile_viewport": [
+    1280,
+    720
+  ],
+  "mobile_window_preserves_aspect_keep": true,
+  "movie": {
+    "status": "PASS_REAL_ENGINE_MOVIE",
+    "checks": 467,
+    "size": [
+      1280,
+      720
+    ],
+    "frames": 185,
+    "fps": 30,
+    "seconds": 6.166667
+  },
+  "png_source": {
+    "access": "VERIFIED",
+    "fit_status": "REVIEW_REQUIRED",
+    "candidate_controls": 6,
+    "verified_controls": 0,
+    "max_candidate_residual_world": 25.757582035802766,
+    "runtime_eligible_regions": 0,
+    "global_affine": "NOT_ESTABLISHED",
+    "collision_and_foreground_review": "NOT_VERIFIED",
+    "pack_build": "REFUSED_UNVERIFIED_REGION"
+  },
+  "original_png_public_upload": false,
+  "android_build": "PENDING_PR_CI; local SDK/adb unavailable",
+  "android_device": "NOT_RUN",
+  "full_repository_suite": "NOT_RUN; changed systems covered by selected 37 regression cases and new engine audit",
+  "remote_ci": "PENDING_AT_COMMIT; follow PR checks; local results do not assert CI success",
+  "manual_long_end_to_end_play": "NOT_RUN",
+  "remaining": "See README required source/image anchors, matching collision/foreground masks and Android device validation."
+}

@@ -6670,6 +6670,7 @@ func constrain_original_motion(actor: CharacterBody2D) -> void:
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
 		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
 		if not field_map.line_clear(actor.global_position,target): actor.velocity = Vector2.ZERO
+		elif field_map is RemakePlayableField and not field_map.point_clear(target): actor.velocity = Vector2.ZERO
 
 func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)
