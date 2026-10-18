@@ -19,3 +19,9 @@ source checks and a physical source pilot review only. Raw PNG and exact edit
 request are retained separately; the failed whole-sheet row was not silently
 removed or overwritten. Full W source/ground/model and actual Main remain
 unapproved. Continue a complete source sequence that uses the corrected pose.
+
+The corrected passing reference was then used to author a new complete W6
+source in one horizontal row, with genuine source poses and unchanged world
+light/apple asymmetry. The new whole PNG is retained separately. Its structural
+result is recorded alongside it; full near/far sequence/landing/model and actual
+Main remain HOLD/NOT_RUN. Pixel uniqueness alone does not approve6gait phases.
