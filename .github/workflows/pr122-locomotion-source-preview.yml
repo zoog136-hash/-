@@ -7,6 +7,7 @@ on:
       - 'docs/remake/evidence/pr122-remaining106/batch07/**'
       - 'docs/remake/evidence/pr122-remaining106/batch08/**'
       - 'docs/remake/evidence/pr122-remaining106/batch09/**'
+      - 'docs/remake/evidence/pr122-remaining106/batch10/**'
       - 'tools/run_pr122_locomotion_source_preview.py'
       - 'tools/check_pr122_locomotion_source_controls.py'
       - 'tests/pr122_reaper_locomotion_source_preview.gd'
@@ -22,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        actor: [reaper, doguri, doguri-W, doguri-N, doguri-run-E]
+        actor: [reaper, doguri, doguri-W, doguri-N, doguri-run-E, doguri-N-registered]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,6 +43,7 @@ jobs:
             /docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/*.png
             /docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/*.png
             /docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/*.png
+            /docs/remake/evidence/pr122-remaining106/batch10/doguri-N-pilot04/*.png
       - name: Install pinned Godot and software OpenGL
         run: |
           set -euo pipefail
@@ -86,6 +88,7 @@ jobs:
             doguri-W) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-preview-v03.json ;;
             doguri-N) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-preview.json ;;
             doguri-run-E) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-preview-v02.json ;;
+            doguri-N-registered) FIXTURE=docs/remake/evidence/pr122-remaining106/batch10/doguri-N-pilot04-preview-canvas1144.json ;;
             *) exit 1 ;;
           esac
           xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_pr122_locomotion_source_preview.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --fixture "$FIXTURE" --output "$REVIEW_ROOT/actual-Main"

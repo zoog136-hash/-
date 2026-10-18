@@ -10,12 +10,12 @@
   "legacy_not_authored_or_connected": 88,
   "actual_legacy_remaining": 106,
   "new_approved": 0,
-  "raw_PNGs_this_batch": 22,
-  "strict_source_geometry_pass_files": 9,
+  "raw_PNGs_this_batch": 23,
+  "strict_source_geometry_pass_files": 10,
   "unapproved_production_applied": false,
-  "actual_Main_new_candidate_checks": 4393,
+  "actual_Main_new_candidate_checks": 8786,
   "actual_Main_new_candidate_failures": 0,
-  "actual_Main_PNG_bodies_in_Git_ZIP": 35,
+  "actual_Main_PNG_bodies_in_Git_ZIP": 70,
   "art_quality": "HOLD; technical PASS does not approve tail pop, model size, full gait or source packing defects",
   "Android_real_device": "NOT_RUN",
   "active_authoring": {
@@ -39,6 +39,22 @@
         "death-pilot01:24"
       ],
       "next": "Re-author E,SE,W,NW walk and all8 attack with complete separated source bodies. Existing strict importer rejects overlapping source bounds and attack-v03 missing3 bodies. No copied/interpolated substitute."
+    },
+    "monster:알비노 몽크": {
+      "status": "AUTHORING",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 128
+      },
+      "complete_approved_source_matrix": false,
+      "source_reference": "res://assets/monsters/original/atlas_3.png region[0,899,328,300]",
+      "source_SHA256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+      "note": "Independent authoring while deer/sourceHOLD remain; no production install."
     }
   },
   "quality14": {
@@ -58,5 +74,12 @@
     "Resolve Doguri candidate canvas registration and tail continuity without changing source pixels/gameplay.",
     "Continue independent source-backed HOLD targets while deer source matrix remains incomplete.",
     "Use only exact-SHA CI; starting846 L1J cancelled jobs were explicitly re-requested, not counted PASS."
-  ]
+  ],
+  "doguri_registered_height": {
+    "original": 105.988006591797,
+    "candidate": 105.9921875,
+    "source_RGBA_regions_anchors_unchanged": true,
+    "final_gait": "HOLD"
+  },
+  "servant_S05": "Strict standalone source geometry PASS; cloth fan/near-hand model HOLD. Actual Main for this source NOT_RUN; no production change."
 }

@@ -41,6 +41,15 @@ def build(root, ci_file):
     ci = json.loads(ci_file.read_text())
     runs = ci['workflow_runs']
     assert runs and all(x['head_sha'] == head for x in runs), 'CI snapshot must match audited HEAD exactly'
+    required = {x['workflow_id']: x['name'] for x in read(
+        'docs/remake/evidence/pr122-remaining106/batch10/ci-846b71d.json')['workflow_runs']}
+    latest = {}
+    for run in runs:
+        latest.setdefault(run['workflow_id'], run)
+    missing_ci = [{'workflow_id': i, 'name': name} for i, name in required.items() if i not in latest]
+    full_ci_pass = not missing_ci and all(latest[i]['conclusion'] == 'success' for i in required)
+    active_path = root / 'docs/remake/evidence/pr122-remaining106/batch10/continuation-state.json'
+    active = json.loads(active_path.read_text()).get('active_authoring', {}) if active_path.is_file() else {}
     files = {}
 
     def resource(relative):
@@ -69,13 +78,19 @@ def build(root, ci_file):
                'newly_approved': False, 'locomotion14_quality_followup': followup}
         # APPROVED is deliberately never inferred from old coverage or CI.
         if key in PAIR:
-            row.update(status='MAIN_VISUAL_PASS', queue='CI_PENDING',
-                       reason='Existing independent post-authoring Main review passed; full exact-HEAD CI is incomplete.')
+            row.update(status='CI_PASS' if full_ci_pass else 'MAIN_VISUAL_PASS',
+                       queue='FINAL_REVIEW_CONFIRMATION' if full_ci_pass else 'CI_PENDING',
+                       reason='Existing post-authoring Main review passed; verify all required exact-HEAD workflows and final approval evidence separately.')
         elif old['native_connected']:
             row.update(status='HOLD', queue='PRESERVE_LEGACY_COMPLETION',
                        reason='Historical completion retained. Current per-species source/Main/CI/independent-review gates are not all established by this audit; do not re-author approved art on this basis.')
         elif previous and previous['status'].startswith('HOLD'):
             row.update(status='HOLD', queue='EXISTING_HOLD', reason=previous['reason'])
+        elif key in active or binding:
+            row.update(status='AUTHORING', queue='AUTHORING_UNAPPROVED',
+                       reason='Source work or a runtime binding exists; full required motion and visual/CI approval are not established.')
+            if key in active:
+                row['active_authoring'] = active[key]
         else:
             row.update(status='NOT_STARTED', queue='NOT_AUTHORED_OR_CONNECTED',
                        reason=(previous or {}).get('reason', old['missing_source']))
@@ -111,12 +126,15 @@ def build(root, ci_file):
             'summary': {'target': 498, 'user_reported_completed': 398,
                         'Git_recorded_completed_preserved': 392, 'unsubstantiated_difference': 6,
                         'runtime_connected': sum(x['runtime_connected'] for x in rows),
-                        'legacy_remaining': 106, 'legacy_HOLD': 16, 'CI_pending': 2,
+                        'legacy_remaining': 106, 'legacy_HOLD': 16,
+                        'CI_pending': counts['MAIN_VISUAL_PASS'],
                         'legacy_not_authored_or_connected': 88,
                         'new_approved': 0, 'current_contract_approvals_granted_by_audit': 0,
                         'current_evidence_states': dict(counts)},
             'CI': {'head_sha': head, 'snapshot_sha256': sha(ci_file),
                    'all_returned_runs_success': all(x['conclusion'] == 'success' for x in runs),
+                   'required_workflows': required, 'missing_required_workflows': missing_ci,
+                   'all_required_workflows_success': full_ci_pass,
                    'runs': [{'id': x['id'], 'name': x['name'], 'status': x['status'],
                              'conclusion': x['conclusion'], 'head_sha': x['head_sha'],
                              'url': x['html_url']} for x in runs]},
