@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-18T03:34:44.838355+00:00",
+  "observed_utc": "2026-10-18T04:48:58.464762+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -85,6 +85,19 @@
       "VRAM": "NOT_MEASURED",
       "Android_real_device": "NOT_RUN",
       "full_PNG_delivery": "Only two selected PNG bodies are in Git; other local PNG bodies are explicitly not delivered here. New remote CI artifacts are separate."
+    },
+    "male_reaper_E_source_preview": {
+      "technical_Main_checks": 4356,
+      "source_candidates": 6,
+      "real_keyboard_native_frames": 6,
+      "speed_ratios": [
+        0.75,
+        1,
+        1.5
+      ],
+      "production_applied": false,
+      "visual_quality": "HOLD; original model/weapon ratios and full near/far timeline,7otherwalk and8run not approved",
+      "completed_added": 0
     }
   },
   "priority": {
@@ -94,7 +107,7 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Complete exact latest-HEAD CI/APK. Tomb ground02 final model/root/heavy-cluster contact and Guardian W-B near-arm/model remain HOLD; Servant/Unicorn/wolf/dog original source failures retained. Full14 locomotion needs6-8genuinewalk/run poses; only femaleEwalk2 omitted53pixel crop was repaired. Unrecovered two Reaper pilotPNG and QA draft remain explicitly unshipped.",
+  "resume": "Continue animation authoring first: Doguri E6 source Main preview, Reaper same-model/near-far corrections and genuine walk/run missing directions. Guardian W arm corrected but material HOLD; Tomb ground02 final model/root/contact HOLD preserved. Latest required CI stays background; no qualified count inflation.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -103,10 +116,10 @@
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "ea37605a1c35dac54eee4b1d400ce04ef631ba9e",
+  "last_successful_pushed_code_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch06/checkpoint.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch07/checkpoint.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -118,5 +131,6 @@
     "unrecovered_manifest": "docs/remake/evidence/pr122-remaining106/batch04/unrecovered-assets.json"
   },
   "historical_user_directive_before_recovery": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
-  "protected_production_change_scope": "Batch05 repaired one existing female Reaper crop/margin/provenance only. Original PNGs,103otherframes, runtime stats/physics/markers preserved. Batch06 changes QA only."
+  "protected_production_change_scope": "Batch05 repaired one existing female Reaper crop/margin/provenance only. Original PNGs,103otherframes, runtime stats/physics/markers preserved. Batch06 changes QA only. Batch07 authors18new wholePNG and actual E6 preview only; no production asset/runtime catalog changed.",
+  "latest_user_priority": "나머지 애니메이션 작업부터해: actual source production first; CI background, no stop at investigation/checkpoint/HOLD"
 }
