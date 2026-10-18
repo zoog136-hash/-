@@ -1,0 +1,39 @@
+{
+  "main_sha": "56f552c800dc031030a05b6e4125ed29a04aba62",
+  "observations": {
+    "baseline": [
+      {
+        "is_capsule": false,
+        "map": "aden_world",
+        "radius": 4.0,
+        "shape": "CircleShape2D",
+        "source_field": true
+      },
+      {
+        "is_capsule": true,
+        "map": "domination_summit",
+        "radius": 15.0,
+        "shape": "CapsuleShape2D",
+        "source_field": false
+      }
+    ],
+    "feature": [
+      {
+        "is_capsule": false,
+        "map": "aden_world",
+        "radius": 4.0,
+        "shape": "CircleShape2D",
+        "source_field": true
+      },
+      {
+        "is_capsule": true,
+        "map": "domination_summit",
+        "radius": 15.0,
+        "shape": "CapsuleShape2D",
+        "source_field": false
+      }
+    ]
+  },
+  "original_failure": "legacy foot collider restored: outdated assertion expects Capsule after returning to current source Aden",
+  "fix": "Assert Circle4 on Aden; test real Capsule restoration on authored domination_summit. No production collision relaxed."
+}

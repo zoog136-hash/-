@@ -1,0 +1,615 @@
+{
+  "android": "NOT_RUN",
+  "boss_combat": [
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uc65c\uace1\uc758 \uc81c\ub2c8\uc2a4 \ud038",
+      "boss_attack_markers": 2,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 24652,
+      "boss_hp_before": 24700,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_01",
+      "player_hp_after": 999944,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\ubd88\uc2e0\uc758 \uc2dc\uc5b4",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 24704,
+      "boss_hp_before": 24800,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_02",
+      "player_hp_after": 999944,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uacf5\ud3ec\uc758 \ubc40\ud30c\uc774\uc5b4",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 24850,
+      "boss_hp_before": 24900,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_03",
+      "player_hp_after": 999944,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uc8fd\uc74c\uc758 \uc880\ube44 \ub85c\ub4dc",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 24781,
+      "boss_hp_before": 25000,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_04",
+      "player_hp_after": 999943,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uc9c0\uc625\uc758 \ucfe0\uac70",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 25057,
+      "boss_hp_before": 25100,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_05",
+      "player_hp_after": 999943,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\ubd88\uc0ac\uc758 \uba38\ubbf8 \ub85c\ub4dc",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 25158,
+      "boss_hp_before": 25200,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_06",
+      "player_hp_after": 999943,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uc794\ud639\ud55c \uc544\uc774\ub9ac\uc2a4",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 25248,
+      "boss_hp_before": 25300,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_07",
+      "player_hp_after": 999942,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uc5b4\ub460\uc758 \ub098\uc774\ud2b8\ubc1c\ub4dc",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 25308,
+      "boss_hp_before": 25400,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_08",
+      "player_hp_after": 999942,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\ubd88\uba78\uc758 \ub9ac\uce58",
+      "boss_attack_markers": 3,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 25454,
+      "boss_hp_before": 25500,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_09",
+      "player_hp_after": 999882,
+      "player_hp_before": 1000000
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "attack": "NORMAL_GAMEPLAY_MARKERS",
+      "boss": "\uc624\ub9cc\ud55c \uc6b0\uadf8\ub204\uc2a4",
+      "boss_attack_markers": 1,
+      "boss_attack_observation": "STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
+      "boss_hp_after": 25557,
+      "boss_hp_before": 25600,
+      "lifecycle_test": "DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY",
+      "map": "oman_10",
+      "player_hp_after": 999941,
+      "player_hp_before": 1000000
+    }
+  ],
+  "checks": 5951,
+  "display": "X11",
+  "failures": [
+    "legacy foot collider restored"
+  ],
+  "maps": [
+    {
+      "checks_cumulative": 168,
+      "draw_chunks": 12,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 9678.663,
+      "layout_revision": 2026101502,
+      "map": "oman_01",
+      "max_chunk_build_usec": 232607,
+      "memory_static_bytes": 316433068,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 32,
+      "source_hash": "5e0ea64c017c6d09a8df12d4e7aa267f48a4eb150f10cd6429a199d6625e1aca",
+      "synchronous_map_entry_ms": 686.068
+    },
+    {
+      "checks_cumulative": 909,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 12431.109,
+      "layout_revision": 2026101502,
+      "map": "oman_02",
+      "max_chunk_build_usec": 392588,
+      "memory_static_bytes": 327113636,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 594,
+      "source_hash": "d34325b72b8e74cfa13443f7f852a54577a91c2d2f3faf8c66cb5ba9052d0b0c",
+      "synchronous_map_entry_ms": 1024.588
+    },
+    {
+      "checks_cumulative": 1476,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 9740.496,
+      "layout_revision": 2026101502,
+      "map": "oman_03",
+      "max_chunk_build_usec": 342262,
+      "memory_static_bytes": 345577518,
+      "monsters": 67,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 372,
+      "source_hash": "959e6fcb4239b995baea1492fe084842552b11547b61767ede80420cfc587138",
+      "synchronous_map_entry_ms": 944.692
+    },
+    {
+      "checks_cumulative": 1731,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 20253.546,
+      "layout_revision": 2026101502,
+      "map": "oman_04",
+      "max_chunk_build_usec": 362891,
+      "memory_static_bytes": 342805158,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 108,
+      "source_hash": "e9aab60886066cec20de386fa4c745c4058a3f3b65c36b6edb933cdfb5805a1e",
+      "synchronous_map_entry_ms": 754.326
+    },
+    {
+      "checks_cumulative": 2450,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 12931.97,
+      "layout_revision": 2026101502,
+      "map": "oman_05",
+      "max_chunk_build_usec": 371238,
+      "memory_static_bytes": 340050284,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 572,
+      "source_hash": "f8e2fe0611e4e0e2a3e1f51787c210db804c80fae4f7ebccfc32fb89d9734c70",
+      "synchronous_map_entry_ms": 1566.173
+    },
+    {
+      "checks_cumulative": 2813,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 9351.444,
+      "layout_revision": 2026101502,
+      "map": "oman_06",
+      "max_chunk_build_usec": 365415,
+      "memory_static_bytes": 337728620,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 216,
+      "source_hash": "f56c29e3643fd9090b57f45647bd1611e4ed8d09e401a75eca7c349cc4ad16ee",
+      "synchronous_map_entry_ms": 773.723
+    },
+    {
+      "checks_cumulative": 3656,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 11256.662,
+      "layout_revision": 2026101502,
+      "map": "oman_07",
+      "max_chunk_build_usec": 354706,
+      "memory_static_bytes": 330346428,
+      "monsters": 67,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 648,
+      "source_hash": "3fdd8035051e4b402ac4e9feea21e26c625b2a43e092cf83cd5d4d85dd06540d",
+      "synchronous_map_entry_ms": 915.988
+    },
+    {
+      "checks_cumulative": 4439,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 11006.639,
+      "layout_revision": 2026101502,
+      "map": "oman_08",
+      "max_chunk_build_usec": 351552,
+      "memory_static_bytes": 333311856,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 636,
+      "source_hash": "729a177409bcca7cc6bb69957a3130d78b3f374b1c686413ac0993cca3458a43",
+      "synchronous_map_entry_ms": 823.492
+    },
+    {
+      "checks_cumulative": 5268,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 14211.993,
+      "layout_revision": 2026101502,
+      "map": "oman_09",
+      "max_chunk_build_usec": 351256,
+      "memory_static_bytes": 334560992,
+      "monsters": 43,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 682,
+      "source_hash": "c01412915550e4c5ca1f2a4616e7612bac6aa1fcd72ef4a525b202127472a5fa",
+      "synchronous_map_entry_ms": 799.044
+    },
+    {
+      "checks_cumulative": 5939,
+      "draw_chunks": 16,
+      "edition": "A3_PC_CURRENT_M_UNVERIFIED",
+      "entry_and_tests_ms": 8965.17,
+      "layout_revision": 2026101502,
+      "map": "oman_10",
+      "max_chunk_build_usec": 393385,
+      "memory_static_bytes": 348597668,
+      "monsters": 67,
+      "nav_chunks": 9,
+      "physics_blocked_edges": 20,
+      "physics_open_edges": 476,
+      "source_hash": "5e880e8a1e391bcc0a2e080db728041d96cfb23111ad0a88b70e0b7ab4d9284d",
+      "synchronous_map_entry_ms": 738.113
+    }
+  ],
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "services_and_travel": [
+    {
+      "map": "oman_01",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "previous"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_02",
+          "expected": "oman_02",
+          "portal": "next"
+        },
+        {
+          "actual": "oman_01",
+          "expected": "oman_01",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_01",
+          "expected": "oman_01",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_02",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_01",
+          "expected": "oman_01",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_03",
+          "expected": "oman_03",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_02",
+          "expected": "oman_02",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_02",
+          "expected": "oman_02",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_03",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_02",
+          "expected": "oman_02",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_04",
+          "expected": "oman_04",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_03",
+          "expected": "oman_03",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_03",
+          "expected": "oman_03",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_04",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_03",
+          "expected": "oman_03",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_05",
+          "expected": "oman_05",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_04",
+          "expected": "oman_04",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_04",
+          "expected": "oman_04",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_05",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_04",
+          "expected": "oman_04",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_06",
+          "expected": "oman_06",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_05",
+          "expected": "oman_05",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_05",
+          "expected": "oman_05",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_06",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_05",
+          "expected": "oman_05",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_07",
+          "expected": "oman_07",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_06",
+          "expected": "oman_06",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_06",
+          "expected": "oman_06",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_07",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_06",
+          "expected": "oman_06",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_08",
+          "expected": "oman_08",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_07",
+          "expected": "oman_07",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_07",
+          "expected": "oman_07",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_08",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_07",
+          "expected": "oman_07",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_09",
+          "expected": "oman_09",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_08",
+          "expected": "oman_08",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_08",
+          "expected": "oman_08",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_09",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_08",
+          "expected": "oman_08",
+          "portal": "previous"
+        },
+        {
+          "actual": "oman_10",
+          "expected": "oman_10",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_09",
+          "expected": "oman_09",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_09",
+          "expected": "oman_09",
+          "portal": "entry_waystone"
+        }
+      ]
+    },
+    {
+      "map": "oman_10",
+      "npc_action": "EXISTING_GUIDE_DIALOGUE",
+      "portals": [
+        {
+          "actual": "oman_09",
+          "expected": "oman_09",
+          "portal": "previous"
+        },
+        {
+          "actual": "domination_summit",
+          "expected": "domination_summit",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "oman_10",
+          "expected": "oman_10",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "oman_10",
+          "expected": "oman_10",
+          "portal": "entry_waystone"
+        }
+      ]
+    }
+  ]
+}

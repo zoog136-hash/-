@@ -6,9 +6,12 @@ on:
       - 'scripts/maps/**'
       - 'scripts/world.gd'
       - 'tests/aden_png*'
+      - 'tests/png_world_runtime_test.gd'
       - 'data/maps/aden_png_alignment.json'
+      - 'data/maps/png_map_sources.json'
       - 'tools/map_restore/aden_png.py'
       - 'tools/map_restore/test_aden_png.py'
+      - 'tools/map_restore/build_png_review_pack.py'
       - '.github/workflows/aden-png-source-validate.yml'
   push:
     branches: [feature/aden-png-source-validation-20261018]
@@ -51,6 +54,7 @@ jobs:
           python3 tools/check_resource_integrity.py --root . | tee aden-png-evidence/resource-integrity.log
           python3 tools/check_aden_world_delivery.py | tee aden-png-evidence/aden-delivery.log
           python3 tools/map_restore/test_aden_png.py
+          python3 -m py_compile tools/map_restore/build_png_review_pack.py
       - name: Import and parse all production scripts
         run: |
           XDG_DATA_HOME="$RUNNER_TEMP/aden-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > aden-png-evidence/import.log 2>&1
@@ -68,7 +72,7 @@ jobs:
       - name: State original-art scope explicitly
         if: always()
         run: |
-          echo 'Aden.png is a local third-party resource and is not downloaded or redistributed by CI. PNG alignment/playable sample remains BLOCKED pending verified source/image and foreground review. Android device NOT_RUN.' > aden-png-evidence/SCOPE.txt
+          echo 'Aden.png and Oman 101-110.png are local third-party resources, not downloaded or redistributed by public CI. Actual local PNG review gameplay is recorded separately; full image/collision/foreground correspondence remains REVIEW_REQUIRED. Domination PNG identity pending. Android device NOT_RUN.' > aden-png-evidence/SCOPE.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:

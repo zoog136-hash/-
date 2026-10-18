@@ -1244,6 +1244,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
+		if field_renderer is RemakeSourceRenderer and field_renderer.png_review_active:
+			hud.set_map_name(str(active_map.get("name",active_map_id))+" · PNG 검수")
+			player.global_position = field_renderer.png_review_spawn
+			player.camera.reset_smoothing();player.camera.force_update_scroll()
+			field_renderer.refresh_visible()
 		_apply_saved_visual_mode()
 		field_population.configure(self, field_map)
 	else:
@@ -3734,6 +3739,9 @@ func _refresh_combat_hud() -> void:
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func _save_game(quiet: bool) -> void:
+	if "--png-review" in OS.get_cmdline_user_args():
+		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
+		return
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
 		return

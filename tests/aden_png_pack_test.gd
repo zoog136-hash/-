@@ -3,6 +3,7 @@ extends SceneTree
 const PACK = preload("res://scripts/maps/aden_png_pack.gd")
 const REGISTRY = preload("res://scripts/maps/aden_remake_registry.gd")
 const CHUNK = preload("res://scripts/maps/aden_png_chunk.gd")
+const REVIEW = preload("res://scripts/maps/source_png_review_pack.gd")
 var failures: Array[String] = []
 var checks: int = 0
 var field: RemakePlayableField
@@ -77,6 +78,17 @@ func run() -> void:
 		if foreground != null:
 			check((foreground.transform*foreground.offset).distance_to(transform.affine_inverse()*Vector2(8,8))<.01,"foreground image pixels preserve measured transform")
 		chunk.free()
+	# Candidate PNG packs must never replace an ordinary saved game's art by
+	# installation alone, even if a manifest calls itself verified.
+	DirAccess.make_dir_recursive_absolute("user://png-review-contract/aden_world")
+	var candidate: Dictionary = {"schema":2,"map_id":"aden_world","png_sha256":PACK.PNG_SHA,"png_size":[15728,7987],
+		"source_map_id":4,"source_grid_sha256":PACK.GRID_SHA,"status":"REVIEW_REQUIRED","regions":[{}]}
+	for claimed_status: String in ["REVIEW_REQUIRED","VERIFIED"]:
+		candidate.status = claimed_status
+		var candidate_file := FileAccess.open("user://png-review-contract/aden_world/manifest.json",FileAccess.WRITE)
+		candidate_file.store_string(JSON.stringify(candidate));candidate_file.close()
+		var review := REVIEW.new()
+		check(not review.configure("user://png-review-contract",field) and not review.review_active and review.rejection == "REVIEW_SESSION_REQUIRED","candidate cannot activate in ordinary gameplay "+claimed_status)
 	field.close();finish()
 
 func finish() -> void:

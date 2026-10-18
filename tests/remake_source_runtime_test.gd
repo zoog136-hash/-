@@ -256,6 +256,14 @@ func run() -> void:
 	print("REMAKE_STAGE legacy_return_set")
 	await frames(2)
 	print("REMAKE_STAGE legacy_return_frames")
+	# Latest main already uses the source field for Aden. Returning from Oman
+	# to Aden must retain the source foot; exercise restoration on an actually
+	# authored map as well, instead of treating a stale Aden expectation as a
+	# production regression.
+	check(world.field_map is RemakePlayableField and world.player.get_node("CollisionShape2D").shape is CircleShape2D and world.player.get_node("CollisionShape2D").shape.radius == 4.0,"Aden source foot retained on source-to-source return")
+	world._set_map("domination_summit",false)
+	await frames(2)
+	check(not world.field_map is RemakePlayableField,"authored map restoration exercised")
 	check(world.player.get_node("CollisionShape2D").shape is CapsuleShape2D,"legacy foot collider restored")
 	var report: Dictionary = {"checks":checks,"failures":failures,"maps":reports,"display":DisplayServer.get_name(),
 		"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN","boss_combat":combat_reports,"services_and_travel":service_reports}

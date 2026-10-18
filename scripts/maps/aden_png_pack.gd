@@ -8,6 +8,7 @@ var regions: Array[Dictionary] = []
 var root_path: String = ""
 var rejection: String = "NOT_INSTALLED"
 var textures: Dictionary = {}
+var review_active: bool = false
 
 static func pair(value: Variant) -> bool:
 	return value is Array and value.size() == 2 and finite_numbers(value)
