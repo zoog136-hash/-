@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "asset": "13055.png",
+  "assigned_by": "user_explicit_2026-10-19",
+  "purpose": "TWILIGHT_Albino_1_to_4_visual_map_source",
+  "source_authentication": {
+    "png_sha256": null,
+    "pixel_size": null,
+    "source_texture_available": false
+  },
+  "status": "PENDING_SOURCE_IMAGE_AND_REGION_BOUNDARY_VERIFICATION",
+  "storage_policy": "LOCAL_OR_PRIVATE_ONLY_DO_NOT_COMMIT_ORIGINAL_ART",
+  "source_geometry_policy": "DO_NOT_ASSUME_13055_MAPCACHE_OR_EXISTING_COLLISION_MATCHES_PNG",
+  "region_selection_policy": "VISUAL_INSPECTION_REQUIRED_NO_AUTOMATIC_QUADRANT_ASSIGNMENT",
+  "regions": [
+    {
+      "ordinal": 1,
+      "map_id": "albino_01",
+      "game_name": "알비노 분지 1구역",
+      "source_rect": null,
+      "verification": "PENDING",
+      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+    },
+    {
+      "ordinal": 2,
+      "map_id": "albino_02",
+      "game_name": "알비노 분지 2구역",
+      "source_rect": null,
+      "verification": "PENDING",
+      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+    },
+    {
+      "ordinal": 3,
+      "map_id": "albino_03",
+      "game_name": "알비노 분지 3구역",
+      "source_rect": null,
+      "verification": "PENDING",
+      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+    },
+    {
+      "ordinal": 4,
+      "map_id": "albino_04",
+      "game_name": "알비노 분지 4구역",
+      "source_rect": null,
+      "verification": "PENDING",
+      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+    }
+  ],
+  "gameplay_contract": {
+    "preserve_map_ids": true,
+    "preserve_monster_boss_records": true,
+    "preserve_player_save_progress": true,
+    "preserve_portal_targets": true,
+    "preserve_navigation_until_source_aligned": true,
+    "preserve_original_png_immutable": true
+  }
+}
