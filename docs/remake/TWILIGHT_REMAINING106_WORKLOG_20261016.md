@@ -108,3 +108,9 @@ Fixed498 scope reconciled: preserved historical392, runtime394, no evidence of39
 
 
 Batch12 original-source continuation: recovered existing private A2002 four chunks, all1700 SPX/14534 records (14304 visible RGBA SHA,230empty) matched prior audit. Kit45 exact ZIP members and3512 body RGBA verified; body2 plus6layers never counted as8species. Native donor21624/21653 actual Main technical91020+92858, full3952PNG and16real Input directions, original walk8/runL8/runR8 disjoint in all8directions. Unmapped identity, death terminal-first literal order, blend/contact/independent review stay HOLD; no production binding or new approval. Original45 authored PNG85,840,707bytes preserved. Private owner-only Drive delivery in progress; source6 global check still FAIL(a1 missing), no original-all-delivered claim. Source guards strengthened to pinned-ZIP member equality, forged-run/bad-ZIP/public-output negative controls refused. See batch12 actual reports/failure logs/continuation; protected production diff0, Android NOT_RUN.
+
+## Batch13 — 실제 개체 완료 우선 지시 반영
+
+알비노 이구아나112자세와 공포의 아그니104자세의 기존 source·실제 Main·AI/접촉/피격/사망/드랍·동일 Main 완료개체 비교·별도 사후 시각 PASS를 대조했다. 검토 당시49개 PNG/SpriteFrames SHA와 현재 바이트, 두 프로필의 정규 JSON SHA가 모두 같고 dc20ab5→e840f0e 사이 assets/data/scripts/scenes/Main.tscn/project.godot 변경이 없다. 같은 성공 검사를 반복하지 않았다. 최신 사용자 지시로 전체 CI/APK를 최종 통합으로 분리하므로, 개체별 요구조건을 이미 충족한 두 종을 명시적으로 APPROVED에 반영한다. 신규 제작2종이라는 주장이 아니라 기존 제작·연결분의 실제 완료 승인2종이다.
+
+**기존392 +이번 완료2 =누적394/498. 실제 잔여104 =HOLD18 +골렘 제작중1 +미제작85.** 정확한 HEAD의 전체 CI/APK는 별도 최종 검증 대기이며 Android 실기 NOT_RUN이다. 원래 CI/APK 대기 장부는 당시 기록으로 보존하고 이 결정을 최신 장부로 사용한다. 골렘 원본9PNG와 요청/실패를 보존했다. idle16/hit16/공격24는 전신 영역 검사만 통과했고, 걷기8×8와사망3×8 및 전체 품질·Main은 아직 미완료라 수량에 넣지 않는다. 다음은 골렘 실제 제작이다.

@@ -11,20 +11,23 @@
   "counts": {
     "target": 498,
     "completed": 392,
-    "remaining": 106,
+    "remaining": 104,
     "HOLD": 16,
     "not_authored_or_not_connected": 88,
     "canonical_Main_reports": 255,
     "individual_Main_eight_direction": 121,
-    "completed_added": 0,
+    "completed_added": 2,
     "runtime_connected": 394,
-    "locally_passed_pending_CI_APK": 2,
+    "locally_passed_pending_CI_APK": 0,
     "canonical_Main_reports_preserved_PR100": 255,
     "new_local_PASS_Main_reports": 4,
     "connected_coverage_Main_report_paths": 259,
     "current_source_HOLD_including_new": 18,
     "not_started_after_two_new_source_attempts": 86,
-    "new_approved": 0
+    "new_approved": 2,
+    "fully_completed": 394,
+    "AUTHORING": 1,
+    "NOT_STARTED": 85
   },
   "protected_production_changed": true,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
@@ -135,13 +138,13 @@
     }
   },
   "priority": {
-    "iguana": "Latest clear-map actual Main, full112native and completed-baseline comparison locally PASS; full latest CI/APK pending.",
-    "agni": "Reproduced6lifecycle-bound and2walk-endpoint failures; fixed QA location selection without weakening guards. Actual Main, full104native and completed-baseline comparison locally PASS; full latest CI/APK pending.",
+    "iguana": "APPROVED per explicit batch13 decision, unchanged49 source/resource SHA and reviewed profile, source/Main/independent visual PASS; final integration CI/APK pending separately.",
+    "agni": "APPROVED per explicit batch13 decision, unchanged49 source/resource SHA and reviewed profile, source/Main/independent visual PASS; final integration CI/APK pending separately.",
     "unicorn": "8 of 9 standalone poses fail existing alpha>100 single-body rule; 2 selected walk source PNGs missing from preserved archives; HOLD",
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Read actual remote PR122 HEAD and batch12 continuation-state. Legacy392/runtime394 remain; native donor2 are UNMAPPED qualityHOLD and not new species. Complete private delivery and target/source/chronology/layer validation, then continue missing source matrices without re-authoring approvals.",
+  "resume": "Read actual PR122 HEAD and batch13 continuation-state. Completed394 (legacy392 +explicit2); remaining104 =HOLD18 +Golem AUTHORING1 +NOT_STARTED85. Continue actual production, defer full manual CI/APK to final integration.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -150,10 +153,10 @@
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "0a81d5cc8ff3dbafb06a5378408512ee32e68579",
+  "last_successful_pushed_code_commit": "e840f0ef7ee0b44f3d972a43745ad1fc5aefdae2",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch12/continuation-state.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch13/continuation-state.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -166,9 +169,9 @@
   },
   "historical_user_directive_before_recovery": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
   "protected_production_change_scope": "Batch05 repaired one existing female Reaper crop/margin/provenance only. Original PNGs,103otherframes, runtime stats/physics/markers preserved. Batch06 changes QA only. Batch07 authors18new wholePNG and actual E6 preview only; no production asset/runtime catalog changed.",
-  "latest_user_priority": "나머지 애니메이션 작업부터해: actual source production first; CI background, no stop at investigation/checkpoint/HOLD",
+  "latest_user_priority": "Finish the locally-qualified waiting2, then Golem/HOLD/not-started actual production. Full manual CI/APK only at final integration; do not weaken source or visual gates.",
   "latest_source_status": {
-    "new_approved": 0,
+    "new_approved": 2,
     "raw_PNGs": 45,
     "raw_PNG_bytes": 85840707,
     "Main_technical_checks": 8786,
@@ -179,5 +182,6 @@
     "private_source_kit_exact_target_mapping": "UNCONFIRMED"
   },
   "last_successful_pushed_code_commit_is_previous_checkpoint": true,
-  "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD."
+  "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD.",
+  "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch13/individual-approvals.json"
 }

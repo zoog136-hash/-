@@ -38,9 +38,9 @@ def build(root, ci_file):
     assert len(identities) == len({x['key'] for x in identities}) == 498
     assert sum(x['native_connected'] for x in identities) == 392
     tracked = set(subprocess.check_output(['git', '-C', str(root), 'ls-files', '-z']).decode().split('\0'))
-    ci = json.loads(ci_file.read_text())
+    ci = json.loads(ci_file.read_text()) if ci_file else {'workflow_runs': []}
     runs = ci['workflow_runs']
-    assert runs and all(x['head_sha'] == head for x in runs), 'CI snapshot must match audited HEAD exactly'
+    assert not ci_file or (runs and all(x['head_sha'] == head for x in runs)), 'CI snapshot must match audited HEAD exactly'
     required = {x['workflow_id']: x['name'] for x in read(
         'docs/remake/evidence/pr122-remaining106/batch10/ci-846b71d.json')['workflow_runs']}
     latest = {}
@@ -53,6 +53,30 @@ def build(root, ci_file):
         'docs/remake/evidence/pr122-remaining106/batch10/continuation-state.json')).resolve()
     assert active_path.is_relative_to(root), 'Active checkpoint must stay inside checkout'
     active = json.loads(active_path.read_text()).get('active_authoring', {}) if active_path.is_file() else {}
+    # Explicit species decisions are separate from the final integration CI.
+    # Never create an approval from a count, a resource binding or a CI result.
+    approvals = {}
+    registry_path = checkpoint.get('individual_approval_registry')
+    if registry_path:
+        registry = read(registry_path)
+        for decision in registry['decisions']:
+            key = decision['id']
+            assert key not in approvals and decision['status'] == 'APPROVED'
+            assert key in {x['key'] for x in identities if not x['native_connected']}
+            assert all(value == 'PASS' for value in decision['species_gates'].values())
+            for pin in decision['evidence_pins']:
+                relative = pin['path']
+                path = (root / relative).resolve()
+                assert path.is_relative_to(root) and path.is_file()
+                assert sha(path) == pin['sha256'], f'Approval evidence changed: {relative}'
+            preservation = read(decision['source_preservation_manifest'])
+            for pin in preservation['checked_files']:
+                path = root / pin['path']
+                assert pin['path'] in tracked and sha(path) == pin['sha256'], f'Approved source changed: {path}'
+            profile_sha = hashlib.sha256(json.dumps(profiles[key], ensure_ascii=False,
+                sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+            assert profile_sha == decision['reviewed_profile_sha256'], f'Approved profile changed: {key}'
+            approvals[key] = decision
     files = {}
 
     def resource(relative):
@@ -80,13 +104,19 @@ def build(root, ci_file):
                'Android_real_device': 'NOT_RUN', 'current_contract_APPROVED': False,
                'newly_approved': False, 'locomotion14_quality_followup': followup}
         # APPROVED is deliberately never inferred from old coverage or CI.
-        if key in PAIR:
+        if key in approvals:
+            row.update(status='APPROVED', queue='COMPLETED',
+                       current_contract_APPROVED=True, newly_approved=True,
+                       approval_decision=approvals[key],
+                       reason='Explicit per-species source/Main/independent visual decision, with unchanged pinned source and profile. Final integration CI/APK remain separate.')
+        elif key in PAIR:
             row.update(status='CI_PASS' if full_ci_pass else 'MAIN_VISUAL_PASS',
                        queue='FINAL_REVIEW_CONFIRMATION' if full_ci_pass else 'CI_PENDING',
                        reason='Existing post-authoring Main review passed; verify all required exact-HEAD workflows and final approval evidence separately.')
         elif old['native_connected']:
-            row.update(status='HOLD', queue='PRESERVE_LEGACY_COMPLETION',
-                       reason='Historical completion retained. Current per-species source/Main/CI/independent-review gates are not all established by this audit; do not re-author approved art on this basis.')
+            row.update(status='APPROVED', queue='PRESERVE_LEGACY_COMPLETION',
+                       approval_basis='PRESERVED_LEGACY_392',
+                       reason='Existing approved completion retained; this audit grants no new review for legacy art. Track any locomotion repair separately without recounting the species.')
         elif previous and previous['status'].startswith('HOLD'):
             row.update(status='HOLD', queue='EXISTING_HOLD', reason=previous['reason'])
         elif key in active or binding:
@@ -134,17 +164,23 @@ def build(root, ci_file):
     return {'schema': 1, 'observed_UTC': datetime.now(timezone.utc).isoformat(),
             'repository': 'zoog136-hash/-', 'PR': 122, 'audited_commit': head,
             'scope': '180 hero-plus transforms + 258 normal monsters + 60 bosses; fixed 498 unique identities',
-            'approval_policy': 'NOT_STARTED -> AUTHORING -> SOURCE_PASS -> MAIN_VISUAL_PASS -> CI_PASS -> APPROVED; insufficient evidence -> HOLD. Historical count is not a new current-contract approval.',
-            'summary': {'target': 498, 'user_reported_completed': 398,
+            'approval_policy': 'Latest user directive: preserve legacy392; explicit complete per-species source/Main/independent visual decisions may be approved while full integration CI/APK are deferred to the final stage. This audit never grants approvals.',
+            'summary': {'target': 498, 'user_confirmed_baseline': 392,
+                        'historical_unverified_report': 398,
                         'Git_recorded_completed_preserved': 392, 'unsubstantiated_difference': 6,
                         'runtime_connected': sum(x['runtime_connected'] for x in rows),
                         'legacy_remaining': 106, 'legacy_HOLD': 16,
                         'CI_pending': counts['MAIN_VISUAL_PASS'],
                         'legacy_not_authored_or_connected': 88,
-                        'new_approved': 0, 'current_contract_approvals_granted_by_audit': 0,
+                        'new_approved': len(approvals),
+                        'completed': 392 + len(approvals), 'remaining': 106 - len(approvals),
+                        'HOLD': counts['HOLD'], 'AUTHORING': counts['AUTHORING'],
+                        'NOT_STARTED': counts['NOT_STARTED'],
+                        'current_contract_approvals_granted_by_audit': 0,
                         'current_evidence_states': dict(counts)},
-            'CI': {'head_sha': head, 'snapshot_sha256': sha(ci_file),
-                   'all_returned_runs_success': all(x['conclusion'] == 'success' for x in runs),
+            'CI': {'head_sha': head, 'snapshot_sha256': sha(ci_file) if ci_file else None,
+                   'status': 'EXACT_HEAD_SNAPSHOT' if ci_file else 'DEFERRED_TO_FINAL_INTEGRATION',
+                   'all_returned_runs_success': bool(runs) and all(x['conclusion'] == 'success' for x in runs),
                    'required_workflows': required, 'missing_required_workflows': missing_ci,
                    'all_required_workflows_success': full_ci_pass,
                    'runs': [{'id': x['id'], 'name': x['name'], 'status': x['status'],
@@ -157,7 +193,7 @@ def build(root, ci_file):
                 'target_runtime_bindings': sum(x['runtime_connected'] for x in rows),
                 'additional_base_class_bindings_outside498': outside_classes,
                 'arithmetic_total': sum(x['runtime_connected'] for x in rows) + len(outside_classes),
-                'interpretation': '394 target bindings + 4 base classes can total398 connections. This is a scope/counting explanation candidate, not evidence of398 approved target species; two target bindings still await CI and base classes are outside180+258+60.'},
+                'interpretation': '394 target bindings + 4 base classes can total398 connections. This is a scope/counting explanation candidate, not evidence of398 approved target species. Base classes are outside180+258+60; count explicit species decisions separately.'},
             'identities': rows, 'resources': list(files.values()),
             'production_mutated': False, 'prior_approval_assets_replaced': False}
 
@@ -165,12 +201,12 @@ def build(root, ci_file):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument('--ci-json', type=Path, required=True)
+    parser.add_argument('--ci-json', type=Path, help='Optional exact-HEAD snapshot; omitted during production, with final CI explicitly deferred')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     if args.output.exists():
         parser.error('Earlier evidence is immutable; select a new output path')
-    result = build(args.root.resolve(), args.ci_json.resolve())
+    result = build(args.root.resolve(), args.ci_json.resolve() if args.ci_json else None)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(result['summary'], ensure_ascii=False))
