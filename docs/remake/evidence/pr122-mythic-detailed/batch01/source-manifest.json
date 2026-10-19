@@ -3515,6 +3515,25 @@
       ],
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "idle",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-NW-idle-repair/girtas-NW-idle-v02.png",
+      "bytes": 2445925,
+      "sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3629,7 +3648,7 @@
     "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
     "transform:267:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
     "transform:267:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
-    "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
+    "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
     "transform:267:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
     "transform:267:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
     "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png"
@@ -4293,6 +4312,22 @@
             "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
           ],
           "source_review_sha256": "af2e11067c72129c8cc0ce0868f11db77a6642817aa7417da1e82afc26418727"
+        },
+        {
+          "slot": "transform:267:NW:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Actual6 poses remain BACK-LEFT/NW, not NE: left boot toe projects screenLEFT while opposite boot reads rear/heel, left near shoulder/arm silhouette is exposed, helmet/back axis and pale back-hair placement turn left-away. No front face/cheststar and no right-facing boot/helmet reversal.",
+            "AnatomicalRIGHT weapon remains the far/right projected arm with same long thin sinuous glowing blade on imageRIGHT; nearLEFT hand imageLEFT is empty. It is not a simple mirrored NE sprite/hand swap.",
+            "Original tall dark/gold ornaments, long pale back hair, thin hard gold radial spikes and long dark goldtrim skirt remain faithful without redmask/flamefeather redesign.",
+            "Both feet remain planted throughout6, while back/shoulder/elbow posture and clearly moving hair/robe lag create locally articulated idle/settle states.",
+            "Full gear/boots/blade tip visible, physical spine attachments rigid, coherent body/equipment ratios across6."
+          ],
+          "source_review_sha256": "a7b9300015692b8afba070f466285164c484c58e0be0d77088455b6b01a8e498"
         }
       ]
     }
