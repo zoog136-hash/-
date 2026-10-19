@@ -10,6 +10,11 @@ var persistent: Dictionary = {}
 var emitted: int = 0
 var retired: int = 0
 var audio_pool: TwilightOriginalSkillAudio
+const SPX_BRIDGE = preload("res://scripts/skills/skill_spx_bridge.gd")
+const SPX_SHADER = preload("res://assets/effects/source_spx_additive.gdshader")
+var spx_bridge: TwilightSkillSPXBridge = SPX_BRIDGE.new()
+var spx_pool: Array[AnimatedSprite2D] = []
+var spx_material: ShaderMaterial
 const MAX_EFFECTS := 160
 const MAX_POOL := 160
 
@@ -17,7 +22,47 @@ func _ready() -> void:
 	presets = preload("res://scripts/skills/skill_catalog.gd").read_json("vfx.json")
 	audio_pool = preload("res://scripts/skills/skill_audio.gd").new()
 	add_child(audio_pool)
+	spx_material = ShaderMaterial.new()
+	spx_material.shader = SPX_SHADER
 	set_process(false)
+
+func _source_sprite(id: String, phase: String, point: Vector2) -> Dictionary:
+	var frames: SpriteFrames = spx_bridge.frames_for(id, phase)
+	if frames == null:
+		return {}
+	var clip := spx_bridge.clip_for(id, phase)
+	var sprite: AnimatedSprite2D = spx_pool.pop_back() if not spx_pool.is_empty() else AnimatedSprite2D.new()
+	if sprite.get_parent() == null:
+		add_child(sprite)
+	sprite.stop()
+	sprite.sprite_frames = frames
+	sprite.animation = clip
+	sprite.centered = true
+	sprite.material = spx_material
+	var texture: Texture2D = frames.get_frame_texture(clip, 0)
+	var edge := maxf(float(texture.get_width()), float(texture.get_height()))
+	sprite.scale = Vector2.ONE * minf(1.0, 260.0 / maxf(1.0, edge))
+	sprite.global_position = point
+	sprite.show()
+	sprite.play(clip)
+	var total_frames := 0.0
+	for index: int in range(frames.get_frame_count(clip)):
+		total_frames += frames.get_frame_duration(clip, index)
+	var duration := clampf(total_frames / maxf(1.0, frames.get_animation_speed(clip)), 0.15, 4.0)
+	return {"sprite":sprite, "duration":duration}
+
+func _recycle_source_sprite(item: Dictionary) -> void:
+	var entry: Variant = item.get("spx_sprite", null)
+	if not (entry is AnimatedSprite2D) or not is_instance_valid(entry):
+		return
+	var sprite: AnimatedSprite2D = entry as AnimatedSprite2D
+	sprite.stop()
+	sprite.hide()
+	sprite.sprite_frames = null
+	if spx_pool.size() < 32:
+		spx_pool.append(sprite)
+	else:
+		sprite.queue_free()
 
 func color_for(id: String) -> Color:
 	return Color.from_hsv(float(presets.get(id, {}).get("hue", .58)), .5, 1.0)
@@ -25,8 +70,11 @@ func color_for(id: String) -> Color:
 func emit_skill(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF) -> void:
 	if phase in ["cast", "impact", "status", "resist"] and is_instance_valid(audio_pool): audio_pool.play_skill(id, point, phase)
 	if live.size() >= MAX_EFFECTS: return
+	var source: Dictionary = _source_sprite(id, phase, point)
 	var item: Dictionary = available.pop_back() if not available.is_empty() else {}
-	item.merge({"id":id,"phase":phase,"point":point,"end":end,"age":0.0,"ttl":.65 if phase != "cast" else .4}, true)
+	item.merge({"id":id,"phase":phase,"point":point,"end":end,"age":0.0,
+		"ttl":float(source.get("duration", .65 if phase != "cast" else .4)),
+		"spx_sprite":source.get("sprite", null)}, true)
 	live.append(item)
 	emitted += 1
 	set_process(true)
@@ -46,6 +94,7 @@ func remove_persistent(id: String) -> void:
 func clear() -> void:
 	if is_instance_valid(audio_pool): audio_pool.clear()
 	for item: Dictionary in live:
+		_recycle_source_sprite(item)
 		item.clear()
 		if available.size() < MAX_POOL: available.append(item)
 		retired += 1
@@ -60,6 +109,7 @@ func _process(delta: float) -> void:
 		if float(live[index].age) >= float(live[index].ttl):
 			var item: Dictionary = live[index]
 			live.remove_at(index)
+			_recycle_source_sprite(item)
 			item.clear()
 			if available.size() < MAX_POOL: available.append(item)
 			retired += 1
@@ -71,6 +121,8 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	for item: Dictionary in live:
+		if item.get("spx_sprite", null) is AnimatedSprite2D:
+			continue
 		var preset: Dictionary = presets.get(str(item.id), {})
 		var point: Vector2 = to_local(item.point)
 		var t := float(item.age) / float(item.ttl)
