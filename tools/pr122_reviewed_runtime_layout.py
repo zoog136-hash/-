@@ -27,6 +27,7 @@ def apply_reviewed_layout(source_path, base_geometry, review):
     PNG. Optional source anchors change metadata only. Neither a valid layout
     nor its proof grants source-art, runtime-scale, or actor approval. A reviewed
     movement permutation changes playback only; each frame retains its authored row.
+    Optional per-pose virtual canvases are indexed by authored row before playback.
     """
     if not isinstance(review, dict) or review.get("status") != "REVIEWED_LAYOUT_PROPOSAL":
         raise ValueError("An explicit REVIEWED_LAYOUT_PROPOSAL is required")
@@ -80,6 +81,23 @@ def apply_reviewed_layout(source_path, base_geometry, review):
         raise ValueError("Derived layout changed the canonical half-width, five-eighths foot")
     if hashlib.sha256(path.read_bytes()).hexdigest() != source_sha:
         raise ValueError("Source bytes changed during layout analysis")
+    if "authored_pose_canvas_sizes" in review:
+        sizes = review["authored_pose_canvas_sizes"]
+        if canvas != 2048:
+            raise ValueError("Per-pose canvases require strict nominal canvas_size 2048")
+        if (not isinstance(sizes, list) or len(sizes) != 6
+                or any(type(value) is not int or not 256 <= value <= 4096 or value % 8
+                       for value in sizes)):
+            raise ValueError("authored_pose_canvas_sizes must contain six integer multiples of 8 from 256 to 4096")
+        for frame, size in zip(derived["frames"], sizes):
+            x, y, width, height = frame["region"]
+            anchor_x, anchor_y = frame["source_anchor"]
+            foot_x, foot_y = size // 2, size * 5 // 8
+            margin_x, margin_y = foot_x - (anchor_x - x), foot_y - (anchor_y - y)
+            if min(margin_x, margin_y) < 0 or margin_x + width > size or margin_y + height > size:
+                raise ValueError("Pose cannot fit its reviewed per-pose foot-anchored canvas")
+            frame.update(margin=[margin_x, margin_y, size - width, size - height],
+                         canvas_size=[size, size], foot=[foot_x, foot_y])
     if "playback_order" in review:
         order = review["playback_order"]
         if review.get("role") not in ("walk", "run"):
@@ -99,4 +117,10 @@ def apply_reviewed_layout(source_path, base_geometry, review):
              "source_pixels_unchanged": True, "resampled": False, "approval_granted": False}
     if "playback_order" in review:
         proof.update(playback_order=list(review["playback_order"]), newly_authored_poses=0)
+    if "authored_pose_canvas_sizes" in review:
+        sizes = [frame["canvas_size"][0] for frame in derived["frames"]]
+        proof.update(pose_canvas_sizes=sizes, runtime_reference_canvas_size=1024,
+                     per_pose_runtime_pixel_scale_ratios=[[1024, size] for size in sizes],
+                     pose_canvas_size_allowed_range=[256, 4096],
+                     runtime_pixel_scale_ratio=[1024, canvas], newly_authored_poses=0)
     return derived, proof
