@@ -4963,31 +4963,31 @@
       "canvas_size": 1152,
       "source_anchors": [
         [
-          256,
+          254,
           455
         ],
         [
-          768,
+          741,
           456
         ],
         [
-          256,
+          247,
           968
         ],
         [
-          768,
+          740,
           968
         ],
         [
-          256,
+          254,
           1471
         ],
         [
-          768,
+          746,
           1471
         ]
       ],
-      "review_basis": "Private actual-profile world-foot comparison with N/S and corrected E1280: W1152 matches helmet-crown, shoulder, hip and ankle heights; W1024 is taller, W1280 visibly undersized. True side projection legitimately narrows torso. Both planted-boot support span and pelvis projection center near source localX256, so retain X256/768 and current Y; no distal-toe lock or bounding-box body normalization. Final compiled integration/render review still required."
+      "review_basis": "Supersedes fixed cell-center W anchors after actual r050 all-six-pose root/loop review. Magnified BOTH planted-boot support spans, with cape explicitly excluded, have localX bounds0[203,304],1[182,276],2[197,297],3[182,274],4[201,306],5[184,284]. Use rounded stance MIDPOINTS, not front toe or wing/cape bbox. These anchors remove per-pose authoring placement drift, including5->0 ~5.4worldpx support jump, while preserving genuine local wing/cloth/body articulation and every source pixel. ExistingY anchors and canvas1152 remain unchanged; crown/shoulder/hip/ankle size already passes N/S/E comparison. Final compiled root review still required."
     },
     "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png": {
       "status": "REVIEWED_LAYOUT_PROPOSAL",
