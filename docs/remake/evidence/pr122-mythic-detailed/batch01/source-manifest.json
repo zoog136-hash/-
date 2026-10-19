@@ -2985,6 +2985,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "E",
+      "role": "hit",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-E-hit-repair/girtas-E-hit-v02.png",
+      "bytes": 2401539,
+      "sha256": "b350a108cae4b520a93f7b9a6b2fbcf91eea44d745562edbc31bfabdace5e8be",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3079,7 +3098,7 @@
     "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v01.png",
     "transform:267:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v01.png",
     "transform:267:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
-    "transform:267:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v01.png",
+    "transform:267:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
     "transform:267:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v01iso01.png",
     "transform:267:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v01.png",
     "transform:267:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
@@ -3505,6 +3524,24 @@
             "Full silhouette including weapon and physical golden spines is visible, with no source outer-edge clipping. Six large disjoint foreground bodies are available."
           ],
           "source_review_sha256": "cc971ebd817c42652fabe87cfc46d95d88a05e946765ef16615546191357bab6"
+        },
+        {
+          "slot": "transform:267:E:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Identity review against only the original portrait and faithful canonical reference: pale visible face, long pale/white hair, original gold head structure, dark gold-edged armor, long dark gold-trimmed skirt, thin radial gold back-spines and the single long sinuous glowing original weapon are retained. No red mask, broad replacement wings or short-skirt redesign.",
+            "Absolute compass: all six figures retain EAST/screen-right heading. Pale face remains a right-facing profile, including the tilted-up head during recoil; no south-facing front-body or back-view substitution.",
+            "Phase0 is stable guard; phase1 visibly tips the torso/head backward and raises the free arm; phase2 has maximum backward torso/head recoil, extended neck and different hip/knee articulation. This is actual body reaction, not opacity, tint or rigid global translation.",
+            "Phase3 shows a wide counterbalance/stagger stance, flexed knees and torso recovery; phase4 regains guard with recovering shoulders/hips; phase5 settles into stable east guard. All six silhouettes and joint positions are distinct.",
+            "The same anatomical right hand continuously holds the one sinuous weapon low at the near side; it follows wrist/body inertia without becoming an offensive swing or switching hands. The free hand remains unarmed.",
+            "Long hair, skirt and radial spines respond consistently with torso lean while the body/gear remain recognizable and complete. The original lower legs and boots are present without an extra leg or disconnected body copy.",
+            "Unchanged strict source analyzer and complete-pose-region gate pass six complete distinct poses. No generated pixel resampling, masking, recoloring, cropping, atlas repair or gate relaxation was performed."
+          ],
+          "source_review_sha256": "da555d57f829fea65dcc064836e88947ffc32bd4d2f7366cbe84937c29c2eca9"
         }
       ]
     }
