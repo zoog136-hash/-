@@ -5554,6 +5554,25 @@
         "canvas_size": 2048,
         "review_basis": "Strict nominal2048 fits exactRGBA mixednative-resolution 6pose composition. Physicalruntime sizes are separate SHA-pinned perposeC [1208,1208,2648,2768,2768,1208] reviewed from anatomicalbodylandmarks, notimage dimensions."
       }
+    },
+    {
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "death",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
+      "original_generated_file": "/workspace/scratch/halpas-NW-death-repair-v02/halpas-NW-death-v02.png",
+      "bytes": 2395749,
+      "sha256": "e3e27205c904a33343bf828f6154a45da9b8cb407ff3a1e43c704975e26dd806",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -5629,7 +5648,7 @@
     "transform:393:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-death-v01iso01.png",
     "transform:393:SW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-death-v01iso01.png",
     "transform:393:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
-    "transform:393:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
+    "transform:393:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
     "transform:393:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
     "transform:393:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-death-v01.png",
     "transform:393:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
@@ -6050,6 +6069,22 @@
             "Anatomicalhelmet/pauldron/backplate/pelvis comparisonagainstactualN/NE/W andNWidleC1280 supports perposeC [1208,1208,2648,2768,2768,1208] andgroundsupport metadata. Pythonlayoutmodule validates all6fit andsourceRGBA unchanged; actualcompiledphysical/game approval remains pending."
           ],
           "source_review_sha256": "0c9ac14b2d7340bc5dae508b607768e6d219a53e83881d3e2aa089c7543761a8"
+        },
+        {
+          "slot": "transform:393:NW:death",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 retain genuine NW rear-up-left body/head/pelvis, gold-rimmed dark dorsal plates and rear helmet. Initial0 and buckling1/kneeling2 match current correct NW guard; no immediate frontal pink breastplate, SW/downleft or NE/right-facing camera.",
+            "Six physical death phases: rear guard0, bowed shoulders with softened knees1, clear low two-knee collapse2, continuous rear/side torso fall3 with legs extending, low lateral settling4 and fully down stable rear-facing corpse5. There is no get-up, standing final pose, duplicate still, disappearing torso or arbitrary viewpoint swap.",
+            "NearLEFT shoulder→upperarm→elbow→forearm→empty hand remains a single connected chain, reaching floor on descent; farRIGHT shoulder→arm→wrist→hand continuously retains original purple sword as weapon arm rotates with fall. Exactly two arm chains and two articulated leg/boot chains throughout.",
+            "Original gold horned helmet, black/gold armor, two separate shoulder-root solid purple feather fans, burgundy LEFT cape and compact broad purple sword remain through corpse5. Wingfans fold gradually and cape pools as body falls; both attachments retained, no extra hands/arms/wingpair or membrane redesign.",
+            "Unchanged analyzer and complete-region guard PASS six distinct full-body regions at canvas1024. Original generated PNG bytes preserved, no masking/resampling/recoloring, importer thresholds unchanged; all full crown/wings/cape/sword/feet remain available."
+          ],
+          "source_review_sha256": "0e17583f5fe309b44ea685e0ead1833592d457f4232f62ad8e70d5bf9aefff53"
         }
       ],
       "compass_audit": {
