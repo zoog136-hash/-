@@ -3076,6 +3076,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "S",
+      "role": "hit",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-S-hit-repair/girtas-S-hit-v02.png",
+      "bytes": 2491159,
+      "sha256": "6bfdeece93c9951d5d235562657321acc30e7aa34bc930d41eb672e7f95e0c1d",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3172,7 +3191,7 @@
     "transform:267:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
     "transform:267:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
     "transform:267:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v01iso01.png",
-    "transform:267:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v01.png",
+    "transform:267:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
     "transform:267:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
     "transform:267:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v01.png",
     "transform:267:NW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v01.png",
@@ -3646,6 +3665,24 @@
             "Strict original analyzer rows6/phase_grid2/canvas1024/reference_rows0/3 passes with6 distinct pixel frames."
           ],
           "source_review_sha256": "564b772476020739685da9b2f8699fddb8d9ca9ea2e3ee454b0335fb09d9dbc7"
+        },
+        {
+          "slot": "transform:267:S:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Absolute compass: all six figures show SOUTH/screen-down front view, with frontal pale face and front chest emblem/armor visible. No left/right body yaw or side-view substitution occurs during recoil.",
+            "Anatomical right hand is consistently at IMAGE LEFT and holds the same one long sinuous original weapon in all six phases. IMAGE RIGHT is the unarmed left hand. The weapon stays low, without an offensive slash or hand swap.",
+            "Phase0 braces; phase1 lifts chin and pitches shoulders/chest backward-away; phase2 has maximum coherent torso/head recoil and a different free elbow/hip/knee configuration. Face remains frontal while the neck pitches back.",
+            "Phase3 uses staggered original feet and flexed knees to counterbalance, with lowered shoulders and an extending free arm. Phase4 regains the torso over the feet; phase5 settles into frontal guard with distinct foot/arm/hair placement.",
+            "Actual articulated head, shoulders, torso, arms, hips, knees and support stance change through the sequence; this is not global translation, tint/opacity, repeated portrait frames or an attack sequence.",
+            "Pale uncovered face, long pale/white hair, thin radial gold back-spines, original gold head structure, dark gold-trimmed armor and long dark skirt remain faithful to the original/canonical identity. The full weapon and boot/spine tips remain visible.",
+            "Unchanged strict analyzer plus complete-pose-region gate pass six complete distinct poses. Generated pixels remain untouched; no cropping, resampling, manual body edits, broad glow masking or validator relaxation."
+          ],
+          "source_review_sha256": "3f27dca9786e4e4d6c0f18d806730199b325d625ae2f2b2ef0a164e83eccdee4"
         }
       ]
     }
