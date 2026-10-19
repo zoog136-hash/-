@@ -7392,6 +7392,31 @@
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-E-run-right-flight-key-v01/result.json",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "walk",
+      "version": "v03mix01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
+      "original_generated_file": "/workspace/scratch/girtas-NW-walk-reviewed-composite-v01/girtas-NW-walk-v03mix01.png",
+      "bytes": 1981632,
+      "sha256": "a9a52c4c8fda46ebcc0f9147327409420b0ca2f2deb94f83cf7e6ad6c37c5c07",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "a9a52c4c8fda46ebcc0f9147327409420b0ca2f2deb94f83cf7e6ad6c37c5c07",
+        "canvas_size": 2048,
+        "review_basis": "Strictnominal2048exactRGBA2x3composition; independentcandidatephysicalPASSCs984/944fromhelmet/pauldron/girdlerigidmarkers, sourceRGBA/alpha16unchanged. Source2/5actualrear-toesupportNWgrounddepthpreserved, actualcompiledPlayerfinalQCpending."
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -7425,7 +7450,7 @@
     "transform:267:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-run-v01.png",
     "transform:267:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-walk-v01.png",
     "transform:267:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-run-v01.png",
-    "transform:267:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-walk-v01.png",
+    "transform:267:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
     "transform:267:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
     "transform:267:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
     "transform:267:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-run-v03composite03.png",
@@ -9007,6 +9032,23 @@
             "Existingstrict outwardtransparentregions/allforegroundowner/RGBA/layout validations passed; no sourcepixel/resample/threshold changes."
           ],
           "source_review_sha256": "5f23f631ecc28380e93d779dc2c1ca643ba27d44e61e86f5061a2a9e02c87abc"
+        },
+        {
+          "slot": "transform:267:NW:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-walk-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6faithfulGirtascorrectNWrearleftcamera: paleprofileonlywherevisible/longsilverhair/goldcrown/blackgoldarmor/thinrigidhardgoldradialrays/longdarkgoldtrimrobe/ONEsinuousgoldyellowblade. No genericredfeather/purpleblade/pants orbadNidle.",
+            "Exactly2arms/2legs: nearLEFTimageLEFTemptylowhand, farRIGHTimageRIGHTpartlybehindhaircontinuousclosedgripononeblade. Noextraarm/head/handflip/mirror.",
+            "Independent6SOURCEgaitPASS exactorder:0nearLEFTheelcontact,1LEFTmidstanceRIGHTpassing,2LEFTtoeoffRIGHTreach,3farRIGHTheelcontact,4RIGHTmidstanceLEFTpassing,5RIGHTtoeoffLEFTreach. Realoppositelead/stanceownershipandknee/anklechanges; notsameleg6/copytranslation/sharedmotion.",
+            "Independentphase5specificallyconfirmsfarRIGHTrearbootheelup/toedownsupportandnearLEFTforwardbootdorsiflexedprecontact, opposite2. Toeoff2/5useactualreartoecontactasnormalWALK, notbothAIR; projectedworldgroundcandidatefollowuprequired.",
+            "ExactlosslessselectedcompleteownedRGBAposemap andstrict6geometryPASS:6new0reuse/6unique/selectedstrongsourceboundary0/wholealpha16coverageonce/norescale/recolor/mirror/cleanup. Failedoriginalfull6HOLDs remainHOLD; foreignclippedfirstrawpose1notselected.",
+            "FreshindependentcandidatephysicalPASS:Cs984/944/944/944/944/984preservecorrectNWidleC944skull/pauldron/waistsizeandidle->0/5->0heading/bodyflow; NWforward/backfootdepth/rear-toesupportpreserved, noflatsoleY/fakeAIRroot. ActualcompiledTRES/Playerstillrequired."
+          ],
+          "source_review_sha256": "fff7c0ca9264bd20c590acc21fbb38188e001062cc67b70176f1ed5045c5733e"
         }
       ],
       "reopened_source_holds": [
@@ -11364,6 +11406,49 @@
       "actor_approval": false,
       "independent_source_review": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/independent-N-author-sixpose-source-root-review.json",
       "independent_source_review_sha256": "99bf2efeb3d1157f538c68399b4d3c3d61a4be367af3b3486afbc10f769a5fe2"
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "walk",
+      "source_sha256": "a9a52c4c8fda46ebcc0f9147327409420b0ca2f2deb94f83cf7e6ad6c37c5c07",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        984,
+        944,
+        944,
+        944,
+        944,
+        984
+      ],
+      "source_anchors": [
+        [
+          588,
+          856
+        ],
+        [
+          1841,
+          844
+        ],
+        [
+          558,
+          2113
+        ],
+        [
+          1847,
+          2111
+        ],
+        [
+          565,
+          3407
+        ],
+        [
+          1869,
+          3420
+        ]
+      ],
+      "review_basis": "IndependentcandidatephysicalSOURCElayoutPASS againstcorrectNWidle0C944/anchor240,456. Helmet/skull/pauldron/girdle rigidmarkers supportCs[984,944,944,944,944,984]; neverentiregear/bboxscale. RootXactualpelvis/waist withnaturalwalkingcountermotion; YpreservesauthoredfootdepthforNWforwardUPLEFT/backDOWNRIGHT, loadrise/contactheel-toe andsource2/5actualrear-toesupport ratherthanflatsoleY. Independentrawposeownership+7panelphysicalflowconfirmidle-entry/5->0correctcamera/bodyflow. MetadataonlysourceRGBA/regionsunchanged. ActualcompiledTRES/Player/groundtoe/rootfinalQCstillrequired. IndependentphysicalreviewSHA ea62d372103f2c8cd06a42a708b25d12ce86762f3eab66c27af93135ddd36dc5"
     }
   },
   "runtime_layout_attempt_holds": [
