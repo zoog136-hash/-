@@ -19,5 +19,5 @@ func _initialize() -> void:
 		push_error("existing fallback image missing")
 		quit(1)
 		return
-	print("SKILL_ICON_PRIVATE_BINDING_PASS")
+	print("SKILL_ICON_PRIVATE_BINDING_OK")
 	quit(0)
