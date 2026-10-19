@@ -7350,10 +7350,19 @@
         "actual_Player_scene_form_api": "PASS",
         "Player_position_collision_class_combat_sequence_preserved": "PASS",
         "missing_locomotion_not_replaced_or_aliased": "PASS",
-        "actual_Main": "NOT_RUN",
+        "actual_Main": "PASS_CANDIDATE_FORM_API",
         "visual_approval": "NOT_RUN",
         "completed_added": 0,
-        "actual_Player_dedicated_actions_and_markers": "PASS"
+        "actual_Player_dedicated_actions_and_markers": "PASS",
+        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW",
+        "actual_Main_cases": {
+          "directional_roles": 40,
+          "death": 1,
+          "native_clips": 48,
+          "normal_catalog_and_inventory_collision_combat_clock_preserved": true
+        },
+        "actual_Main_engine": "4.7.2.stable.official.ed1daf0bf",
+        "actual_Main_test": "tests/pr122_native_main_connection_test.gd"
       }
     },
     "transform:267": {
