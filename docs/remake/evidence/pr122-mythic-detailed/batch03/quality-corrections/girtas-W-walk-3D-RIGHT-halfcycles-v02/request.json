@@ -1,0 +1,38 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-3D-RIGHT-halfcycles01",
+  "source_batch": "batch03",
+  "expected_poses": 2,
+  "game_phases": [
+    4,
+    5
+  ],
+  "newly_authored_poses": 2,
+  "operation": "AUTHOR_DEDICATED_TRUE_3D_RIGHT_SUPPORT_WALK_POSES",
+  "corrective_reason": "Complete faithful trueW alternatingnearLEFT/farRIGHTwalk with actual3Dhip/knee/boot depth; old2Dcontactcandidate remainsunapproved/preserved. NewnearLEFT0 alreadyindependentPASS, LEFT1/2 strict2PASS+independentpending.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-v02/3D-W-RIGHT-support-game4-5-authority.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-v02/3D-W-RIGHT-support-game4-5-authority.png": "639d8da357978cae669fa682db5017d1ee527ba49f91586146037841fea59059",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png": "480e064084b9245c4ecc18d30ca4dc6b35a1e7c0e2c47257f108a0cfe3e8f23f",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  },
+  "reference_roles": [
+    "ABSOLUTE3Dleg/camera/support/occlusion authority",
+    "Identity/equipmentonly NOoldlegs",
+    "OriginalLONGrobe trim/materialonly"
+  ],
+  "prompt": "DRESS EXACT TWO 3D WALK MANNEQUINS OF IMAGE1 as the SAME faithful GIRTAS from IMAGE2/3. Image1 is ABSOLUTE authority for actual hip->thigh->knee->ankle/boot positions, near/far depth and occlusion, grounded support versus lifted swing. Image2 is exact character/equipment ONLY with old legs removed; image3 is original LONG ROBE material/trim ONLY. NO mannequin colors, guide marks, labels, floor or diagrams in final.\n\nTransparentRGBA1536x1024 landscape atlas, exactly TWO complete figures side by side in two768x1024cells. LEFTcell=game4, RIGHTcell=game5, matching image1. Identical body pixel size/camera in both; entire long blade/hair/hard gold needles/robe/boots must fit each cell with60px transparent margin, empty gutter and no interfigure overlap/glow bridges. No extra figures, backgrounds, shadows, lettering, motion smears or detached particles.\n\nBOTH are RIGHT FAR SUPPORT phases (ORANGE in image1), opposite from prior LEFT support. BLUE is anatomical LEFT NEAR leg on the same side as EMPTY LEFT near arm. ORANGE is RIGHT FAR leg on permanent weapon side. Copy exact 3D skeleton/occlusion, NEVER generic same near-leg-forward stance.\nGAME4 LEFTcell: RIGHT FAR leg is almost vertical underbody, boot FLAT at UPPER far floor, heel and toe carry weight. LEFT NEAR leg is visibly lifted PASSING: flexed near knee/ankle/boot in front of the far supporting leg, foot clearly ABOVE its LOWER near floor. Show the actual near thigh->bent knee->raised ankle chain; it must NOT become another grounded contact or extra limb.\nGAME5 RIGHTcell: RIGHT FAR leg trails BACK toward imageRIGHT, its rear TOE stays at UPPER far floor with heel raised. LEFT NEAR leg extends FORWARD toward imageLEFT, its leading heel is still clearly ABOVE LOWER near floor and toes slightly raised, ready for next LEFTcontact0. Near blue thigh/knee/shin is foreground crossing IN FRONT OF far orange rear leg; same exact blue-near/front and orange-far/back relationship asimage1. Do not turn phase5 into grounded LEFTcontact0 or swap only toe outlines. One support foot always grounded; NO wholebody AIR, running or jumping.\n\nMake true near/far leg ownership readable in natural walking opening/folds of original long dark GOLD-TRIMMED split ROBE. Preserve ankle-length hanging panels/back/side hem, same elegant motif; show real hip/thigh/knee continuity through slit and actual boot positions fromimage1. Never replace robe with segmentedpants or hide both upperleg roots under a flat skirt. Black hard boot/greave with faithful gold edging/knee/ankle articulation; no invented equipment.\n\nExactly original Girtas WEST left-facing side camera: pale profile face/nose LEFT, one side eye, long pale silver hair, original crown, narrow HARD straight GOLD radial back needles toward imageRIGHT (not soft wings/feathers/flames), black/gold fine armor and long robe. ONE head,TWOarms,TWOlegs. ONE original FULL LONG SINUOUS GOLD/ORANGE SOLID WAVY BLADE permanently held in RIGHT FAR hand with continuous shoulder/elbow/forearm/wrist/grip; natural body occlusion only. Near LEFT hand stays EMPTY, distinct relaxed gentle walk counter-swing; no weapon swap/extra hand/third arm/second blade. Keep attached hard spines/hair/cloth original material/color quality.\n\nOutput ONLY these two finished faithful Girtas RIGHTsupport4/5 poses in exact image1 positions on transparency.",
+  "transparent_background": true,
+  "attempt_policy": "One materially3D-authority generation then source/anatomy/support/geometryindependentreview; nofakefullcycle/identicalretries.",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}
