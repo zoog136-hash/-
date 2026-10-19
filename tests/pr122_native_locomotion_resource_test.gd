@@ -48,6 +48,9 @@ func _run() -> void:
 					var proof: Dictionary = track.runtime_layout_proof
 					assert(proof.source_pixels_unchanged and not proof.resampled and not proof.approval_granted)
 					assert(proof.source_sha256 == track.source_sha256 and proof.canvas_size == canvas)
+					if proof.has("playback_order"):
+						assert(track.role in ["walk", "run"] and not proof.newly_authored_poses)
+						assert(pose.row == proof.playback_order[phase])
 				else:
 					assert(atlas.get_size() == Vector2(1024, 1024))
 				checked_poses += 1

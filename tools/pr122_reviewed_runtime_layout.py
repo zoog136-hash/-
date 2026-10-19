@@ -25,7 +25,8 @@ def apply_reviewed_layout(source_path, base_geometry, review):
 
     A larger virtual canvas reduces runtime body size without resampling its
     PNG. Optional source anchors change metadata only. Neither a valid layout
-    nor its proof grants source-art, runtime-scale, or actor approval.
+    nor its proof grants source-art, runtime-scale, or actor approval. A reviewed
+    movement permutation changes playback only; each frame retains its authored row.
     """
     if not isinstance(review, dict) or review.get("status") != "REVIEWED_LAYOUT_PROPOSAL":
         raise ValueError("An explicit REVIEWED_LAYOUT_PROPOSAL is required")
@@ -79,6 +80,16 @@ def apply_reviewed_layout(source_path, base_geometry, review):
         raise ValueError("Derived layout changed the canonical half-width, five-eighths foot")
     if hashlib.sha256(path.read_bytes()).hexdigest() != source_sha:
         raise ValueError("Source bytes changed during layout analysis")
+    if "playback_order" in review:
+        order = review["playback_order"]
+        if review.get("role") not in ("walk", "run"):
+            raise ValueError("Reviewed playback_order is only allowed for walk/run")
+        if (not isinstance(order, list) or len(order) != 6
+                or any(type(value) is not int for value in order)
+                or sorted(order) != list(range(6))):
+            raise ValueError("Reviewed playback_order must be an exact integer permutation of 0 through 5")
+        derived["frames"] = [derived["frames"][phase] for phase in order]
+        derived["authored_phase_order"] = list(order)
     proof = {"status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED", "source_sha256": source_sha,
              "base_geometry_sha256": _digest(base_geometry), "derived_geometry_sha256": _digest(derived),
              "review_sha256": _digest(review), "review_basis": review["review_basis"],
@@ -86,4 +97,6 @@ def apply_reviewed_layout(source_path, base_geometry, review):
              "foot": derived["foot"], "source_anchors": [f["source_anchor"] for f in derived["frames"]],
              "runtime_pixel_scale_ratio": [base_canvas[0], canvas],
              "source_pixels_unchanged": True, "resampled": False, "approval_granted": False}
+    if "playback_order" in review:
+        proof.update(playback_order=list(review["playback_order"]), newly_authored_poses=0)
     return derived, proof
