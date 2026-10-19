@@ -1,0 +1,70 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/halpas-NW-walk-repair-v03/halpas-NW-walk-v03.png",
+    "/workspace/scratch/halpas-NW-canonical-key-v01/halpas-NW-canonical-key-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-NW-walk-repair-v03/halpas-NW-walk-v03.png": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+    "/workspace/scratch/halpas-NW-canonical-key-v01/halpas-NW-canonical-key-v01.png": "253725e7eb3e361cef5b2c6a04f72ef103f08c00be4a5106518551c54c46659a"
+  },
+  "reference_anatomy_reassessment": {
+    "path": "/workspace/scratch/halpas-NW-run-repair-v03/reference-NW-walk-independent-flight-anatomy-reassessment.json",
+    "sha256": "d817353633d0c879f8574b619a5f43ff997b89c5024949521d306417a83b6e17",
+    "source_art": "PASS",
+    "source_raw_sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+    "basis": "Visible6flightlegchainscontinuous; SEtrailingplantarflexionisnotanisolatedbootreversal; NWbody/helmet/back/armsremaincoherent."
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing NWrun source wrongNWorientation. New corrected NWcanonical + independentlyreassessedPASS NWwalk provide correctrear-leftmodel. Author dedicated6fastflight strongerlean/wingstroke/legtrail without forcingidletoeorientation ontoflight.",
+  "user_authorization": "Private production image tools allowed. No mainchat images/binary/previewlinks. One newrole sourceedit attempt, no identicalretry.",
+  "prompt": "Edit the SAME correct NORTHWEST Halpas from these references into ONE NEW SIX-PHASE FAST NW RUN/FLIGHT animation atlas. Image1 is validated NW gentle airborne walk/flight, the primary camera/anatomy authority. Image2 is original corrected NW standing canonical identity/handedness. Author SIX new fast-flight articulated drawings, NOT copying slowwalk poses or changing playback speed, no mirroring/redesign/heading turn.\n\nNW CAMERA STAYS EXACTLY AS REFS: flight direction is diagonally screen UPPER-LEFT/away, rear-left three-quarter body with black/gold segmented BACK/SPINE prominently visible, same helmet back/side left-away profile, same shoulder plane. Near anatomicalLEFT shoulder/free arm is LOWER-LEFT; far anatomicalRIGHT shoulder/armed arm is UPPER-RIGHT. Keep head, spine/back, pelvis, hip exits and shoulder plane in that same NW orientation in ALL SIX. Front chest skull/frontal face remain hidden. Never snap toward N/NE, show a front/SW body, or rotate head/hips separately. Same elevated orthographic/isometric camera and original physical head/torso/armor proportions.\n\nIDENTITY/HANDEDNESS: Exact closed gold-horn helmet, black articulated plates with precise gold edging, narrow segmented rear backplates, TWO original solid purple CRYSTAL feather-fan wings at TWO gold shoulder/back roots, tattered burgundy cape attached same anatomicalLEFT/back side, original ONE compact broad purple blade in anatomicalRIGHT hand. NearLEFT arm is always EMPTY, connected shoulder→elbow→visible free fist at lower-left; farRIGHT arm holds sword on upper/right side as references. Blade can guard naturally lowered outward/down-right beside body, but must remain owned by the same farRIGHT arm, never transferred/mirrored. Two coherent arms/hands and two legs/boots only, no additional wingpair, forearm, equipment or changed feather/cloth model. Same original wing root connections and fan-feather anatomy throughout rotations, natural far-wing overlap allowed.\n\nFAST RUN = STRONGER AIRBORNE FLIGHT than image1: controlled aerodynamic lean of entire SAME NW torso toward UPPER-LEFT, hips/legs/cape trail behind toward LOWER-RIGHT. BOTH BOOTS AIRBORNE. Genuine flexing knees and trailing shin/ankle follow-through, no grounded footsteps or alternating foot-contact requirement. IMPORTANT ANATOMY: trailing feet may naturally extend/plantarflex so toes project DOWN/BACK toward LOWER-RIGHT, just like validated flight image1. Do NOT force standing image2's UPLEFT planted-boot angle onto flight. Keep each boot continuously attached to same shin through physically plausible extended ankle/knee chain; no 180-degree isolated boot twist or knee disconnection. Tucked/extended legs can lag flight while body still faces NW. Stronger forwardlean, greater wingstroke, more rearward leg/cape stream than slowwalk, preserving normal limb lengths and body size.\n\nNew full6 wingbeat sequence0→1→2→3→4→5→0:0 HIGH extended fans above gold roots preparing power, knees tucked back;1 strong POWER DOWNSTROKE fans rotating through broad middle/horizontal rear span, small body lift, cape lags;2 LOWEST stroke with complete fans swept DOWN/BACK below shoulder/along hip plane, gold roots actually rotate and legs tuck in thrust;3 low-rear followthrough, fan partly closes and ankles extend rearward while cape wave catches up;4 recovery rises through MID height, wingjoint flexes/narrower fan profile and knees soften;5 late HIGH upstroke returning toward0, fans reopen while cape/forearm/leg response smoothly resolves. Large actual HIGH→MID→LOW→lowreturn→midrise→highreturn loop, not six wingfans parked above shoulders. Both original wingfans/roots retained, no detached fans, membrane, flame/smoke or shape morph. Six distinct real local articulated wingroot/feather/back/arm/hip/knee/cape drawings, no wholeimage transforms or duplicate stills. Same NW body/head/armplane for all6.\n\nLAYOUT transparentPNG1024x1536, TWO512px COLUMNS by THREE512px ROWS, SIX complete figures in reading order, one percell. Entire silhouette including high/low wingtips, cape, horns, blade and bothboots fits CENTRAL340x340 region, physical crown-to-boots about270-300px, at least80px fully empty transparent gutter to allcell edges. Uniform body scale across6, generous detached full-pose boundingboxes; no adjacentcell overlap. Never shorten/erase/crop gear to fit. High-detail crisp production RPG cutout with opaque solid armor/cloth/crystal, alpha0 background and limb gaps, thin1-2px antialias edge. Purple/light INSIDE solid crystals only. No exterior glow, bloom, haze, aura, fog, trails, particles, motionblur, shadows, floor, ground, text, numbers, labels, grids, frames or extra objects. Highest priorities: validated NW back-facing camera and nearLEFT-empty/farRIGHT-blade, exact boss identity, plausible connected flying leg chains, dedicated strong fast6phase complete wingcycle and full uncropped silhouettes.",
+  "requested_at": "2026-10-19T12:21:53.251876+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_cumulative_estimate_before_source": 3772114,
+  "private_jpeg_budget_limit": 8000000,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 preserve validated rear-left/NW head/helmet side-back, exposed gold-edged spine/back armor, pelvis and shoulder/arm plane, no frontal skull/chest/face or N/NE heading snap. Original body faces diagonally UP-LEFT while legs trail behind.",
+      "NearLEFT free fist/arm remains lower-left with continuous shoulder/elbow/wrist chain; farRIGHT arm still owns sole compact purple crystal blade upper/right. Same two arms/hands, two legs, no mirrored ownership or extra equipment.",
+      "New dedicated fullwingcycle:0HIGH,1middlepower,2LOWdownback,3lowfollowthrough/recovery,4middleupstroke,5highreturn. Actual gold-root/fan articulation, fan opening and delayed cape waves distinguish six newly drawn poses.",
+      "Compared with gentle NWwalk, body/hip axis has stronger upper-left aerodynamic lean, lower limbs stream farther back/downRIGHT with energetic knee/ankle changes and cape response. Body physical proportions remain coherent while posture changes; source is not a tinted/sharedplayback substitution.",
+      "Across all6 visible hip exits/knees/shins/ankle rims/boots form continuous plausible flight chains. Down/backSE pointed toes follow extended/plantarflexed trailing ankles; they are not treated as idletoe heading or a standalone180degree bootreversal. Armor/cape occlude proximal hip sockets, recorded as hiddengeometry uncertainty rather than observed defect.",
+      "Both established crystalline featherfans/roots, gold horns, narrow dark/gold backplates, burgundyLEFT/back cape and single samehand blade remain faithful and complete. Existing strictanalyzer+complete-region coverage PASS exactly6 distinct frames;0 alpha>100pixels touch outerimageedge."
+    ],
+    "visual_limitations": [
+      "Sourceart+local6framegeometry PASS only. Native SpriteFrames, physicalvirtualcanvas/hiproot, Player tests and temporal/game review remain for root.",
+      "No fixedcanvas size inferred from raw image size or wing/cape bbox. Flightbodyroot should follow anatomical hips with allowed bob, not forced plantedboot anchoring. No finalactor/defaultprofile/approvalcount change."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38",
+    "raw_bytes": 2663540,
+    "request_sha256": "90e8616a73d67da78acfcde4934b5cc9f9749aee28ac55b1e61a0743a803769d",
+    "review_sha256": "e21a266ece5cca8fe6691bf05438e0465e9894f9e3c574651bc9d4029d4d3dc5"
+  },
+  "available_repository_reference_sources": {
+    "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-253725e7eb3e361cef5b2c6a04f72ef103f08c00be4a5106518551c54c46659a.png",
+      "sha256": "253725e7eb3e361cef5b2c6a04f72ef103f08c00be4a5106518551c54c46659a",
+      "bytes": 1506812,
+      "original_reference": "/workspace/scratch/halpas-NW-canonical-key-v01/halpas-NW-canonical-key-v01.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
+  "output_sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38",
+  "output_bytes": 2663540,
+  "original_generated_file": "/workspace/scratch/halpas-NW-run-repair-v03/halpas-NW-run-v03.png"
+}

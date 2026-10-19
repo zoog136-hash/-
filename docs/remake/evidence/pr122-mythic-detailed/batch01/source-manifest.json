@@ -4984,6 +4984,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "run",
+      "version": "v03",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
+      "original_generated_file": "/workspace/scratch/halpas-NW-run-repair-v03/halpas-NW-run-v03.png",
+      "bytes": 2663540,
+      "sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -5006,7 +5025,7 @@
     "transform:393:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
     "transform:393:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
     "transform:393:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png",
-    "transform:393:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
+    "transform:393:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
     "transform:393:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
     "transform:393:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-run-v01.png",
     "transform:393:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
@@ -5342,6 +5361,23 @@
             "Source geometry retains six distinct complete physical RGBA regions and unchanged PNG pixels. Requested sparse320px/96px gutters were not met (regions about442–467px wide); actual strict complete coverage passes, with no strong outer-edge alpha. Layout/body scale must be reviewed in the actual runtime separately rather than inventing a source-art defect from resolution alone."
           ],
           "source_review_sha256": "d83da0817df58262708de58e7793c0c335af6a6e81a13ce6c9add33a06c8abc0"
+        },
+        {
+          "slot": "transform:393:NW:run",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 preserve validated rear-left/NW head/helmet side-back, exposed gold-edged spine/back armor, pelvis and shoulder/arm plane, no frontal skull/chest/face or N/NE heading snap. Original body faces diagonally UP-LEFT while legs trail behind.",
+            "NearLEFT free fist/arm remains lower-left with continuous shoulder/elbow/wrist chain; farRIGHT arm still owns sole compact purple crystal blade upper/right. Same two arms/hands, two legs, no mirrored ownership or extra equipment.",
+            "New dedicated fullwingcycle:0HIGH,1middlepower,2LOWdownback,3lowfollowthrough/recovery,4middleupstroke,5highreturn. Actual gold-root/fan articulation, fan opening and delayed cape waves distinguish six newly drawn poses.",
+            "Compared with gentle NWwalk, body/hip axis has stronger upper-left aerodynamic lean, lower limbs stream farther back/downRIGHT with energetic knee/ankle changes and cape response. Body physical proportions remain coherent while posture changes; source is not a tinted/sharedplayback substitution.",
+            "Across all6 visible hip exits/knees/shins/ankle rims/boots form continuous plausible flight chains. Down/backSE pointed toes follow extended/plantarflexed trailing ankles; they are not treated as idletoe heading or a standalone180degree bootreversal. Armor/cape occlude proximal hip sockets, recorded as hiddengeometry uncertainty rather than observed defect.",
+            "Both established crystalline featherfans/roots, gold horns, narrow dark/gold backplates, burgundyLEFT/back cape and single samehand blade remain faithful and complete. Existing strictanalyzer+complete-region coverage PASS exactly6 distinct frames;0 alpha>100pixels touch outerimageedge."
+          ],
+          "source_review_sha256": "e21a266ece5cca8fe6691bf05438e0465e9894f9e3c574651bc9d4029d4d3dc5"
         }
       ],
       "compass_audit": {
