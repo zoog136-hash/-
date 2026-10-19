@@ -99,6 +99,9 @@ static func build(mid: String, spec: Dictionary, portals: Array) -> Array:
 		if is_boss:
 			row["boss_id"]=str(source.get("boss_id",names[0]))
 			row["map_id"]=mid
+			# PNG Escaros merges five old fields; cooldown and remaining HP are
+			# intentionally shared with each corresponding original field boss.
+			row["boss_state_map_id"]=roster_source if not roster_source.is_empty() else mid
 			row["verification_status"]={"exact_spawn_area":"unverified","schedule":"twilight_boss_policy","roster":"existing_world_spawn_profile"}
 		result.append(row)
 	return result
