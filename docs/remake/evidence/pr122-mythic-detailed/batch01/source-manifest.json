@@ -6523,6 +6523,443 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:267",
+      "direction": "SW",
+      "role": "walk",
+      "version": "v03composite02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-walk-v03composite02.png",
+      "original_generated_file": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/girtas-SW-walk-reviewed-composite-v02.png",
+      "bytes": 5760960,
+      "sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+        "canvas_size": 2048,
+        "review_basis": "ExactRGBA6faithfulSWwalksourcekeyswithstrict6geometry/completegear; independentfull6gait/model/projectedrootcandidatePASS. Allowedvirtual2048, explicitoutwardtransparentrootpaddingunderunchangedowner/alpha/clipguards. FinalactualPlayer/actorapprovalstillHOLD.",
+        "assembly_proof": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/girtas-SW-walk-reviewed-composite-v02.assembly.json",
+        "assembly_proof_sha256": "911803de9ac1da8c12ef945de1c2e29d1b878de941d0b57bd9882fc7fd313912",
+        "source_art_review": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/independent-N-author-sixpose-source-root-review.json",
+        "source_art_review_sha256": "99bf2efeb3d1157f538c68399b4d3c3d61a4be367af3b3486afbc10f769a5fe2",
+        "actor_approval": false
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+        "base_geometry_sha256": "a3cbbeb0505c1cab3908f48d6220c51c22cdaa063f197e4775c5beba3c5fafc9",
+        "direction": "SW",
+        "review_basis": "Outward-only transparent source-regionpadding forprojectedgroundroots3/4/5; noRGBAchange,noignoredforeignbody, unchangedowner/strongthresholdguards. AuthoredrootproposalindependentQCpending. Independentfull6source/rootcandidatePASS; thisregionoperationonlyprovesoutwardpadding/ownership/RGBA, notactorapproval.",
+        "regions": [
+          [
+            147,
+            155,
+            1241,
+            1231
+          ],
+          [
+            1922,
+            407,
+            764,
+            726
+          ],
+          [
+            369,
+            1942,
+            798,
+            723
+          ],
+          [
+            1696,
+            1702,
+            1216,
+            1232
+          ],
+          [
+            352,
+            3423,
+            831,
+            854
+          ],
+          [
+            1682,
+            3225,
+            1242,
+            1251
+          ]
+        ],
+        "nearest_owner_sha256": "b3430ff1819bf7ce93a027a0fcae0e894afe4bc725bd9dfda213aa7a3273308d"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+        "source_RGBA_sha256": "bd83a9ec66c21a356dc327ba42e58579aec7b7a6a0134ced605a8bac3d957561",
+        "base_geometry_sha256": "a3cbbeb0505c1cab3908f48d6220c51c22cdaa063f197e4775c5beba3c5fafc9",
+        "derived_geometry_sha256": "6018041dbb2ce8f8bf37e81681945d7e43066a3ac1ea85bffb9ca4442b4859c1",
+        "review_sha256": "9803c7be48a68e6e2829dd37e47bd59596191fbe9e41c1132453831f4a709768",
+        "review_basis": "Outward-only transparent source-regionpadding forprojectedgroundroots3/4/5; noRGBAchange,noignoredforeignbody, unchangedowner/strongthresholdguards. AuthoredrootproposalindependentQCpending. Independentfull6source/rootcandidatePASS; thisregionoperationonlyprovesoutwardpadding/ownership/RGBA, notactorapproval.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 2077868,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            147,
+            155,
+            1241,
+            1231
+          ],
+          [
+            1922,
+            407,
+            764,
+            726
+          ],
+          [
+            369,
+            1942,
+            798,
+            723
+          ],
+          [
+            1696,
+            1702,
+            1216,
+            1232
+          ],
+          [
+            352,
+            3423,
+            831,
+            854
+          ],
+          [
+            1682,
+            3225,
+            1242,
+            1251
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "b3430ff1819bf7ce93a027a0fcae0e894afe4bc725bd9dfda213aa7a3273308d",
+        "foreground_owner_sha256": "d4b341c8e19be3b94ef0eae528e0f945f7b799f903ace3a645b8b929a440f0ff",
+        "detached_pixels": 37,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 7,
+            "bbox": [
+              2557,
+              720,
+              2558,
+              727
+            ],
+            "nearest_max": 5.830951894845301,
+            "second_nearest_min": 990.123729641907,
+            "owner_margin_min": 986.123729641907
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2556,
+              728,
+              2557,
+              729
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 987.996963558087,
+            "owner_margin_min": 984.996963558087
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2231,
+              753,
+              2232,
+              754
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 883.5440000362178,
+            "owner_margin_min": 881.5440000362178
+          },
+          {
+            "row": 1,
+            "pixels": 7,
+            "bbox": [
+              2547,
+              761,
+              2549,
+              767
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 949.2323214050394,
+            "owner_margin_min": 946.4038942802932
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2462,
+              787,
+              2463,
+              788
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 919.528683620038,
+            "owner_margin_min": 917.2926156425382
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              681,
+              789,
+              682,
+              790
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1157.3556065445055,
+            "owner_margin_min": 1155.1195385670057
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2463,
+              789,
+              2464,
+              790
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 917.5903225296134,
+            "owner_margin_min": 915.3542545521136
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              950,
+              2172,
+              951,
+              2173
+            ],
+            "nearest_max": 4.47213595499958,
+            "second_nearest_min": 795.5658363705671,
+            "owner_margin_min": 791.0937004155676
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2238,
+              2318,
+              2239,
+              2319
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 927.4378685389119,
+            "owner_margin_min": 924.6094414141656
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2237,
+              2320,
+              2238,
+              2321
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 925.66948745219,
+            "owner_margin_min": 923.66948745219
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2449,
+              3340,
+              2450,
+              3341
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 470.2435539164785,
+            "owner_margin_min": 468.00748593897873
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1005,
+              3609,
+              1006,
+              3610
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 986.3792374132781,
+            "owner_margin_min": 983.5508102885319
+          },
+          {
+            "row": 4,
+            "pixels": 2,
+            "bbox": [
+              778,
+              3743,
+              779,
+              3745
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1086.162510861059,
+            "owner_margin_min": 1083.162510861059
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1058,
+              3758,
+              1059,
+              3759
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 900.2277489613392,
+            "owner_margin_min": 897.9916809838394
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1066,
+              3786,
+              1067,
+              3787
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 876.2933298844629,
+            "owner_margin_min": 873.2933298844629
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1066,
+              3788,
+              1067,
+              3789
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 875.0417132914293,
+            "owner_margin_min": 872.0417132914293
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2650,
+              3858,
+              2651,
+              3859
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1025.6597876489066,
+            "owner_margin_min": 1022.8313605241603
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2602,
+              3871,
+              2603,
+              3872
+            ],
+            "nearest_max": 11.313708498984761,
+            "second_nearest_min": 1022.5463314686529,
+            "owner_margin_min": 1011.2326229696681
+          },
+          {
+            "row": 5,
+            "pixels": 2,
+            "bbox": [
+              2604,
+              3872,
+              2606,
+              3873
+            ],
+            "nearest_max": 10.198039027185569,
+            "second_nearest_min": 1024.0986280627467,
+            "owner_margin_min": 1013.9005890355611
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              738,
+              4010,
+              739,
+              4011
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1030.756033210575,
+            "owner_margin_min": 1028.5199652330753
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2372,
+              4111,
+              2373,
+              4112
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1193.3524207039595,
+            "owner_margin_min": 1191.1163527264598
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2236,
+              4159,
+              2237,
+              4160
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1059.8009247023706,
+            "owner_margin_min": 1057.5648567248709
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2647,
+              4337,
+              2648,
+              4338
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1483.8453423453536,
+            "owner_margin_min": 1481.609274367854
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -6552,7 +6989,7 @@
     "transform:393:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
     "transform:267:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
     "transform:267:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
-    "transform:267:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-walk-v01.png",
+    "transform:267:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-walk-v03composite02.png",
     "transform:267:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-run-v01.png",
     "transform:267:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-walk-v01.png",
     "transform:267:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-run-v01.png",
@@ -8120,6 +8557,24 @@
             "Existing source-owner/completealpha/RGBA/outward-only transparent padding and layout validation all passed, no sourcepixel/resample/threshold changes."
           ],
           "source_review_sha256": "4e9e346431de991da9bf919a1f40a54ad531bf5756b487fc26964553966fceea"
+        },
+        {
+          "slot": "transform:267:SW:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-walk-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-walk-v03composite02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six preserve true SW/front-left body and pale face direction, original pale hair, thin hard gold rays, long dark gold-trim robe and original long sinuous weapon in anatomical RIGHT/far hand; no model/weapon-hand swap.",
+            "Actual LEFTnear contact→midstance with RIGHTpassing→LEFTtoeoff/RIGHTfarreach→RIGHTfarcontact→RIGHTmidstance/LEFTpassing→RIGHTtrailtoeoff/LEFTnearreaching phases are distinct and exchange supporting/swinging legs. Boots/knees are articulated through coherent original robe panels.",
+            "Rigid skull/face/shoulder/torso sizes are visually coherent versus exact selectedSWidle underC[2560,1472,1472,2560,1752,2560]. Foreheadworld range approximately−119.07..−114.63 brackets idle−117.39; no material wholeactor size jump appears in this candidate.",
+            "SelectedSWidle nearLEFT/farRIGHT projecteddepth is9canonical, correctly distinct from SE26. Contact/mid roots retain that SWdepth and source2/5 explicitly author fore/aft rootcarry using actual toeoff/reach leg art.",
+            "Phase5farRIGHTtrailingtoe is locally−67.2canonical/−18.917world in projected screenY: near/far9 plus trailing fore/aftdepth. This is not asserted as verticalAIRheight; actualnearLEFTreachingboot and fartrailtoe form a plausible terminalwalk stance.",
+            "5→0 head drops2.252world and manualwaist drops1.914world into nearLEFTplant; 2→3 head drops1.944world into farRIGHTplant. Candidate loop/stepbodyarc is coherent without lowestfoot/bbox locking.",
+            "Existingstrict outwardtransparentregions/allforegroundowner/RGBA/layout validations passed; no sourcepixel/resample/threshold changes."
+          ],
+          "source_review_sha256": "5f23f631ecc28380e93d779dc2c1ca643ba27d44e61e86f5061a2a9e02c87abc"
         }
       ],
       "reopened_source_holds": [
@@ -10412,6 +10867,55 @@
       "runtime_validation": "SOURCE_AND_AUTHORED_ROOT_INDEPENDENT_PASS_ACTUAL_PLAYER_HOLD",
       "independent_source_review": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json",
       "independent_source_review_sha256": "e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a"
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-walk-v03composite02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+      "canvas_size": 2048,
+      "direction": "SW",
+      "key": "transform:267",
+      "role": "walk",
+      "authored_pose_canvas_sizes": [
+        2560,
+        1472,
+        1472,
+        2560,
+        1752,
+        2560
+      ],
+      "source_anchors": [
+        [
+          822,
+          1377
+        ],
+        [
+          2275,
+          1124
+        ],
+        [
+          728,
+          2648
+        ],
+        [
+          2360,
+          2925
+        ],
+        [
+          823,
+          4268
+        ],
+        [
+          2364,
+          4467
+        ]
+      ],
+      "review_basis": "Nativeforehead/centralhelmetmarker plusvisiblehead/shoulder/waistCproposal; measuredactual9canonicalnear/farSWidledepth; explicitnewterminalstancefore/aftprojectedgroundroot. ExactRGBA/transparentsourcepaddingchecked, independentfull6andactualruntimePENDING. Independent6sourceandprojectedrootcandidatePASS nowpinned /workspace/scratch/girtas-SW-walk-reviewed-composite-v02/independent-N-author-sixpose-source-root-review.json SHA256 99bf2efeb3d1157f538c68399b4d3c3d61a4be367af3b3486afbc10f769a5fe2. ActualcompiledPlayer/idletransition/5to0 andactorapprovalstillHOLD.",
+      "anchor_measurement_evidence": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/authored-projected-ground-root-proposal.json",
+      "anchor_measurement_evidence_sha256": "5640af3ccc58811f72ebd4efde982224c95bf17b78775dce2ebebd81d469497d",
+      "runtime_validation": "SOURCE_AND_AUTHORED_ROOT_INDEPENDENT_PASS_ACTUAL_PLAYER_HOLD",
+      "actor_approval": false,
+      "independent_source_review": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/independent-N-author-sixpose-source-root-review.json",
+      "independent_source_review_sha256": "99bf2efeb3d1157f538c68399b4d3c3d61a4be367af3b3486afbc10f769a5fe2"
     }
   },
   "runtime_layout_attempt_holds": [
