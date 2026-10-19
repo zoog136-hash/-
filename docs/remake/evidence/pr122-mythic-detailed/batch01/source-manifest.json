@@ -6183,6 +6183,25 @@
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-SE-walk-precontact-from-right-key-v02/result.json",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "idle",
+      "version": "v03",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
+      "original_generated_file": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+      "bytes": 2244539,
+      "sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -6297,7 +6316,7 @@
     "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
     "transform:267:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
     "transform:267:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
-    "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+    "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
     "transform:267:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
     "transform:267:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
     "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png"
@@ -7746,12 +7765,29 @@
             "Metadata-only v03composite03 passed existing preserve_action and stager source/owner/layout semantics in isolated scratchfixture; raw/C/regions/anchors and original4new+2reusedposecounts unchanged."
           ],
           "source_review_sha256": "19da3f5f7f0e46f301ba210da42f6aff1c82edcdf30f5211511d92e04f6c3cb9"
+        },
+        {
+          "slot": "transform:267:NW:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six NOW show correct rear-LEFT/NW three-quarter as only valid guard0v04 reference: near/imageLEFT shoulder/arm larger/lower-left, farRIGHT shoulder behind long pale hair, helmet left-away/back profile, diagonally rearleft pelvis and naturalNW stance. No pure axial Nrear/symmetric back camera returned.",
+            "Faithful Girtas: pale profile only where visible, long PALE SILVER hair, angular gold crown, blackgold layered armor, THIN HARD STRAIGHT GOLD RADIAL BACK RAYS, LONG DARK gold-trim robe, original boots and ONE LONG SINUOUS gold/yellow blade. No Halpaswingfans/purpleblade, redVmask, featherwings, pants substitution or broadstraight sword.",
+            "Exactly two arms/legs all6. NearLEFT arm stays low with EMPTY hand; farRIGHT shoulder/elbow/forearm/wrist continuously grips same low outward/down sinuousblade beside hip, natural partocclusion behind hair. No extra raised empty right fist, thirdarm, floating weapon or grip swap.",
+            "Six actual subtle idle articulations:0guard;1slight shoulder/back inhale;2gentle expanded breath with hair/robe lag;3exhale back/shoulder/hair lowered;4quiet weight/cloth settling;5return toward0. Hair ends and long robe panels move locally, torso/shoulder/hair shape varies beyond wholeimage translation. Feet retain sameNW guard without step/legswap/attack, hardrays follow torso rigidly rather than flapping as feathers.",
+            "Unchanged strict6distinctcompletegeometryC1024PASS, zero alpha>100 outerimage clipping. All full horn/rays/hair/robe/boots/blade silhouettes present with actualtransparent background, no postgeneration mask/resize/recolor or guide residues.",
+            "Metadata-only C944 perpose proposal and two-sole centroid/depth anchors normalized against ACTUAL faithful NWattackguard0C1696. Private source-layout7panel verifies same helmet/pauldron/girdle physicalbody size, consistentNWrearleft camera and idle6breathloop with intactlowRIGHTweapon/EMPTYLEFT. apply_reviewed_layout confirms sourcebytes/all6regions/RGBA unchanged; actualcompiledfinalQC stillrequired."
+          ],
+          "source_review_sha256": "ee1068e8be3d7de690035ebd3efbc48347abc9d64ee11c4c12ec5be2f0ce737f"
         }
       ],
       "reopened_source_holds": [
         {
           "schema": "pr122-reopened-source-hold-v1",
-          "status": "HOLD",
+          "status": "RESOLVED",
           "slot": "transform:267:NW:idle",
           "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
           "source_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
@@ -7763,7 +7799,15 @@
           "key": "transform:267",
           "direction": "NW",
           "role": "idle",
-          "id": "6037211bbddc3d19cb527caa1e78f3f90d4c74da4287e96d05bd77b8f6325726"
+          "id": "6037211bbddc3d19cb527caa1e78f3f90d4c74da4287e96d05bd77b8f6325726",
+          "resolution": {
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
+            "replacement_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+            "correction_sha256": "185b8e139b3cc3f4194096ec60097c6dd20d995c8b75e0a6378e99d9d0f9da06",
+            "source_review_sha256": "ee1068e8be3d7de690035ebd3efbc48347abc9d64ee11c4c12ec5be2f0ce737f",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0
+          }
         }
       ]
     }
@@ -9943,6 +9987,46 @@
       "runtime_validation": "HOLD_PENDING_ACTUAL_GAME_AND_FRESH_PRIVATE_RUNTIME_QC",
       "actor_approval": false,
       "new_actor_approvals": 0
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        944,
+        944,
+        944,
+        944,
+        944,
+        944
+      ],
+      "source_anchors": [
+        [
+          240,
+          456
+        ],
+        [
+          735,
+          458
+        ],
+        [
+          242,
+          964
+        ],
+        [
+          743,
+          967
+        ],
+        [
+          245,
+          1473
+        ],
+        [
+          735,
+          1470
+        ]
+      ],
+      "review_basis": "New correctNWcamera6 physicalscale/root proposal against actualcompiledNWattackguard0 r083C1696 (faithful camera), never oldNwrongidle. Neutral crown-to-two-sole projectedbodyheight + samehelmet/pauldron/girdle qualitative landmarks give uniformC944 candidate. Bothvisiblebootsolecentroid/depth normalizedtoactualguard0; preserve naturalstance/breath and allsourceRGBA. FullsourcePNG unchanged, no completewing/blade/ray/cape bbox scaling or actorapproval. ActualcompiledfinalQC required."
     }
   },
   "runtime_layout_attempt_holds": [
