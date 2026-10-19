@@ -127,14 +127,20 @@ func _draw_structure_geography() -> void:
 
 func _draw_boss_regions() -> void:
 	for spawn: Dictionary in field.data.get("monster_spawn",[]):
-		if str(spawn.get("mode",""))!="boss" or not spawn.has("polygon"): continue
-		var points: PackedVector2Array = _map_polygon(spawn)
+		if str(spawn.get("mode",""))!="boss": continue
+		var raw_polygons: Array=[]
+		if spawn.has("polygon"): raw_polygons=[spawn.polygon]
+		elif spawn.has("polygons"): raw_polygons=spawn.polygons
+		if raw_polygons.is_empty(): continue
 		var cells: Array = field.spawn_cells.get(str(spawn.id),[])
 		var stride: int = maxi(1,ceili(float(cells.size())/480.0))
 		for i: int in range(0,cells.size(),stride):
 			draw_circle(_point(field.cell_to_world(cells[i])),1.1,Color(.9,.35,.25,.45))
-		points.append(points[0])
-		draw_polyline(points,Color(.9,.35,.25,.7),1.0,true)
+		for raw: Array in raw_polygons:
+			if raw.size()<3: continue
+			var points: PackedVector2Array=_map_polygon({"polygon":raw})
+			points.append(points[0])
+			draw_polyline(points,Color(.9,.35,.25,.7),1.0,true)
 
 func _draw_hunting_region(region: Dictionary) -> void:
 	if str(region.type)=="safe": return
