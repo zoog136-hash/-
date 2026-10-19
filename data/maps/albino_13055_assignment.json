@@ -1,57 +1,260 @@
 {
-  "schema_version": 1,
-  "asset": "13055.png",
-  "assigned_by": "user_explicit_2026-10-19",
-  "purpose": "TWILIGHT_Albino_1_to_4_visual_map_source",
-  "source_authentication": {
-    "png_sha256": null,
-    "pixel_size": null,
-    "source_texture_available": false
+  "schema_version": 2,
+  "source": {
+    "filename": "13055.png",
+    "sha256": "28dfa558ecff9577b22c96219f527f667043a3465e4ce09539b926b939b7c444",
+    "bytes": 64777633,
+    "pixel_size": [
+      16773,
+      7687
+    ],
+    "source_location": "user-provided Google Drive, keep local/private",
+    "original_unchanged": true,
+    "thumbnail_comparison": "same geography as provided 190x87 thumbnail"
   },
-  "status": "PENDING_SOURCE_IMAGE_AND_REGION_BOUNDARY_VERIFICATION",
-  "storage_policy": "LOCAL_OR_PRIVATE_ONLY_DO_NOT_COMMIT_ORIGINAL_ART",
-  "source_geometry_policy": "DO_NOT_ASSUME_13055_MAPCACHE_OR_EXISTING_COLLISION_MATCHES_PNG",
-  "region_selection_policy": "VISUAL_INSPECTION_REQUIRED_NO_AUTOMATIC_QUADRANT_ASSIGNMENT",
+  "assigned_by": "user_explicit_2026-10-19",
+  "purpose": "TWILIGHT visual terrain source for Albino regions 1-4",
+  "status": "SOURCE_VERIFIED_FOUR_PRIVATE_CROPS_PRODUCED_GAMEPLAY_ALIGNMENT_PENDING",
+  "preview_grid": [
+    1900,
+    871
+  ],
+  "region_selection_policy": "4 terrain-specific seeded nearest-region groups; candidate visual boundaries only",
   "regions": [
     {
       "ordinal": 1,
       "map_id": "albino_01",
       "game_name": "알비노 분지 1구역",
-      "source_rect": null,
-      "verification": "PENDING",
-      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+      "visual_theme": "푸른 호수",
+      "preview_rect_xyxy": [
+        135,
+        155,
+        720,
+        670
+      ],
+      "source_rect_xyxy": [
+        1191,
+        1367,
+        6357,
+        5914
+      ],
+      "private_asset_filename": "albino_01_13055_visual.png",
+      "original_pixel_values_preserved": true,
+      "boundary_status": "CANDIDATE_REVIEW_REQUIRED",
+      "runtime_activation": "DISABLED",
+      "navigation_status": "NOT_YET_ALIGNED",
+      "collision_status": "NOT_YET_ALIGNED",
+      "spawns_and_portals": "PRESERVE_EXISTING_UNTIL_REAL_REMAP"
     },
     {
       "ordinal": 2,
       "map_id": "albino_02",
       "game_name": "알비노 분지 2구역",
-      "source_rect": null,
-      "verification": "PENDING",
-      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+      "visual_theme": "녹색 유적",
+      "preview_rect_xyxy": [
+        445,
+        190,
+        1085,
+        700
+      ],
+      "source_rect_xyxy": [
+        3928,
+        1676,
+        9579,
+        6178
+      ],
+      "private_asset_filename": "albino_02_13055_visual.png",
+      "original_pixel_values_preserved": true,
+      "boundary_status": "CANDIDATE_REVIEW_REQUIRED",
+      "runtime_activation": "DISABLED",
+      "navigation_status": "NOT_YET_ALIGNED",
+      "collision_status": "NOT_YET_ALIGNED",
+      "spawns_and_portals": "PRESERVE_EXISTING_UNTIL_REAL_REMAP"
     },
     {
       "ordinal": 3,
       "map_id": "albino_03",
       "game_name": "알비노 분지 3구역",
-      "source_rect": null,
-      "verification": "PENDING",
-      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+      "visual_theme": "화산 지대",
+      "preview_rect_xyxy": [
+        625,
+        85,
+        1380,
+        655
+      ],
+      "source_rect_xyxy": [
+        5517,
+        750,
+        12183,
+        5781
+      ],
+      "private_asset_filename": "albino_03_13055_visual.png",
+      "original_pixel_values_preserved": true,
+      "boundary_status": "CANDIDATE_REVIEW_REQUIRED",
+      "runtime_activation": "DISABLED",
+      "navigation_status": "NOT_YET_ALIGNED",
+      "collision_status": "NOT_YET_ALIGNED",
+      "spawns_and_portals": "PRESERVE_EXISTING_UNTIL_REAL_REMAP"
     },
     {
       "ordinal": 4,
       "map_id": "albino_04",
       "game_name": "알비노 분지 4구역",
-      "source_rect": null,
-      "verification": "PENDING",
-      "runtime_activation": "DISABLED_UNTIL_COLLISION_PORTALS_SPAWNS_VERIFIED"
+      "visual_theme": "황량한 분지",
+      "preview_rect_xyxy": [
+        345,
+        425,
+        1105,
+        855
+      ],
+      "source_rect_xyxy": [
+        3045,
+        3750,
+        9755,
+        7546
+      ],
+      "private_asset_filename": "albino_04_13055_visual.png",
+      "original_pixel_values_preserved": true,
+      "boundary_status": "CANDIDATE_REVIEW_REQUIRED",
+      "runtime_activation": "DISABLED",
+      "navigation_status": "NOT_YET_ALIGNED",
+      "collision_status": "NOT_YET_ALIGNED",
+      "spawns_and_portals": "PRESERVE_EXISTING_UNTIL_REAL_REMAP"
     }
   ],
+  "preview_seed_points": [
+    [
+      [
+        260,
+        425
+      ],
+      [
+        445,
+        350
+      ],
+      [
+        545,
+        275
+      ],
+      [
+        330,
+        515
+      ],
+      [
+        380,
+        450
+      ]
+    ],
+    [
+      [
+        600,
+        395
+      ],
+      [
+        690,
+        445
+      ],
+      [
+        790,
+        440
+      ],
+      [
+        780,
+        530
+      ],
+      [
+        630,
+        530
+      ],
+      [
+        710,
+        345
+      ],
+      [
+        925,
+        505
+      ]
+    ],
+    [
+      [
+        765,
+        185
+      ],
+      [
+        780,
+        280
+      ],
+      [
+        925,
+        245
+      ],
+      [
+        1050,
+        340
+      ],
+      [
+        1130,
+        400
+      ],
+      [
+        1145,
+        525
+      ],
+      [
+        1065,
+        475
+      ]
+    ],
+    [
+      [
+        500,
+        565
+      ],
+      [
+        615,
+        680
+      ],
+      [
+        790,
+        722
+      ],
+      [
+        900,
+        680
+      ],
+      [
+        520,
+        630
+      ],
+      [
+        875,
+        655
+      ]
+    ]
+  ],
+  "restrictions": {
+    "storage": "ONLY_IN_PRIVATE_USER_RESOURCE_PACK_NOT_PUBLIC_GITHUB",
+    "source_map_id": "Do not infer from the unrelated old server mapcache ID 13055",
+    "previews": "Do not present these crops as playable collision-validated maps",
+    "no_silent_activation": true
+  },
   "gameplay_contract": {
     "preserve_map_ids": true,
     "preserve_monster_boss_records": true,
     "preserve_player_save_progress": true,
     "preserve_portal_targets": true,
     "preserve_navigation_until_source_aligned": true,
-    "preserve_original_png_immutable": true
-  }
+    "preserve_original_png_immutable": true,
+    "preserve_legacy_field_json": true,
+    "preserve_other_prs": true
+  },
+  "pending_validation": [
+    "pixel-to-world scale/origin for each map",
+    "walkable/blocked terrain boundaries",
+    "spawn/portal coordinates and safe entry",
+    "foreground occlusion and draw order",
+    "streaming memory and FPS on Android",
+    "Main scene gameplay smoke and regression",
+    "CI before merge"
+  ]
 }
