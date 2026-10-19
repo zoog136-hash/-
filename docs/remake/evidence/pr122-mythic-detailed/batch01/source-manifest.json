@@ -5279,7 +5279,14 @@
         "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
         "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
         "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
-        "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png"
+        "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png"
       ],
       "slots": [
         "transform:393:SW:run",
@@ -5294,7 +5301,14 @@
         "transform:393:W:run",
         "transform:393:NW:idle",
         "transform:393:NW:walk",
-        "transform:393:NW:run"
+        "transform:393:NW:run",
+        "transform:393:N:death",
+        "transform:393:NW:hit",
+        "transform:393:NW:death",
+        "transform:393:N:hit",
+        "transform:393:E:hit",
+        "transform:393:SE:hit",
+        "transform:393:NE:hit"
       ],
       "reason": "SW run and N/NE/NW attack heading defects; NW locomotion/front view and E/W versus SE/SW cardinal separation require correction",
       "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
@@ -5824,7 +5838,27 @@
           "cardinal_audit_criterion": "Compare projected nose/visor, mask/cheek visibility, shoulder and pelvis foreshortening plus knee/boot overlap with diagonal counterpart. Do not require anatomically flat profiles, hidden chest, or derive heading from cape/wing/airborne trailing-foot direction."
         },
         "approval_change": 0
-      }
+      },
+      "independent_quality_findings": [
+        {
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-first-three-source-holds-r062.json",
+          "sha256": "3aeddd3fb0c1bda652d6892c286269d9c90d281ccaf20605e5528b391f6ed0e9",
+          "status": "HOLD",
+          "actor_approvals_added": 0
+        },
+        {
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-N-hit-source-hold-r062.json",
+          "sha256": "00dc1b290220492fedc465911a0786000abc69ba87494041ed93784176f4c867",
+          "status": "HOLD",
+          "actor_approvals_added": 0
+        },
+        {
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-E-SE-NE-hit-anatomy-holds-r062.json",
+          "sha256": "a0ac9dd733129b5c501bb7ca7d778dc2783d404eef91366c0555fbb24bc5337d",
+          "status": "HOLD",
+          "actor_approvals_added": 0
+        }
+      ]
     },
     {
       "key": "transform:267",
