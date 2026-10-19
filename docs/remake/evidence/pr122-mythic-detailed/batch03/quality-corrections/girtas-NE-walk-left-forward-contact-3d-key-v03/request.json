@@ -1,0 +1,43 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "one_NEW_true_NE_farLEFT_forward_contact_fixedbone3D_primary",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phases": [
+    0
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/NE-LEFT-forward-contact0-fixedbone-3d-guide.png",
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/faithful-NE-identity-UPPERBODY-NO-LEGS.png",
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/faithful-NE-LONG-ROBE-only-NO-LEGS.png",
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/faithful-NE-RIGHT-sinuous-weapon-only.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/NE-LEFT-forward-contact0-fixedbone-3d-guide.png": "e84196530563ff44e4964195b900e9e9e8805cb1d38459f3f53ed47900a03ac9",
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/faithful-NE-identity-UPPERBODY-NO-LEGS.png": "1c06188e10be257a76a779a0b46982bf450f51d21c7ee786ac152eb3002c9c74",
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/faithful-NE-LONG-ROBE-only-NO-LEGS.png": "ff74d238147e598f6486c3fbf9136a169a6d4729feb6278608ce59aed5c3d615",
+    "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/faithful-NE-RIGHT-sinuous-weapon-only.png": "fba50d589080cfec6e5e794a09dced995487373eacd83e7fa1aa1ac6c3a613a0"
+  },
+  "transparent_background": true,
+  "prompt": "Author exactly ONE NEW detailed GIRTAS NE WALK GAME0 LEFT-FORWARD HEEL CONTACT using FIRST FIXED-BONE 3D MANNEQUIN as the ONLY whole-body/leg/foot/camera POSE AUTHORITY. DRESS its exact 3D bones in the original Girtas armor/longrobe. SECOND is correct NE original upperbody identity with oldlegs REMOVED; THIRD original LONGROBE material only; FOURTH original longRIGHTweapon detail only. These identity crops are NOT pose templates. No copying old unseen legs or neutral standing pose. Do not draw mannequin, graybody, flat lowpoly, guidecolors or floor in final.\n\nEXACT THREE-DIMENSIONAL FORWARD WALK: mannequin MAGENTA limb is anatomical FAR LEFT (-X), its hip stays far/IMAGE LEFT but its thigh→knee→ankle→HEEL extends FORWARD world+Y, projecting UP-RIGHT IN FRONT OF ITS OWN LEFT HIP. UP-RIGHT is relative to the LEFT HIP'S GROUND PROJECTION, not the raised hip's image-height: actual heel stays BELOW the elevated pelvis in image exactly as FIRST3D. No belly-high highknee pose. LEFT boot must actually be forward towardCENTER/UPRIGHT, not outLEFT/back like failed oldcontact. GREEN limb is anatomical NEAR RIGHT (+X), its hip stays near/IMAGE RIGHT but leg TRAILS world-Y, its knee/shin/toe project DOWN-LEFT BEHIND ITS OWN RIGHT HIP. RIGHT heel raised, RIGHTtoe planted behind; arrivingLEFT heel planted forward acceptingweight, slighttoe-up initialcontact. Exactly the source3D hip/knee/ankle positions/groundplane, fixed thigh/shin lengths. Normal grounded WALK double-support, no run/jump/twofootflight.\n\nCRITICAL SCREEN OCCLUSION: LEFT and RIGHT FOOT screen-X order MAY CROSS because farLEFT is forward UP-RIGHT and nearRIGHT trails DOWN-LEFT! This is correct perspective; it does NOT change anatomical hip/leg ownership. Do NOT force LEFTbootoutIMAGELEFT and RIGHTbootoutIMAGERIGHT, that makes the wrong backwards/lateralstride. Trace every foot through its original coloredshin→knee→hip. At overlap the RIGHTnear leg naturally occludes farLEFT, never swaphips/inventthirdleg. Match FIRST actual leading and trailing directions, not a mirrored/equallyspread stance. Sameforwardworld+Y for BOTHlegs across walkcycle.\n\nPreserve original model quality in identity refs: true NE rearRIGHT threequarter camera, predominantly BACK with longPALE/SILVERhair, visible nearRIGHT shoulder/weaponarm IMAGE RIGHT, foreshortened farLEFT shoulder and EMPTYLEFT hand, oblique hips. Original GOLD horncrown, thin HARD GOLD radialspines, black/gold heavyarmor, LONG DARK GOLDTRIMROBE toankles. Part/fold the SAME longrobe only enough to show the genuine two jointchains/boots, keep cape/hem length and equipment, no pants/shortskirt/barehumanthigh. Original one LONG SINUOUS orangegold weapon in anatomical NEAR RIGHT HAND continuously, emptyLEFT; exactly2arms. Fullblade/hardspines/hair/robe/boots retained, no redVmask/flamefeatherfan/wings/broadsword/newgear/handtransfer/frontface/pureN symmetricback/pureEside.\n\nBody/hip/leg proportions and camera are FIRST geometry, while rendering/materials/armor shape are original detailed hand-painted gameart fromSECOND/THIRD/FOURTH. Rich original gold filigree/hardarmor planes/palehair strands, not a generic armored mannequin. Weight lands onto farLEFT heel with modest knee softness, RIGHTrear toe planted and heelUP, body slightNEforwardwalklean, no extreme lunge. Loweredleg/foot joint geometry must genuinely change from identityrefs; no cloth-only animation.\n\nOUTPUT ONE full isolated transparent requested1024squareRGBA figure, body500–600px/fullgear≤800px, ≥96px alpha0 outerclearance, no cropping/shortening. Hard opaque blade with internalshine only, no outwardglow/haze/shadow/floor/groundpad/aura/particles/blur/trails/text/grid/labels/arrows/coloredguides/duplicates. Final actual check: farLEFT hip→knee→HEEL in FRONT projectedUPRIGHT, nearRIGHT hip→knee→TOE behind projectedDOWNLEFT, genuineNEforwardwalk with two connected limbs, faithfuloriginalmodel.",
+  "corrective_reason": "Independent full6SOURCEreview confirmed oldLEFT0/5 are backward UPLEFT, notparallelNEforwardstride. Root authorized genuinelynewLEFTforward0 thennew5onlyafterPASS. Exactfixedbone NE3D PRIMARY with projectedfootordercrossing; alloldlegpose conditioningremoved. Preserve0/5/HOLDatlases andcorrect1/2/4/newRIGHT3; no rootdisguise/no sixregen.",
+  "user_authorization": "Private production imagegen authorized; no mainchatimages; continue actualUnique animations onPR122 preserving priorassets/approvals.",
+  "root_authorization": "2026-10-19 root: Make only genuinefarLEFTforward0 (hip/knee/heel toward projectedNE UPright consistentwith1), then genuinelyparallel LEFTreach5 asneeded, using exactNE3Djointprojection fromNWauthor method +faithfulidentity.",
+  "independent_source_reviewer": "/root/girtas_movement_source_runtime_qc confirmed actualfarhip→thigh→knee→boot0 isbackward; source5followsbackward0; pinnedJSON forthcoming, preservechatjudgmentinreceipt.",
+  "fixedbone_3d_proof_path": "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/fixedbone-NE-contact0-3d-projection-proof.json",
+  "fixedbone_3d_proof_sha256": "0c913e84cb113d8a02751b595750be55db2f40cfa9999a23c9e771dd9e873a6c",
+  "identity_crop_proofs_path": "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/identity-material-reference-crop-proofs.json",
+  "identity_crop_proofs_sha256": "87d3e3d2507b9e3fabd97e8801252f12647081e975a07fedcd77df9a924351b5",
+  "requested_at": "2026-10-19T15:27:27.393073+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_poses": 0,
+  "actor_approval": false,
+  "generation_budget": "ONE_material_trueLEFTforward0; no identicalcompletedfailedretry.",
+  "pre_call_clarification": "Root clarified +Y NE advance relative HIP GROUND PROJECTION; heel remains belowraisedpelvis. Earlier unsubmittedrequestsnapshot preserved, modelcalls0."
+}
