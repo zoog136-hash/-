@@ -6,10 +6,10 @@
   "actors": {
     "transform:393": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r008/SpriteFrames.tres",
-      "frames_sha256": "0b309a3ab589d5f0d056a9e087f7f3deb382f32a6a0ef4a18449c961a534c0b6",
-      "native_track_count": 12,
-      "native_pose_count": 72,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r009/SpriteFrames.tres",
+      "frames_sha256": "168ed23faa9e890f60bcc12e93ad1800cdfbd33695b63042f3e404bb12f9f742",
+      "native_track_count": 13,
+      "native_pose_count": 78,
       "canvas_size": [
         1024,
         1024
@@ -313,6 +313,158 @@
             ],
             "distinct_pixel_frames": 6,
             "neutral_height": 338.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "walk",
+          "animation": "walk_6",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
+          "source_sha256": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r009/N-walk.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  79,
+                  84,
+                  383,
+                  371
+                ],
+                "margin": [
+                  335,
+                  273,
+                  641,
+                  653
+                ],
+                "source_anchor": [
+                  256,
+                  451
+                ],
+                "rgba_sha256": "4e4340b5ed5ed49ff9f046705839e5499397b5dc70791bacb2db2391671864d6"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  563,
+                  137,
+                  415,
+                  313
+                ],
+                "margin": [
+                  307,
+                  331,
+                  609,
+                  711
+                ],
+                "source_anchor": [
+                  768,
+                  446
+                ],
+                "rgba_sha256": "826ff9e9e2f176f1105df8963c3b53ffa8f09ee4d212836d3e619bd14dc30f25"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  72,
+                  572,
+                  395,
+                  373
+                ],
+                "margin": [
+                  328,
+                  271,
+                  629,
+                  651
+                ],
+                "source_anchor": [
+                  256,
+                  941
+                ],
+                "rgba_sha256": "7dceacdb87250ca7e2bece81d0e60cfe3816256193f827b75eaec2fcacc182d2"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  556,
+                  611,
+                  426,
+                  325
+                ],
+                "margin": [
+                  300,
+                  319,
+                  598,
+                  699
+                ],
+                "source_anchor": [
+                  768,
+                  932
+                ],
+                "rgba_sha256": "c2c92c8cfda89e8e934d4995c2b3e6b515b62141e4e2799063aaf9cc16065ca4"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  52,
+                  1074,
+                  437,
+                  370
+                ],
+                "margin": [
+                  308,
+                  274,
+                  587,
+                  654
+                ],
+                "source_anchor": [
+                  256,
+                  1440
+                ],
+                "rgba_sha256": "87f3f5d7e6b74f157a4955bfd65417f4c49a3678b6bd75ceba9f611fd0d67c97"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  552,
+                  1105,
+                  434,
+                  335
+                ],
+                "margin": [
+                  296,
+                  309,
+                  590,
+                  689
+                ],
+                "source_anchor": [
+                  768,
+                  1436
+                ],
+                "rgba_sha256": "7611b32263384e3bbe9d1a69eff147e215f03b4e435cb6576c371c9bf9ef56a4"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 342.0,
             "canvas_size": [
               1024,
               1024
@@ -1845,7 +1997,6 @@
         }
       ],
       "missing_locomotion": [
-        "walk_6",
         "walk_7",
         "run_6",
         "run_7"
@@ -1863,19 +2014,19 @@
       "visual_review": "NOT_RUN; image generation and preview tools forbidden",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r008/NativeMotionProfile.tres",
-      "native_profile_sha256": "4947a1aba3465ada8ff308a4af7759dce002ae26c2077457703b87d1c580c82d",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r009/NativeMotionProfile.tres",
+      "native_profile_sha256": "e10bcbce9b3bb64d37374747a9dbda1b6f6ad254943b55386a0db00f5526d011",
       "native_profile_basis": {
         "display_height": 110.0,
-        "source_reference_height": 348.75,
-        "pixel_scale": 0.3154121863799283,
-        "foot_offset_y": -40.37275985663082,
+        "source_reference_height": 342.0,
+        "pixel_scale": 0.3216374269005848,
+        "foot_offset_y": -41.16959064327485,
         "sizing_review": "HOLD; native staging only",
         "production_catalog_replaced": false
       },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 72,
+        "distinct_native_poses": 78,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -2723,12 +2874,33 @@
           "visual_approval": "NOT_RUN",
           "completed_added": 0
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r008/SpriteFrames.tres",
+        "frames_sha256": "0b309a3ab589d5f0d056a9e087f7f3deb382f32a6a0ef4a18449c961a534c0b6",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r008/NativeMotionProfile.tres",
+        "native_profile_sha256": "4947a1aba3465ada8ff308a4af7759dce002ae26c2077457703b87d1c580c82d",
+        "native_track_count": 12,
+        "native_pose_count": 72,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 72,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0
+        }
       }
     ]
   },
   "next_locomotion_source": {
     "key": "transform:393",
     "direction": "N",
-    "role": "walk"
+    "role": "run"
   }
 }
