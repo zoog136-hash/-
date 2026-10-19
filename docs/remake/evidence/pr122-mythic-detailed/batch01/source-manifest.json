@@ -3112,6 +3112,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "E",
+      "role": "idle",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+      "original_generated_file": "/workspace/scratch/halpas-E-idle-repair/halpas-E-idle-v02.png",
+      "bytes": 2482337,
+      "sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3190,7 +3209,7 @@
     "transform:393:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
     "transform:393:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
     "transform:393:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-death-v01.png",
-    "transform:393:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+    "transform:393:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
     "transform:393:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
     "transform:393:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
     "transform:393:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png",
@@ -3327,6 +3346,22 @@
             "At shared source-pixel resolution, translated only onto a common foot baseline, new neutral attack body scale is close to NE walk. No image scaling or bbox-height normalization was performed."
           ],
           "source_review_sha256": "ff13239209d03922311cd2f86ad892a57008c8d3f494ba18749a5cda9039fe72"
+        },
+        {
+          "slot": "transform:393:E:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six helmet nose/visor, foreshortened sternum, pelvis and side-view legs retain true screen-RIGHT heading; this is clearly different from the old front-right/SE model.",
+            "Near/far shoulders and hips occlude as a coherent lateral elevated-camera view; helmet and shoulder upper planes remain visible. No concrete camera-elevation mismatch identified at game-view detail.",
+            "Black/gold helmet and armor, burgundy cape, crystalline wings, single established blade and anatomical weapon hand remain coherent. Far wing is naturally occluded by lateral projection.",
+            "Six articulated idle phases vary wing joints, feather spread, cape fold and shoulder/hip response while retaining exact heading; no translation-only or view-rotation sequence.",
+            "Complete, uncropped figures. Source physical pixel height is larger than N/S references, but private QC-only uniform0.80x display aligns shoulder, hip and boot landmarks closely; no isolated torso/limb elongation remains evident."
+          ],
+          "source_review_sha256": "9fcb6ec666457bc89edd591286faa8ca3ce18aa623503e0d3f8e26f4b9ffd5fb"
         }
       ],
       "compass_audit": {

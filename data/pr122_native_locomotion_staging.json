@@ -6,8 +6,8 @@
   "actors": {
     "transform:393": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r047/SpriteFrames.tres",
-      "frames_sha256": "10efc7ca7fad7825532742e9c904463541cf8f3a155089bc0dd3c94949b1c82e",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r048/SpriteFrames.tres",
+      "frames_sha256": "5c411cd06d397ebb3852f2b314d359013368a09893013ac87a5cedc62d17d8b3",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -479,12 +479,12 @@
           "direction": "E",
           "role": "idle",
           "animation": "idle_0",
-          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
-          "source_sha256": "77fdf18c910fdf1e80da6d6e05fcf4e1217472267a916d3f38bf9e2a1274880e",
-          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r037/E-idle.png",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+          "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r048/E-idle.png",
           "geometry": {
             "image_size": [
-              1536,
+              1024,
               1536
             ],
             "frames": [
@@ -492,139 +492,190 @@
                 "row": 0,
                 "direction": "E",
                 "region": [
-                  136,
-                  52,
-                  530,
-                  411
+                  53,
+                  29,
+                  451,
+                  451
                 ],
                 "margin": [
-                  264,
-                  233,
-                  494,
-                  613
+                  437,
+                  353,
+                  829,
+                  829
                 ],
                 "source_anchor": [
-                  384,
-                  459
+                  256,
+                  476
                 ],
-                "rgba_sha256": "6277e52783fa7f268528da7f3cda52ec32b767344ab9d266f29ed37983f23968"
+                "rgba_sha256": "66591853ac00ea478a0e9eaad02b7b25772f9e874723fd80d773e509fea650c2"
               },
               {
                 "row": 1,
                 "direction": "E",
                 "region": [
-                  922,
-                  32,
-                  485,
-                  449
+                  565,
+                  21,
+                  440,
+                  460
                 ],
                 "margin": [
-                  282,
-                  195,
-                  539,
-                  575
+                  437,
+                  344,
+                  840,
+                  820
                 ],
                 "source_anchor": [
-                  1152,
+                  768,
                   477
                 ],
-                "rgba_sha256": "77014e8fbed74f70dcfa2ce649e3f52fe460187052cc4e0a2e5eea68d7306f08"
+                "rgba_sha256": "7c984ba0f7ba922f5f60d44491585177c85bc6407f03be6b0885c9392a895c25"
               },
               {
                 "row": 2,
                 "direction": "E",
                 "region": [
-                  139,
-                  532,
-                  520,
-                  475
+                  35,
+                  487,
+                  486,
+                  495
                 ],
                 "margin": [
-                  267,
-                  169,
-                  504,
-                  549
+                  419,
+                  309,
+                  794,
+                  785
                 ],
                 "source_anchor": [
-                  384,
-                  1003
+                  256,
+                  978
                 ],
-                "rgba_sha256": "61f47eb0d3b8223416651f9fb952aabf39ff8f3cffc28ce01b815fe2789d6001"
+                "rgba_sha256": "d259ea14c74b7509d904da809e7df39110a57afcfed87f49e466f35b719381d6"
               },
               {
                 "row": 3,
                 "direction": "E",
                 "region": [
-                  921,
-                  581,
-                  485,
-                  376
+                  568,
+                  550,
+                  446,
+                  433
                 ],
                 "margin": [
-                  281,
-                  268,
-                  539,
-                  648
+                  440,
+                  371,
+                  834,
+                  847
                 ],
                 "source_anchor": [
-                  1152,
-                  953
+                  768,
+                  979
                 ],
-                "rgba_sha256": "16a1b4cba1d5f03c9bd2669a07a28f2f1e676d9d4d396477e0ad2d5b1984c1f5"
+                "rgba_sha256": "05b85ef28ffdd6eed93f28dc961cd25d53828813ccf91fb157c3175997ce5e2a"
               },
               {
                 "row": 4,
                 "direction": "E",
                 "region": [
-                  142,
-                  1082,
-                  532,
-                  397
+                  46,
+                  1051,
+                  453,
+                  411
                 ],
                 "margin": [
-                  270,
-                  247,
-                  492,
-                  627
+                  430,
+                  393,
+                  827,
+                  869
                 ],
                 "source_anchor": [
-                  384,
-                  1475
+                  256,
+                  1458
                 ],
-                "rgba_sha256": "f136e29298275e9b4011f7dcf23b0331794f2a12ea538b731872c187a7aa9799"
+                "rgba_sha256": "dd64aec7b1ef8985a81f4042efe577f75dd4579607bfc4654b33ac606b01cea7"
               },
               {
                 "row": 5,
                 "direction": "E",
                 "region": [
-                  922,
-                  1077,
-                  484,
-                  408
+                  563,
+                  1024,
+                  452,
+                  439
                 ],
                 "margin": [
-                  282,
-                  236,
-                  540,
-                  616
+                  435,
+                  365,
+                  828,
+                  841
                 ],
                 "source_anchor": [
-                  1152,
-                  1481
+                  768,
+                  1459
                 ],
-                "rgba_sha256": "45f8b2e11863228e9b07054cc2934a495e91d8e3b62b5d1c72d0733fb55a4171"
+                "rgba_sha256": "83d340ec639f15f67696395078ac1a7aa1202f7b6f0804dfcbac26f025197619"
               }
             ],
             "distinct_pixel_frames": 6,
-            "neutral_height": 387.5,
+            "neutral_height": 436.0,
             "canvas_size": [
-              1024,
-              1024
+              1280,
+              1280
             ],
             "foot": [
-              512,
-              640
+              640,
+              800
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+            "base_geometry_sha256": "4a78c3c582a2388b72e0808a7e1a40efb50bdf1d63876ba80a9d31c81a2f56ae",
+            "derived_geometry_sha256": "5ce325911eb26701e8e28ea19269cb62edfb3b752eb3007742b7224ae869d500",
+            "review_sha256": "4828c2b047db012892bc3b188898030ce6763e22bc8ca08baee9b6eeb87b9911",
+            "review_basis": "Private uniform0.80 display comparison aligns E shoulder/hip/boot landmarks with N/S; preserve correct lateral proportions and entire PNG; virtualcanvas1280 normalizes to1024 without resampling. Final scale/loop review pending",
+            "direction": "E",
+            "pose_count": 6,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ],
+            "source_anchors": [
+              [
+                256,
+                476
+              ],
+              [
+                768,
+                477
+              ],
+              [
+                256,
+                978
+              ],
+              [
+                768,
+                979
+              ],
+              [
+                256,
+                1458
+              ],
+              [
+                768,
+                1459
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1280
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -7331,8 +7382,8 @@
       "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r047/NativeMotionProfile.tres",
-      "native_profile_sha256": "aae6942e3eae38c970606272f505886102ed12f7b15c383da17917ae8e68d95b",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r048/NativeMotionProfile.tres",
+      "native_profile_sha256": "779f229936374a022db997a993e66581f2afd7d822570209292d414527833735",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 350.5,
@@ -7351,7 +7402,7 @@
         "Player_position_collision_class_combat_sequence_preserved": "PASS",
         "missing_locomotion_not_replaced_or_aliased": "PASS",
         "actual_Main": "NOT_RUN",
-        "visual_approval": "HOLD_COMPASS_CORRECTIONS_AND_FINAL_QUALITY",
+        "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
         "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS",
         "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
@@ -7438,6 +7489,22 @@
               "At shared source-pixel resolution, translated only onto a common foot baseline, new neutral attack body scale is close to NE walk. No image scaling or bbox-height normalization was performed."
             ],
             "source_review_sha256": "ff13239209d03922311cd2f86ad892a57008c8d3f494ba18749a5cda9039fe72"
+          },
+          {
+            "slot": "transform:393:E:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six helmet nose/visor, foreshortened sternum, pelvis and side-view legs retain true screen-RIGHT heading; this is clearly different from the old front-right/SE model.",
+              "Near/far shoulders and hips occlude as a coherent lateral elevated-camera view; helmet and shoulder upper planes remain visible. No concrete camera-elevation mismatch identified at game-view detail.",
+              "Black/gold helmet and armor, burgundy cape, crystalline wings, single established blade and anatomical weapon hand remain coherent. Far wing is naturally occluded by lateral projection.",
+              "Six articulated idle phases vary wing joints, feather spread, cape fold and shoulder/hip response while retaining exact heading; no translation-only or view-rotation sequence.",
+              "Complete, uncropped figures. Source physical pixel height is larger than N/S references, but private QC-only uniform0.80x display aligns shoulder, hip and boot landmarks closely; no isolated torso/limb elongation remains evident."
+            ],
+            "source_review_sha256": "9fcb6ec666457bc89edd591286faa8ca3ce18aa623503e0d3f8e26f4b9ffd5fb"
           }
         ],
         "compass_audit": {
@@ -17861,6 +17928,29 @@
           "visual_approval": "HOLD_REMAINING_NE_NW_ATTACK_AND_COMPASS_REVIEW",
           "completed_added": 0,
           "actual_Player_dedicated_actions_and_markers": "PASS"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r047/SpriteFrames.tres",
+        "frames_sha256": "10efc7ca7fad7825532742e9c904463541cf8f3a155089bc0dd3c94949b1c82e",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r047/NativeMotionProfile.tres",
+        "native_profile_sha256": "aae6942e3eae38c970606272f505886102ed12f7b15c383da17917ae8e68d95b",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_COMPASS_CORRECTIONS_AND_FINAL_QUALITY",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
         }
       }
     ],
