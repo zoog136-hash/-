@@ -1,5 +1,6 @@
 """Derive reviewed virtual-canvas metadata without changing any source pixels."""
 
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -20,7 +21,7 @@ def _pose_identity(frame):
     return {key: frame.get(key) for key in ("row", "direction", "region", "rgba_sha256")}
 
 
-def apply_reviewed_layout(source_path, base_geometry, review):
+def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_review=None):
     """Return ``(geometry, proof)`` for a SHA-pinned six-pose layout proposal.
 
     A larger virtual canvas reduces runtime body size without resampling its
@@ -28,6 +29,8 @@ def apply_reviewed_layout(source_path, base_geometry, review):
     nor its proof grants source-art, runtime-scale, or actor approval. A reviewed
     movement permutation changes playback only; each frame retains its authored row.
     Optional per-pose virtual canvases are indexed by authored row before playback.
+    An explicit source-region review is validated against fresh canonical source
+    geometry before its exact expanded result can receive layout metadata.
     """
     if not isinstance(review, dict) or review.get("status") != "REVIEWED_LAYOUT_PROPOSAL":
         raise ValueError("An explicit REVIEWED_LAYOUT_PROPOSAL is required")
@@ -69,9 +72,36 @@ def apply_reviewed_layout(source_path, base_geometry, review):
             or any(not isinstance(anchor, list) or len(anchor) != 2
                    or any(type(value) is not int for value in anchor) for anchor in anchors)):
         raise ValueError("Reviewed source_anchors must contain six integer [x, y] pairs")
-    derived = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                               directions_axis="phase_grid2", canvas_size=canvas,
-                               source_anchors=anchors, directions=[direction])
+    if source_region_review is None:
+        derived = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
+                                   directions_axis="phase_grid2", canvas_size=canvas,
+                                   source_anchors=anchors, directions=[direction])
+    else:
+        # The original automatic rectangles can legitimately fail the complete-
+        # foreground gate. Validate the explicit region review before that gate,
+        # never by reanalyzing the expanded rectangles as an automatic layout.
+        import pr122_reviewed_source_regions as reviewed_regions
+
+        canonical = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
+                                     directions_axis="phase_grid2", canvas_size=base_canvas[0],
+                                     directions=[direction])
+        checked, _ = reviewed_regions.apply_reviewed_regions(path, canonical, source_region_review)
+        if checked != base_geometry or _digest(checked) != _digest(base_geometry):
+            raise ValueError("Reviewed expanded geometry differs from the supplied exact base geometry")
+        derived = deepcopy(checked)
+        foot_x, foot_y = canvas // 2, canvas * 5 // 8
+        derived.update(canvas_size=[canvas, canvas], foot=[foot_x, foot_y])
+        for row, frame in enumerate(derived["frames"]):
+            x, y, width, height = frame["region"]
+            anchor_x, anchor_y = anchors[row] if anchors is not None else frame["source_anchor"]
+            if not (x <= anchor_x < x + width and y <= anchor_y < y + height):
+                raise ValueError("Reviewed source anchor must remain inside its exact source region")
+            margin_x, margin_y = foot_x - (anchor_x - x), foot_y - (anchor_y - y)
+            if (min(margin_x, margin_y) < 0 or margin_x + width > canvas
+                    or margin_y + height > canvas):
+                raise ValueError("Pose cannot fit its reviewed foot-anchored canvas")
+            frame.update(source_anchor=[anchor_x, anchor_y],
+                         margin=[margin_x, margin_y, canvas - width, canvas - height])
     importer.require_complete_pose_regions(path, derived)
     if ([_pose_identity(f) for f in derived["frames"]] != [_pose_identity(f) for f in frames]
             or derived["distinct_pixel_frames"] != 6
@@ -115,6 +145,8 @@ def apply_reviewed_layout(source_path, base_geometry, review):
              "foot": derived["foot"], "source_anchors": [f["source_anchor"] for f in derived["frames"]],
              "runtime_pixel_scale_ratio": [base_canvas[0], canvas],
              "source_pixels_unchanged": True, "resampled": False, "approval_granted": False}
+    if source_region_review is not None:
+        proof["source_region_review_sha256"] = _digest(source_region_review)
     if "playback_order" in review:
         proof.update(playback_order=list(review["playback_order"]), newly_authored_poses=0)
     if "authored_pose_canvas_sizes" in review:

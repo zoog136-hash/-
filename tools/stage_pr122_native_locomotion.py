@@ -119,7 +119,8 @@ def stage(root, key, revision=None):
         layout_proof = None
         layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
         if layout is not None:
-            geometry, layout_proof = reviewed_layout.apply_reviewed_layout(path, geometry, layout)
+            geometry, layout_proof = reviewed_layout.apply_reviewed_layout(
+                path, geometry, layout, source_region_review=record.get('source_region_review'))
         tracks.append(dict(direction=direction, role=role,
                            animation=f'{role}_{importer.DIRECTIONS.index(direction)}',
                            source=source, source_sha256=record['sha256'],
