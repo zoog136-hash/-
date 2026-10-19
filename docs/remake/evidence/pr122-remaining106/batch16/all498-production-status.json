@@ -2,11 +2,11 @@
   "target": 498,
   "unique_ids": 498,
   "session_start_approval_preserved": 394,
-  "session_added": 9,
-  "approvals_total": 403,
+  "session_added": 11,
+  "approvals_total": 405,
   "status_counts": {
-    "NOT_AUTHORED": 78,
-    "VERIFIED_COMPLETED": 389,
+    "NOT_AUTHORED": 76,
+    "VERIFIED_COMPLETED": 391,
     "FRAME_INSUFFICIENT": 14,
     "SOURCE_HOLD": 16,
     "IN_PROGRESS": 1
@@ -1848,9 +1848,9 @@
       "id": "monster:검은숲 거미",
       "name": "검은숲 거미",
       "approval_preserved": false,
-      "production_status": "NOT_AUTHORED",
-      "reason": "No identity-compatible licensed source for spider",
-      "frames_path": ""
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Exact pinned project atlas1 cell0/crawl/melee source128 reused with original per-ID width/tint/speed cadence; actual Main3686 and continuous87873 all-PASS, new source art0, shared PNG paths retained",
+      "frames_path": "res://assets/actors/eight_direction/original_based/dark_forest_spider_batch16_project/SpriteFrames.tres"
     },
     {
       "id": "monster:검은숲 도적",
@@ -3632,9 +3632,9 @@
       "id": "monster:왜곡의 타란툴라",
       "name": "왜곡의 타란툴라",
       "approval_preserved": false,
-      "production_status": "NOT_AUTHORED",
-      "reason": "No identity-compatible licensed source for spider",
-      "frames_path": ""
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Exact pinned project atlas1 cell0/crawl/melee source128 reused with original per-ID width/tint/speed cadence; actual Main3686 and continuous87873 all-PASS, new source art0, shared PNG paths retained",
+      "frames_path": "res://assets/actors/eight_direction/original_based/distorted_tarantula_batch16_project/SpriteFrames.tres"
     },
     {
       "id": "monster:욥니르",
@@ -3998,5 +3998,5 @@
     }
   ],
   "unrecovered_assets_note": "Previous Reaper PNG2 and QA draft remain UNRECOVERED, not additional lost species. Large QA archives preserved in start commit; all156 tracked PR122 PNG restored/SHA checked.",
-  "batch16_added": 4
+  "batch16_added": 6
 }

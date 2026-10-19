@@ -4,11 +4,11 @@
   "branch": "feature/twilight-remaining106-20261016",
   "PR": 122,
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
-  "last_safe_commit": "fb6b02c5",
+  "last_safe_commit": "8f7cc7bc",
   "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
   "counts": {
-    "NOT_AUTHORED": 78,
-    "VERIFIED_COMPLETED": 389,
+    "NOT_AUTHORED": 76,
+    "VERIFIED_COMPLETED": 391,
     "FRAME_INSUFFICIENT": 14,
     "SOURCE_HOLD": 16,
     "IN_PROGRESS": 1
@@ -416,7 +416,9 @@
     "monster:알비노 변이된 골렘",
     "monster:알비노 디어",
     "transform:269",
-    "monster:스파이더"
+    "monster:스파이더",
+    "monster:검은숲 거미",
+    "monster:왜곡의 타란툴라"
   ],
   "current_ids": [
     "monster:스파이더",
@@ -471,7 +473,6 @@
     "monster:그림 리퍼",
     "monster:말하는 섬 들개",
     "monster:검은숲 늑대",
-    "monster:검은숲 거미",
     "monster:에바 왕국 심해어인",
     "monster:오만의 탑 공포의 악마",
     "monster:지룡의 둥지 대지수호자",
@@ -510,7 +511,6 @@
     "monster:오만한 플레임 팽",
     "monster:왜곡의 메두사",
     "monster:왜곡의 제니스 퀸",
-    "monster:왜곡의 타란툴라",
     "monster:욥니르",
     "monster:잔혹한 아이리스",
     "monster:질투의 공주 이자벨",
@@ -646,7 +646,10 @@
       "source_reference": "res://assets/monsters/original/atlas_3.png region[0,899,328,300]",
       "source_SHA256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
       "note": "Independent authoring while deer/sourceHOLD remain; no production install.",
-      "blocker": "Whole128 matrix unavailable: six sheets fail unchanged ownership/body-count guards. All8 standalone E originals fail strict8-neighbor alpha>100 body rule; only3 qualify for unchanged3/11-pixel microrepair. Correct opposite support and stable model/camera remain unapproved."
+      "blocker": "Whole128 matrix unavailable: six sheets fail unchanged ownership/body-count guards. All8 standalone E originals fail strict8-neighbor alpha>100 body rule; only3 qualify for unchanged3/11-pixel microrepair. Correct opposite support and stable model/camera remain unapproved.",
+      "latest_source_parts": "Batch16 complete128 geometric matrix exists with8 whole16 sheets; no runtime/profile approval",
+      "latest_source_geometry": "PASS128",
+      "current_blocker": "SW idle0/1 still face right instead of left. Two one-for-one replacements being authored; full raw matrices and old HOLD retained. Native gait and Main final review pending."
     },
     "monster:알비노 변이된 골렘": {
       "status": "APPROVED",
@@ -845,15 +848,25 @@
       "status": "APPROVED",
       "runtime_connected": true,
       "proof": "docs/remake/evidence/pr122-remaining106/batch16/spider-completion-decision.json"
+    },
+    "monster:검은숲 거미": {
+      "status": "APPROVED",
+      "runtime_connected": true,
+      "proof": "docs/remake/evidence/pr122-remaining106/batch16/dark-forest-spider-completion-decision.json"
+    },
+    "monster:왜곡의 타란툴라": {
+      "status": "APPROVED",
+      "runtime_connected": true,
+      "proof": "docs/remake/evidence/pr122-remaining106/batch16/distorted-tarantula-completion-decision.json"
     }
   },
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
   "new_approved_this_batch": 5,
-  "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-tomb.json",
+  "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-spider-family.json",
   "final_CI": "PENDING_NEW_PRODUCTION_BATCH",
   "derived_navigation": "Local test bake outputs preserved in /workspace/qa/derived-navigation-before-restore; all26 original Git navigation files restored unchanged.",
-  "state": "FOUR_NATIVE_TARGETS_LOCALLY_COMPLETED; TWO_PINNED_SPIDER_ADAPTERS_AND_MONK_SOURCE_CONTINUE",
-  "active": "monster:검은숲 거미",
+  "state": "SIX_NEW_NATIVE_BINDINGS_LOCALLY_VERIFIED; MONK128_SOURCE_REPAIR_CONTINUES",
+  "active": "monster:알비노 몽크",
   "newly_drawn_poses": 296,
   "preserved_prior_poses": 32,
   "complete_native_matrix": 144,
@@ -861,11 +874,11 @@
   "total_pack_PNG": 18,
   "runtime_profile_applied": true,
   "actual_Main": "PASS",
-  "new_completed": 4,
+  "new_completed": 6,
   "remaining_ids_source": "../batch15/all498-production-status.json",
-  "normal_completed": 389,
-  "approvals_total": 403,
-  "remaining_unapproved": 95,
+  "normal_completed": 391,
+  "approvals_total": 405,
+  "remaining_unapproved": 93,
   "deer_source_failures": {
     "attack_v01": "Identity drift: antler rack shape; preserved outside pack",
     "attack_v02": "All4 six-pose sheets fail unchanged foreign-body rectangle guard; reframe as8 full-direction three-pose vertical sheets, never lower thresholds",

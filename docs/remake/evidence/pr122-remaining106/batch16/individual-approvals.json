@@ -3,9 +3,9 @@
   "policy_UTC": "2026-10-18T15:35:07.022781+00:00",
   "authorization": "Latest user directive: continue production and validate locally; integrated CI at the end; no main merge.",
   "baseline_completed_preserved": 392,
-  "new_completed": 11,
-  "completed": 403,
-  "remaining": 95,
+  "new_completed": 13,
+  "completed": 405,
+  "remaining": 93,
   "final_release_or_merge_approved": false,
   "decisions": [
     {
@@ -750,8 +750,164 @@
           "sha256": "95c44e44417d379414760d24641a422fb392153a6daa4b9db250a6e5520ea48f"
         }
       ]
+    },
+    {
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming agent reviewed source base128 plus actual per-ID Main E/N gait, real poison strike and S terminal collapse. Preserved original per-ID width/tint and actual56/94 movement speeds with distinct cadence. No independent human or no-slip measurement claim.",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 128,
+        "run": "No separate source run defined; none invented"
+      },
+      "newly_drawn_poses": 0,
+      "preserved_prior_poses": 128,
+      "new_raw_PNG": 0,
+      "total_pack_PNG": 0,
+      "shared_source_PNG": 8,
+      "source_reuse": true,
+      "source_id": "monster:스파이더",
+      "visual_notes": "Verified exact same project atlas bytes/region/body/crawl/melee contract before reuse; no external ID inference. Shared source texture paths prevent duplicate PNG loading. Only original display width/tint and animation cadence are adapted; all gameplay DB, AI, poison/damage/hit count, collision and save logic unchanged. Each actor renders all128 phases in its own actual Main case.",
+      "id": "monster:검은숲 거미",
+      "name": "검은숲 거미",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-19T00:07:39.308996+00:00",
+      "scope": "Local reference-based native completion, final integrated CI/device acceptance separate; no independent human claim",
+      "runtime_connected": true,
+      "actual_Main_checks": 1961,
+      "with_baseline_gameplay_checks": 3686,
+      "continuous_with_baseline_checks": 87873,
+      "source_reference_SHA256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+      "final_CI": "PENDING_BATCH",
+      "Android_device": "NOT_RUN",
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch16/dark-forest-spider-source-preservation.json",
+      "reviewed_profile_sha256": "eb3c706bd708fa0738555977f5f134bc6f28151d3ecb407f2491945750edd61c",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/dark-forest-spider-source-preservation.json",
+          "sha256": "6612680452ef6a67098d23f5cce1e55f4efedab9c68acaf0ee839144a81fc6f4"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-reuse-plan.json",
+          "sha256": "33490a43bac58344daa2eb9a8f3052769b0ce109f70a648f6ff75aa14378891f"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Main-reports/gameplay.json",
+          "sha256": "372fe62541473737d1c3416ceea4d4b1bc4962fb7177f5705fe0434ed1acd8ab"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Main-reports/gameplay-cases/dark-forest-spider-batch16-project.json",
+          "sha256": "a0ffa3a38888834d43bd8bce9ebe571c8117f715f9f7a8894c0896cc86f9e316"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Temporal-reports/report.json",
+          "sha256": "0a847b3fd6ab2a5aec21ecdb97382bfad4ce1a232ebe38e3a0ae74f1f3611631"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Temporal-reports/report-cases/dark-forest-spider-batch16-project.json",
+          "sha256": "5692a2e30e6885ef3aff3971405ff7b70e5e3e0b4a65ac94ab81d00e85b6333b"
+        }
+      ]
+    },
+    {
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "Resuming agent reviewed source base128 plus actual per-ID Main E/N gait, real poison strike and S terminal collapse. Preserved original per-ID width/tint and actual56/94 movement speeds with distinct cadence. No independent human or no-slip measurement claim.",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 128,
+        "run": "No separate source run defined; none invented"
+      },
+      "newly_drawn_poses": 0,
+      "preserved_prior_poses": 128,
+      "new_raw_PNG": 0,
+      "total_pack_PNG": 0,
+      "shared_source_PNG": 8,
+      "source_reuse": true,
+      "source_id": "monster:스파이더",
+      "visual_notes": "Verified exact same project atlas bytes/region/body/crawl/melee contract before reuse; no external ID inference. Shared source texture paths prevent duplicate PNG loading. Only original display width/tint and animation cadence are adapted; all gameplay DB, AI, poison/damage/hit count, collision and save logic unchanged. Each actor renders all128 phases in its own actual Main case.",
+      "id": "monster:왜곡의 타란툴라",
+      "name": "왜곡의 타란툴라",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-19T00:07:40.113396+00:00",
+      "scope": "Local reference-based native completion, final integrated CI/device acceptance separate; no independent human claim",
+      "runtime_connected": true,
+      "actual_Main_checks": 1723,
+      "with_baseline_gameplay_checks": 3686,
+      "continuous_with_baseline_checks": 87873,
+      "source_reference_SHA256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+      "final_CI": "PENDING_BATCH",
+      "Android_device": "NOT_RUN",
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch16/distorted-tarantula-source-preservation.json",
+      "reviewed_profile_sha256": "c1156d9ce5cd121ebeb42535754a17818e9bc069042412df7301d1568fb2f39e",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/distorted-tarantula-source-preservation.json",
+          "sha256": "7e57ab166f0be8617b731db96a787147e5e891d0573717b67a64178f80630cfd"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-reuse-plan.json",
+          "sha256": "33490a43bac58344daa2eb9a8f3052769b0ce109f70a648f6ff75aa14378891f"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Main-reports/gameplay.json",
+          "sha256": "372fe62541473737d1c3416ceea4d4b1bc4962fb7177f5705fe0434ed1acd8ab"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Main-reports/gameplay-cases/distorted-tarantula-batch16-project.json",
+          "sha256": "4a965b50e7749f379150bd3bd4beedd86a3d3e2f813c6e9add027408c477f00a"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Temporal-reports/report.json",
+          "sha256": "0a847b3fd6ab2a5aec21ecdb97382bfad4ce1a232ebe38e3a0ae74f1f3611631"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-family-Temporal-reports/report-cases/distorted-tarantula-batch16-project.json",
+          "sha256": "133841914120f969d93e719cf7e153ab670eab933f29d2dcd185c2628c7d1b65"
+        }
+      ]
     }
   ],
-  "session_added": 9,
-  "batch16_added": 4
+  "session_added": 11,
+  "batch16_added": 6
 }
