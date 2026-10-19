@@ -1,0 +1,289 @@
+{
+  "key": "267",
+  "direction": "N",
+  "role": "run",
+  "status": "DRAFT_SOURCE_PHYSICAL_SCALE_PROPOSAL_NOT_RUNTIME_APPROVAL",
+  "created_at": "2026-10-19T12:38:57.857441+00:00",
+  "absolute_baseline": {
+    "path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+    "sha256": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+    "source_canvas": 1024,
+    "actual_spriteframes_at_guide_authoring": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/SpriteFrames.tres",
+    "actual_spriteframes_sha256_at_guide_authoring": "f063517084ce148d9b937714129a5d7ad131459c9d13bf810ea29cdd02b0660b",
+    "actual_track_authoring_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+    "reference_recipe": "/workspace/scratch/girtas-N-run-repair-v03/production-reference-recipe.json",
+    "reference_recipe_sha256": "17e0332b4544a47496718fe8271d4398ea1503f6e7bb3a6822a71effdeab0cbf",
+    "landmarks": {
+      "head_root": [
+        205,
+        78
+      ],
+      "shoulder_left": [
+        140,
+        159
+      ],
+      "shoulder_right": [
+        267,
+        159
+      ],
+      "waist_junction": [
+        207,
+        250
+      ]
+    },
+    "native_landmark_uncertainty_pixels": 6
+  },
+  "sources_in_intended_game_order": [
+    {
+      "game_phase": 0,
+      "name": "LEFT landing key",
+      "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+      "head_root": [
+        593,
+        230
+      ],
+      "shoulder_left": [
+        430,
+        440
+      ],
+      "shoulder_right": [
+        765,
+        425
+      ],
+      "waist_junction": [
+        593,
+        650
+      ],
+      "uncertainty_native_pixels": 20,
+      "draft_virtual_canvas": 2624,
+      "newly_authored_for_proposed_six_map": false,
+      "source_visual_status": "PASS_SINGLE_LANDING_KEY_ONLY",
+      "sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+      "rigid_measurements": {
+        "shoulder_span": 335,
+        "head_root_to_shoulder_midpoint": 202.5,
+        "head_root_to_waist_junction_diagnostic": 420
+      },
+      "relative_to_Nwalk": {
+        "shoulder_span": 2.6377952755905514,
+        "head_to_shoulder": 2.5,
+        "waist_diagnostic": 2.441860465116279
+      },
+      "coordinate_system": "Each pinned input PNG native coordinate system, not assembled atlas coordinates.",
+      "support_anchor_status": "HOLD: actual per-pose support and flight translation must follow independent source QC and reviewed whole-six ground projection."
+    },
+    {
+      "game_phase": 1,
+      "name": "LEFT compression RIGHT drive",
+      "path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/source-row0-lossless.png",
+      "head_root": [
+        300,
+        110
+      ],
+      "shoulder_left": [
+        156,
+        244
+      ],
+      "shoulder_right": [
+        394,
+        256
+      ],
+      "waist_junction": [
+        297,
+        347
+      ],
+      "uncertainty_native_pixels": 12,
+      "draft_virtual_canvas": 1840,
+      "newly_authored_for_proposed_six_map": true,
+      "source_visual_status": "PENDING_INDEPENDENT_COMPRESSION_QC",
+      "sha256": "b34bb2fc149e8f9ffd35847f335e758c11f4815a0c078567dd7bbc732101be6d",
+      "rigid_measurements": {
+        "shoulder_span": 238,
+        "head_root_to_shoulder_midpoint": 140.0,
+        "head_root_to_waist_junction_diagnostic": 237
+      },
+      "relative_to_Nwalk": {
+        "shoulder_span": 1.874015748031496,
+        "head_to_shoulder": 1.728395061728395,
+        "waist_diagnostic": 1.377906976744186
+      },
+      "coordinate_system": "Each pinned input PNG native coordinate system, not assembled atlas coordinates.",
+      "support_anchor_status": "HOLD: actual per-pose support and flight translation must follow independent source QC and reviewed whole-six ground projection."
+    },
+    {
+      "game_phase": 2,
+      "name": "AIR RIGHT forward LEFT trail",
+      "path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/source-row1-lossless.png",
+      "head_root": [
+        282,
+        112
+      ],
+      "shoulder_left": [
+        126,
+        223
+      ],
+      "shoulder_right": [
+        388,
+        252
+      ],
+      "waist_junction": [
+        283,
+        334
+      ],
+      "uncertainty_native_pixels": 12,
+      "draft_virtual_canvas": 1856,
+      "newly_authored_for_proposed_six_map": true,
+      "source_visual_status": "PENDING_INDEPENDENT_FLIGHT_QC",
+      "sha256": "d1707604c9739686c04dcea79d502b264b179f90ec60ab0e9e966bcdba983a7a",
+      "rigid_measurements": {
+        "shoulder_span": 262,
+        "head_root_to_shoulder_midpoint": 125.5,
+        "head_root_to_waist_junction_diagnostic": 222
+      },
+      "relative_to_Nwalk": {
+        "shoulder_span": 2.062992125984252,
+        "head_to_shoulder": 1.5493827160493827,
+        "waist_diagnostic": 1.2906976744186047
+      },
+      "coordinate_system": "Each pinned input PNG native coordinate system, not assembled atlas coordinates.",
+      "support_anchor_status": "HOLD: actual per-pose support and flight translation must follow independent source QC and reviewed whole-six ground projection."
+    },
+    {
+      "game_phase": 3,
+      "name": "RIGHT landing reused original row0",
+      "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+      "head_root": [
+        143,
+        64
+      ],
+      "shoulder_left": [
+        94,
+        130
+      ],
+      "shoulder_right": [
+        194,
+        128
+      ],
+      "waist_junction": [
+        143,
+        178
+      ],
+      "uncertainty_native_pixels": 6,
+      "draft_virtual_canvas": 816,
+      "newly_authored_for_proposed_six_map": false,
+      "source_visual_status": "PASS_SINGLE_RIGHT_LANDING_KEY_ONLY",
+      "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+      "rigid_measurements": {
+        "shoulder_span": 100,
+        "head_root_to_shoulder_midpoint": 65.0,
+        "head_root_to_waist_junction_diagnostic": 114
+      },
+      "relative_to_Nwalk": {
+        "shoulder_span": 0.7874015748031497,
+        "head_to_shoulder": 0.8024691358024691,
+        "waist_diagnostic": 0.6627906976744186
+      },
+      "coordinate_system": "Each pinned input PNG native coordinate system, not assembled atlas coordinates.",
+      "support_anchor_status": "HOLD: actual per-pose support and flight translation must follow independent source QC and reviewed whole-six ground projection."
+    },
+    {
+      "game_phase": 4,
+      "name": "RIGHT compression LEFT drive",
+      "path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/source-row0-lossless.png",
+      "head_root": [
+        273,
+        110
+      ],
+      "shoulder_left": [
+        174,
+        230
+      ],
+      "shoulder_right": [
+        369,
+        244
+      ],
+      "waist_junction": [
+        276,
+        314
+      ],
+      "uncertainty_native_pixels": 12,
+      "draft_virtual_canvas": 1600,
+      "newly_authored_for_proposed_six_map": true,
+      "source_visual_status": "PENDING_INDEPENDENT_COMPRESSION_QC",
+      "sha256": "6a54b11587e11093eed3bd39eb9a11e851e2946c7b3e5da674db7f77215d62e5",
+      "rigid_measurements": {
+        "shoulder_span": 195,
+        "head_root_to_shoulder_midpoint": 127.0,
+        "head_root_to_waist_junction_diagnostic": 204
+      },
+      "relative_to_Nwalk": {
+        "shoulder_span": 1.5354330708661417,
+        "head_to_shoulder": 1.5679012345679013,
+        "waist_diagnostic": 1.186046511627907
+      },
+      "coordinate_system": "Each pinned input PNG native coordinate system, not assembled atlas coordinates.",
+      "support_anchor_status": "HOLD: actual per-pose support and flight translation must follow independent source QC and reviewed whole-six ground projection."
+    },
+    {
+      "game_phase": 5,
+      "name": "AIR LEFT forward RIGHT trail",
+      "path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/source-row1-lossless.png",
+      "head_root": [
+        249,
+        110
+      ],
+      "shoulder_left": [
+        160,
+        221
+      ],
+      "shoulder_right": [
+        349,
+        242
+      ],
+      "waist_junction": [
+        253,
+        315
+      ],
+      "uncertainty_native_pixels": 12,
+      "draft_virtual_canvas": 1536,
+      "newly_authored_for_proposed_six_map": true,
+      "source_visual_status": "PENDING_INDEPENDENT_FLIGHT_QC",
+      "sha256": "71208ae72f8ac8613b1440bb47d6a8a983e489f249db64054e762d4cd7ec73b5",
+      "rigid_measurements": {
+        "shoulder_span": 189,
+        "head_root_to_shoulder_midpoint": 121.5,
+        "head_root_to_waist_junction_diagnostic": 205
+      },
+      "relative_to_Nwalk": {
+        "shoulder_span": 1.4881889763779528,
+        "head_to_shoulder": 1.5,
+        "waist_diagnostic": 1.191860465116279
+      },
+      "coordinate_system": "Each pinned input PNG native coordinate system, not assembled atlas coordinates.",
+      "support_anchor_status": "HOLD: actual per-pose support and flight translation must follow independent source QC and reviewed whole-six ground projection."
+    }
+  ],
+  "draft_virtual_canvases": [
+    2624,
+    1840,
+    1856,
+    816,
+    1600,
+    1536
+  ],
+  "method": "Approximate manual head-root/shoulder joint midpoint and shoulder span versus already connected Nwalk. Waist-junction diagnostic is recorded but not used to normalize torso foreshortening. No bbox-height fitting. No image pixels changed.",
+  "limitations": [
+    "Manual landmark positions are provisional; shoulder movement and running lean affect projection.",
+    "Head, shoulders and pelvis must be privately inspected together at compiled Player physical scale before accepting any virtual canvas.",
+    "Current source side identities are correct, but compression phases1/4 and projected flight2/5 require independent source-art verdict.",
+    "Support/flight translations and runtime anchors are deliberately unset. No automatic foot/bbox lock.",
+    "Initial common-key reference ratio3.25 was conditioning only; this document adds the existing good Nwalk absolute-size reference."
+  ],
+  "new_pose_crops_exact_RGBA": true,
+  "proposed_six_map_newly_authored": 4,
+  "proposed_six_map_reused_landing_keys": 2,
+  "runtime_final_status": "HOLD",
+  "actor_approval": false,
+  "repo_mutations": false,
+  "chat_image_attachments": false
+}
