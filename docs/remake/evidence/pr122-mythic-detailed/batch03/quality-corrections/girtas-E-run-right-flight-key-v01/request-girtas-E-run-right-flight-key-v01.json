@@ -1,0 +1,82 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_flight_legart_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 5,
+  "intended_anatomical_support": "NONE_AIR_LEFTlead_RIGHTtrail",
+  "references": [
+    "/workspace/scratch/girtas-E-run-right-compression-key-v01/girtas-E-run-right-compression-key-v01.png",
+    "/workspace/scratch/girtas-E-run-right-flight-key-v01/E-run-AIR5-LEFTlead-RIGHTtrail-both-flexed-joint-guide.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-right-compression-key-v01/girtas-E-run-right-compression-key-v01.png": "f730390ab28948a8f142e3df0dcfdc476a16406786fcb295bea238ff01141ce3",
+    "/workspace/scratch/girtas-E-run-right-flight-key-v01/E-run-AIR5-LEFTlead-RIGHTtrail-both-flexed-joint-guide.png": "96e1d65df282ba9720c4e82d64038fc208676275ee2d3a00961ed74ede2b9141",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Author missing opposite flight5 from correct RIGHT compressed support: nearRIGHT folds backward clear, farLEFT leads forward, two genuinely articulated airborne leg chains. Final world ground/root arc requires separate six-pose authorship/review; never claim floor embedded in PNG.",
+  "prompt": "Author exactly ONE new GIRTAS E RUN phase5 FLIGHT leg-art key from reference1 independently valid near-RIGHT loaded support. Reference2 is material joint authority: replace planted RIGHT leg with folded trailing RIGHT leg, preserve anatomy and physical rigid model. Actual anatomical FAR LEFT is the LEADING leg toward image RIGHT: LEFT thigh forward/up to knee1115,695, shin folds down/back to ankle1115,935, LEFT complete boot reaches right with toe near1230,955. Anatomical NEAR RIGHT is now TRAILING toward image LEFT: near RIGHT hip875,650 -> knee730,855 -> shin folds sharply BACK UP to ankle600,780 -> complete RIGHT boot620,725, with clearly visible knee flex and upturned trailing sole. The two leg chains must be visually different and distinguishable. BOTH entire boots are flexed/free above both guide support projections, no toe or heel reaching the old support floor. Do not retain the source flat planted RIGHT boot. Pelvis/core rise naturally about60 native pixels from compression while rigid helmet/head/shoulder/torso/hip SIZES remain identical; not a scale change or torso elongation. Preserve E camera of source with slight front chest, face/nose/pelvis/travel all RIGHT, never SE/back. New root/ground metadata will be authored for the six-pose animation separately; do not draw a floor, contact shadow or pretend sole angle proves a plane. Original permanent anatomical RIGHT/near hand retains original LONG SINUOUS gold-orange blade streaming LEFT and LEFT/far hand is empty; do not mirror equipment when exchanging legs. Preserve pale visible human face/long pale hair, thin HARD GOLD radial spines, black-gold armor and LONG DARK gold-trim robe/skirt with panels sweeping LEFT, split enough that both flexed legs and knees/boots remain readable. No red mask/flamefeatherfan/pants/shortbroadblade. Full body/all blade-tip/rays/robe/hair must fit with alpha gutters>=45px on native1254-equivalent canvas; translate the WHOLE figure if needed to fit, never shorten gear or crop. Exactly one complete figure on transparent alpha, no text, skeleton, floor, glow haze or extraneous effects. This is genuinely airborne articulated leg art: FAR LEFT leading RIGHT, NEAR RIGHT bent trailing LEFT, both complete boots clear; not another planted support or both legs pointing the same way.",
+  "requested_at": "2026-10-19T14:30:13.131066+00:00",
+  "user_authorization": "Private production images permitted; no main-chat attachments. One missing flight key request, preserve all failures.",
+  "pose_guide_proof": {
+    "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+    "source": "/workspace/scratch/girtas-E-run-right-compression-key-v01/girtas-E-run-right-compression-key-v01.png",
+    "source_sha256": "f730390ab28948a8f142e3df0dcfdc476a16406786fcb295bea238ff01141ce3",
+    "source_independent_review": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-right-compression-v01-independent-review.json",
+    "source_independent_review_sha256": "951523a847e56f807ef3e03e5c0a01bda87d5f497b8b7be70005ff9220c00108",
+    "guide_sha256": "96e1d65df282ba9720c4e82d64038fc208676275ee2d3a00961ed74ede2b9141",
+    "target_joint_coordinates": {
+      "near_RIGHT_hip": [
+        875,
+        650
+      ],
+      "RIGHT_trail_knee": [
+        730,
+        855
+      ],
+      "RIGHT_trail_ankle": [
+        600,
+        780
+      ],
+      "RIGHT_trail_boot": [
+        620,
+        725
+      ],
+      "far_LEFT_hip": [
+        915,
+        640
+      ],
+      "LEFT_lead_knee": [
+        1115,
+        695
+      ],
+      "LEFT_lead_ankle": [
+        1115,
+        935
+      ],
+      "LEFT_lead_boottoe": [
+        1230,
+        955
+      ]
+    },
+    "guide_projected_ground_y": [
+      1152,
+      1112
+    ],
+    "guide_plane_is_intention_not_output_proof": true,
+    "physical_runtime_ground": "Will be explicitly authored from final six-source Cs/anchors with independent physical review, not inferred from transparent PNG"
+  },
+  "pose_guide_proof_sha256": "9f019c051bc0245501b1c6fc0334e0467882b86991d4cf29bbe2d90e2f67463e",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}
