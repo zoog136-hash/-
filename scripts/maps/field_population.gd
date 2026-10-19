@@ -139,7 +139,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	monster.setup(record,world.player,world,world._monster_texture(record))
 	# setup/_setup_animation writes collision_radius and collision_offset.
 	# Apply the source foot LAST so monsters and the player really use 4px.
-	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField)
+	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField or field is NativePngField)
 	monster.attack_cooldown = world.rng.randf_range(0.,monster.attack_interval*.7)
 	if not monster.died.is_connected(world._on_monster_died): monster.died.connect(world._on_monster_died)
 	if not monster.player_hit.is_connected(world._on_player_hit): monster.player_hit.connect(world._on_player_hit)
