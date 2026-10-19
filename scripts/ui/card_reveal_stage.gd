@@ -167,11 +167,7 @@ func _fit() -> void:
 func seek(value: float) -> void:
 	clock = clampf(value,0,duration)
 	for card: Control in cards:
-		card.seek(clock)
-		if fusion and upgrade and clock >= card.open_at+card.reel_seconds+0.5:
-			# Authored success-only second discharge. Failed fusion and pity
-			# compensation never get mislabeled as a successful promotion.
-			card.surface_fx.set_time(clock-card.open_at-card.reel_seconds-0.5,clock)
+		card.seek(clock,fusion and upgrade)
 	var complete: bool = cards.all(func(card: Control) -> bool: return clock >= card.open_at+card.reel_seconds)
 	if showcase:
 		result_note.text = "청색 · 적색 · 보라 · 금빛 · 에메랄드\n연출 비교 전용 · 카드 보상 없음"
@@ -197,11 +193,12 @@ func _process(delta: float) -> void:
 					sound_played[i] = true
 					sound_player.stream = IMPACT
 					sound_player.play()
-			var promotion_at: float = 4.15
-			if fusion and upgrade and previous < promotion_at and clock >= promotion_at and not sound_played.has("promotion"):
-				sound_played["promotion"] = true
-				sound_player.stream = UPGRADE
-				sound_player.play()
+			if fusion and upgrade and not cards.is_empty():
+				var promotion_at: float = cards[0].open_at+cards[0].reel_seconds+0.5
+				if previous < promotion_at and clock >= promotion_at and not sound_played.has("promotion"):
+					sound_played["promotion"] = true
+					sound_player.stream = UPGRADE
+					sound_player.play()
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO,size),Color("060b13"))
@@ -212,9 +209,9 @@ func _draw() -> void:
 	if not reduced_motion:
 		for card: Control in cards:
 			var elapsed: float = clock-card.open_at-card.reel_seconds+0.1
-			if fusion and upgrade and clock >= card.open_at+card.reel_seconds+0.5:
-				elapsed = clock-card.open_at-card.reel_seconds-0.5
 			var power: float = PROFILES.pulse(card.grade,elapsed)
+			if fusion and upgrade:
+				power += PROFILES.pulse(card.grade,clock-card.open_at-card.reel_seconds-0.5)
 			if power > 0.03:
 				draw_rect(Rect2(Vector2.ZERO,size),Color(PROFILES.color(card.grade),minf(0.055,power*0.023*intensity_scale)))
 
@@ -240,8 +237,14 @@ func close_reveal() -> void:
 	queue_free()
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		close_reveal()
 		accept_event()
 	elif event is InputEventScreenTouch or event is InputEventMouseButton:
 		accept_event()
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	# A transport Button may own keyboard focus after it is clicked.
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		close_reveal()
+		get_viewport().set_input_as_handled()

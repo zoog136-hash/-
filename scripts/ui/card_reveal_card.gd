@@ -11,6 +11,7 @@ var reel_seconds: float = 3.0
 var clock: float = 0.0
 var aura: Control
 var surface_fx: Control
+var promotion_fx: Control
 var face: Control
 var name_label: Label
 var grade_label: Label
@@ -91,14 +92,19 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	back.region = Rect2(Vector2(3.13,2.045)*cell,cell*Vector2(0.74,0.86))
 	face.back = back
 	clip.add_child(face)
-	surface_fx = FX.new()
-	surface_fx.name = "GradeLightningInsideCard"
-	surface_fx.surface = true
-	surface_fx.grade = grade
-	surface_fx.reduced_motion = reduced_motion
-	surface_fx.detail_scale = detail_scale
-	surface_fx.intensity_scale = intensity_scale
-	clip.add_child(surface_fx)
+	for pass_name: String in ["GradeLightningInsideCard","PromotionLightningInsideCard"]:
+		var effect: Control = FX.new()
+		effect.name = pass_name
+		effect.surface = true
+		effect.grade = grade
+		effect.reduced_motion = reduced_motion
+		effect.detail_scale = detail_scale
+		effect.intensity_scale = intensity_scale
+		clip.add_child(effect)
+		if pass_name == "GradeLightningInsideCard":
+			surface_fx = effect
+		else:
+			promotion_fx = effect
 	var rim := Panel.new()
 	rim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rim.name = "MetalRim"
@@ -131,6 +137,7 @@ func _fit() -> void:
 	clip.size = size
 	face.size = size
 	surface_fx.size = size
+	promotion_fx.size = size
 	(get_node("MetalRim") as Control).size = size
 	name_label.position = Vector2(-size.x*0.2,size.y+8)
 	name_label.size = Vector2(size.x*1.4,26)
@@ -139,7 +146,7 @@ func _fit() -> void:
 	grade_heading.position = Vector2(-size.x*0.2,-54)
 	grade_heading.size = Vector2(size.x*1.4,40)
 
-func seek(value: float) -> void:
+func seek(value: float, successful_fusion: bool = false) -> void:
 	clock = value
 	var local: float = clock-open_at
 	face.elapsed = local
@@ -147,6 +154,8 @@ func seek(value: float) -> void:
 	face.queue_redraw()
 	aura.set_time(local-reel_seconds,clock)
 	surface_fx.set_time(local-reel_seconds+0.1,clock)
+	# Keep the full primary sequence when the success discharge overlaps it.
+	promotion_fx.set_time(local-reel_seconds-0.5 if successful_fusion else -1.0,clock)
 	var revealed: bool = local >= reel_seconds
 	name_label.visible = revealed
 	grade_label.visible = revealed
