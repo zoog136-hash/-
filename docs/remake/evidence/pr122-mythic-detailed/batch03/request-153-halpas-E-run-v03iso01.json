@@ -1,0 +1,146 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03iso01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/halpas-E-walk-repair/halpas-E-walk-v03.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-E-walk-repair/halpas-E-walk-v03.png": "069c0d434a153855b313c32076457253daafc98a62c6500f43cc03b150ba427d",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing selected E run wrongly uses SE/front-right heading. Correct E walk and idle now preserve trueRIGHT lateral model. Author dedicated stronger forward-leaning fast flight/run wingcycle with new sixposes, not replay-time reuse.",
+  "user_authorization": "Production image tools allowed. No chat images/binary/previewlinks. One new sourceEDIT attempt, no identical retry.",
+  "prompt": "Edit these established TRUE EAST Halpas model references into a NEW SIX-PHASE FAST AIRBORNE RUN/FLIGHT animation atlas. This is the same exact character. Image1 is SLOW E flight/walk model; image2 is matching TRUE E grounded idle identity. Author a new dedicated faster flight cycle, not copying six slow poses or changing playback speed. Preserve exact SAME screen-RIGHT side-view camera, physical body/gear model, anatomical weapon hand and colors.\n\nABSOLUTE COMPASS: ALL6 visor/nose/helmet profile points horizontally screen-RIGHT/EAST; chest and pelvis remain lateral RIGHT. Never turn front-right/SOUTHEAST, never expose broad frontal chest, never rotate toward viewer. SAME elevated orthographic camera as refs. Modest whole-torso forward lean toward screen-RIGHT for faster flight, not a camera turn. Near anatomical RIGHT weapon arm retains the single short broad PURPLE CRYSTALLINE blade, naturally guarded down-forward/right of hip, arm anatomically connected. Far LEFT remains the unarmed arm. Exactly TWO arms, TWO legs, TWO existing purple crystal-feather-fan wings at their gold shoulder/back roots. Far wing can naturally occlude behind near wing but retain both root/wing structure. Do not mirror or swap sword hand. Original black/gold articulated armor, gold horn crown, crystal wing design, crimson/burgundy shredded cape and correct compact blade remain unchanged. No new shield, weapon, wing pair, membrane or costume.\n\nFAST FLIGHT RUN ARTICULATION: fixed rightward heading all6, both feet continuously airborne, legs naturally tucked/trailed BACK toward screen-LEFT with energetic knee/ankle follow-through. Stronger forward torso lean and cape stream backward than SLOW flight image1, coherent body scale. Dedicated full wingbeat loop with clearly DIFFERENT wing-root angles and feather fans, not six wings always above shoulder. Reading order0→1→2→3→4→5→0: FRAME0 full UPPER wing extension, raised wing tips high above gold roots, rear knees flexed; FRAME1 POWER DOWNSTROKE crossing through near-horizontal wing span behind shoulder, roots actively rotating and cape delayed; FRAME2 LOWEST wingbeat, entire fan swept DOWN/BACK with feather tips below shoulder level toward hip/lower-left, real articulated gold-root rotation, body slightly lifted by thrust and feet tucked back; FRAME3 lower-rear wing sweep begins fold/recovery, feather fan partially closes and knees/ankles lag back; FRAME4 rising RECOVERY through middle height with wing joints flexed, distinct narrower fan shape and cape streaming; FRAME5 late UPSTROKE above shoulder returning toward0 with reopened fans and slightly different elbow/cape/ankle follow-through. Thus high→horizontal→LOW→low-rear→middle-up→high→loop. Preserve SAME wing parts/feather shapes and attachment through rotations, no detached fans or morphing wings. Show meaningful greater wingstroke than slowwalk. Six genuine independently articulated phases with coherent shoulders, elbows, hips, knees, boots/cape lag; not translated/rotated copies of whole figure. Do not invent alternating grounded foot contacts for airborne flight.\n\nLAYOUT: PNG1024x1536 transparent, TWO512px columns by THREE512px rows, SIX complete figures only. One figure fully contained in each cell, reading order left-to-right then down. Each full silhouette including strongest down/up wing tips, complete blade, cape, horns and toes must fit CENTRAL340x340 area, approximately260-300px physical crown-to-boot size; leave at least80px EMPTY transparent margin to each cell edge. Uniform scale in all six; use generous gutters so fullbody bounding rectangles never overlap between cells. Never crop/shorten wings, blade, cape or boots to fit. Detailed crisp production RPG rendering, opaque solid armor/crystals/cloth, pure transparent alpha0 background and gaps, thin1-2px edge antialiasing. Purple color/light stays INSIDE solid crystal wings/blade. NO diffuse outerglow, bloom, halo, fog, haze, trails, sparks, motionblur, shadow, floor, ground, labels, numbers, text, grid, panels or additional objects. Critical quality: TRUE RIGHT lateral model every frame, original right-hand weapon and equipment, actual complete HIGH-to-LOW-to-HIGH FAST wingcycle, complete uncropped silhouette and stable body proportions.",
+  "requested_at": "2026-10-19T11:39:01.371702+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_cumulative_estimate_before_source": 2514498,
+  "private_jpeg_budget_limit": 8000000,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 visor/nose, lateral chest, pelvis and motion heading remain horizontal RIGHT/EAST, distinct from old SE/front-facing run. No view turn or mirrored weapon-hand swap seen.",
+      "New genuine fast-flight body posture uses stronger forward lean and trailing/tucked knees/ankles versus slow E walk; cape streams backward and changes fold/lag with wingstroke. Both legs airborne, no invented grounded contact requirement.",
+      "Dedicated full6 wingbeat sequence is visible:0 HIGH raised crystal fan,1 horizontal power sweep,2 LOW down/back fan toward hip/lower-left,3 low-rear partially recovered sweep,4 middle/raised recovery,5 late raised return toward0. Rotations occur at gold shoulder/back wingroot; not whole-image translation or replay-speed reuse.",
+      "Existing two-arm/two-leg model, same nearRIGHT weapon arm with single broad purple crystal blade, horn crown, black/gold plates, crimson tattered cape and established crystalline fan structure retained. Far wing/root remains naturally layered and largely occluded as in lateral E reference. No extra arm/weapon or detached equipment observed.",
+      "Entire six silhouettes appear complete, no strong opaque pixels touch outerimageedge. Physical head/torso/gear scale is coherent across phases while knees/wingfan/cape articulate.",
+      "Raw strict importer detects one pose rectangle containing another body; native geometry remains HOLD pending lossless disjoint-pose layout, no cropping or threshold relaxation applied."
+    ],
+    "visual_limitations": [
+      "Source-art/motion PASS only. Actual SpriteFrames selection, pixel-preserving repack, physical virtualcanvas/support layout, Player tests and private native temporal review remain for root.",
+      "Default profile and actor finalapproval remain unchanged;0 fully approved actor increment."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "ce2b8d7a4fa25855eec010eaa426f1ce160525af2a77f64e0a404290bf817619",
+    "raw_bytes": 2434594,
+    "request_sha256": "c48e2a536efb57a180eda07231af9ae1cfef494873e392e29b760e071806440e",
+    "review_sha256": "2d63c4d0e030c3a21c7fabee2b97f59a71bbbab0d84da15ef89b14ebcc0182e6"
+  },
+  "available_repository_reference_sources": {
+    "069c0d434a153855b313c32076457253daafc98a62c6500f43cc03b150ba427d": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03.png"
+  },
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-152-halpas-E-run-v03.json",
+  "parent_request_sha256": "169258f50632d749631a24367ef4effef5315e58cedf885d24b614cafd7415fd",
+  "processing_proof": {
+    "source_sha256": "ce2b8d7a4fa25855eec010eaa426f1ce160525af2a77f64e0a404290bf817619",
+    "output_sha256": "7cdf37a20cd14c2f53adb7fed226c879b4a4f0162ab8ddde5ce9e2a42ef5b874",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03.png",
+    "output": "/workspace/scratch/halpas-E-run-v03iso01.png",
+    "preserved_foreground_rgba": true,
+    "source_canvas": [
+      1024,
+      1536
+    ],
+    "output_canvas": [
+      1536,
+      1536
+    ],
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 90663,
+    "maximum_removed_alpha": 15,
+    "foreground_pixels": 554031,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -4
+        ],
+        "pixels": 107407,
+        "foreground_pixels": 101332,
+        "rgba_sha256": "19e5b7a29d3d8c39f425cdf8e288d5ae82982adcf278d6e792e74021289a568f"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -71
+        ],
+        "pixels": 92629,
+        "foreground_pixels": 86885,
+        "rgba_sha256": "dcee2cebbaeccd4838ec26c439fd7a7b5afbd58f3a0fdaafc5d18a3e334753cf"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          -22
+        ],
+        "pixels": 96911,
+        "foreground_pixels": 91250,
+        "rgba_sha256": "acb9e1d5e66901ea7b6078063e0cbac272aaf9677b73451f678888e7ee62e4bd"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          -5
+        ],
+        "pixels": 80734,
+        "foreground_pixels": 76220,
+        "rgba_sha256": "f812b48983a9e3a973a6cbf231258d201e012514866a63f303a986aa7486a097"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          39
+        ],
+        "pixels": 103448,
+        "foreground_pixels": 97656,
+        "rgba_sha256": "6f7adcc05424d637b393c35038ce469aed1a5af202455fc47dd10fce06063092"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          52
+        ],
+        "pixels": 106604,
+        "foreground_pixels": 100688,
+        "rgba_sha256": "a13f7e62cca3b0387c735fd3a3983588ae60321586a3bba7f3093adf974296d7"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03iso01.png",
+  "output_sha256": "7cdf37a20cd14c2f53adb7fed226c879b4a4f0162ab8ddde5ce9e2a42ef5b874",
+  "output_bytes": 1604231,
+  "original_generated_file": "/workspace/scratch/halpas-E-run-v03iso01.png"
+}
