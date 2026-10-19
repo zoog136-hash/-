@@ -3699,6 +3699,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "W",
+      "role": "idle",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png",
+      "bytes": 2317850,
+      "sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3812,7 +3831,7 @@
     "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
     "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
     "transform:267:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
-    "transform:267:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
+    "transform:267:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
     "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
     "transform:267:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
     "transform:267:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
@@ -4587,6 +4606,22 @@
             "Unchanged strict analyzer plus complete-region gate pass six complete distinct source poses. No source pixels were moved or edited. Prior v02 HOLD request/result/raw SHA are unchanged."
           ],
           "source_review_sha256": "aa93c040c0822b309eda0a46ed49b4c578707d1a804e6917fd339dc454e782e1"
+        },
+        {
+          "slot": "transform:267:W:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 are consistently LEFT/W lateral: pale face has clear left silhouette/profile rather than front-facing eyes, head/chin/nose and both boot toes aim left, torso/pelvis keep matching left axis. No SW-facing front-head replacement or opposite-heading frame.",
+            "Near anatomicalLEFT arm is foreground/camera-side on projected right and its hand stays EMPTY; anatomicalRIGHT/FAR arm projects left of torso with same sinuous weapon grip. Correct far-weapon/near-free layering is visible, not a mirrored E hand swap.",
+            "Original visible pale face and long pale hair, tall gold/black ornaments, thin hard gold radial spines, long dark goldtrim skirt and long thin curved weapon remain faithful.",
+            "Both boot soles stay planted; local chest/shoulder/head/forearm and clear hair/robe lag vary through breathing/settling without a walking step or attack.",
+            "Body/equipment scale and rigid spine attachment remain coherent across6, all boots/gear/long blade tip visible."
+          ],
+          "source_review_sha256": "8c9daba98583f83b1f1e3e84b81a1416e3718d732c2a886870008cacbd9c05d7"
         }
       ]
     }
