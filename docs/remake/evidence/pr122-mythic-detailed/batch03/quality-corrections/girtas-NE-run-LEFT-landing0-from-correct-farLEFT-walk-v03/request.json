@@ -1,0 +1,37 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "NEW_bounded_run_edit_from_independently_correct_farLEFT_walk_anatomy",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phases": [
+    0
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/faithful-true-FARLEFT-forward-contact-ANATOMY-primary.png",
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/correct-farLEFT-anatomy-NEW-RIGHT-high-recovery-guide.png",
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/NE-RUN-LEFT-landing0-fixedbone-CUTAWAY-primary.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/faithful-true-FARLEFT-forward-contact-ANATOMY-primary.png": "c571d32c6d83b2f56136980bf08125a6a622794205b9943cd1ce720400341f59",
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/correct-farLEFT-anatomy-NEW-RIGHT-high-recovery-guide.png": "005a22c62116bbdcb9e91c94ec44e043c2127fd3d316018ea216a99108422694",
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/NE-RUN-LEFT-landing0-fixedbone-CUTAWAY-primary.png": "a5d1286da2d40adfaab6553183cda223d6f5031b2a5d58f56a720f90cf5fb579"
+  },
+  "transparent_background": true,
+  "prompt": "EDIT FIRST exact faithful GIRTAS trueNE FAR-LEFT-FORWARD WALK CONTACT anatomy into ONE NEW NE RUN LEFT-LANDING0. FIRST anatomical farLEFT support was independently verified correct; PRESERVE THAT SAME FARLEFT hip→thigh→knee→forwardgroundboot ownership/forwardextent. Do NOT replace it with the nearRIGHT outerhip leading leg, which failed earlier. SECOND is the exactsame source with the OLD trailingnearRIGHTlowerleg erased and NEW GREEN bent-high recovery chain drawn as an authoring target; YELLOW box is originalfarLEFTplantedboot toKEEP, not a targetcolor. THIRD constant-boneNEcutaway confirms nearRIGHThighfoldedrecovery versusfarLEFTforwardlanding. Source figure is primary for trueleft/righthip ownership; sketch and3D describe NEW running articulation, never a mannequin/color/floor output.\n\nGenuine NEW RUN change: lift the anatomical NEAR RIGHT leg that originally trails DOWN-LEFT, bend its KNEE HIGH/FORWARD from its SAME NEARRIGHThip, fold the SHIN BACK/UP so RIGHTHEEL/BOOT is HIGH AIRBORNE behindtheknee and clearly ABOVE theforwardfarLEFTsupportsole. Original bottom trailingRIGHTtoe must disappear entirely, not remainasthirdboot or groundedtoe. The TWO actuallegchains stay original hip-owned: farLEFT continues forwardNEUPRIGHT andtouchesground; NEARRIGHT foldsHIGHrecovery, notgroundlead. Show the nearRIGHT recoveryknee/shin connection naturally where longrobe parts enough to proveownership, keep exactly2legs/boots. Match originalsegmentproportions; notgiantlonglegs/tinychest orswappedbootlabels. FootscreenX maycross; NEVERforceLEFTbootleft. FARLEFT heel/sole lands alone withsoftknee, no walkdoublecontact.\n\nAlso author actual RUN dynamics: modest 10-15degree forwardNE torsolean, compact bentelbows/contralateralarms (RIGHToriginalweaponarm forward, EMPTYfarLEFTarm back), longhair andlongrobe stream behindnaturally. Keep sourcefarLEFT supportchain anatomy while joints/arms/torso genuinely move into run, do not merely recolor/copyoldwalk. Same originalPALE/SILVERlonghair/goldcrown/narrowHARDstraightGOLDradialspines/blackgoldheavyarmor/LONGdarkgoldtrimlayeredrobe toankles. Preservehardpauldron/skull/waistcharacterproportions, detailedfiligree, completeequipment. Exactly2hands; originalONE LONGSINUOUSorangegoldblade continuously in NEARRIGHT hand, samefullbladecurve/length asFIRST, emptyLEFT, no thirdarm/handtransfer/shortbroadsword/newgear/redmask/flamefeatherfan/wings/segmentedpants/shortskirt.\n\nSame exact trueNErearRIGHTthreequarter camera: largernearRIGHTshoulder/weaponarm IMAGERIGHT, foreshortenedfarLEFT, obliquehips, mostlyBACKhair/dorsalarmor, no pureN/E/frontturn. OutputONEentireisolated transparentrequested1024squareRGBA, body500-600px/fullgear≤800px, ≥96pxalpha0clearance, no clipping/gearshortening/floor/shadow/aura/outwardhaze/particles/blur/coloredguide/text/duplicates. Actual finalcriteria: KEEP correctFARLEFT forwardgroundchain and originalrightweapon, replaceONLYoriginalnearRIGHTtrailingleg with trueHIGHfoldedrecoveryleg plusnewrunlean/armmotion. If nearRIGHT insteadleads orRIGHTtoe stillgrounds, failed.",
+  "corrective_reason": "Two guide-only oppositecontactattempts returnednearRIGHTlead. Rootauthorizedmateriallydifferentanatomy-primary edit fromactualcorrectfarLEFTwalk0c571, preservehipownership whileauthoringtruenearRIGHTHIGHrecovery/runlean/arms; no staticwalkcompletion or existingRGBAreuse. Prior0failures+success3immutable.",
+  "root_authorization": "2026-10-19 root: immediately proceed boundedrunedit actualfarLEFTNEwalk0 anatomy-primary, preservekneepelvisownership andauthoractualHIGHnearRIGHTrecovery+runarms/torso; continuewithinuser scopewithoutwaitingper-step permission.",
+  "user_authorization": "ActualPR122animationproduction, privateproductiongenerationallowed/noimagesmainchat, preserveallpriorart/colorprofiles/approvals.",
+  "bounded_edit_provenance_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/bounded-edit-source-and-joint-provenance.json",
+  "bounded_edit_provenance_sha256": "d9e871fccedb7b0b83c20e41aa87a9ca90540753c8f0bff9c1e129221f0d299b",
+  "requested_at": "2026-10-19T16:24:57.609290+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_game_poses": 0,
+  "actor_approval": false,
+  "generation_budget": "ONE materiallydifferent actualcorrectfarLEFT-anatomy boundedrunedit; freshsourceQCbeforeanynext4."
+}
