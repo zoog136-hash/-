@@ -2759,6 +2759,8 @@ func _grant_playtest_aden() -> void:
 	_save_game(true)
 
 func _use_card_pack_item(item_name: String) -> void:
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
 	var spec: Dictionary = CARD_PACK_ITEMS.definition(item_name)
 	if spec.is_empty() or int(inventory.get(item_name, 0)) < 1:
 		hud.show_message("뽑기권이 없습니다")
@@ -2792,6 +2794,7 @@ func _use_card_pack_item(item_name: String) -> void:
 	hud.show_message(message)
 	hud.append_log(message)
 	_save_game(true)
+	hud.call("present_card_reveal", category, outcome, false)
 
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
@@ -5363,6 +5366,8 @@ func _on_class_selected(value: int) -> void:
 func _on_card_pack_draw_requested(category: String) -> void:
 	if not OS.is_debug_build():
 		return
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
 	var result: Dictionary = card_draw_fusion.draw_pack(category)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "뽑기 실패")))
@@ -5382,8 +5387,11 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.call("set_card_collection_state", card_draw_fusion.export_state())
 	_save_game(true)
+	hud.call("present_card_reveal", category, result, false)
 
 func _on_card_fusion_requested(category: String, grade: String) -> void:
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
 	var result: Dictionary = card_draw_fusion.fuse(category, grade)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
@@ -5401,6 +5409,7 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.call("set_card_collection_state", card_draw_fusion.export_state())
 	_save_game(true)
+	hud.call("present_card_reveal", category, result, true)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
 	if category == "아이템":
