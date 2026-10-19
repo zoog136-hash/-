@@ -64,7 +64,8 @@ func _run() -> void:
 				assert(actor.motion.state == track.role and actor.motion.facing8 == direction)
 				assert(str(sprite.animation) == track.animation and not sprite.flip_h)
 				assert(sprite.self_modulate == Color.WHITE)
-				var foot: Vector2 = Vector2(0, float(record.foot[1]) - float(record.canvas_size[1]) / 2.0)
+				var canvas := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame).get_size()
+				var foot := Vector2(0, canvas.y / 8.0)
 				assert((sprite.position + foot * sprite.scale).is_equal_approx(Vector2.ZERO))
 				seen[sprite.frame] = true
 			assert(seen.size() == 6)

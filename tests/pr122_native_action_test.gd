@@ -55,7 +55,8 @@ func _run() -> void:
 				if str(sprite.animation) == track.animation:
 					seen[sprite.frame] = true
 					assert(not sprite.flip_h and sprite.rotation == 0.0)
-					var foot := Vector2(0, float(record.foot[1]) - float(record.canvas_size[1]) / 2.0)
+					var canvas := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame).get_size()
+					var foot := Vector2(0, canvas.y / 8.0)
 					assert((sprite.position + foot * sprite.scale).is_equal_approx(Vector2.ZERO))
 				if role == "attack" and not strikes.is_empty() and not released:
 					assert(strikes == [sequence])

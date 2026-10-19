@@ -12,6 +12,7 @@ from pathlib import Path
 import subprocess
 
 import import_original_based_motion as importer
+import pr122_reviewed_runtime_layout as reviewed_layout
 
 
 SOURCE_MANIFEST = Path('docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json')
@@ -104,11 +105,17 @@ def stage(root, key, revision=None):
         assert geometry['canvas_size'] == [1024, 1024] and geometry['foot'] == [512, 640]
         assert [frame['row'] for frame in geometry['frames']] == list(range(6))
         assert all(frame['direction'] == direction for frame in geometry['frames'])
+        layout_proof = None
+        layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
+        if layout is not None:
+            geometry, layout_proof = reviewed_layout.apply_reviewed_layout(path, geometry, layout)
         tracks.append(dict(direction=direction, role=role,
                            animation=f'{role}_{importer.DIRECTIONS.index(direction)}',
                            source=source, source_sha256=record['sha256'],
                            texture=previous_textures.get((source, record['sha256']),
                                        (folder / f'{direction}-{role}.png').as_posix()), geometry=geometry))
+        if layout_proof is not None:
+            tracks[-1]['runtime_layout_proof'] = layout_proof
     assert 1 <= len(tracks) <= len(NATIVE_ROLES) * 8
     fingerprints = [frame['rgba_sha256'] for track in tracks for frame in track['geometry']['frames']]
     assert len(set(fingerprints)) == len(fingerprints), 'No duplicated native poses across tracks'
