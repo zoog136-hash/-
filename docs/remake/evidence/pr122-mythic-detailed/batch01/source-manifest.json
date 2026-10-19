@@ -5365,6 +5365,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "E",
+      "role": "hit",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
+      "original_generated_file": "/workspace/scratch/halpas-E-hit-repair-v02/halpas-E-hit-v02.png",
+      "bytes": 2586344,
+      "sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -5427,7 +5446,7 @@
     "transform:393:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-attack-v01iso01.png",
     "transform:393:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
     "transform:393:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
-    "transform:393:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
+    "transform:393:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
     "transform:393:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
     "transform:393:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-hit-v01.png",
     "transform:393:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-hit-v01iso01.png",
@@ -5809,6 +5828,21 @@
             "Same gold horns, black/gold plate segments, full purple crystal fan wings, original blade and torn burgundy cape. Complete uncut silhouettes; zero alpha>100 pixels on outer image edge. Existing flight/overlapping legs match reference; no standing-foot direction test imposed."
           ],
           "source_review_sha256": "40b1a9832f3a1f91bde50f6e922586d84149201cf75c336ece97c87f926e7fda"
+        },
+        {
+          "slot": "transform:393:E:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six preserve due EAST pure side profile: helmet snout points right and narrow side armor/hip plane stays E through head recoil. No rear/front three-quarter camera swap.",
+            "Exactly two arm chains: near anatomical RIGHT shoulder-elbow-low forearm-hand continuously grips original blade low at hip all six. Far EMPTY LEFT forearm emerges in front of upper torso at1, bends near helmet peak2, releases3, lowers4 and returns5. No third arm, extra right empty fist, disconnected weapon or grip swap.",
+            "Clear six-phase hit response: guard0; left arm lift/head recoil1; peak2 torso/head rear lean and bent empty LEFT hand; release3; lower-hand/wing-cape recovery4; settle5. Blade stays low rather than becoming an attack swing.",
+            "Exact same gold-horn helmet, black/gold plate segmentation, original purple fan wings, crystal blade and left-back burgundy cape. Existing hovering two-leg chains match idle reference. All silhouettes fully present, zero alpha>100 outer-edge pixels. Unchanged strict six-frame geometry and complete-pose checks PASS."
+          ],
+          "source_review_sha256": "964e8076a9a6b06d8c0e1695616884867cb5f844fd5a33a7698bb63418fd6652"
         }
       ],
       "compass_audit": {
