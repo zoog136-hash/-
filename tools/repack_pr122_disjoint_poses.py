@@ -21,11 +21,22 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def repack(source, output, direction):
+def repack(source, output, direction, *, pose_count=6, canvas_size=1024, cell_width=768):
+    """Split a reviewed two-column source; partial sources never imply approval."""
+    for name, value, choices in (('pose_count', pose_count, (2, 4, 6)),
+                                 ('canvas_size', canvas_size, (1024, 2048)),
+                                 ('cell_width', cell_width, (768, 1280))):
+        if type(value) is not int or value not in choices:
+            raise ValueError(f'{name} must be an integer in {choices}')
+    if direction not in importer.DIRECTIONS:
+        raise ValueError('Unknown reviewed direction')
     assert source.is_file() and not output.exists()
+    assert not output.with_suffix('.repack.json').exists(), 'Never overwrite an existing proof'
     rgba = np.array(Image.open(source).convert('RGBA'))
     height, width = rgba.shape[:2]
-    assert width % 2 == 0 and height % 3 == 0
+    grid_rows = (pose_count + 1) // 2
+    if pose_count == 6:
+        assert width % 2 == 0 and height % 3 == 0
     visible = rgba[:, :, 3] > 100
     assert not (visible[0].any() or visible[-1].any() or visible[:, 0].any()
                 or visible[:, -1].any()), 'Clipped source cannot be repaired by adding padding'
@@ -38,7 +49,7 @@ def repack(source, output, direction):
         labels, _ = ndimage.label(rgba[:, :, 3] > seed_alpha, np.ones((3, 3)))
         sizes = np.bincount(labels.ravel())
         bodies = [int(i) for i in np.flatnonzero(sizes >= 200) if i]
-        if len(bodies) != 6:
+        if len(bodies) != pose_count:
             continue
         large = np.isin(labels, bodies)
         distance, nearest = ndimage.distance_transform_edt(~large, return_indices=True)
@@ -46,27 +57,28 @@ def repack(source, output, direction):
                 and np.all(distance[foreground] <= (2 if seed_alpha == 16 else 5))):
             break
     else:
-        raise ValueError('Require six separate bodies with only bounded faint edge fringe')
+        count_label = 'six' if pose_count == 6 else str(pose_count)
+        raise ValueError(f'Require {count_label} separate bodies with only bounded faint edge fringe')
     owners = labels[nearest[0], nearest[1]]
     kept = foreground | ((rgba[:, :, 3] > 0) & (distance <= 2))
     removed = (rgba[:, :, 3] > 0) & ~kept
     assert not removed.any() or int(rgba[:, :, 3][removed].max()) <= 16
-    source_cell_height = height // 3
+    source_row_height = height / grid_rows
+    source_cell_height = (height + grid_rows - 1) // grid_rows
     largest_height = max(int(np.ptp(np.where(kept & (owners == body))[0])) + 1 for body in bodies)
-    cell_width = 768
     cell_height = max(source_cell_height, ((largest_height + 16 + 63) // 64) * 64)
-    result = np.zeros((cell_height * 3, cell_width * 2, 4), dtype=np.uint8)
+    result = np.zeros((cell_height * grid_rows, cell_width * 2, 4), dtype=np.uint8)
     slots, proof = set(), []
     for body in bodies:
         cy, cx = ndimage.center_of_mass(large, labels, body)
-        column, row = int(cx // (width // 2)), int(cy // source_cell_height)
-        assert 0 <= column < 2 and 0 <= row < 3
+        column, row = int(cx // (width / 2)), int(cy // source_row_height)
+        assert 0 <= column < 2 and 0 <= row < grid_rows
         slot = row * 2 + column
         assert slot not in slots, 'Multiple bodies in one temporal slot'
         slots.add(slot)
         mask = kept & (owners == body)
         ys, xs = np.where(mask)
-        dx = column * cell_width + cell_width // 2 - (column * (width // 2) + width // 4)
+        dx = column * cell_width + cell_width // 2 - ((2 * column + 1) * width // 4)
         dy = row * cell_height + cell_height // 2 - (int(ys.min()) + int(ys.max())) // 2
         target_x = xs + dx
         target_y = ys + dy
@@ -80,18 +92,20 @@ def repack(source, output, direction):
         proof.append(dict(phase=slot, translation=[int(dx), int(dy)], pixels=int(mask.sum()),
                           foreground_pixels=int((mask & foreground).sum()),
                           rgba_sha256=hashlib.sha256(rgba[ys, xs].tobytes()).hexdigest()))
-    assert slots == set(range(6))
+    assert slots == set(range(pose_count))
     assert sum(p['foreground_pixels'] for p in proof) == int(foreground.sum())
     output.parent.mkdir(parents=True, exist_ok=True)
     Image.fromarray(result).save(output)
-    geometry = importer.analyze(output, rows_count=6, reference_rows=[0, 3],
-                                directions_axis='phase_grid2', canvas_size=1024,
+    geometry = importer.analyze(output, rows_count=pose_count,
+                                reference_rows=[0, min(3, pose_count - 1)],
+                                directions_axis='phase_grid2', canvas_size=canvas_size,
                                 directions=[direction])
     importer.require_complete_pose_regions(output, geometry)
-    assert geometry['distinct_pixel_frames'] == 6
+    assert geometry['distinct_pixel_frames'] == pose_count
     audit = dict(source_sha256=digest(source), output_sha256=digest(output),
                  source=str(source), output=str(output), preserved_foreground_rgba=True,
-                 source_canvas=[width, height], output_canvas=[cell_width * 2, cell_height * 3],
+                 source_canvas=[width, height],
+                 output_canvas=[cell_width * 2, cell_height * grid_rows],
                  resampled=False, recolored=False, newly_authored_poses=0,
                  foreground_alpha_threshold=16, retained_fringe_distance=2,
                  body_seed_alpha=seed_alpha,
@@ -100,6 +114,10 @@ def repack(source, output, direction):
                  maximum_removed_alpha=int(rgba[:, :, 3][removed].max()) if removed.any() else 0,
                  foreground_pixels=int(foreground.sum()), poses=sorted(proof, key=lambda p: p['phase']),
                  strict_importer='PASS', visual_approval='NOT_RUN')
+    if (pose_count, canvas_size, cell_width) != (6, 1024, 768):
+        audit.update(pose_count=pose_count, importer_canvas_size=canvas_size,
+                     temporal_rows=grid_rows, temporal_columns=2,
+                     partial_source=pose_count != 6, approvals_added=0)
     output.with_suffix('.repack.json').write_text(json.dumps(audit, indent=2) + '\n')
     return audit
 
@@ -109,6 +127,10 @@ if __name__ == '__main__':
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--direction', required=True, choices=importer.DIRECTIONS)
+    parser.add_argument('--pose-count', type=int, choices=(2, 4, 6), default=6)
+    parser.add_argument('--canvas-size', type=int, choices=(1024, 2048), default=1024)
+    parser.add_argument('--cell-width', type=int, choices=(768, 1280), default=768)
     args = parser.parse_args()
-    audit = repack(args.source, args.output, args.direction)
+    audit = repack(args.source, args.output, args.direction, pose_count=args.pose_count,
+                   canvas_size=args.canvas_size, cell_width=args.cell_width)
     print(json.dumps({k: audit[k] for k in ('foreground_pixels', 'maximum_removed_alpha', 'strict_importer')}))
