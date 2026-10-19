@@ -1,0 +1,102 @@
+{
+  "status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA",
+  "actor": "transform:267",
+  "direction": "S",
+  "role": "attack",
+  "actual_frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/SpriteFrames.tres",
+  "actual_frames_sha256": "f063517084ce148d9b937714129a5d7ad131459c9d13bf810ea29cdd02b0660b",
+  "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/NativeMotionProfile.tres",
+  "track": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+    "source_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+    "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/S-attack.png",
+    "geometry_sha256": "313a072948777ac413c8111168b7acd7d4cf9562b64b1629cdb31c6a5357972a",
+    "frame_RGBA_sha256": [
+      "b33cc95dbd13995b29255b0e993cd6432ec00d0e737924c8335305edd2679f35",
+      "923f3034556fcd9e1c363e8eee14c6f275ee9dffa083b0c16bbed544708d159b",
+      "182089a098f0516df53bfd5909f08ab54f149a4c5a58b34ee6098d1a39dfa4f7",
+      "91e3cee854f425a832cab2d57b1e1644e875d9a17df1caf5326c22d5af8c1afd",
+      "e246325b78d4b6a8f868ac475a406d943aa8cdb4a33d203ce20eef8b6aedfef6",
+      "6c1a21f4e8704cf00923eb01a9d42c35dc55589597ccd2a544862efdc94a4fbc"
+    ],
+    "source_authored_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fps": 14.285714286,
+    "loop": false,
+    "durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "actual_TRES_region_margin_canvas_and_crop_SHA": "PASS"
+  },
+  "idle_reference": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+    "source_sha256": "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641",
+    "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r053/S-idle.png",
+    "geometry_sha256": "ae9daf8fe97adbac6f9a68455fabbf42e32edc487f9d119bd64d358a558bc563",
+    "frame_RGBA_sha256": [
+      "e9e1fbd64afc120b5f9fc016fd73c71b610ca50d587e421f893b94b8c39577a8",
+      "4ab9ebc88f8d38606024cf917dc4e73f12128c8ec05ca07f0a18ad5be76b9b02",
+      "5fb7c79c4b433a26864efc2224081e3fa8a653c91b4f267b70e95df3f92b41f1",
+      "74774249323f40088112f396fe7bfbe20b650a7778f58430461adecf5aed6496",
+      "550000ef37fa44ea80159ad26cca77b048011c04166e9d990f8ff4a3b615aec2",
+      "1df99c6ea208ab2168f8fc193555409b11ae8de51698c8676be0c1d8b2d6732b"
+    ],
+    "source_authored_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fps": 5.0,
+    "loop": true,
+    "durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "actual_TRES_region_margin_canvas_and_crop_SHA": "PASS"
+  },
+  "runtime_reference_canvas": [
+    1024,
+    1024
+  ],
+  "private_preview": "/workspace/scratch/girtas-corrected-core-runtime-qa-20261019/S-attack-actual-compiled-private.jpg",
+  "private_preview_bytes": 58295,
+  "actor_approval_change": 0,
+  "repository_mutated": false,
+  "source_pixels_changed": false,
+  "reviewed_at": "2026-10-19T11:57:45.107536+00:00",
+  "scope": "Only this corrected selected six-pose clip and same-heading faithful idle transition; not whole-actor visual approval, production catalog enablement or detailed completion.",
+  "phase_count": 6,
+  "source_pixel_preservation": "PASS exact selected PNG bytes and all six frame RGBA crops; TRES regions/margins/virtual sizes match register.",
+  "source_order": "PASS authored phases0..5 retained; no core phase reordering or duplicate expansion.",
+  "private_detail_preview": "/workspace/scratch/girtas-corrected-core-runtime-qa-20261019/S-attack-compiled-detail-private.jpg",
+  "private_detail_preview_bytes": 139679,
+  "actor_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+  "detailed_completion_change": 0,
+  "full_CI_or_tests_run": false,
+  "heading_and_model": "PASS frontal SOUTH face/chest/pelvis remain coherent across six poses. Paired gold armor, original long dark skirt, pale hair and thin rigid back rays remain the same model; loaded/wider stance explains height changes without a proven rigid head/torso-scale discontinuity.",
+  "arms_and_weapon": "PASS anatomicalRIGHT/imageLEFT hand retains the long thin S-curved weapon through low guard, raised windup, loaded overhead pose, contact3 toward screenBOTTOM/downleft, follow-through4 and recovered guard5. Free imageRIGHT hand stays separate; no ownership flip, extra arm or rigid short sword.",
+  "strike_and_transition": "PASS phases0..5 visibly form guard -> raise -> load -> contact3 -> downward follow-through -> guard. Contact3 remains a distinct foreground/downward strike. Guard5 returns toward the same SOUTH idle without a camera flip or unexplained whole-model displacement.",
+  "foot_and_root_observation": "Contact3/4 boots sit above the common y640 baseline while the lower weapon tip approaches it. Loaded knees in2 and raised/advancing body in3 support a brief authored aerial/forward lunge; this is not sufficient evidence of a packing bug. Preserve the genuine movement rather than forcing stationary feet. Grounded-only strike intent would require a separate motion-design review, not an automatic source-anchor normalization.",
+  "timing_scope": "Actual TRES has six1.0-weight frames, loop=false, fps14.285714286 (~0.42s). Root already validated actual Player/actions and marker3 once; no repeated marker/gameplay test performed.",
+  "private_contact_detail_preview": "/workspace/scratch/girtas-corrected-core-runtime-qa-20261019/S-attack-contact-lowerbody-private.jpg",
+  "private_contact_detail_preview_bytes": 70880,
+  "concrete_visual_defects": []
+}

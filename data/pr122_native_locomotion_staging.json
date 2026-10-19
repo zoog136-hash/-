@@ -7688,7 +7688,13 @@
               "Existing helmet, black/gold armor, single same-hand blade, crystalline wings and burgundy cape stay coherent. No duplicate static idle or whole-image translation substituted for flight.",
               "Fixed0.75-pixel-scale contact review avoids misleading per-bbox thumbnail normalization; helmet/body physical scale stays coherent while wing/leg poses change."
             ],
-            "source_review_sha256": "44e188e450e8f365da4b04bbd872be11c7e37d5de67dd8bf0f69f4affa8dd1ae"
+            "source_review_sha256": "44e188e450e8f365da4b04bbd872be11c7e37d5de67dd8bf0f69f4affa8dd1ae",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r053-E-walk.json",
+              "sha256": "05b4ae1e8c9dcc92b2f0b248c9348ee6ef4706bed97df0af58c4799fb521873b",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_E_IDLE_WALK_RUNTIME_LAYOUT"
+            }
           },
           {
             "slot": "transform:393:E:run",
@@ -7705,7 +7711,13 @@
               "Entire six silhouettes appear complete, no strong opaque pixels touch outerimageedge. Physical head/torso/gear scale is coherent across phases while knees/wingfan/cape articulate.",
               "Raw strict importer detects one pose rectangle containing another body; native geometry remains HOLD pending lossless disjoint-pose layout, no cropping or threshold relaxation applied."
             ],
-            "source_review_sha256": "2d63c4d0e030c3a21c7fabee2b97f59a71bbbab0d84da15ef89b14ebcc0182e6"
+            "source_review_sha256": "2d63c4d0e030c3a21c7fabee2b97f59a71bbbab0d84da15ef89b14ebcc0182e6",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r056-E-run.json",
+              "sha256": "054360a8fbd30fd8fd8f5e5b0c019048ba5685e6debcb7657e10dba19db33e52",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_E_RUN_RUNTIME_TRANSITION_AND_LOOP"
+            }
           },
           {
             "slot": "transform:393:W:walk",
@@ -16259,7 +16271,13 @@
               "Six selected regions retain exact original RGBA/provenance. Public strict6pose importer and complete coverage passed at2048. Three terminal alpha21/61/41 pixels retainedexact; full sharp blade tip privately confirmed, no strong foreground boundary clip.",
               "Runtime proposal uses measured pelvis-axis/supportsole anchors, not old cell-center/bbox anchors."
             ],
-            "source_review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205"
+            "source_review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r076-N-walk.json",
+              "sha256": "a93e87899bf7ffc623c79a7dc29248f31ed2cbe9ee06a1bdc274405ef60f92c3",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_NATIVE_N_WALK_RUNTIME_VISUAL_QC"
+            }
           },
           {
             "slot": "transform:267:W:hit",
@@ -16293,7 +16311,13 @@
               "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
               "Existing W derivative PNG is copied byte-identically; only reviewed atlas region metadata expands to include all current nonzero ray/AA pixels."
             ],
-            "source_review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d"
+            "source_review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r079-W-death.json",
+              "sha256": "b07ab4c965129440b5cfad02542cc5c66ca7bf73bcea05ed56f87d94c1520117",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
+            }
           },
           {
             "slot": "transform:267:S:attack",
@@ -16309,7 +16333,13 @@
               "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
               "All1,572,864 original RGBA pixels including transparent RGB/faintbackground retained exactlyonce; original S attack contact3/front heading and long sinuous weapon are unchanged."
             ],
-            "source_review_sha256": "23874f98f7b820532c1014fee236c19d7b0885c358b11bcb99dbb37f790d7a7c"
+            "source_review_sha256": "23874f98f7b820532c1014fee236c19d7b0885c358b11bcb99dbb37f790d7a7c",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r079-S-attack.json",
+              "sha256": "d548b512def6d6f811bcf406c6ab96d1708030b5a38ad23c7e96bbad9d535de6",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
+            }
           }
         ]
       }
