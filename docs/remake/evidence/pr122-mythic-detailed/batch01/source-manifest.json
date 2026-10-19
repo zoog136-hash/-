@@ -5696,6 +5696,31 @@
         "canvas_size": 2048,
         "review_basis": "Unchanged strict complete six-pose importer PASS for exactRGBA mixed-resolution assembly in3072x4608 image with1536 cells. Perpose runtime canvas scale handled separately; no relaxation of ownership/fringe/clipping/region guards."
       }
+    },
+    {
+      "key": "transform:393",
+      "direction": "S",
+      "role": "attack",
+      "version": "v02composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+      "original_generated_file": "/workspace/scratch/halpas-S-attack-composite-v02/halpas-S-attack-v02composite01.png",
+      "bytes": 3390000,
+      "sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+        "canvas_size": 2048,
+        "review_basis": "ExactRGBA mixedresolution6posecomposition requiresstrictnominal2048. PhysicalruntimeCsare[1024,1024,1024,2304,1024,1024]; oldfiveoriginalworldpixelpositions preserved, onlynewcontact3physicalbodyresolutionnormalizedwithoutresampling."
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -5752,7 +5777,7 @@
   "selected_detailed_action_sheets": {
     "transform:393:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png",
     "transform:393:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-attack-v01.png",
-    "transform:393:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+    "transform:393:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
     "transform:393:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-attack-v01iso01.png",
     "transform:393:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
     "transform:393:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-attack-v01iso01.png",
@@ -6256,6 +6281,23 @@
             "Private metadata-normalized seven-cell comparison against actual selected directional idle0 reviewed all six for source physicalbody/camera/reaction flow. Closed helmet/pauldron/girdle scale and waist roots proposed from rigid landmarks, not whole silhouette bbox or standing-foot lock. Proposals keep head/torso/emptyarm/wing/cape response; actual Player runtime final QC still required."
           ],
           "source_review_sha256": "946b1cb91a61bde637f5de9845ebeba1058d1014fc964b9bb2e7c68b6980909e"
+        },
+        {
+          "slot": "transform:393:S:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "OnlyoldSattackcontact3wasreplaced. Original0/1/2/4/5retainexactsourceRGBA,originalC1024andtranslatedoriginalanchors: identicalruntimepixelpositions atsameactorprofile, nootherpose/palette/timing/substitutionchanged.",
+            "New3hasexactlytwoarmchains: RIGHTshoulderIMAGELEFT→upperarm→elbow→inwardforearm→LOWCENTRALrightgrip→soleDOWNpurpleblade. OldIMAGELEFTemptyfistremovedbecauseitisthearmnowgripping; no thirdcentralarm orduplicatefist.",
+            "OnlyotherLEFTarmoriginatesIMAGERIGHTpauldronandendsinoneemptyhand/claw. New3trueSfronthelmet/chest/hipsandDOWNcontact targetretainedwithforcefulkneelunge, completeboots/wings/cape/originalHalpasmodel.",
+            "Orderedguard/raise/load/contact3DOWN/follow/recover from5oldand1newkey remains genuineattackmotion. Existingnondefectivefiveposesareunchanged; actualnative2→3→4gripcontinuitymuststillbefinallyreviewed.",
+            "SixuniquevisibleRGBAposes, allselectedalpha>16pixelscoveredonce, strictcomplete6basegeometryPASSnominal2048. No resampling/mirror/recolor/pixelcleanup/gearclip. Sourcehashes/request/guide/cropproofs preservedinline.",
+            "Newcontact3C2304matchesactualSidleC1024andoldattackhelmet/pauldron/chest/waist proportions; supportanchor[630,1025] followsbootsratherthanDOWNbladetip. PythonreviewedlayoutmodulePASSall6fit/sourceRGBAunchanged, sourceproposalonly."
+          ],
+          "source_review_sha256": "cf917785060435d5a94cd14b4dfcc04b4ac3e3b179db2a9c5630926d7da71ded"
         }
       ],
       "compass_audit": {
@@ -9104,6 +9146,153 @@
         ]
       ],
       "review_basis": "Lossless exact sixpose composite retains original source RGBA resolutions. Perpose body-scale proposal from same closed-helmet/pauldron/girdle landmarks against actual selected SEidle, never whole silhouette bbox. Waist-based abstract flight roots match idle body origin while preserving local hit head/torso/arm/wing/cape motion; no standing-foot clamp. Final actual Player/physical QA required before actor approval."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "key": "transform:393",
+      "direction": "S",
+      "role": "attack",
+      "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        1024,
+        1024,
+        1024,
+        2304,
+        1024,
+        1024
+      ],
+      "source_anchors": [
+        [
+          622,
+          854
+        ],
+        [
+          1938,
+          873
+        ],
+        [
+          607,
+          2106
+        ],
+        [
+          1919,
+          2330
+        ],
+        [
+          608,
+          3404
+        ],
+        [
+          1911,
+          3419
+        ]
+      ],
+      "review_basis": "Preserveold5poseC1024andoriginalsourceanchorsEXACT viaatlastranslation; identicalRGBAworldpositions arealgebraicallyunchanged. Onlynewcontact3C2304 chosenfromactualSidleC1024andoldattack0/2/4helmet/crown-neck/pauldron/chestdiamond/waistproportions, notimage/bboxsize; newkeyboot-supportcenter[630,1025] keepslegsgrounded andLOWbladeextendsbelowgroundcontact. C2432/2560undercuthelmet/torso proportion relativebaseline. PreservegenuinewideScontactlunge, nohiplocking orweapontip-footanchoring. Actualnativequality/Playerremainpending.",
+      "legacy_five_runtime_position_proof": [
+        {
+          "phase": 0,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            256,
+            465
+          ],
+          "atlas_translation": [
+            366,
+            389
+          ],
+          "new_atlas_anchor": [
+            622,
+            854
+          ],
+          "source_region_RGBA_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 1,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            768,
+            482
+          ],
+          "atlas_translation": [
+            1170,
+            391
+          ],
+          "new_atlas_anchor": [
+            1938,
+            873
+          ],
+          "source_region_RGBA_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 2,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            256,
+            932
+          ],
+          "atlas_translation": [
+            351,
+            1174
+          ],
+          "new_atlas_anchor": [
+            607,
+            2106
+          ],
+          "source_region_RGBA_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 4,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            256,
+            1426
+          ],
+          "atlas_translation": [
+            352,
+            1978
+          ],
+          "new_atlas_anchor": [
+            608,
+            3404
+          ],
+          "source_region_RGBA_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 5,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            768,
+            1428
+          ],
+          "atlas_translation": [
+            1143,
+            1991
+          ],
+          "new_atlas_anchor": [
+            1911,
+            3419
+          ],
+          "source_region_RGBA_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        }
+      ],
+      "new_contact3_source_anchor": [
+        630,
+        1025
+      ],
+      "new_contact3_anchor_basis": "Anatomicaltwo-boot supportcenterX andfront/nearbootsole groundprojectionY; bladeextendsDOWNbelowboots so notlowestfigurepixelanchor. NewsourcewholeSfrontbodycentercontrolledagainstactualSidle, no floatingweapon.",
+      "resampled": false,
+      "actor_approval_added": 0
     }
   }
 }

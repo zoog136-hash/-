@@ -1,0 +1,1293 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "S",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v02composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 1,
+  "reused_poses": 5,
+  "contact_phase": 3,
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-padded.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/S-contact3-two-arm-ownership-guide.png",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png": "c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-padded.png": "8d9f77483d5fcbb410d29753ebe3f20cd69318dc39b586c4fe83eb58a0a1c3ef",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/S-contact3-two-arm-ownership-guide.png": "da9054a2f6bbadc632897355c944f96851f2d5894cbb67edf7d385eff48f0e47",
+    "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-lossless.png": "17df72efcf791d7391455ac09dbf289df17db26b5a69f2a6ddb48fb77b224f2f"
+  },
+  "transparent_background": true,
+  "kind": "reviewed_native_pose_composition",
+  "corrective_reason": "ActualnativeQC found3handsatoldScontact3. ReplaceONLYthatkeywithnewgenuineSfrontDOWNcontact exactly2arms: RIGHTfromIMAGELEFTpauldron→LOWcentralgrip andLEFTIMAGERIGHTempty. Preserveold0/1/2/4/5exactRGBAandoriginalC1024/sourceanchors, nofull6regeneration.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+    "canvas_size": 2048,
+    "review_basis": "ExactRGBA mixedresolution6posecomposition requiresstrictnominal2048. PhysicalruntimeCsare[1024,1024,1024,2304,1024,1024]; oldfiveoriginalworldpixelpositions preserved, onlynewcontact3physicalbodyresolutionnormalizedwithoutresampling."
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "key": "transform:393",
+    "direction": "S",
+    "role": "attack",
+    "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+    "canvas_size": 2048,
+    "authored_pose_canvas_sizes": [
+      1024,
+      1024,
+      1024,
+      2304,
+      1024,
+      1024
+    ],
+    "source_anchors": [
+      [
+        622,
+        854
+      ],
+      [
+        1938,
+        873
+      ],
+      [
+        607,
+        2106
+      ],
+      [
+        1919,
+        2330
+      ],
+      [
+        608,
+        3404
+      ],
+      [
+        1911,
+        3419
+      ]
+    ],
+    "review_basis": "Preserveold5poseC1024andoriginalsourceanchorsEXACT viaatlastranslation; identicalRGBAworldpositions arealgebraicallyunchanged. Onlynewcontact3C2304 chosenfromactualSidleC1024andoldattack0/2/4helmet/crown-neck/pauldron/chestdiamond/waistproportions, notimage/bboxsize; newkeyboot-supportcenter[630,1025] keepslegsgrounded andLOWbladeextendsbelowgroundcontact. C2432/2560undercuthelmet/torso proportion relativebaseline. PreservegenuinewideScontactlunge, nohiplocking orweapontip-footanchoring. Actualnativequality/Playerremainpending.",
+    "legacy_five_runtime_position_proof": [
+      {
+        "phase": 0,
+        "old_canvas": 1024,
+        "new_canvas": 1024,
+        "old_source_anchor": [
+          256,
+          465
+        ],
+        "atlas_translation": [
+          366,
+          389
+        ],
+        "new_atlas_anchor": [
+          622,
+          854
+        ],
+        "source_region_RGBA_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+        "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+      },
+      {
+        "phase": 1,
+        "old_canvas": 1024,
+        "new_canvas": 1024,
+        "old_source_anchor": [
+          768,
+          482
+        ],
+        "atlas_translation": [
+          1170,
+          391
+        ],
+        "new_atlas_anchor": [
+          1938,
+          873
+        ],
+        "source_region_RGBA_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+        "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+      },
+      {
+        "phase": 2,
+        "old_canvas": 1024,
+        "new_canvas": 1024,
+        "old_source_anchor": [
+          256,
+          932
+        ],
+        "atlas_translation": [
+          351,
+          1174
+        ],
+        "new_atlas_anchor": [
+          607,
+          2106
+        ],
+        "source_region_RGBA_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+        "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+      },
+      {
+        "phase": 4,
+        "old_canvas": 1024,
+        "new_canvas": 1024,
+        "old_source_anchor": [
+          256,
+          1426
+        ],
+        "atlas_translation": [
+          352,
+          1978
+        ],
+        "new_atlas_anchor": [
+          608,
+          3404
+        ],
+        "source_region_RGBA_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+        "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+      },
+      {
+        "phase": 5,
+        "old_canvas": 1024,
+        "new_canvas": 1024,
+        "old_source_anchor": [
+          768,
+          1428
+        ],
+        "atlas_translation": [
+          1143,
+          1991
+        ],
+        "new_atlas_anchor": [
+          1911,
+          3419
+        ],
+        "source_region_RGBA_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7",
+        "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+      }
+    ],
+    "new_contact3_source_anchor": [
+      630,
+      1025
+    ],
+    "new_contact3_anchor_basis": "Anatomicaltwo-boot supportcenterX andfront/nearbootsole groundprojectionY; bladeextendsDOWNbelowboots so notlowestfigurepixelanchor. NewsourcewholeSfrontbodycentercontrolledagainstactualSidle, no floatingweapon.",
+    "resampled": false,
+    "actor_approval_added": 0
+  },
+  "reviewed_runtime_layout_proposal_path": "/workspace/scratch/halpas-S-attack-composite-v02/reviewed_runtime_layout.proposal.json",
+  "reviewed_runtime_layout_proof": {
+    "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+    "base_geometry_sha256": "61c45272e45810a162804a7f29094fbc94d414a27e7b618056f76efad3847dc4",
+    "derived_geometry_sha256": "bb8f7897dc645013107ff22afde795792c274ce5eb6c70a04fe09361a97a5348",
+    "review_sha256": "89f902d55e8dfc1137deba944178542e5fed7ccceae92f2554d4dfdfd8db880c",
+    "review_basis": "Preserveold5poseC1024andoriginalsourceanchorsEXACT viaatlastranslation; identicalRGBAworldpositions arealgebraicallyunchanged. Onlynewcontact3C2304 chosenfromactualSidleC1024andoldattack0/2/4helmet/crown-neck/pauldron/chestdiamond/waistproportions, notimage/bboxsize; newkeyboot-supportcenter[630,1025] keepslegsgrounded andLOWbladeextendsbelowgroundcontact. C2432/2560undercuthelmet/torso proportion relativebaseline. PreservegenuinewideScontactlunge, nohiplocking orweapontip-footanchoring. Actualnativequality/Playerremainpending.",
+    "direction": "S",
+    "pose_count": 6,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ],
+    "source_anchors": [
+      [
+        622,
+        854
+      ],
+      [
+        1938,
+        873
+      ],
+      [
+        607,
+        2106
+      ],
+      [
+        1919,
+        2330
+      ],
+      [
+        608,
+        3404
+      ],
+      [
+        1911,
+        3419
+      ]
+    ],
+    "runtime_pixel_scale_ratio": [
+      1024,
+      2048
+    ],
+    "source_pixels_unchanged": true,
+    "resampled": false,
+    "approval_granted": false,
+    "pose_canvas_sizes": [
+      1024,
+      1024,
+      1024,
+      2304,
+      1024,
+      1024
+    ],
+    "runtime_reference_canvas_size": 1024,
+    "per_pose_runtime_pixel_scale_ratios": [
+      [
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024
+      ],
+      [
+        1024,
+        2304
+      ],
+      [
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024
+      ]
+    ],
+    "pose_canvas_size_allowed_range": [
+      256,
+      4096
+    ],
+    "newly_authored_poses": 0
+  },
+  "source_composition": {
+    "method": "lossless_exactRGBA5oldplus1new_1280cells",
+    "pose_map": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "direction": "S",
+      "role": "attack",
+      "poses": [
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "region": [
+            59,
+            32,
+            430,
+            437
+          ],
+          "rgba_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "game_phase": 0
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "region": [
+            558,
+            12,
+            384,
+            474
+          ],
+          "rgba_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+          "source_pose": 1,
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "game_phase": 1
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "region": [
+            60,
+            555,
+            457,
+            381
+          ],
+          "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+          "source_pose": 2,
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "game_phase": 2
+        },
+        {
+          "path": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png",
+          "source_sha256": "c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66",
+          "region": [
+            95,
+            15,
+            1072,
+            1200
+          ],
+          "rgba_sha256": "076f10aaaa2329529b522f76e7c164564567016a3d9601d6a45b248d2a2f4660",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Newsinglecontact3PASS exactly2arms RIGHTIMAGELEFTpauldron→lowcentralgrip→DOWNblade andLEFTIMAGERIGHTempty, genuineScontactmodel.",
+          "game_phase": 3
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "region": [
+            32,
+            1014,
+            511,
+            416
+          ],
+          "rgba_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+          "source_pose": 4,
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "game_phase": 4
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "region": [
+            552,
+            985,
+            450,
+            447
+          ],
+          "rgba_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7",
+          "source_pose": 5,
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "game_phase": 5
+        }
+      ],
+      "newly_authored_poses": 1,
+      "reused_poses": 5,
+      "physical_scale_review": "PENDING_actualSidle1024_and_oldfiveattack_physicalbodylandmarks; exactRGBAcompositiondoesnotgrantactorapproval"
+    },
+    "assembly_proof": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "role": "attack",
+      "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+      "direction": "S",
+      "metadata_sha256": "a9971498bf48932213b2e6f589277212fb81b281abffab65625d7a66ddddfdc0",
+      "metadata_path": "/workspace/scratch/halpas-S-attack-composite-v02/pose-map.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/halpas-S-attack-composite-v02/halpas-S-attack-v02composite01.png",
+      "output_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+      "output_canvas": [
+        2560,
+        3840
+      ],
+      "cell_size": [
+        1280,
+        1280
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "source_pose": 0,
+          "source_region": [
+            59,
+            32,
+            430,
+            437
+          ],
+          "rgba_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+          "visible_pose_sha256": "c2d1fa79c8391d232efbd2c15509f831710ca749107552a2a58abf6e625c115e",
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "output_region": [
+            425,
+            421,
+            430,
+            437
+          ],
+          "translation": [
+            366,
+            389
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 96763
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "source_pose": 1,
+          "source_region": [
+            558,
+            12,
+            384,
+            474
+          ],
+          "rgba_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+          "visible_pose_sha256": "42fdc3be9ddc21e49d47133f03a38f9abd03a691fa71a710914c08e90a71d0a1",
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "output_region": [
+            1728,
+            403,
+            384,
+            474
+          ],
+          "translation": [
+            1170,
+            391
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 81581
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "source_pose": 2,
+          "source_region": [
+            60,
+            555,
+            457,
+            381
+          ],
+          "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+          "visible_pose_sha256": "614baeb91fd0b12dbe0f20eaf9872e028d7d8e8f8624510735b504d22197b405",
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "output_region": [
+            411,
+            1729,
+            457,
+            381
+          ],
+          "translation": [
+            351,
+            1174
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 79200
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png",
+          "source_sha256": "c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66",
+          "source_pose": 0,
+          "source_region": [
+            95,
+            15,
+            1072,
+            1200
+          ],
+          "rgba_sha256": "076f10aaaa2329529b522f76e7c164564567016a3d9601d6a45b248d2a2f4660",
+          "visible_pose_sha256": "86cd39f541e8f7045713b3e9746f99b268d03f6031aab873f506ddf36f2104be",
+          "newly_authored": true,
+          "review_basis": "Newsinglecontact3PASS exactly2arms RIGHTIMAGELEFTpauldron→lowcentralgrip→DOWNblade andLEFTIMAGERIGHTempty, genuineScontactmodel.",
+          "output_region": [
+            1384,
+            1320,
+            1072,
+            1200
+          ],
+          "translation": [
+            1289,
+            1305
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 574965
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "source_pose": 4,
+          "source_region": [
+            32,
+            1014,
+            511,
+            416
+          ],
+          "rgba_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+          "visible_pose_sha256": "3c4eba48deb8ebc3bb5deeb455e4070a0cab762964a1e0e28238d3e4e0afe6e1",
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "output_region": [
+            384,
+            2992,
+            511,
+            416
+          ],
+          "translation": [
+            352,
+            1978
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 88915
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "source_pose": 5,
+          "source_region": [
+            552,
+            985,
+            450,
+            447
+          ],
+          "rgba_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7",
+          "visible_pose_sha256": "6017d3fca78821ab4399df3ecc2dccb3816516c3861ff924cd23378e7c6e5599",
+          "newly_authored": false,
+          "review_basis": "OriginalnondefectiveSattackphase retainedexactRGBA asrequested; genuinephaseandtwoarmshape fromoldsource; finalnativecontinuitystillrequired.",
+          "output_region": [
+            1695,
+            2976,
+            450,
+            447
+          ],
+          "translation": [
+            1143,
+            1991
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 98723
+        }
+      ],
+      "newly_authored_poses": 1,
+      "reused_poses": 5,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          2560,
+          3840
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "S",
+            "region": [
+              425,
+              421,
+              430,
+              437
+            ],
+            "margin": [
+              809,
+              847,
+              1618,
+              1611
+            ],
+            "source_anchor": [
+              640,
+              854
+            ],
+            "rgba_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce"
+          },
+          {
+            "row": 1,
+            "direction": "S",
+            "region": [
+              1728,
+              403,
+              384,
+              474
+            ],
+            "margin": [
+              832,
+              810,
+              1664,
+              1574
+            ],
+            "source_anchor": [
+              1920,
+              873
+            ],
+            "rgba_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f"
+          },
+          {
+            "row": 2,
+            "direction": "S",
+            "region": [
+              411,
+              1729,
+              457,
+              381
+            ],
+            "margin": [
+              795,
+              903,
+              1591,
+              1667
+            ],
+            "source_anchor": [
+              640,
+              2106
+            ],
+            "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9"
+          },
+          {
+            "row": 3,
+            "direction": "S",
+            "region": [
+              1382,
+              1317,
+              1077,
+              1205
+            ],
+            "margin": [
+              486,
+              79,
+              971,
+              843
+            ],
+            "source_anchor": [
+              1920,
+              2518
+            ],
+            "rgba_sha256": "f74b8a88fd048b59e184e777d57f90f3746dc968c16e0296655463903874987a"
+          },
+          {
+            "row": 4,
+            "direction": "S",
+            "region": [
+              384,
+              2992,
+              511,
+              416
+            ],
+            "margin": [
+              768,
+              868,
+              1537,
+              1632
+            ],
+            "source_anchor": [
+              640,
+              3404
+            ],
+            "rgba_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161"
+          },
+          {
+            "row": 5,
+            "direction": "S",
+            "region": [
+              1695,
+              2976,
+              450,
+              447
+            ],
+            "margin": [
+              799,
+              837,
+              1598,
+              1601
+            ],
+            "source_anchor": [
+              1920,
+              3419
+            ],
+            "rgba_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 815.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": "PENDING_actualSidle1024_and_oldfiveattack_physicalbodylandmarks; exactRGBAcompositiondoesnotgrantactorapproval",
+      "region_height_span": [
+        381,
+        1200
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "assembly_proof_sha256": "8e24e275c0cc91d51742bb907654051f7d2d33480c6827847b85ac1a1582e458",
+    "new_contact3_original_request": {
+      "key": "transform:393",
+      "name": "해방된 할파스",
+      "direction": "S",
+      "role": "attack",
+      "source_batch": "batch03",
+      "version": "phase3-contact-v02",
+      "status": "REQUESTED_NOT_APPROVED",
+      "expected_poses": 1,
+      "requested_poses": 1,
+      "newly_authored_poses": 1,
+      "requested_game_phase": 3,
+      "references": [
+        "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-padded.png",
+        "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
+        "/workspace/scratch/halpas-S-attack-phase3-repair-v02/S-contact3-two-arm-ownership-guide.png"
+      ],
+      "reference_sha256": {
+        "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-padded.png": "8d9f77483d5fcbb410d29753ebe3f20cd69318dc39b586c4fe83eb58a0a1c3ef",
+        "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e",
+        "/workspace/scratch/halpas-S-attack-phase3-repair-v02/S-contact3-two-arm-ownership-guide.png": "da9054a2f6bbadc632897355c944f96851f2d5894cbb67edf7d385eff48f0e47"
+      },
+      "source_phase2_crop_proof": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/source-phase2-crop-proof.json",
+      "guide_proof": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/guide-proof.json",
+      "transparent_background": true,
+      "corrective_reason": "IndependentactualnativeQC foundScontact3threehands. ReauthorONLYmissingcontact3 fromgoodloaded2+Sidleidentity+explicit2armgraph; RIGHTimageLEFTarmmustmovetocenterLOWbladeandoldemptyfistcannotremain, LEFTimageRIGHTonlyemptyhand. Other5oldphasespreservedpendingcompositecontinuityreview.",
+      "user_authorization": "ExistingPR122 privateproductionallowed. No mainchatimage/binary, no Git/data/defaultwrites. One initialmissingkey edit nofullsixregeneration.",
+      "prompt": "Edit ONE correct loaded SOUTH Halpas pose into ONE new SOUTH/DOWN CONTACT3 strike pose with EXACTLY TWO arms/hands. One complete actor only, not a sprite sheet. Image1 is only the old good loadedphase2, image2 correct SOUTH front identity, image3 explicit armownership/lowcontact diagram (guideONLY, noflatstyle/colors/arrows/text in final). Do not recreate any known three-hand pose.\n\nCONTACT TARGET SOUTH = SCREEN DOWN toward viewer. Character remains FRONT/SOUTH: same gold horned closedhelmet/frontvisor, chestfront original skull/diamond armor, hips/knees face DOWN, same elevated orthographic gamecamera. Decisive forward/down attack, torsoleans slightly down/forward and knees absorb; actual blade tip points straight DOWN in lowercenter belowwaist toward SOUTHtarget. NOT a raised/windup blade or right/left/diagonal attack. Keep original uniqueHalpasblack/gold armor, two solidpurple crystalline featherfanwings and their goldroots, burgundytatteredcape, original compactbroad purplecrystalblade. No long sinuous yellow Girtassword, newequipment, mirroredmodel, extrawingpair or generic redesign.\n\nTWO-ARM GRAPH CRITICAL, image3: AnatomicalRIGHT shoulder is IMAGELEFTpauldron. Its existing RIGHTupperarm descends from that IMAGELEFTsocket, bends at IMAGELEFT/lowleft elbow, and RIGHTforearm angles inward to ONE CENTRAL-LOW rightwrist/grippinghand near/belowwaist. That ONE righthand alone grips originalgoldhilt/purpleblade, bladeextends straightDOWN. Draw one continuous IMAGELEFTpauldron→RIGHTupperarm→elbow→inwardforearm→CENTER-LOWgrip→soleblade chain. This same imageLEFTarm MUST MOVE to centralgrip, so DO NOT leave any separate emptyfist hanging imageLEFT from that shoulder. No duplicate downleftarm/hand pluscentralweaponarm. The anatomicalLEFTarm originates IMAGERIGHTpauldron and remains the ONLYEMPTYhand, relaxedcounterbalance/claw to IMAGERIGHT lowerwaist, continuous shoulder→elbow→wrist. Precisely TWO shoulders, TWO upperarms, TWO elbows, TWO forearms, TWO hands total: IMAGELEFT-origin RIGHTweaponhand centerLOW, IMAGERIGHT-origin LEFTemptyhand at right. Never add a central thirdarm, never branch two arms from onepauldron, no disconnectedgrip, newarmstub, floatinghilt, leftgripswap or ghostweapon. Existing oldimageLEFT emptyfist is REPLACED by same arm's real reachinggrip motion, not retained.\n\nAdvance from loaded2 to genuineCONTACT3: rightshoulder drives forward, elbow bends/extends inwardinto lowcentralweapon, solidbladetip thrusts/slashes DOWN into targetsector belowbody with real hips/kneerecoil. Originaltwoarms physically reconnect in correctsocketownership. Same armor/horn/wingparts andbodyproportions/camera. Wingsreactslightly to strike, capelags, completeboots visible withplausibleSguard stance; no flight orbodyspin. Keep highdetail exactbossidentity, no clipping or weaponafterimages/magic effects to substitute realcontact.\n\nONE detailed fullbodycutout PNG1024x1024transparent, generousmarginaround entirehorns/wings/cape/legs/DOWNblade. Fullposecentral750x800region, physicalcrown-to-boots roughly650pixels, enoughspacebelowforDOWNblade. Do not crop/shorten gear or zoom toframeedge. Opaque solidarmor/cloth/crystals, alpha0 background/gaps,1-2px edgeantialiasing. Purplelight/color onlyINSIDEsolidwing/blade. Noouterglow,bloom,halo,haze,fog,shadow,ground,floor,particles,trail,motionblur,text,numbers,labels,diagramcolors,arrows,grid,frame orsecondfigure. SuccessONE trueSfrontDOWNcontact, onlyRIGHTchainfromIMAGELEFTpauldronintocentralLOWblade, onlyLEFTemptyhandIMAGERIGHT, exactlyTWOarms/hands andoriginalHalpasidentity.",
+      "requested_at": "2026-10-19T13:26:42.789998+00:00",
+      "imagegen_attempt_limit": 1,
+      "private_jpeg_budget_cumulative_estimate_before_source": 5685566,
+      "private_jpeg_budget_limit": 8000000
+    },
+    "new_contact3_request_sha256": "c88784fa2295305254787896ba6fa2a7ead87772803767ed087fa4a544369d1e",
+    "new_contact3_source_review": {
+      "status": "GENERATED_SINGLE_CONTACT3_SOURCE_VISUAL_AND_GEOMETRY_PASS_NOT_APPROVED",
+      "key": "transform:393",
+      "name": "해방된 할파스",
+      "direction": "S",
+      "role": "attack",
+      "version": "phase3-contact-v02",
+      "expected_poses": 1,
+      "requested_poses": 1,
+      "newly_authored_poses": 1,
+      "requested_game_phase": 3,
+      "request_path": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/request.json",
+      "request_sha256": "c88784fa2295305254787896ba6fa2a7ead87772803767ed087fa4a544369d1e",
+      "original_generated_file": "/workspace/generated_images/exec-8aa4a9b0-b198-4111-8943-9d33121b6cfb.png",
+      "raw_png": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png",
+      "raw_sha256": "c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66",
+      "raw_bytes": 1555706,
+      "image_size": [
+        1254,
+        1254
+      ],
+      "private_preview": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/generated-private.jpg",
+      "private_preview_bytes": 123186,
+      "created_at": "2026-10-19T13:28:19.235003+00:00",
+      "repository_mutated": false,
+      "imagegen_attempts": 1,
+      "chat_image_attachments": 0,
+      "source_visual_status": "PASS",
+      "integration_ready": false,
+      "approved_actor_change": 0,
+      "detailed_completion_change": 0,
+      "single_key_ready": true,
+      "camera_validation": "PASS_S_FRONT_DOWN_STRIKE",
+      "handedness_validation": "PASS_EXACT2_ARMS_RIGHT_FROM_IMAGELEFT_PAULDRON_TO_LOWCENTRALGRIP_LEFT_IMAGERIGHT_EMPTY",
+      "contact_validation": "PASS_ACTUAL_LOW_DOWNWARD_CONTACT3",
+      "geometry_validation": "SINGLE_POSE_GEOMETRY_PASS_CANVAS2048",
+      "visual_findings": [
+        "Exactlytwoarms/hands: anatomicalRIGHT originatesIMAGELEFTpauldron andcontinuousupperarm/elbow/forearm reacheslowCENTRALgrip ofsoleDOWNpurpleblade. NooldimageLEFTemptyfist remains orcentralthirdarm added.",
+        "OnlyotheranatomicalLEFT arm originatesIMAGERIGHTpauldron andendsinoneemptyclaw/freehandatright. Noarmbranching, extrawrist, extraweapon ordisconnectedgrip observed.",
+        "TrueSfronthelmet/chest/hips anddownwardtarget retained, solidbladetip clearlyDOWNbelowbodycontact ratherthanraisedloadedpose. Knees/hips spreadabsorbstrike withplausibleconnectedlegs/boots.",
+        "SameHalpasgoldhorn/blackgoldarmor/twosolidcrystalfans/burgundycape/compactpurpleblade model, noGirtasweaponmix or camera-facing change.",
+        "Completeuncroppedfigure,0strongalphapixelatouteredge. Strictonepose/complete-regionanalyzerPASS2048; allalpha>16region[95,15,1072,1200],955outsideweakpixelsalpha≤8retainedinoriginalPNG."
+      ],
+      "visual_limitations": [
+        "ONEnewcontact3key only. Preserveother5oldframesexactlyandassemble/physicallynormalizebeforeactualPlayer/nativequalityreview. Noactor/defaultapproval.",
+        "Existingother5sourcephasegrip/camera continuity mustremainvisibleinfinalnative6review; thissourcekeyPASSdoesnotapproveentireactor."
+      ],
+      "source_region": [
+        95,
+        15,
+        1072,
+        1200
+      ],
+      "source_key_region_proof": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/source-key-region-proof.json",
+      "private_jpeg_budget_cumulative_estimate_bytes": 5808752,
+      "private_jpeg_budget_limit": 8000000,
+      "imagegen_attempt_limit_reached": true,
+      "further_generation_attempts": 0,
+      "reviewed_at": "2026-10-19T13:30:12.143482+00:00"
+    },
+    "new_contact3_region_proof": {
+      "source_path": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png",
+      "source_sha256": "c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66",
+      "source_pose": 0,
+      "requested_game_phase": 3,
+      "region": [
+        95,
+        15,
+        1072,
+        1200
+      ],
+      "rgba_sha256": "076f10aaaa2329529b522f76e7c164564567016a3d9601d6a45b248d2a2f4660",
+      "alpha_gt16_outside": 0,
+      "weak_pixels_outside": 955,
+      "outside_alpha_max": 8,
+      "outer_edge_alpha_gt100_pixels": 0,
+      "strict_single_pose_geometry": {
+        "status": "SINGLE_POSE_GEOMETRY_PASS",
+        "region": [
+          93,
+          12,
+          1077,
+          1205
+        ],
+        "canvas": 2048
+      },
+      "source_pixels_unchanged": true
+    },
+    "old_phase2_only_genreference_crop_proof": {
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+      "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+      "source_pose": 2,
+      "region": [
+        60,
+        555,
+        457,
+        381
+      ],
+      "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+      "crop_path": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-lossless.png",
+      "crop_sha256": "17df72efcf791d7391455ac09dbf289df17db26b5a69f2a6ddb48fb77b224f2f",
+      "pixel_processing": "ExactRGBA crop only, no badphase3 used asgenref",
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "S",
+            "region": [
+              59,
+              32,
+              430,
+              437
+            ],
+            "margin": [
+              315,
+              207,
+              594,
+              587
+            ],
+            "source_anchor": [
+              256,
+              465
+            ],
+            "rgba_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce"
+          },
+          {
+            "row": 1,
+            "direction": "S",
+            "region": [
+              558,
+              12,
+              384,
+              474
+            ],
+            "margin": [
+              302,
+              170,
+              640,
+              550
+            ],
+            "source_anchor": [
+              768,
+              482
+            ],
+            "rgba_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f"
+          },
+          {
+            "row": 2,
+            "direction": "S",
+            "region": [
+              60,
+              555,
+              457,
+              381
+            ],
+            "margin": [
+              316,
+              263,
+              567,
+              643
+            ],
+            "source_anchor": [
+              256,
+              932
+            ],
+            "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9"
+          },
+          {
+            "row": 3,
+            "direction": "S",
+            "region": [
+              543,
+              525,
+              415,
+              453
+            ],
+            "margin": [
+              287,
+              191,
+              609,
+              571
+            ],
+            "source_anchor": [
+              768,
+              974
+            ],
+            "rgba_sha256": "6d1b4b0f037b27df003fd593f708d634c33fbfc1b6233dd4c57260529386ffee"
+          },
+          {
+            "row": 4,
+            "direction": "S",
+            "region": [
+              32,
+              1014,
+              511,
+              416
+            ],
+            "margin": [
+              288,
+              228,
+              513,
+              608
+            ],
+            "source_anchor": [
+              256,
+              1426
+            ],
+            "rgba_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161"
+          },
+          {
+            "row": 5,
+            "direction": "S",
+            "region": [
+              552,
+              985,
+              450,
+              447
+            ],
+            "margin": [
+              296,
+              197,
+              574,
+              577
+            ],
+            "source_anchor": [
+              768,
+              1428
+            ],
+            "rgba_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 439.0,
+        "canvas_size": [
+          1024,
+          1024
+        ],
+        "foot": [
+          512,
+          640
+        ]
+      }
+    },
+    "new_contact3_armgraph_proof": {
+      "guide_only": true,
+      "guide_path": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/S-contact3-two-arm-ownership-guide.png",
+      "guide_sha256": "da9054a2f6bbadc632897355c944f96851f2d5894cbb67edf7d385eff48f0e47",
+      "right_armed_chain": "anatomRIGHT imageLEFTpauldron -> elbow -> lowCENTERgrip -> bladeDOWN",
+      "left_empty_chain": "anatomLEFT imageRIGHTpauldron -> elbow -> ONEemptyhand",
+      "arm_count": 2,
+      "old_leftside_empty_fist": "mustnotremain; thatRIGHTarmnowgripsblade",
+      "pad_translation": [
+        283,
+        321
+      ],
+      "pad_sha256": "8d9f77483d5fcbb410d29753ebe3f20cd69318dc39b586c4fe83eb58a0a1c3ef"
+    },
+    "original_source_HOLD_evidence": {
+      "schema": "pr122-independent-native-quality-findings-v1",
+      "actor": "transform:393",
+      "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+      "selected_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+      "status": "HOLD",
+      "actor_approved": false,
+      "counts_changed": false,
+      "findings": [
+        {
+          "direction": "S",
+          "role": "attack",
+          "status": "HOLD_SOURCE_EXTRA_ARM_AT_CONTACT",
+          "phases": [
+            3
+          ],
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r015/S-attack.png",
+          "phase3_region": [
+            543,
+            525,
+            415,
+            453
+          ],
+          "phase3_rgba_sha256": "6d1b4b0f037b27df003fd593f708d634c33fbfc1b6233dd4c57260529386ffee",
+          "basis": "South contact3 has a closed empty hand at image-left on a complete shoulder-to-elbow-to-hand chain, a separate open/clawed empty hand hanging at image-right on a second complete shoulder-to-elbow chain, AND the third front-center black hand gripping the gold blade guard/handle. The central weapon arm and hanging image-right empty arm branch from the same shoulder region. All three hand endpoints are visible simultaneously. Keep the real downwards S contact and repair only the extra free arm branch; other phases may be reused after review.",
+          "hand_locations_in_region_approx": {
+            "left_empty_fist": [
+              187,
+              201
+            ],
+            "right_empty_claw": [
+              341,
+              290
+            ],
+            "front_center_weapon_grip": [
+              250,
+              250
+            ]
+          },
+          "fix_type": "new_contact_pose_required",
+          "metadata_only_fix_possible": false
+        }
+      ],
+      "private_evidence_panels": [
+        "r062-all-attack-phase3-source-detail.jpg",
+        "r062-S-attack-phase3-source-detail.jpg"
+      ],
+      "reviewer": "halpas_final_native_quality"
+    },
+    "physical_scale_and_support_review": {
+      "status": "REVIEWED_PROPOSAL_NOT_NATIVE_APPROVAL",
+      "reference": "actualSidleC1024 andoriginalSattack0/2/4",
+      "new_contact3_canvas": 2304,
+      "old_five_canvas": 1024,
+      "body_landmarks": "helmet/crown-neck, pauldronwidth, chestdiamond andwaistwidth compareusingfixedpixel-to-world ratio; Cs2432/2560 made newbody/helmettoo small, C2304matchestarget. No image/bboxratio normalization.",
+      "new_contact3_ground_anchor": [
+        630,
+        1025
+      ],
+      "anchor_basis": "Two-boot supportcenter X with near/frontbootsole groundprojectionY. TheDOWNbladetip extendsbelowfootground, so it doesnotsetroot. RealwideSstrike/kneebend preserved.",
+      "old_five_runtime_positions": [
+        {
+          "phase": 0,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            256,
+            465
+          ],
+          "atlas_translation": [
+            366,
+            389
+          ],
+          "new_atlas_anchor": [
+            622,
+            854
+          ],
+          "source_region_RGBA_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 1,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            768,
+            482
+          ],
+          "atlas_translation": [
+            1170,
+            391
+          ],
+          "new_atlas_anchor": [
+            1938,
+            873
+          ],
+          "source_region_RGBA_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 2,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            256,
+            932
+          ],
+          "atlas_translation": [
+            351,
+            1174
+          ],
+          "new_atlas_anchor": [
+            607,
+            2106
+          ],
+          "source_region_RGBA_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 4,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            256,
+            1426
+          ],
+          "atlas_translation": [
+            352,
+            1978
+          ],
+          "new_atlas_anchor": [
+            608,
+            3404
+          ],
+          "source_region_RGBA_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        },
+        {
+          "phase": 5,
+          "old_canvas": 1024,
+          "new_canvas": 1024,
+          "old_source_anchor": [
+            768,
+            1428
+          ],
+          "atlas_translation": [
+            1143,
+            1991
+          ],
+          "new_atlas_anchor": [
+            1911,
+            3419
+          ],
+          "source_region_RGBA_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7",
+          "same_runtime_pixel_positions": "EXACT_TRANSLATION_AND_EQUAL_CANVAS; for everycopiedpixel (source+translation-newanchor)/1024=(source-oldanchor)/1024"
+        }
+      ],
+      "source_pixels_resampled": false,
+      "native_Player_or_actor_approval": false
+    },
+    "newly_authored_poses": 1,
+    "reused_poses": 5,
+    "preserved_region_rgba_exact": true,
+    "resampled": false,
+    "mirrored": false,
+    "recolored": false,
+    "cleaned_pixels": 0
+  },
+  "user_authorization": "ExistingPR122 actualanimationproduction; no authorGit/data/defaultwrites, no mainchatimage/binary.",
+  "prompt": "ExactRGBA[old0,old1,old2,newcontact3,old4,old5]. Onlynewkeyimageedit once; no generationforcomposite.",
+  "imagegen_attempts": 0,
+  "requested_at": "2026-10-19T13:34:51.437944+00:00",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "OnlyoldSattackcontact3wasreplaced. Original0/1/2/4/5retainexactsourceRGBA,originalC1024andtranslatedoriginalanchors: identicalruntimepixelpositions atsameactorprofile, nootherpose/palette/timing/substitutionchanged.",
+      "New3hasexactlytwoarmchains: RIGHTshoulderIMAGELEFT→upperarm→elbow→inwardforearm→LOWCENTRALrightgrip→soleDOWNpurpleblade. OldIMAGELEFTemptyfistremovedbecauseitisthearmnowgripping; no thirdcentralarm orduplicatefist.",
+      "OnlyotherLEFTarmoriginatesIMAGERIGHTpauldronandendsinoneemptyhand/claw. New3trueSfronthelmet/chest/hipsandDOWNcontact targetretainedwithforcefulkneelunge, completeboots/wings/cape/originalHalpasmodel.",
+      "Orderedguard/raise/load/contact3DOWN/follow/recover from5oldand1newkey remains genuineattackmotion. Existingnondefectivefiveposesareunchanged; actualnative2→3→4gripcontinuitymuststillbefinallyreviewed.",
+      "SixuniquevisibleRGBAposes, allselectedalpha>16pixelscoveredonce, strictcomplete6basegeometryPASSnominal2048. No resampling/mirror/recolor/pixelcleanup/gearclip. Sourcehashes/request/guide/cropproofs preservedinline.",
+      "Newcontact3C2304matchesactualSidleC1024andoldattackhelmet/pauldron/chest/waist proportions; supportanchor[630,1025] followsbootsratherthanDOWNbladetip. PythonreviewedlayoutmodulePASSall6fit/sourceRGBAunchanged, sourceproposalonly."
+    ],
+    "visual_limitations": [
+      "Sourceart6andstrictRGBAgeometryPASS withreviewedlayoutproposal only. RootmustapplyinlineperposeCs/anchorsbeforestage, thenGodotresource/Player/actiontestsandactualnative2→3→4/fullactorQC. Noactor/defaultapproval.",
+      "Fiveoldposes unchangedasperrequest; finalnativegrip/camera continuity andnewcontactgroundroot still requireprivatecompiledreview. Sourceapprovalneverraisesactorcompletion."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+    "raw_bytes": 3390000,
+    "request_sha256": "65157b0e3e62444f78a559aa6a7044f13264f34a55a491d793213a1a42cc5867",
+    "review_sha256": "cf917785060435d5a94cd14b4dfcc04b4ac3e3b179db2a9c5630926d7da71ded"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66.png",
+      "sha256": "c89894637d1049442a2db90ab899cdef138806e5c92413bc02896bc75460ee66",
+      "bytes": 1555706,
+      "original_reference": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/halpas-S-attack-phase3-contact-v02.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-8d9f77483d5fcbb410d29753ebe3f20cd69318dc39b586c4fe83eb58a0a1c3ef.png",
+      "sha256": "8d9f77483d5fcbb410d29753ebe3f20cd69318dc39b586c4fe83eb58a0a1c3ef",
+      "bytes": 334647,
+      "original_reference": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-padded.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-da9054a2f6bbadc632897355c944f96851f2d5894cbb67edf7d385eff48f0e47.png",
+      "sha256": "da9054a2f6bbadc632897355c944f96851f2d5894cbb67edf7d385eff48f0e47",
+      "bytes": 39501,
+      "original_reference": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/S-contact3-two-arm-ownership-guide.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-17df72efcf791d7391455ac09dbf289df17db26b5a69f2a6ddb48fb77b224f2f.png",
+      "sha256": "17df72efcf791d7391455ac09dbf289df17db26b5a69f2a6ddb48fb77b224f2f",
+      "bytes": 317522,
+      "original_reference": "/workspace/scratch/halpas-S-attack-phase3-repair-v02/correct-old-phase2-loaded-lossless.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+  "output_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+  "output_bytes": 3390000,
+  "original_generated_file": "/workspace/scratch/halpas-S-attack-composite-v02/halpas-S-attack-v02composite01.png"
+}

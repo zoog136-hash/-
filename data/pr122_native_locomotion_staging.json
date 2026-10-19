@@ -6,8 +6,8 @@
   "actors": {
     "transform:393": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SpriteFrames.tres",
-      "frames_sha256": "7c80d9e52b76ebb42a314f78de0347a4326a7f923e4e799ce52f285101c484ca",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r072/SpriteFrames.tres",
+      "frames_sha256": "0ecc00c0123636ba47c2ede4de2484950fb5d09ed7062f13519d90a1e6f06db2",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -4269,21 +4269,21 @@
           "direction": "S",
           "role": "attack",
           "animation": "attack_2",
-          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
-          "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
-          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r015/S-attack.png",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+          "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r072/S-attack.png",
           "geometry": {
             "image_size": [
-              1024,
-              1536
+              2560,
+              3840
             ],
             "frames": [
               {
                 "row": 0,
                 "direction": "S",
                 "region": [
-                  59,
-                  32,
+                  425,
+                  421,
                   430,
                   437
                 ],
@@ -4294,17 +4294,25 @@
                   587
                 ],
                 "source_anchor": [
-                  256,
-                  465
+                  622,
+                  854
                 ],
-                "rgba_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce"
+                "rgba_sha256": "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               },
               {
                 "row": 1,
                 "direction": "S",
                 "region": [
-                  558,
-                  12,
+                  1728,
+                  403,
                   384,
                   474
                 ],
@@ -4315,17 +4323,25 @@
                   550
                 ],
                 "source_anchor": [
-                  768,
-                  482
+                  1938,
+                  873
                 ],
-                "rgba_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f"
+                "rgba_sha256": "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               },
               {
                 "row": 2,
                 "direction": "S",
                 "region": [
-                  60,
-                  555,
+                  411,
+                  1729,
                   457,
                   381
                 ],
@@ -4336,38 +4352,54 @@
                   643
                 ],
                 "source_anchor": [
-                  256,
-                  932
+                  607,
+                  2106
                 ],
-                "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9"
+                "rgba_sha256": "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               },
               {
                 "row": 3,
                 "direction": "S",
                 "region": [
-                  543,
-                  525,
-                  415,
-                  453
+                  1382,
+                  1317,
+                  1077,
+                  1205
                 ],
                 "margin": [
-                  287,
-                  191,
-                  609,
-                  571
+                  615,
+                  427,
+                  1227,
+                  1099
                 ],
                 "source_anchor": [
-                  768,
-                  974
+                  1919,
+                  2330
                 ],
-                "rgba_sha256": "6d1b4b0f037b27df003fd593f708d634c33fbfc1b6233dd4c57260529386ffee"
+                "rgba_sha256": "f74b8a88fd048b59e184e777d57f90f3746dc968c16e0296655463903874987a",
+                "canvas_size": [
+                  2304,
+                  2304
+                ],
+                "foot": [
+                  1152,
+                  1440
+                ]
               },
               {
                 "row": 4,
                 "direction": "S",
                 "region": [
-                  32,
-                  1014,
+                  384,
+                  2992,
                   511,
                   416
                 ],
@@ -4378,17 +4410,25 @@
                   608
                 ],
                 "source_anchor": [
-                  256,
-                  1426
+                  608,
+                  3404
                 ],
-                "rgba_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161"
+                "rgba_sha256": "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               },
               {
                 "row": 5,
                 "direction": "S",
                 "region": [
-                  552,
-                  985,
+                  1695,
+                  2976,
                   450,
                   447
                 ],
@@ -4399,22 +4439,121 @@
                   577
                 ],
                 "source_anchor": [
-                  768,
-                  1428
+                  1911,
+                  3419
                 ],
-                "rgba_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7"
+                "rgba_sha256": "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               }
             ],
             "distinct_pixel_frames": 6,
-            "neutral_height": 439.0,
+            "neutral_height": 815.0,
             "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+            "base_geometry_sha256": "61c45272e45810a162804a7f29094fbc94d414a27e7b618056f76efad3847dc4",
+            "derived_geometry_sha256": "bb8f7897dc645013107ff22afde795792c274ce5eb6c70a04fe09361a97a5348",
+            "review_sha256": "89f902d55e8dfc1137deba944178542e5fed7ccceae92f2554d4dfdfd8db880c",
+            "review_basis": "Preserveold5poseC1024andoriginalsourceanchorsEXACT viaatlastranslation; identicalRGBAworldpositions arealgebraicallyunchanged. Onlynewcontact3C2304 chosenfromactualSidleC1024andoldattack0/2/4helmet/crown-neck/pauldron/chestdiamond/waistproportions, notimage/bboxsize; newkeyboot-supportcenter[630,1025] keepslegsgrounded andLOWbladeextendsbelowgroundcontact. C2432/2560undercuthelmet/torso proportion relativebaseline. PreservegenuinewideScontactlunge, nohiplocking orweapontip-footanchoring. Actualnativequality/Playerremainpending.",
+            "direction": "S",
+            "pose_count": 6,
+            "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ],
+            "source_anchors": [
+              [
+                622,
+                854
+              ],
+              [
+                1938,
+                873
+              ],
+              [
+                607,
+                2106
+              ],
+              [
+                1919,
+                2330
+              ],
+              [
+                608,
+                3404
+              ],
+              [
+                1911,
+                3419
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              2048
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false,
+            "pose_canvas_sizes": [
+              1024,
+              1024,
+              1024,
+              2304,
               1024,
               1024
             ],
-            "foot": [
-              512,
-              640
-            ]
+            "runtime_reference_canvas_size": 1024,
+            "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                1024
+              ],
+              [
+                1024,
+                1024
+              ],
+              [
+                1024,
+                1024
+              ],
+              [
+                1024,
+                2304
+              ],
+              [
+                1024,
+                1024
+              ],
+              [
+                1024,
+                1024
+              ]
+            ],
+            "pose_canvas_size_allowed_range": [
+              256,
+              4096
+            ],
+            "newly_authored_poses": 0
           }
         },
         {
@@ -8360,8 +8499,8 @@
       "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/NativeMotionProfile.tres",
-      "native_profile_sha256": "d5b6536721c21bfffcde49c3d182543781abe0a009dc72534a3b9b7feef82c90",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r072/NativeMotionProfile.tres",
+      "native_profile_sha256": "1064123d636975fb1eee0d81f8d1aa7daa3feed4eccfa642b5d181a47e7d1908",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 362.25,
@@ -8812,6 +8951,23 @@
               "Private metadata-normalized seven-cell comparison against actual selected directional idle0 reviewed all six for source physicalbody/camera/reaction flow. Closed helmet/pauldron/girdle scale and waist roots proposed from rigid landmarks, not whole silhouette bbox or standing-foot lock. Proposals keep head/torso/emptyarm/wing/cape response; actual Player runtime final QC still required."
             ],
             "source_review_sha256": "946b1cb91a61bde637f5de9845ebeba1058d1014fc964b9bb2e7c68b6980909e"
+          },
+          {
+            "slot": "transform:393:S:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "OnlyoldSattackcontact3wasreplaced. Original0/1/2/4/5retainexactsourceRGBA,originalC1024andtranslatedoriginalanchors: identicalruntimepixelpositions atsameactorprofile, nootherpose/palette/timing/substitutionchanged.",
+              "New3hasexactlytwoarmchains: RIGHTshoulderIMAGELEFT→upperarm→elbow→inwardforearm→LOWCENTRALrightgrip→soleDOWNpurpleblade. OldIMAGELEFTemptyfistremovedbecauseitisthearmnowgripping; no thirdcentralarm orduplicatefist.",
+              "OnlyotherLEFTarmoriginatesIMAGERIGHTpauldronandendsinoneemptyhand/claw. New3trueSfronthelmet/chest/hipsandDOWNcontact targetretainedwithforcefulkneelunge, completeboots/wings/cape/originalHalpasmodel.",
+              "Orderedguard/raise/load/contact3DOWN/follow/recover from5oldand1newkey remains genuineattackmotion. Existingnondefectivefiveposesareunchanged; actualnative2→3→4gripcontinuitymuststillbefinallyreviewed.",
+              "SixuniquevisibleRGBAposes, allselectedalpha>16pixelscoveredonce, strictcomplete6basegeometryPASSnominal2048. No resampling/mirror/recolor/pixelcleanup/gearclip. Sourcehashes/request/guide/cropproofs preservedinline.",
+              "Newcontact3C2304matchesactualSidleC1024andoldattackhelmet/pauldron/chest/waist proportions; supportanchor[630,1025] followsbootsratherthanDOWNbladetip. PythonreviewedlayoutmodulePASSall6fit/sourceRGBAunchanged, sourceproposalonly."
+            ],
+            "source_review_sha256": "cf917785060435d5a94cd14b4dfcc04b4ac3e3b179db2a9c5630926d7da71ded"
           }
         ],
         "compass_audit": {
@@ -21021,6 +21177,29 @@
         "frames_sha256": "6e497557701026263e10ed2e9d81e6177afaa335ee2d6fe2b0b74f6ebe96441c",
         "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/NativeMotionProfile.tres",
         "native_profile_sha256": "2fcfffdd5be04caf8de18f6956b3fa1098c2cca17c77c269adcfc77b045e8de4",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SpriteFrames.tres",
+        "frames_sha256": "7c80d9e52b76ebb42a314f78de0347a4326a7f923e4e799ce52f285101c484ca",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/NativeMotionProfile.tres",
+        "native_profile_sha256": "d5b6536721c21bfffcde49c3d182543781abe0a009dc72534a3b9b7feef82c90",
         "native_track_count": 48,
         "native_pose_count": 288,
         "verification": {
