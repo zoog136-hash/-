@@ -1,0 +1,458 @@
+{
+  "status": "AUTHORED_NW_RUN_PHYSICAL_CANDIDATE_PENDING_INDEPENDENT_QC",
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+  "source_map_sha256": "30f39dc4b9e6c54a5ddac4b2596a3d892a156312a16e04e87c61525c7cd5ea99",
+  "assembly_sha256": "f7b9cd48304da2510f240df252afcffb9e386bc5f3d177f82e9c125afed317e1",
+  "whole6_independent_source_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+  "whole6_independent_source_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+  "rigid_marker_proof": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/rigid-head-C-measurement-proposal-v01.json",
+  "rigid_marker_proof_sha256": "ed21f2824310d6fef68e4801f3efbfbc8811ab08c86c200a23480286bd4b1cfe",
+  "reference_correct_NWidle_source": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+  "reference_C": 944,
+  "reference_source_root": [
+    240,
+    456
+  ],
+  "reference_visible_posterior_waist_manual": [
+    213,
+    230
+  ],
+  "reference_inferred_pelvis_axis_manual": [
+    240,
+    251
+  ],
+  "reference_waist_ground_height_canonical": 245.15254237288136,
+  "authored_pose_canvas_sizes": [
+    848,
+    2096,
+    2392,
+    2376,
+    2280,
+    872
+  ],
+  "source_native_root_anchors": [
+    [
+      239,
+      403
+    ],
+    [
+      530,
+      981
+    ],
+    [
+      623,
+      1274
+    ],
+    [
+      623,
+      1120
+    ],
+    [
+      625,
+      1021
+    ],
+    [
+      747,
+      1461
+    ]
+  ],
+  "baseline_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NativeMotionProfile.tres",
+  "baseline_profile_sha256": "e5d796d2b07fc5b803c3fa2e2dc93f1208e690c5fdbaf3464569e97c027f8f7a",
+  "baseline_pixel_scale": 0.219105011732,
+  "AIR_plane_authorship": "Explicit candidate NW projected floors: nearLEFTtrail+55/farRIGHTlead-55 for2; nearLEFTlead-55/farRIGHTtrail+55 for5. This combines authored forward/back projected depth and near/far leg perspective; not flatsoleY, not exact bones/floor fromPNG. Independent support/projection/cadence validation required.",
+  "authored_waist_arc_canonical": [
+    245.15254237288136,
+    225,
+    310,
+    245.15254237288136,
+    225,
+    310
+  ],
+  "authoring_basis": "Visibleposteriorcuirass/upperrobe junction +correctNWidle waist\u2192inferredpelvis\u2192groundcalibration. Contact245/load225/flight310 canonical are explicit small2D RUNbodyarc choices; rigidCs neverchosenfromwholebodybbox/headheight fitting. Hiddenhipaxis isauthored, notclothV tip. Actual source hip-under-slit/knee/ankle and supportforeaft must pass independentphysicalreview.",
+  "frames": [
+    {
+      "phase": 0,
+      "C": 848,
+      "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+      "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+      "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+        215,
+        200
+      ],
+      "manual_waist_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_manual_native": [
+        239,
+        218.864406779661
+      ],
+      "inferred_axis_is_authored_not_visible_bone": true,
+      "authored_waist_ground_height_canonical": 245.15254237288136,
+      "source_ground_root_native": [
+        239,
+        403
+      ],
+      "feet": [
+        {
+          "anatomical_side": "LEFT",
+          "boot_ROI_xyxy": [
+            105,
+            380,
+            205,
+            460
+          ],
+          "last4strongrows_centroid_native": [
+            165.6346153846154,
+            452.24038461538464
+          ],
+          "local_canonical1024": [
+            -88.59216255442671,
+            59.46008708272863
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        },
+        {
+          "anatomical_side": "RIGHT",
+          "boot_ROI_xyxy": [
+            295,
+            350,
+            385,
+            450
+          ],
+          "last4strongrows_centroid_native": [
+            350.8,
+            430.05
+          ],
+          "local_canonical1024": [
+            135.00377358490567,
+            32.66415094339624
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "C": 2096,
+      "source_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+      "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+      "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+        470,
+        520
+      ],
+      "manual_waist_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_manual_native": [
+        530,
+        566.6271186440678
+      ],
+      "inferred_axis_is_authored_not_visible_bone": true,
+      "authored_waist_ground_height_canonical": 225,
+      "source_ground_root_native": [
+        530,
+        981
+      ],
+      "feet": [
+        {
+          "anatomical_side": "LEFT",
+          "boot_ROI_xyxy": [
+            200,
+            950,
+            450,
+            1120
+          ],
+          "last4strongrows_centroid_native": [
+            319.9156976744186,
+            1099.0058139534883
+          ],
+          "local_canonical1024": [
+            -102.63660571631458,
+            57.65169536658971
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        },
+        {
+          "anatomical_side": "RIGHT",
+          "boot_ROI_xyxy": [
+            680,
+            850,
+            900,
+            1080
+          ],
+          "last4strongrows_centroid_native": [
+            788.1754385964912,
+            1061.122807017544
+          ],
+          "local_canonical1024": [
+            126.13151198607203,
+            39.143966787197016
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "C": 2392,
+      "source_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+      "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+      "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+        555,
+        550
+      ],
+      "manual_waist_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_manual_native": [
+        623,
+        603.2118644067797
+      ],
+      "inferred_axis_is_authored_not_visible_bone": true,
+      "authored_waist_ground_height_canonical": 310,
+      "source_ground_root_native": [
+        623,
+        1274
+      ],
+      "feet": [
+        {
+          "anatomical_side": "LEFT",
+          "boot_ROI_xyxy": [
+            610,
+            820,
+            790,
+            1050
+          ],
+          "last4strongrows_centroid_native": [
+            693.6231884057971,
+            1042.2173913043478
+          ],
+          "local_canonical1024": [
+            30.233338180408133,
+            -99.2246619165334
+          ],
+          "authored_projected_ground_plane_localY_canonical": 55,
+          "AIR_minimum_clearance_world": 33.79139635858579,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        },
+        {
+          "anatomical_side": "RIGHT",
+          "boot_ROI_xyxy": [
+            235,
+            820,
+            400,
+            930
+          ],
+          "last4strongrows_centroid_native": [
+            334.65306122448976,
+            916.1632653061224
+          ],
+          "local_canonical1024": [
+            -123.43949218483381,
+            -153.18763224353287
+          ],
+          "authored_projected_ground_plane_localY_canonical": -55,
+          "AIR_minimum_clearance_world": 21.513402314656574,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "C": 2376,
+      "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+      "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+      "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+        555,
+        551
+      ],
+      "manual_waist_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_manual_native": [
+        623,
+        603.8559322033898
+      ],
+      "inferred_axis_is_authored_not_visible_bone": true,
+      "authored_waist_ground_height_canonical": 245.15254237288136,
+      "source_ground_root_native": [
+        623,
+        1120
+      ],
+      "feet": [
+        {
+          "anatomical_side": "LEFT",
+          "boot_ROI_xyxy": [
+            610,
+            840,
+            790,
+            1050
+          ],
+          "last4strongrows_centroid_native": [
+            687.6666666666666,
+            1031.2063492063492
+          ],
+          "local_canonical1024": [
+            27.86980920314252,
+            -38.26797071241518
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        },
+        {
+          "anatomical_side": "RIGHT",
+          "boot_ROI_xyxy": [
+            300,
+            840,
+            470,
+            1010
+          ],
+          "last4strongrows_centroid_native": [
+            466.1875,
+            1003.1875
+          ],
+          "local_canonical1024": [
+            -67.58249158249158,
+            -50.343434343434346
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "C": 2280,
+      "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+      "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+      "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+        560,
+        520
+      ],
+      "manual_waist_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_manual_native": [
+        625,
+        570.7203389830509
+      ],
+      "inferred_axis_is_authored_not_visible_bone": true,
+      "authored_waist_ground_height_canonical": 225,
+      "source_ground_root_native": [
+        625,
+        1021
+      ],
+      "feet": [
+        {
+          "anatomical_side": "LEFT",
+          "boot_ROI_xyxy": [
+            240,
+            670,
+            470,
+            930
+          ],
+          "last4strongrows_centroid_native": [
+            350.0853658536585,
+            906.219512195122
+          ],
+          "local_canonical1024": [
+            -123.470432178006,
+            -51.55053487376978
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        },
+        {
+          "anatomical_side": "RIGHT",
+          "boot_ROI_xyxy": [
+            620,
+            1000,
+            830,
+            1170
+          ],
+          "last4strongrows_centroid_native": [
+            755.2916666666666,
+            1143.2261904761904
+          ],
+          "local_canonical1024": [
+            58.516959064327466,
+            54.8945697577276
+          ],
+          "authored_projected_ground_plane_localY_canonical": null,
+          "AIR_minimum_clearance_world": null,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "C": 872,
+      "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+      "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+      "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+        722,
+        1197
+      ],
+      "manual_waist_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_manual_native": [
+        747,
+        1216.3983050847457
+      ],
+      "inferred_axis_is_authored_not_visible_bone": true,
+      "authored_waist_ground_height_canonical": 310,
+      "source_ground_root_native": [
+        747,
+        1461
+      ],
+      "feet": [
+        {
+          "anatomical_side": "LEFT",
+          "boot_ROI_xyxy": [
+            590,
+            1270,
+            735,
+            1400
+          ],
+          "last4strongrows_centroid_native": [
+            683.8536585365854,
+            1381.9756097560976
+          ],
+          "local_canonical1024": [
+            -74.15350190199148,
+            -92.79928395614229
+          ],
+          "authored_projected_ground_plane_localY_canonical": -55,
+          "AIR_minimum_clearance_world": 8.282012554671756,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        },
+        {
+          "anatomical_side": "RIGHT",
+          "boot_ROI_xyxy": [
+            800,
+            1370,
+            950,
+            1495
+          ],
+          "last4strongrows_centroid_native": [
+            816.6744186046511,
+            1488.1627906976744
+          ],
+          "local_canonical1024": [
+            81.81950074674627,
+            31.89758907616808
+          ],
+          "authored_projected_ground_plane_localY_canonical": 55,
+          "AIR_minimum_clearance_world": 5.061854016503678,
+          "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+        }
+      ]
+    }
+  ],
+  "source_pixels_unchanged": true,
+  "actor_approval": false,
+  "new_actor_approvals": 0
+}
