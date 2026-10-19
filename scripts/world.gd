@@ -36,6 +36,7 @@ const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
+const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -143,6 +144,7 @@ var catalog_item_variant_count: Dictionary = {} # name -> count; never dedupe ro
 var verified_catalog_options: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
+var card_draw_fusion: TwilightCardDrawFusion = CARD_DRAW_FUSION.new()
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
 var equipped_items: Dictionary = {
 	"weapon": {}, "offhand": {}, "helmet": {}, "tshirt": {}, "body": {}, "pants": {}, "cloak": {},
@@ -300,6 +302,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	card_draw_fusion.configure(catalog_db)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -1105,6 +1108,10 @@ func _connect_signals() -> void:
 	hud.save_pressed.connect(func() -> void: _save_game(false))
 	hud.load_pressed.connect(func() -> void: _load_game(false))
 	hud.catalog_equip_requested.connect(_equip_catalog)
+	if hud.has_signal("card_pack_draw_requested"):
+		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
+	if hud.has_signal("card_fusion_requested"):
+		hud.connect("card_fusion_requested", _on_card_fusion_requested)
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
@@ -3732,6 +3739,8 @@ func _update_hud() -> void:
 	character_state["gold"] = gold
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	hud.set_character_state(character_state)
+	if hud.has_method("set_card_collection_state"):
+		hud.call("set_card_collection_state", card_draw_fusion.export_state())
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
@@ -3801,6 +3810,7 @@ func _save_game(quiet: bool) -> void:
 		"consumable_state": consumable_service.call("export_state"),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
+		"card_draw_fusion": card_draw_fusion.export_state(),
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
@@ -3920,6 +3930,7 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
 	if equipped_value is Dictionary:
 		equipped_catalog = equipped_value as Dictionary
@@ -5307,6 +5318,50 @@ func _on_class_selected(value: int) -> void:
 	player.set_class_index(class_index)
 	hud.show_message("캐릭터 외형: %s" % ["전사", "마법사", "궁수", "암살자"][class_index])
 	_update_hud()
+
+# Card acquisition is the only debug-only action. Real pack ownership/cost is
+# not modelled yet; fusion is available whenever saved duplicate cards exist.
+func _on_card_pack_draw_requested(category: String) -> void:
+	if not OS.is_debug_build():
+		return
+	var result: Dictionary = card_draw_fusion.draw_pack(category)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "뽑기 실패")))
+		return
+	var grades: Dictionary = {"고급": 0, "희귀": 0, "영웅": 0, "전설": 0}
+	for raw: Variant in result.get("results", []) as Array:
+		if raw is Dictionary:
+			var grade: String = str((raw as Dictionary).get("grade", ""))
+			if grades.has(grade):
+				grades[grade] = int(grades[grade]) + 1
+	var message: String = "%s 최상급팩 11장 · 고급 %d / 희귀 %d / 영웅 %d / 전설 %d" % [
+		category, int(grades["고급"]), int(grades["희귀"]),
+		int(grades["영웅"]), int(grades["전설"])
+	]
+	hud.show_message(message)
+	hud.append_log(message)
+	hud.call("set_card_draw_fusion_result", category, message)
+	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_save_game(true)
+
+func _on_card_fusion_requested(category: String, grade: String) -> void:
+	var result: Dictionary = card_draw_fusion.fuse(category, grade)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "합성 실패")))
+		return
+	var card: Dictionary = result.get("result", {}) as Dictionary
+	var outcome: String = "성공" if bool(result.get("success", false)) else "실패"
+	var message: String = "%s %s 합성 %s · %s(%s)" % [
+		category, grade, outcome, str(card.get("name", "")), str(card.get("grade", ""))
+	]
+	var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
+	if not pity_card.is_empty():
+		message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	hud.show_message(message)
+	hud.append_log(message)
+	hud.call("set_card_draw_fusion_result", category, message)
+	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_save_game(true)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
 	if category == "아이템":
