@@ -23,6 +23,13 @@ func _run() -> void:
 	for target: Dictionary in sources.targets:
 		if register.actors.has(target.key):
 			references[target.key] = target.reference.path
+	# The detailed mythic queue also contains already-approved generic actors
+	# outside the remaining106 source list. Require their exact queued portrait.
+	var detailed: Array = JSON.parse_string(FileAccess.get_file_as_string("res://docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json"))
+	for subject: Dictionary in detailed:
+		if not register.actors.has(subject.id): continue
+		if references.has(subject.id): assert(references[subject.id] == subject.reference)
+		references[subject.id] = subject.reference
 	var actor: Node2D = load("res://scenes/Player.tscn").instantiate()
 	root.add_child(actor)
 	await process_frame
@@ -36,6 +43,7 @@ func _run() -> void:
 		if not scope.is_empty() and not scope.has(key): continue
 		tested_actors += 1
 		var record: Dictionary = register.actors[key]
+		assert(references.has(key), "Require the saved portrait for every native actor")
 		var profile: Resource = load(record.native_profile)
 		actor.motion.advance(0.0, Vector2.ZERO)
 		actor.set_transform_visual(references[key], 1.0, profile)
