@@ -4891,6 +4891,25 @@
           "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
         ]
       }
+    },
+    {
+      "key": "transform:393",
+      "direction": "W",
+      "role": "run",
+      "version": "v03iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
+      "original_generated_file": "/workspace/scratch/halpas-W-run-v03iso01.png",
+      "bytes": 1526527,
+      "sha256": "3d50892007edc60ce2091584be01d9dfcd272b8a42f177eada40a209973fdd72",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -4911,7 +4930,7 @@
     "transform:393:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
     "transform:393:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
     "transform:393:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
-    "transform:393:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
+    "transform:393:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
     "transform:393:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
     "transform:393:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
     "transform:393:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
@@ -5187,6 +5206,23 @@
             "All silhouettes appear complete and uncropped; no opaque alpha>100pixels touch outerimageedge. Strict unchanged geometry+complete-region checker PASS with exactly6 distinct frames. Source pixel scale remains unmodified; runtime physical scale/bodyroot requires separate review."
           ],
           "source_review_sha256": "ffff780d8018ae1cf0767d36a7f18609b538a3e4df9206318307b88d2ceacfa1"
+        },
+        {
+          "slot": "transform:393:W:run",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 visor/nose/chest/hip axes retain genuine LEFT/WEST lateral elevated-camera model, no SW/front-left turn, hand mirror or broad front-chest snap.",
+            "NearLEFT free fist remains visible with its connected near arm; farRIGHT hand carries sole compact purple crystal blade aheadLEFT. Exactly two coherent arm/hand chains and two legs/boots, with natural partial occlusion during flight. Gold horns/plates, crystalline fan feathers/roots and burgundy cape remain faithful.",
+            "New full wingbeat0HIGH→1horizontalpower→2LOWbelowshoulder/downback→3lowrearfollowthrough→4risingmiddle→5latehighreturn is visibly articulated, with changing gold-root angle and fan closure; not slowwalk replay/duplicate stills.",
+            "Stronger whole-torso forward lean, hips/knees/boots trailing rearRIGHT and cape streaming more horizontally distinguish dedicated fast run from gentle Wwalk. Feet stay airborne; no ground contacts imposed.",
+            "Complete fullsilhouettes appear uncropped; no alpha>100pixels touch outerimageedge. Raw strictimporter detects overlapping pose rectangles, so geometry remains HOLD for lossless disjointsplit rather than altered thresholds/cropped figures.",
+            "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
+          ],
+          "source_review_sha256": "657ccad253341b2ffec98899b7b5d90fb641ec168864dea9b58738795d88cf3d"
         }
       ],
       "compass_audit": {
