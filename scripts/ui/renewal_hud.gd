@@ -32,6 +32,8 @@ var quick_page_buttons: Array[Button] = []
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
+const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
+var card_reveal_stage: Control
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -1243,6 +1245,8 @@ func _build_catalog_panel() -> void:
 	card_draw_button = UI.button("최상급팩 11회 뽑기 (검수 전용)", _request_card_pack_draw, Vector2(0, 42))
 	card_draw_button.name = "CardTopPackDraw"
 	card_controls.add_child(card_draw_button)
+	var reveal_preview := UI.button("5개 등급 연출 비교 · 보상 없음", _preview_card_reveal_grades, Vector2(0,42))
+	card_controls.add_child(reveal_preview)
 	card_fusion_grade_select = OptionButton.new()
 	card_fusion_grade_select.name = "CardFusionGrade"
 	card_fusion_grade_select.custom_minimum_size.y = 40
@@ -1300,6 +1304,62 @@ func set_card_collection_state(value: Dictionary) -> void:
 func set_card_draw_fusion_result(category: String, result_text: String) -> void:
 	if category == catalog_category and card_result_label != null:
 		card_result_label.text = result_text
+
+func is_card_reveal_busy() -> bool:
+	return is_instance_valid(card_reveal_stage)
+
+func _new_card_reveal_stage() -> Control:
+	var layer := CanvasLayer.new()
+	layer.name = "CardRevealLayer"
+	layer.layer = 100
+	add_child(layer)
+	var stage: Control = CARD_REVEAL.new()
+	var settings: Dictionary = get_parent().presentation_settings
+	stage.reduced_motion = bool(settings.get("reduced_motion",false))
+	stage.intensity_scale = clampf(float(settings.get("impact_intensity",0.85)),0.0,1.5)
+	stage.detail_scale = 0.6 if str(settings.get("effect_detail","full")) == "low" else 1.0
+	card_reveal_stage = stage
+	layer.add_child(stage)
+	stage.finished.connect(func() -> void:
+		card_reveal_stage = null
+		layer.queue_free()
+		_refresh_card_controls())
+	return stage
+
+func _preview_card_reveal_grades() -> void:
+	if not playtest_tools_enabled() or is_card_reveal_busy():
+		return
+	_new_card_reveal_stage().present_showcase()
+
+func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool) -> void:
+	if is_card_reveal_busy() or not bool(awarded.get("ok",false)):
+		return
+	# Resolve stable IDs against the current game's catalog. No preview rerolls,
+	# catalog writes, material consumption or inventory awards occur here.
+	var catalog: Array = catalog_data.get(category,[]) as Array
+	var by_id: Dictionary = {}
+	var candidates: Array[Texture2D] = []
+	for raw: Variant in catalog:
+		if not raw is Dictionary:
+			continue
+		var record: Dictionary = raw as Dictionary
+		by_id[CARD_RULES.card_id(record)] = record
+		var path: String = str(record.get("image_path",""))
+		if candidates.size() < 8 and not path.is_empty() and ResourceLoader.exists(path):
+			candidates.append(load(path) as Texture2D)
+	var raw_awards: Array = [awarded.get("result",{})] if is_fusion else awarded.get("results",[]) as Array
+	var bonus: Dictionary = awarded.get("pity_reward",{}) as Dictionary
+	if not bonus.is_empty():
+		raw_awards.append(bonus.merged({"pity_reward":true}))
+	var views: Array[Dictionary] = []
+	for raw: Variant in raw_awards:
+		if raw is Dictionary and not (raw as Dictionary).is_empty():
+			var result: Dictionary = raw as Dictionary
+			views.append((by_id.get(str(result.get("id","")),{}) as Dictionary).merged(result,true).duplicate(true))
+	if views.is_empty():
+		return
+	var stage: Control = _new_card_reveal_stage()
+	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
 
 func _refresh_card_controls() -> void:
 	if card_controls == null or card_fusion_grade_select == null:
