@@ -1,0 +1,464 @@
+{
+  "schema": 1,
+  "revision": 2026101901,
+  "sources": {
+    "99777.png": {
+      "bytes": 60285049,
+      "sha256": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+      "size": [
+        19353,
+        6566
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        1,
+        0,
+        11750,
+        6220
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    },
+    "99111.png": {
+      "bytes": 76808234,
+      "sha256": "4733602c00225a447182cdc7bd07733fa4b43ac7b6875ed2520ff3dba46fc355",
+      "size": [
+        16035,
+        8017
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        2962,
+        1432,
+        13034,
+        6744
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    },
+    "13474.png": {
+      "bytes": 70743016,
+      "sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "size": [
+        19998,
+        6428
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        0,
+        0,
+        12854,
+        6427
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    },
+    "99112.png": {
+      "bytes": 59567305,
+      "sha256": "5f0b8eae1a651430127116cb12b5ecbf79f5c17cf8cc78b918228b833bc46528",
+      "size": [
+        12288,
+        6144
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        0,
+        0,
+        12288,
+        6143
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    }
+  },
+  "source_map_id_policy": "PNG_NUMBER_IS_NOT_SERVER_MAP_ID",
+  "albino_partition": {
+    "method": "EXPLICIT_VISUAL_RIDGE_POLYLINES",
+    "status": "VISUAL_PARTITION_CANDIDATE_NOT_OFFICIAL_BOUNDARY",
+    "reason": "The three biomes share one connected alpha support; no source separators or authoritative zone boundaries were supplied.",
+    "cuts": [
+      [
+        [
+          4000,
+          0
+        ],
+        [
+          4000,
+          2600
+        ],
+        [
+          4400,
+          2800
+        ],
+        [
+          4700,
+          3200
+        ],
+        [
+          4920,
+          3450
+        ],
+        [
+          5480,
+          3800
+        ],
+        [
+          5920,
+          4000
+        ],
+        [
+          6220,
+          4400
+        ],
+        [
+          6500,
+          4600
+        ],
+        [
+          19998,
+          6428
+        ]
+      ],
+      [
+        [
+          7200,
+          0
+        ],
+        [
+          7540,
+          1230
+        ],
+        [
+          8000,
+          1700
+        ],
+        [
+          8500,
+          2050
+        ],
+        [
+          8800,
+          2450
+        ],
+        [
+          9100,
+          2600
+        ],
+        [
+          9650,
+          2780
+        ],
+        [
+          10000,
+          3000
+        ],
+        [
+          19999,
+          6428
+        ]
+      ]
+    ]
+  },
+  "maps": {
+    "albino_01": {
+      "name": "알비노 분지 1구역",
+      "file": "13474.png",
+      "spawn": [
+        3100,
+        4390
+      ],
+      "walk_polygons": [
+        [
+          [
+            3000,
+            4360
+          ],
+          [
+            3190,
+            4290
+          ],
+          [
+            3290,
+            4400
+          ],
+          [
+            3130,
+            4490
+          ],
+          [
+            2990,
+            4440
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_PATCH_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "UNMAPPED_PRESERVE_LEGACY",
+      "route_checks": [
+        [
+          3100,
+          4390
+        ]
+      ],
+      "blocked_probes": [
+        [
+          2880,
+          4360
+        ]
+      ]
+    },
+    "albino_02": {
+      "name": "알비노 분지 2구역",
+      "file": "13474.png",
+      "spawn": [
+        6400,
+        2910
+      ],
+      "walk_polygons": [
+        [
+          [
+            6250,
+            2890
+          ],
+          [
+            6410,
+            2840
+          ],
+          [
+            6540,
+            2900
+          ],
+          [
+            6380,
+            2980
+          ],
+          [
+            6260,
+            2950
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_PATCH_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "UNMAPPED_PRESERVE_LEGACY",
+      "route_checks": [
+        [
+          6400,
+          2910
+        ]
+      ],
+      "blocked_probes": [
+        [
+          6130,
+          2890
+        ]
+      ]
+    },
+    "albino_03": {
+      "name": "알비노 분지 3구역",
+      "file": "13474.png",
+      "spawn": [
+        10450,
+        1250
+      ],
+      "walk_polygons": [
+        [
+          [
+            10340,
+            1210
+          ],
+          [
+            10510,
+            1140
+          ],
+          [
+            10610,
+            1210
+          ],
+          [
+            10470,
+            1320
+          ],
+          [
+            10330,
+            1290
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_PATCH_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "UNMAPPED_PRESERVE_LEGACY",
+      "route_checks": [
+        [
+          10450,
+          1250
+        ]
+      ],
+      "blocked_probes": [
+        [
+          10220,
+          1210
+        ]
+      ]
+    },
+    "escaros_world": {
+      "name": "에스카로스",
+      "file": "99777.png",
+      "spawn": [
+        7440,
+        2910
+      ],
+      "walk_polygons": [
+        [
+          [
+            7310,
+            2910
+          ],
+          [
+            7440,
+            2840
+          ],
+          [
+            7570,
+            2910
+          ],
+          [
+            7450,
+            2970
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_PATCH_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "UNMAPPED_PRESERVE_LEGACY",
+      "route_checks": [
+        [
+          7440,
+          2910
+        ]
+      ],
+      "blocked_probes": [
+        [
+          7190,
+          2910
+        ]
+      ]
+    },
+    "yahee_temple": {
+      "name": "야히의신전",
+      "file": "99112.png",
+      "spawn": [
+        5520,
+        2740
+      ],
+      "walk_polygons": [
+        [
+          [
+            5410,
+            2720
+          ],
+          [
+            5520,
+            2660
+          ],
+          [
+            5660,
+            2740
+          ],
+          [
+            5520,
+            2810
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_PATCH_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "UNMAPPED_PRESERVE_LEGACY",
+      "route_checks": [
+        [
+          5520,
+          2740
+        ]
+      ],
+      "blocked_probes": [
+        [
+          5290,
+          2720
+        ]
+      ]
+    },
+    "balrog_temple": {
+      "name": "발록의 시전",
+      "file": "99111.png",
+      "spawn": [
+        8260,
+        4170
+      ],
+      "walk_polygons": [
+        [
+          [
+            8120,
+            4160
+          ],
+          [
+            8260,
+            4090
+          ],
+          [
+            8410,
+            4170
+          ],
+          [
+            8270,
+            4250
+          ],
+          [
+            8140,
+            4240
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_PATCH_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "UNMAPPED_PRESERVE_LEGACY",
+      "route_checks": [
+        [
+          8260,
+          4170
+        ]
+      ],
+      "blocked_probes": [
+        [
+          8000,
+          4160
+        ]
+      ]
+    }
+  },
+  "activation": "EXPLICIT_NATIVE_PNG_SESSION_UNTIL_FULL_COLLISION_AND_SPAWN_REVIEW",
+  "escaros": {
+    "canonical": "escaros_world",
+    "legacy_ids": [
+      "escaros_01",
+      "escaros_02",
+      "escaros_03",
+      "escaros_04",
+      "escaros_05"
+    ],
+    "single_canvas": true,
+    "subregion_boundaries": "UNVERIFIED",
+    "monster_and_boss_placement": "NOT_MIGRATED_WITHOUT_COORDINATE_EVIDENCE"
+  }
+}

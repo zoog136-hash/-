@@ -15,6 +15,7 @@ func configure(controller: Node, value: PlayableField) -> void:
 	field = value
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
 	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
+	if field is NativePngField: source_overview = field.overview_texture()
 	queue_redraw()
 
 func _ready() -> void:

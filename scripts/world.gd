@@ -19,6 +19,8 @@ const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
 const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
 const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
+const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
+const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
 const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
@@ -310,7 +312,7 @@ func _ready() -> void:
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
 	_setup_collision_tileset()
 	_setup_field_services()
-	hud.refresh_maps(maps)
+	hud.refresh_maps(NATIVE_PNG.menu_entries(maps))
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
 	var requested_png_map: String = ""
@@ -320,8 +322,11 @@ func _ready() -> void:
 				var candidate_png_map: String = argument.trim_prefix("--png-map=")
 				if maps_by_id.has(candidate_png_map) and REMAKE_REGISTRY.installed(candidate_png_map): requested_png_map = candidate_png_map;active_map_id = candidate_png_map
 	_set_map(active_map_id, false)
-	var creating_character: bool = not FileAccess.file_exists(SAVE_PATH)
+	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	if NATIVE_PNG.enabled():
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--native-png-map="): _set_map(argument.trim_prefix("--native-png-map="),false)
 	# Restore character progress first; an explicit review destination wins over
 	# a different map in the isolated legacy save without reusing its pixels.
 	if not requested_png_map.is_empty() and requested_png_map != active_map_id: _set_map(requested_png_map, false)
@@ -436,6 +441,9 @@ func _load_data() -> void:
 			var map_data: Dictionary = map_value as Dictionary
 			if remake_names.has(str(map_data.get("id", ""))): map_data["name"] = remake_names[str(map_data.id)]
 			maps_by_id[str(map_data.get("id", ""))] = map_data
+	for record: Dictionary in NATIVE_PNG.catalog_entries():
+		maps.append(record)
+		maps_by_id[str(record.id)] = record
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
 		maps_by_id[str(record.id)] = record
@@ -1146,8 +1154,15 @@ func _connect_signals() -> void:
 
 func _set_map(map_id: String, keep_position: bool) -> void:
 	_clear_combat_actions()
+	map_id = NATIVE_PNG.canonical(map_id)
 	if not maps_by_id.has(map_id):
 		return
+	var requested_native: PlayableField = null
+	if NATIVE_PNG.supports(map_id):
+		requested_native = NATIVE_PNG.load_field(map_id)
+		if requested_native == null:
+			hud.show_message("PNG 원본 팩 누락·손상: 현재 지역을 유지합니다")
+			return
 	# Validate before releasing the current playable world.
 	var requested_map: Dictionary = maps_by_id[map_id] as Dictionary
 	var requested_field: Dictionary = requested_map.get("field_definition", {})
@@ -1158,7 +1173,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			return
 		requested_field = loaded_field as Dictionary
 	var requested_original: OriginalPlayableField = null
-	if REMAKE_REGISTRY.installed(map_id):
+	if requested_native != null:
+		pass
+	elif REMAKE_REGISTRY.installed(map_id):
 		requested_original = REMAKE_REGISTRY.load_field(map_id)
 		if requested_original == null:
 			hud.show_message("리메이크 지도 데이터가 손상되어 현재 맵을 유지합니다")
@@ -1190,6 +1207,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	ground_loot.hide_map()
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
+	if requested_native != null:
+		active_map = active_map.duplicate()
+		active_map["name"] = requested_native.data.map_name
 	tile_size = int(active_map.get("tile_size_world", 32))
 	world_size = Vector2(float(int(active_map.get("width", 1)) * tile_size), float(int(active_map.get("height", 1)) * tile_size))
 	player.camera.limit_left = 0
@@ -1201,9 +1221,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
 		shape.queue_free()
-	if requested_original != null or not requested_field.is_empty():
-		if requested_original != null:
-			field_map = requested_original
+	if requested_native != null or requested_original != null or not requested_field.is_empty():
+		if requested_native != null or requested_original != null:
+			field_map = requested_native if requested_native != null else requested_original
 			world_size = field_map.bounds.size
 			player.camera.limit_left = floori(field_map.bounds.position.x)
 			player.camera.limit_top = floori(field_map.bounds.position.y)
@@ -1237,7 +1257,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	if not keep_position or not _is_walkable_world(player.global_position):
 		player.global_position = _spawn_position()
 	player.velocity = Vector2.ZERO
-	preload("res://scripts/maps/source_body_profile.gd").apply(player,field_map is RemakePlayableField)
+	preload("res://scripts/maps/source_body_profile.gd").apply(player,field_map is RemakePlayableField or field_map is NativePngField)
 	player.set_touch_vector(Vector2.ZERO)
 	player.camera.reset_smoothing()
 	player.camera.force_update_scroll()
@@ -1247,7 +1267,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
+		if field_map is NativePngField: field_renderer = NATIVE_PNG_RENDERER.new()
+		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
@@ -3581,6 +3602,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 		hud.call("open_crafting")
 
 func _npc_teleport_requested(map_id: String) -> void:
+	map_id = NATIVE_PNG.canonical(map_id)
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
 		return
@@ -3747,6 +3769,9 @@ func _refresh_combat_hud() -> void:
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
+func save_path() -> String:
+	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
+
 func _save_game(quiet: bool) -> void:
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
@@ -3806,7 +3831,9 @@ func _save_game(quiet: bool) -> void:
 		"item_instances": item_instances,
 		"next_item_instance_id":next_item_instance_id
 	}
-	var result: Error = preload("res://scripts/skills/save_writer.gd").write(SAVE_PATH, data)
+	if field_map is NativePngField:
+		data["native_png_plan_sha256"] = FileAccess.get_sha256(NATIVE_PNG.PLAN_PATH)
+	var result: Error = preload("res://scripts/skills/save_writer.gd").write(save_path(), data)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
@@ -3815,7 +3842,7 @@ func _save_game(quiet: bool) -> void:
 		hud.show_message("저장 완료")
 
 func _load_game(quiet: bool) -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
+	if not FileAccess.file_exists(save_path()):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
 		return
@@ -3823,7 +3850,7 @@ func _load_game(quiet: bool) -> void:
 	# The explicit parser returns an error code, so damaged local saves can be
 	# rejected without corrupting the current session or failing a smoke test.
 	var save_parser: JSON = JSON.new()
-	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(SAVE_PATH))
+	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(save_path()))
 	if parse_error != OK:
 		if not quiet:
 			hud.show_message("저장 데이터가 손상되었습니다")
@@ -3837,6 +3864,12 @@ func _load_game(quiet: bool) -> void:
 		return
 	var data: Dictionary = value as Dictionary
 	var saved_map_id: String = str(data.get("map_id", ""))
+	if data.has("native_png_plan_sha256"):
+		var native_saved_field: PlayableField = NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if NATIVE_PNG.enabled() else null
+		if native_saved_field == null or str(data.native_png_plan_sha256) != FileAccess.get_sha256(NATIVE_PNG.PLAN_PATH):
+			source_save_blocked = true
+			hud.show_message("PNG 팩 누락·변경: 저장 파일을 보존합니다")
+			return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
 		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
 		if saved_field == null:
@@ -3844,8 +3877,8 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
 			return
 		saved_field.close()
-	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(SAVE_PATH + ".pre-original-skills"):
-		var backup_error := DirAccess.copy_absolute(SAVE_PATH, SAVE_PATH + ".pre-original-skills")
+	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(save_path() + ".pre-original-skills"):
+		var backup_error := DirAccess.copy_absolute(save_path(), save_path() + ".pre-original-skills")
 		if backup_error != OK:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
@@ -6470,7 +6503,7 @@ func use_field_portal(portal_id: String) -> bool:
 		if portal.has("target_source"):
 			if level < int(portal.get("min_level",0)) or (int(portal.get("max_level",0)) > 0 and level > int(portal.max_level)): return false
 			return SOURCE_TRAVEL.enter(self,str(portal.target_map),COORD.array_vector(portal.target_source))
-		var target_map: String = str(portal["target_map"])
+		var target_map: String = NATIVE_PNG.canonical(str(portal["target_map"]))
 		if not maps_by_id.has(target_map):
 			return false
 		player.clear_click_path()
@@ -6483,7 +6516,7 @@ func use_field_portal(portal_id: String) -> bool:
 			if active_map_id != target_map: return false
 			if field_map == null:
 				_place_return_gate()
-			elif portal.has("target_position") and (not field_map is RemakePlayableField or int(portal.get("target_layout_revision",-1))==int(field_map.data.layout_revision)):
+			elif portal.has("target_position") and (not (field_map is RemakePlayableField or field_map is NativePngField) or int(portal.get("target_layout_revision",-1))==int(field_map.data.layout_revision)):
 				# Old pixel destinations belong to the old layout. A source remake
 				# uses its validated entry unless a calibrated target revision matches.
 				var landing: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))

@@ -1,0 +1,55 @@
+name: Native PNG map code regression
+
+on:
+  pull_request:
+    paths:
+      - 'data/maps/native_png*'
+      - 'scripts/maps/native_png*'
+      - 'scripts/maps/field_minimap.gd'
+      - 'scripts/world.gd'
+      - 'tests/native_png*'
+      - 'tools/map_restore/*native_png*'
+      - '.github/workflows/native-png-maps.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-code-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Install official engine and numerical test tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-numpy python3-pil xvfb xauth libgl1-mesa-dri
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Lossless processing and regeneration contracts
+        run: |
+          python3 tools/check_resource_integrity.py --root .
+          python3 tools/map_restore/test_native_png_maps.py
+          python3 -m py_compile tools/map_restore/build_native_png_maps.py tools/map_restore/verify_native_png_pack.py
+      - name: Parse project and preserve ordinary game/save contracts
+        run: |
+          mkdir -p native-png-ci
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_runtime_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test
+      - name: State private integration scope
+        if: always()
+        run: |
+          mkdir -p native-png-ci
+          echo 'PUBLIC CODE REGRESSION ONLY. No private original PNGs are available here. native_png_runtime_test must SKIP without the actual private pack and --native-png-maps. Actual local OpenGL/PNG evidence is reported separately. Full collision/spawns/foreground and Android are incomplete.' > native-png-ci/SCOPE.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-png-code-regression-${{ github.sha }}
+          path: native-png-ci
+          retention-days: 7

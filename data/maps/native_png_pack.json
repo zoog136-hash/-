@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "index_sha256": "68c2244ed653853319d47456fe4647c8819c42e5e050dc997e23bc02c752f934",
+  "maps": {
+    "albino_01": {
+      "manifest": "albino_01/manifest.json",
+      "sha256": "7f5edcfcffd538fd6c07e1e932516a82064c44ccbc66651c153f1d12a663c32a",
+      "chunks": 20,
+      "bounds": [
+        0,
+        2800,
+        6508,
+        3627
+      ],
+      "split": {
+        "file": "albino_01_source.png",
+        "sha256": "c06b3842660f99d73e11d75bca5b4cda80884b747f76bb831bb6141e9ae410e1",
+        "bytes": 22516878
+      }
+    },
+    "albino_02": {
+      "manifest": "albino_02/manifest.json",
+      "sha256": "983655db76b44d1a5b6f8f875cb7a1b0decc0fbbd37c6b536128601b1fbf8b14",
+      "chunks": 17,
+      "bounds": [
+        4399,
+        1229,
+        5473,
+        3373
+      ],
+      "split": {
+        "file": "albino_02_source.png",
+        "sha256": "ddb5a0126ae5db0224d8eacea4f149f172bd9187b9f84e90ac195dccaf2cf270",
+        "bytes": 18647498
+      }
+    },
+    "albino_03": {
+      "manifest": "albino_03/manifest.json",
+      "sha256": "74b71a5f61e6b18a6ae2774e7918e6d56d28174a511f1b0dd2bb97860a5c969a",
+      "chunks": 15,
+      "bounds": [
+        7540,
+        0,
+        5314,
+        2920
+      ],
+      "split": {
+        "file": "albino_03_source.png",
+        "sha256": "de6561f4faa39acf2d8f058d96ed059fef7fc5cb64e5548f0295e10687949221",
+        "bytes": 15885346
+      }
+    },
+    "escaros_world": {
+      "manifest": "escaros_world/manifest.json",
+      "sha256": "0abb9c85d3f14ce993f3797a3c6b7200afdcc38ba525bf1d117882924a63b750",
+      "chunks": 44,
+      "bounds": [
+        1,
+        0,
+        11749,
+        6220
+      ]
+    },
+    "yahee_temple": {
+      "manifest": "yahee_temple/manifest.json",
+      "sha256": "e1fd588efd450a715954a7aae66708d8442b68a2778a6c9d29a56e4d872f18d1",
+      "chunks": 48,
+      "bounds": [
+        0,
+        0,
+        12288,
+        6143
+      ]
+    },
+    "balrog_temple": {
+      "manifest": "balrog_temple/manifest.json",
+      "sha256": "326beb2fce2f72d3cb22b166b6176f057b6baaaf3240ad739e0bb4ef02f15ec7",
+      "chunks": 49,
+      "bounds": [
+        2962,
+        1432,
+        10072,
+        5312
+      ]
+    }
+  },
+  "albino_partition": {
+    "visible_pixels": 28549496,
+    "region_pixels": [
+      11358743,
+      9100022,
+      8090731
+    ],
+    "omitted_pixels": 0,
+    "duplicated_pixels": 0,
+    "rgba_roundtrip": true
+  },
+  "scope": "ACTUAL_PRIVATE_PNG_ENTRY_PATCHES_NOT_FULL_MAP_COMPLETION",
+  "private_art_in_public_git": false
+}
