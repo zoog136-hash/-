@@ -12,6 +12,7 @@ from pathlib import Path
 import subprocess
 
 import import_original_based_motion as importer
+from pr122_reviewed_source_regions import apply_reviewed_regions
 import pr122_reviewed_runtime_layout as reviewed_layout
 
 
@@ -105,6 +106,9 @@ def stage(root, key, revision=None):
         geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
                                     directions_axis='phase_grid2', canvas_size=canvas,
                                     directions=[direction])
+        if record.get('source_region_review') is not None:
+            geometry, region_proof = apply_reviewed_regions(path, geometry, record['source_region_review'])
+            assert region_proof == record['source_region_proof'], 'Reviewed source region proof changed'
         importer.require_complete_pose_regions(path, geometry)
         saved = json.loads(path.with_suffix('.geometry.json').read_text())
         assert json.loads(json.dumps(geometry)) == saved, f'Saved source geometry changed: {source}'

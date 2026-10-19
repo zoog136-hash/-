@@ -13,6 +13,7 @@ import sys
 
 import bind_pr122_native_locomotion_profiles as binder
 import stage_pr122_native_locomotion as staging
+from pr122_reviewed_source_regions import apply_reviewed_regions
 
 
 def write_json(path, value):
@@ -42,6 +43,8 @@ def preserve_action(root, source, request):
         result = staging.importer.analyze(dest, rows_count=6, reference_rows=[0, 3],
                                          directions_axis='phase_grid2', canvas_size=canvas,
                                          directions=[direction])
+        if request.get('source_region_review') is not None:
+            result, region_proof = apply_reviewed_regions(dest, result, request['source_region_review'])
         staging.importer.require_complete_pose_regions(dest, result)
         assert result['distinct_pixel_frames'] == 6
         write_json(dest.with_suffix('.geometry.json'), result)
@@ -54,6 +57,10 @@ def preserve_action(root, source, request):
                   geometry=geometry, production_connected=False, detailed_completed=False)
     if canvas_review is not None:
         record['source_canvas_review'] = canvas_review
+    if request.get('source_region_review') is not None:
+        record['source_region_review'] = request['source_region_review']
+        if geometry['status'] == 'GEOMETRY_PASS':
+            record['source_region_proof'] = region_proof
     manifest_path = root / staging.SOURCE_MANIFEST
     manifest = json.loads(manifest_path.read_text())
     manifest['raw_images'].append(record)
