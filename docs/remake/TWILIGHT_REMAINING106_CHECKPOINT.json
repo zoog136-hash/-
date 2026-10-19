@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-19T02:55:02.085476+00:00",
+  "observed_utc": "2026-10-19T03:07:05.271519+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -161,51 +161,16 @@
   "protected_production_change_scope": "No approved PNG or SpriteFrames overwritten; only5 previously incomplete identities gain candidate bindings. New common runtime native_width_ratio/HDR tint support has approved-Iguana actual Main technical baseline PASS, not full regression approval.",
   "latest_user_priority": "계속 메시지 용량초과 오류가 발생한다 그만하고 지금까지 작성내용 다 저장해",
   "latest_source_status": {
-    "new_approved": 8,
-    "approved_this_save": 0,
-    "latest_Golem_raw_PNGs": 12,
-    "new_Queen_raw_PNGs": 1,
-    "HOLD": 18,
-    "AUTHORING": 6,
-    "NOT_STARTED": 79,
+    "approved_total": 405,
+    "new_approved_this_batch": 0,
+    "raw_new_PNGs": 67,
+    "HOLD": 17,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 75,
     "runtime_connected_unapproved": 0,
-    "Android": "NOT_RUN",
-    "private_source_kit_body_count": 2,
-    "private_source_kit_exact_target_mapping": "UNCONFIRMED",
-    "previous_source_counts_historical": {
-      "new_approved": 2,
-      "raw_PNGs": 45,
-      "raw_PNG_bytes": 85840707,
-      "Main_technical_checks": 8786,
-      "Main_capture_PNGs": 70,
-      "source_HOLD18": true,
-      "Android": "NOT_RUN",
-      "private_source_kit_body_count": 2,
-      "private_source_kit_exact_target_mapping": "UNCONFIRMED",
-      "latest_Golem_raw_PNGs": 12,
-      "new_Queen_raw_PNGs": 1,
-      "source_HOLD19": true,
-      "unapproved_runtime_candidates": 5,
-      "approved_this_save": 0
-    },
-    "current_detail": "docs/remake/evidence/pr122-remaining106/batch14/save-checkpoint.json",
-    "batch16": {
-      "newly_drawn_poses": 296,
-      "new_completed": 6,
-      "active": "monster:알비노 몽크",
-      "proof": "docs/remake/evidence/pr122-remaining106/batch16/golem-completion-decision.json",
-      "new_palette_edits": 3
-    },
-    "batch17": {
-      "raw_new_PNGs": 67,
-      "new_completed": 0,
-      "active": [
-        "monster:알비노 몽크",
-        "monster:얼음 여왕",
-        "monster:놀"
-      ],
-      "proof": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json"
-    }
+    "current_detail": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json",
+    "private_backup": "NOT_DELIVERED",
+    "old_reaper": "UNRECOVERED"
   },
   "last_successful_pushed_code_commit_is_previous_checkpoint": true,
   "last_successful_pushed_code_commit_role": "Previous production checkpoint; latest stop-save commit resolved from this file git log",
@@ -276,7 +241,7 @@
     }
   },
   "state": "STOPPED_BY_USER",
-  "last_safe_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
+  "last_safe_commit": "4459ada3ea38d0a554deb69adf13dd9d4e72736e",
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
   "current_ids": [
     "monster:알비노 몽크",
@@ -291,7 +256,7 @@
   "new_completed": 6,
   "new_approved_this_batch": 6,
   "final_CI": "NOT_VERIFIED; manual workflow dispatch HTTP401; no historical success reuse",
-  "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
+  "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_STOP_20261019.md",
   "active_authoring": {
     "monster:알비노 몽크": {
       "status": "SOURCE_HOLD",
@@ -323,7 +288,10 @@
     "all_current_work_archive": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json",
     "previous_work_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
     "private_backup": "NOT_DELIVERED",
-    "old_reaper": "UNRECOVERED"
+    "old_reaper": "UNRECOVERED",
+    "all_archive_parts_remote_SHA256_verified": 162,
+    "complete_evidence_commit": "4459ada3ea38d0a554deb69adf13dd9d4e72736e",
+    "full_CI": "NOT_VERIFIED; user stopped work; save commits use skip ci"
   },
   "final_runtime_audit": "TARGETED_PRIOR_NATIVE_PASS; FULL_REGRESSION_INTERRUPTED_BY_USER",
   "validation_at_current_commit": {
@@ -402,5 +370,54 @@
       },
       "cast": "Future explicit cast=attack alias only; not extra unique poses"
     }
-  }
+  },
+  "historical_latest_source_status_before_this_stop": {
+    "new_approved": 8,
+    "approved_this_save": 0,
+    "latest_Golem_raw_PNGs": 12,
+    "new_Queen_raw_PNGs": 1,
+    "HOLD": 18,
+    "AUTHORING": 6,
+    "NOT_STARTED": 79,
+    "runtime_connected_unapproved": 0,
+    "Android": "NOT_RUN",
+    "private_source_kit_body_count": 2,
+    "private_source_kit_exact_target_mapping": "UNCONFIRMED",
+    "previous_source_counts_historical": {
+      "new_approved": 2,
+      "raw_PNGs": 45,
+      "raw_PNG_bytes": 85840707,
+      "Main_technical_checks": 8786,
+      "Main_capture_PNGs": 70,
+      "source_HOLD18": true,
+      "Android": "NOT_RUN",
+      "private_source_kit_body_count": 2,
+      "private_source_kit_exact_target_mapping": "UNCONFIRMED",
+      "latest_Golem_raw_PNGs": 12,
+      "new_Queen_raw_PNGs": 1,
+      "source_HOLD19": true,
+      "unapproved_runtime_candidates": 5,
+      "approved_this_save": 0
+    },
+    "current_detail": "docs/remake/evidence/pr122-remaining106/batch14/save-checkpoint.json",
+    "batch16": {
+      "newly_drawn_poses": 296,
+      "new_completed": 6,
+      "active": "monster:알비노 몽크",
+      "proof": "docs/remake/evidence/pr122-remaining106/batch16/golem-completion-decision.json",
+      "new_palette_edits": 3
+    },
+    "batch17": {
+      "raw_new_PNGs": 67,
+      "new_completed": 0,
+      "active": [
+        "monster:알비노 몽크",
+        "monster:얼음 여왕",
+        "monster:놀"
+      ],
+      "proof": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json"
+    }
+  },
+  "complete_evidence_commit": "4459ada3ea38d0a554deb69adf13dd9d4e72736e",
+  "stop_delivery_receipt": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/transfer/batch17-stop-remote-verification.json"
 }

@@ -30,3 +30,7 @@
 SPX1700개·44그룹·36효과의 코드와 원장은 유지한다. 미확정 ID 대응과 제3자 원본 공개 업로드는 하지 않았다. 비공개 원본 백업은 **NOT_DELIVERED**, 이전 사신 원화2개와 QA 초안은 **UNRECOVERED**다. 이번 보존 묶음은 이 비공개 원본 백업의 전달물이 아니다.
 
 병행5커밋, 기존 승인본·HOLD·전투 데이터·AI·저장 호환성은 보존한다. force push, rebase, main 병합, 다른 PR 수정은 하지 않는다.
+
+## 원격 저장 완료 확인
+
+전체162개 분할본을 포함하는 커밋은 `4459ada3ea38d0a554deb69adf13dd9d4e72736e`다. 4,751,840,049바이트 전부를 원격에서 다시 내려받아 각 조각 SHA-256을 확인했고, 새/변경 blob의 Git SHA와 크기도 일치한다. [원격 전달 영수증](evidence/pr122-remaining106/batch17/authoring-stop-20261019/transfer/batch17-stop-remote-verification.json), [정상 push 기록](evidence/pr122-remaining106/batch17/authoring-stop-20261019/transfer/batch17-stop-transfer.json), 설정·드라이버·로그도 함께 보존했다. 이 영수증을 추가한 최신 저장 SHA는 이 문서의 `git log -1 --format=%H`로 확인한다. 저장 커밋은 `[skip ci]`이며 신규 제작·테스트·수동 CI를 재개하지 않았다.
