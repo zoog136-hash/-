@@ -132,6 +132,37 @@ def record_correction(root, path):
         (root / filename).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
 
 
+def preserve_external_references(root, request):
+    """Keep exact newly cropped authoring guides with their generated source."""
+    manifest = recovery.read_json(root / staging.SOURCE_MANIFEST)
+    known = {r.get('sha256'): r.get('source') for r in manifest.get('raw_images', [])}
+    copies = []
+    folder = root / recovery.BATCH.with_name(request.get('source_batch', 'batch03')) / 'authoring-references'
+    for reference in request['references']:
+        source = absolute_file(Path(reference))
+        if source.is_relative_to(root):
+            continue
+        sha = request['reference_sha256'][reference]
+        require(digest(source) == sha, 'External reference changed before preservation')
+        if sha in known and (root / known[sha]).is_file() and digest(root / known[sha]) == sha:
+            request.setdefault('available_repository_reference_sources', {})[sha] = known[sha]
+            continue
+        require(source.stat().st_size <= 16 * 1024 * 1024, 'Unexpectedly large authoring reference')
+        data = source.read_bytes()
+        require(data[:8] == b'\x89PNG\r\n\x1a\n', 'Preserve PNG authoring references only')
+        folder.mkdir(exist_ok=True)
+        target = folder / ('ref-' + sha + '.png')
+        if target.exists():
+            require(not target.is_symlink() and digest(target) == sha, 'Preserved reference differs; never overwrite')
+        else:
+            with target.open('xb') as stream:
+                stream.write(data)
+        copies.append(dict(source=target.relative_to(root).as_posix(), sha256=sha, bytes=len(data),
+                           original_reference=reference))
+    if copies:
+        request['preserved_reference_files'] = copies
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('request', 'generated', 'review'): parser.add_argument('--' + name, type=Path, required=True)
@@ -151,6 +182,7 @@ def main():
         version = subprocess.check_output([str(GODOT), '--version'], text=True).strip()
         require(version == '4.7.2.stable.official.ed1daf0bf', 'Require exact Godot4.7.2')
         revision = recovery.next_revision(root, request['key'])
+        preserve_external_references(root, request)
         with path.open('x') as stream: stream.write(json.dumps(request, ensure_ascii=False, indent=2) + '\n')
         run('advance_pr122_native_locomotion.py', '--request', path, '--generated', args.generated, '--revision', revision, '--godot', GODOT)
         if recovery.read_json(path)['status'] == 'GENERATED_HOLD_NOT_APPROVED':

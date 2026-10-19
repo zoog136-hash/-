@@ -74,6 +74,14 @@ def main():
     names = [request['output_source'], str(args.request), str(staging.SOURCE_MANIFEST),
              str(staging.REGISTER), 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md',
              'tools/checkpoint_pr122_native_clip.py']
+    for reference in request.get('preserved_reference_files', []):
+        relative = Path(reference['source'])
+        allowed = root / 'docs/remake/evidence/pr122-mythic-detailed' / request.get('source_batch', 'batch03') / 'authoring-references'
+        path = root / relative
+        assert not relative.is_absolute() and '..' not in relative.parts and not path.is_symlink()
+        assert path.resolve().is_relative_to(allowed.resolve()) and path.is_file()
+        assert staging.digest(path) == reference['sha256'] and path.stat().st_size == reference['bytes']
+        names.append(relative.as_posix())
     if passed:
         assert actor is not None, 'A passed clip requires a real staged and verified actor'
         assert actor['verification']['actual_Player_scene_form_api'] == 'PASS'
