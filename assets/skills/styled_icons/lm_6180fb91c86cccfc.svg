@@ -1,14 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
 <defs>
-<radialGradient id="b" cx="0.35" cy="0.30" r="0.8"><stop offset="0" stop-color="#20445e"/><stop offset="0.67" stop-color="#101c29"/><stop offset="1" stop-color="#060a14"/></radialGradient>
-<linearGradient id="f" x1="0.15" y1="0.10" x2="0.82" y2="0.95"><stop offset="0" stop-color="#f8f8e5"/><stop offset="0.42" stop-color="#93d1f1"/><stop offset="1" stop-color="#6795b3"/></linearGradient>
+<radialGradient id="b" cx="29" cy="23" r="47" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#665021"/><stop offset=".57" stop-color="#242016"/><stop offset="1" stop-color="#080b11"/></radialGradient>
+<linearGradient id="f" x1="12" y1="9" x2="50" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fffbe3"/><stop offset=".47" stop-color="#f8d97f"/><stop offset="1" stop-color="#bc9639"/></linearGradient>
+<radialGradient id="a" cx="31" cy="30" r="28" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
 </defs>
-<rect x="0.5" y="0.5" width="63" height="63" rx="7.5" fill="#080d17"/>
-<rect x="1.5" y="1.5" width="61" height="61" rx="6.5" fill="url(#b)" stroke="#6795b3" stroke-width="1.5"/>
-<path d="M7 11L16 4H48L57 11" fill="none" stroke="#93d1f1" stroke-width="0.8" opacity="0.33"/>
-<circle cx="35" cy="28" r="23" fill="#6795b3" opacity="0.085"/>
-<g transform="translate(5.5 5.5) scale(0.1035)" fill="url(#f)" stroke="#151b2a" stroke-width="1.35" stroke-linejoin="round"><path d="M491.313 21.406C331.102 120.193 194.688 226.866 70 350.906c29.11-21.616 63.387-37.86 103.875-49.28 40.95-60.157 100.923-106.7 170.844-130.157-23.522 69.8-70.747 130.135-131.314 171.25-9.76 38.353-26.835 69.38-48 96.374C289.153 314.63 403.748 181.7 491.312 21.406zM132.656 345.5v.344c-30.526 52.844-71.12 87.318-115.437 115.47-4.89 28.29 9.777 39.067 34.75 34.56 30.594-51.69 68.69-88.052 115.436-115.468 0-19.56-12.363-34.906-34.75-34.906z"/></g>
-<path d="M7 56h50" fill="none" stroke="#93d1f1" stroke-width="0.8" opacity="0.53"/>
-<circle cx="8" cy="8" r="1.1" fill="#93d1f1"/>
-<circle cx="56" cy="8" r="1.1" fill="#93d1f1"/>
+<rect x=".5" y=".5" width="63" height="63" rx="7.5" fill="#0c0c13" stroke="#6d7780" stroke-width="1"/>
+<rect x="2" y="2" width="60" height="60" rx="6" fill="url(#b)"/>
+<circle cx="13" cy="36" r="20" fill="url(#a)"/>
+<circle cx="32" cy="32" r="26" fill="none" stroke="#ffffff" stroke-width=".45" opacity=".2"/>
+<path d="M32 7v8M28 11h8M10 32h7M47 32h7" fill="none" stroke="#ffffff" stroke-width=".85" opacity=".6"/>
+<g transform="translate(5.5 5.5) scale(.1035)" fill="url(#f)" stroke="#121623" stroke-width="1.6" stroke-linejoin="round"><path d="M491.313 21.406C331.102 120.193 194.688 226.866 70 350.906c29.11-21.616 63.387-37.86 103.875-49.28 40.95-60.157 100.923-106.7 170.844-130.157-23.522 69.8-70.747 130.135-131.314 171.25-9.76 38.353-26.835 69.38-48 96.374C289.153 314.63 403.748 181.7 491.312 21.406zM132.656 345.5v.344c-30.526 52.844-71.12 87.318-115.437 115.47-4.89 28.29 9.777 39.067 34.75 34.56 30.594-51.69 68.69-88.052 115.436-115.468 0-19.56-12.363-34.906-34.75-34.906z"/></g>
+<path d="M8 11L14 5h36l6 6M8 53l6 6h36l6-6" fill="none" stroke="#6d7780" stroke-width=".8" opacity=".65"/>
+<path d="M6 57h52" stroke="#ffffff" stroke-width=".6" opacity=".55"/>
+
 </svg>

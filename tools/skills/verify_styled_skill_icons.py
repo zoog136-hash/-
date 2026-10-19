@@ -20,10 +20,12 @@ for skill in records:
     filename = skill["icon"].removeprefix("res://")
     assert filename == "assets/skills/styled_icons/" + id + ".svg"
     assert skill["source"].startswith(("lorc/", "delapouite/"))
+    assert skill.get("theme") in {"fire","electric","ice","earth","heal","blood","shadow","holy","arcane","nature","wind","weapon"}
+    assert skill.get("visual_fidelity") == "MOTIF_THEMATIC_NO_SOURCE_PIXEL_MATCH"
     image = ROOT / filename
     assert image.is_file(), filename
     content = image.read_text(encoding="utf-8")
-    assert "<svg" in content and "url(#f)" in content
+    assert "<svg" in content and "url(#f)" in content and "url(#b)" in content
     ET.fromstring(content)
 assert len(names) == 125
 print("SKILL_STYLED_ICON_125_SVG_PASS")
