@@ -2,6 +2,7 @@ extends PlayableField
 class_name NativePngField
 ## Pixel coordinates come from the decoded PNG, not an assumed server map ID.
 ## Hand-traced floors share one navigation/physics mesh. Unreviewed pockets stay solid.
+const NATIVE_SPAWNS = preload("res://scripts/monsters/native_png_spawns.gd")
 var png_manifest: Dictionary
 var png_root: String
 
@@ -19,13 +20,15 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
 		"layout_revision":int(plan.revision),"bounds":manifest.bounds,"native_png":true,
 		"navigation":{"cell_size":16,"clearance":4,"use_baked_cache":false},
+		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
 		"spawn_position":spawn,"navigable_polygons":spec.walk_polygons,
-		"collision":spec.get("collision",[]),"monster_spawn":[],"npc_spawn":[],"portal":portals,"teleport":[],
+		"collision":spec.get("collision",[]),"monster_spawn":NATIVE_SPAWNS.build(mid,spec,portals),"npc_spawn":[],"portal":portals,"teleport":[],
 		"regions":spec.get("regions",[]),"surfaces":[],"roads":[],"water":[],"props":[],"bridges":[],
 		"safe_zone":[],"combat_zone":[],"boss_zone":[],"route_checks":spec.route_checks,
 		"minimap":{"title":spec.name},"collision_scope":spec.collision_scope,
-		"population_status":spec.monster_coordinate_status}
+		"population_status":"LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES",
+		"spawn_layout_revision":"native_png_spawns_20261019"}
 	value["runtime_foreground"]=spec.get("runtime_foreground",[])
 	configure(value)
 	# This mask only excludes transparent source pixels. Actual water, walls and
@@ -34,6 +37,17 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		for run: Array in manifest.get("alpha_solid_runs",[]):
 			astar.fill_solid_region(Rect2i(int(run[1]),int(run[0]),int(run[2]),1))
 		_build_reachability()
+	# The alpha guard was applied after PlayableField built its candidates.
+	# Drop any now-solid/unreachable or poorly cleared samples, rather than
+	# materialising actors in invisible pixels, pillars or wall edges.
+	for zone: Dictionary in value["monster_spawn"]:
+		var zone_id: String=str(zone.id)
+		var candidates: Array[Vector2i]=[]
+		for cell: Vector2i in spawn_cells.get(zone_id,[]):
+			if astar.is_point_solid(cell) or reachable[cell.y*width+cell.x]==0: continue
+			if not point_clear(cell_to_world(cell),12.0): continue
+			candidates.append(cell)
+		spawn_cells[zone_id]=candidates
 
 func solid_rectangles() -> Array[Rect2i]:
 	# Merge equal runs vertically. No cell changes its solid/walking ownership.

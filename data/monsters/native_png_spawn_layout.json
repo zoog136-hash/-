@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "base_plan_sha256": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+  "source_policy": "Use PR128 hash-pinned PNG geometry only; map source monsters from existing world_spawn_profiles; temple roster is provisional from registered monster DB",
+  "spawn_exclusion_radius": 320,
+  "portal_exclusion_radius": 180,
+  "maps": {
+    "albino_01": [
+      {
+        "id": "native_room_1",
+        "source_map": "albino_01",
+        "source_zone": "room_1",
+        "walk_polygon": 1,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_2",
+        "source_map": "albino_01",
+        "source_zone": "room_2",
+        "walk_polygon": 2,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_3",
+        "source_map": "albino_01",
+        "source_zone": "room_3",
+        "walk_polygon": 3,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_4",
+        "source_map": "albino_01",
+        "source_zone": "room_4",
+        "walk_polygon": 1,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_5",
+        "source_map": "albino_01",
+        "source_zone": "room_5",
+        "walk_polygon": 3,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_6",
+        "source_map": "albino_01",
+        "source_zone": "room_6",
+        "walk_polygon": 2,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_7",
+        "source_map": "albino_01",
+        "source_zone": "room_7",
+        "walk_polygon": 3,
+        "max_count": 4
+      },
+      {
+        "id": "native_boss",
+        "source_map": "albino_01",
+        "source_zone": "boss",
+        "walk_polygon": 4,
+        "max_count": 1
+      }
+    ],
+    "albino_02": [
+      {
+        "id": "native_room_1",
+        "source_map": "albino_02",
+        "source_zone": "room_1",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_2",
+        "source_map": "albino_02",
+        "source_zone": "room_2",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_3",
+        "source_map": "albino_02",
+        "source_zone": "room_3",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_4",
+        "source_map": "albino_02",
+        "source_zone": "room_4",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_5",
+        "source_map": "albino_02",
+        "source_zone": "room_5",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_6",
+        "source_map": "albino_02",
+        "source_zone": "room_6",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_room_7",
+        "source_map": "albino_02",
+        "source_zone": "room_7",
+        "walk_polygon": 0,
+        "max_count": 4
+      },
+      {
+        "id": "native_boss",
+        "source_map": "albino_02",
+        "source_zone": "boss",
+        "walk_polygon": 0,
+        "max_count": 1,
+        "rect_override": [
+          7180,
+          2520,
+          520,
+          390
+        ]
+      }
+    ],
+    "albino_03": [
+      {
+        "id": "native_room_1",
+        "source_map": "albino_03",
+        "source_zone": "room_1",
+        "walk_polygon": 0,
+        "max_count": 3
+      },
+      {
+        "id": "native_room_2",
+        "source_map": "albino_03",
+        "source_zone": "room_2",
+        "walk_polygon": 0,
+        "max_count": 3
+      },
+      {
+        "id": "native_room_3",
+        "source_map": "albino_03",
+        "source_zone": "room_3",
+        "walk_polygon": 3,
+        "max_count": 3
+      },
+      {
+        "id": "native_room_4",
+        "source_map": "albino_03",
+        "source_zone": "room_4",
+        "walk_polygon": 0,
+        "max_count": 3
+      },
+      {
+        "id": "native_room_5",
+        "source_map": "albino_03",
+        "source_zone": "room_5",
+        "walk_polygon": 3,
+        "max_count": 3
+      },
+      {
+        "id": "native_room_6",
+        "source_map": "albino_03",
+        "source_zone": "room_6",
+        "walk_polygon": 0,
+        "max_count": 3
+      },
+      {
+        "id": "native_room_7",
+        "source_map": "albino_03",
+        "source_zone": "room_7",
+        "walk_polygon": 3,
+        "max_count": 3
+      },
+      {
+        "id": "native_boss",
+        "source_map": "albino_03",
+        "source_zone": "boss",
+        "walk_polygon": 2,
+        "max_count": 1
+      }
+    ],
+    "escaros_world": [
+      {
+        "id": "native_escaros_01_field_0",
+        "source_map": "escaros_01",
+        "source_zone": "field_0",
+        "region_id": "escaros_gorge",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_01_field_1",
+        "source_map": "escaros_01",
+        "source_zone": "field_1",
+        "region_id": "escaros_gorge",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_01_field_2",
+        "source_map": "escaros_01",
+        "source_zone": "field_2",
+        "region_id": "escaros_gorge",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_01_field_3",
+        "source_map": "escaros_01",
+        "source_zone": "field_3",
+        "region_id": "escaros_gorge",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_01_boss",
+        "source_map": "escaros_01",
+        "source_zone": "boss",
+        "region_id": "escaros_gorge",
+        "max_count": 1
+      },
+      {
+        "id": "native_escaros_02_field_0",
+        "source_map": "escaros_02",
+        "source_zone": "field_0",
+        "region_id": "escaros_plain",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_02_field_1",
+        "source_map": "escaros_02",
+        "source_zone": "field_1",
+        "region_id": "escaros_plain",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_02_field_2",
+        "source_map": "escaros_02",
+        "source_zone": "field_2",
+        "region_id": "escaros_plain",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_02_field_3",
+        "source_map": "escaros_02",
+        "source_zone": "field_3",
+        "region_id": "escaros_plain",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_02_boss",
+        "source_map": "escaros_02",
+        "source_zone": "boss",
+        "region_id": "escaros_plain",
+        "max_count": 1
+      },
+      {
+        "id": "native_escaros_03_field_0",
+        "source_map": "escaros_03",
+        "source_zone": "field_0",
+        "region_id": "escaros_castle_01",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_03_field_1",
+        "source_map": "escaros_03",
+        "source_zone": "field_1",
+        "region_id": "escaros_castle_01",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_03_field_2",
+        "source_map": "escaros_03",
+        "source_zone": "field_2",
+        "region_id": "escaros_castle_01",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_03_field_3",
+        "source_map": "escaros_03",
+        "source_zone": "field_3",
+        "region_id": "escaros_castle_01",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_03_boss",
+        "source_map": "escaros_03",
+        "source_zone": "boss",
+        "region_id": "escaros_castle_01",
+        "max_count": 1
+      },
+      {
+        "id": "native_escaros_04_field_0",
+        "source_map": "escaros_04",
+        "source_zone": "field_0",
+        "region_id": "escaros_castle_02",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_04_field_1",
+        "source_map": "escaros_04",
+        "source_zone": "field_1",
+        "region_id": "escaros_castle_02",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_04_field_2",
+        "source_map": "escaros_04",
+        "source_zone": "field_2",
+        "region_id": "escaros_castle_02",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_04_field_3",
+        "source_map": "escaros_04",
+        "source_zone": "field_3",
+        "region_id": "escaros_castle_02",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_04_boss",
+        "source_map": "escaros_04",
+        "source_zone": "boss",
+        "region_id": "escaros_castle_02",
+        "max_count": 1
+      },
+      {
+        "id": "native_escaros_05_field_0",
+        "source_map": "escaros_05",
+        "source_zone": "field_0",
+        "region_id": "escaros_castle_03",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_05_field_1",
+        "source_map": "escaros_05",
+        "source_zone": "field_1",
+        "region_id": "escaros_castle_03",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_05_field_2",
+        "source_map": "escaros_05",
+        "source_zone": "field_2",
+        "region_id": "escaros_castle_03",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_05_field_3",
+        "source_map": "escaros_05",
+        "source_zone": "field_3",
+        "region_id": "escaros_castle_03",
+        "max_count": 8
+      },
+      {
+        "id": "native_escaros_05_boss",
+        "source_map": "escaros_05",
+        "source_zone": "boss",
+        "region_id": "escaros_castle_03",
+        "max_count": 1
+      }
+    ],
+    "yahee_temple": [
+      {
+        "id": "shrine_court",
+        "walk_polygon": 0,
+        "max_count": 7,
+        "monster_types": [
+          "오만의 탑 죽음의 수호자",
+          "오만의 탑 공포의 악마"
+        ]
+      },
+      {
+        "id": "shrine_west_path",
+        "walk_polygon": 1,
+        "max_count": 6,
+        "monster_types": [
+          "오만의 탑 죽음의 수호자",
+          "공포의 레서 데몬"
+        ]
+      },
+      {
+        "id": "shrine_south_path",
+        "walk_polygon": 2,
+        "max_count": 7,
+        "monster_types": [
+          "오만의 탑 공포의 악마",
+          "오만의 탑 죽음의 수호자"
+        ]
+      }
+    ],
+    "balrog_temple": [
+      {
+        "id": "balrog_west_wing",
+        "walk_polygon": 3,
+        "max_count": 8,
+        "monster_types": [
+          "공포의 레서 데몬",
+          "오만의 탑 공포의 악마"
+        ]
+      },
+      {
+        "id": "balrog_north_wing",
+        "walk_polygon": 4,
+        "max_count": 8,
+        "monster_types": [
+          "마계 악마전사",
+          "공포의 레서 데몬"
+        ]
+      },
+      {
+        "id": "balrog_east_wing",
+        "walk_polygon": 5,
+        "max_count": 8,
+        "monster_types": [
+          "마계 악마전사",
+          "종말의 성역 혼돈의 사도"
+        ]
+      },
+      {
+        "id": "balrog_south_wing",
+        "walk_polygon": 6,
+        "max_count": 8,
+        "monster_types": [
+          "공포의 레서 데몬",
+          "마계 악마전사"
+        ]
+      }
+    ]
+  }
+}
