@@ -4261,6 +4261,25 @@
         "assembly_proof": "/workspace/scratch/girtas-W-hit-reviewed-composite-v01/girtas-W-hit-reviewed-composite-v01.assembly.json",
         "actor_approval": false
       }
+    },
+    {
+      "key": "transform:393",
+      "direction": "W",
+      "role": "walk",
+      "version": "v03",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
+      "original_generated_file": "/workspace/scratch/halpas-W-walk-repair-v03/halpas-W-walk-v03.png",
+      "bytes": 2364475,
+      "sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -4280,7 +4299,7 @@
     "transform:393:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
     "transform:393:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
     "transform:393:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
-    "transform:393:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+    "transform:393:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
     "transform:393:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
     "transform:393:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
     "transform:393:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
@@ -4540,6 +4559,23 @@
             "Raw strict importer detects one pose rectangle containing another body; native geometry remains HOLD pending lossless disjoint-pose layout, no cropping or threshold relaxation applied."
           ],
           "source_review_sha256": "2d63c4d0e030c3a21c7fabee2b97f59a71bbbab0d84da15ef89b14ebcc0182e6"
+        },
+        {
+          "slot": "transform:393:W:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 helmet/visor/nose profiles, foreshortened lateral chest, pelvis and motion heading remain true horizontal LEFT/WEST, distinct from old SW/front-left selected movement. No source-heading blending or horizontal mirror used.",
+            "Near anatomicalLEFT free fist remains visible hanging on the near side; far anatomicalRIGHT hand/forearm carries the sole purple crystal blade ahead/LEFT. Two connected arms/hands and two legs/boots remain coherent, no near-hand blade transfer.",
+            "A new genuine normal slow airborne wingcycle is visible:0 HIGH raised crystal fan,1 broad horizontal sweep,2 DOWN/BACK feather fan below shoulder toward hip/lowerRIGHT,3 low-rear recovery with partly closed fan,4 rising middle/upper recovery,5 high opening returning toward0. Gold-root articulation and fan parts remain coherent.",
+            "Body has gentle leftward lean, both boots airborne with local knee/ankle tuck/trail changes; cape follows through behind toward RIGHT with distinct delayed folds. No invented grounded walking contacts or forced alternating leg requirement.",
+            "Original gold horn crown, black/gold segmented armor, established solid crystalline fan wings/root layering, burgundy cape, same farRIGHT compact purple blade and W physical model remain intact. Far wing naturally overlaps/occludes as in W identity source.",
+            "All silhouettes appear complete and uncropped; no opaque alpha>100pixels touch outerimageedge. Strict unchanged geometry+complete-region checker PASS with exactly6 distinct frames. Source pixel scale remains unmodified; runtime physical scale/bodyroot requires separate review."
+          ],
+          "source_review_sha256": "ffff780d8018ae1cf0767d36a7f18609b538a3e4df9206318307b88d2ceacfa1"
         }
       ],
       "compass_audit": {
