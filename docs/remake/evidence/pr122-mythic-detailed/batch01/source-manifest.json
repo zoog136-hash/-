@@ -1,0 +1,54 @@
+{
+  "status": "NATIVE_SOURCE_AUTHORING; no finished species claimed",
+  "raw_images": [
+    {
+      "key": "transform:393",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-locomotion-v01.png",
+      "original_generated_file": "/workspace/generated_images/exec-81a7a5d9-34bc-49b1-9b7e-fd970b04f981.png",
+      "sha256": "203b4ab70b094ca0aef7e6dcbe1f241edfc302a8eb4c3ac905d4237684c7d72c",
+      "bytes": 2536196,
+      "image": {
+        "size": [
+          1024,
+          1536
+        ],
+        "mode": "RGBA"
+      },
+      "requested_poses": 12,
+      "geometry": {
+        "status": "HOLD",
+        "canvas_size": 512,
+        "reason": "A pose rectangle includes another body; cannot safely crop"
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-locomotion-v01.png",
+      "original_generated_file": "/workspace/generated_images/exec-4c761d2e-6acb-4ea5-a3b4-6b0b2c6ae78d.png",
+      "sha256": "316d285f5c08ddd0100acc83f6d82645047a1164f007b054ef6ae6582d73cba1",
+      "bytes": 2587149,
+      "image": {
+        "size": [
+          1024,
+          1536
+        ],
+        "mode": "RGBA"
+      },
+      "requested_poses": 12,
+      "geometry": {
+        "status": "PASS",
+        "canvas_size": 512,
+        "frame_count": 12,
+        "distinct_pixel_frames": 12
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    }
+  ],
+  "mythic_detail_total": 31,
+  "mythic_detail_complete": 0,
+  "broad_CI": "CANCELLED_BY_USER_PRIORITY",
+  "approved_history_preserved": 405
+}
