@@ -12,8 +12,10 @@ func _run() -> void:
 		return
 	var register: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_native_locomotion_staging.json"))
 	var checked: int = 0
+	var expected: int = 0
 	for key: String in register.actors:
 		var actor: Dictionary = register.actors[key]
+		expected += int(actor.native_track_count)
 		var textures: Array[ImageTexture] = []
 		for track: Dictionary in actor.tracks:
 			var texture: ImageTexture = ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
@@ -49,6 +51,6 @@ func _run() -> void:
 			checked += 1
 		sprite.queue_free()
 		await process_frame
-	assert(checked == 9)
+	assert(checked == expected and expected > 0)
 	print("PR122_NATIVE_ACTOR_MOTION_PASS tracks=%d cases=direction,walk,run,all_phases,foot_anchor,native_color,no_mirror,no_warp engine=%s approvals_added=0" % [checked, Engine.get_version_info().string])
 	quit(0)

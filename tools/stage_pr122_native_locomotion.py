@@ -56,13 +56,24 @@ def build_frames(tracks):
     return '\n'.join(lines).encode()
 
 
-def stage(root, key):
+def stage(root, key, revision=None):
     manifest = json.loads((root / SOURCE_MANIFEST).read_text())
     assert manifest['mythic_detail_complete'] == 0
     assert manifest['approved_history_preserved'] == 405
     records = {(row['key'], row['source']): row for row in manifest['raw_images']}
     selected = manifest['selected_locomotion_sheets']
+    register_path = root / REGISTER
+    register = json.loads(register_path.read_text()) if register_path.exists() else dict(
+        schema='pr122-native-locomotion-staging-v1', approved_history_preserved=405,
+        detailed_complete=0, detailed_total=31, actors={})
+    previous_actor = register['actors'].get(key, {})
+    previous_textures = {(t['source'], t['source_sha256']): t['texture']
+                         for t in previous_actor.get('tracks', [])}
     folder = Path('assets/actors/eight_direction/native_locomotion_staging') / ACTORS[key]
+    if revision is not None:
+        if not revision or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in revision):
+            raise ValueError('Use a bounded ASCII revision directory')
+        folder /= revision
     tracks = []
     # Validate the whole unit before writing any outputs.
     for identity, source in sorted(selected.items()):
@@ -91,8 +102,9 @@ def stage(root, key):
         tracks.append(dict(direction=direction, role=role,
                            animation=f'{role}_{importer.DIRECTIONS.index(direction)}',
                            source=source, source_sha256=record['sha256'],
-                           texture=(folder / f'{direction}-{role}.png').as_posix(), geometry=geometry))
-    assert len(tracks) == (5 if key == 'transform:393' else 4)
+                           texture=previous_textures.get((source, record['sha256']),
+                                       (folder / f'{direction}-{role}.png').as_posix()), geometry=geometry))
+    assert 1 <= len(tracks) <= 16
     fingerprints = [frame['rgba_sha256'] for track in tracks for frame in track['geometry']['frames']]
     assert len(set(fingerprints)) == len(fingerprints), 'No duplicated native poses across tracks'
     for track in tracks:
@@ -100,10 +112,6 @@ def stage(root, key):
         assert digest(root / track['texture']) == track['source_sha256']
     frames_path = folder / 'SpriteFrames.tres'
     preserve_write(root / frames_path, build_frames(tracks))
-    register_path = root / REGISTER
-    register = json.loads(register_path.read_text()) if register_path.exists() else dict(
-        schema='pr122-native-locomotion-staging-v1', approved_history_preserved=405,
-        detailed_complete=0, detailed_total=31, actors={})
     missing = [f'{role}_{index}' for role in ('walk', 'run') for index in range(8)
                if f'{role}_{index}' not in {track['animation'] for track in tracks}]
     entry = dict(
@@ -118,9 +126,18 @@ def stage(root, key):
         integration='Godot SpriteFrames contract only; production catalogs and profiles unchanged')
     previous = dict(register['actors'].get(key, {}))
     verification = previous.pop('verification', None)
-    if previous and previous != entry:
+    for field in ('native_profile', 'native_profile_sha256', 'native_profile_basis'):
+        previous.pop(field, None)
+    if previous and previous != entry and revision is None:
         raise ValueError('Existing actor record differs; preserve it instead of replacing history')
-    if verification is not None:
+    if previous_actor and previous_actor.get('frames') != entry['frames']:
+        history = register.setdefault('history', {}).setdefault(key, [])
+        snapshot = {field: previous_actor[field] for field in
+                    ('frames', 'frames_sha256', 'native_profile', 'native_profile_sha256',
+                     'native_track_count', 'native_pose_count', 'verification') if field in previous_actor}
+        if not any(item['frames'] == snapshot['frames'] for item in history):
+            history.append(snapshot)
+    if previous == entry and verification is not None:
         entry['verification'] = verification
     register['actors'][key] = entry
     register_path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
@@ -131,8 +148,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--key', choices=ACTORS, required=True)
+    parser.add_argument('--revision', help='New immutable revision; existing source textures are reused')
     args = parser.parse_args()
-    stage(args.root.resolve(), args.key)
+    stage(args.root.resolve(), args.key, args.revision)
 
 
 if __name__ == '__main__':

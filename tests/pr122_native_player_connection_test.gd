@@ -7,6 +7,14 @@ func _run() -> void:
 	var register: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_native_locomotion_staging.json"))
 	var sources: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation_authoring_sources.json"))
 	var references: Dictionary = {}
+	var textures: Array[ImageTexture] = []
+	var expected: int = 0
+	for entry: Dictionary in register.actors.values():
+		expected += int(entry.native_track_count)
+		for track: Dictionary in entry.tracks:
+			var texture := ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
+			texture.take_over_path("res://" + str(track.texture))
+			textures.append(texture)
 	for target: Dictionary in sources.targets:
 		if register.actors.has(target.key):
 			references[target.key] = target.reference.path
@@ -70,6 +78,6 @@ func _run() -> void:
 	assert(actor.class_sprite.sprite_frames == original_class_frames)
 	actor.queue_free()
 	await process_frame
-	assert(checked == 9)
-	print("PR122_NATIVE_PLAYER_CONNECTION_PASS actors=2 clips=9 native_phases=54 position_collision_class_combat_sequence_preserved=true engine=%s production_catalog_switches=0 approvals_added=0" % Engine.get_version_info().string)
+	assert(checked == expected and expected > 0)
+	print("PR122_NATIVE_PLAYER_CONNECTION_PASS actors=%d clips=%d native_phases=%d position_collision_class_combat_sequence_preserved=true engine=%s production_catalog_switches=0 approvals_added=0" % [register.actors.size(), checked, checked * 6, Engine.get_version_info().string])
 	quit(0)

@@ -1,5 +1,5 @@
 {
-  "status": "NATIVE_SOURCE_AUTHORING; no finished species claimed",
+  "status": "NATIVE_ANIMATION_AUTHORING_IN_PROGRESS",
   "raw_images": [
     {
       "key": "transform:393",
@@ -458,6 +458,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "S",
+      "role": "run",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-61ac70c3-b69b-4d98-ad13-596724970768.png",
+      "bytes": 2214127,
+      "sha256": "d34c9acd6dba4f03a8a911a4e5d7dfe1276dd906eb68964b2ccd5dd311b2bced",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -473,9 +492,10 @@
     "transform:267:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-run-v02.png",
     "transform:267:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png",
     "transform:267:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
-    "transform:393:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png"
+    "transform:393:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+    "transform:393:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png"
   },
-  "selected_locomotion_native_poses": 54,
-  "session_stop_reason": "USER_REQUEST_SAVE_COMMIT_HANDOFF; NO_MORE_IMAGE_TOOL_CALLS_OR_CHAT_IMAGES",
-  "image_tools_forbidden": true
+  "selected_locomotion_native_poses": 60,
+  "session_stop_reason": null,
+  "image_tools_forbidden": false
 }
