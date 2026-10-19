@@ -1,6 +1,8 @@
 extends "res://scripts/hud_v20.gd"
 
 # Debug-build tools. Requests are also checked by the authoritative world.
+signal card_pack_draw_requested(category: String)
+signal card_fusion_requested(category: String, grade: String)
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
@@ -29,6 +31,7 @@ var pointer_transfer: Node
 var quick_page_buttons: Array[Button] = []
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -97,6 +100,13 @@ var catalog_test_toggle: Button
 var catalog_clear_button: Button
 var catalog_grade_column: VBoxContainer
 var catalog_grade_buttons: Dictionary = {}
+var card_collection_state: Dictionary = {}
+var card_controls: VBoxContainer
+var card_draw_button: Button
+var card_fusion_grade_select: OptionButton
+var card_fusion_button: Button
+var card_owned_label: Label
+var card_result_label: Label
 
 func _build_v20_status() -> void:
 	super._build_v20_status()
@@ -1084,6 +1094,9 @@ func open_catalog(category: String) -> void:
 		for grade_name: String in catalog_grade_buttons: catalog_grade_buttons[grade_name].button_pressed = grade_name == catalog_grade_filter
 	catalog_details_active = false
 	_fit_catalog_browser_layout()
+	if card_result_label != null:
+		card_result_label.text = "뽑기·합성 결과가 이곳에 표시됩니다"
+	_refresh_card_controls()
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()
@@ -1146,7 +1159,7 @@ func _build_catalog_panel() -> void:
 		grade_button.add_theme_color_override("font_color",UI.grade(grade_name))
 		catalog_grade_column.add_child(grade_button)
 		catalog_grade_buttons[grade_name] = grade_button
-	for title: String in ["합성","컬렉션"]:
+	for title: String in ["컬렉션"]:
 		var unavailable := UI.button(title,Callable(),Vector2(124,36))
 		unavailable.disabled = true
 		unavailable.tooltip_text = "현재 게임에 카드 보유·중복 재료 및 "+title+" 시스템이 없어 사용할 수 없습니다"
@@ -1217,6 +1230,37 @@ func _build_catalog_panel() -> void:
 			confirm_action("적용 해제",category+" 적용을 해제하시겠습니까?","해제",func(_count: int) -> void: catalog_equip_requested.emit(category,{})))
 	catalog_clear_button.name = "ClearCatalog"
 	right.add_child(catalog_clear_button)
+	# Card ownership is a new sidecar state; existing catalog/equip behavior is
+	# preserved to avoid invalidating old playtest saves. No paid/free packs
+	# exist yet: only debug builds can generate 11-card top-tier samples.
+	card_controls = VBoxContainer.new()
+	card_controls.name = "CardDrawFusionControls"
+	right.add_child(card_controls)
+	card_owned_label = UI.label("", 12, UI.MUTED)
+	card_owned_label.name = "CardOwnershipSummary"
+	card_owned_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	card_controls.add_child(card_owned_label)
+	card_draw_button = UI.button("최상급팩 11회 뽑기 (검수 전용)", func() -> void:
+		if playtest_tools_enabled() and CARD_RULES.CATEGORIES.has(catalog_category):
+			card_pack_draw_requested.emit(catalog_category), Vector2(0, 42))
+	card_draw_button.name = "CardTopPackDraw"
+	card_controls.add_child(card_draw_button)
+	card_fusion_grade_select = OptionButton.new()
+	card_fusion_grade_select.name = "CardFusionGrade"
+	card_fusion_grade_select.custom_minimum_size.y = 40
+	for grade_name: String in ["일반", "고급", "희귀", "영웅", "전설", "신화"]:
+		var target: String = str(CARD_RULES.FUSION_NEXT[grade_name])
+		var percent: int = int(CARD_RULES.FUSION_WEIGHTS[grade_name]) / 100
+		card_fusion_grade_select.add_item("%s → %s (%d%%)" % [grade_name, target, percent])
+	card_fusion_grade_select.item_selected.connect(func(_index: int) -> void: _refresh_card_controls())
+	card_controls.add_child(card_fusion_grade_select)
+	card_fusion_button = UI.button("중복 카드 합성", _request_card_fusion, Vector2(0, 42))
+	card_fusion_button.name = "CardFuseDuplicates"
+	card_controls.add_child(card_fusion_button)
+	card_result_label = UI.label("뽑기·합성 결과가 이곳에 표시됩니다", 12, UI.GOLD)
+	card_result_label.name = "CardDrawFusionResult"
+	card_result_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	card_controls.add_child(card_result_label)
 	# Clearly marked playtest grants. Runtime inventory and item-ID logic remain
 	# world-owned; the UI only emits requests and never writes inventory itself.
 	catalog_test_toggle = UI.button("검수용 지급 도구",Callable(),Vector2(0,32))
@@ -1244,6 +1288,71 @@ func _build_catalog_panel() -> void:
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
 	old.queue_free()
+
+func set_card_collection_state(value: Dictionary) -> void:
+	card_collection_state = value.duplicate(true)
+	_refresh_card_controls()
+
+func set_card_draw_fusion_result(category: String, result_text: String) -> void:
+	if category == catalog_category and card_result_label != null:
+		card_result_label.text = result_text
+
+func _refresh_card_controls() -> void:
+	if card_controls == null or card_fusion_grade_select == null:
+		return
+	var category: String = catalog_category
+	card_controls.visible = CARD_RULES.CATEGORIES.has(category)
+	if not card_controls.visible:
+		return
+	card_draw_button.visible = playtest_tools_enabled()
+	var all_owned: Dictionary = card_collection_state.get("owned", {}) as Dictionary
+	var category_owned: Dictionary = all_owned.get(category, {}) as Dictionary
+	var all_spare: Dictionary = card_collection_state.get("spare", {}) as Dictionary
+	var category_spare: Dictionary = all_spare.get(category, {}) as Dictionary
+	var total_spares: int = 0
+	for identity: String in category_spare:
+		total_spares += maxi(0, int(category_spare[identity]))
+	var all_pity: Dictionary = card_collection_state.get("pity", {}) as Dictionary
+	var category_pity: Dictionary = all_pity.get(category, {}) as Dictionary
+	card_owned_label.text = "획득 %d종 · 중복 %d장 · 희귀→영웅 실패 %d/20 · 영웅→전설 실패 %d/20" % [
+		category_owned.size(), total_spares,
+		int(category_pity.get("희귀", 0)), int(category_pity.get("영웅", 0))
+	]
+	var grade_index: int = card_fusion_grade_select.selected
+	if grade_index < 0:
+		card_fusion_button.disabled = true
+		return
+	var source_grades: Array[String] = ["일반", "고급", "희귀", "영웅", "전설", "신화"]
+	var grade_name: String = source_grades[clampi(grade_index, 0, source_grades.size() - 1)]
+	var available: int = 0
+	var seen: Dictionary = {}
+	for raw: Variant in catalog_data.get(category, []) as Array:
+		if not (raw is Dictionary):
+			continue
+		var record: Dictionary = raw as Dictionary
+		if str(record.get("grade", "")) != grade_name:
+			continue
+		var identity: String = CARD_RULES.card_id(record)
+		if identity.is_empty() or seen.has(identity):
+			continue
+		seen[identity] = true
+		available += maxi(0, int(category_spare.get(identity, 0)))
+	var required: int = int(CARD_RULES.FUSION_MATERIALS[grade_name])
+	card_fusion_button.text = "%s 중복 %d/%d장 합성" % [grade_name, available, required]
+	card_fusion_button.disabled = available < required
+
+func _request_card_fusion() -> void:
+	if card_fusion_grade_select == null or not CARD_RULES.CATEGORIES.has(catalog_category):
+		return
+	if card_fusion_button.disabled:
+		return
+	var source_grades: Array[String] = ["일반", "고급", "희귀", "영웅", "전설", "신화"]
+	var grade_name: String = source_grades[clampi(card_fusion_grade_select.selected, 0, source_grades.size() - 1)]
+	var category: String = catalog_category
+	var required: int = int(CARD_RULES.FUSION_MATERIALS[grade_name])
+	confirm_action("카드 합성", "%s %s 중복 카드 %d장을 소모하시겠습니까? 실패 시 같은 등급 카드 1장을 획득합니다." % [
+		category, grade_name, required
+	], "합성", func(_count: int) -> void: card_fusion_requested.emit(category, grade_name))
 
 func _reset_catalog_drag() -> void:
 	catalog_drag_touch = -1
@@ -1503,6 +1612,15 @@ func _on_catalog_item_selected(index: int) -> void:
 		catalog_equip_button.text="현재 적용 중" if applied else {"변신":"변신","마법인형":"소환","성물":"성물 적용"}.get(catalog_category,"적용")
 		catalog_equip_button.disabled=applied
 		catalog_detail.text += "\n\n현재 적용: "+UI.safe(equipped.get("name","없음"))
+		var unlocks: Dictionary = card_collection_state.get("owned", {}) as Dictionary
+		var category_unlocks: Dictionary = unlocks.get(catalog_category, {}) as Dictionary
+		var extras: Dictionary = card_collection_state.get("spare", {}) as Dictionary
+		var category_extras: Dictionary = extras.get(catalog_category, {}) as Dictionary
+		var identity: String = CARD_RULES.card_id(selected_catalog_record)
+		catalog_detail.text += "\n카드 소유: %s · 합성 중복: %d장" % [
+			"획득" if category_unlocks.has(identity) else "미획득",
+			int(category_extras.get(identity, 0))
+		]
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
