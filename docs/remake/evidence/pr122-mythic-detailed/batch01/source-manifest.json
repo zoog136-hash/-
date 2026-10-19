@@ -3038,6 +3038,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "S",
+      "role": "death",
+      "version": "v02iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
+      "original_generated_file": "/workspace/scratch/girtas-S-death-v02iso01.png",
+      "bytes": 1506982,
+      "sha256": "0a5002d3c69e4c8dc2004ea625e872437c90be3a50218bee61ed53c2592da44f",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3142,7 +3161,7 @@
     "transform:267:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v01.png",
     "transform:267:E:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
     "transform:267:SE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v01iso01.png",
-    "transform:267:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v01iso01.png",
+    "transform:267:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
     "transform:267:SW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v01iso01.png",
     "transform:267:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
     "transform:267:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
@@ -3576,6 +3595,21 @@
             "Unchanged strict source analyzer and complete-pose-region gate pass six complete distinct poses. No generated pixel resampling, masking, recoloring, cropping, atlas repair or gate relaxation was performed."
           ],
           "source_review_sha256": "da555d57f829fea65dcc064836e88947ffc32bd4d2f7366cbe84937c29c2eca9"
+        },
+        {
+          "slot": "transform:267:S:death",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six poses retain exposed pale face, long pale hair, narrow hard golden radial back spines, dark long gold-trim skirt and a long thin sinuous weapon in the same original right hand. Prior red-mask/flame-feather/broad-blade redesign absent.",
+            "South-facing front chest/pelvis heading persists into a forward/down-axis fall. During bending/falling the back naturally becomes visible, with head toward screen bottom and boots trailing screen top; no lateral east/west corpse or north reversal.",
+            "Six articulated phases show upright fatal recoil, bent failing knees, deep buckle/hand reach, forward falling/landing, low ground impact and settled fully prone corpse. Final head, hand and hair settle after phase4; the physical back-spine array lies with the fallen torso rather than floating as an upright ghost.",
+            "Every body, both boots, long hair, full spine silhouette and entire sinuous weapon remain visible; all six silhouettes are separate and no opaque foreground touches the outer image edge."
+          ],
+          "source_review_sha256": "7cea2f5e38b607bd5d843f6517ee90e7064e17b41db41a2c96478efa814b96a2"
         }
       ]
     }
