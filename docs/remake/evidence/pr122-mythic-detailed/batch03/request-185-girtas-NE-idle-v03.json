@@ -1,0 +1,1376 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "idle",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "source_kind": "six_new_correct_camera_unique_idle_poses",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+    "/workspace/scratch/girtas-NE-idle-repair-v03/NE-rear-right-fixed-camera-idle-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e",
+    "/workspace/scratch/girtas-NE-idle-repair-v03/NE-rear-right-fixed-camera-idle-guide.png": "4d76680df6be607e9b3ea031a58238e26f85260940e7101b9bb88ac1c6cdcb67"
+  },
+  "transparent_background": true,
+  "corrective_reason": "IndependentlyconfirmedcurrentNEidle5502d2d6nearNcamera, actualNEguardcorrectrear-right. Rootdurablypinned39thcameraHOLD/reopenedexactslot preservinghistory1/31. AuthorNEW6NEidlefromONLYcorrectNEguardcamera+explicitNEguide, nooldwrongNEidle/Nposeconditioning.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+  "replaces_selected_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+  "independent_camera_HOLD_evidence": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/girtas-NE-idle-camera-HOLD-r087-independent.json",
+  "independent_camera_HOLD_evidence_sha256": "4c5364351bfc2653d133a5ad71c8152ab5f558fc8ce81b301c0c4837bba3808e",
+  "prompt": "Produce SIX NEW SUBTLE IDLE/REST BREATHING POSES of the SAME exact GIRTAS in CORRECT NORTHEAST REAR-RIGHT THREE-QUARTER VIEW, using FIRST supplied CORRECT NE ATTACKGUARD0 as the ONLY model/camera/stance authority. This is NEW NE IDLE toreplace an oldwrongNcamera, NOT reusingoldNEidle/Nposes. SECONDimage is the same guardwith camera annotations only. No marks/colors/text fromguide in finishedart.\n\nCAMERA MUST NEVER CHANGE ACROSS SIX: fixed trueNE rear3/4, headandbodyfaceUP-RIGHT awayfromviewer. Mostlysilverbackhair/dorsalarmor, BUT nearRIGHT shoulder/pauldron andRIGHTweaponarm at IMAGERIGHT clearlyvisible andLARGER thanforeshortenedfarLEFTsideIMAGELEFT. Original RIGHTOUTERHIPandobliquebootplanes visible, clear diagonalshoulder/hipdepth. GoldradialspinesprojectmostlytowardIMAGELEFTfromback asprimary, notbilateralsymmetricNfan. DoNOTrotatebacktofullsymmetricalNview, showfrontface/chest, becomeEsideorchangeheading. Originalhelmet/profile/hairattachment andbodywidthsamecamera everyframe. ReferenceNEguardisprimary; NEVER inventaNstandin.\n\nOriginal longPALE/SILVERhair, goldhorncrown, narrowHARD straightGOLD radialspines, blackgoldarmor, LONG DARK GOLDTRIM layeredrobe/skirt, correct boots andoriginalONE LONG SINUOUSorangegoldweapon exactlypreserved. WeaponcontinuouslyheldbyanatomicalRIGHT NEAR hand atIMAGERIGHT alongsamefullconnectedRIGHTarm. FarLEFTarmhand atIMAGELEFT EMPTY, visiblewhereitwasinsource notthirdarm, nohandtransfer. Exactly2arms/2hands/2legs/2boots, no redVmask/segmentedpants/flamefeatherfan/wings/shortbroadsword/newgear/extra spikes ormissinggear. ThehardgoldraysareRIGID attachedornaments, notbendyfeathers.\n\nACTUAL SIX IDLE MOTION: keepBOTHoriginalbootssolidlygrounded atsame2solepositions, SAME hipstance/footangle, nolegswap/step/run/attack/hit. Pose0 relaxedneutralguard/rest, slightspinalbreathstarting;1 chest/shouldersgentlyriseinhale andhairlags;2 modestinhalepeak/armorventbreath,3 exhale/shoulderssoften withlonghairtip/robehem delayedreturn;4 lowestrelaxedbreath/clothsettle;5 smoothreturntoward0. Subtlebutactualsixdifferent shoulder/torso/emptyhand/hair/robe contours, notsixpixelidenticalcopiesorcolorflashes. Smallbodybreath about1-3%torsoheightmax, nogreatsquat/bounce orbodygrow/shrink. Rightweaponsteadywithtinywristbreathresponse, continuousarm; exactblade shape/lengthandallspinesconsistent. Camera/faceidentity/bootgroundplane fixed, originalhairnaturalmotionandclothhemgentlephase-delay whileRIGIDgear stayssolid.\n\nLayout transparentrequested3072x3072PNG, TWO COLUMNS andTHREE ROWS, temporalorder rowmajor0,1/2,3/4,5. Sixfullcompleteisolatedfigures atEXACTsamephysicalhead/shoulder/hipsize, no perspective/zoomchange. Eachwholefigureincludingfullsinuousblade,everyhardspinetip,hair,robehem,bootsinsideown1024square, figureenvelope<=760x760 with>=120pxtruealpha0 guttersALLsides. Keep>=180pxalpha0spacebetweeneverynearestgearbetweenfigures. Ifactualcanvasdiffersuniformlyshrinkall6tosamephysicalsizeforgenerousgutters, nevercrop/shortenblade/spines orbridgecells. Hardopaqueweaponwithinternalbrightshine, no outwardbloom/haze/auras; allnegativegapsalpha0withonly1pxedgeAA. No shadow/floor/groundparticles/text/grid/labels/arrows/coloredguides/motionblur/trails/duplicates. Preservefineoriginalgameartmaterials. OutputEXACT6differentNEidleposes, not8directions, notwalk, andneverwrongpureNcamera.",
+  "requested_at": "2026-10-19T14:38:42.061189+00:00",
+  "newly_authored_pose_target": 6,
+  "reused_game_animation_poses": 0,
+  "actor_approval": false,
+  "user_authorization": "RootauthorizednewNEidlefollowingindependentHOLD; privateproductionimagegenallowed noimageattachmentsmainchat.",
+  "generation_budget": "Oneinitial6correctNEidlecall; anywrongcamera/model/poseHOLDpreservednoidenticalretry.",
+  "request_kind": "REGISTER_NEW_CORRECT_CAMERA_SIX_POSE_SOURCE_WITH_REVIEWED_PHYSICAL_LAYOUT",
+  "original_generation_request_path": "/workspace/scratch/girtas-NE-idle-repair-v03/request.json",
+  "original_generation_request_sha256": "2badf07d2ae815f713f153d4c52034a8e42ef60a8c6f48aa3850d621081ed7d3",
+  "original_generation_receipt_path": "/workspace/scratch/girtas-NE-idle-repair-v03/production-receipt.json",
+  "original_generation_receipt_sha256": "c5ac5620c35cc104156337c8babd46fea2282db5d8aad694b635c620431f3e08",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+    "canvas_size": 2048,
+    "review_basis": "Six NEW correctNErearRIGHT breathingposes, strict6geometry, independentSOURCE/camera/anatomy andphysicalcandidatePASS. Nominal2048 with sixC832 exactlymatches independentlyreviewedscalarC832; metadataonly outwardfringe retention underunchanged sixbody/alpha16 ownerguards. Runtime/actor pending, guardC1024mismatch separatelyHOLD.",
+    "source_art_review": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-source-camera-review-nw-author.json",
+    "source_art_review_sha256": "d10764d7c62ad9e00f12d83157cb76619e1844c7bd611d60ce3907a6504e48e4",
+    "actor_approval": false
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+    "base_geometry_sha256": "58bffe726b1251e8b081166cc725eed72a312342689adf212cfe97211665f34e",
+    "direction": "NE",
+    "review_basis": "Outward-only metadata retains the one faint own alpha>16 fringe excluded by alpha100 automatic bbox; exact original sixbody pixels unchanged. Existing fullalpha16 topology/nearest-owner checks, no foreignbody, no threshold changes, no cleanup or resampling.",
+    "regions": [
+      [
+        161,
+        5,
+        447,
+        417
+      ],
+      [
+        719,
+        4,
+        459,
+        418
+      ],
+      [
+        156,
+        426,
+        460,
+        417
+      ],
+      [
+        719,
+        427,
+        460,
+        419
+      ],
+      [
+        154,
+        847,
+        460,
+        422
+      ],
+      [
+        722,
+        854,
+        456,
+        415
+      ]
+    ],
+    "nearest_owner_sha256": "c736424c240f3536c75d93c4fe08102754c7efccd063680134204c7df2bcb1f4"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "key": "transform:267",
+    "role": "idle",
+    "direction": "NE",
+    "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        337,
+        407
+      ],
+      [
+        897,
+        407
+      ],
+      [
+        334,
+        828
+      ],
+      [
+        897,
+        828
+      ],
+      [
+        336,
+        1252
+      ],
+      [
+        898,
+        1253
+      ]
+    ],
+    "review_basis": "NEW faithful rearRIGHT NEidle6 from correctNEguard camera. Physical C832 uses measured rigid crowncore→hairroot vs correct N/NW markers, nearshoulder/waist correspondence; allsix root at actual two resting sole-centroid midpoint retaining projected NE foot depth. Independent SOURCE and physical/full6 review pending; no oldwrongNEidle camera/size reference. Allsix source regions include unchanged own faint alpha>16 via strict outward-only region review. Independent SOURCE/camera/anatomy and physical candidate PASS pinned; nominal2048+sixexplicitC832 is physically identical to independently reviewed scalarC832. CurrentNEattack guardC1024 small remains separate metadata HOLD; no actor/defaultMain approval.",
+    "anchor_measurement_evidence": "/workspace/scratch/girtas-NE-idle-repair-v03/rigid-scale-two-sole-ground-root-proposal.json",
+    "anchor_measurement_evidence_sha256": "46b08dfc6608ff3ea1b165d05bc44985bd5b61d6c5bf466398c6916c42387a25",
+    "runtime_validation": "SOURCE_CAMERA_AND_PHYSICAL_CANDIDATE_INDEPENDENT_PASS_ACTUAL_PLAYER_HOLD",
+    "actor_approval": false,
+    "authored_pose_canvas_sizes": [
+      832,
+      832,
+      832,
+      832,
+      832,
+      832
+    ],
+    "independent_source_review": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-source-camera-review-nw-author.json",
+    "independent_source_review_sha256": "d10764d7c62ad9e00f12d83157cb76619e1844c7bd611d60ce3907a6504e48e4",
+    "independent_physical_review": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-physical-layout-review-nw-author.json",
+    "independent_physical_review_sha256": "bd9c2adfa70a4ba1bf89b79b0be9d212d657521c4fc5f27eb91c9bbc0e62eabe"
+  },
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "source_visual_status": "PASS",
+  "approval": "SOURCE_AND_PHYSICAL_CANDIDATE_PASS_RUNTIME_ACTOR_HOLD",
+  "integration_prepared_at": "2026-10-19T15:00:06.069554+00:00",
+  "source_provenance": {
+    "original_generation_request_path": "/workspace/scratch/girtas-NE-idle-repair-v03/request.json",
+    "original_generation_request_sha256": "2badf07d2ae815f713f153d4c52034a8e42ef60a8c6f48aa3850d621081ed7d3",
+    "original_generation_request_inline": {
+      "key": "transform:267",
+      "name": "기르타스",
+      "direction": "NE",
+      "role": "idle",
+      "source_batch": "batch03",
+      "version": "v03",
+      "status": "REQUESTED_NOT_APPROVED",
+      "source_kind": "six_new_correct_camera_unique_idle_poses",
+      "expected_poses": 6,
+      "requested_poses": 6,
+      "references": [
+        "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+        "/workspace/scratch/girtas-NE-idle-repair-v03/NE-rear-right-fixed-camera-idle-guide.png"
+      ],
+      "reference_sha256": {
+        "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e",
+        "/workspace/scratch/girtas-NE-idle-repair-v03/NE-rear-right-fixed-camera-idle-guide.png": "4d76680df6be607e9b3ea031a58238e26f85260940e7101b9bb88ac1c6cdcb67"
+      },
+      "transparent_background": true,
+      "corrective_reason": "IndependentlyconfirmedcurrentNEidle5502d2d6nearNcamera, actualNEguardcorrectrear-right. Rootdurablypinned39thcameraHOLD/reopenedexactslot preservinghistory1/31. AuthorNEW6NEidlefromONLYcorrectNEguardcamera+explicitNEguide, nooldwrongNEidle/Nposeconditioning.",
+      "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+      "replaces_selected_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+      "independent_camera_HOLD_evidence": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/girtas-NE-idle-camera-HOLD-r087-independent.json",
+      "independent_camera_HOLD_evidence_sha256": "4c5364351bfc2653d133a5ad71c8152ab5f558fc8ce81b301c0c4837bba3808e",
+      "prompt": "Produce SIX NEW SUBTLE IDLE/REST BREATHING POSES of the SAME exact GIRTAS in CORRECT NORTHEAST REAR-RIGHT THREE-QUARTER VIEW, using FIRST supplied CORRECT NE ATTACKGUARD0 as the ONLY model/camera/stance authority. This is NEW NE IDLE toreplace an oldwrongNcamera, NOT reusingoldNEidle/Nposes. SECONDimage is the same guardwith camera annotations only. No marks/colors/text fromguide in finishedart.\n\nCAMERA MUST NEVER CHANGE ACROSS SIX: fixed trueNE rear3/4, headandbodyfaceUP-RIGHT awayfromviewer. Mostlysilverbackhair/dorsalarmor, BUT nearRIGHT shoulder/pauldron andRIGHTweaponarm at IMAGERIGHT clearlyvisible andLARGER thanforeshortenedfarLEFTsideIMAGELEFT. Original RIGHTOUTERHIPandobliquebootplanes visible, clear diagonalshoulder/hipdepth. GoldradialspinesprojectmostlytowardIMAGELEFTfromback asprimary, notbilateralsymmetricNfan. DoNOTrotatebacktofullsymmetricalNview, showfrontface/chest, becomeEsideorchangeheading. Originalhelmet/profile/hairattachment andbodywidthsamecamera everyframe. ReferenceNEguardisprimary; NEVER inventaNstandin.\n\nOriginal longPALE/SILVERhair, goldhorncrown, narrowHARD straightGOLD radialspines, blackgoldarmor, LONG DARK GOLDTRIM layeredrobe/skirt, correct boots andoriginalONE LONG SINUOUSorangegoldweapon exactlypreserved. WeaponcontinuouslyheldbyanatomicalRIGHT NEAR hand atIMAGERIGHT alongsamefullconnectedRIGHTarm. FarLEFTarmhand atIMAGELEFT EMPTY, visiblewhereitwasinsource notthirdarm, nohandtransfer. Exactly2arms/2hands/2legs/2boots, no redVmask/segmentedpants/flamefeatherfan/wings/shortbroadsword/newgear/extra spikes ormissinggear. ThehardgoldraysareRIGID attachedornaments, notbendyfeathers.\n\nACTUAL SIX IDLE MOTION: keepBOTHoriginalbootssolidlygrounded atsame2solepositions, SAME hipstance/footangle, nolegswap/step/run/attack/hit. Pose0 relaxedneutralguard/rest, slightspinalbreathstarting;1 chest/shouldersgentlyriseinhale andhairlags;2 modestinhalepeak/armorventbreath,3 exhale/shoulderssoften withlonghairtip/robehem delayedreturn;4 lowestrelaxedbreath/clothsettle;5 smoothreturntoward0. Subtlebutactualsixdifferent shoulder/torso/emptyhand/hair/robe contours, notsixpixelidenticalcopiesorcolorflashes. Smallbodybreath about1-3%torsoheightmax, nogreatsquat/bounce orbodygrow/shrink. Rightweaponsteadywithtinywristbreathresponse, continuousarm; exactblade shape/lengthandallspinesconsistent. Camera/faceidentity/bootgroundplane fixed, originalhairnaturalmotionandclothhemgentlephase-delay whileRIGIDgear stayssolid.\n\nLayout transparentrequested3072x3072PNG, TWO COLUMNS andTHREE ROWS, temporalorder rowmajor0,1/2,3/4,5. Sixfullcompleteisolatedfigures atEXACTsamephysicalhead/shoulder/hipsize, no perspective/zoomchange. Eachwholefigureincludingfullsinuousblade,everyhardspinetip,hair,robehem,bootsinsideown1024square, figureenvelope<=760x760 with>=120pxtruealpha0 guttersALLsides. Keep>=180pxalpha0spacebetweeneverynearestgearbetweenfigures. Ifactualcanvasdiffersuniformlyshrinkall6tosamephysicalsizeforgenerousgutters, nevercrop/shortenblade/spines orbridgecells. Hardopaqueweaponwithinternalbrightshine, no outwardbloom/haze/auras; allnegativegapsalpha0withonly1pxedgeAA. No shadow/floor/groundparticles/text/grid/labels/arrows/coloredguides/motionblur/trails/duplicates. Preservefineoriginalgameartmaterials. OutputEXACT6differentNEidleposes, not8directions, notwalk, andneverwrongpureNcamera.",
+      "requested_at": "2026-10-19T14:38:42.061189+00:00",
+      "newly_authored_pose_target": 6,
+      "reused_game_animation_poses": 0,
+      "actor_approval": false,
+      "user_authorization": "RootauthorizednewNEidlefollowingindependentHOLD; privateproductionimagegenallowed noimageattachmentsmainchat.",
+      "generation_budget": "Oneinitial6correctNEidlecall; anywrongcamera/model/poseHOLDpreservednoidenticalretry."
+    },
+    "receipt_path": "/workspace/scratch/girtas-NE-idle-repair-v03/production-receipt.json",
+    "receipt_sha256": "c5ac5620c35cc104156337c8babd46fea2282db5d8aad694b635c620431f3e08",
+    "receipt_inline": {
+      "key": "transform:267",
+      "direction": "NE",
+      "role": "idle",
+      "version": "v03",
+      "source_batch": "batch03",
+      "source_kind": "six_new_correct_camera_unique_idle_poses",
+      "expected_poses": 6,
+      "original_generated_file": "/workspace/generated_images/exec-eadce273-57f3-46f6-a309-9d08f536210d.png",
+      "raw_path": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+      "raw_png": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+      "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "raw_bytes": 1322121,
+      "image_size": [
+        1230,
+        1278
+      ],
+      "request_path": "/workspace/scratch/girtas-NE-idle-repair-v03/request.json",
+      "request_sha256": "2badf07d2ae815f713f153d4c52034a8e42ef60a8c6f48aa3850d621081ed7d3",
+      "imagegen_attempts": 1,
+      "source_visual_status": "PENDING_PRIVATE_REVIEW",
+      "actor_approval": false
+    },
+    "independent_source_review_path": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-source-camera-review-nw-author.json",
+    "independent_source_review_sha256": "d10764d7c62ad9e00f12d83157cb76619e1844c7bd611d60ce3907a6504e48e4",
+    "independent_source_review_inline": {
+      "status": "PASS_SCOPED_SIX_POSE_SOURCE_CAMERA_ANATOMY_ONLY_NOT_RUNTIME_OR_ACTOR",
+      "key": "transform:267",
+      "direction": "NE",
+      "role": "idle",
+      "version": "v03",
+      "reviewer": "/root/girtas_nw_walk_author (independentofNEsourceauthor)",
+      "raw_path": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+      "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "raw_bytes": 1322121,
+      "request_path": "/workspace/scratch/girtas-NE-idle-repair-v03/request.json",
+      "request_sha256": "2badf07d2ae815f713f153d4c52034a8e42ef60a8c6f48aa3850d621081ed7d3",
+      "geometry_path": "/workspace/scratch/girtas-NE-idle-repair-v03/geometry-base1024.json",
+      "geometry_sha256": "8d4f1929d43a3c4b10689035be58ac22ebaac837c20e56f30b7c9e5b94900b1e",
+      "geometry_validation": "STRICT6_DISTINCT_COMPLETE_RGBA_POSES_PASS",
+      "outer_edge_alpha100_count": 0,
+      "correct_camera_guard_reference": {
+        "path": "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+        "sha256": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e"
+      },
+      "private_previews": [
+        {
+          "path": "/workspace/scratch/girtas-NE-idle-repair-v03/private-NE-idle-six-v03.jpg",
+          "sha256": "f96348d5074b9fda6a02f63c110cc98281ec4064788fd58bbf5c0428a2fefe4d",
+          "bytes": 135226
+        },
+        {
+          "path": "/workspace/scratch/girtas-NE-idle-repair-v03/private-NE-head-feet-native-coordinate-probe.jpg",
+          "sha256": "7cf80cdf21ed35e531164df972b6adc2d7e59c239295e78d51be497e001b50d3",
+          "bytes": 79842
+        }
+      ],
+      "private_preview_bytes_this_review": 215068,
+      "findings": [
+        "All6matchONLYcorrectNEattackguardrear-RIGHT3/4camera: nearRIGHTpauldron/arm/hiponimageRIGHT, farLEFTsidebehindlonghaironimageLEFT; helmet/backneck/hipsandstancebootsfaceUPRIGHTawayinconsistentpureNfront-backabsent. Directnew0-vsNEguardhead/footcomparisonsamecorrectview; oldpureNNEidlewasnotused.",
+        "FaithfulGirtaslongPALESILVERhair/pointedgoldhelmet/blackgoldlayeredpauldronsandbodyarmor/THINHARDSTRAIGHTGOLDbackradialrays/LONGDARKGOLDTRIMrobe/originalboots/ONEsinousgoldyellowblade all6. Rayssolidrigidmetalfollowback, neverfeathers/fanwing/Halpasgear. Noarmoredpants/shortskirtreplacement.",
+        "Exactly2arms/hands: nearanatomicalRIGHTarmimageRIGHTcontinuouslydescendsfromshoulderthroughgoldelbow/forearmtoclosedhandandONEbladepointinglowoutwardRIGHT; farLEFTemptyarmmostlyoccludedbyhair/robeasguard, noextraemptyraisedfist/grip/handflip. Twolegsinretainedfixedguardstance, noextrafoot/head/weapon.",
+        "Sixactualsubtlebreathing/settlingarticulationsratherthanwalking: shoulder/backsmallinhale/exhale, hairstrands/bunchedsilverendsandrobe/trimpanelslaglocally, slightweightsettlereturnnear0; bothbootskeeppairedNEguardfootplacementandorientationswithoutsteplegswap/AIR/attack. Rigidraysstayattachedtosamebackplane. Sourceall6distinctstrictRGBAframesandvisuallocalarticulationconfirmnotmerewholeimagetranslation.",
+        "Allcrown/hair/rays/robe/boots/bladesilhouettescompletealpha0background, no guidecolors/text/floor/afterimage; strict6regionsandallforegroundcoveragePASSandouteralpha100clipping0."
+      ],
+      "limitations": [
+        "Source/camera/anatomyPASSonly. MetadataC/rootphysicalnormalizationbelongsseparateauthorcandidateproposal; thisreviewdoesNOTapprovephysicalscale/compiledTRES/Player/defaultMain/finalactor.",
+        "Finalbreathcadenceandidleentry/exitstillrequireactualimmutableSpriteFrames/runtimeQC afterstaging."
+      ],
+      "actor_approval_added": 0,
+      "detailed_completion_added": 0,
+      "repository_mutated": false,
+      "created_at": "2026-10-19T14:55:17.739144+00:00"
+    },
+    "independent_physical_review_path": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-physical-layout-review-nw-author.json",
+    "independent_physical_review_sha256": "bd9c2adfa70a4ba1bf89b79b0be9d212d657521c4fc5f27eb91c9bbc0e62eabe",
+    "independent_physical_review_inline": {
+      "status": "PASS_SCOPED_NE_IDLE_SIX_CANDIDATE_PHYSICAL_LAYOUT_ONLY_NOT_COMPILED_RUNTIME_OR_ACTOR",
+      "key": "transform:267",
+      "direction": "NE",
+      "role": "idle",
+      "version": "v03",
+      "reviewer": "/root/girtas_nw_walk_author (independentNEsource/metadataauthor)",
+      "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "layout_path": "/workspace/scratch/girtas-NE-idle-repair-v03/reviewed_runtime_layout.proposal.json",
+      "layout_sha256": "db439e88672f5a2ee5c95364fc12558139ac483fe0335a1f40ab4262e17208ca",
+      "physical_metadata_path": "/workspace/scratch/girtas-NE-idle-repair-v03/rigid-scale-two-sole-ground-root-proposal.json",
+      "physical_metadata_sha256": "46b08dfc6608ff3ea1b165d05bc44985bd5b61d6c5bf466398c6916c42387a25",
+      "private_preview": "/workspace/scratch/girtas-NE-idle-repair-v03/private-common-physical-ten-panel-C832-proposal.jpg",
+      "private_preview_sha256": "f26a8fb200598c6ae47ded9705e72637d858e1887011f2564e82c36111299aae",
+      "private_preview_bytes": 144752,
+      "source_review_path": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-source-camera-review-nw-author.json",
+      "source_review_sha256": "d10764d7c62ad9e00f12d83157cb76619e1844c7bd611d60ce3907a6504e48e4",
+      "canvas": 832,
+      "source_anchors": [
+        [
+          337,
+          407
+        ],
+        [
+          897,
+          407
+        ],
+        [
+          334,
+          828
+        ],
+        [
+          897,
+          828
+        ],
+        [
+          336,
+          1252
+        ],
+        [
+          898,
+          1253
+        ]
+      ],
+      "rigid_crown_hair_marker_canonical_range": [
+        82.46153846153847,
+        86.15384615384616
+      ],
+      "projected_near_far_depth_canonical_range": [
+        23.384615384615383,
+        27.076923076923077
+      ],
+      "findings": [
+        "Actual10panelphysicalcomparisonshowsnewNEidleC832consistentphysicalskull/helmetcore/nearpauldron/waistwithcorrectNidleC1024andNWidleC944. Perspectiveleg/robe/hair/ray/bladeenvelopesarenotnormalizers. Numericcrown-core->boundedhair-rootmarkers82.46..86.15canonicalmatchN83/NW85.69, nearshoulder/waistdistanceconsistentwithinmanual5pxuncertainty.",
+        "All6samecorrectNErearRIGHTbody/camera/sizeasindependentSOURCEPASS. Breathingchangeslocalshoulder/hair/cloth, head/girdlebodyheightstayswithinquietidlebreath; 5->0showsnosizeflip/headanglejumporfalsegait.",
+        "EachsourceanchorindependentlymatchesroundedmeanofBOTHactualrestingbootsolecentroidswithin0.5px; nearRIGHTandfarLEFTdepthremains23..27canonicalinsteadflatteningsolesY. Samefixedpairstance/rootconvention6poses; norootselectionfromblade/robe/spikebbox. Floorrootnearhipsandprojectedpaireddepthpreservedin10panel; noinventedAIR/step.",
+        "OriginalsourcePNGunchanged: exactrawSHAandN/NW/NEguardreferenceSHAsverified, all6targetC832equalandpinned. SourceartandpriorSOURCEQCstayunchanged."
+      ],
+      "limitations": [
+        "CandidatephysicalmetadataPASSonly; actualcompiledSpriteFrames/Player/entry-exit/enginegroundrootsandfinalactorqualityremainHOLDforrootintegration.",
+        "CorrectNEguardCURRENTC1024isvisiblysmall; guard@C864iscomparisonONLYnotappliednorapprovedhere. NewNEidleC832passdoesnotapproveoldattackguardruntimealignmentorentireactor."
+      ],
+      "actor_approval_added": 0,
+      "detailed_completion_added": 0,
+      "repository_mutated": false,
+      "created_at": "2026-10-19T14:58:26.708470+00:00"
+    },
+    "physical_measurement_path": "/workspace/scratch/girtas-NE-idle-repair-v03/rigid-scale-two-sole-ground-root-proposal.json",
+    "physical_measurement_sha256": "46b08dfc6608ff3ea1b165d05bc44985bd5b61d6c5bf466398c6916c42387a25",
+    "physical_measurement_inline": {
+      "status": "AUTHORED_NE_IDLE_RIGID_SCALE_AND_TWO_SOLE_GROUND_ROOT_PROPOSAL_REQUIRES_INDEPENDENT_PHYSICAL_QC",
+      "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "authored_canvas": 832,
+      "method": "C832 calibrates rigid central helmet crown-core to bounded palehair ROOT, then near shoulder and waist separations; source/robe/weapon/spine envelope is not a normalizer. Root is the same two actual resting sole-centroid coordinate convention in all six phases. FarLEFT and nearRIGHT projected depth remains present; neither sole is forced onto a flat singleY. Actual currentNEguard C1024 is visibly small; correct camera remains authoritative but that old metadata is not a body-scale target.",
+      "reference_N_idle_marker": {
+        "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
+        "source_sha256": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6",
+        "canvas": 1024,
+        "crown_core_y": 13,
+        "pale_hair_root_y": 96,
+        "marker_1024": 83
+      },
+      "reference_NW_idle_marker": {
+        "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
+        "source_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+        "canvas": 944,
+        "crown_core_y": 16,
+        "pale_hair_root_y": 95,
+        "marker_1024": 85.69491525423729
+      },
+      "correct_NE_guard_marker": {
+        "source_path": "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+        "source_sha256": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e",
+        "crown_core_y": 3,
+        "pale_hair_root_y": 74,
+        "native_marker": 71,
+        "proposed_comparison_canvas_only": 864,
+        "marker_1024_at_proposed_864": 84.14814814814815,
+        "current_canvas": 1024,
+        "current_marker_1024": 71,
+        "metadata_change_not_applied": true,
+        "near_shoulder_top_manual_y": 109,
+        "waist_axis_manual_y": 223,
+        "manual_landmark_uncertainty_native": 5
+      },
+      "manual_correspondence_check": "NEnew phase0 hairroot77→waist(y5+218=223)146px /832=179.69canonical; NEguard hairroot74→waist223149px /864=176.59canonical (~1.8%). Crest/hair markers newphase0=84.92 vs correctguard@864=84.15 vsN83/NW85.69. Nearshoulder/waist must be independently visually checked; no bbox scaling.",
+      "poses": [
+        {
+          "phase": 0,
+          "source_region": [
+            161,
+            5,
+            447,
+            417
+          ],
+          "central_crown_core_ROI_xyxy": [
+            331,
+            5,
+            376,
+            85
+          ],
+          "central_crown_core_native_y": 8,
+          "bounded_head_pale_ROI_xyxy": [
+            291,
+            60,
+            376,
+            150
+          ],
+          "pale_hair_root_component_bbox": [
+            291,
+            77,
+            354,
+            150
+          ],
+          "pale_component_pixels": 1798,
+          "rigid_crown_core_to_hair_root_native": 69,
+          "rigid_marker_normalized_to_1024": 84.92307692307692,
+          "near_shoulder_top_manual_native": [
+            351,
+            112
+          ],
+          "waist_axis_manual_native": [
+            351,
+            223
+          ],
+          "manual_shoulder_waist_uncertainty_native": 5,
+          "feet": [
+            {
+              "foot": "FAR_LEFT",
+              "ROI_xyxy": [
+                231,
+                350,
+                316,
+                416
+              ],
+              "last_strong_native_y": 399,
+              "bottom_4row_centroid": [
+                284.1232876712329,
+                397.2328767123288
+              ],
+              "bottom_4row_pixels": 73
+            },
+            {
+              "foot": "NEAR_RIGHT",
+              "ROI_xyxy": [
+                326,
+                355,
+                416,
+                422
+              ],
+              "last_strong_native_y": 418,
+              "bottom_4row_centroid": [
+                389.311320754717,
+                416.10377358490564
+              ],
+              "bottom_4row_pixels": 106
+            }
+          ],
+          "two_sole_centroid_native": [
+            336.7173042129749,
+            406.6683251486172
+          ],
+          "authored_ground_root": [
+            337,
+            407
+          ],
+          "projected_near_far_laststrong_depth_native": 19,
+          "projected_near_far_depth_canonical": 23.384615384615383
+        },
+        {
+          "phase": 1,
+          "source_region": [
+            719,
+            4,
+            459,
+            418
+          ],
+          "central_crown_core_ROI_xyxy": [
+            889,
+            4,
+            934,
+            84
+          ],
+          "central_crown_core_native_y": 7,
+          "bounded_head_pale_ROI_xyxy": [
+            849,
+            59,
+            934,
+            149
+          ],
+          "pale_hair_root_component_bbox": [
+            849,
+            75,
+            912,
+            149
+          ],
+          "pale_component_pixels": 1836,
+          "rigid_crown_core_to_hair_root_native": 68,
+          "rigid_marker_normalized_to_1024": 83.6923076923077,
+          "near_shoulder_top_manual_native": [
+            909,
+            111
+          ],
+          "waist_axis_manual_native": [
+            909,
+            222
+          ],
+          "manual_shoulder_waist_uncertainty_native": 5,
+          "feet": [
+            {
+              "foot": "FAR_LEFT",
+              "ROI_xyxy": [
+                789,
+                349,
+                874,
+                415
+              ],
+              "last_strong_native_y": 399,
+              "bottom_4row_centroid": [
+                844.4647887323944,
+                397.22535211267603
+              ],
+              "bottom_4row_pixels": 71
+            },
+            {
+              "foot": "NEAR_RIGHT",
+              "ROI_xyxy": [
+                884,
+                354,
+                974,
+                422
+              ],
+              "last_strong_native_y": 418,
+              "bottom_4row_centroid": [
+                950.0480769230769,
+                416.15384615384613
+              ],
+              "bottom_4row_pixels": 104
+            }
+          ],
+          "two_sole_centroid_native": [
+            897.2564328277356,
+            406.6895991332611
+          ],
+          "authored_ground_root": [
+            897,
+            407
+          ],
+          "projected_near_far_laststrong_depth_native": 19,
+          "projected_near_far_depth_canonical": 23.384615384615383
+        },
+        {
+          "phase": 2,
+          "source_region": [
+            157,
+            426,
+            459,
+            417
+          ],
+          "central_crown_core_ROI_xyxy": [
+            327,
+            426,
+            372,
+            506
+          ],
+          "central_crown_core_native_y": 429,
+          "bounded_head_pale_ROI_xyxy": [
+            287,
+            481,
+            372,
+            571
+          ],
+          "pale_hair_root_component_bbox": [
+            287,
+            496,
+            352,
+            571
+          ],
+          "pale_component_pixels": 1929,
+          "rigid_crown_core_to_hair_root_native": 67,
+          "rigid_marker_normalized_to_1024": 82.46153846153847,
+          "near_shoulder_top_manual_native": [
+            347,
+            533
+          ],
+          "waist_axis_manual_native": [
+            347,
+            644
+          ],
+          "manual_shoulder_waist_uncertainty_native": 5,
+          "feet": [
+            {
+              "foot": "FAR_LEFT",
+              "ROI_xyxy": [
+                227,
+                771,
+                312,
+                837
+              ],
+              "last_strong_native_y": 820,
+              "bottom_4row_centroid": [
+                281.8235294117647,
+                818.1323529411765
+              ],
+              "bottom_4row_pixels": 68
+            },
+            {
+              "foot": "NEAR_RIGHT",
+              "ROI_xyxy": [
+                322,
+                776,
+                412,
+                843
+              ],
+              "last_strong_native_y": 839,
+              "bottom_4row_centroid": [
+                386.5057471264368,
+                837.2068965517242
+              ],
+              "bottom_4row_pixels": 87
+            }
+          ],
+          "two_sole_centroid_native": [
+            334.16463826910075,
+            827.6696247464504
+          ],
+          "authored_ground_root": [
+            334,
+            828
+          ],
+          "projected_near_far_laststrong_depth_native": 19,
+          "projected_near_far_depth_canonical": 23.384615384615383
+        },
+        {
+          "phase": 3,
+          "source_region": [
+            719,
+            427,
+            460,
+            419
+          ],
+          "central_crown_core_ROI_xyxy": [
+            889,
+            427,
+            934,
+            507
+          ],
+          "central_crown_core_native_y": 430,
+          "bounded_head_pale_ROI_xyxy": [
+            849,
+            482,
+            934,
+            572
+          ],
+          "pale_hair_root_component_bbox": [
+            849,
+            500,
+            913,
+            572
+          ],
+          "pale_component_pixels": 1807,
+          "rigid_crown_core_to_hair_root_native": 70,
+          "rigid_marker_normalized_to_1024": 86.15384615384616,
+          "near_shoulder_top_manual_native": [
+            909,
+            534
+          ],
+          "waist_axis_manual_native": [
+            909,
+            645
+          ],
+          "manual_shoulder_waist_uncertainty_native": 5,
+          "feet": [
+            {
+              "foot": "FAR_LEFT",
+              "ROI_xyxy": [
+                789,
+                772,
+                874,
+                838
+              ],
+              "last_strong_native_y": 820,
+              "bottom_4row_centroid": [
+                844.6716417910447,
+                818.1343283582089
+              ],
+              "bottom_4row_pixels": 67
+            },
+            {
+              "foot": "NEAR_RIGHT",
+              "ROI_xyxy": [
+                884,
+                777,
+                974,
+                846
+              ],
+              "last_strong_native_y": 839,
+              "bottom_4row_centroid": [
+                949.5894736842106,
+                837.1684210526316
+              ],
+              "bottom_4row_pixels": 95
+            }
+          ],
+          "two_sole_centroid_native": [
+            897.1305577376277,
+            827.6513747054203
+          ],
+          "authored_ground_root": [
+            897,
+            828
+          ],
+          "projected_near_far_laststrong_depth_native": 19,
+          "projected_near_far_depth_canonical": 23.384615384615383
+        },
+        {
+          "phase": 4,
+          "source_region": [
+            154,
+            847,
+            460,
+            422
+          ],
+          "central_crown_core_ROI_xyxy": [
+            324,
+            847,
+            369,
+            927
+          ],
+          "central_crown_core_native_y": 850,
+          "bounded_head_pale_ROI_xyxy": [
+            284,
+            902,
+            369,
+            992
+          ],
+          "pale_hair_root_component_bbox": [
+            284,
+            919,
+            352,
+            992
+          ],
+          "pale_component_pixels": 1869,
+          "rigid_crown_core_to_hair_root_native": 69,
+          "rigid_marker_normalized_to_1024": 84.92307692307692,
+          "near_shoulder_top_manual_native": [
+            344,
+            954
+          ],
+          "waist_axis_manual_native": [
+            344,
+            1065
+          ],
+          "manual_shoulder_waist_uncertainty_native": 5,
+          "feet": [
+            {
+              "foot": "FAR_LEFT",
+              "ROI_xyxy": [
+                224,
+                1192,
+                309,
+                1258
+              ],
+              "last_strong_native_y": 1243,
+              "bottom_4row_centroid": [
+                282.7894736842105,
+                1241.3026315789473
+              ],
+              "bottom_4row_pixels": 76
+            },
+            {
+              "foot": "NEAR_RIGHT",
+              "ROI_xyxy": [
+                319,
+                1197,
+                409,
+                1269
+              ],
+              "last_strong_native_y": 1265,
+              "bottom_4row_centroid": [
+                388.685393258427,
+                1263.0337078651685
+              ],
+              "bottom_4row_pixels": 89
+            }
+          ],
+          "two_sole_centroid_native": [
+            335.73743347131875,
+            1252.1681697220579
+          ],
+          "authored_ground_root": [
+            336,
+            1252
+          ],
+          "projected_near_far_laststrong_depth_native": 22,
+          "projected_near_far_depth_canonical": 27.076923076923077
+        },
+        {
+          "phase": 5,
+          "source_region": [
+            722,
+            854,
+            456,
+            415
+          ],
+          "central_crown_core_ROI_xyxy": [
+            892,
+            854,
+            937,
+            934
+          ],
+          "central_crown_core_native_y": 857,
+          "bounded_head_pale_ROI_xyxy": [
+            852,
+            909,
+            937,
+            999
+          ],
+          "pale_hair_root_component_bbox": [
+            852,
+            925,
+            914,
+            999
+          ],
+          "pale_component_pixels": 1808,
+          "rigid_crown_core_to_hair_root_native": 68,
+          "rigid_marker_normalized_to_1024": 83.6923076923077,
+          "near_shoulder_top_manual_native": [
+            912,
+            961
+          ],
+          "waist_axis_manual_native": [
+            912,
+            1072
+          ],
+          "manual_shoulder_waist_uncertainty_native": 5,
+          "feet": [
+            {
+              "foot": "FAR_LEFT",
+              "ROI_xyxy": [
+                792,
+                1199,
+                877,
+                1265
+              ],
+              "last_strong_native_y": 1245,
+              "bottom_4row_centroid": [
+                845.0704225352113,
+                1243.1971830985915
+              ],
+              "bottom_4row_pixels": 71
+            },
+            {
+              "foot": "NEAR_RIGHT",
+              "ROI_xyxy": [
+                887,
+                1204,
+                977,
+                1269
+              ],
+              "last_strong_native_y": 1265,
+              "bottom_4row_centroid": [
+                951.0754716981132,
+                1263.132075471698
+              ],
+              "bottom_4row_pixels": 106
+            }
+          ],
+          "two_sole_centroid_native": [
+            898.0729471166622,
+            1253.1646292851447
+          ],
+          "authored_ground_root": [
+            898,
+            1253
+          ],
+          "projected_near_far_laststrong_depth_native": 20,
+          "projected_near_far_depth_canonical": 24.615384615384617
+        }
+      ],
+      "source_pixels_unchanged": true,
+      "newly_authored_poses": 6,
+      "reused_poses": 0,
+      "actor_approval": false,
+      "runtime_status": "HOLD_NOT_STAGED"
+    },
+    "physical_layout_representation_equivalence": {
+      "status": "PASS_NUMERIC_RUNTIME_GEOMETRY_EQUIVALENT_METADATA_REPRESENTATION",
+      "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "independent_scalar_layout_snapshot": "/workspace/scratch/girtas-NE-idle-repair-v03/reviewed_runtime_layout.proposal-pre-final-db439e88672f.json",
+      "independent_scalar_layout_snapshot_sha256": "db439e88672f5a2ee5c95364fc12558139ac483fe0335a1f40ab4262e17208ca",
+      "independent_scalar_layout_review": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-physical-layout-review-nw-author.json",
+      "independent_scalar_layout_review_sha256": "bd9c2adfa70a4ba1bf89b79b0be9d212d657521c4fc5f27eb91c9bbc0e62eabe",
+      "new_canonical_layout": "/workspace/scratch/girtas-NE-idle-repair-v03/reviewed_runtime_layout.proposal.json",
+      "new_canonical_layout_sha256": "3d2f60a297ba5d6d049a318e4abaeac2baf5d89b3a028097564a7dc578af28fa",
+      "before_canvas": 832,
+      "after_nominal_canvas": 2048,
+      "after_per_pose_canvas": [
+        832,
+        832,
+        832,
+        832,
+        832,
+        832
+      ],
+      "all_six_region_RGBA_sourceanchors_margins_runtime_C_foot_identical": true,
+      "source_pixels_unchanged": true,
+      "actor_approval": false
+    },
+    "fringe_preservation_proof_path": "/workspace/scratch/girtas-NE-idle-repair-v03/fringe-preservation-proof.json",
+    "fringe_preservation_proof_sha256": "3882885d9ae6c00ea42943104d42ad356c125172b73e830ebfd5f5bb77647969",
+    "fringe_preservation_proof_inline": {
+      "status": "PASS_METADATA_ONLY_NO_RGBA_CHANGE",
+      "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "automatic_omitted_alpha_gt16": [
+        {
+          "xy": [
+            156,
+            564
+          ],
+          "alpha": 19,
+          "owner": 2
+        }
+      ],
+      "old_regions": [
+        [
+          161,
+          5,
+          447,
+          417
+        ],
+        [
+          719,
+          4,
+          459,
+          418
+        ],
+        [
+          157,
+          426,
+          459,
+          417
+        ],
+        [
+          719,
+          427,
+          460,
+          419
+        ],
+        [
+          154,
+          847,
+          460,
+          422
+        ],
+        [
+          722,
+          854,
+          456,
+          415
+        ]
+      ],
+      "reviewed_regions": [
+        [
+          161,
+          5,
+          447,
+          417
+        ],
+        [
+          719,
+          4,
+          459,
+          418
+        ],
+        [
+          156,
+          426,
+          460,
+          417
+        ],
+        [
+          719,
+          427,
+          460,
+          419
+        ],
+        [
+          154,
+          847,
+          460,
+          422
+        ],
+        [
+          722,
+          854,
+          456,
+          415
+        ]
+      ],
+      "strict_owner_validation": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+        "source_RGBA_sha256": "44f4f36f49be2ce7c3d57dcbf3f71aebbac42d36a45ee0be1864a144d19f1579",
+        "base_geometry_sha256": "58bffe726b1251e8b081166cc725eed72a312342689adf212cfe97211665f34e",
+        "derived_geometry_sha256": "c68f627333c4bf35a441f3290860aac971d78179d325f7555fcabeb6bd34be94",
+        "review_sha256": "886f7aad01ce50a0477942e914925fec5bb6f39b2a85aec245096089230919bf",
+        "review_basis": "Outward-only metadata retains the one faint own alpha>16 fringe excluded by alpha100 automatic bbox; exact original sixbody pixels unchanged. Existing fullalpha16 topology/nearest-owner checks, no foreignbody, no threshold changes, no cleanup or resampling.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 370441,
+        "added_alpha_gt16_pixels": 1,
+        "all_alpha_positive_covered": false,
+        "expanded_regions": [
+          [
+            161,
+            5,
+            447,
+            417
+          ],
+          [
+            719,
+            4,
+            459,
+            418
+          ],
+          [
+            156,
+            426,
+            460,
+            417
+          ],
+          [
+            719,
+            427,
+            460,
+            419
+          ],
+          [
+            154,
+            847,
+            460,
+            422
+          ],
+          [
+            722,
+            854,
+            456,
+            415
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "c736424c240f3536c75d93c4fe08102754c7efccd063680134204c7df2bcb1f4",
+        "foreground_owner_sha256": "5f5c429c666e0ebeee7dad606d1340008b13808887e791884f513aa987ef83cb",
+        "detached_pixels": 5,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              313,
+              72,
+              314,
+              73
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 360.0805465447974,
+            "owner_margin_min": 357.84447856729764
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              822,
+              104,
+              823,
+              105
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 334.73123547108656,
+            "owner_margin_min": 332.4951674935868
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              871,
+              496,
+              872,
+              497
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 99.46356116689167,
+            "owner_margin_min": 97.22749318939188
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              292,
+              500,
+              293,
+              501
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 101.04454463255303,
+            "owner_margin_min": 98.21611750780684
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              812,
+              1214,
+              813,
+              1215
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 206.52602741543257,
+            "owner_margin_min": 204.28995943793277
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      },
+      "canonical_layout_path": "/workspace/scratch/girtas-NE-idle-repair-v03/reviewed_runtime_layout.regions-composed.proposal.json",
+      "actor_approval": false
+    },
+    "source_region_validation_inline": {
+      "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "source_RGBA_sha256": "44f4f36f49be2ce7c3d57dcbf3f71aebbac42d36a45ee0be1864a144d19f1579",
+      "base_geometry_sha256": "58bffe726b1251e8b081166cc725eed72a312342689adf212cfe97211665f34e",
+      "derived_geometry_sha256": "c68f627333c4bf35a441f3290860aac971d78179d325f7555fcabeb6bd34be94",
+      "review_sha256": "886f7aad01ce50a0477942e914925fec5bb6f39b2a85aec245096089230919bf",
+      "review_basis": "Outward-only metadata retains the one faint own alpha>16 fringe excluded by alpha100 automatic bbox; exact original sixbody pixels unchanged. Existing fullalpha16 topology/nearest-owner checks, no foreignbody, no threshold changes, no cleanup or resampling.",
+      "source_unchanged": true,
+      "canonical_canvas_foot_anchors_unchanged": true,
+      "all_alpha_gt16_covered_exactly_once": true,
+      "foreign_foreground_pixels": 0,
+      "alpha_gt16_pixels": 370441,
+      "added_alpha_gt16_pixels": 1,
+      "all_alpha_positive_covered": false,
+      "expanded_regions": [
+        [
+          161,
+          5,
+          447,
+          417
+        ],
+        [
+          719,
+          4,
+          459,
+          418
+        ],
+        [
+          156,
+          426,
+          460,
+          417
+        ],
+        [
+          719,
+          427,
+          460,
+          419
+        ],
+        [
+          154,
+          847,
+          460,
+          422
+        ],
+        [
+          722,
+          854,
+          456,
+          415
+        ]
+      ],
+      "default_importer_repacker_unchanged": true,
+      "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+      "nearest_owner_sha256": "c736424c240f3536c75d93c4fe08102754c7efccd063680134204c7df2bcb1f4",
+      "foreground_owner_sha256": "5f5c429c666e0ebeee7dad606d1340008b13808887e791884f513aa987ef83cb",
+      "detached_pixels": 5,
+      "detached_fragments": [
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            313,
+            72,
+            314,
+            73
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 360.0805465447974,
+          "owner_margin_min": 357.84447856729764
+        },
+        {
+          "row": 1,
+          "pixels": 1,
+          "bbox": [
+            822,
+            104,
+            823,
+            105
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 334.73123547108656,
+          "owner_margin_min": 332.4951674935868
+        },
+        {
+          "row": 3,
+          "pixels": 1,
+          "bbox": [
+            871,
+            496,
+            872,
+            497
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 99.46356116689167,
+          "owner_margin_min": 97.22749318939188
+        },
+        {
+          "row": 2,
+          "pixels": 1,
+          "bbox": [
+            292,
+            500,
+            293,
+            501
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 101.04454463255303,
+          "owner_margin_min": 98.21611750780684
+        },
+        {
+          "row": 5,
+          "pixels": 1,
+          "bbox": [
+            812,
+            1214,
+            813,
+            1215
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 206.52602741543257,
+          "owner_margin_min": 204.28995943793277
+        }
+      ],
+      "minimum_required_owner_margin": 32.0
+    },
+    "runtime_layout_validation_inline": {
+      "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "base_geometry_sha256": "c68f627333c4bf35a441f3290860aac971d78179d325f7555fcabeb6bd34be94",
+      "derived_geometry_sha256": "0723db5ac271f9b9b0a119a6380c15daeaa9cb761f0c99894ca4925b5b972113",
+      "review_sha256": "18179d4f25b1726b70a6945a76172c0dceef591db5bc49bb15639a5aab0b69a3",
+      "review_basis": "NEW faithful rearRIGHT NEidle6 from correctNEguard camera. Physical C832 uses measured rigid crowncore→hairroot vs correct N/NW markers, nearshoulder/waist correspondence; allsix root at actual two resting sole-centroid midpoint retaining projected NE foot depth. Independent SOURCE and physical/full6 review pending; no oldwrongNEidle camera/size reference. Allsix source regions include unchanged own faint alpha>16 via strict outward-only region review. Independent SOURCE/camera/anatomy and physical candidate PASS pinned; nominal2048+sixexplicitC832 is physically identical to independently reviewed scalarC832. CurrentNEattack guardC1024 small remains separate metadata HOLD; no actor/defaultMain approval.",
+      "direction": "NE",
+      "pose_count": 6,
+      "canvas_size": [
+        2048,
+        2048
+      ],
+      "foot": [
+        1024,
+        1280
+      ],
+      "source_anchors": [
+        [
+          337,
+          407
+        ],
+        [
+          897,
+          407
+        ],
+        [
+          334,
+          828
+        ],
+        [
+          897,
+          828
+        ],
+        [
+          336,
+          1252
+        ],
+        [
+          898,
+          1253
+        ]
+      ],
+      "runtime_pixel_scale_ratio": [
+        1024,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "resampled": false,
+      "approval_granted": false,
+      "source_region_review_sha256": "886f7aad01ce50a0477942e914925fec5bb6f39b2a85aec245096089230919bf",
+      "pose_canvas_sizes": [
+        832,
+        832,
+        832,
+        832,
+        832,
+        832
+      ],
+      "runtime_reference_canvas_size": 1024,
+      "per_pose_runtime_pixel_scale_ratios": [
+        [
+          1024,
+          832
+        ],
+        [
+          1024,
+          832
+        ],
+        [
+          1024,
+          832
+        ],
+        [
+          1024,
+          832
+        ],
+        [
+          1024,
+          832
+        ],
+        [
+          1024,
+          832
+        ]
+      ],
+      "pose_canvas_size_allowed_range": [
+        256,
+        4096
+      ],
+      "newly_authored_poses": 0
+    }
+  },
+  "private_source_review": {
+    "visual_findings": [
+      "All6matchONLYcorrectNEattackguardrear-RIGHT3/4camera: nearRIGHTpauldron/arm/hiponimageRIGHT, farLEFTsidebehindlonghaironimageLEFT; helmet/backneck/hipsandstancebootsfaceUPRIGHTawayinconsistentpureNfront-backabsent. Directnew0-vsNEguardhead/footcomparisonsamecorrectview; oldpureNNEidlewasnotused.",
+      "FaithfulGirtaslongPALESILVERhair/pointedgoldhelmet/blackgoldlayeredpauldronsandbodyarmor/THINHARDSTRAIGHTGOLDbackradialrays/LONGDARKGOLDTRIMrobe/originalboots/ONEsinousgoldyellowblade all6. Rayssolidrigidmetalfollowback, neverfeathers/fanwing/Halpasgear. Noarmoredpants/shortskirtreplacement.",
+      "Exactly2arms/hands: nearanatomicalRIGHTarmimageRIGHTcontinuouslydescendsfromshoulderthroughgoldelbow/forearmtoclosedhandandONEbladepointinglowoutwardRIGHT; farLEFTemptyarmmostlyoccludedbyhair/robeasguard, noextraemptyraisedfist/grip/handflip. Twolegsinretainedfixedguardstance, noextrafoot/head/weapon.",
+      "Sixactualsubtlebreathing/settlingarticulationsratherthanwalking: shoulder/backsmallinhale/exhale, hairstrands/bunchedsilverendsandrobe/trimpanelslaglocally, slightweightsettlereturnnear0; bothbootskeeppairedNEguardfootplacementandorientationswithoutsteplegswap/AIR/attack. Rigidraysstayattachedtosamebackplane. Sourceall6distinctstrictRGBAframesandvisuallocalarticulationconfirmnotmerewholeimagetranslation.",
+      "Allcrown/hair/rays/robe/boots/bladesilhouettescompletealpha0background, no guidecolors/text/floor/afterimage; strict6regionsandallforegroundcoveragePASSandouteralpha100clipping0."
+    ],
+    "visual_limitations": [
+      "Actual compiled SpriteFrames/Player/defaultMain/wholeactor not yet approved.",
+      "Current correctNEattackguardC1024 is small vs newlycorrectNEidleC832; guardC864 was physical comparison only, separate metadata correction/HOLD required before wholeactor approval.",
+      "No actor/count increase from six source poses or geometry alone."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+    "raw_bytes": 1322121,
+    "request_sha256": "7a9f661ca2b8e8f3c4cad01ec4fb3cee9a085c7a81bd721d33aa3af5d2819484",
+    "review_sha256": "661ad8275cda914dcfc8df393cbabc1c3ad42555940a2fb3ae1bcaa0fa9a58d6"
+  },
+  "reopened_source_hold": {
+    "id": "3bfbe284f36d5ffc257052eac87e726a234d8d0130f84a2fd0ea20d57a4d4e5f",
+    "source_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+    "evidence_sha256": "4c5364351bfc2653d133a5ad71c8152ab5f558fc8ce81b301c0c4837bba3808e",
+    "prior_corrections_sha256": "e11b2bb937bd023ddf5afc6e61cb1a7ecd8c324083488218c979f760280a48c1"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e.png",
+      "sha256": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e",
+      "bytes": 181141,
+      "original_reference": "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-4d76680df6be607e9b3ea031a58238e26f85260940e7101b9bb88ac1c6cdcb67.png",
+      "sha256": "4d76680df6be607e9b3ea031a58238e26f85260940e7101b9bb88ac1c6cdcb67",
+      "bytes": 176844,
+      "original_reference": "/workspace/scratch/girtas-NE-idle-repair-v03/NE-rear-right-fixed-camera-idle-guide.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v03.png",
+  "output_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+  "output_bytes": 1322121,
+  "original_generated_file": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png"
+}
