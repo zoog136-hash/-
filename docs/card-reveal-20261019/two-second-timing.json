@@ -1,0 +1,37 @@
+{
+  "provenance": "TWILIGHT requested authored timing; not original-game video measurements",
+  "lightning_to_confirmation_seconds": 2.0,
+  "single_high_grade": {
+    "open": 0.65,
+    "first_lightning": 3.55,
+    "promotion_signal_success_only": 4.15,
+    "confirmation": 5.55,
+    "fusion_duration": 8.7
+  },
+  "single_low_grade": {
+    "open": 0.65,
+    "first_lightning": 1.2,
+    "promotion_signal_success_only": 1.8,
+    "confirmation": 3.2
+  },
+  "eleven_high_grade_fixture": {
+    "first_lightning": 3.35,
+    "first_confirmation": 5.35,
+    "last_lightning": 4.95,
+    "last_confirmation": 6.95,
+    "duration": 9.9
+  },
+  "capture_fps": 30,
+  "expected_capture_frames": {
+    "grades": 297,
+    "draw": 297,
+    "fusion": 261
+  },
+  "checks": {
+    "timeline_input": 83,
+    "main_integration": 208,
+    "boot": "PASS"
+  },
+  "ci": "NOT_RUN [skip ci]",
+  "physical_android": "NOT_RUN"
+}

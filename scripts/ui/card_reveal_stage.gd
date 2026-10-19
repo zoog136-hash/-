@@ -91,7 +91,7 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		board.add_child(card)
 		card.configure(results[i],candidate_textures,category)
 		cards.append(card)
-	duration = 6.8 if fusion else 8.0
+	duration = (6.8 if fusion else 8.0)+CARD.CONFIRM_DELAY_SECONDS-CARD.LIGHTNING_EARLY_SECONDS
 	title_label.text = "5개 등급 연출 비교" if showcase else category+(" 합성 결과" if fusion else " 뽑기 결과")
 	_fit()
 	seek(0.0)
@@ -168,7 +168,7 @@ func seek(value: float) -> void:
 	clock = clampf(value,0,duration)
 	for card: Control in cards:
 		card.seek(clock,fusion and upgrade)
-	var complete: bool = cards.all(func(card: Control) -> bool: return clock >= card.open_at+card.reel_seconds)
+	var complete: bool = cards.all(func(card: Control) -> bool: return clock >= card.reveal_at())
 	if showcase:
 		result_note.text = "청색 · 적색 · 보라 · 금빛 · 에메랄드\n연출 비교 전용 · 카드 보상 없음"
 	elif complete:
@@ -188,13 +188,13 @@ func _process(delta: float) -> void:
 		seek(clock+minf(delta,0.08))
 		if not silent:
 			for i: int in range(cards.size()):
-				var at: float = cards[i].open_at+cards[i].reel_seconds-0.1
+				var at: float = cards[i].lightning_at()
 				if previous < at and clock >= at and not sound_played.has(i):
 					sound_played[i] = true
 					sound_player.stream = IMPACT
 					sound_player.play()
 			if fusion and upgrade and not cards.is_empty():
-				var promotion_at: float = cards[0].open_at+cards[0].reel_seconds+0.5
+				var promotion_at: float = cards[0].promotion_at()
 				if previous < promotion_at and clock >= promotion_at and not sound_played.has("promotion"):
 					sound_played["promotion"] = true
 					sound_player.stream = UPGRADE
@@ -208,10 +208,10 @@ func _draw() -> void:
 	# Illumination is separate from smoke, card movement and surface discharges.
 	if not reduced_motion:
 		for card: Control in cards:
-			var elapsed: float = clock-card.open_at-card.reel_seconds+0.1
+			var elapsed: float = clock-card.lightning_at()
 			var power: float = PROFILES.pulse(card.grade,elapsed)
 			if fusion and upgrade:
-				power += PROFILES.pulse(card.grade,clock-card.open_at-card.reel_seconds-0.5)
+				power += PROFILES.pulse(card.grade,clock-card.promotion_at())
 			if power > 0.03:
 				draw_rect(Rect2(Vector2.ZERO,size),Color(PROFILES.color(card.grade),minf(0.055,power*0.023*intensity_scale)))
 

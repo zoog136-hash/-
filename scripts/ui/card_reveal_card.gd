@@ -4,6 +4,8 @@ const FX = preload("res://scripts/ui/card_reveal_effects.gd")
 const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ATLAS = preload("res://assets/card_reveal/authored_atlas.webp")
+const LIGHTNING_EARLY_SECONDS: float = 0.1
+const CONFIRM_DELAY_SECONDS: float = 2.0
 var record: Dictionary = {}
 var grade: String = "희귀"
 var open_at: float = 0.6
@@ -43,14 +45,17 @@ class Face extends Control:
 			draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
 			return
 		draw_rect(Rect2(Vector2.ZERO,size),Color(tint,0.08))
-		if elapsed >= duration or candidates.is_empty():
+		if elapsed >= duration:
 			_art(artwork,Vector2.ZERO)
+		elif candidates.is_empty():
+			draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
 		else:
-			var position_value: float = (1-pow(1-clampf(elapsed/duration,0,1),3.4))*24.0
+			# Keep visibly moving after the grade signal, then land at reveal_at.
+			var position_value: float = (1-pow(1-clampf(elapsed/duration,0,1),2.0))*40.0
 			var cell: int = int(floor(position_value))
 			var offset: float = position_value-floor(position_value)
 			for j: int in range(-1,3):
-				var image: Texture2D = artwork if cell+j >= 24 else candidates[posmod(cell+j,candidates.size())]
+				var image: Texture2D = artwork if cell+j >= 40 else candidates[posmod(cell+j,candidates.size())]
 				_art(image,Vector2((float(j)-offset)*size.x,0))
 		# Surface reflection follows the result color and leaves the figure legible.
 		draw_rect(Rect2(0,size.y*0.78,size.x,size.y*0.22),Color(tint,0.12))
@@ -146,17 +151,27 @@ func _fit() -> void:
 	grade_heading.position = Vector2(-size.x*0.2,-54)
 	grade_heading.size = Vector2(size.x*1.4,40)
 
+func lightning_at() -> float:
+	return open_at+reel_seconds-LIGHTNING_EARLY_SECONDS
+
+func reveal_at() -> float:
+	return lightning_at()+CONFIRM_DELAY_SECONDS
+
+func promotion_at() -> float:
+	# The second signal stays inside the anticipation, on its own clock.
+	return open_at+reel_seconds+0.5
+
 func seek(value: float, successful_fusion: bool = false) -> void:
 	clock = value
 	var local: float = clock-open_at
+	var revealed: bool = clock >= reveal_at()
 	face.elapsed = local
-	face.duration = reel_seconds
+	face.duration = reveal_at()-open_at
 	face.queue_redraw()
-	aura.set_time(local-reel_seconds,clock)
-	surface_fx.set_time(local-reel_seconds+0.1,clock)
+	aura.set_time(clock-reveal_at() if revealed else -1.0,clock)
+	surface_fx.set_time(clock-lightning_at(),clock)
 	# Keep the full primary sequence when the success discharge overlaps it.
-	promotion_fx.set_time(local-reel_seconds-0.5 if successful_fusion else -1.0,clock)
-	var revealed: bool = local >= reel_seconds
+	promotion_fx.set_time(clock-promotion_at() if successful_fusion else -1.0,clock)
 	name_label.visible = revealed
 	grade_label.visible = revealed
 	var tint: Color = PROFILES.color(grade) if revealed else Color("9b8a6b")

@@ -82,6 +82,38 @@ func _run() -> void:
 	_check(not stage.sound_played.has("promotion"),"ordinary result has no success sound")
 	stage.close_reveal()
 	await process_frame
+	# The grade signal precedes the visual result by two full seconds.
+	for grade: String in ["일반","고급","희귀","영웅","전설","신화","유일"]:
+		stage = _stage(grade)
+		card = stage.cards[0]
+		var signal_at: float = card.lightning_at()
+		_check(is_equal_approx(card.reveal_at()-signal_at,2.0),grade+" confirms two seconds after lightning")
+		stage.seek(signal_at+0.028)
+		_check(PROFILES.pulse(grade,card.surface_fx.elapsed) > 0.0 and not card.name_label.visible,grade+" lightning fires before result")
+		stage.seek(signal_at+1.98)
+		_check(card.face.elapsed < card.face.duration and not card.name_label.visible and not card.grade_label.visible,grade+" remains unresolved throughout anticipation")
+		_check(card.aura.elapsed < 0.0 and stage.result_note.text == "결과를 확인하고 있습니다.",grade+" result aura and success text wait for confirmation")
+		stage.seek(signal_at+2.01)
+		_check(card.face.elapsed >= card.face.duration and card.name_label.visible and card.grade_label.visible,grade+" confirms artwork and labels together")
+		_check(card.aura.elapsed >= 0.0 and stage.result_note.text == "승급 성공",grade+" confirmation starts result aura and success text")
+		_check(stage.duration-card.reveal_at() >= 3.0,grade+" retains time to inspect result")
+		stage.close_reveal()
+		await process_frame
+	stage = STAGE.new()
+	root.add_child(stage)
+	var pack: Array[Dictionary] = []
+	for index: int in range(11):
+		pack.append({"name":"결과 "+str(index),"grade":"유일","id":str(index)})
+	var candidate_textures: Array[Texture2D] = []
+	stage.present(pack,candidate_textures,"변신")
+	stage.set_process(false)
+	stage.seek(stage.cards[10].reveal_at()-0.02)
+	_check(stage.cards[0].name_label.visible and not stage.cards[10].name_label.visible,"eleven-card sequence coexists with pending result")
+	_check(stage.result_note.text == "결과를 확인하고 있습니다.","pack completion waits for last delayed card")
+	stage.seek(stage.cards[10].reveal_at()+0.02)
+	_check(stage.result_note.text == "카드를 획득했습니다","pack confirms after last delayed card")
+	stage.close_reveal()
+	await process_frame
 	# Real ScreenTouch events, with mouse emulation disabled by project.godot.
 	stage = _stage("영웅")
 	await process_frame

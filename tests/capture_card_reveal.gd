@@ -45,7 +45,7 @@ func _run() -> void:
 	var absolute: String = ProjectSettings.globalize_path(target)
 	DirAccess.make_dir_recursive_absolute(absolute)
 	var fps: int = 30
-	var frames: int = 1 if one_frame >= 0.0 else int(stage.duration*fps)
+	var frames: int = 1 if one_frame >= 0.0 else int(round(stage.duration*fps))
 	for index: int in range(frames):
 		stage.seek(one_frame if one_frame >= 0.0 else float(index)/fps)
 		await process_frame
