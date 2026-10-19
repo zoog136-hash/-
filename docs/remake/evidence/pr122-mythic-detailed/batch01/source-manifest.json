@@ -5686,7 +5686,9 @@
         "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v01.png",
         "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
         "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
-        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png"
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+        "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png"
       ],
       "slots": [
         "transform:393:SW:run",
@@ -5708,7 +5710,9 @@
         "transform:393:N:hit",
         "transform:393:E:hit",
         "transform:393:SE:hit",
-        "transform:393:NE:hit"
+        "transform:393:NE:hit",
+        "transform:393:S:attack",
+        "transform:393:W:death"
       ],
       "reason": "SW run and N/NE/NW attack heading defects; NW locomotion/front view and E/W versus SE/SW cardinal separation require correction",
       "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
@@ -6301,6 +6305,24 @@
         {
           "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-E-SE-NE-hit-anatomy-holds-r062.json",
           "sha256": "a0ac9dd733129b5c501bb7ca7d778dc2783d404eef91366c0555fbb24bc5337d",
+          "status": "HOLD",
+          "actor_approvals_added": 0
+        },
+        {
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-S-attack-contact3-anatomy-hold-r062.json",
+          "sha256": "d6c5e8e2c9c335482e2708deb5bae5be728c3924a4b475a9df6aa7ca06ed9564",
+          "status": "HOLD",
+          "actor_approvals_added": 0
+        },
+        {
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-W-death-corpses4-5-duplicate-hold-r062.json",
+          "sha256": "722d2dbcad9066b745c53d95e3e23736e64a6f5478e3aeb5dfb1dddb19e2d55d",
+          "status": "HOLD",
+          "actor_approvals_added": 0
+        },
+        {
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/initial-r062-47-track-review-result.json",
+          "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645",
           "status": "HOLD",
           "actor_approvals_added": 0
         }
