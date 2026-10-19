@@ -1,0 +1,71 @@
+{
+  "schema": "PR122_E_WALK_R094_ACTUAL_COMPILED_INDEPENDENT_SCOPED_QC_V1",
+  "utc": "2026-10-19T16:00:59.861022+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "PASS_SCOPED_ACTUAL_COMPILED_E_IDLE_WALK6_AND_LOOP",
+  "scope": "Actual final r094 SpriteFrames/profile, Eidle0\u2192walk0..5\u21925to0 only. Exact compiledRGBA/C/margins/root transfer and one private reconstruction of actual runtime display geometry. Prior six-source/fixedC physicalPASS fb881a0\u2026 is inherited, not re-opened.",
+  "actor_approval_increment": 0,
+  "actor_approval": false,
+  "actual_frames_pin": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r094/SpriteFrames.tres",
+    "sha256": "5ea99bd516b4906ce1c73d96ae31ecab9aca14a738905398d7aafbc205f43702"
+  },
+  "actual_profile_pin": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r094/NativeMotionProfile.tres",
+    "sha256": "8c2dea273dee8651ce471db4828607c404a316b6ed21e2302397467a21df3d5c"
+  },
+  "numeric_proof_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/Ewalk-r094-actual-compiled-numeric-proof.json",
+    "sha256": "e092b5b42a823c3a64c4da9782f61b4ef48c8a086df4300135dc5f89a267a6b1"
+  },
+  "prior_physical_candidate_pin": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-six-fixed-C-physical-gait-independent-candidate-review.json",
+    "sha256": "fb881a0b75cbc2e5860a8e3fba40110f544ee5d23604d36520a8aea2f13276ca"
+  },
+  "findings": [
+    "All6 actual compiled AtlasTexture region/margin/effectiveC/RGBA hashes and atlas source anchors match the exact approved physicalcandidate byte-for-byte. Current Eidle crop also matches prior actual-idle RGBA proof.",
+    "walk_0 contains6 distinct ordered frames, loop=true,12.5fps. The5\u21920 entry remains genuine coherent opposite-leg gait with no clip/routing loss.",
+    "Corrected actual r094 profile uses pixel_scale110/490=0.224489795918 and Player widthmultiplier0.9 plus1024/effectiveC. It preserves the common actor display convention; bad r093 .135 profile was never viewed.",
+    "At actual runtime scale, rigid head/pauldron/torso, credible hidden-hip/knee/ankle flex and complete gear remain consistent with accepted physicalcandidate. Upright stride height versus relaxed idle is retained; cloth V is not treated as hip.",
+    "Support/raised boots preserve the accepted oblique forward plane and narrower walking lane. No changed C/root or invented AIR was introduced. Actual Eidle\u2192walk6\u2192loop layout contains no new floor penetration or missing frame/endpoint defect."
+  ],
+  "runtime_geometry": {
+    "pixel_scale": 0.224489795918,
+    "reference_canvas": [
+      1024,
+      1024
+    ],
+    "transform_width_multiplier": 0.9,
+    "root_canonical": [
+      512,
+      640
+    ],
+    "sprite_offset_y": -28.734693877551,
+    "root_world_y": -4.699884925685183e-11,
+    "pose_C": [
+      2256,
+      2408,
+      2352,
+      2352,
+      2408,
+      2304
+    ],
+    "world_forward_ground_slope_y_per_x": 0.031844436538930425,
+    "walking_near_minus_far_lane_world": 0.34781264677025076,
+    "standing_neutral_lane_world_reference_only": 5.332633668304312,
+    "floor_basis": "Exact unchanged prior physicalcandidate source/C/root plus actual anatomy review. Idle neutral depth is not imposed on walking lane."
+  },
+  "private_preview": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-Ewalk-r094-actual-compiled-world3x-idle-six-loop.jpg",
+    "sha256": "5c28c6db148296b50b483f8335483c196dac819dc448b16d2fb84e26827b6c9c",
+    "bytes": 149010,
+    "classification": "PIL reconstruction of actual compiledTRES/profile/Player geometry; NOT a Godot-render screenshot."
+  },
+  "remaining_HOLD": [
+    "Whole actor267 final independent48role quality approval and actualMain/defaultcatalog activation remain pending. Detailed COMPLETE count remains1/31 Halpas393 only."
+  ],
+  "test_scope": "This reviewer performed exact compiled resource/pixel/geometry checks and one private JPEG review. Root separately reports realGodot resource/actualPlayer+32actions PASS; this JSON does not claim to be a realGodot screenshot.",
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "25c5f8fb47bf07bc517d54228ee961bd29538192dbd6509ccedd250851ce1910",
+  "repository_mutations": false
+}

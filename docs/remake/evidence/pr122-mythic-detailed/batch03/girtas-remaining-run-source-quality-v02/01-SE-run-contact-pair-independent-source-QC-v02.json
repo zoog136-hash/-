@@ -1,0 +1,209 @@
+{
+  "schema": "PR122_GIRTAS_SE_RUN_CONTACT_PAIR_INDEPENDENT_SOURCE_QC_V02",
+  "created_utc": "2026-10-19T15:46:00.022797+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "scope": "Only the two new SE run landing sources phase0 and phase3 plus their six-solid-guide recipe; independent source/camera/model/opposite-chain visual QC before remaining four art calls. No whole-six/fixed-C/runtime/actor approval.",
+  "status": "SOURCE_PAIR_PASS",
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "actor_approval_increment": 0,
+  "actor_approval": false,
+  "default_catalog_enabled": false,
+  "pack": {
+    "path": "/workspace/scratch/girtas-SE-run-production-v01/contact-pair-independent-QC-pack.json",
+    "sha256": "95eb6cc8b02c1c88f1ff33a48a9d99a0280d08780e2b76d709ced92ebb901ef3"
+  },
+  "source_pins": [
+    {
+      "intended_game_phase": 0,
+      "raw_path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/girtas-SE-run-left-landing-key-v01.png",
+      "raw_sha256": "553356b11936a9dc23449c888c54abd874948576b54d7bb2dd97350b576e817c",
+      "request_path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/request-girtas-SE-run-left-landing-key-v01.json",
+      "request_sha256": "51be6d46e9e481b463050b38136a079d680c52d2f32d829e8d1e90ef58d9fb33",
+      "receipt_path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/generation-receipt.json",
+      "receipt_sha256": "a03941951264634f0660b8316cdeffa5993653401521c386b4e26b132e0bb301",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "alpha_gt16_bbox": [
+        54,
+        24,
+        1192,
+        1187
+      ],
+      "boundary_gt16_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    },
+    {
+      "intended_game_phase": 3,
+      "raw_path": "/workspace/scratch/girtas-SE-run-right-landing-key-v01/girtas-SE-run-right-landing-key-v01.png",
+      "raw_sha256": "97dab96143e8f4a5ea56f4bc654035908f1e2cd7cad8ee24333b6dc2ad6a7393",
+      "request_path": "/workspace/scratch/girtas-SE-run-right-landing-key-v01/request-girtas-SE-run-right-landing-key-v01.json",
+      "request_sha256": "b3730080c9cea10365138133d9197a60dcf6251f22bf02ca47a78e37ed352bbb",
+      "receipt_path": "/workspace/scratch/girtas-SE-run-right-landing-key-v01/generation-receipt.json",
+      "receipt_sha256": "08ae75966aa9cfd78dca73210004d2f555146d6901430406568eec53e3a8ebe7",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "alpha_gt16_bbox": [
+        133,
+        29,
+        1097,
+        1170
+      ],
+      "boundary_gt16_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    }
+  ],
+  "reference_pins": {
+    "idle": {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+      "sha256": "e3b15578727710866b76c6495ad1b538156b35d74820061c362713db48441071"
+    },
+    "walk": {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
+      "sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d"
+    },
+    "walk_runtime_frames": {
+      "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r086/SpriteFrames.tres",
+      "sha256": "e986c0cc81b281fa36459065f1ec00de1d27792a69624d0011f97241366d974f"
+    },
+    "selected_idle_exactRGBA": {
+      "path": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+      "sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91"
+    },
+    "actual_r086_SEwalk_sheet": {
+      "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r086/SE-walk.png",
+      "sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "review": "Actual TRES track_35_0 and track_35_3 AtlasTexture regions, not a Godot-render screenshot."
+    }
+  },
+  "guide_recipe": {
+    "path": "/workspace/scratch/girtas-SE-run-production-v01/six-solid-guide-recipe.json",
+    "sha256": "6c067d9f06e71a19a1ba7eaa9392dea2d249e51d69df657e143b09e19ac81b8e",
+    "poses": 6,
+    "constant_bones": true,
+    "exact_Girtas_bone_proportions_certified": false,
+    "finding": "Camera and opposite-support geometry are usable production guidance. Generic .60/.58 bone lengths and 29.4-vs26 canonical near/far depth are reference-only, not proof of exact character body ratios or automatic failure."
+  },
+  "findings": {
+    "camera": "Both new poses show faithful absolute SE front/down-right camera and near anatomical RIGHT on image-left, consistent with selected SEidle and actual r086 SEwalk.",
+    "phase0": "Far anatomical LEFT chain extends from the far hip under robe through its knee/shin to the complete forward/down-right landing boot. Near anatomical RIGHT raised thigh/kneecap and folded shin lead to a distinct recovery boot tucked below/behind the raised kneecap; that boot is visibly separated from the landing boot and cannot be mistaken for a second support.",
+    "phase3": "Near anatomical RIGHT chain extends from the near hip through its long exposed knee/shin to the complete landing boot. Far anatomical LEFT thigh is raised to image-right; folded shin ends in a separate down-pointing recovery boot behind/below its kneecap. Actual ownership reverses relative to phase0.",
+    "identity_and_gear": "Pale human face, long pale hair, hard pointed gold rays/crown/pauldrons, dark full-length gold-trim robe and long sinuous blade in permanent anatomical RIGHT hand are faithful. Complete blade/fist/boot/ray endpoints remain inside each alpha canvas.",
+    "proportions": "No material systemic head/pauldron/waist-to-leg mismatch against the selected idle and actual r086 walk regions. The dynamic torso lean, raised knee, folded shin and robe occlusion explain shorter projected segments. Review used the rigid face/skull and pauldron-to-waist relationship, not silhouette/bounding-box normalization or cloth-V-as-hip. True hip/knee centers remain partly hidden; exact bone lengths are not certified.",
+    "source_dimensions": "Both PNG headers are actual1254x1254. The pack canvas_size2048 is the importer virtual per-pose coordinate canvas per author clarification, not source image dimensions."
+  },
+  "provisional_assembly_guidance": {
+    "raw_to_selected_idle_candidate_uniform_scale_range": [
+      0.43,
+      0.5
+    ],
+    "meaning": "Initial raw1254-to-selected-idle460x511 visual alignment search only. Fit rigid face/skull plus near pauldron/waist together and validate sole/root physically later; this is not a selected runtime scale or permission to normalize source bbox.",
+    "landmark_search_regions_native_raw": {
+      "phase0": {
+        "visible_face_brow_chin_search_xyxy": [
+          840,
+          290,
+          940,
+          400
+        ],
+        "near_pauldron_search_xyxy": [
+          590,
+          350,
+          780,
+          460
+        ],
+        "waist_belt_search_xyxy": [
+          730,
+          520,
+          900,
+          640
+        ],
+        "raised_near_knee_search_xyxy": [
+          670,
+          650,
+          850,
+          790
+        ],
+        "near_recovery_boot_search_xyxy": [
+          560,
+          730,
+          700,
+          870
+        ],
+        "far_landing_boot_search_xyxy": [
+          940,
+          1030,
+          1100,
+          1190
+        ]
+      },
+      "phase3": {
+        "visible_face_brow_chin_search_xyxy": [
+          810,
+          275,
+          900,
+          370
+        ],
+        "near_pauldron_search_xyxy": [
+          590,
+          340,
+          760,
+          440
+        ],
+        "waist_belt_search_xyxy": [
+          720,
+          500,
+          880,
+          620
+        ],
+        "raised_far_knee_search_xyxy": [
+          900,
+          600,
+          1050,
+          750
+        ],
+        "far_recovery_boot_search_xyxy": [
+          820,
+          690,
+          950,
+          850
+        ],
+        "near_landing_boot_search_xyxy": [
+          800,
+          1020,
+          970,
+          1160
+        ]
+      }
+    },
+    "uncertainty": "Manual visual search regions, not measured hidden joints or extracted skeletal markers."
+  },
+  "remaining_HOLD": [
+    "Remaining four new dedicated SE run keys must be independently reviewed as a whole six for genuine alternation, contacts/load/flight and costume/gear consistency.",
+    "Authored roots, AIR heights, source-to-canonical scale and floor non-penetration remain unapproved. Never force flat Y or introduce fictional AIR/root shifts.",
+    "Actual integrated SpriteFrames/Player resource routing, Godot runtime and final independent actor quality remain unapproved. Actor267 approval remains0 and detailed COMPLETE1/31 remains Halpas393 only."
+  ],
+  "private_review": {
+    "ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+    "ledger_sha256": "e72f161336fe3cd99fe1c093265c9532a12817bdf65aaf59fbc66e2fb3b91e82",
+    "cumulative_encoded_preview_file_bytes": 579142,
+    "cap_bytes": 8000000,
+    "images_sent_to_parent_or_main_chat": 0,
+    "note": "Local private JPEG review only. One detail JPEG160100B exceeds preferred150KB, remains below cumulative cap."
+  },
+  "repository_mutations": false,
+  "tests": "No broad scan/full test/CI repeated. Numeric source SHA/header/alpha-boundary checks and private visual inspection only."
+}

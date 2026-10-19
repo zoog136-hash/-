@@ -1,0 +1,293 @@
+{
+  "frames_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r094/SpriteFrames.tres",
+  "frames_sha256": "5ea99bd516b4906ce1c73d96ae31ecab9aca14a738905398d7aafbc205f43702",
+  "profile_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r094/NativeMotionProfile.tres",
+  "profile_sha256": "8c2dea273dee8651ce471db4828607c404a316b6ed21e2302397467a21df3d5c",
+  "pixel_scale": 0.224489795918,
+  "normalized_reference_body_height": 490,
+  "display_reference_body_height": 110,
+  "transform_width_multiplier": 0.9,
+  "sprite_offset_y": -28.734693877551,
+  "runtime_reference_canvas": [
+    1024,
+    1024
+  ],
+  "canonical_root": [
+    512,
+    640
+  ],
+  "tracks": {
+    "idle_0": {
+      "ids": [
+        "track_3_0",
+        "track_3_1",
+        "track_3_2",
+        "track_3_3",
+        "track_3_4",
+        "track_3_5"
+      ],
+      "loop": true,
+      "fps": 5.0
+    },
+    "walk_0": {
+      "ids": [
+        "track_5_0",
+        "track_5_1",
+        "track_5_2",
+        "track_5_3",
+        "track_5_4",
+        "track_5_5"
+      ],
+      "loop": true,
+      "fps": 12.5
+    }
+  },
+  "actual_frames": [
+    {
+      "label": "actual E idle0",
+      "subresource": "track_3_0",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r049/E-idle.png",
+      "atlas_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+      "region": [
+        46,
+        4,
+        427,
+        495
+      ],
+      "margin": [
+        302,
+        149,
+        597,
+        529
+      ],
+      "effective_C": [
+        1024,
+        1024
+      ],
+      "RGBA_sha256": "54deab291e7e39110b6dbc084e84eb98472d55acdd394f3258f4d5d058bef264",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.2020408163262,
+      "world_scale_y": 0.224489795918,
+      "exact_prior_idle_RGBA_match": true
+    },
+    {
+      "label": "actual E walk0",
+      "subresource": "track_5_0",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "atlas_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "region": [
+        141,
+        141,
+        1254,
+        1254
+      ],
+      "margin": [
+        481,
+        202,
+        1002,
+        1002
+      ],
+      "effective_C": [
+        2256,
+        2256
+      ],
+      "RGBA_sha256": "4a9338dadfb58b859db43d6bfc9a4d979b0c9626899a080b823b04863f7985e6",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.09170646982182128,
+      "world_scale_y": 0.10189607757980142,
+      "exact_fixedC_candidate_region_margin_RGBA_anchor_match": true,
+      "atlas_source_anchor": [
+        788.0,
+        1349.0
+      ]
+    },
+    {
+      "label": "actual E walk1",
+      "subresource": "track_5_1",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "atlas_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "region": [
+        1677,
+        141,
+        1254,
+        1254
+      ],
+      "margin": [
+        550,
+        289,
+        1154,
+        1154
+      ],
+      "effective_C": [
+        2408,
+        2408
+      ],
+      "RGBA_sha256": "d245421d05a4cd0844e9bbf43485488829d592d6094437ea9ada4f481dad61a9",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.08591768933472957,
+      "world_scale_y": 0.09546409926081063,
+      "exact_fixedC_candidate_region_margin_RGBA_anchor_match": true,
+      "atlas_source_anchor": [
+        2331.0,
+        1357.0
+      ]
+    },
+    {
+      "label": "actual E walk2",
+      "subresource": "track_5_2",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "atlas_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "region": [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      "margin": [
+        472,
+        312,
+        1098,
+        1098
+      ],
+      "effective_C": [
+        2352,
+        2352
+      ],
+      "RGBA_sha256": "fd45d7567b519b574ecfa27c2405e657910fbc2f5968855958512561d82da162",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.08796334860460409,
+      "world_scale_y": 0.09773705400511565,
+      "exact_fixedC_candidate_region_margin_RGBA_anchor_match": true,
+      "atlas_source_anchor": [
+        845.0,
+        2835.0
+      ]
+    },
+    {
+      "label": "actual E walk3",
+      "subresource": "track_5_3",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "atlas_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "region": [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      "margin": [
+        512,
+        270,
+        1098,
+        1098
+      ],
+      "effective_C": [
+        2352,
+        2352
+      ],
+      "RGBA_sha256": "3165754b3e0a5ffa60f8f7497b209daf13372015ad23a60f18f9dcfc5650f984",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.08796334860460409,
+      "world_scale_y": 0.09773705400511565,
+      "exact_fixedC_candidate_region_margin_RGBA_anchor_match": true,
+      "atlas_source_anchor": [
+        2341.0,
+        2877.0
+      ]
+    },
+    {
+      "label": "actual E walk4",
+      "subresource": "track_5_4",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "atlas_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "region": [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      "margin": [
+        590,
+        257,
+        1154,
+        1154
+      ],
+      "effective_C": [
+        2408,
+        2408
+      ],
+      "RGBA_sha256": "fa28a7573ba212116b7b84b6d4a7acdb48402b87a7d884e451ab32873891f44a",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.08591768933472957,
+      "world_scale_y": 0.09546409926081063,
+      "exact_fixedC_candidate_region_margin_RGBA_anchor_match": true,
+      "atlas_source_anchor": [
+        755.0,
+        4461.0
+      ]
+    },
+    {
+      "label": "actual E walk5",
+      "subresource": "track_5_5",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "atlas_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "region": [
+        1677,
+        3213,
+        1254,
+        1254
+      ],
+      "margin": [
+        468,
+        226,
+        1050,
+        1050
+      ],
+      "effective_C": [
+        2304,
+        2304
+      ],
+      "RGBA_sha256": "f9954806237763116bc027e75b29fe464a36fe21f97aadbf401f1df39eed0ce1",
+      "canonical_root": [
+        512,
+        640
+      ],
+      "world_scale_x": 0.0897959183672,
+      "world_scale_y": 0.09977324263022222,
+      "exact_fixedC_candidate_region_margin_RGBA_anchor_match": true,
+      "atlas_source_anchor": [
+        2361.0,
+        4427.0
+      ]
+    }
+  ],
+  "candidate_pin": {
+    "path": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/physical-candidate-v01.geometry.json",
+    "sha256": "7fce3cc5e6294d2585805201b5d10ca3b8103fa611b31fb39ef587918d7e851f"
+  },
+  "prior_physical_proof_pin": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-six-fixed-C-physical-gait-independent-candidate-review.json",
+    "sha256": "fb881a0b75cbc2e5860a8e3fba40110f544ee5d23604d36520a8aea2f13276ca"
+  },
+  "preview_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-Ewalk-r094-actual-compiled-world3x-idle-six-loop.jpg",
+  "preview_sha256": "5c28c6db148296b50b483f8335483c196dac819dc448b16d2fb84e26827b6c9c",
+  "preview_bytes": 149010,
+  "note": "PIL reconstruction of ACTUAL compiled AtlasTexture regions/margins and ACTUAL runtime scale/offset logic; not a Godot-render screenshot. All six exactRGBA/C/root transfer checks pass."
+}
