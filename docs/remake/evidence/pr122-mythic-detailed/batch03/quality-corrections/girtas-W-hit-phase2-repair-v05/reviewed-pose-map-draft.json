@@ -1,0 +1,537 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "status": "DRAFT_SOURCE_REVIEWED_RUNTIME_HOLD_NOT_ASSEMBLED",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "hit",
+  "version": "v05mix01-draft",
+  "poses": [
+    {
+      "path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "region": [
+        21,
+        65,
+        459,
+        436
+      ],
+      "rgba_sha256": "e6649fa758654395ed557c77eab30585181af70be876ad08c7a4e6f07f6e7eee",
+      "source_pose": 0,
+      "animation_phase": 0,
+      "newly_authored": false,
+      "review_basis": "Original Wv03 privately reviewed good phase retained unchanged; only oldphase2 was anatomically invalid and is excluded",
+      "saved_geometry_region": [
+        21,
+        65,
+        459,
+        436
+      ],
+      "saved_geometry_rgba_sha256": "e6649fa758654395ed557c77eab30585181af70be876ad08c7a4e6f07f6e7eee",
+      "reviewed_region_validation": "PASS",
+      "selected_foreground_alpha_gt16_pixels": 63352,
+      "ref_canvas_proposal": 1024,
+      "ref_canvas_is_NOT_runtime_default": true,
+      "support_hip_proposal": {
+        "phase": 0,
+        "status": "DRAFT_NOT_APPROVED",
+        "source_path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+        "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+        "source_region": [
+          21,
+          65,
+          459,
+          436
+        ],
+        "ref_canvas_candidate": 1024,
+        "candidate_is_NOT_runtime_default": true,
+        "far_anatomical_RIGHT_front_sole": {
+          "source_xy": [
+            239,
+            480
+          ],
+          "boot_ROI": [
+            181,
+            448,
+            101,
+            53
+          ],
+          "solid_alpha": 248,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "near_anatomical_LEFT_rear_sole": {
+          "source_xy": [
+            312,
+            496
+          ],
+          "boot_ROI": [
+            282,
+            448,
+            106,
+            53
+          ],
+          "solid_alpha": 243,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "strong_support": "near_LEFT_rear",
+        "strong_support_source_xy": [
+          312,
+          496
+        ],
+        "hip_source_xy_proposal": [
+          283,
+          270
+        ],
+        "hip_landmark": "Visually proposed gold pelvic-girdle/pelvis center; provisional, not full blade/spine bbox center",
+        "hip_point_alpha": 253,
+        "normalized_hip_minus_support": [
+          -29.0,
+          -226.0
+        ],
+        "support_basis": "Phase3 counterbalance uses front planted foot; other guard/backward recoil uses rear planted support. Final weighting requires actual runtime review.",
+        "actual_foot_anchor_review": "REQUIRED; no default chosen"
+      }
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "region": [
+        526,
+        84,
+        478,
+        412
+      ],
+      "rgba_sha256": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+      "source_pose": 1,
+      "animation_phase": 1,
+      "newly_authored": false,
+      "review_basis": "Original Wv03 privately reviewed good phase retained unchanged; only oldphase2 was anatomically invalid and is excluded",
+      "saved_geometry_region": [
+        526,
+        84,
+        478,
+        412
+      ],
+      "saved_geometry_rgba_sha256": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+      "reviewed_region_validation": "PASS",
+      "selected_foreground_alpha_gt16_pixels": 65982,
+      "ref_canvas_proposal": 1024,
+      "ref_canvas_is_NOT_runtime_default": true,
+      "support_hip_proposal": {
+        "phase": 1,
+        "status": "DRAFT_NOT_APPROVED",
+        "source_path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+        "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+        "source_region": [
+          526,
+          84,
+          478,
+          412
+        ],
+        "ref_canvas_candidate": 1024,
+        "candidate_is_NOT_runtime_default": true,
+        "far_anatomical_RIGHT_front_sole": {
+          "source_xy": [
+            706,
+            477
+          ],
+          "boot_ROI": [
+            693,
+            446,
+            105,
+            50
+          ],
+          "solid_alpha": 252,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "near_anatomical_LEFT_rear_sole": {
+          "source_xy": [
+            825,
+            491
+          ],
+          "boot_ROI": [
+            798,
+            446,
+            110,
+            50
+          ],
+          "solid_alpha": 252,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "strong_support": "near_LEFT_rear",
+        "strong_support_source_xy": [
+          825,
+          491
+        ],
+        "hip_source_xy_proposal": [
+          798,
+          278
+        ],
+        "hip_landmark": "Visually proposed gold pelvic-girdle/pelvis center; provisional, not full blade/spine bbox center",
+        "hip_point_alpha": 253,
+        "normalized_hip_minus_support": [
+          -27.0,
+          -213.0
+        ],
+        "support_basis": "Phase3 counterbalance uses front planted foot; other guard/backward recoil uses rear planted support. Final weighting requires actual runtime review.",
+        "actual_foot_anchor_review": "REQUIRED; no default chosen"
+      }
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/girtas-W-hit-phase2-v05.png",
+      "source_sha256": "5e2b911b760b9cde3c4002a5a0a4ae0d7bb4bb2c86c3b1de7cec7efb731773a2",
+      "region": [
+        40,
+        184,
+        1200,
+        961
+      ],
+      "rgba_sha256": "c72e992ff34f1e5685dc9486ca0f407c35e9b66b3cccec7bd9872c353035236f",
+      "source_pose": 0,
+      "animation_phase": 2,
+      "newly_authored": true,
+      "review_basis": "Source artist and independent anatomist PASS nearLEFT and farRIGHT arm chains; complete original maximum W recoil; runtime layout stillHOLD",
+      "saved_geometry_region": [
+        40,
+        184,
+        1200,
+        961
+      ],
+      "saved_geometry_rgba_sha256": "c72e992ff34f1e5685dc9486ca0f407c35e9b66b3cccec7bd9872c353035236f",
+      "reviewed_region_validation": "PASS",
+      "selected_foreground_alpha_gt16_pixels": 391983,
+      "ref_canvas_proposal": 2720,
+      "ref_canvas_is_NOT_runtime_default": true,
+      "support_hip_proposal": {
+        "phase": 2,
+        "status": "DRAFT_NOT_APPROVED",
+        "source_path": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/girtas-W-hit-phase2-v05.png",
+        "source_sha256": "5e2b911b760b9cde3c4002a5a0a4ae0d7bb4bb2c86c3b1de7cec7efb731773a2",
+        "source_region": [
+          40,
+          184,
+          1200,
+          961
+        ],
+        "ref_canvas_candidate": 2720,
+        "candidate_is_NOT_runtime_default": true,
+        "far_anatomical_RIGHT_front_sole": {
+          "source_xy": [
+            547,
+            1100
+          ],
+          "boot_ROI": [
+            460,
+            1029,
+            263,
+            116
+          ],
+          "solid_alpha": 248,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "near_anatomical_LEFT_rear_sole": {
+          "source_xy": [
+            822,
+            1140
+          ],
+          "boot_ROI": [
+            723,
+            1029,
+            277,
+            116
+          ],
+          "solid_alpha": 252,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "strong_support": "near_LEFT_rear",
+        "strong_support_source_xy": [
+          822,
+          1140
+        ],
+        "hip_source_xy_proposal": [
+          724,
+          636
+        ],
+        "hip_landmark": "Visually proposed gold pelvic-girdle/pelvis center; provisional, not full blade/spine bbox center",
+        "hip_point_alpha": 253,
+        "normalized_hip_minus_support": [
+          -36.894,
+          -189.741
+        ],
+        "support_basis": "Phase3 counterbalance uses front planted foot; other guard/backward recoil uses rear planted support. Final weighting requires actual runtime review.",
+        "actual_foot_anchor_review": "REQUIRED; no default chosen"
+      }
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "region": [
+        532,
+        564,
+        461,
+        404
+      ],
+      "rgba_sha256": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+      "source_pose": 3,
+      "animation_phase": 3,
+      "newly_authored": false,
+      "review_basis": "Original Wv03 privately reviewed good phase retained unchanged; only oldphase2 was anatomically invalid and is excluded",
+      "saved_geometry_region": [
+        532,
+        564,
+        461,
+        404
+      ],
+      "saved_geometry_rgba_sha256": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+      "reviewed_region_validation": "PASS",
+      "selected_foreground_alpha_gt16_pixels": 65362,
+      "ref_canvas_proposal": 1024,
+      "ref_canvas_is_NOT_runtime_default": true,
+      "support_hip_proposal": {
+        "phase": 3,
+        "status": "DRAFT_NOT_APPROVED",
+        "source_path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+        "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+        "source_region": [
+          532,
+          564,
+          461,
+          404
+        ],
+        "ref_canvas_candidate": 1024,
+        "candidate_is_NOT_runtime_default": true,
+        "far_anatomical_RIGHT_front_sole": {
+          "source_xy": [
+            739,
+            945
+          ],
+          "boot_ROI": [
+            693,
+            919,
+            101,
+            49
+          ],
+          "solid_alpha": 249,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "near_anatomical_LEFT_rear_sole": {
+          "source_xy": [
+            891,
+            963
+          ],
+          "boot_ROI": [
+            794,
+            919,
+            152,
+            49
+          ],
+          "solid_alpha": 235,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "strong_support": "far_RIGHT_front",
+        "strong_support_source_xy": [
+          739,
+          945
+        ],
+        "hip_source_xy_proposal": [
+          795,
+          754
+        ],
+        "hip_landmark": "Visually proposed gold pelvic-girdle/pelvis center; provisional, not full blade/spine bbox center",
+        "hip_point_alpha": 253,
+        "normalized_hip_minus_support": [
+          56.0,
+          -191.0
+        ],
+        "support_basis": "Phase3 counterbalance uses front planted foot; other guard/backward recoil uses rear planted support. Final weighting requires actual runtime review.",
+        "actual_foot_anchor_review": "REQUIRED; no default chosen"
+      }
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "region": [
+        19,
+        1039,
+        474,
+        439
+      ],
+      "rgba_sha256": "362b16ba12795e5b55474852229dbabaa7e06b3b1bcb50588d787563557d212d",
+      "source_pose": 4,
+      "animation_phase": 4,
+      "newly_authored": false,
+      "review_basis": "Original Wv03 privately reviewed good phase retained unchanged; only oldphase2 was anatomically invalid and is excluded",
+      "saved_geometry_region": [
+        19,
+        1039,
+        474,
+        439
+      ],
+      "saved_geometry_rgba_sha256": "362b16ba12795e5b55474852229dbabaa7e06b3b1bcb50588d787563557d212d",
+      "reviewed_region_validation": "PASS",
+      "selected_foreground_alpha_gt16_pixels": 65237,
+      "ref_canvas_proposal": 1024,
+      "ref_canvas_is_NOT_runtime_default": true,
+      "support_hip_proposal": {
+        "phase": 4,
+        "status": "DRAFT_NOT_APPROVED",
+        "source_path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+        "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+        "source_region": [
+          19,
+          1039,
+          474,
+          439
+        ],
+        "ref_canvas_candidate": 1024,
+        "candidate_is_NOT_runtime_default": true,
+        "far_anatomical_RIGHT_front_sole": {
+          "source_xy": [
+            246,
+            1456
+          ],
+          "boot_ROI": [
+            184,
+            1425,
+            105,
+            53
+          ],
+          "solid_alpha": 249,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "near_anatomical_LEFT_rear_sole": {
+          "source_xy": [
+            347,
+            1473
+          ],
+          "boot_ROI": [
+            289,
+            1425,
+            109,
+            53
+          ],
+          "solid_alpha": 250,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "strong_support": "near_LEFT_rear",
+        "strong_support_source_xy": [
+          347,
+          1473
+        ],
+        "hip_source_xy_proposal": [
+          289,
+          1245
+        ],
+        "hip_landmark": "Visually proposed gold pelvic-girdle/pelvis center; provisional, not full blade/spine bbox center",
+        "hip_point_alpha": 253,
+        "normalized_hip_minus_support": [
+          -58.0,
+          -228.0
+        ],
+        "support_basis": "Phase3 counterbalance uses front planted foot; other guard/backward recoil uses rear planted support. Final weighting requires actual runtime review.",
+        "actual_foot_anchor_review": "REQUIRED; no default chosen"
+      }
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "region": [
+        524,
+        1041,
+        471,
+        444
+      ],
+      "rgba_sha256": "cff611872a2b9f38bced0a540e7e3ffddbe80650b45bea84a762abd0536a78d9",
+      "source_pose": 5,
+      "animation_phase": 5,
+      "newly_authored": false,
+      "review_basis": "Original Wv03 privately reviewed good phase retained unchanged; only oldphase2 was anatomically invalid and is excluded",
+      "saved_geometry_region": [
+        524,
+        1041,
+        471,
+        444
+      ],
+      "saved_geometry_rgba_sha256": "cff611872a2b9f38bced0a540e7e3ffddbe80650b45bea84a762abd0536a78d9",
+      "reviewed_region_validation": "PASS",
+      "selected_foreground_alpha_gt16_pixels": 65960,
+      "ref_canvas_proposal": 1024,
+      "ref_canvas_is_NOT_runtime_default": true,
+      "support_hip_proposal": {
+        "phase": 5,
+        "status": "DRAFT_NOT_APPROVED",
+        "source_path": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+        "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+        "source_region": [
+          524,
+          1041,
+          471,
+          444
+        ],
+        "ref_canvas_candidate": 1024,
+        "candidate_is_NOT_runtime_default": true,
+        "far_anatomical_RIGHT_front_sole": {
+          "source_xy": [
+            749,
+            1461
+          ],
+          "boot_ROI": [
+            688,
+            1431,
+            104,
+            54
+          ],
+          "solid_alpha": 248,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "near_anatomical_LEFT_rear_sole": {
+          "source_xy": [
+            826,
+            1480
+          ],
+          "boot_ROI": [
+            792,
+            1431,
+            108,
+            54
+          ],
+          "solid_alpha": 246,
+          "basis": "Manually reviewed FRONT/REAR boot ROI; lower sole alpha>100 row1px above actual visible boot bottom"
+        },
+        "strong_support": "near_LEFT_rear",
+        "strong_support_source_xy": [
+          826,
+          1480
+        ],
+        "hip_source_xy_proposal": [
+          792,
+          1250
+        ],
+        "hip_landmark": "Visually proposed gold pelvic-girdle/pelvis center; provisional, not full blade/spine bbox center",
+        "hip_point_alpha": 253,
+        "normalized_hip_minus_support": [
+          -34.0,
+          -230.0
+        ],
+        "support_basis": "Phase3 counterbalance uses front planted foot; other guard/backward recoil uses rear planted support. Final weighting requires actual runtime review.",
+        "actual_foot_anchor_review": "REQUIRED; no default chosen"
+      }
+    }
+  ],
+  "newly_authored_poses": 1,
+  "reused_poses": 5,
+  "source_visual_status": "PASS",
+  "independent_arm_review": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/independent-arm-review.json",
+  "independent_arm_review_sha256": "9a43c63bd167b17e72254a56b6abe7032bc342f7d3d0491a7ff4348c15a0faa8",
+  "new_source_sha256": "5e2b911b760b9cde3c4002a5a0a4ae0d7bb4bb2c86c3b1de7cec7efb731773a2",
+  "original_five_source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+  "source_region_RGBA_ownership": "PASS6; read-only validator, all owned alpha>16 complete and no foreign body/bridge",
+  "new_pose_ref_canvas_candidate": 2720,
+  "ref_canvas_candidates_are_NOT_defaults": true,
+  "runtime_layout_status": "HOLD_PENDING_SUPPORT_HIP_ANCHORS_AND_ACTUAL_PLAYER_QC",
+  "layout_proposal": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/runtime-support-hip-proposal-draft.json",
+  "assembly_run": false,
+  "source_PNG_mutations": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T11:44:09.730264+00:00"
+}

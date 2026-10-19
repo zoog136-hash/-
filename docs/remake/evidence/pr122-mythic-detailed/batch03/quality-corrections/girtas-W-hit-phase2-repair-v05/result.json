@@ -1,0 +1,141 @@
+{
+  "status": "GENERATED_SINGLE_POSE_SOURCE_PASS_RUNTIME_LAYOUT_HOLD",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v05",
+  "source_kind": "standalone_corrected_pose",
+  "source_phase": 2,
+  "output_pose_count": 1,
+  "newly_authored_pose_count": 1,
+  "reused_existing_pose_count": 5,
+  "reused_phases": [
+    0,
+    1,
+    3,
+    4,
+    5
+  ],
+  "reused_source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+  "reused_source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+  "reused_phase_rgba_sha256": {
+    "0": "e6649fa758654395ed557c77eab30585181af70be876ad08c7a4e6f07f6e7eee",
+    "1": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+    "3": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+    "4": "362b16ba12795e5b55474852229dbabaa7e06b3b1bcb50588d787563557d212d",
+    "5": "cff611872a2b9f38bced0a540e7e3ffddbe80650b45bea84a762abd0536a78d9"
+  },
+  "request_path": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/request.json",
+  "request_sha256": "964bd12fff0eb0bda868b6b1a815c243fcc0f7e6039020a01c0cfb3f483677be",
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase1-lossless.png": "a8126b42ae5cab4352368438badd89dc02e9795e2676525449f4389506f8ee21",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase3-lossless.png": "6f270261e3ef9ad7778fe0fbe5ffd997136c6bfe6942c8587d387cbbe85ff565",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b"
+  },
+  "neighbor_lossless_crop_proofs": [
+    {
+      "source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "source_phase": 1,
+      "source_region": [
+        526,
+        84,
+        478,
+        412
+      ],
+      "geometry_sha256": "94f02ecdb76c645113ed31424958f45bbb8079652e5400e983571ad593667a8c",
+      "crop": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase1-lossless.png",
+      "crop_sha256": "a8126b42ae5cab4352368438badd89dc02e9795e2676525449f4389506f8ee21",
+      "crop_rgba_sha256": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+      "source_geometry_rgba_sha256": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+      "operations": "Exact RGBA region crop only; no scaling/alpha edit/mirror/redraw"
+    },
+    {
+      "source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "source_phase": 3,
+      "source_region": [
+        532,
+        564,
+        461,
+        404
+      ],
+      "geometry_sha256": "94f02ecdb76c645113ed31424958f45bbb8079652e5400e983571ad593667a8c",
+      "crop": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase3-lossless.png",
+      "crop_sha256": "6f270261e3ef9ad7778fe0fbe5ffd997136c6bfe6942c8587d387cbbe85ff565",
+      "crop_rgba_sha256": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+      "source_geometry_rgba_sha256": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+      "operations": "Exact RGBA region crop only; no scaling/alpha edit/mirror/redraw"
+    }
+  ],
+  "original_generated_file": "/workspace/generated_images/exec-603d09e6-1ea1-41fd-8d7b-ce4378b40c8c.png",
+  "raw_png": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/girtas-W-hit-phase2-v05.png",
+  "raw_sha256": "5e2b911b760b9cde3c4002a5a0a4ae0d7bb4bb2c86c3b1de7cec7efb731773a2",
+  "raw_bytes": 1062463,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "imagegen_attempts": 1,
+  "source_visual_status": "PASS",
+  "source_art_status": "PASS_WITH_RUNTIME_LAYOUT_HOLD",
+  "runtime_layout_status": "HOLD_PENDING_PINNED_PERPOSE_CANVAS_FOOT_HIP_AND_ACTUAL_PLAYER_REVIEW",
+  "strict_geometry_status": "SOURCE_EXTRACTION_PASS_ONE_COMPLETE_POSE",
+  "source_geometry": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/source-extraction.geometry.json",
+  "source_geometry_sha256": "a5d0fbc56bb10c50bf081a6c5ecc9555ce50af3f9c370fe738a0a6b9b9ed9968",
+  "source_extraction_envelope": 2048,
+  "envelope_is_NOT_runtime_default": true,
+  "source_layout_proposal": {
+    "suggested_ref_canvas": 2720,
+    "multiple_of8": true,
+    "suggestion_is_NOT_default_or_approved": true,
+    "QC_display_scale": 0.377,
+    "exact_candidate_display_scale": 0.3764705882352941,
+    "approx_comparison_scale_error_percent": 0.14062500000000533,
+    "QC_display_translation": [
+      290,
+      209
+    ],
+    "actual_runtime_anchors": "REQUIRE_REVIEWED_STRONG_SUPPORT_AND_HIP_PROOF",
+    "evidence": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/physical-normalization-comparison.jpg"
+  },
+  "private_preview": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/private-edit-preview.jpg",
+  "private_preview_bytes": 178266,
+  "private_comparison": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/physical-normalization-comparison.jpg",
+  "private_comparison_bytes": 223680,
+  "independent_review": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/independent-arm-review.json",
+  "independent_review_sha256": "9a43c63bd167b17e72254a56b6abe7032bc342f7d3d0491a7ff4348c15a0faa8",
+  "visual_findings": [
+    "Complete near anatomical LEFT shoulder/arm route has been rebuilt, not merely a fist removed. Shoulder pauldron rotates into a visible upper arm descending forward-left to an elbow, then forearm runs across the foreground breastplate to wrist and raised OPEN empty hand. No hanging upper-arm stump or wrong opposite-chest emergence remains.",
+    "Original far anatomical RIGHT weapon-bearing arm is separate, its wrist/hand still grips the same full long sinuous blade low image-left. Exactly two connected arm chains and two hands are visible.",
+    "Actual maximum head/torso backward recoil, bent supporting knees and hips, LEFT facial/body yaw and same isometric camera remain. Long pale hair, pale face, original gold head structure, narrow hard-gold back spines, long dark gold-trimmed skirt and boots preserve the faithful model.",
+    "Uniform DISPLAY-only0.377 comparison places the new higher-resolution pose alongside source phase2 and retained neighbors1/3. Head/torso/hip/boots ratios and full weapon/spine proportions are consistent; source resolution itself is not a defect. A rounded2720 virtual-canvas candidate is only a proposal requiring actual runtime proof.",
+    "Fresh independent reviewer confirms the new continuous LEFT chain, separate RIGHT weapon chain, no remnant/extra arm, and consistent normalized model/camera at moderately high confidence. Source extraction under unchanged gate finds one complete distinct pose."
+  ],
+  "visual_limitations": [
+    "This is source-art PASS only, not a completed six-frame clip or actor approval. No assembly, runtime layout, timing or actual Player test ran here.",
+    "Five old good poses remain byte-identical in the preserved Wv03 source; only phase2 is newly authored. Any assembler must pin all five original region/RGBA proofs and the exact new source pixels.",
+    "Candidate2720 and QC registration are not runtime defaults. Support-foot, hip anchors and actual game-view scale/loop must be reviewed before approval.",
+    "No source resampling, mirroring, recoloring, manual drawing, pose splicing or original overwriting occurred. All prior v03/v04 source/QC SHA pins remain intact."
+  ],
+  "prior_source_protection": {
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/request.json": "bc4062321c5b0562b1857445c7c47969e751c447c844d318e31624c785003e7d",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/result.json": "e733cf7de12853198874ccfe69545dacb3537c15d06e56323e5c48349a92cafe",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/reassessment.json": "80c1f9b336f5a72af3b6993a492d74e86418b877992668e252897d339a3c2733",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/reassessment-independent-anatomy.json": "e69125d8685b78af166ab9c08af548e2df85d6c86156f187e92dbe50294c6afd",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d"
+  },
+  "prior_sources_and_QC_unchanged": true,
+  "integration": "NOT_ASSEMBLED",
+  "repository_mutated": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "created_at": "2026-10-19T11:30:49.319708+00:00",
+  "reviewed_at": "2026-10-19T11:40:19.939157+00:00",
+  "production_receipt": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/receipt.json",
+  "production_receipt_sha256": "9a387301c62d3c7a0c9416a510574a4bb85d76ac5eddf9389165ac51e0b589d9"
+}
