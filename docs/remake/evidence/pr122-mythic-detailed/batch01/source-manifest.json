@@ -3131,6 +3131,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "S",
+      "role": "walk",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-S-walk-repair/girtas-S-walk-v02.png",
+      "bytes": 2398400,
+      "sha256": "01f7f906efd051ab4255a68df9873301dc0846a7ccb70dfd7d48c7fb8bde4d47",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3158,7 +3177,7 @@
     "transform:393:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-run-v01.png",
     "transform:393:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
     "transform:393:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
-    "transform:267:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v01.png",
+    "transform:267:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
     "transform:267:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v01.png",
     "transform:267:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-walk-v01.png",
     "transform:267:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-run-v01.png",
@@ -3735,6 +3754,22 @@
             "Unchanged strict analyzer plus complete-pose-region gate pass six complete distinct poses. Generated pixels remain untouched; no cropping, resampling, manual body edits, broad glow masking or validator relaxation."
           ],
           "source_review_sha256": "3f27dca9786e4e4d6c0f18d806730199b325d625ae2f2b2ef0a164e83eccdee4"
+        },
+        {
+          "slot": "transform:267:S:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Original-faithful pale face/hair, narrow gold radial spines, dark long gold-trim skirt and long thin sinuous weapon persist; same anatomical right weapon hand/image-left.",
+            "All six remain front/SOUTH, without heading flips or whole-model mirroring.",
+            "Genuine alternating gait:0-2 right support with left swing/knee flex;3-5 left support with right swing/knee flex. Both boots and altered lower-leg articulation are visible.",
+            "Whole pelvis/knee/boot inspection confirms plausible opposite contact exchanges2->3 and5->0. The initial phase-label-only HOLD has been preserved and explicitly superseded by motion-reassessment.json.",
+            "Six complete disjoint silhouettes, no opaque source outer-edge clipping."
+          ],
+          "source_review_sha256": "7141ee4b5b4c66a12d5476350ed8c05f0111df9d751170eaa4f3c724dfac9fd8"
         }
       ]
     }
