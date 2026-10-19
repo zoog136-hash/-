@@ -3207,6 +3207,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NE",
+      "role": "hit",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-NE-hit-repair/girtas-NE-hit-v02.png",
+      "bytes": 2339371,
+      "sha256": "74da8eb7fb0b690a11db4c769748635d1f77c4d613b16ef4ad446c9fc753d22a",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3308,7 +3327,7 @@
     "transform:267:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v01.png",
     "transform:267:NW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v01.png",
     "transform:267:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
-    "transform:267:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v01.png",
+    "transform:267:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
     "transform:267:E:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
     "transform:267:SE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v01iso01.png",
     "transform:267:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
@@ -3877,6 +3896,22 @@
             "Original pale hair, narrow hard gold rays and long dark gold-trim skirt retained; no red mask, feather fan, broad short sword or leg-armor replacement."
           ],
           "source_review_sha256": "5d355c79e2a3a8ca2608424f49e1d5dfbf815a0bd83cfefcc8a6372c880a10fa"
+        },
+        {
+          "slot": "transform:267:NE:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Absolute compass: all six are rear-right NORTH-EAST views, with back helmet, long pale back-hair and back armor visible, plus right-side depth and oblique boots distinguishing the new direction from the straight-N rear guide. No front face/breastplate or front-right EAST substitution occurs.",
+            "Phase0 braces; phases1-2 show actual shoulder/head/hip recoil, raised free-arm counterbalance and hair/skirt lag; phase3 makes a clear original-foot counterstep with flexed knees; phases4-5 settle back to the same rear-right guard. Joint changes are genuine, not global translations or color/opacity variations.",
+            "The same anatomical right weapon arm is the near/right arm, with the single long sinuous original blade at image right throughout. The other hand remains free even during cross-body counterbalance. No attack slash, mirror or hand swap.",
+            "Faithful pale back-hair, narrow hard-gold radial spines, exact gold head structure, dark gold-trimmed long skirt/armor and original weapon/boots are maintained. Full body and gear are present.",
+            "Unchanged strict analyze plus complete-pose-region gate pass six complete distinct poses; generated pixels remain untouched."
+          ],
+          "source_review_sha256": "3576cdddf2e0c5bd84be370fc7ba2985275bb6250c0c9f6e5af7697e26a93e48"
         }
       ]
     }
