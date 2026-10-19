@@ -2947,6 +2947,25 @@
       "source_visual_status": "HOLD_FRONT_LEFT_INSTEAD_OF_REAR_LEFT",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "NE",
+      "role": "attack",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
+      "original_generated_file": "/workspace/scratch/halpas-NE-attack-repair/generated.png",
+      "bytes": 2198097,
+      "sha256": "020fd6c34f3b9f52d804ad1b7eda2149ec91da97f031388f71bcca0c93681013",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3008,7 +3027,7 @@
     "transform:393:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
     "transform:393:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-attack-v01iso01.png",
     "transform:393:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
-    "transform:393:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
+    "transform:393:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
     "transform:393:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
     "transform:393:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
     "transform:393:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-hit-v01.png",
@@ -3127,6 +3146,23 @@
             "Six complete figures, distinct guard/anticipation/load/contact/follow-through/recovery, same established gold-black armor, burgundy cape, crystalline wing structure and equipment at game-view scale."
           ],
           "actor_approval_added": 0
+        },
+        {
+          "slot": "transform:393:NE:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Absolute compass review: all six poses aim NORTH-EAST/screen upper-right AWAY from the camera. Back of helmet and back segmented torso armor remain visible; these are rear-right views, distinct from southeast front-right views with a visible front face/breastplate.",
+            "Phase0 holds a rear-right guard; phase1 bends the actual weapon arm overhead while the back remains visible; phase2 loads without turning face or chest toward the viewer.",
+            "Phase3 extends the same weapon and anatomical striking arm diagonally upper-right toward a target farther away. The helmet and torso retain their rear-right heading rather than facing screen lower-right.",
+            "Phase4 follows through along that upper-right-away strike line while showing back armor; phase5 returns to the same rear-right guard. Six visibly different articulated guard/anticipation/load/contact/follow-through/recovery poses.",
+            "The established gold/black armor, burgundy/black cape, gold horned helmet, purple crystalline wings and single purple-bladed weapon are preserved from the original portrait and correct native NE walk/idle references.",
+            "At shared source-pixel resolution, translated only onto a common foot baseline, new neutral attack body scale is close to NE walk. No image scaling or bbox-height normalization was performed."
+          ],
+          "source_review_sha256": "ff13239209d03922311cd2f86ad892a57008c8d3f494ba18749a5cda9039fe72"
         }
       ]
     },
