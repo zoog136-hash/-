@@ -20,6 +20,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
 		"layout_revision":int(plan.revision),"bounds":manifest.bounds,"native_png":true,
 		"navigation":{"cell_size":16,"clearance":4,"use_baked_cache":false},
+		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
 		"spawn_position":spawn,"navigable_polygons":spec.walk_polygons,
 		"collision":spec.get("collision",[]),"monster_spawn":NATIVE_SPAWNS.build(mid,spec,portals),"npc_spawn":[],"portal":portals,"teleport":[],
