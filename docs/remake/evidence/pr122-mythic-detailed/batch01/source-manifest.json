@@ -3900,6 +3900,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "E",
+      "role": "attack",
+      "version": "v03iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
+      "original_generated_file": "/workspace/scratch/girtas-E-attack-v03iso01.png",
+      "bytes": 1303695,
+      "sha256": "af87d66cc918a9ff9c5c71014a16b0cb9333627e3a69b1fac7882bc013bef2a4",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3986,7 +4005,7 @@
     "transform:393:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
     "transform:393:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
     "transform:393:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
-    "transform:267:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
+    "transform:267:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
     "transform:267:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
     "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
     "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
@@ -4900,6 +4919,22 @@
             "Unchanged strict geometry analyzer rows6/phase_grid2/canvas1024/reference_rows0,3 passes6 distinct physical frames."
           ],
           "source_review_sha256": "d84189bbd51c0ea4b4a8c1592d1f8c6a43131aedc03cdd40deba8e93f7f6b0a5"
+        },
+        {
+          "slot": "transform:267:E:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six original E attack phase constructions/order are retained: low guard0, raised same-hand anticipation1, bent-knee load2, E/right extended contact3, down-right follow-through4 and low recovery5. None was replaced by idle or another direction.",
+            "Every pale face/head, torso/pelvis and leg heading remains E/right. Long pale hair, crown, narrow hard gold radial spikes, long dark goldtrim skirt and original armor/boots remain original-faithful.",
+            "Exactly TWO arm/hand chains in each pose; original anatomicalRIGHT retains the single long thin sinuous orange-gold weapon throughout. Contact3 still extends RIGHT with repeated narrow S-curves and taper, not a short broad blade, and the free left arm is distinct.",
+            "Outside diffuse glow/haze is substantially removed. At alpha>16 the edited raw has SIX complete separate connected foreground bodies, compared with the prior blocking bridge. No opaque source outer-edge clipping.",
+            "Raw nominal bounding rectangles still overlap, so raw strict extraction remains HOLD. One unchanged LOSSLESS repack succeeds: six distinct complete frames, all alpha>16 foreground RGBA preserved, no resampling/recoloring/new poses, maximum removed distant background alpha16. Strict original importer and complete-pose ownership check PASS for the derivative."
+          ],
+          "source_review_sha256": "72c9b3e8f5982bfd2c715f322064d9e69a810b9038b7fdd85eea2850de75be82"
         }
       ]
     }
