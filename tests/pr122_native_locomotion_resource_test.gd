@@ -49,7 +49,7 @@ func _run() -> void:
 					assert(proof.source_pixels_unchanged and not proof.resampled and not proof.approval_granted)
 					assert(proof.source_sha256 == track.source_sha256)
 					if proof.has("pose_canvas_sizes"):
-						assert(proof.pose_canvas_sizes[phase] == canvas)
+						assert(proof.pose_canvas_sizes[phase] == canvas[0] and canvas[0] == canvas[1])
 					else:
 						assert(proof.canvas_size == canvas)
 					if proof.has("playback_order"):
