@@ -5307,6 +5307,40 @@
         5
       ],
       "review_basis": "Private joint/support review:0Rlanding 3Rcompression 2LEFTpassing 1Llanding 4Ldrive 5RIGHTpassing forms one full six-frame cycle, all source poses used once, no pixels/mirrors/invented poses; raw row order remains HOLD"
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "0676e2d482daaef489610cb96f524810d7952f83ddf3706bd82a0b4ec154c292",
+      "direction": "E",
+      "role": "walk",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          464,
+          530
+        ],
+        [
+          1232,
+          476
+        ],
+        [
+          464,
+          1062
+        ],
+        [
+          1232,
+          1084
+        ],
+        [
+          464,
+          1688
+        ],
+        [
+          1232,
+          1688
+        ]
+      ],
+      "review_basis": "Private actual r052 TRES comparison finds Ewalk canvas1024 renders source body 25 percent larger than reviewed Eidle canvas1280. Direct native-pixel crown-to-upper-pelvis/shoulder-to-pelvis comparison is comparable (idle approximately396px crown-to-toe and112px shoulder-to-pelvis; flying walk approximately388px crown-to-bent-toe and114px shoulder-to-pelvis), so use same1280 virtual canvas, not wing bounding-box sizing. A uniform +80sourceX corrects packed-cell center lying behind hip/body; all six original per-pose Y anchors and relative intra-cycle body/leg/wing changes remain unchanged. Phase0 hip reference moves from approximately[+20.5,-46.2]world to[-3.2,-37.0]world; comparison idle approximately[-2.5,-40.4]world. Residual vertical difference is bent-knee flight, not a planted-foot requirement. Source RGBA/regions remain identical; final newly compiled TRES transition QC required. This is metadata normalization, not actor approval."
     }
   }
 }
