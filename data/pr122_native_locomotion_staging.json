@@ -7723,8 +7723,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r050/SpriteFrames.tres",
-      "frames_sha256": "24c11a88a9e896b666c0d1a885f126294517ea15309d9a9b99080d897673e9e5",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r051/SpriteFrames.tres",
+      "frames_sha256": "667b08670b3e990f7ac3150b07dfb12ae2fa3cb01889bee470fae215e969b2b5",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -8236,13 +8236,13 @@
                   495
                 ],
                 "margin": [
-                  267,
+                  299,
                   149,
                   594,
                   529
                 ],
                 "source_anchor": [
-                  768,
+                  736,
                   495
                 ],
                 "rgba_sha256": "a8dd3fc67e8dc843476965360fbd2f98545a8fcf71a7db6b8f16f2f9d63e69c9"
@@ -8257,13 +8257,13 @@
                   500
                 ],
                 "margin": [
-                  300,
+                  298,
                   144,
                   591,
                   524
                 ],
                 "source_anchor": [
-                  256,
+                  258,
                   1008
                 ],
                 "rgba_sha256": "9ddba39afa17d95510594cdc9f0d6050f973784ff8fc111ddec93c57cd6dbfa9"
@@ -8278,13 +8278,13 @@
                   500
                 ],
                 "margin": [
-                  270,
+                  301,
                   144,
                   595,
                   524
                 ],
                 "source_anchor": [
-                  768,
+                  737,
                   1008
                 ],
                 "rgba_sha256": "14fb722c056db9531cff3f6394f7b42ef90e2f35ed127d7f9afd0515a8254b23"
@@ -8299,13 +8299,13 @@
                   497
                 ],
                 "margin": [
-                  302,
+                  301,
                   147,
                   592,
                   527
                 ],
                 "source_anchor": [
-                  256,
+                  257,
                   1520
                 ],
                 "rgba_sha256": "ba28ddd14e95ea4da54a4757195647647e08897605c011dc62411ca45fc13976"
@@ -8320,13 +8320,13 @@
                   499
                 ],
                 "margin": [
-                  271,
+                  303,
                   145,
                   596,
                   525
                 ],
                 "source_anchor": [
-                  768,
+                  736,
                   1520
                 ],
                 "rgba_sha256": "60d3b4c82557f754a2f6bb86d9046bc9d0f9ee37c9386fe5cb5502dbab9ee68c"
@@ -8342,6 +8342,57 @@
               512,
               640
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+            "base_geometry_sha256": "daab7e54335b2fc0b753f53b5f1274a70aeceaa79db56af3dbb84cfdbe679ebe",
+            "derived_geometry_sha256": "4f1d1401fc9dbc173e665b2f3164afcb83faa20f28809ae35005d91abd2c5b34",
+            "review_sha256": "b8ed4d8c6d3acf8e4b8f8b277806d6634e253d6c89c437f0c30e09a0e9cc1aac",
+            "review_basis": "Private actual-margin source-SHA review: planted rear boot alternates32sourcepx between atlas columns; keep phase0 position and allY, remove only packing drift; hit balance-step and death collapse remain unchanged",
+            "direction": "E",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                256,
+                495
+              ],
+              [
+                736,
+                495
+              ],
+              [
+                258,
+                1008
+              ],
+              [
+                737,
+                1008
+              ],
+              [
+                257,
+                1520
+              ],
+              [
+                736,
+                1520
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -15045,11 +15096,11 @@
       "detailed_completed": false,
       "completed_added": 0,
       "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
-      "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
+      "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r050/NativeMotionProfile.tres",
-      "native_profile_sha256": "644654ed0a657819ea90deb600359129968037807e33f77a0cf19c4232e2abf0",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r051/NativeMotionProfile.tres",
+      "native_profile_sha256": "b6cfeeec8559bbbd0d35831dfca780a7c7fd77d43ccc0ec8c73f10ed44bcdd00",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 385.5,
@@ -15065,13 +15116,12 @@
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
         "actual_Player_scene_form_api": "PASS",
-        "Player_position_collision_class_combat_sequence_preserved": "PASS",
-        "missing_locomotion_not_replaced_or_aliased": "PASS",
-        "actual_Main": "NOT_RUN",
-        "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
-        "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS",
-        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        "visual_approval": "HOLD_REMAINING_IDENTITY_REPLACEMENTS_AND_FINAL_QUALITY",
+        "actual_Main": "NOT_RUN_NEW_REVISION",
+        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW",
+        "completed_added": 0,
+        "reviewed_E_idle_foot_anchor_layout": "PASS_ACTUAL_PLAYER"
       },
       "visual_quality_hold": {
         "key": "transform:267",
@@ -18885,6 +18935,29 @@
         "frames_sha256": "a86cd550b96a1ae471e49c66a9f7e7a22dea6d0d2b1493164472e86d8dac780a",
         "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r049/NativeMotionProfile.tres",
         "native_profile_sha256": "c5b28211717d66203648206f9e2daee9b4a5f2df48acf1399e251a9b25aff015",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r050/SpriteFrames.tres",
+        "frames_sha256": "24c11a88a9e896b666c0d1a885f126294517ea15309d9a9b99080d897673e9e5",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r050/NativeMotionProfile.tres",
+        "native_profile_sha256": "644654ed0a657819ea90deb600359129968037807e33f77a0cf19c4232e2abf0",
         "native_track_count": 48,
         "native_pose_count": 288,
         "verification": {

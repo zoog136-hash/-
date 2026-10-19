@@ -3703,5 +3703,47 @@
         }
       ]
     }
-  ]
+  ],
+  "reviewed_runtime_layouts": {
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+      "direction": "E",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          256,
+          495
+        ],
+        [
+          736,
+          495
+        ],
+        [
+          258,
+          1008
+        ],
+        [
+          737,
+          1008
+        ],
+        [
+          257,
+          1520
+        ],
+        [
+          736,
+          1520
+        ]
+      ],
+      "review_basis": "Private actual-margin source-SHA review: planted rear boot alternates32sourcepx between atlas columns; keep phase0 position and allY, remove only packing drift; hit balance-step and death collapse remain unchanged"
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+      "direction": "E",
+      "canvas_size": 1280,
+      "review_basis": "Private uniform0.80 display comparison aligns E shoulder/hip/boot landmarks with N/S; preserve correct lateral proportions and entire PNG; virtualcanvas1280 normalizes to1024 without resampling. Final scale/loop review pending"
+    }
+  }
 }

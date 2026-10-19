@@ -89,6 +89,8 @@ def main():
     resume = root / 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md'
     next_text = '이동/달리기 원화 큐 종료; 전투 동작 또는 HOLD 보완' if next_target is None else (
         f'{next_target["key"]} {next_target["direction"]} {next_target["role"]}')
+    if any(hold.get('status') == 'HOLD' for hold in manifest.get('visual_quality_holds', [])):
+        next_text = '유일 개체 시각 HOLD 교정 우선; 이후 ' + next_text
     latest = (f'- 최신 제작: {request["key"]} {request["direction"]} {request["role"]} {request["version"]} '
               f'{"신규6자세와 실제 Player 연결 PASS" if passed else "소스 HOLD 보존"}. '
               f'현재{total}클립/{total * 6}자세, 남은 이동{missing}블록/전용 동작{missing_actions}블록. 다음 제작: {next_text}. '
