@@ -1,0 +1,108 @@
+{
+  "key": "transform:267",
+  "name": "지배자 기르타스",
+  "direction": "W",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v04",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "standalone_corrected_pose",
+  "source_phase": 2,
+  "output_pose_count": 1,
+  "newly_authored_pose_count": 1,
+  "reused_existing_pose_count": 5,
+  "reused_source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+  "reused_source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+  "reused_phases": [
+    0,
+    1,
+    3,
+    4,
+    5
+  ],
+  "references": [
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/source-W-hit-v03-phase2-padded1024.png",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/source-W-hit-v03-phase2-padded1024.png": "6a4e2d349e7b3c3c7c8a9d2e80cdbef5a15b70558b8f0188acf466aa9a20055e",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b"
+  },
+  "reference_roles": [
+    "EDIT_TARGET_exact_lossless_padded_bad_phase2",
+    "correct_TWO_arm_W_idle_anatomy_ONLY"
+  ],
+  "source_crop_padding_proof": {
+    "source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+    "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+    "source_bytes": 2213274,
+    "geometry": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.geometry.json",
+    "geometry_sha256": "94f02ecdb76c645113ed31424958f45bbb8079652e5400e983571ad593667a8c",
+    "source_phase": 2,
+    "source_region": [
+      19,
+      599,
+      497,
+      366
+    ],
+    "source_anchor": [
+      256,
+      961
+    ],
+    "source_region_rgba_sha256": "d447846d3407477bdff628a5ef90aaa9a779b5b076107031cc3909fee2b47aa5",
+    "crop": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/source-W-hit-v03-phase2-lossless.png",
+    "crop_sha256": "5deb2ca99017270fb0c1a5dff941b64e2b036d0aeb84fb0c6be2a916637bf0ef",
+    "crop_size": [
+      497,
+      366
+    ],
+    "crop_rgba_sha256": "d447846d3407477bdff628a5ef90aaa9a779b5b076107031cc3909fee2b47aa5",
+    "padded_reference": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/source-W-hit-v03-phase2-padded1024.png",
+    "padded_sha256": "6a4e2d349e7b3c3c7c8a9d2e80cdbef5a15b70558b8f0188acf466aa9a20055e",
+    "padded_size": [
+      1024,
+      1024
+    ],
+    "padded_crop_position": [
+      275,
+      278
+    ],
+    "padded_region": [
+      275,
+      278,
+      497,
+      366
+    ],
+    "padded_rgba_sha256": "be07a8be550e03cd173f9f32d12c24000cd6dcd38c3a047f611a53854113f941",
+    "proof": "Exact source region pixels pasted without alpha compositing onto transparent1024canvas at saved virtual-canvas margins; allRGBA bytes retained; no resize/rotation/mirror/alpha edit/manual redraw",
+    "prior_whole_sheet_protection": {
+      "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "/workspace/scratch/girtas-W-hit-repair-v03/request.json": "9e9ce6ea9c76365c64a7fdb6bd7b5857b531584b047cf94d7ff21102a24f2ba6",
+      "/workspace/scratch/girtas-W-hit-repair-v03/result.json": "3fcef0d264ec72e8f9d2803d936469591b15052990c0ef50f935ffd6fba0788c"
+    }
+  },
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "corrective_reason": "Changed method: edit ONLY extra-limb bad phase2 from preserved Wv03, retain five good poses unchanged; local anatomy correction from exact source at identical native physical scale, not full-sheet regeneration.",
+  "prior_whole_sheet_protection": {
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+    "/workspace/scratch/girtas-W-hit-repair-v03/request.json": "9e9ce6ea9c76365c64a7fdb6bd7b5857b531584b047cf94d7ff21102a24f2ba6",
+    "/workspace/scratch/girtas-W-hit-repair-v03/result.json": "3fcef0d264ec72e8f9d2803d936469591b15052990c0ef50f935ffd6fba0788c"
+  },
+  "expected_canvas": [
+    1024,
+    1024
+  ],
+  "expected_foot": [
+    512,
+    640
+  ],
+  "expected_original_region": [
+    275,
+    278,
+    497,
+    366
+  ],
+  "prompt": "EDIT ONLY THE FIRST IMAGE. Output ONE corrected SINGLE GAME SPRITE on the SAME1024x1024 TRANSPARENT canvas, not an animation sheet or a collage. The first image is phase2 MAXIMUM WEST-facing HIT RECOIL at its intended native physical pixel scale. The second image is a correct faithful two-arm LEFT-facing idle model used ONLY as anatomical/equipment reference. Do NOT replace the first image's recoil pose with that idle stance.\n\nThe first sprite currently has an EXTRA THIRD arm/hand. REMOVE ONLY the hanging EMPTY arm and EMPTY fist on IMAGE RIGHT, the fist roughly centered at canvas x607,y462 and its descending forearm/upper-arm chain roughly x590..650,y385..485. Keep the original near shoulder/pauldron and repair its natural anatomy/material occlusion where necessary, but eliminate the extra downward arm chain. Fill the area naturally with the appropriate existing torso/hair/skirt or transparent space behind it; do not leave a stump, ghost, detached hand or repeated armor arm.\n\nKEEP the TWO required arms: (1) the original FAR ANATOMICAL RIGHT arm/hand holding the one long sinuous glowing weapon low on IMAGE LEFT, grip around x477,y451; preserve the grip, full weapon curve and blade tip exactly as the first image, no hand swap; (2) the raised FREE ANATOMICAL LEFT forearm/hand on UPPER IMAGE LEFT near chest, around x479,y367; preserve that visible impact-counterbalance hand and naturally connect it through a coherent shoulder/elbow chain. Exactly TWO shoulders, TWO upper arms, TWO elbows, TWO forearms and TWO hands total, one original weapon hand and one raised empty hand. No other hanging empty fist at image right, no extra hand anywhere. Do not solve this by deleting a required arm or moving the weapon to the raised hand.\n\nPreserve the FIRST image's maximum-recoil body pose, LEFT/W facial heading, chin/neck tilt, torso/hip pitch, bent supporting knees, original boots and feet placement, long pale hair, pale face, gold head structure, narrow physical gold radial back-spines, long DARK gold-trimmed skirt and original gear/material identity. This is the SAME original Girtas, not a redesign. Keep the pale nose facing LEFT even with the head tilted back; do not turn front, right or downward. The second reference only clarifies the correct two-arm anatomy and faithful model, never the pose or composition.\n\nDO NOT SCALE OR REPOSITION THE CHARACTER. Keep the SAME1024x1024 canvas and original source-native physical size: existing complete sprite occupies approximately x275..772,y278..644, and the foot baseline is640. Retain head/torso/feet, weapon and back-spine sizes and their existing canvas positions, except the minimum local anatomy correction. Do NOT enlarge the sprite to fill the empty square or center it differently. Preserve large empty transparent margins. The long weapon stays its original full length relative to body; no crop, shortening or clipping. This corrected phase must match the other FIVE retained native phases in physical scale and model.\n\nKeep all background and limb/spine gaps transparent alpha0. Fully opaque original armor/hair/weapon materials with crisp game-sprite edges; original gold/fire luminosity stays within the real weapon surface, no new aura, glow fog, blur or detached sparks. No floor, shadow, background, text, grid, labels or extra figures. One minimal local arm-removal/anatomy edit ONLY: maintain the original complete maximum WEST recoil sprite, with exactly TWO anatomically connected arms and unchanged scale/position.",
+  "requested_at": "2026-10-19T11:07:07.896178+00:00"
+}
