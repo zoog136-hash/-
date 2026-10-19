@@ -26,6 +26,9 @@ def repack(source, output, direction):
     rgba = np.array(Image.open(source).convert('RGBA'))
     height, width = rgba.shape[:2]
     assert width % 2 == 0 and height % 3 == 0
+    visible = rgba[:, :, 3] > 100
+    assert not (visible[0].any() or visible[-1].any() or visible[:, 0].any()
+                or visible[:, -1].any()), 'Clipped source cannot be repaired by adding padding'
     foreground = rgba[:, :, 3] > 16
     # A faint antialiased bridge can join two otherwise separate bodies. Use
     # a second, still very low alpha seed only when every stronger pixel stays
@@ -48,12 +51,15 @@ def repack(source, output, direction):
     kept = foreground | ((rgba[:, :, 3] > 0) & (distance <= 2))
     removed = (rgba[:, :, 3] > 0) & ~kept
     assert not removed.any() or int(rgba[:, :, 3][removed].max()) <= 16
-    cell_width, cell_height = 768, height // 3
-    result = np.zeros((height, cell_width * 2, 4), dtype=np.uint8)
+    source_cell_height = height // 3
+    largest_height = max(int(np.ptp(np.where(kept & (owners == body))[0])) + 1 for body in bodies)
+    cell_width = 768
+    cell_height = max(source_cell_height, ((largest_height + 16 + 63) // 64) * 64)
+    result = np.zeros((cell_height * 3, cell_width * 2, 4), dtype=np.uint8)
     slots, proof = set(), []
     for body in bodies:
         cy, cx = ndimage.center_of_mass(large, labels, body)
-        column, row = int(cx // (width // 2)), int(cy // cell_height)
+        column, row = int(cx // (width // 2)), int(cy // source_cell_height)
         assert 0 <= column < 2 and 0 <= row < 3
         slot = row * 2 + column
         assert slot not in slots, 'Multiple bodies in one temporal slot'
@@ -85,6 +91,7 @@ def repack(source, output, direction):
     assert geometry['distinct_pixel_frames'] == 6
     audit = dict(source_sha256=digest(source), output_sha256=digest(output),
                  source=str(source), output=str(output), preserved_foreground_rgba=True,
+                 source_canvas=[width, height], output_canvas=[cell_width * 2, cell_height * 3],
                  resampled=False, recolored=False, newly_authored_poses=0,
                  foreground_alpha_threshold=16, retained_fringe_distance=2,
                  body_seed_alpha=seed_alpha,
