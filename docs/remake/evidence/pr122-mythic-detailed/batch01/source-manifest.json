@@ -4872,12 +4872,25 @@
       "bytes": 2358607,
       "requested_poses": 6,
       "geometry": {
-        "status": "NOT_SELECTED_SOURCE_VISUAL_HOLD"
+        "status": "HOLD",
+        "reason": "A pose rectangle includes another body; cannot safely crop"
       },
       "source_visual_status": "UNREVIEWED",
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-W-run-repair-v03/result.json",
       "production_connected": false,
-      "detailed_completed": false
+      "detailed_completed": false,
+      "subsequent_private_source_review": {
+        "source_visual_status": "PASS",
+        "review_sha256": "657ccad253341b2ffec98899b7b5d90fb641ec168864dea9b58738795d88cf3d",
+        "findings": [
+          "All6 visor/nose/chest/hip axes retain genuine LEFT/WEST lateral elevated-camera model, no SW/front-left turn, hand mirror or broad front-chest snap.",
+          "NearLEFT free fist remains visible with its connected near arm; farRIGHT hand carries sole compact purple crystal blade aheadLEFT. Exactly two coherent arm/hand chains and two legs/boots, with natural partial occlusion during flight. Gold horns/plates, crystalline fan feathers/roots and burgundy cape remain faithful.",
+          "New full wingbeat0HIGH→1horizontalpower→2LOWbelowshoulder/downback→3lowrearfollowthrough→4risingmiddle→5latehighreturn is visibly articulated, with changing gold-root angle and fan closure; not slowwalk replay/duplicate stills.",
+          "Stronger whole-torso forward lean, hips/knees/boots trailing rearRIGHT and cape streaming more horizontally distinguish dedicated fast run from gentle Wwalk. Feet stay airborne; no ground contacts imposed.",
+          "Complete fullsilhouettes appear uncropped; no alpha>100pixels touch outerimageedge. Raw strictimporter detects overlapping pose rectangles, so geometry remains HOLD for lossless disjointsplit rather than altered thresholds/cropped figures.",
+          "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
+        ]
+      }
     }
   ],
   "mythic_detail_total": 31,
