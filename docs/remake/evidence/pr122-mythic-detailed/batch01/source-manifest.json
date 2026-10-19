@@ -5529,6 +5529,31 @@
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-NE-hit-peak2-key-v03/result.json",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "attack",
+      "version": "v04composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
+      "original_generated_file": "/workspace/scratch/halpas-NW-attack-composite-v04/halpas-NW-attack-v04composite01.png",
+      "bytes": 5366882,
+      "sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+        "canvas_size": 2048,
+        "review_basis": "Strict nominal2048 fits exactRGBA mixednative-resolution 6pose composition. Physicalruntime sizes are separate SHA-pinned perposeC [1208,1208,2648,2768,2768,1208] reviewed from anatomicalbodylandmarks, notimage dimensions."
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -5587,7 +5612,7 @@
     "transform:393:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-attack-v01.png",
     "transform:393:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
     "transform:393:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-attack-v01iso01.png",
-    "transform:393:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
+    "transform:393:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
     "transform:393:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-attack-v01iso01.png",
     "transform:393:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
     "transform:393:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
@@ -6008,6 +6033,23 @@
             "Unmodified geometry analyzer and complete-region guard PASS six distinct frames at virtual canvas1024. Raw PNG unchanged, no resampling/masking/recoloring or threshold relaxation; zero strong outer-edge clipping."
           ],
           "source_review_sha256": "ea54c122b53fda69be90dd27e7f2893737198c8cfebbd116b64023d981c5c3a6"
+        },
+        {
+          "slot": "transform:393:NW:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 preserve correctNWrear-left head/back/hip/shoulder plane, hiddenfrontskull/chest, originalgoldhorn/blackgoldarmor/twocrystalwingfans/cape/compactpurpleblade.",
+            "Exactlytwoarms/hands throughout: nearLEFTlower-leftempty, samefarRIGHTsolebladegrip through0guard,1raise,2loaded,3elbowextension-UPLEFTcontact,4cross-frontfollow,5guardrecovery. No leftoverdownRIGHTarm or newthirdattackarm.",
+            "Follow4 independentanatomyPASS finds nearLEFTfreechain andweaponforearm/elbow continuous, farRIGHThumerus occludedbyhelmet/nearpauldron; no explicitsecondsocket, armduplication, separatedelbow orhandswap. OriginalUNRESOLVEDrecord preserved andindependentreportSHApinned.",
+            "Actualguard→raise→load→contact3UPLEFT→follow→recover withwing/cape response, sourceposeorder unchanged. GroundedNWleg/kneechains coherent; genuinehip/kneelunge retainedrelativeheel support.",
+            "ExactRGBA assembly reuses3validkeys andadds3newmissingkeys. Sixuniquevisiblefingerprints, everyselectedalpha>16 pixelcoveredonce, unchangedstrict6completegeometry nominal2048PASS. Noresampling/mirror/recolor/cleanedpixels orgearclipping.",
+            "Anatomicalhelmet/pauldron/backplate/pelvis comparisonagainstactualN/NE/W andNWidleC1280 supports perposeC [1208,1208,2648,2768,2768,1208] andgroundsupport metadata. Pythonlayoutmodule validates all6fit andsourceRGBA unchanged; actualcompiledphysical/game approval remains pending."
+          ],
+          "source_review_sha256": "0c9ac14b2d7340bc5dae508b607768e6d219a53e83881d3e2aa089c7543761a8"
         }
       ],
       "compass_audit": {
@@ -8405,6 +8447,174 @@
         ]
       ],
       "review_basis": "Absolute comparison against selected faithful native NW idle0 (C1024, sourceSHA4a140dd2...): match original helmet/head and rigid shoulder/torso scale, checking neutral guard/recovery crown-to-support span as supporting evidence; exclude large weapon/rays from scale inference. Different old/new source pixel resolutions require six virtual canvases. The centroid/depth of two visible soles supplies a candidate body root, avoiding the rejected single-heel pivot that exaggerated stance widening into whole-body translation. Both foot advance/spread and torso loading remain authored. Approximate manual landmark proposal only; final compiled/Player visual QC remains HOLD."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "attack",
+      "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        1208,
+        1208,
+        2648,
+        2768,
+        2768,
+        1208
+      ],
+      "source_anchors": [
+        [
+          648,
+          863
+        ],
+        [
+          1957,
+          866
+        ],
+        [
+          776,
+          2449
+        ],
+        [
+          2127,
+          2512
+        ],
+        [
+          894,
+          3694
+        ],
+        [
+          1941,
+          3422
+        ]
+      ],
+      "review_basis": "Absolutephysicalsourcepixel display compares helmet/crown-neck, nearpauldron span, backplate segment spacing and pelviswidth against actual393r062 NWidle C1280 and existingN/NE C1024,W C1152. Csnormalize independentlyauthoredkeys withoutresampling, notimage/bboxheight. Groundedattackanchors use nearLEFT heel-support projection calibrated against NWidle0 anchor[286,479] (strongheelbandmedian291,deltaX-5), retaining original hip/knee/lunge relativeheel ratherthanforcinghips stationary. Armraisedweaponextents, cape/wings do not setscale/root. NativePlayer/privatecompiledtemporalQC remainsrequired.",
+      "physical_scale_reference": {
+        "actor_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+        "NWidle_canvas": 1280,
+        "N_NEidle_canvas": 1024,
+        "Widle_canvas": 1152,
+        "profile_pixel_scale": 0.3036576949620428
+      },
+      "source_pose_anchor_review": [
+        {
+          "phase": 0,
+          "canvas": 1208,
+          "source_anchor": [
+            287,
+            476
+          ],
+          "heel_band_height": 11,
+          "heel_strong_pixel_median_x": 292.0,
+          "heel_ground_y": 476,
+          "atlas_translation": [
+            361,
+            387
+          ],
+          "atlas_anchor": [
+            648,
+            863
+          ]
+        },
+        {
+          "phase": 1,
+          "canvas": 1208,
+          "source_anchor": [
+            796,
+            479
+          ],
+          "heel_band_height": 11,
+          "heel_strong_pixel_median_x": 801.0,
+          "heel_ground_y": 479,
+          "atlas_translation": [
+            1161,
+            387
+          ],
+          "atlas_anchor": [
+            1957,
+            866
+          ]
+        },
+        {
+          "phase": 2,
+          "canvas": 2648,
+          "source_anchor": [
+            814,
+            1163
+          ],
+          "heel_band_height": 25,
+          "heel_strong_pixel_median_x": 824.0,
+          "heel_ground_y": 1163,
+          "atlas_translation": [
+            -38,
+            1286
+          ],
+          "atlas_anchor": [
+            776,
+            2449
+          ]
+        },
+        {
+          "phase": 3,
+          "canvas": 2768,
+          "source_anchor": [
+            854,
+            1216
+          ],
+          "heel_band_height": 26,
+          "heel_strong_pixel_median_x": 865.0,
+          "heel_ground_y": 1216,
+          "atlas_translation": [
+            1273,
+            1296
+          ],
+          "atlas_anchor": [
+            2127,
+            2512
+          ]
+        },
+        {
+          "phase": 4,
+          "canvas": 2768,
+          "source_anchor": [
+            878,
+            1190
+          ],
+          "heel_band_height": 26,
+          "heel_strong_pixel_median_x": 889.0,
+          "heel_ground_y": 1190,
+          "atlas_translation": [
+            16,
+            2504
+          ],
+          "atlas_anchor": [
+            894,
+            3694
+          ]
+        },
+        {
+          "phase": 5,
+          "canvas": 1208,
+          "source_anchor": [
+            801,
+            1496
+          ],
+          "heel_band_height": 11,
+          "heel_strong_pixel_median_x": 806.0,
+          "heel_ground_y": 1496,
+          "atlas_translation": [
+            1140,
+            1926
+          ],
+          "atlas_anchor": [
+            1941,
+            3422
+          ]
+        }
+      ],
+      "resampled": false,
+      "actor_approval_added": 0
     }
   }
 }
