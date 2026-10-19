@@ -20,6 +20,8 @@ CONFIRMED_STATUSES = frozenset({
 })
 IDENTITY_FIELDS = ('key', 'direction', 'role')
 PIN_FIELDS = ('id', 'source_sha256', 'evidence_sha256', 'prior_corrections_sha256')
+DIRECTIONS = frozenset(('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))
+ROLES = frozenset(('idle', 'walk', 'run', 'attack', 'hit', 'death'))
 
 
 def require(condition, message):
@@ -78,7 +80,7 @@ def matching_hold(manifest, request, source):
 
 def _prior_pass(hold, slot, source):
     return [record for record in hold.get('corrections', [])
-            if record.get('slot') == slot and record.get('replacement_source') == source
+            if isinstance(record, dict) and record.get('slot') == slot and record.get('replacement_source') == source
             and record.get('source_visual_status') == 'PASS'
             and record.get('geometry_and_actual_Player') == 'PASS']
 
@@ -124,10 +126,15 @@ def _validate_entry(root, hold, entry, request, source):
     require(digest(source_path) == entry.get('source_sha256'), 'Reopened selected source bytes/hash changed')
     history = hold.get('corrections', [])
     count = entry.get('prior_corrections_count')
-    require(type(count) is int and count > 0 and count <= len(history)
+    require(isinstance(history, list) and type(count) is int and count > 0 and count <= len(history)
             and canonical_sha256(history[:count]) == entry.get('prior_corrections_sha256'),
             'Earlier correction history was changed or removed')
-    require(not any(record.get('slot') == slot for record in history[count:]),
+    suffix = history[count:]
+    require(all(isinstance(record, dict) and isinstance(record.get('slot'), str)
+                and len(parts := record['slot'].rsplit(':', 2)) == 3
+                and parts[0] == request['key'] and parts[1] in DIRECTIONS and parts[2] in ROLES
+                for record in suffix), 'Appended correction history has an invalid actor/slot')
+    require(not any(record['slot'] == slot for record in suffix),
             'This reopened slot has already advanced; do not reuse its authorization')
     _evidence(root, hold, entry, request)
     expected_id = canonical_sha256({key: entry[key] for key in
@@ -166,7 +173,7 @@ def authorize_selected_replacement(root, manifest, request, hold, source):
     require(selected_source(manifest, request) == source
             and matching_hold(manifest, request, source) is hold,
             'Selected source or visual HOLD changed')
-    previously_corrected = any(record.get('replacement_source') == source
+    previously_corrected = any(isinstance(record, dict) and record.get('replacement_source') == source
                                for record in hold.get('corrections', []))
     entries = [entry for entry in hold.get('reopened_source_holds', [])
                if entry.get('status') == 'HOLD' and entry.get('slot') == slot_for(request)
@@ -189,7 +196,7 @@ def resolve_reopened_source_hold(root, manifest, hold, request, actor, correctio
     history and the actor's approval/connection fields are never changed here.
     """
     previous = request['replaces_selected_source']
-    previously_corrected = any(record.get('replacement_source') == previous
+    previously_corrected = any(isinstance(record, dict) and record.get('replacement_source') == previous
                                for record in hold.get('corrections', []))
     if not previously_corrected:
         require('reopened_source_hold' not in request, 'Unexpected reopened authorization')

@@ -157,6 +157,43 @@ class ReopenedSourceHoldTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'retained earlier'):
             self.authorize()
 
+    def test_later_unrelated_slot_keeps_original_authorization_and_history_pin(self):
+        entry = self.register()
+        token = self.authorize()
+        original_entry = copy.deepcopy(entry)
+        unrelated = dict(self.hold['corrections'][0], slot='transform:267:N:run',
+                         previous_source='N-run-old.png', replacement_source='N-run-new.png')
+        self.hold['corrections'].append(unrelated)
+        self.request['reopened_source_hold'] = token
+        self.assertEqual(self.authorize(), token)
+        self.assertEqual(entry, original_entry)
+        self.assertEqual(entry['prior_corrections_count'], 1)
+        self.assertEqual(self.hold['corrections'][-1], unrelated)
+
+    def test_pinned_prefix_reorder_or_removal_rejects_unrelated_suffix(self):
+        earlier = dict(self.hold['corrections'][0], slot='transform:267:E:hit',
+                       previous_source='E-hit-old.png', replacement_source='E-hit-new.png')
+        self.hold['corrections'].append(earlier)
+        self.register()
+        pinned = copy.deepcopy(self.hold['corrections'])
+        unrelated = dict(earlier, slot='transform:267:N:run')
+        self.hold['corrections'] = list(reversed(pinned)) + [unrelated]
+        with self.assertRaisesRegex(ValueError, 'history was changed or removed'):
+            self.authorize()
+        self.hold['corrections'] = pinned[:1] + [unrelated]
+        with self.assertRaisesRegex(ValueError, 'history was changed or removed'):
+            self.authorize()
+
+    def test_appended_history_requires_another_valid_slot_of_the_same_actor(self):
+        self.register()
+        for invalid in (None, {}, {'slot': 'transform:393:N:run'},
+                        {'slot': 'transform:267:N:unknown'}, {'slot': 'transform:267:bad:run'}):
+            with self.subTest(record=invalid):
+                self.hold['corrections'].append(invalid)
+                with self.assertRaisesRegex(ValueError, 'invalid actor/slot'):
+                    self.authorize()
+                self.hold['corrections'].pop()
+
     def test_duplicate_active_or_consumed_evidence_is_rejected(self):
         entry = self.register()
         with self.assertRaisesRegex(ValueError, 'already has an active'):
@@ -211,6 +248,19 @@ class ReopenedSourceHoldTest(unittest.TestCase):
         self.assertEqual(self.manifest['mythic_detail_complete'], 0)
         with self.assertRaises(ValueError):
             self.resolve(actor, correction)
+
+    def test_resolution_preserves_later_unrelated_correction_records(self):
+        entry, actor, correction = self.resolution_fixture()
+        unrelated = dict(self.hold['corrections'][0], slot='transform:267:N:run',
+                         previous_source='N-run-old.png', replacement_source='N-run-new.png')
+        self.hold['corrections'].append(unrelated)
+        history_before = copy.deepcopy(self.hold['corrections'])
+        token_before = copy.deepcopy(self.request['reopened_source_hold'])
+        self.resolve(actor, correction)
+        self.assertEqual(entry['status'], 'RESOLVED')
+        self.assertEqual(self.hold['corrections'], history_before)
+        self.assertEqual(self.hold['corrections'][-1], unrelated)
+        self.assertEqual(self.request['reopened_source_hold'], token_before)
 
     def test_resolution_needs_strict_geometry_actual_player_and_exact_track(self):
         entry, actor, correction = self.resolution_fixture()
