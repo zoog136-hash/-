@@ -6,10 +6,10 @@
   "actors": {
     "transform:393": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r033/SpriteFrames.tres",
-      "frames_sha256": "d604fe770bd4cae2fa7d662a349e6d010e2f8d94412c9baef913658b9d42c7bb",
-      "native_track_count": 37,
-      "native_pose_count": 222,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r034/SpriteFrames.tres",
+      "frames_sha256": "ce6c3d6f0e27d66ee4d1e4cf883c9f8d480a8df66329a50282e0d95655c15776",
+      "native_track_count": 38,
+      "native_pose_count": 228,
       "canvas_size": [
         1024,
         1024
@@ -2137,6 +2137,158 @@
             ],
             "distinct_pixel_frames": 6,
             "neutral_height": 417.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "death",
+          "animation": "death_5",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
+          "source_sha256": "5215ed8605d97b59f5b5620955a1f86579bda05051caf54dfa2ef8e9edb38093",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r034/NW-death.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  161,
+                  29,
+                  487,
+                  456
+                ],
+                "margin": [
+                  289,
+                  188,
+                  537,
+                  568
+                ],
+                "source_anchor": [
+                  384,
+                  481
+                ],
+                "rgba_sha256": "2276653b5f744a4b8bf9d755f9484381683d971680d5bb9a2676475b8287335d"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  910,
+                  71,
+                  472,
+                  372
+                ],
+                "margin": [
+                  270,
+                  272,
+                  552,
+                  652
+                ],
+                "source_anchor": [
+                  1152,
+                  439
+                ],
+                "rgba_sha256": "5cc6d879a9b50643b715fa8db9f369effd185dce335a19a925d805eb3f499c7d"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  163,
+                  604,
+                  499,
+                  329
+                ],
+                "margin": [
+                  291,
+                  315,
+                  525,
+                  695
+                ],
+                "source_anchor": [
+                  384,
+                  929
+                ],
+                "rgba_sha256": "76dda3c5631996f8b946388b9e97da4e1094f816f017473cc1b42a343fe3bc9c"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  902,
+                  640,
+                  500,
+                  257
+                ],
+                "margin": [
+                  262,
+                  387,
+                  524,
+                  767
+                ],
+                "source_anchor": [
+                  1152,
+                  893
+                ],
+                "rgba_sha256": "6bd8db6409caabb6cc10e8a379c42745f5d1e0e5f950ad4f84b222d15d119135"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  145,
+                  1155,
+                  500,
+                  250
+                ],
+                "margin": [
+                  273,
+                  394,
+                  524,
+                  774
+                ],
+                "source_anchor": [
+                  384,
+                  1401
+                ],
+                "rgba_sha256": "52bfdd0340e69d4f7d0bdf20015ef4f9392f6f1eba102fed5bde18862a7d90c0"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  917,
+                  1178,
+                  481,
+                  205
+                ],
+                "margin": [
+                  277,
+                  439,
+                  543,
+                  819
+                ],
+                "source_anchor": [
+                  1152,
+                  1379
+                ],
+                "rgba_sha256": "8b7f8c5815a09e4b6ca3528b149ec58f3dba3e92814003bc1bbd0fe9786db435"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 350.5,
             "canvas_size": [
               1024,
               1024
@@ -5663,7 +5815,6 @@
         "attack": [],
         "hit": [],
         "death": [
-          "death_5",
           "death_6",
           "death_7"
         ]
@@ -5675,8 +5826,8 @@
       "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r033/NativeMotionProfile.tres",
-      "native_profile_sha256": "1c0e2771a4aad7909544bb97bc4786bcb4c45ed695c00a7c6cdd86f9bb817c9f",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r034/NativeMotionProfile.tres",
+      "native_profile_sha256": "64aea0123ad529a5072f9e09ba6b24900ecbee2ab404de6c01b25a613bea04a4",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 350.5,
@@ -5687,7 +5838,7 @@
       },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 222,
+        "distinct_native_poses": 228,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -8886,6 +9037,28 @@
           "completed_added": 0,
           "actual_Player_dedicated_actions_and_markers": "PASS"
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r033/SpriteFrames.tres",
+        "frames_sha256": "d604fe770bd4cae2fa7d662a349e6d010e2f8d94412c9baef913658b9d42c7bb",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r033/NativeMotionProfile.tres",
+        "native_profile_sha256": "1c0e2771a4aad7909544bb97bc4786bcb4c45ed695c00a7c6cdd86f9bb817c9f",
+        "native_track_count": 37,
+        "native_pose_count": 222,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 222,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS"
+        }
       }
     ],
     "transform:267": [
@@ -9155,5 +9328,5 @@
     "direction": "N",
     "role": "death"
   },
-  "missing_detailed_action_blocks": 43
+  "missing_detailed_action_blocks": 42
 }
