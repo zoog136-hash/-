@@ -4280,6 +4280,186 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "W",
+      "role": "death",
+      "version": "v03regions01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+      "original_generated_file": "/workspace/scratch/girtas-W-death-reviewed-regions-v01/girtas-W-death-v03regions01.png",
+      "bytes": 962694,
+      "sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+        "base_geometry_sha256": "c29faa68a9d6b0566218fe3d403eebfeb3a26db37244aaa3afcf805bbe7424a9",
+        "direction": "W",
+        "review_basis": "Original faithful W death art PASS plus independent six-core/whole-foreground exact RGBA translation proof. Expand only crop metadata to include all existing ray/antialias fragments; no PNG changes, default guards unchanged.",
+        "regions": [
+          [
+            179,
+            28,
+            433,
+            459
+          ],
+          [
+            904,
+            58,
+            455,
+            397
+          ],
+          [
+            145,
+            596,
+            475,
+            347
+          ],
+          [
+            871,
+            649,
+            528,
+            240
+          ],
+          [
+            138,
+            1181,
+            509,
+            200
+          ],
+          [
+            890,
+            1191,
+            504,
+            179
+          ]
+        ],
+        "nearest_owner_sha256": "ced2680d2a79e51f3a2bd28af1700e1c2f1affa3f9160bddf76edef9810ad4c3",
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+        "source_RGBA_sha256": "4b045a084e6a6998ea4e4adae63f1d61d5e9c033ee7fd16045ca09afd35d7761",
+        "base_geometry_sha256": "c29faa68a9d6b0566218fe3d403eebfeb3a26db37244aaa3afcf805bbe7424a9",
+        "derived_geometry_sha256": "79057b0510c6cd1b826f154c9c4141e638f3cc43adb22d95e9d95bb929cb72b9",
+        "review_sha256": "33354c9240e659fce7d2669d0100bbc9282eca6b4795c9bec0270178ddaa15a4",
+        "review_basis": "Original faithful W death art PASS plus independent six-core/whole-foreground exact RGBA translation proof. Expand only crop metadata to include all existing ray/antialias fragments; no PNG changes, default guards unchanged.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 300796,
+        "added_alpha_gt16_pixels": 23,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            179,
+            28,
+            433,
+            459
+          ],
+          [
+            904,
+            58,
+            455,
+            397
+          ],
+          [
+            145,
+            596,
+            475,
+            347
+          ],
+          [
+            871,
+            649,
+            528,
+            240
+          ],
+          [
+            138,
+            1181,
+            509,
+            200
+          ],
+          [
+            890,
+            1191,
+            504,
+            179
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "ced2680d2a79e51f3a2bd28af1700e1c2f1affa3f9160bddf76edef9810ad4c3",
+        "foreground_owner_sha256": "58e04c4749f61762e5bdb4294306ddc8195acc94e16a635a0ceae2eb9104d43d",
+        "detached_pixels": 4,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              502,
+              426,
+              503,
+              427
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 183.65728953678914,
+            "owner_margin_min": 180.82886241204295
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              1221,
+              778,
+              1222,
+              779
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 327.0,
+            "owner_margin_min": 324.0
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              247,
+              1275,
+              248,
+              1276
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 359.6109008358896,
+            "owner_margin_min": 356.6109008358896
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              235,
+              1291,
+              236,
+              1292
+            ],
+            "nearest_max": 4.123105625617661,
+            "second_nearest_min": 376.3416001453998,
+            "owner_margin_min": 372.21849451978215
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -4386,7 +4566,7 @@
     "transform:267:SE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v02.png",
     "transform:267:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
     "transform:267:SW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v03iso01.png",
-    "transform:267:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
+    "transform:267:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
     "transform:267:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
     "transform:267:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
     "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
@@ -5364,6 +5544,22 @@
             "Independent arm anatomy review remains PASS for unchanged new source. Strong-support anchors and per-pose2720 native resolution correction are proposals; hip-minus-support compression/recoil/backstep remains represented, no playback reorder."
           ],
           "source_review_sha256": "daf149dedaccb627564586bbcef3204e2a88e20fddf5e0612a441a783c7f9850"
+        },
+        {
+          "slot": "transform:267:W:death",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
+            "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
+            "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
+            "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
+            "Existing W derivative PNG is copied byte-identically; only reviewed atlas region metadata expands to include all current nonzero ray/AA pixels."
+          ],
+          "source_review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d"
         }
       ]
     }
