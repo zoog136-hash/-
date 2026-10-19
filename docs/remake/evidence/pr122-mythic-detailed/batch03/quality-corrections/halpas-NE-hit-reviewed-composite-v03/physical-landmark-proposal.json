@@ -1,0 +1,83 @@
+{
+  "status": "SOURCE_NORMALIZATION_PROPOSAL_NOT_ACTOR_APPROVAL",
+  "direction": "NE",
+  "reference_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+  "reference_idle_source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+  "reference_waist_minus_idle_root_1024": [
+    88,
+    -193
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "source_anchor_before_assembly": [
+        384,
+        461
+      ],
+      "source_waist_proposal": null,
+      "virtual_canvas": 1024,
+      "basis": "Exact current selected idle source anchor reused unchanged, retains idle native body root."
+    },
+    {
+      "phase": 1,
+      "source_anchor_before_assembly": [
+        580,
+        1088
+      ],
+      "source_waist_proposal": [
+        795,
+        618
+      ],
+      "virtual_canvas": 2496,
+      "basis": "Manual same rigid gold waist/spinal-girdle landmark normalization vs selected NEidle0. Body helmet/pauldron/pelvis scale proposal, not full silhouette/gear bbox; flight leg and wing articulation preserved."
+    },
+    {
+      "phase": 2,
+      "source_anchor_before_assembly": [
+        590,
+        1141
+      ],
+      "source_waist_proposal": [
+        815,
+        646
+      ],
+      "virtual_canvas": 2624,
+      "basis": "Manual same rigid gold waist/spinal-girdle landmark normalization vs selected NEidle0. Body helmet/pauldron/pelvis scale proposal, not full silhouette/gear bbox; flight leg and wing articulation preserved."
+    },
+    {
+      "phase": 3,
+      "source_anchor_before_assembly": [
+        600,
+        1104
+      ],
+      "source_waist_proposal": [
+        814,
+        634
+      ],
+      "virtual_canvas": 2496,
+      "basis": "Manual same rigid gold waist/spinal-girdle landmark normalization vs selected NEidle0. Body helmet/pauldron/pelvis scale proposal, not full silhouette/gear bbox; flight leg and wing articulation preserved."
+    },
+    {
+      "phase": 4,
+      "source_anchor_before_assembly": [
+        384,
+        1489
+      ],
+      "source_waist_proposal": null,
+      "virtual_canvas": 1024,
+      "basis": "Exact current selected idle source anchor reused unchanged, retains idle native body root."
+    },
+    {
+      "phase": 5,
+      "source_anchor_before_assembly": [
+        1152,
+        1490
+      ],
+      "source_waist_proposal": null,
+      "virtual_canvas": 1024,
+      "basis": "Exact current selected idle source anchor reused unchanged, retains idle native body root."
+    }
+  ],
+  "no_source_resampling": true,
+  "no_default_enable": true
+}
