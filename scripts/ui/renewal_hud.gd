@@ -1285,6 +1285,12 @@ func _build_catalog_panel() -> void:
 		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
+	for pack_name: String in ["최상급 변신 뽑기권", "최상급 변신 뽑기권 11회 팩", "최상급 마법인형 뽑기권", "최상급 마법인형 뽑기권 11회 팩", "최상급 성물 뽑기권", "최상급 성물 뽑기권 11회 팩"]:
+		var grant_pack_name: String = pack_name
+		var ticket_button := UI.button("테스트 " + grant_pack_name + " ×1", func() -> void:
+			if playtest_tools_enabled():
+				playtest_catalog_grant_requested.emit(grant_pack_name, 1), Vector2(0, 39))
+		catalog_test_tools.add_child(ticket_button)
 	old.queue_free()
 
 func set_card_collection_state(value: Dictionary) -> void:
