@@ -80,6 +80,9 @@ func _initialize() -> void:
 				boss_count+=1
 				check(int(row.respawn_time)==86400,mid+" inherits existing renewed boss cooldown")
 				check(row.get("boss_id","") in row.monster_types,mid+" recognized legacy boss")
+				var state_map: String=str(row.get("boss_state_map_id",""))
+				check(not state_map.is_empty() and old_profiles.maps.has(state_map),mid+" native boss inherits existing life and cooldown "+state_map)
+				check(preload("res://scripts/monsters/boss_director.gd").new().key(mid,row)==state_map+":"+str(row.boss_id),mid+" existing boss persistence identity remains identical")
 			else:
 				normal_count+=int(row.max_count)
 		if mid.begins_with("albino_") or mid=="escaros_world":
