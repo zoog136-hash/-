@@ -51,3 +51,5 @@
 - 최신 제작: transform:393 NE attack v02 신규6자세와 실제 Player 연결 PASS. 현재106클립/636자세, 남은 이동6블록/전용 동작32블록. 다음 제작: transform:413 NW walk. 현재 수량은 data/pr122_native_locomotion_staging.json과 선택 소스를 우선한다.
 
 - 비공개 시각 검토: 할파스 SW run/N·NE·NW attack 방향 교정, 기르타스48클립 원형 외형 복원 HOLD. 기존 원화·리비전 전부 보존, 기본 게임 적용·승인 추가0.
+
+- 8방향 절대 방향 추가 검토: 할파스 E/W/NW의 대기·이동·달리기9클립은 방향 분리 HOLD. 수정 완료 SW run/N·NE attack은 새 원본·Player PASS와 함께 보존, 최종 승인 추가0.
