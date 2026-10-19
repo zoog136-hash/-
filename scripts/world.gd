@@ -37,6 +37,7 @@ const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
+const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -2708,7 +2709,7 @@ func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	if item_name.is_empty() or CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("테스트 지급 불가 아이템")
 		return
-	var permitted: bool = not _find_catalog_item_record(item_name).is_empty()
+	var permitted: bool = CARD_PACK_ITEMS.is_pack(item_name) or not _find_catalog_item_record(item_name).is_empty()
 	if not permitted:
 		permitted = item_name in ["무기 마법 주문서 (각인)", "갑옷 마법 주문서 (각인)", "장신구 마법 주문서 (각인)"]
 	if not permitted:
@@ -2757,6 +2758,41 @@ func _grant_playtest_aden() -> void:
 	hud.show_message("테스트 아데나 · 현재 %d" % gold)
 	_save_game(true)
 
+func _use_card_pack_item(item_name: String) -> void:
+	var spec: Dictionary = CARD_PACK_ITEMS.definition(item_name)
+	if spec.is_empty() or int(inventory.get(item_name, 0)) < 1:
+		hud.show_message("뽑기권이 없습니다")
+		return
+	var category: String = str(spec.get("category", ""))
+	var count: int = int(spec.get("count", 0))
+	if not card_draw_fusion.can_draw(category):
+		hud.show_message("해당 종류의 뽑기 카드 목록이 부족합니다")
+		return
+	# The draw service validates before granting; spend only on success.
+	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
+	if not bool(outcome.get("ok", false)):
+		hud.show_message(str(outcome.get("error", "뽑기 실패")))
+		return
+	var remaining: int = int(inventory.get(item_name, 0)) - 1
+	if remaining == 0:
+		inventory.erase(item_name)
+	else:
+		inventory[item_name] = remaining
+	var grades: Dictionary = {}
+	for raw: Variant in outcome.get("results", []) as Array:
+		if raw is Dictionary:
+			var grade: String = str((raw as Dictionary).get("grade", ""))
+			grades[grade] = int(grades.get(grade, 0)) + 1
+	var message: String = "%s %d회 완료 · 고급 %d · 희귀 %d · 영웅 %d · 전설 %d" % [
+		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
+		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
+	hud.refresh_inventory(inventory)
+	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	hud.call("set_card_draw_fusion_result", category, message)
+	hud.show_message(message)
+	hud.append_log(message)
+	_save_game(true)
+
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
@@ -2765,6 +2801,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
+		return
+	if CARD_PACK_ITEMS.is_pack(item_name):
+		_use_card_pack_item(item_name)
 		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
