@@ -7367,10 +7367,10 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r041/SpriteFrames.tres",
-      "frames_sha256": "056532a7ca3e9d56cf029fc0ae57937abf624a42079b5f7462b9e7eb82a014e5",
-      "native_track_count": 44,
-      "native_pose_count": 264,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r042/SpriteFrames.tres",
+      "frames_sha256": "8aa97e6344bd6164603f5399f3e599dc758a9098550903a0a9fb98b7abf4c706",
+      "native_track_count": 45,
+      "native_pose_count": 270,
       "canvas_size": [
         1024,
         1024
@@ -10258,6 +10258,158 @@
             ],
             "distinct_pixel_frames": 6,
             "neutral_height": 407.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "idle",
+          "animation": "idle_5",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
+          "source_sha256": "4f455350533bd240ef95397bcdaf3bdef7df0a8e6b30c60f0a1d8f3038cf3c13",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r042/NW-idle.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  40,
+                  40,
+                  457,
+                  455
+                ],
+                "margin": [
+                  296,
+                  189,
+                  567,
+                  569
+                ],
+                "source_anchor": [
+                  256,
+                  491
+                ],
+                "rgba_sha256": "afa736f9df6d9115c71b8415183785799c2b6c4acddcf66adf49a0fd638fca51"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  543,
+                  37,
+                  445,
+                  458
+                ],
+                "margin": [
+                  287,
+                  186,
+                  579,
+                  566
+                ],
+                "source_anchor": [
+                  768,
+                  491
+                ],
+                "rgba_sha256": "3881038e4d2a2bf3b4a72a94a48343ef1510e461046dc0e4f7b5394ee370b5b7"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  32,
+                  520,
+                  475,
+                  468
+                ],
+                "margin": [
+                  288,
+                  176,
+                  549,
+                  556
+                ],
+                "source_anchor": [
+                  256,
+                  984
+                ],
+                "rgba_sha256": "ffe979679e3d4ed7ca5f5580420541d6c80e1949accee330c8736b3df262a77f"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  547,
+                  535,
+                  458,
+                  457
+                ],
+                "margin": [
+                  291,
+                  187,
+                  566,
+                  567
+                ],
+                "source_anchor": [
+                  768,
+                  988
+                ],
+                "rgba_sha256": "2b8a30eca7a252abb3ccd4b7127536eda7089d79d249024448bd47e1bef69ca9"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  38,
+                  1028,
+                  464,
+                  461
+                ],
+                "margin": [
+                  294,
+                  183,
+                  560,
+                  563
+                ],
+                "source_anchor": [
+                  256,
+                  1485
+                ],
+                "rgba_sha256": "38e198d8d2b9191025c836092232765a4924c9f8507b146b26042a80cf821df9"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  545,
+                  1033,
+                  462,
+                  457
+                ],
+                "margin": [
+                  289,
+                  187,
+                  562,
+                  567
+                ],
+                "source_anchor": [
+                  768,
+                  1486
+                ],
+                "rgba_sha256": "20931ae979956081c29909faf9bc09f01f158627a3f0de62186efcec45188d28"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 450.0,
             "canvas_size": [
               1024,
               1024
@@ -14076,7 +14228,6 @@
       "missing_dedicated_by_direction": {
         "idle": [
           "idle_1",
-          "idle_5",
           "idle_6",
           "idle_7"
         ],
@@ -14091,8 +14242,8 @@
       "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r041/NativeMotionProfile.tres",
-      "native_profile_sha256": "9233817ad40e25953dcda5392200d91648dd560ea31fb9e4be6ce1d28bf0c1cd",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r042/NativeMotionProfile.tres",
+      "native_profile_sha256": "09d8bd33dbe14f5012dc723a75e59edfb3fe104b4efcbd472a117619b95439fa",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 385.5,
@@ -14103,7 +14254,7 @@
       },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 264,
+        "distinct_native_poses": 270,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -15933,14 +16084,36 @@
           "completed_added": 0,
           "actual_Player_dedicated_actions_and_markers": "PASS"
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r041/SpriteFrames.tres",
+        "frames_sha256": "056532a7ca3e9d56cf029fc0ae57937abf624a42079b5f7462b9e7eb82a014e5",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r041/NativeMotionProfile.tres",
+        "native_profile_sha256": "9233817ad40e25953dcda5392200d91648dd560ea31fb9e4be6ce1d28bf0c1cd",
+        "native_track_count": 44,
+        "native_pose_count": 264,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 264,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS"
+        }
       }
     ]
   },
   "next_locomotion_source": null,
   "next_detailed_source": {
     "key": "transform:267",
-    "direction": "NW",
+    "direction": "N",
     "role": "idle"
   },
-  "missing_detailed_action_blocks": 4
+  "missing_detailed_action_blocks": 3
 }
