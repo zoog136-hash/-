@@ -876,6 +876,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NE",
+      "role": "run",
+      "version": "v01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-run-v01.png",
+      "original_generated_file": "/workspace/generated_images/exec-59e6c29f-26d4-46f6-85f2-da32e1d3d3a8.png",
+      "bytes": 2019216,
+      "sha256": "bd8b47d375eba5b1657e5e060847e449cd8773839c1678959c5a9deb486e8ddc",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -913,9 +932,10 @@
     "transform:267:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
     "transform:267:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
     "transform:267:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-run-v01.png",
-    "transform:267:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-walk-v01.png"
+    "transform:267:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-walk-v01.png",
+    "transform:267:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-run-v01.png"
   },
-  "selected_locomotion_native_poses": 186,
+  "selected_locomotion_native_poses": 192,
   "session_stop_reason": null,
   "image_tools_forbidden": false
 }
