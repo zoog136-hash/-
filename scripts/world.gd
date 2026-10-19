@@ -3865,7 +3865,7 @@ func _load_game(quiet: bool) -> void:
 	var data: Dictionary = value as Dictionary
 	var saved_map_id: String = str(data.get("map_id", ""))
 	if data.has("native_png_plan_sha256"):
-		var native_saved_field: PlayableField = NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if NATIVE_PNG.enabled() else null
+		var native_saved_field: PlayableField = NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if NATIVE_PNG.supports(saved_map_id) else null
 		if native_saved_field == null or str(data.native_png_plan_sha256) != FileAccess.get_sha256(NATIVE_PNG.PLAN_PATH):
 			source_save_blocked = true
 			hud.show_message("PNG 팩 누락·변경: 저장 파일을 보존합니다")

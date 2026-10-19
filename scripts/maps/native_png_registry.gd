@@ -1,6 +1,7 @@
 extends RefCounted
-## Actual private PNGs in a separate playable session while terrain review is
-## incomplete. Ordinary save data, populations and geometry remain authoritative.
+## New independent temples can be entered in the ordinary game with a verified
+## private pack. Replacing existing Albino/Escaros geometry remains explicit
+## until their legacy gameplay coordinates have a supported correspondence.
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 
@@ -20,6 +21,11 @@ static func root_path() -> String:
 	var configured := OS.get_environment("TWILIGHT_NATIVE_PNG_PACK")
 	return configured.trim_suffix("/") if not configured.is_empty() else "user://native_png_maps"
 
+static func installed() -> bool:
+	var receipt: Dictionary=read_json("res://data/maps/native_png_pack.json")
+	var path: String=root_path()+"/index.json"
+	return FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
+
 static func canonical(mid: String) -> String:
 	if not enabled(): return mid
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
@@ -27,13 +33,14 @@ static func canonical(mid: String) -> String:
 	return mid
 
 static func supports(mid: String) -> bool:
-	return enabled() and plan().get("maps",{}).has(canonical(mid))
+	return plan().get("maps",{}).has(canonical(mid)) and (enabled() or (mid in ["yahee_temple","balrog_temple"] and installed()))
 
 static func catalog_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
-	if not enabled(): return entries
+	if not enabled() and not installed(): return entries
 	var specs: Dictionary = plan().get("maps",{})
 	for mid: String in ["escaros_world","yahee_temple","balrog_temple"]:
+		if mid=="escaros_world" and not enabled(): continue
 		entries.append({"id":mid,"name":specs[mid].name,"width":1,"height":1,"tile_size_world":32,"native_png":true})
 	return entries
 
@@ -71,14 +78,14 @@ static func load_field(mid: String) -> PlayableField:
 	var rows: Variant = manifest.get("chunks")
 	if not rows is Array or rows.is_empty(): return null
 	var positions: Dictionary = {}
-	for chunk: Dictionary in rows:
+	for chunk: Dictionary in rows+manifest.get("foreground",[]):
 		var filename: String = str(chunk.get("file",""))
 		if filename.get_file() != filename or not filename.ends_with(".png"): return null
 		if not chunk.get("size") is Array or chunk["size"].size()!=2: return null
 		var dimensions: Array = chunk["size"]
 		if dimensions[0] < 1 or dimensions[1] < 1 or dimensions[0]>1024 or dimensions[1]>1024: return null
 		if not chunk.get("position") is Array or chunk.position.size()!=2: return null
-		var key: String = str(chunk.position)
+		var key: String = filename
 		if positions.has(key): return null
 		positions[key] = true
 		var path: String = local_root+"/"+mid+"/"+filename

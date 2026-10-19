@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from build_native_png_maps import ROOT, build, compile_chunks, partition
+from build_native_png_maps import ROOT, build, compile_chunks, compile_layers, partition, transparent_runs
 
 
 class LosslessPreparation(unittest.TestCase):
@@ -56,6 +56,30 @@ class LosslessPreparation(unittest.TestCase):
     def test_public_checkout_output_is_rejected(self):
         with self.assertRaisesRegex(ValueError, 'private directory'):
             build(Path('/missing'), Path('/missing'), ROOT/'assets/forbidden-originals')
+
+    def test_visibility_guard_does_not_classify_opaque_colours_as_floor(self):
+        pixels = np.zeros((32, 48, 4), dtype=np.uint8)
+        pixels[:, :32, 3] = 255  # Opaque black is as visible as opaque white.
+        pixels[:, 16:32, :3] = 255
+        self.assertEqual(transparent_runs(Image.fromarray(pixels)), [[0, 2, 1], [1, 2, 1]])
+
+    def test_foreground_retains_source_pixels_and_global_foot(self):
+        pixels = np.random.default_rng(61).integers(0, 256, (70, 90, 4), dtype=np.uint8)
+        pixels[:, :, 3] = 255
+        cut = dict(id='statue', polygon_image=[[117, 239], [131, 229], [148, 244], [128, 262]],
+                   foot_image=[129, 260], collision_correspondence='statue_foot')
+        with tempfile.TemporaryDirectory() as tmp:
+            ground, rows = compile_layers(Image.fromarray(pixels), [100, 220, 190, 290], [cut], Path(tmp))
+            self.assertEqual(rows[0]['foot_image'], [129, 260])
+            self.assertEqual(rows[0]['collision_correspondence'], 'statue_foot')
+            with Image.open(Path(tmp)/rows[0]['file']) as foreground:
+                x, y = np.asarray(rows[0]['position'])-[100, 220]
+                rebuilt = np.asarray(ground).copy()
+                target = rebuilt[y:y+foreground.height, x:x+foreground.width]
+                selected = np.asarray(foreground)[:, :, 3] > 0
+                self.assertTrue(np.all(target[selected, 3] == 0))
+                target[selected] = np.asarray(foreground)[selected]
+                np.testing.assert_array_equal(rebuilt, pixels)
 
     def test_plan_keeps_names_and_unknown_server_ids(self):
         plan = json.loads((ROOT/'data/maps/native_png_plan.json').read_text())

@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw
+from png_layers import split_foreground
 
 ROOT = Path(__file__).resolve().parents[2]
 Image.MAX_IMAGE_PIXELS = 180_000_000
@@ -72,7 +73,7 @@ def partition(image, cuts):
 def compile_chunks(image, box, destination, chunk_size=1024):
     if not 64 <= chunk_size <= 1024:
         raise ValueError('Chunk edge must be between 64 and 1024')
-    destination.mkdir(parents=True)
+    destination.mkdir(parents=True, exist_ok=True)
     left, top, _, _ = box
     chunks = []
     for y in range(0, image.height, chunk_size):
@@ -93,6 +94,64 @@ def compile_chunks(image, box, destination, chunk_size=1024):
     preview.thumbnail((512, 512))
     preview.save(destination/'overview.png')
     return chunks
+
+
+def compile_layers(image, box, cuts, destination):
+    """Remove reviewed object pixels once, preserving the composite exactly."""
+    local = []
+    for cut in cuts:
+        row = dict(cut)
+        row['polygon_image'] = [[x-box[0], y-box[1]] for x, y in cut['polygon_image']]
+        row['foot_image'] = [cut['foot_image'][0]-box[0], cut['foot_image'][1]-box[1]]
+        local.append(row)
+    ground, layers = split_foreground(image, [1, 0, 0, 0, 1, 0], local)
+    # Exact RGBA ownership, not alpha-composited colour approximation.
+    rebuilt = np.asarray(ground).copy()
+    rows = []
+    destination.mkdir(parents=True, exist_ok=True)
+    for layer in layers:
+        pixels = np.asarray(layer['image'])
+        x, y = layer['image_origin']
+        target = rebuilt[y:y+pixels.shape[0], x:x+pixels.shape[1]]
+        support = pixels[:, :, 3] > 0
+        if np.any(target[:, :, 3][support]):
+            raise ValueError('Duplicate ground/foreground pixel ownership')
+        target[support] = pixels[support]
+        if max(layer['image'].size) > 1024:
+            raise ValueError('Foreground needs bounded cuts, never a full map texture')
+        path = destination/('fg_'+layer['id']+'.png')
+        layer['image'].save(path)
+        rows.append(dict(file=path.name, size=list(layer['image'].size),
+                         position=[box[0]+x, box[1]+y],
+                         foot_image=[box[0]+layer['foot_image'][0], box[1]+layer['foot_image'][1]],
+                         id=layer['id'], sha256=digest(path), bytes=path.stat().st_size,
+                         collision_correspondence=layer['collision_correspondence']))
+    original = np.asarray(image)
+    visible = original[:, :, 3] > 0
+    if not np.array_equal(rebuilt[visible], original[visible]):
+        raise ValueError('Ground plus foreground does not reconstruct original RGBA')
+    return ground, rows
+
+
+def transparent_runs(image, cell=16, foot=4):
+    """Visibility guard only. Opaque colours never imply walkable terrain."""
+    alpha = np.asarray(image.getchannel('A'))
+    width = (image.width+cell-1)//cell
+    height = (image.height+cell-1)//cell
+    xx, yy = np.meshgrid(np.arange(width)*cell+cell//2,
+                         np.arange(height)*cell+cell//2)
+    visible = np.ones((height, width), dtype=bool)
+    for dx, dy in [(0, 0), (-foot, 0), (foot, 0), (0, -foot), (0, foot)]:
+        x, y = xx+dx, yy+dy
+        valid = (x < image.width) & (y < image.height) & (x >= 0) & (y >= 0)
+        visible &= valid & (alpha[y.clip(0, image.height-1), x.clip(0, image.width-1)] > 0)
+    runs = []
+    for y, row in enumerate(~visible):
+        padded = np.pad(row, (1, 1)).astype(np.int8)
+        starts = np.flatnonzero(np.diff(padded) == 1)
+        ends = np.flatnonzero(np.diff(padded) == -1)
+        runs.extend([[y, int(x), int(end-x)] for x, end in zip(starts, ends)])
+    return runs
 
 
 def build(sources, plan_path, output):
@@ -122,12 +181,21 @@ def build(sources, plan_path, output):
             with Image.open(sources/spec['file']) as original:
                 box = list(original.getchannel('A').getbbox())
                 image = original.crop(box)
-        chunks = compile_chunks(image, box, output/mid)
+        alpha_solid_runs = transparent_runs(image)
+        # Keep the minimap as the untouched original composite.
+        overview = image.copy()
+        ground, foreground = compile_layers(image, box, spec.get('foreground', []), output/mid)
+        chunks = compile_chunks(ground, box, output/mid)
+        overview.thumbnail((512, 512))
+        overview.save(output/mid/'overview.png')
         manifest = dict(schema=1, map_id=mid, source_file=spec['file'],
                         source_sha256=originals[spec['file']]['sha256'],
                         plan_sha256=digest(plan_path), bounds=[box[0], box[1], image.width, image.height],
                         native_pixel_scale=1, chunks=chunks, overview='overview.png',
-                        collision_scope=spec['collision_scope'], foreground_scope='NOT_RECONSTRUCTED')
+                        alpha_guard_cell_size=16, alpha_solid_runs=alpha_solid_runs,
+                        collision_scope=spec['collision_scope'], foreground=foreground,
+                        layer_rgba_roundtrip=True,
+                        foreground_scope='MANUALLY_REVIEWED_CUTS' if foreground else 'NOT_RECONSTRUCTED')
         write(output/mid/'manifest.json', manifest)
         built[mid] = dict(manifest=mid+'/manifest.json', sha256=digest(output/mid/'manifest.json'),
                           chunks=len(chunks), bounds=manifest['bounds'])

@@ -1,7 +1,7 @@
 extends SceneTree
 # TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_NATIVE_PNG_PACK
 ## This suite only passes with real decoded private PNGs in the actual Main.
-## Entry patches are tested; untraced terrain/monster positions remain incomplete.
+## Real Main walking over the traced routes; unmapped gameplay stays incomplete.
 const REGISTRY = preload("res://scripts/maps/native_png_registry.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 var world: TwilightWorld
@@ -9,6 +9,10 @@ var failures: Array[String] = []
 var checks: int = 0
 var records: Array[Dictionary] = []
 var output: String
+var walked_distance: float = 0.0
+
+class DepthProbe extends Node2D:
+	func _draw() -> void: draw_rect(Rect2(-12,-70,24,70),Color.MAGENTA)
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, label: String) -> void:
@@ -16,6 +20,52 @@ func check(ok: bool, label: String) -> void:
 	if not ok: failures.append(label);printerr("NATIVE_PNG_RUNTIME_FAIL: "+label)
 func ticks(count: int) -> void:
 	for i: int in range(count): await physics_frame
+
+func traverse(field: NativePngField, mid: String) -> float:
+	var distance: float=0.0
+	for raw: Array in REGISTRY.plan().maps[mid].route_checks:
+		var target:=Vector2(raw[0],raw[1])
+		var path: PackedVector2Array=field.path(world.player.global_position,target)
+		check(field.walkable(target) and not path.is_empty(),mid+" traced route reachable "+str(raw))
+		if path.is_empty(): continue
+		var length: float=0.0
+		var last: Vector2=world.player.global_position
+		for point: Vector2 in path: length+=last.distance_to(point);last=point
+		world._set_click_destination(target)
+		var budget: int=ceili(length/210.0*60.0)*2+120
+		var arrived: bool=false
+		for i: int in range(budget):
+			await physics_frame
+			if world.player.global_position.distance_to(target)<12: arrived=true;break
+		check(arrived,mid+" actual player traversed "+str(raw))
+		if not arrived:
+			printerr("NATIVE_PNG_STUCK ",mid," target=",target," at=",world.player.global_position)
+			break
+		distance+=length
+		world.player.clear_click_path()
+	for raw: Array in REGISTRY.plan().maps[mid].blocked_probes:
+		check(not field.walkable(Vector2(raw[0],raw[1])),mid+" inspected water/wall/object excluded "+str(raw))
+	return distance
+
+func inspect_foreground(renderer: NativePngRenderer, field: NativePngField) -> void:
+	for row: Dictionary in field.png_manifest.get("foreground",[]):
+		var foot:=Vector2(row.foot_image[0],row.foot_image[1])
+		world.player.global_position=foot+Vector2(200,0)
+		world.player.clear_click_path();world.player.velocity=Vector2.ZERO
+		world.player.camera.reset_smoothing();world.player.camera.force_update_scroll();renderer.refresh_visible()
+		var probe:=DepthProbe.new();probe.position=foot-Vector2(0,10);world.add_child(probe)
+		await ticks(3);await RenderingServer.frame_post_draw
+		var target:=foot-Vector2(0,40)
+		var screen: Vector2=world.get_global_transform_with_canvas()*target
+		var behind: Color=root.get_texture().get_image().get_pixelv(Vector2i(screen))
+		var original:=Image.load_from_file(field.png_root+"/"+str(row.file))
+		var expected: Color=original.get_pixel(int(target.x-row.position[0]),int(target.y-row.position[1]))
+		check(behind.is_equal_approx(expected),"real source foreground covers the actor behind its foot")
+		probe.position=foot+Vector2(0,20)
+		await ticks(3);await RenderingServer.frame_post_draw
+		var front: Color=root.get_texture().get_image().get_pixelv(Vector2i(screen))
+		check(front.r>.95 and front.b>.95 and front.g<.05,"actor in front covers the source foreground")
+		probe.free()
 
 func inspect(mid: String) -> void:
 	world._set_map(mid,false)
@@ -79,6 +129,10 @@ func inspect(mid: String) -> void:
 		check(root.get_texture().get_image().save_png(output+"/"+mid+".png")==OK,mid+" real Main screenshot")
 	world.player.pulse_attack();check(world.player.motion.active,mid+" existing attack playback")
 	await ticks(55)
+	var traversed: float=await traverse(field,mid)
+	walked_distance+=traversed
+	if not field.png_manifest.get("foreground",[]).is_empty(): await inspect_foreground(renderer,field)
+	world.player.global_position=spawn;world.player.velocity=Vector2.ZERO;world.player.clear_click_path()
 	var loaded_chunks: int=renderer.chunks.size()
 	var peak_bytes: int=renderer.peak_decoded_pixels*4
 	world._save_game(true)
@@ -92,7 +146,7 @@ func inspect(mid: String) -> void:
 	await ticks(45)
 	world.set_process(false)
 	check(world.active_map_id=="aden_world",mid+" walking into real return portal loads existing Aden")
-	records.append({"map_id":mid,"png_sha256":field.png_manifest.source_sha256,"loaded_chunks":loaded_chunks,"peak_rgba_bytes":peak_bytes,"collision_sides":found,"playable_scope":"MANUALLY_REVIEWED_ENTRY_PATCH_ONLY","full_map_verified":false,"monster_spawn":"NOT_MAPPED"})
+	records.append({"map_id":mid,"png_sha256":field.png_manifest.source_sha256,"loaded_chunks":loaded_chunks,"peak_rgba_bytes":peak_bytes,"collision_sides":found,"walked_path_pixels":traversed,"route_targets":REGISTRY.plan().maps[mid].route_checks.size(),"playable_scope":"MANUALLY_TRACED_FLOORS_AND_ROUTES","full_map_verified":false,"monster_spawn":"NOT_MAPPED"})
 
 func run() -> void:
 	if not REGISTRY.enabled() or OS.get_environment("TWILIGHT_NATIVE_PNG_PACK").is_empty():
@@ -131,7 +185,7 @@ func run() -> void:
 	OS.set_environment("TWILIGHT_NATIVE_PNG_PACK",installed)
 	check(FileAccess.get_sha256(normal_path)==normal_hash,"normal player save remains byte-identical")
 	check(FileAccess.get_sha256("res://data/game_db_v17.json")==db_hash,"monster, boss, rewards and balance DB unchanged")
-	var report: Dictionary={"checks":checks,"failures":failures,"maps":records,"original_png_rendered":true,"production_complete":false,"android_device":"NOT_RUN"}
+	var report: Dictionary={"checks":checks,"failures":failures,"maps":records,"walked_path_pixels":walked_distance,"original_png_rendered":true,"production_complete":false,"android_device":"NOT_RUN"}
 	var file:=FileAccess.open(output+"/runtime.json",FileAccess.WRITE);file.store_string(JSON.stringify(report,"\t"));file.close()
 	print("NATIVE_PNG_RUNTIME_RESULT ",JSON.stringify(report))
 	world.queue_free();await ticks(3);quit(0 if failures.is_empty() else 1)

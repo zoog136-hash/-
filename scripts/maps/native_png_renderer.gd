@@ -10,11 +10,12 @@ const MAX_VISIBLE_PIXELS: int = 24*1024*1024
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field=value;native_field=value as NativePngField;player=actor
-	z_index=-20
+	z_index=0
+	y_sort_enabled=true
 	texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 	set_meta("native_png",true)
 	var markers:=Node2D.new()
-	markers.name="Portals";markers.z_index=1;add_child(markers)
+	markers.name="Portals";markers.z_index=-10;add_child(markers)
 	for portal: Dictionary in field.data.portal:
 		var ring:=Line2D.new()
 		ring.position=Vector2(portal.position[0],portal.position[1])
@@ -41,7 +42,7 @@ func refresh_visible() -> void:
 	var extent: Vector2=get_viewport_rect().size/camera.zoom
 	var view:=Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(96)
 	var wanted: Dictionary={}
-	for row: Dictionary in native_field.png_manifest.chunks:
+	for row: Dictionary in native_field.png_manifest.chunks+native_field.png_manifest.get("foreground",[]):
 		var box:=Rect2(Vector2(row.position[0],row.position[1]),Vector2(row.size[0],row.size[1]))
 		if box.intersects(view): wanted[str(row.file)]=row
 	# Release old textures first; no cache retains offscreen images.
@@ -60,6 +61,12 @@ func refresh_visible() -> void:
 			push_error("Native PNG chunk decode failed: "+filename);continue
 		var sprite:=Sprite2D.new()
 		sprite.centered=false;sprite.position=Vector2(row.position[0],row.position[1])
+		sprite.z_index=-20
+		if row.has("foot_image"):
+			sprite.z_index=0
+			sprite.position=Vector2(row.foot_image[0],row.foot_image[1])
+			sprite.offset=Vector2(row.position[0],row.position[1])-sprite.position
+			sprite.set_meta("native_foreground",row.id)
 		sprite.texture=ImageTexture.create_from_image(image)
 		sprite.set_meta("pixels",pixels);add_child(sprite);chunks[filename]=sprite
 		decoded_pixels+=pixels;peak_decoded_pixels=maxi(peak_decoded_pixels,decoded_pixels)

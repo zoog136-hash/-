@@ -19,6 +19,6 @@ func _initialize() -> void:
 	for prefix: String in ["albino_","escaros_"]:
 		for floor: int in range(1,5 if prefix=="albino_" else 6):
 			check(ids.has(prefix+"%02d"%floor),"legacy ID remains loadable: "+prefix+str(floor))
-	check(REGISTRY.catalog_entries().size()==(3 if REGISTRY.enabled() else 0),"native catalog is isolated until full terrain/spawn review")
+	check(REGISTRY.catalog_entries().size()==(3 if REGISTRY.enabled() else (2 if REGISTRY.installed() else 0)),"new temples register with installed art; legacy replacements require explicit mode")
 	print("NATIVE_PNG_CATALOG_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"CODE_REGRESSION_NOT_PNG_RUNTIME"}))
 	quit(0 if failures.is_empty() else 1)
