@@ -106,7 +106,7 @@ def stage(root, key):
         detailed_complete=0, detailed_total=31, actors={})
     missing = [f'{role}_{index}' for role in ('walk', 'run') for index in range(8)
                if f'{role}_{index}' not in {track['animation'] for track in tracks}]
-    register['actors'][key] = dict(
+    entry = dict(
         grade='유일', frames='res://' + frames_path.as_posix(), frames_sha256=digest(root / frames_path),
         native_track_count=len(tracks), native_pose_count=len(fingerprints),
         canvas_size=[1024, 1024], foot=[512, 640], tracks=tracks,
@@ -116,6 +116,13 @@ def stage(root, key):
         visual_review='NOT_RUN; image generation and preview tools forbidden',
         timing_review='HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved',
         integration='Godot SpriteFrames contract only; production catalogs and profiles unchanged')
+    previous = dict(register['actors'].get(key, {}))
+    verification = previous.pop('verification', None)
+    if previous and previous != entry:
+        raise ValueError('Existing actor record differs; preserve it instead of replacing history')
+    if verification is not None:
+        entry['verification'] = verification
+    register['actors'][key] = entry
     register_path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     print(f'NATIVE_TRACKS_STAGED {key} tracks={len(tracks)} poses={len(fingerprints)} approvals_added=0')
 

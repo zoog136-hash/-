@@ -816,6 +816,668 @@
         "visual_approval": "NOT_RUN",
         "completed_added": 0
       }
+    },
+    "transform:267": {
+      "grade": "유일",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/SpriteFrames.tres",
+      "frames_sha256": "4ce1a8fa80134757163049b7c429abd88084660ebafd1ccce4db25b224947ad9",
+      "native_track_count": 4,
+      "native_pose_count": 24,
+      "canvas_size": [
+        1024,
+        1024
+      ],
+      "foot": [
+        512,
+        640
+      ],
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-run-v02.png",
+          "source_sha256": "3073598c41ef6f431f7dc38efd63eab75e6bf4ddf56217b6931c76e39fec6d9e",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/E-run.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  95,
+                  118,
+                  438,
+                  362
+                ],
+                "margin": [
+                  351,
+                  282,
+                  586,
+                  662
+                ],
+                "source_anchor": [
+                  256,
+                  476
+                ],
+                "rgba_sha256": "78a457645063a143c512a023e9472c93de6feb99ca29a3b62346606f4b925b7b"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  577,
+                  110,
+                  429,
+                  342
+                ],
+                "margin": [
+                  321,
+                  302,
+                  595,
+                  682
+                ],
+                "source_anchor": [
+                  768,
+                  448
+                ],
+                "rgba_sha256": "80e720af5d4bcb18637c1d07a617fd7b4fefaaeac3129c6a3ecb97773c13ddb5"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  95,
+                  595,
+                  436,
+                  367
+                ],
+                "margin": [
+                  351,
+                  277,
+                  588,
+                  657
+                ],
+                "source_anchor": [
+                  256,
+                  958
+                ],
+                "rgba_sha256": "15e0ed9aaaea49e7e45c2d3cfc8b8f7abeffc2558985410a78da76229c412a9a"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  596,
+                  618,
+                  413,
+                  361
+                ],
+                "margin": [
+                  340,
+                  283,
+                  611,
+                  663
+                ],
+                "source_anchor": [
+                  768,
+                  975
+                ],
+                "rgba_sha256": "a367d8b2003d25d16bdf352211c87880537f6d82446d8fd6a90ad6882be0a9a4"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  94,
+                  1080,
+                  439,
+                  347
+                ],
+                "margin": [
+                  350,
+                  297,
+                  585,
+                  677
+                ],
+                "source_anchor": [
+                  256,
+                  1423
+                ],
+                "rgba_sha256": "6be648eed18ae58d757420cdcab44c5347f796fcc0d7a7a79726e7a2e2285e3f"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  587,
+                  1079,
+                  421,
+                  361
+                ],
+                "margin": [
+                  331,
+                  283,
+                  603,
+                  663
+                ],
+                "source_anchor": [
+                  768,
+                  1436
+                ],
+                "rgba_sha256": "596666324dcc980dd5c2cf8335e72a814d61faf62e243e41cefe0bc13940d82c"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 355.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "walk",
+          "animation": "walk_0",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+          "source_sha256": "84e17c6b4bbe6ee9f4268167529d7888959e6ce8af7465243466afb047345492",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/E-walk.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  110,
+                  114,
+                  375,
+                  351
+                ],
+                "margin": [
+                  366,
+                  293,
+                  649,
+                  673
+                ],
+                "source_anchor": [
+                  256,
+                  461
+                ],
+                "rgba_sha256": "5224ba70b3cd6008b918b161d907d782b8084c2993d40967a552072c1f761f78"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  623,
+                  117,
+                  365,
+                  353
+                ],
+                "margin": [
+                  367,
+                  291,
+                  659,
+                  671
+                ],
+                "source_anchor": [
+                  768,
+                  466
+                ],
+                "rgba_sha256": "d0d522bd4d669decf4292235c66bee765e18c75a48e03930b8a44cc824be4718"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  109,
+                  608,
+                  376,
+                  357
+                ],
+                "margin": [
+                  365,
+                  287,
+                  648,
+                  667
+                ],
+                "source_anchor": [
+                  256,
+                  961
+                ],
+                "rgba_sha256": "906ae4752060c471a3857351e975e10f5e26ada49e52a999152a9b782099ee49"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  625,
+                  611,
+                  384,
+                  354
+                ],
+                "margin": [
+                  369,
+                  290,
+                  640,
+                  670
+                ],
+                "source_anchor": [
+                  768,
+                  961
+                ],
+                "rgba_sha256": "76a1002771fdf0698eff299799d0ccdf925a226e13624481d8fa86efba9bb82b"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  112,
+                  1103,
+                  380,
+                  352
+                ],
+                "margin": [
+                  368,
+                  292,
+                  644,
+                  672
+                ],
+                "source_anchor": [
+                  256,
+                  1451
+                ],
+                "rgba_sha256": "065637d16b32fba1be1f8e59e48111ed0ddd468a4dd3166cf011950cd3027c93"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  620,
+                  1093,
+                  375,
+                  362
+                ],
+                "margin": [
+                  364,
+                  282,
+                  649,
+                  662
+                ],
+                "source_anchor": [
+                  768,
+                  1451
+                ],
+                "rgba_sha256": "752efebaca262db4f48d542ecc87453192b8b643c98114bc073df95c2bc5a021"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 346.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
+          "source_sha256": "4118a399b8dfcb3f7c23f5142c99752e194f5ed47b75cf4f92038538f5c84733",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/SE-run.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  89,
+                  81,
+                  412,
+                  391
+                ],
+                "margin": [
+                  345,
+                  253,
+                  612,
+                  633
+                ],
+                "source_anchor": [
+                  256,
+                  468
+                ],
+                "rgba_sha256": "3daa431ec8316a7b90999e4eb185ca44599a5ff341224e4e875502685098d134"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  590,
+                  80,
+                  411,
+                  352
+                ],
+                "margin": [
+                  334,
+                  292,
+                  613,
+                  672
+                ],
+                "source_anchor": [
+                  768,
+                  428
+                ],
+                "rgba_sha256": "a715287db5d4452dc0011e20e77a706e8f6abfd3d346cde53620ae3683506e5e"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  76,
+                  553,
+                  437,
+                  389
+                ],
+                "margin": [
+                  332,
+                  255,
+                  587,
+                  635
+                ],
+                "source_anchor": [
+                  256,
+                  938
+                ],
+                "rgba_sha256": "3fc17dd6e410e180190529689b44979ca332fa16beb3f2502ea409a517cf8c84"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  598,
+                  564,
+                  411,
+                  400
+                ],
+                "margin": [
+                  342,
+                  244,
+                  613,
+                  624
+                ],
+                "source_anchor": [
+                  768,
+                  960
+                ],
+                "rgba_sha256": "dbc7955c3760d7e3f8eab94a2917208899e5447440ac201fefbbee17492b499f"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  85,
+                  1044,
+                  428,
+                  348
+                ],
+                "margin": [
+                  341,
+                  296,
+                  596,
+                  676
+                ],
+                "source_anchor": [
+                  256,
+                  1388
+                ],
+                "rgba_sha256": "d7423d54c18f8be1d609827ebd304be331a308525bcab1e2a27314e249856dd8"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  586,
+                  1030,
+                  422,
+                  393
+                ],
+                "margin": [
+                  330,
+                  251,
+                  602,
+                  631
+                ],
+                "source_anchor": [
+                  768,
+                  1419
+                ],
+                "rgba_sha256": "76c2564931393f71b33f99f402018f91708e6596be05b854046963680232df43"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 389.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "walk",
+          "animation": "walk_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png",
+          "source_sha256": "2a723c3f0ec63db71e4c0fb7bf8af15408963594c852e53c45f5400788ffcfe6",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/SE-walk.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  118,
+                  94,
+                  394,
+                  376
+                ],
+                "margin": [
+                  374,
+                  268,
+                  630,
+                  648
+                ],
+                "source_anchor": [
+                  256,
+                  466
+                ],
+                "rgba_sha256": "5522f6a5344b7d4891e1f74a3f3cd022795880f344ae5071ad477dc0e8b5fee7"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  591,
+                  103,
+                  406,
+                  374
+                ],
+                "margin": [
+                  335,
+                  270,
+                  618,
+                  650
+                ],
+                "source_anchor": [
+                  768,
+                  473
+                ],
+                "rgba_sha256": "7fcccda42e7ee9d9f000441b5395c50c9aa5a566da452f03ec3a620eff5143ad"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  108,
+                  579,
+                  406,
+                  376
+                ],
+                "margin": [
+                  364,
+                  268,
+                  618,
+                  648
+                ],
+                "source_anchor": [
+                  256,
+                  951
+                ],
+                "rgba_sha256": "dec9e93f84e8b01a8bcf23ef0f9d2ee6f5963deca477eb34f9624c11c0442dc3"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  587,
+                  577,
+                  406,
+                  373
+                ],
+                "margin": [
+                  331,
+                  271,
+                  618,
+                  651
+                ],
+                "source_anchor": [
+                  768,
+                  946
+                ],
+                "rgba_sha256": "65a86f5b3596173789d3c5a9ab91533a50f036177fe0dbf71cf68717f4119b80"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  108,
+                  1062,
+                  411,
+                  371
+                ],
+                "margin": [
+                  364,
+                  273,
+                  613,
+                  653
+                ],
+                "source_anchor": [
+                  256,
+                  1429
+                ],
+                "rgba_sha256": "eb19a90b8c0762f3062a679653909306e5a90340e8c39d98712a33564237eee0"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  584,
+                  1062,
+                  406,
+                  377
+                ],
+                "margin": [
+                  328,
+                  267,
+                  618,
+                  647
+                ],
+                "source_anchor": [
+                  768,
+                  1435
+                ],
+                "rgba_sha256": "5031fbb44cb7da4f92005f6a983623976b7d40d5c8c4932f26f6000fe56c0e80"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 368.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        }
+      ],
+      "missing_locomotion": [
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "walk_5",
+        "walk_6",
+        "walk_7",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "missing_dedicated_roles": [
+        "idle",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "completed_added": 0,
+      "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
+      "visual_review": "NOT_RUN; image generation and preview tools forbidden",
+      "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
+      "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
+      "verification": {
+        "source_sha256_and_saved_geometry": "PASS",
+        "distinct_native_poses": 24,
+        "spriteframes_parse_and_all_frame_cycles": "PASS",
+        "auxiliary_engine": "4.6.3.stable.official.7d41c59c4",
+        "required_engine_4_7_2": "NOT_RUN",
+        "actual_Main": "NOT_RUN",
+        "visual_approval": "NOT_RUN",
+        "completed_added": 0
+      }
     }
   }
 }
