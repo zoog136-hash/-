@@ -8189,8 +8189,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r081/SpriteFrames.tres",
-      "frames_sha256": "688a9913af2fa874c2e44b0748c5db046a30530333e553707b2cf3451a7fbe66",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r082/SpriteFrames.tres",
+      "frames_sha256": "8500c03823faa0c69f9338aee3121a5d220103220d7100a76ba2cc793c7c1a09",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -13955,13 +13955,13 @@
                   399
                 ],
                 "margin": [
-                  311,
-                  245,
-                  636,
-                  625
+                  195,
+                  120,
+                  436,
+                  425
                 ],
                 "source_anchor": [
-                  256,
+                  272,
                   482
                 ],
                 "rgba_sha256": "6ca24f7966471174311413655d47100d8cc9bf1bd8d81456aa0e436ee1839ba8"
@@ -13976,13 +13976,13 @@
                   452
                 ],
                 "margin": [
-                  347,
-                  192,
-                  686,
-                  572
+                  231,
+                  67,
+                  486,
+                  372
                 ],
                 "source_anchor": [
-                  768,
+                  784,
                   482
                 ],
                 "rgba_sha256": "73a2a972f993a120e6517624eb85aff1d290a85b5fd32a162061ea2200f28401"
@@ -13997,13 +13997,13 @@
                   406
                 ],
                 "margin": [
-                  349,
-                  238,
-                  638,
-                  618
+                  233,
+                  113,
+                  438,
+                  418
                 ],
                 "source_anchor": [
-                  256,
+                  272,
                   964
                 ],
                 "rgba_sha256": "eacfddb8e6d22ab52ad59954e751136d9de0010ad8d1cd7eae368a123a3748ef"
@@ -14018,13 +14018,13 @@
                   386
                 ],
                 "margin": [
-                  260,
-                  258,
-                  559,
-                  638
+                  144,
+                  133,
+                  359,
+                  438
                 ],
                 "source_anchor": [
-                  768,
+                  784,
                   965
                 ],
                 "rgba_sha256": "308b93722f484fa07b4ff790e6dda304f6d2c3cadf7a0822345a73ff6afcec7c"
@@ -14039,14 +14039,14 @@
                   362
                 ],
                 "margin": [
-                  303,
-                  282,
-                  544,
-                  662
+                  187,
+                  174,
+                  344,
+                  462
                 ],
                 "source_anchor": [
-                  256,
-                  1437
+                  272,
+                  1420
                 ],
                 "rgba_sha256": "b8f780f5e3747fbf946b0edd4fff7ac37774021889ba81d8618225cc22c41490"
               },
@@ -14060,13 +14060,13 @@
                   398
                 ],
                 "margin": [
-                  305,
-                  246,
-                  650,
-                  626
+                  189,
+                  121,
+                  450,
+                  426
                 ],
                 "source_anchor": [
-                  768,
+                  784,
                   1450
                 ],
                 "rgba_sha256": "ad49e256e3c8874be00edc2cb3a3b0e8d2ad00283b5a565f9cd29e78e0ad2726"
@@ -14075,13 +14075,64 @@
             "distinct_pixel_frames": 6,
             "neutral_height": 386.5,
             "canvas_size": [
-              1024,
-              1024
+              824,
+              824
             ],
             "foot": [
-              512,
-              640
+              412,
+              515
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+            "base_geometry_sha256": "f7541aa4721f0a61f818067e6baa7e042935e1deadb1de8debf4f6631ff0b2c5",
+            "derived_geometry_sha256": "468e06d8ef144868c4260899a615e42f42d6de27f8644bbaf04b0a0c7b421fed",
+            "review_sha256": "4cb1c54cff8c7d0fee246df845354d19e810c0f4a8a8314391b213067a1acb41",
+            "review_basis": "Actual r081 compiled AtlasTexture region/margin/crop-SHA comparison against selected SW idle shows attack0/5 about20% physically undersized in head/shoulder/torso, not merely crouch height. Uniform C824 increases every attack phase by1024/824 without changing per-phase relative body scale. Common source-anchor X+16 across all6 aligns guard/recovery root with idle while exactly retaining authored relative X trajectory. Only follow-through4 source-anchor Y is corrected1437->1420, the last strong-alpha pixel of its planted front boot; automatic anchor followed lower blade tip and caused unsupported float. Other foot Ys unchanged, preserving genuine raised legs, load/crouch and forward lunge. Timing/order/hit3 untouched; actual Player recapture still required.",
+            "direction": "SW",
+            "pose_count": 6,
+            "canvas_size": [
+              824,
+              824
+            ],
+            "foot": [
+              412,
+              515
+            ],
+            "source_anchors": [
+              [
+                272,
+                482
+              ],
+              [
+                784,
+                482
+              ],
+              [
+                272,
+                964
+              ],
+              [
+                784,
+                965
+              ],
+              [
+                272,
+                1420
+              ],
+              [
+                784,
+                1450
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              824
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -16062,11 +16113,11 @@
       "detailed_completed": false,
       "completed_added": 0,
       "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
-      "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
+      "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r081/NativeMotionProfile.tres",
-      "native_profile_sha256": "3ea1daa419ac14ba3532f1f689649a86969c262f87954931fc4f5c11b4b25de8",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r082/NativeMotionProfile.tres",
+      "native_profile_sha256": "4452c78c32ac2c1b9f6bc67eaeae7dd4a55aec986b0c1482e1557208fb71f361",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 390.75,
@@ -16085,585 +16136,9 @@
         "Player_position_collision_class_combat_sequence_preserved": "PASS",
         "missing_locomotion_not_replaced_or_aliased": "PASS",
         "actual_Main": "NOT_RUN",
-        "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+        "visual_approval": "NOT_RUN",
         "completed_added": 0,
-        "actual_Player_dedicated_actions_and_markers": "PASS",
-        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
-      },
-      "visual_quality_hold": {
-        "key": "transform:267",
-        "status": "HOLD",
-        "scope": "all_native_clips",
-        "clips": 48,
-        "reason": "Original pale face, narrow gold radial spines, long dark goldtrim skirt and sinuous weapon were redesigned; several action headings reverse",
-        "private_review": "All48clips/288poses and original portrait reviewed privately; faithful identity reauthoring in progress",
-        "completion_change": 0,
-        "corrections": [
-          {
-            "slot": "transform:267:E:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six poses retain the corrected pale exposed face, long pale hair, narrow hard gold radial back spines, dark gold-trim long skirt and long thin sinuous weapon. No prior red V mask, orange feather fan or short broad sword.",
-              "All six head/chest orientations remain east/right with the same weapon hand; no front-facing reversal appears during the collapse.",
-              "Distinct upright fatal recoil, bowed failing knees, low knee buckle, forward falling/landing pose, grounded impact and settled horizontal corpse are present. Final head lies screen right and feet left; the spine array follows the fallen torso rather than remaining a standing ghost.",
-              "Full silhouette including weapon and physical golden spines is visible, with no source outer-edge clipping. Six large disjoint foreground bodies are available."
-            ],
-            "source_review_sha256": "cc971ebd817c42652fabe87cfc46d95d88a05e946765ef16615546191357bab6"
-          },
-          {
-            "slot": "transform:267:E:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Identity review against only the original portrait and faithful canonical reference: pale visible face, long pale/white hair, original gold head structure, dark gold-edged armor, long dark gold-trimmed skirt, thin radial gold back-spines and the single long sinuous glowing original weapon are retained. No red mask, broad replacement wings or short-skirt redesign.",
-              "Absolute compass: all six figures retain EAST/screen-right heading. Pale face remains a right-facing profile, including the tilted-up head during recoil; no south-facing front-body or back-view substitution.",
-              "Phase0 is stable guard; phase1 visibly tips the torso/head backward and raises the free arm; phase2 has maximum backward torso/head recoil, extended neck and different hip/knee articulation. This is actual body reaction, not opacity, tint or rigid global translation.",
-              "Phase3 shows a wide counterbalance/stagger stance, flexed knees and torso recovery; phase4 regains guard with recovering shoulders/hips; phase5 settles into stable east guard. All six silhouettes and joint positions are distinct.",
-              "The same anatomical right hand continuously holds the one sinuous weapon low at the near side; it follows wrist/body inertia without becoming an offensive swing or switching hands. The free hand remains unarmed.",
-              "Long hair, skirt and radial spines respond consistently with torso lean while the body/gear remain recognizable and complete. The original lower legs and boots are present without an extra leg or disconnected body copy.",
-              "Unchanged strict source analyzer and complete-pose-region gate pass six complete distinct poses. No generated pixel resampling, masking, recoloring, cropping, atlas repair or gate relaxation was performed."
-            ],
-            "source_review_sha256": "da555d57f829fea65dcc064836e88947ffc32bd4d2f7366cbe84937c29c2eca9"
-          },
-          {
-            "slot": "transform:267:S:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six poses retain exposed pale face, long pale hair, narrow hard golden radial back spines, dark long gold-trim skirt and a long thin sinuous weapon in the same original right hand. Prior red-mask/flame-feather/broad-blade redesign absent.",
-              "South-facing front chest/pelvis heading persists into a forward/down-axis fall. During bending/falling the back naturally becomes visible, with head toward screen bottom and boots trailing screen top; no lateral east/west corpse or north reversal.",
-              "Six articulated phases show upright fatal recoil, bent failing knees, deep buckle/hand reach, forward falling/landing, low ground impact and settled fully prone corpse. Final head, hand and hair settle after phase4; the physical back-spine array lies with the fallen torso rather than floating as an upright ghost.",
-              "Every body, both boots, long hair, full spine silhouette and entire sinuous weapon remain visible; all six silhouettes are separate and no opaque foreground touches the outer image edge."
-            ],
-            "source_review_sha256": "7cea2f5e38b607bd5d843f6517ee90e7064e17b41db41a2c96478efa814b96a2"
-          },
-          {
-            "slot": "transform:267:E:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Exact original/canonical major identity retained: pale visible face and long pale hair, tall gold/black head ornaments, narrow rigid gold radial spikes, long dark goldtrim skirt, long thin sinuous orange/gold weapon in anatomical right/near hand. No redmask/flamefeather/shortblade redesign.",
-              "All6 consistently lookE/right at matching camera and maintain model/equipment scale and silhouette. Entire body, every spike, boots and weapon tip visibly preserved.",
-              "Both boots remain planted in matching staggered stance; no walk step, raised knee or attack. Pelvis stays stable while subtle chest/shoulder/head posture follows inhale/peak/exhale/settle cycle.",
-              "Local hair strands, robe hem, right wrist and shoulder/forearm shape respond across breathing phases rather than a simple global translation/tint. Phase2 reads as the lifted inhale state and later phases settle toward0.",
-              "Weapon remains the same long curved contour and low grip, with small coherent wrist response, not a material/shape replacement. Rigid spike attachments remain stable.",
-              "Strict original analyzer rows6/phase_grid2/canvas1024/reference_rows0/3 passes with6 distinct pixel frames."
-            ],
-            "source_review_sha256": "564b772476020739685da9b2f8699fddb8d9ca9ea2e3ee454b0335fb09d9dbc7"
-          },
-          {
-            "slot": "transform:267:S:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Absolute compass: all six figures show SOUTH/screen-down front view, with frontal pale face and front chest emblem/armor visible. No left/right body yaw or side-view substitution occurs during recoil.",
-              "Anatomical right hand is consistently at IMAGE LEFT and holds the same one long sinuous original weapon in all six phases. IMAGE RIGHT is the unarmed left hand. The weapon stays low, without an offensive slash or hand swap.",
-              "Phase0 braces; phase1 lifts chin and pitches shoulders/chest backward-away; phase2 has maximum coherent torso/head recoil and a different free elbow/hip/knee configuration. Face remains frontal while the neck pitches back.",
-              "Phase3 uses staggered original feet and flexed knees to counterbalance, with lowered shoulders and an extending free arm. Phase4 regains the torso over the feet; phase5 settles into frontal guard with distinct foot/arm/hair placement.",
-              "Actual articulated head, shoulders, torso, arms, hips, knees and support stance change through the sequence; this is not global translation, tint/opacity, repeated portrait frames or an attack sequence.",
-              "Pale uncovered face, long pale/white hair, thin radial gold back-spines, original gold head structure, dark gold-trimmed armor and long dark skirt remain faithful to the original/canonical identity. The full weapon and boot/spine tips remain visible.",
-              "Unchanged strict analyzer plus complete-pose-region gate pass six complete distinct poses. Generated pixels remain untouched; no cropping, resampling, manual body edits, broad glow masking or validator relaxation."
-            ],
-            "source_review_sha256": "3f27dca9786e4e4d6c0f18d806730199b325d625ae2f2b2ef0a164e83eccdee4"
-          },
-          {
-            "slot": "transform:267:S:walk",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Original-faithful pale face/hair, narrow gold radial spines, dark long gold-trim skirt and long thin sinuous weapon persist; same anatomical right weapon hand/image-left.",
-              "All six remain front/SOUTH, without heading flips or whole-model mirroring.",
-              "Genuine alternating gait:0-2 right support with left swing/knee flex;3-5 left support with right swing/knee flex. Both boots and altered lower-leg articulation are visible.",
-              "Whole pelvis/knee/boot inspection confirms plausible opposite contact exchanges2->3 and5->0. The initial phase-label-only HOLD has been preserved and explicitly superseded by motion-reassessment.json.",
-              "Six complete disjoint silhouettes, no opaque source outer-edge clipping."
-            ],
-            "source_review_sha256": "7141ee4b5b4c66a12d5476350ed8c05f0111df9d751170eaa4f3c724dfac9fd8"
-          },
-          {
-            "slot": "transform:267:S:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 show actual FRONT/S face, chest and pelvis toward viewer/screenDOWN, both shoulders visible; no E profile, back or opposite-heading frame.",
-              "Original pale visible face and long pale hair, tall dark/gold head ornaments, narrow hard gold radial spikes, long dark goldtrim skirt and dark boots are preserved; no generic redmask/flamefeather/shortblade redesign.",
-              "Original long thin sinuous orange/gold weapon stays in anatomicalRIGHT hand on IMAGELEFT in every front pose. Free anatomicalLEFT hand stays IMAGERIGHT empty. Whole blade contour/tip visible, no hand swap or mirror.",
-              "Both boot soles remain planted in stable two-foot guard without stepping/raised knee. Local chest/head/shoulder/forearm posture, hair strands and cloth hem vary through inhale/peak/exhale/settle cycle while stance and facing remain steady.",
-              "Body and equipment proportions stay coherent across6; rigid gold radial spine attachments remain consistent. Full body/gear including long outer rays and blade tip are not visibly cropped.",
-              "Unchanged strict analyze rows6/phase_grid2/canvas1024/reference_rows0,3 passes with6 distinct pixel frames."
-            ],
-            "source_review_sha256": "4b4e5770137f221d7794d430ae9be0ca70f1284c6c1bea44668ac3c2f7cdab70"
-          },
-          {
-            "slot": "transform:267:N:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Absolute compass: all six show NORTH/screen-up BACK views, back of the gold head structure and long pale back-hair, back armor/skirt and rear boots. No front face, frontal chest emblem, breastplate or east/right-facing profile appears in any phase.",
-              "Anatomical RIGHT weapon hand is consistently IMAGE RIGHT, while IMAGE LEFT is the unarmed left hand. The same single long sinuous original blade remains low to the right, never becoming a slash or a second weapon.",
-              "Phase0 is back guard; phase1 raises the free arm, shifts shoulder/hip balance and reacts through the head/hair; phase2 has the strongest spread free-arm/elbow and shoulder/head/hip response with bent support and pronounced pale-hair lag while retaining the back-facing model.",
-              "Phase3 visibly countersteps an original foot and flexes the knees to regain balance, phase4 recovers the torso over the feet, and phase5 settles into stable NORTH/back guard. Genuine joint and stance changes distinguish the six drawings; they are not translated/tinted/opacity variants.",
-              "Long pale hair drapes over the upper back, narrow hard-gold radial shoulder/back-spines retain their thin original form, long dark gold-trimmed skirt and full original boots/weapon preserve the faithful canonical identity. No redesigned red mask or broad substitute wings are used.",
-              "All six full characters have readable complete gear, spine tips and blade tips. The unchanged strict analyzer and complete-pose gate pass six complete distinct regions, with original generated pixels preserved."
-            ],
-            "source_review_sha256": "1973dddef8424320450e524c24de1b50e2e7e40c1880069f9a8a20f57959a71b"
-          },
-          {
-            "slot": "transform:267:N:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 are genuine NORTH rear view: rear helmet, long pale back hair, rear dark gold-trimmed skirt, face/front chest hidden.",
-              "Same original anatomical RIGHT arm (viewer-right rear) holds one long sinuous orange-gold weapon in every phase; left arm stays free.",
-              "Phase1 raises weapon, phase2 bends loaded elbow, phase3 opens the shoulder/elbow into a clear UP/NORTH extension, phase4 follows through up-right while body remains rear/N, phase5 recovers.",
-              "Six clearly changed arm/torso/knee and cloth states; no front/right body snap.",
-              "Original pale hair, narrow hard gold rays and long dark gold-trim skirt retained; no red mask, feather fan, broad short sword or leg-armor replacement."
-            ],
-            "source_review_sha256": "5d355c79e2a3a8ca2608424f49e1d5dfbf815a0bd83cfefcc8a6372c880a10fa"
-          },
-          {
-            "slot": "transform:267:NE:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Absolute compass: all six are rear-right NORTH-EAST views, with back helmet, long pale back-hair and back armor visible, plus right-side depth and oblique boots distinguishing the new direction from the straight-N rear guide. No front face/breastplate or front-right EAST substitution occurs.",
-              "Phase0 braces; phases1-2 show actual shoulder/head/hip recoil, raised free-arm counterbalance and hair/skirt lag; phase3 makes a clear original-foot counterstep with flexed knees; phases4-5 settle back to the same rear-right guard. Joint changes are genuine, not global translations or color/opacity variations.",
-              "The same anatomical right weapon arm is the near/right arm, with the single long sinuous original blade at image right throughout. The other hand remains free even during cross-body counterbalance. No attack slash, mirror or hand swap.",
-              "Faithful pale back-hair, narrow hard-gold radial spines, exact gold head structure, dark gold-trimmed long skirt/armor and original weapon/boots are maintained. Full body and gear are present.",
-              "Unchanged strict analyze plus complete-pose-region gate pass six complete distinct poses; generated pixels remain untouched."
-            ],
-            "source_review_sha256": "3576cdddf2e0c5bd84be370fc7ba2985275bb6250c0c9f6e5af7697e26a93e48"
-          },
-          {
-            "slot": "transform:267:N:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 actual source poses are unambiguous N/backUP: back helmet and long pale hair/back torso visible, no face/eyes/front chest star, both boots face away.",
-              "Original anatomicalRIGHT hand is imageRIGHT and holds same long thin sinuous orange/gold blade; free left hand imageLEFT is empty.",
-              "Original thin hard gold radial spines, tall head ornaments, long dark goldtrim skirt and opaque dark/gold armor are retained, not redmask/flamefeather redesign.",
-              "Feet remain planted in a stable stance; local back/shoulder/elbow response and clear coherent pale-hair/robe settling variation form a restrained idle without step or weapon attack.",
-              "All physical equipment/boots/blade tips remain visible; radial spine attachments stay rigid and body scale is coherent across6."
-            ],
-            "source_review_sha256": "c71d6bb38b4881bfe82e6e32428e4fe64878c84891245ffacbe145491d409808"
-          },
-          {
-            "slot": "transform:267:N:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six maintain true NORTH full-rear heading: only back of crown/head and long hair/back armor are visible, with original right-hand weapon on image right. No front face/chest or intermediate east turn. Fall and final prone corpse have head toward screen TOP, feet toward BOTTOM, and visible boot soles/flattened torso establish the physical forward fall.",
-              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
-              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
-              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
-            ],
-            "source_review_sha256": "7bc287283a5752eb87451d58ae3555d9408c046c27ff8072cf0b9797a282ba02"
-          },
-          {
-            "slot": "transform:267:NE:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 remain rear NORTHEAST: back helmet/hair/armor/skirt dominate, face/front chest hidden, body/pelvis/boots point upper-right.",
-              "Same original anatomical right arm holds the long sinuous orange-gold weapon; left arm remains free with connected elbows/hands.",
-              "Phase1 weapon raises NE, phase2 visibly bends loaded elbow and knees, phase3 straightens shoulder/elbow into a real UP-RIGHT reach with full weapon projected NE, phase4 follows through NE, phase5 rear NE guard.",
-              "Long pale hair, hard narrow gold radial spikes and dark long gold-trim skirt retained; no red mask/feather fan/short broad blade/leg-armor replacement."
-            ],
-            "source_review_sha256": "1173ffd381801ac9478fcb0aea792ed448743f1a1a8e2c3cde9c3438a25d989a"
-          },
-          {
-            "slot": "transform:267:NE:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six retain rear-right NORTHEAST heading: back of head/long hair and back armor dominate, with no front chest model or east-facing intermediate replacement. The body progressively bends and falls along the diagonal; impact/corpse have head UPPER RIGHT and both feet LOWER LEFT with boot soles visible. Complete body lies prone at the end; the single weapon remains beside its original right-hand side.",
-              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
-              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
-              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
-            ],
-            "source_review_sha256": "f252ba5ab9fc3f6926863668184c4eb14e183c1b8c8f27ec31d0afdb0f05994b"
-          },
-          {
-            "slot": "transform:267:NE:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 show stable NE/back-right view: back/hair dominates, right shoulder/arm and right-facing-away boot perspective visible, no pale front face/cheststar and no SE/front turn.",
-              "Original anatomicalRIGHT hand remains the projected right/lower near-side hand with same long thin sinuous orange/gold weapon; free farLEFT hand stays empty.",
-              "Original tall head ornaments, pale back hair, thin rigid gold radial spines, long dark goldtrim skirt and opaque dark/gold armor stay faithful; no redmask/flamefeather redesign.",
-              "Both boots remain planted; small local back/shoulder/elbow pose and clear hair/robe lag vary through breathing/settling rather than a step, attack or global tint/translation.",
-              "Body scale and equipment attachment remain coherent across6, full physical spikes/boots/weapon tip visible."
-            ],
-            "source_review_sha256": "80f842a28ab280cbcb2037a57d15ae76d8f56b29c979675617e8595f774b2c07"
-          },
-          {
-            "slot": "transform:267:NW:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six retain rear-left NORTHWEST heading rather than NE: crown/head and bending torso aim upper left; back hair/back armor remain visible and no front-facing model appears. Deep buckle, fall and prone corpse are on the UP-LEFT axis, head UPPER LEFT and feet LOWER RIGHT. The weapon stays in the same anatomical RIGHT hand/image-right-side arm throughout all six; no mid-action hand swap or mirror. The free left arm braces separately.",
-              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
-              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
-              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
-            ],
-            "source_review_sha256": "af2e11067c72129c8cc0ce0868f11db77a6642817aa7417da1e82afc26418727"
-          },
-          {
-            "slot": "transform:267:NW:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Actual6 poses remain BACK-LEFT/NW, not NE: left boot toe projects screenLEFT while opposite boot reads rear/heel, left near shoulder/arm silhouette is exposed, helmet/back axis and pale back-hair placement turn left-away. No front face/cheststar and no right-facing boot/helmet reversal.",
-              "AnatomicalRIGHT weapon remains the far/right projected arm with same long thin sinuous glowing blade on imageRIGHT; nearLEFT hand imageLEFT is empty. It is not a simple mirrored NE sprite/hand swap.",
-              "Original tall dark/gold ornaments, long pale back hair, thin hard gold radial spikes and long dark goldtrim skirt remain faithful without redmask/flamefeather redesign.",
-              "Both feet remain planted throughout6, while back/shoulder/elbow posture and clearly moving hair/robe lag create locally articulated idle/settle states.",
-              "Full gear/boots/blade tip visible, physical spine attachments rigid, coherent body/equipment ratios across6."
-            ],
-            "source_review_sha256": "a7b9300015692b8afba070f466285164c484c58e0be0d77088455b6b01a8e498"
-          },
-          {
-            "slot": "transform:267:SE:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 maintain SOUTHEAST/front-right: pale face/front chest visible, nose/torso/hips/knees/boot toes point down-right; no rear NE or leftward body switch.",
-              "Original anatomical right/image-left-front arm retains the one long sinuous weapon throughout. Free left hand remains distinct and unarmed.",
-              "Phase1 retracts right arm back-left, phase2 coils shoulder/elbow/knees, phase3 visibly extends connected right arm into LOWER-RIGHT and full blade continues DOWN-RIGHT toward foreground; phase4 absorbs SE followthrough, phase5 SE guard.",
-              "Original pale face/long hair, thin hard gold rays, long dark gold-trim skirt and original long curved weapon retained; no red mask/flame feather fan/short broad sword."
-            ],
-            "source_review_sha256": "47b6f772c91e11751b06dedf78f1928d756fd547bff9d64ad9f28adcd5fe22b4"
-          },
-          {
-            "slot": "transform:267:SE:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six retain front-right SOUTHEAST heading: visible pale face and front chest/waist point down-right without rear or east-only model substitution. There are exactly TWO coherent arms/hands: anatomical right holds the sinuous weapon at the viewer-left body side, free left arm braces separately. The diagonal fall and full prone corpse have head LOWER RIGHT and feet UPPER LEFT, with both arms and both boots retained through impact/settling.",
-              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
-              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
-              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
-            ],
-            "source_review_sha256": "32d379b9650714bc974aabf7979354c07ea81cd2c51599fd40316ba63a7862bc"
-          },
-          {
-            "slot": "transform:267:SE:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Absolute compass: all six keep SOUTH-EAST/front-right DOWN-RIGHT heading, with pale front-right facial surfaces and original front chest armor visible. This is distinct from the horizontal EAST side profile and from rear-right/back view.",
-              "Phase0 braces; phases1-2 pitch the torso/head back toward upper-left opposite the incoming front-right hit, with maximum genuine chest/neck recoil at2 while yaw stays front-right. The free arm, hips and knees visibly articulate rather than translating the whole figure.",
-              "Phase3 adopts a balanced bent-knee stagger/counterstep; phase4 brings the torso back over the feet; phase5 settles into the same front-right guard. Long hair/skirt lag follows the body and all six drawings are distinct.",
-              "Anatomical RIGHT weapon hand remains at near/image-left side and holds the same one full long sinuous original blade low, without an attacking slash or hand swap. The image-right hand stays unarmed.",
-              "Pale visible face, long pale hair, original gold head structure, narrow hard-gold radial spines, long dark gold-trimmed skirt/armor and original boots remain faithful. No red mask, broad replacement wing or short-skirt redesign.",
-              "Strict direct source import reports GEOMETRY_HOLD because a pose bounding rectangle includes another body. Original full bodies/tips look complete in private review, but this does not authorize unsafe direct rectangular cropping."
-            ],
-            "source_review_sha256": "5d5e872af7bd466af3e0d7c740e55770c7711142060670b2d985a5f547137493"
-          },
-          {
-            "slot": "transform:267:W:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 face WEST/screen-left: pale nose/profile, shoulders, hips, knees and feet maintain leftward heading; no E/right reversal.",
-              "Phase1 lifts original long blade, phase2 genuine elbow/hip load, phase3 clearly straightens same weapon shoulder/elbow into LEFT reach with full sinuous weapon, phase4 absorbs left followthrough, phase5 left guard.",
-              "Original anatomical right weapon arm remains the consistent far/forward-side arm through guard/load/contact, while nearer/free left arm balances.",
-              "Original pale face/long pale hair, narrow hard gold rays and long dark gold-trim skirt preserved; no red mask, broad feather fan, short blade or skirt replacement."
-            ],
-            "source_review_sha256": "9f0f6f3e42b53c0f75df27c1fc1d0ea263159158dff0bdcca6a0b38204555ece"
-          },
-          {
-            "slot": "transform:267:SE:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 show actual FRONT-RIGHT/SE: pale front/right face and centered front chest visible, torso/pelvis and near boot toe project DOWNRIGHT; not E pureprofile, NE back view or opposing turn.",
-              "AnatomicalRIGHT near arm remains imageLEFT/lower side and grips same long thin sinuous orange/gold blade; farLEFT hand imageRIGHT is empty/braced. No hand swap or additional weapon.",
-              "Original pale face/long pale hair, tall gold/black head ornaments, thin rigid gold radial spikes and long dark goldtrim skirt are faithful, without old redmask/flamefeather/shortblade redesign.",
-              "Both soles remain planted in stable guard. Chest/shoulder/head/forearm and gentle hair/robe lag visibly change through breathing/settling, not a walk, attack or rigid tint/translation substitute.",
-              "Body/equipment ratios coherent across6; full physical spines, boots, robe and long curved blade tip visible."
-            ],
-            "source_review_sha256": "4720c3da0c4b06c2edb371e00701f2c95293bd272ad419db183dbe6f9fbdfdc2"
-          },
-          {
-            "slot": "transform:267:NW:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "New correct NW idle/death conditioning resolves the v02 guard reversal: ALL SIX now retain BACK-LEFT/NORTHWEST heading. The near left boot toe projects LEFT, the far right boot reads back/heel, and helmet/back torso aim upper-left away, including guards0/5.",
-              "The near anatomical LEFT arm is visibly empty at image left; the far anatomical RIGHT hand keeps the single original long sinuous weapon at image right. No mirroring, hand swap, front face/cheststar or right-facing guard is present.",
-              "Phase0 braces; phase1 begins genuine backward shoulder/head/hip reaction opposite the upper-left heading; phase2 has maximum actual back-pitch, knee flexion and counterbalancing free-left arm/hair lag while retaining back-left yaw. Phase3 countersteps and regains balance;4-5 settle into the same NW guard.",
-              "Long pale upper-back hair, exact gold head structure, narrow hard-gold radial spines, dark gold-trimmed long skirt/armor and original boots/blade remain faithful. All original body/gear tips are visible and six phases have distinct joint/stance articulation.",
-              "Unchanged strict analyzer plus complete-region gate pass six complete distinct source poses. No source pixels were moved or edited. Prior v02 HOLD request/result/raw SHA are unchanged."
-            ],
-            "source_review_sha256": "aa93c040c0822b309eda0a46ed49b4c578707d1a804e6917fd339dc454e782e1"
-          },
-          {
-            "slot": "transform:267:W:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 are consistently LEFT/W lateral: pale face has clear left silhouette/profile rather than front-facing eyes, head/chin/nose and both boot toes aim left, torso/pelvis keep matching left axis. No SW-facing front-head replacement or opposite-heading frame.",
-              "Near anatomicalLEFT arm is foreground/camera-side on projected right and its hand stays EMPTY; anatomicalRIGHT/FAR arm projects left of torso with same sinuous weapon grip. Correct far-weapon/near-free layering is visible, not a mirrored E hand swap.",
-              "Original visible pale face and long pale hair, tall gold/black ornaments, thin hard gold radial spines, long dark goldtrim skirt and long thin curved weapon remain faithful.",
-              "Both boot soles stay planted; local chest/shoulder/head/forearm and clear hair/robe lag vary through breathing/settling without a walking step or attack.",
-              "Body/equipment scale and rigid spine attachment remain coherent across6, all boots/gear/long blade tip visible."
-            ],
-            "source_review_sha256": "8c9daba98583f83b1f1e3e84b81a1416e3718d732c2a886870008cacbd9c05d7"
-          },
-          {
-            "slot": "transform:267:S:run",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six poses keep front SOUTH face, shoulders, chest and pelvis; pale face, long white hair, chest core and thin gold radial spines match the faithful canonical and selected new S walk.",
-              "One sinuous luminous weapon remains in anatomicalRIGHT/imageLEFT hand throughout; imageRIGHT hand stays free. Long dark gold-trimmed skirt panels remain visible and flare with leg drive; no pants-only redesign.",
-              "The gait genuinely exchanges leg arrangements: phases0/3 have one boot extended/loaded and the other tucked, phases1/4 show the opposite leg arrangement with knee drive, and phases2/5 show shorter/tucked passing configurations. This is visibly faster and more articulated than the saved slow S walk; not all frames retain one leading leg.",
-              "Phase2->3 and5->0 read as compact passing/flight into a longer opposite-leg extension/landing; skirt, knees and boots articulate while front-body orientation and weapon hand remain stable.",
-              "All six complete figures and equipment fit the source without significant alpha on any outer border; strict source geometry independently finds six distinct poses."
-            ],
-            "source_review_sha256": "db4df96e7dc7797442bf9d0702bb691ece17da22876e7ac7e6dc12123505cd61"
-          },
-          {
-            "slot": "transform:267:SW:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v03iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Correct original-faithful SW/front-left initial model: pale face/nose LEFT, wider front chest/waist than W and down/left near-boot toe. No old right-facing initial pose.",
-              "All six retain exactly TWO arm chains: original far anatomicalRIGHT bears the full sinuous weapon; foreground anatomicalLEFT is empty and braces. No side swap, extra fist or hand.",
-              "Whole-body progression is a coherent leftward side/forward death fall from the SW stance: knee failure, low buckle, horizontal chest over the same bracing forearm, grounded impact and relaxed full prone corpse.",
-              "The final corpse is approximately W-aligned because the character falls/rolls laterally LEFT. This is acceptable physically continuous motion, with no new face plane, anatomical heading snap, boot-side flip or model replacement. Initial axis-only HOLD is preserved and superseded by motion-reassessment.json.",
-              "Long pale hair, long dark gold-trim skirt, narrow attached gold radial spines, exposed pale face and full original sinuous weapon remain coherent. Six complete disjoint bodies, no outer-edge clipping."
-            ],
-            "source_review_sha256": "98fd431694272306abf4b075157137488271cf7be07a90eff72816f80980db7c"
-          },
-          {
-            "slot": "transform:267:SW:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "The new actual LEFT-facing SW idle v03 as FIRST compass master resolves the v02 right-looking guard/impact failure: ALL SIX now keep pale nose/chin and helmet aiming LEFT, with front-LEFT SOUTHWEST chest/pelvis and down-left boots. Guards0/5 and impacts1/2 do not reverse toward right.",
-              "Phase0 braces; phase1 visibly pitches shoulder/chest/head backward while keeping LEFT yaw; phase2 is the strongest genuine torso/neck recoil, chin lifts but pale face/nose remains LEFT; phase3 adopts flexed-knee counterbalance and free-arm extension; phases4-5 recover the same front-left guard.",
-              "Anatomical RIGHT far/image-left arm continuously holds the one original long sinuous weapon low, while the near anatomical LEFT/image-right hand stays empty. Original grip and full blade remain visible, without attack slash, hand swap or mirror.",
-              "Original pale exposed face, long pale/white hair, exact gold head structure, narrow hard-gold radial spines, long dark gold-trimmed skirt/armor and original boots remain faithful. Six actual joint/stance changes, no tint/opacity or global translation substitute.",
-              "Unchanged strict analyze plus complete-region gate pass six complete distinct poses. The v02 HOLD request/result/raw checksums are unchanged and no source pixel has been patched, cropped, mirrored, resampled or spliced."
-            ],
-            "source_review_sha256": "bece9c5c2cf3b73228da4d3f47b894837ad9843bac4070094e06dd5087aae353"
-          },
-          {
-            "slot": "transform:267:SW:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Actual ALL6 face FRONTLEFT/SW: pale nose/chin point LEFT, front-left pale face/chest remain visible, pelvis and both boot toe projections aim DOWNLEFT. None defaults to right-facing/SE or rear view.",
-              "AnatomicalRIGHT FAR shoulder/arm projects imageLEFT and grips original long thin sinuous orange/gold blade. Near anatomicalLEFT shoulder/arm is foreground imageRIGHT and its hand EMPTY. Correct layered arm assignment rather than mirrored SE swap.",
-              "Original pale human face, long pale hair, tall gold/dark ornaments, thin hard gold radial spines, long DARK goldtrim skirt and black/gold armor are retained; no redmask/flamefeather/shortblade redesign.",
-              "Both boot soles/pelvis anchor remain planted in stable guard; real local chest/shoulder/head/forearm and hair/robe lag vary through six restrained inhale/exhale/settle poses without stepping or attack.",
-              "Full body/gear/rigid spine attachments and entire same long curved blade/tip remain visible and coherent across6.",
-              "Unchanged strict geometry analyzer rows6/phase_grid2/canvas1024/reference_rows0,3 passes6 distinct physical frames."
-            ],
-            "source_review_sha256": "d84189bbd51c0ea4b4a8c1592d1f8c6a43131aedc03cdd40deba8e93f7f6b0a5"
-          },
-          {
-            "slot": "transform:267:E:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six original E attack phase constructions/order are retained: low guard0, raised same-hand anticipation1, bent-knee load2, E/right extended contact3, down-right follow-through4 and low recovery5. None was replaced by idle or another direction.",
-              "Every pale face/head, torso/pelvis and leg heading remains E/right. Long pale hair, crown, narrow hard gold radial spikes, long dark goldtrim skirt and original armor/boots remain original-faithful.",
-              "Exactly TWO arm/hand chains in each pose; original anatomicalRIGHT retains the single long thin sinuous orange-gold weapon throughout. Contact3 still extends RIGHT with repeated narrow S-curves and taper, not a short broad blade, and the free left arm is distinct.",
-              "Outside diffuse glow/haze is substantially removed. At alpha>16 the edited raw has SIX complete separate connected foreground bodies, compared with the prior blocking bridge. No opaque source outer-edge clipping.",
-              "Raw nominal bounding rectangles still overlap, so raw strict extraction remains HOLD. One unchanged LOSSLESS repack succeeds: six distinct complete frames, all alpha>16 foreground RGBA preserved, no resampling/recoloring/new poses, maximum removed distant background alpha16. Strict original importer and complete-pose ownership check PASS for the derivative."
-            ],
-            "source_review_sha256": "72c9b3e8f5982bfd2c715f322064d9e69a810b9038b7fdd85eea2850de75be82"
-          },
-          {
-            "slot": "transform:267:N:walk",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
-              "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
-              "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization.",
-              "Six selected regions retain exact original RGBA/provenance. Public strict6pose importer and complete coverage passed at2048. Three terminal alpha21/61/41 pixels retainedexact; full sharp blade tip privately confirmed, no strong foreground boundary clip.",
-              "Runtime proposal uses measured pelvis-axis/supportsole anchors, not old cell-center/bbox anchors."
-            ],
-            "source_review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205",
-            "scoped_runtime_visual_review": {
-              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r076-N-walk.json",
-              "sha256": "a93e87899bf7ffc623c79a7dc29248f31ed2cbe9ee06a1bdc274405ef60f92c3",
-              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
-              "review_status": "PASS_SCOPED_NATIVE_N_WALK_RUNTIME_VISUAL_QC"
-            }
-          },
-          {
-            "slot": "transform:267:W:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v03composite01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Complete near anatomical LEFT shoulder/arm route has been rebuilt, not merely a fist removed. Shoulder pauldron rotates into a visible upper arm descending forward-left to an elbow, then forearm runs across the foreground breastplate to wrist and raised OPEN empty hand. No hanging upper-arm stump or wrong opposite-chest emergence remains.",
-              "Original far anatomical RIGHT weapon-bearing arm is separate, its wrist/hand still grips the same full long sinuous blade low image-left. Exactly two connected arm chains and two hands are visible.",
-              "Actual maximum head/torso backward recoil, bent supporting knees and hips, LEFT facial/body yaw and same isometric camera remain. Long pale hair, pale face, original gold head structure, narrow hard-gold back spines, long dark gold-trimmed skirt and boots preserve the faithful model.",
-              "Uniform DISPLAY-only0.377 comparison places the new higher-resolution pose alongside source phase2 and retained neighbors1/3. Head/torso/hip/boots ratios and full weapon/spine proportions are consistent; source resolution itself is not a defect. A rounded2720 virtual-canvas candidate is only a proposal requiring actual runtime proof.",
-              "Fresh independent reviewer confirms the new continuous LEFT chain, separate RIGHT weapon chain, no remnant/extra arm, and consistent normalized model/camera at moderately high confidence. Source extraction under unchanged gate finds one complete distinct pose.",
-              "All6 selected source regions retain exact original RGBA, one new corrected phase2 and five unchanged approved source-art poses; strict6 importer/complete coverage passed at2048 source canvas.",
-              "Independent arm anatomy review remains PASS for unchanged new source. Strong-support anchors and per-pose2720 native resolution correction are proposals; hip-minus-support compression/recoil/backstep remains represented, no playback reorder."
-            ],
-            "source_review_sha256": "daf149dedaccb627564586bbcef3204e2a88e20fddf5e0612a441a783c7f9850"
-          },
-          {
-            "slot": "transform:267:W:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
-              "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
-              "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
-              "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
-              "Existing W derivative PNG is copied byte-identically; only reviewed atlas region metadata expands to include all current nonzero ray/AA pixels."
-            ],
-            "source_review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d",
-            "scoped_runtime_visual_review": {
-              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r079-W-death.json",
-              "sha256": "b07ab4c965129440b5cfad02542cc5c66ca7bf73bcea05ed56f87d94c1520117",
-              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
-              "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
-            }
-          },
-          {
-            "slot": "transform:267:S:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
-              "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
-              "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
-              "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
-              "All1,572,864 original RGBA pixels including transparent RGB/faintbackground retained exactlyonce; original S attack contact3/front heading and long sinuous weapon are unchanged."
-            ],
-            "source_review_sha256": "23874f98f7b820532c1014fee236c19d7b0885c358b11bcb99dbb37f790d7a7c",
-            "scoped_runtime_visual_review": {
-              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r079-S-attack.json",
-              "sha256": "d548b512def6d6f811bcf406c6ab96d1708030b5a38ad23c7e96bbad9d535de6",
-              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
-              "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
-            }
-          },
-          {
-            "slot": "transform:267:SW:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 existing SW attack phases/order preserved: lowguard, diagonalraise, overheadload, contact3 down-left, lowerfollow and lowrecovery; revised_poses6/newly_authored_poses0.",
-              "Every pale face points left while front-left chest/stance remain SW; original six articulated movements are retained without W/NW/right-facing substitution.",
-              "All6 preserve continuous far RIGHT/image-left weapon shoulder-elbow-wrist-grip, full sinuous narrow blade and empty near LEFT/image-right hand; exactly2arm chains, no swapped ownership.",
-              "Original pale hair/face, thin gold radial spines, black/gold crown/armor and dark long gold-trimmed robe retained with complete uncropped gear.",
-              "Unchanged strict analyze+require_complete_pose_regions PASS:6distinct1024canonical frames, six alpha16 bodies, all foreground covered and outer alpha>100 clipping0. No repack needed or performed."
-            ],
-            "source_review_sha256": "d1e623ffada0b4fe23de37144de3b28d46c557b6aefbf44f3a409302c26623ac"
-          }
-        ]
+        "actual_Player_dedicated_actions_and_markers": "PASS"
       }
     },
     "transform:413": {
@@ -21428,6 +20903,29 @@
           "visual_approval": "NOT_RUN",
           "completed_added": 0,
           "actual_Player_dedicated_actions_and_markers": "PASS"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r081/SpriteFrames.tres",
+        "frames_sha256": "688a9913af2fa874c2e44b0748c5db046a30530333e553707b2cf3451a7fbe66",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r081/NativeMotionProfile.tres",
+        "native_profile_sha256": "3ea1daa419ac14ba3532f1f689649a86969c262f87954931fc4f5c11b4b25de8",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
         }
       }
     ],
