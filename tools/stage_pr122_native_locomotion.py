@@ -95,14 +95,21 @@ def stage(root, key, revision=None):
         subprocess.run(['git', 'ls-files', '--error-unmatch', source], cwd=root,
                        check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         assert path.stat().st_size == record['bytes'] and digest(path) == record['sha256']
+        canvas = record['geometry'].get('canvas', 1024)
+        assert type(canvas) is int and 64 <= canvas <= 2048 and canvas % 8 == 0
+        if canvas != 1024:
+            review = record.get('source_canvas_review', {})
+            assert review.get('status') == 'REVIEWED_SOURCE_CANVAS_PROPOSAL'
+            assert review.get('source_sha256') == record['sha256'] and review.get('canvas_size') == canvas
+            assert isinstance(review.get('review_basis'), str) and review['review_basis'].strip()
         geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                                    directions_axis='phase_grid2', canvas_size=1024,
+                                    directions_axis='phase_grid2', canvas_size=canvas,
                                     directions=[direction])
         importer.require_complete_pose_regions(path, geometry)
         saved = json.loads(path.with_suffix('.geometry.json').read_text())
         assert json.loads(json.dumps(geometry)) == saved, f'Saved source geometry changed: {source}'
         assert len(geometry['frames']) == geometry['distinct_pixel_frames'] == 6
-        assert geometry['canvas_size'] == [1024, 1024] and geometry['foot'] == [512, 640]
+        assert geometry['canvas_size'] == [canvas, canvas] and geometry['foot'] == [canvas // 2, canvas * 5 // 8]
         assert [frame['row'] for frame in geometry['frames']] == list(range(6))
         assert all(frame['direction'] == direction for frame in geometry['frames'])
         layout_proof = None

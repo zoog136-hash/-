@@ -42,12 +42,16 @@ func _run() -> void:
 				assert(atlas != null and atlas.atlas == textures[track_index])
 				assert(atlas.region == Rect2(rect[0], rect[1], rect[2], rect[3]))
 				assert(atlas.margin == Rect2(margin[0], margin[1], margin[2], margin[3]))
-				var canvas: Array = track.geometry.canvas_size
+				var canvas: Array = pose.get("canvas_size", track.geometry.canvas_size)
 				assert(atlas.get_size() == Vector2(canvas[0], canvas[1]) and atlas.filter_clip)
 				if track.has("runtime_layout_proof"):
 					var proof: Dictionary = track.runtime_layout_proof
 					assert(proof.source_pixels_unchanged and not proof.resampled and not proof.approval_granted)
-					assert(proof.source_sha256 == track.source_sha256 and proof.canvas_size == canvas)
+					assert(proof.source_sha256 == track.source_sha256)
+					if proof.has("pose_canvas_sizes"):
+						assert(proof.pose_canvas_sizes[phase] == canvas)
+					else:
+						assert(proof.canvas_size == canvas)
 					if proof.has("playback_order"):
 						assert(track.role in ["walk", "run"] and not proof.newly_authored_poses)
 						assert(pose.row == proof.playback_order[phase])

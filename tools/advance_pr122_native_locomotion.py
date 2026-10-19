@@ -25,6 +25,14 @@ def preserve_action(root, source, request):
     assert batch in ('batch03', 'batch04'), 'Use a dedicated preserved authoring batch'
     folder = root / 'docs/remake/evidence/pr122-mythic-detailed' / batch
     folder.mkdir(exist_ok=True)
+    canvas = 1024
+    canvas_review = request.get('source_canvas_review')
+    if canvas_review is not None:
+        assert canvas_review.get('status') == 'REVIEWED_SOURCE_CANVAS_PROPOSAL'
+        assert canvas_review.get('source_sha256') == staging.digest(source)
+        canvas = canvas_review.get('canvas_size')
+        assert type(canvas) is int and 64 <= canvas <= 2048 and canvas % 8 == 0
+        assert isinstance(canvas_review.get('review_basis'), str) and canvas_review['review_basis'].strip()
     name = staging.ACTORS[key].rsplit('_', 1)[0]
     dest = folder / f'{name}-{direction}-{role}-{request["version"]}.png'
     assert not dest.exists(), 'Never overwrite a previously authored source'
@@ -32,18 +40,20 @@ def preserve_action(root, source, request):
     geometry = dict(status='HOLD')
     try:
         result = staging.importer.analyze(dest, rows_count=6, reference_rows=[0, 3],
-                                         directions_axis='phase_grid2', canvas_size=1024,
+                                         directions_axis='phase_grid2', canvas_size=canvas,
                                          directions=[direction])
         staging.importer.require_complete_pose_regions(dest, result)
         assert result['distinct_pixel_frames'] == 6
         write_json(dest.with_suffix('.geometry.json'), result)
-        geometry = dict(status='GEOMETRY_PASS', frames=6, distinct_pixel_frames=6, canvas=1024)
+        geometry = dict(status='GEOMETRY_PASS', frames=6, distinct_pixel_frames=6, canvas=canvas)
     except Exception as exc:
         geometry['reason'] = str(exc)
     record = dict(key=key, direction=direction, role=role, version=request['version'],
                   source=dest.relative_to(root).as_posix(), original_generated_file=str(source),
                   bytes=dest.stat().st_size, sha256=staging.digest(dest), requested_poses=6,
                   geometry=geometry, production_connected=False, detailed_completed=False)
+    if canvas_review is not None:
+        record['source_canvas_review'] = canvas_review
     manifest_path = root / staging.SOURCE_MANIFEST
     manifest = json.loads(manifest_path.read_text())
     manifest['raw_images'].append(record)
@@ -67,7 +77,8 @@ def main():
     assert source.is_file() and not source.is_symlink()
     log_prefix = Path('/tmp') / ('twilight-' + staging.ACTORS[key] + '-' + args.revision)
     save_log = log_prefix.with_suffix('.save.log')
-    if role in ('walk', 'run') and key in ('transform:393', 'transform:267'):
+    if (role in ('walk', 'run') and key in ('transform:393', 'transform:267')
+            and request.get('source_canvas_review') is None):
         with save_log.open('w') as out:
             subprocess.run([sys.executable, str(root / 'docs/remake/evidence/pr122-mythic-detailed/batch01/save_source.py'),
                             '--source', str(source), '--key', key, '--direction', direction,
