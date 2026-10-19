@@ -1,0 +1,117 @@
+{
+  "key": "transform:393",
+  "direction": "NW",
+  "role": "attack",
+  "name": "해방된 할파스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png": "90f3918feaef084f63e3eeffa3301245069ff662bb5a3ca901d3f849f4fc5345",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG ATTACK animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved NW native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for NW.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces NORTHWEST / screen up-left, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: poised guard; 1: visible backswing / anticipation; 2: loaded compression; 3: active forward strike / CONTACT; 4: follow-through; 5: recovery toward guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nPhase3 must visibly extend the actual referenced weapon or natural striking limb toward the facing direction, at contact. Strong anticipation, release and follow-through; hands retain the same weapon throughout.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "poised guard",
+    "visible backswing / anticipation",
+    "loaded compression",
+    "active forward strike / CONTACT",
+    "follow-through",
+    "recovery toward guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "intended_contact_frame": 3,
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-008-halpas-NW-attack-v01.json",
+  "processing_proof": {
+    "source_sha256": "16b6a15bb140d9db38cb8eb33f55128e3c091139c70d6a8b6a3c35ba119caa6d",
+    "output_sha256": "21140a17ad1741d58e1847e4c1fd4863e92a3f65f234e773063376f57c2caedf",
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01.png",
+    "output": "/workspace/scratch/halpas-NW-attack-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 32,
+    "maximum_foreground_distance": 4.0,
+    "removed_background_pixels": 68979,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 516182,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -20
+        ],
+        "pixels": 90399,
+        "foreground_pixels": 85623,
+        "rgba_sha256": "7220f9d87333072666d13adb984b69fce739dc39b71668b07fd5b99357450ca1"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -16
+        ],
+        "pixels": 86649,
+        "foreground_pixels": 82403,
+        "rgba_sha256": "9949d5fd527977916da1975b9c37d945d49862cd3d4badfc05bf4096558572ed"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          -2
+        ],
+        "pixels": 88428,
+        "foreground_pixels": 84775,
+        "rgba_sha256": "8381c14effa294b2c20ab8e9123120a62278eedc81daca724e8c4995b6cfb7e1"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          5
+        ],
+        "pixels": 90132,
+        "foreground_pixels": 85421,
+        "rgba_sha256": "516133af7017146138b51e3f25f064b5a3dab0da7c3be05c472a3dae4fd4ff7f"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          50
+        ],
+        "pixels": 94041,
+        "foreground_pixels": 89529,
+        "rgba_sha256": "8b9af800179268439333429b5b946bf67b41431c98e9ca095a6be58d9202612f"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          29
+        ],
+        "pixels": 93180,
+        "foreground_pixels": 88431,
+        "rgba_sha256": "bd370c1a63d2065827710063b77cdd72d07f6825fa752a1d42228b68d3580d84"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
+  "output_sha256": "21140a17ad1741d58e1847e4c1fd4863e92a3f65f234e773063376f57c2caedf",
+  "output_bytes": 1540671,
+  "original_generated_file": "/workspace/scratch/halpas-NW-attack-v01iso01.png"
+}
