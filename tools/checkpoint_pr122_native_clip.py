@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 
 import stage_pr122_native_locomotion as staging
+import pr122_native_production_approvals as production_approvals
 
 BRANCH = 'feature/twilight-remaining106-20261016'
 
@@ -65,7 +66,8 @@ def main():
     request = json.loads(request_path.read_text())
     register = json.loads((root / staging.REGISTER).read_text())
     manifest = json.loads((root / staging.SOURCE_MANIFEST).read_text())
-    assert register['approved_history_preserved'] == 405 and register['detailed_complete'] == 0
+    approval_state = production_approvals.load_state(root, manifest=manifest, register=register)
+    approval_state.require_mutable(request['key'], 'checkpoint a new source for')
     passed = request['status'] == 'GENERATED_GEOMETRY_PASS_NOT_APPROVED'
     assert passed or request['status'] == 'GENERATED_HOLD_NOT_APPROVED'
     source = root / request['output_source']
@@ -93,6 +95,7 @@ def main():
         assert subprocess.run(['git', 'diff', '--quiet', '--', protected], cwd=root).returncode == 0
     total = sum(a['native_track_count'] for a in register['actors'].values())
     missing, missing_actions, next_target = update_authoring_queue(register, manifest)
+    approval_state.assert_preserved(manifest, register)
     (root / staging.REGISTER).write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     resume = root / 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md'
     next_text = '이동/달리기 원화 큐 종료; 전투 동작 또는 HOLD 보완' if next_target is None else (

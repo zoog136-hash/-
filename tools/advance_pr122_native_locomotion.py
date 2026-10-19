@@ -13,6 +13,7 @@ import sys
 
 import bind_pr122_native_locomotion_profiles as binder
 import stage_pr122_native_locomotion as staging
+import pr122_native_production_approvals as production_approvals
 from pr122_reviewed_source_regions import apply_reviewed_regions
 
 
@@ -80,6 +81,8 @@ def main():
     assert request['status'] == 'REQUESTED_NOT_APPROVED', 'Do not repeat a processed image'
     key, direction, role = (request[field] for field in ('key', 'direction', 'role'))
     assert key in staging.ACTORS and direction in staging.importer.DIRECTIONS and role in staging.NATIVE_ROLES
+    approval_state = production_approvals.load_state(root)
+    approval_state.require_mutable(key, 'advance a source for')
     source = args.generated.resolve()
     assert source.is_file() and not source.is_symlink()
     log_prefix = Path('/tmp') / ('twilight-' + staging.ACTORS[key] + '-' + args.revision)
@@ -113,6 +116,7 @@ def main():
     manifest['image_tools_forbidden'] = False
     manifest['session_stop_reason'] = None
     manifest['status'] = 'NATIVE_ANIMATION_AUTHORING_IN_PROGRESS'
+    approval_state.assert_preserved(manifest, json.loads((root / staging.REGISTER).read_text()))
     write_json(manifest_path, manifest)
     files = [record['source'], str(Path(record['source']).with_suffix('.geometry.json')),
              str(staging.SOURCE_MANIFEST), str(request_path.relative_to(root))]
@@ -151,6 +155,7 @@ def main():
                                 actual_Main='NOT_RUN', visual_approval='NOT_RUN', completed_added=0)
     if any(track['role'] in staging.CORE_ROLES for track in actor['tracks']):
         actor['verification']['actual_Player_dedicated_actions_and_markers'] = 'PASS'
+    approval_state.assert_preserved(manifest, register)
     write_json(register_path, register)
     total = sum(a['native_track_count'] for a in register['actors'].values())
     missing = sum(len(a['missing_locomotion']) for a in register['actors'].values())

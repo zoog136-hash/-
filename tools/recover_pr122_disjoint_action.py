@@ -13,6 +13,8 @@ import re
 
 import repack_pr122_disjoint_poses as repacker
 import stage_pr122_native_locomotion as staging
+import pr122_corrective_reopen_guard as reopen_guard
+import pr122_native_production_approvals as production_approvals
 
 
 BATCH = Path('docs/remake/evidence/pr122-mythic-detailed/batch03')
@@ -69,8 +71,9 @@ def validate_proof(proof, source, output):
             'Foreground accounting is incomplete')
 
 
-def unselected_manifest(root, request, source):
-    manifest = read_json(root / staging.SOURCE_MANIFEST)
+def unselected_manifest(root, request, source, *, manifest=None):
+    if manifest is None:
+        manifest = read_json(root / staging.SOURCE_MANIFEST)
     slot = ':'.join(request[field] for field in ('key', 'direction', 'role'))
     selected = [manifest.get(table, {}).get(slot) for table in
                 ('selected_locomotion_sheets', 'selected_detailed_action_sheets')]
@@ -79,11 +82,10 @@ def unselected_manifest(root, request, source):
         require(len(selected) == 1 and bool(request.get('corrective_reason'))
                 and request.get('replaces_selected_source') == selected[0],
                 'Selected source requires an explicit pinned corrective replacement')
-        require(any(hold.get('status') == 'HOLD' and hold.get('key') == request['key']
-                    and (hold.get('scope') == 'all_native_clips'
-                         or selected[0] in hold.get('sources', []))
-                    for hold in manifest.get('visual_quality_holds', [])),
-                'Corrective replacement requires an unresolved visual HOLD for the previous source')
+        hold = reopen_guard.matching_hold(manifest, request, selected[0])
+        reopened = reopen_guard.authorize_selected_replacement(root, manifest, request, hold, selected[0])
+        require(reopened is None or request.get('reopened_source_hold') == reopened,
+                'Recovery must retain the exact reopened source authorization')
     relative = source.relative_to(root).as_posix()
     records = [r for r in manifest.get('raw_images', [])
                if r.get('source') == relative and r.get('key') == request['key']
@@ -135,6 +137,8 @@ def prepare(root, request_path, scratch=Path('/workspace/scratch')):
     require(batch in (BATCH, BATCH.with_name('batch04')), 'Require a preserved native authoring batch')
     parent_digest = digest(request_path)
     request = read_json(request_path)
+    approval_state = production_approvals.load_state(root)
+    approval_state.require_mutable(request.get('key'), 'recover a source for')
     require(request.get('status') == 'GENERATED_HOLD_NOT_APPROVED', 'Require an unapproved raw HOLD')
     require(request.get('kind') != 'pixel_preserving_derived_source', 'Never derive a repeated derivative')
     require(request.get('key') in staging.ACTORS
@@ -146,7 +150,7 @@ def prepare(root, request_path, scratch=Path('/workspace/scratch')):
     source = repo_file(root, request['output_source'])
     require(digest(source) == request.get('output_sha256'), 'Saved source digest changed')
     require(source.stat().st_size == request.get('output_bytes'), 'Saved source byte count changed')
-    unselected_manifest(root, request, source)
+    unselected_manifest(root, request, source, manifest=approval_state.manifest)
     next_request(root, request, version, batch)
     next_revision(root, request['key'])
     scratch = scratch.resolve()
@@ -164,7 +168,9 @@ def prepare(root, request_path, scratch=Path('/workspace/scratch')):
     validate_proof(proof, source, output)
     # Recheck after the pixel operation: another unit may have advanced the queue.
     require(digest(request_path) == parent_digest, 'Parent request changed during recovery')
-    unselected_manifest(root, request, source)
+    manifest = read_json(root / staging.SOURCE_MANIFEST)
+    approval_state.assert_preserved(manifest, read_json(root / staging.REGISTER))
+    unselected_manifest(root, request, source, manifest=manifest)
     path = next_request(root, request, version, batch)
     revision = next_revision(root, request['key'])
     derivative = {k: v for k, v in request.items()

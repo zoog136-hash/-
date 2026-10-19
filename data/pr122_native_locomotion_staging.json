@@ -17288,6 +17288,24 @@
             ],
             "source_review_sha256": "d76c9486fbf7fcab50b3dbbbc08c82e8932731504a8cb1ff5fb1f7b9154f1880"
           }
+        ],
+        "reopened_source_holds": [
+          {
+            "schema": "pr122-reopened-source-hold-v1",
+            "status": "HOLD",
+            "slot": "transform:267:NW:idle",
+            "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+            "source_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-camera-HOLD-r083.json",
+            "evidence_sha256": "3dcc0611c2cc11d3dba4bdb5f19ba168ca0c655a2e4c580df6bd5a60c9db5555",
+            "reason": "New independent actual-runtime review proves selected corrected NWidle is pure-N camera; true NWattack entry/return changes angle. Requires new faithful rear-left idle six poses; previous corrections remain intact.",
+            "prior_corrections_count": 35,
+            "prior_corrections_sha256": "44047cf865708305511c434b2fb3d3f5277dc56067fc20eafe4e0bca84aa4d83",
+            "key": "transform:267",
+            "direction": "NW",
+            "role": "idle",
+            "id": "6037211bbddc3d19cb527caa1e78f3f90d4c74da4287e96d05bd77b8f6325726"
+          }
         ]
       }
     },

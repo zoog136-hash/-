@@ -15,7 +15,9 @@ import sys
 import tempfile
 
 import recover_pr122_disjoint_action as recovery
+import pr122_corrective_reopen_guard as reopen_guard
 import stage_pr122_native_locomotion as staging
+import pr122_native_production_approvals as production_approvals
 
 BRANCH = 'feature/twilight-remaining106-20261016'
 GODOT = Path('/workspace/scratch/godot472/Godot_v4.7.2-stable_linux.x86_64')
@@ -35,7 +37,7 @@ def absolute_file(path):
     return path.resolve()
 
 
-def selected_hold(manifest, request):
+def selected_hold(manifest, request, root=None):
     slot = ':'.join(request[k] for k in ('key', 'direction', 'role'))
     values = [manifest.get(t, {}).get(slot) for t in ('selected_locomotion_sheets', 'selected_detailed_action_sheets')]
     values = [v for v in values if v is not None]
@@ -43,8 +45,11 @@ def selected_hold(manifest, request):
     holds = [h for h in manifest.get('visual_quality_holds', []) if h.get('key') == request['key']
              and h.get('status') == 'HOLD' and (h.get('scope') == 'all_native_clips' or values[0] in h.get('sources', []))]
     require(len(holds) == 1, 'Selected source requires one unresolved private visual HOLD')
-    require(not any(c.get('replacement_source') == values[0] for c in holds[0].get('corrections', [])),
-            'Selected corrective source already passed; do not repeat it')
+    if root is None:
+        require(not any(c.get('replacement_source') == values[0] for c in holds[0].get('corrections', [])),
+                'Selected corrective source already passed; do not repeat it')
+    else:
+        reopen_guard.authorize_selected_replacement(root, manifest, request, holds[0], values[0])
     return slot, values[0], holds[0]
 
 
@@ -68,8 +73,10 @@ def prepare(root, request_path, generated, review_path):
     require(refs and set(refs) == set(request.get('reference_sha256', {})), 'Require all pinned references')
     require(all(digest(absolute_file(Path(p))) == request['reference_sha256'][p] for p in refs), 'Reference digest changed')
     manifest = recovery.read_json(root / staging.SOURCE_MANIFEST)
-    require(manifest['approved_history_preserved'] == 405 and manifest['mythic_detail_complete'] == 0, 'Manifest approval baseline changed')
-    _, previous, _ = selected_hold(manifest, request)
+    approval_state = production_approvals.load_state(root, manifest=manifest)
+    approval_state.require_mutable(request['key'], 'prepare a corrective source for')
+    _, previous, hold = selected_hold(manifest, request, root=root)
+    reopened = reopen_guard.authorize_selected_replacement(root, manifest, request, hold, previous)
     require(not any(r.get('sha256') == review['raw_sha256'] for r in manifest.get('raw_images', [])), 'PNG already preserved; do not repeat')
     batch = request.get('source_batch', 'batch03')
     require(batch in ('batch03', 'batch04'), 'Invalid preserved request batch')
@@ -88,6 +95,8 @@ def prepare(root, request_path, generated, review_path):
     findings.update(source_visual_status='PASS', raw_sha256=review['raw_sha256'], raw_bytes=review['raw_bytes'],
                     request_sha256=digest(request_path), review_sha256=digest(review_path))
     request.update(replaces_selected_source=previous, private_source_review=findings)
+    if reopened is not None:
+        request['reopened_source_hold'] = reopened
     name = staging.ACTORS[request['key']].rsplit('_', 1)[0]
     path = folder / f'request-{max(ordinals, default=0) + 1:03d}-{name}-{request["direction"]}-{request["role"]}-{request["version"]}.json'
     source_batch = ('batch01' if request['role'] in ('walk', 'run')
@@ -101,7 +110,8 @@ def prepare(root, request_path, generated, review_path):
 def record_correction(root, path):
     request = recovery.read_json(path)
     manifest, register = (recovery.read_json(root / p) for p in (staging.SOURCE_MANIFEST, staging.REGISTER))
-    require(register['approved_history_preserved'] == 405 and register['detailed_complete'] == 0, 'Approval baseline changed')
+    approval_state = production_approvals.load_state(root, manifest=manifest, register=register)
+    approval_state.require_mutable(request['key'], 'record a correction for')
     actor = register['actors'][request['key']]
     require(request['status'] == 'GENERATED_GEOMETRY_PASS_NOT_APPROVED'
             and actor['verification']['actual_Player_scene_form_api'] == 'PASS'
@@ -115,8 +125,7 @@ def record_correction(root, path):
     slot = ':'.join(request[k] for k in ('key', 'direction', 'role'))
     require(any(t['source'] == request['output_source'] for t in actor['tracks']), 'Player source is not selected')
     table = 'selected_locomotion_sheets' if request['role'] in ('walk', 'run') else 'selected_detailed_action_sheets'
-    require(manifest[table].get(slot) == request['output_source'] and manifest['approved_history_preserved'] == 405
-            and manifest['mythic_detail_complete'] == 0, 'Selected source or approval baseline changed')
+    require(manifest[table].get(slot) == request['output_source'], 'Selected corrective source changed')
     holds = [h for h in manifest['visual_quality_holds'] if h['key'] == request['key'] and h['status'] == 'HOLD'
              and (h['scope'] == 'all_native_clips' or request['replaces_selected_source'] in h.get('sources', []))]
     require(len(holds) == 1, 'Original visual HOLD changed during integration')
@@ -124,12 +133,14 @@ def record_correction(root, path):
                       source_visual_status='PASS', geometry_and_actual_Player='PASS', actor_approval_added=0,
                       source_visual_findings=request['private_source_review']['visual_findings'],
                       source_review_sha256=request['private_source_review']['review_sha256'])
+    reopen_guard.resolve_reopened_source_hold(root, manifest, holds[0], request, actor, correction)
     holds[0].setdefault('corrections', []).append(correction)
     actor.update(visual_review='HOLD; corrective clip reviewed, final actor quality remains pending',
                  visual_quality_hold=copy.deepcopy(holds[0]), production_connected=False,
                  detailed_completed=False, completed_added=0)
     actor['verification'].update(visual_approval='HOLD_FINAL_ACTOR_QUALITY_REVIEW',
                                  actual_Main_default_catalog='NOT_ENABLED_PENDING_QUALITY_REVIEW')
+    approval_state.assert_preserved(manifest, register)
     for filename, value in ((staging.SOURCE_MANIFEST, manifest), (staging.REGISTER, register)):
         (root / filename).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
 

@@ -1,0 +1,208 @@
+{
+  "schema": "pr122-independent-changed-native-quality-review-v1",
+  "actor": "transform:393",
+  "status": "PASS_SCOPED_ACTUAL_SE_HIT_SIX_PLUS_IDLE_ENTRY",
+  "revision": "r071",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SpriteFrames.tres",
+  "selected_frames_sha256": "7c80d9e52b76ebb42a314f78de0347a4326a7f923e4e799ce52f285101c484ca",
+  "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/NativeMotionProfile.tres",
+  "native_profile_sha256": "d5b6536721c21bfffcde49c3d182543781abe0a009dc72534a3b9b7feef82c90",
+  "direction": "SE",
+  "role": "hit",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
+  "source_sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+  "native_animation": "hit_1",
+  "source_visual_status": "PASS_SCOPED_SIX",
+  "actual_selected_status": "PASS_SCOPED_SIX",
+  "perpose_canvas": [
+    1024,
+    1024,
+    2688,
+    2344,
+    2344,
+    1024
+  ],
+  "loop": false,
+  "frames_per_second": 27.272727273,
+  "source_arms_and_equipment": "Every phase has exactly one RIGHT-hand permanent blade and EMPTY LEFT arm. Newly authored2/3/4 show coherent single shoulder->upperarm->elbow->forearm->hand guard/release, no old extra arm or duplicated blade. Single helmet/head, two coherent legs (occlusion belongs to folded flight leg), one feather-wing pair/cape/tail. SE front-quarter identity retained.",
+  "physical_layout": "Rigid helmet/pauldron/pelvic-girdle scale matches SEidle with authored yaw/lean/foreshortening allowed. All6 waist-root positions are continuous; root/body pose motion belongs to recoil, no bbox rescale or foot clamp. New2/3/4 have same physical torso/hips despite larger source-native pixel resolution; all old0/1/5 and new2/3/4 use exact source RGBA.",
+  "motion": "0brace ->1LEFTguard/neck recoil ->2stronger torso recoil/LEFTguard ->3release ->4lower LEFT ->5settle, genuine distinct six-phase hit. 0 and5 connect to selected idle without model-size or body-origin jump. Blade stays in RIGHT throughout, flight legs/wing/cape lag retained.",
+  "runtime_metadata_changes_required": false,
+  "actual_AtlasTexture_animationmap_sourceSHA_cropRGBA_proof": {
+    "revision": "r071",
+    "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SpriteFrames.tres",
+    "frames_sha256": "7c80d9e52b76ebb42a314f78de0347a4326a7f923e4e799ce52f285101c484ca",
+    "profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/NativeMotionProfile.tres",
+    "profile_sha256": "d5b6536721c21bfffcde49c3d182543781abe0a009dc72534a3b9b7feef82c90",
+    "basis": "Exact actual selected AtlasTexture regions/margins; equal physical canvas via per-pose C. No bbox fit. Native global1024/foot512,640.",
+    "tracks": [
+      {
+        "direction": "SE",
+        "role": "hit",
+        "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
+        "source_sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+        "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SE-hit.png",
+        "texture_sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+        "poses": [
+          {
+            "phase": "idle0",
+            "C": 1024,
+            "rect": [
+              145,
+              43,
+              506,
+              428
+            ],
+            "margin": [
+              273,
+              216,
+              518,
+              596
+            ],
+            "source_anchor": [
+              384,
+              467
+            ],
+            "rgba_sha256": "e6f45f2edbfb4c4dc91f0b1bafe4d2946e9147a9c7fdc373a0535fa1f2b91180"
+          },
+          {
+            "phase": 0,
+            "C": 1024,
+            "rect": [
+              516,
+              533,
+              504,
+              470
+            ],
+            "margin": [
+              265,
+              199,
+              520,
+              554
+            ],
+            "source_anchor": [
+              763,
+              974
+            ],
+            "rgba_sha256": "301ad842f8f9a8adc8a888ee737e405379f9c7fdac6d045847afd22f9ca1953c"
+          },
+          {
+            "phase": 1,
+            "C": 1024,
+            "rect": [
+              2051,
+              532,
+              506,
+              471
+            ],
+            "margin": [
+              278,
+              194,
+              518,
+              553
+            ],
+            "source_anchor": [
+              2285,
+              978
+            ],
+            "rgba_sha256": "7c803a73237ecb7cce3d5ecfc72e5f84cb7e4a4eafc858705ef546cfd3bd5a97"
+          },
+          {
+            "phase": 2,
+            "C": 2688,
+            "rect": [
+              151,
+              1751,
+              1233,
+              1106
+            ],
+            "margin": [
+              734,
+              606,
+              1455,
+              1582
+            ],
+            "source_anchor": [
+              761,
+              2825
+            ],
+            "rgba_sha256": "e28661cea9660ff1a12c30a9c6b3fa8e12d939ab1c839d44b68ad078a1ac4516"
+          },
+          {
+            "phase": 3,
+            "C": 2344,
+            "rect": [
+              1730,
+              1791,
+              1147,
+              1026
+            ],
+            "margin": [
+              626,
+              482,
+              1197,
+              1318
+            ],
+            "source_anchor": [
+              2276,
+              2774
+            ],
+            "rgba_sha256": "e3010cd23696d6717d663e518a0188a8aaaa9e70bd822c4abc083ccdfbcb8924"
+          },
+          {
+            "phase": 4,
+            "C": 2344,
+            "rect": [
+              200,
+              3318,
+              1135,
+              1044
+            ],
+            "margin": [
+              638,
+              462,
+              1209,
+              1300
+            ],
+            "source_anchor": [
+              734,
+              4321
+            ],
+            "rgba_sha256": "f202d06a47ab5e47a26e4c54ce8119a0e71b9341a70c447c6536ef59644acf57"
+          },
+          {
+            "phase": 5,
+            "C": 1024,
+            "rect": [
+              2059,
+              3607,
+              489,
+              465
+            ],
+            "margin": [
+              271,
+              200,
+              535,
+              559
+            ],
+            "source_anchor": [
+              2300,
+              4047
+            ],
+            "rgba_sha256": "a99aabf947d3243ab5daa63c715f7f2ea1760273eb7b3eb2b7b9d4c3cc0d84a2"
+          }
+        ],
+        "private_panel": "/workspace/scratch/halpas-final-changed-clips-qc-20261019/r071-SE-hit-actual-normalized.jpg",
+        "private_panel_bytes": 110977
+      }
+    ]
+  },
+  "root_focused_saved_validation_revision": "r071",
+  "root_focused_saved_validation_summary": "resource48/288 + actualPlayer16movement/96phases + action32core/all6phases/marker3/authoritativeclock PASS; no repeated Godot/fullCI run byQA.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_complete": false,
+  "default_enable_authorized": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

@@ -6,15 +6,17 @@ from pathlib import Path
 import statistics
 
 from stage_pr122_native_locomotion import preserve_write
+import pr122_native_production_approvals as production_approvals
 
 
 def bind(root, only_key=None):
     path = root / 'data/pr122_native_locomotion_staging.json'
     register = json.loads(path.read_text())
+    approval_state = production_approvals.load_state(root, register=register)
+    bind_keys = approval_state.bind_keys(register, only_key)
     catalog = json.loads((root / 'data/combat_animation_profiles.json').read_text())['profiles']
-    for key, actor in register['actors'].items():
-        if only_key is not None and key != only_key:
-            continue
+    for key in bind_keys:
+        actor = register['actors'][key]
         assert actor['production_connected'] is False and actor['detailed_completed'] is False
         frames = root / actor['frames'].removeprefix('res://')
         assert hashlib.sha256(frames.read_bytes()).hexdigest() == actor['frames_sha256']
@@ -56,6 +58,7 @@ def bind(root, only_key=None):
                                             pixel_scale=scale, foot_offset_y=foot_offset,
                                             sizing_review='HOLD; native staging only',
                                             production_catalog_replaced=False)
+    approval_state.assert_preserved(approval_state.manifest, register)
     path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     print(f'PR122_NATIVE_PROFILES_BOUND actors={len(register["actors"])} complete_actors_added=0 production_switches=0')
 

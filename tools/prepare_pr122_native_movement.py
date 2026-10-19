@@ -11,6 +11,8 @@ from pathlib import Path
 import re
 import sys
 
+import pr122_native_production_approvals as production_approvals
+
 
 BASE = Path('docs/remake/evidence/pr122-mythic-detailed')
 QUEUE = BASE / 'batch01/queue.json'
@@ -73,6 +75,8 @@ def prepare(root, key, direction, role, version):
         raise ValueError('Actor identity and grade must come from exactly one queue entry')
     actor = rows[0]
     manifest = read_json(root / MANIFEST)
+    approval_state = production_approvals.load_state(root, manifest=manifest)
+    approval_state.require_mutable(key, 'prepare movement for')
     selected = manifest.get('selected_locomotion_sheets', {})
     slot = f'{key}:{direction}:{role}'
     if slot in selected or slot in manifest.get('selected_detailed_action_sheets', {}):

@@ -14,6 +14,7 @@ import subprocess
 import import_original_based_motion as importer
 from pr122_reviewed_source_regions import apply_reviewed_regions
 import pr122_reviewed_runtime_layout as reviewed_layout
+import pr122_native_production_approvals as production_approvals
 
 
 SOURCE_MANIFEST = Path('docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json')
@@ -65,14 +66,14 @@ def build_frames(tracks):
 
 def stage(root, key, revision=None):
     manifest = json.loads((root / SOURCE_MANIFEST).read_text())
-    assert manifest['mythic_detail_complete'] == 0
-    assert manifest['approved_history_preserved'] == 405
     records = {(row['key'], row['source']): row for row in manifest['raw_images']}
     selected = {**manifest['selected_locomotion_sheets'], **manifest.get('selected_detailed_action_sheets', {})}
     register_path = root / REGISTER
     register = json.loads(register_path.read_text()) if register_path.exists() else dict(
         schema='pr122-native-locomotion-staging-v1', approved_history_preserved=405,
         detailed_complete=0, detailed_total=31, actors={})
+    approval_state = production_approvals.load_state(root, manifest=manifest, register=register)
+    approval_state.require_mutable(key, 'restage')
     previous_actor = register['actors'].get(key, {})
     previous_textures = {(t['source'], t['source_sha256']): t['texture']
                          for t in previous_actor.get('tracks', [])}
@@ -169,6 +170,7 @@ def stage(root, key, revision=None):
     if previous == entry and verification is not None:
         entry['verification'] = verification
     register['actors'][key] = entry
+    approval_state.assert_preserved(manifest, register)
     register_path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     print(f'NATIVE_TRACKS_STAGED {key} tracks={len(tracks)} poses={len(fingerprints)} approvals_added=0')
 

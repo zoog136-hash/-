@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import stage_pr122_native_locomotion as staging
+import pr122_native_production_approvals as production_approvals
 
 
 FACINGS = dict(E='EAST / screen right', SE='SOUTHEAST / screen down-right',
@@ -30,6 +31,8 @@ def prepare(root):
     key, direction, role = (target[k] for k in ('key', 'direction', 'role'))
     assert key in staging.ACTORS and direction in FACINGS and role in PHASES
     manifest = json.loads((root / staging.SOURCE_MANIFEST).read_text())
+    approval_state = production_approvals.load_state(root, manifest=manifest, register=register)
+    approval_state.require_mutable(key, 'prepare an action for')
     selected = manifest.get('selected_detailed_action_sheets', {})
     assert f'{key}:{direction}:{role}' not in selected
     queue = json.loads((root / 'docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json').read_text())
