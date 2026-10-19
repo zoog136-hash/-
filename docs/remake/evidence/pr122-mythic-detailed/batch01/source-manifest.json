@@ -3792,6 +3792,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "SW",
+      "role": "hit",
+      "version": "v03",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
+      "original_generated_file": "/workspace/scratch/girtas-SW-hit-repair-v03/girtas-SW-hit-v03.png",
+      "bytes": 2513513,
+      "sha256": "5efe3aea29a81e950c8f7afc856ee516224cf66f22900099c2b71ed179664eed",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3889,7 +3908,7 @@
     "transform:267:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
     "transform:267:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v02iso01.png",
     "transform:267:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
-    "transform:267:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
+    "transform:267:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
     "transform:267:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v01.png",
     "transform:267:NW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v03.png",
     "transform:267:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
@@ -4744,6 +4763,22 @@
             "Long pale hair, long dark gold-trim skirt, narrow attached gold radial spines, exposed pale face and full original sinuous weapon remain coherent. Six complete disjoint bodies, no outer-edge clipping."
           ],
           "source_review_sha256": "98fd431694272306abf4b075157137488271cf7be07a90eff72816f80980db7c"
+        },
+        {
+          "slot": "transform:267:SW:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "The new actual LEFT-facing SW idle v03 as FIRST compass master resolves the v02 right-looking guard/impact failure: ALL SIX now keep pale nose/chin and helmet aiming LEFT, with front-LEFT SOUTHWEST chest/pelvis and down-left boots. Guards0/5 and impacts1/2 do not reverse toward right.",
+            "Phase0 braces; phase1 visibly pitches shoulder/chest/head backward while keeping LEFT yaw; phase2 is the strongest genuine torso/neck recoil, chin lifts but pale face/nose remains LEFT; phase3 adopts flexed-knee counterbalance and free-arm extension; phases4-5 recover the same front-left guard.",
+            "Anatomical RIGHT far/image-left arm continuously holds the one original long sinuous weapon low, while the near anatomical LEFT/image-right hand stays empty. Original grip and full blade remain visible, without attack slash, hand swap or mirror.",
+            "Original pale exposed face, long pale/white hair, exact gold head structure, narrow hard-gold radial spines, long dark gold-trimmed skirt/armor and original boots remain faithful. Six actual joint/stance changes, no tint/opacity or global translation substitute.",
+            "Unchanged strict analyze plus complete-region gate pass six complete distinct poses. The v02 HOLD request/result/raw checksums are unchanged and no source pixel has been patched, cropped, mirrored, resampled or spliced."
+          ],
+          "source_review_sha256": "bece9c5c2cf3b73228da4d3f47b894837ad9843bac4070094e06dd5087aae353"
         }
       ]
     }
