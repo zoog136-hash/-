@@ -3057,6 +3057,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "E",
+      "role": "idle",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-E-idle-repair/girtas-E-idle-v02.png",
+      "bytes": 2507857,
+      "sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3167,7 +3186,7 @@
     "transform:267:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
     "transform:267:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v01iso01.png",
     "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
-    "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png",
+    "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
     "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v01.png",
     "transform:267:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
     "transform:267:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
@@ -3610,6 +3629,23 @@
             "Every body, both boots, long hair, full spine silhouette and entire sinuous weapon remain visible; all six silhouettes are separate and no opaque foreground touches the outer image edge."
           ],
           "source_review_sha256": "7cea2f5e38b607bd5d843f6517ee90e7064e17b41db41a2c96478efa814b96a2"
+        },
+        {
+          "slot": "transform:267:E:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Exact original/canonical major identity retained: pale visible face and long pale hair, tall gold/black head ornaments, narrow rigid gold radial spikes, long dark goldtrim skirt, long thin sinuous orange/gold weapon in anatomical right/near hand. No redmask/flamefeather/shortblade redesign.",
+            "All6 consistently lookE/right at matching camera and maintain model/equipment scale and silhouette. Entire body, every spike, boots and weapon tip visibly preserved.",
+            "Both boots remain planted in matching staggered stance; no walk step, raised knee or attack. Pelvis stays stable while subtle chest/shoulder/head posture follows inhale/peak/exhale/settle cycle.",
+            "Local hair strands, robe hem, right wrist and shoulder/forearm shape respond across breathing phases rather than a simple global translation/tint. Phase2 reads as the lifted inhale state and later phases settle toward0.",
+            "Weapon remains the same long curved contour and low grip, with small coherent wrist response, not a material/shape replacement. Rigid spike attachments remain stable.",
+            "Strict original analyzer rows6/phase_grid2/canvas1024/reference_rows0/3 passes with6 distinct pixel frames."
+          ],
+          "source_review_sha256": "564b772476020739685da9b2f8699fddb8d9ca9ea2e3ee454b0335fb09d9dbc7"
         }
       ]
     }
