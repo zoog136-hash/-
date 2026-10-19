@@ -2754,8 +2754,10 @@
       "direction": "SE",
       "role": "idle",
       "request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-089-girtas-SE-idle-v01.json",
-      "status": "HOLD",
-      "reason": "service output not returned across session interruption; no image bytes received"
+      "status": "RESOLVED_WITH_NEW_SOURCE",
+      "reason": "service output not returned across session interruption; no image bytes received",
+      "resolved_by": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png",
+      "original_unreturned_request_preserved": true
     }
   ]
 }

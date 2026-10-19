@@ -41,6 +41,12 @@ var hit_direction: Vector2 = Vector2.ZERO
 var hit_strength: float = 1.0
 var action_role: String = ""
 var hit_duration: float = 0.085
+# Authored hit playback has its own visual envelope. The existing reaction,
+# tint, physics and combat clocks retain their original short duration.
+var _native_hit_clock: float = 0.0
+var _native_hit_duration: float = 0.0
+var _native_hit_profile: PROFILE = null
+var _native_hit_source: SpriteFrames = null
 var state_clock: float = 0.0
 var frame_source: SpriteFrames = null # optional authored frames for an existing Sprite2D
 var _tracks: Dictionary = {}
@@ -74,6 +80,7 @@ func begin_attack(total: float, aim: Vector2, style: String = "", marker: float 
 	cancel_attack()
 	# A cancellation subscriber may kill this actor or start a replacement action.
 	if dead or sequence != previous_sequence: return -1
+	_clear_native_hit_presentation()
 	face(aim)
 	sequence += 1
 	attack_elapsed = 0.0
@@ -117,6 +124,15 @@ func cancel_attack() -> void:
 	if not dead: _set_state("idle")
 	if was_active: cancelled.emit(cancelled_sequence)
 
+func _clear_native_hit_presentation() -> void:
+	_native_hit_clock = 0.0
+	_native_hit_duration = 0.0
+	_native_hit_profile = null
+	_native_hit_source = null
+
+func _native_hit_presenting() -> bool:
+	return _native_hit_clock > 0.0 and _native_hit_profile == profile and _native_hit_source == _track_source
+
 func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	if dead: return
 	# Repeated hits replace a bounded envelope, never accumulate displacement.
@@ -126,10 +142,20 @@ func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	hit_direction = incoming.normalized() if incoming.length_squared() > 0.001 else -direction
 	# Pose freeze only: physics, cooldowns and attack markers are never paused.
 	visual_hold = 0.028 if critical and not reduced_motion else 0.0
+	_clear_native_hit_presentation()
+	# Form setup resolves this cache before damage can request an authored hit.
+	if _track_source != null and _resolved_profile == profile and bool(_track_source.get_meta("twilight_native_locomotion_staging", false)):
+		var key: String = "hit_" + str(facing8)
+		if _track_source.has_animation(key) and _track_source.get_frame_count(key) > 0:
+			_native_hit_duration = maxf(hit_duration, presentation_seconds(_track_source, key, hit_duration))
+			_native_hit_clock = _native_hit_duration
+			_native_hit_profile = profile
+			_native_hit_source = _track_source
 
 func die() -> void:
 	if dead: return
 	dead = true
+	_clear_native_hit_presentation()
 	death_clock = 0.0
 	state_clock = 0.0
 	state = "death"
@@ -143,6 +169,9 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		if _impact_pose_age > 0.2: impact_pose_pending = false
 	idle_clock += delta
 	hit_clock = maxf(0.0, hit_clock - delta)
+	if _native_hit_profile != null and _native_hit_profile != profile:
+		_clear_native_hit_presentation()
+	_native_hit_clock = maxf(0.0, _native_hit_clock - delta)
 	turn_clock = maxf(0.0, turn_clock - delta)
 	visual_hold = maxf(0.0, visual_hold - delta)
 	if dead:
@@ -187,6 +216,10 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 			return
 	if impact_pose_pending:
 		_set_state("attack")
+		return
+	if _native_hit_presenting():
+		# Display the real hit without stopping movement or delaying an attack.
+		_set_state("hit", delta)
 		return
 	if move_ratio > 0.01:
 		face(real_velocity)
@@ -308,6 +341,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 
 func _resolve_frames(frames: SpriteFrames) -> void:
 	if _track_source != frames or _resolved_profile != profile:
+		_clear_native_hit_presentation()
 		_track_source = frames
 		_tracks.clear()
 		_resolved_state = ""
@@ -322,9 +356,9 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	if bool(frames.get_meta("twilight_native_locomotion_staging", false)):
 		# Native WIP tracks represent exact authored actions/views. Missing run,
 		# idle, combat or headings stay unavailable; never alias a different pose.
-		# Recovery and corpse continue their own authored attack/death track;
-		# they are lifecycle states, never substitutes for a missing action.
-		var native_role: String = "attack" if state == "recovery" else ("death" if state == "corpse" else state)
+		# Recovery/corpse continue attack/death; a stationary turn presents the
+		# actual idle at its new facing. None creates a new authored track.
+		var native_role: String = "attack" if state == "recovery" else ("death" if state == "corpse" else ("idle" if state == "turn" else state))
 		var native_key: String = native_role + "_" + str(facing8)
 		_resolved_role = "unavailable"
 		if frames.has_animation(native_key) and frames.get_frame_count(native_key) > 0:
@@ -398,6 +432,7 @@ func apply_frames(sprite: Node2D) -> void:
 	var frames: SpriteFrames = (sprite as AnimatedSprite2D).sprite_frames if sprite is AnimatedSprite2D else frame_source
 	if frames == null: return
 	if _track_source != frames or _resolved_profile != profile:
+		_clear_native_hit_presentation()
 		_track_source = frames
 		_resolved_profile = profile
 		_tracks.clear()
@@ -431,7 +466,8 @@ func apply_frames(sprite: Node2D) -> void:
 	elif dead and _resolved_role == "death":
 		frame_value = _weighted_frame(track, death_clock / maxf(.01, profile.death_duration))
 	elif _resolved_role == "hit":
-		frame_value = _weighted_frame(track, 1.0 - hit_clock / hit_duration)
+		var hit_progress: float = 1.0 - _native_hit_clock / _native_hit_duration if _native_hit_presenting() else 1.0 - hit_clock / hit_duration
+		frame_value = _weighted_frame(track, hit_progress)
 	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:
 		if source_timed:
 			var ends: PackedFloat64Array = track.ends
