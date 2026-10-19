@@ -7264,6 +7264,108 @@
         ]
       ],
       "review_basis": "Private actualr057 WIdle/Wwalk/Wrun physical comparison. Native shoulder-to-pelvis lengths approximately131/129/128px and crown-to-pelvis215/206/218px show shared physical bodyresolution; use reviewed WIdle1152 virtualcanvas, removing current12.5percent wholebody enlargement without wingbbox sizing. Visible central blackpelvis material immediately below waist/belt and above frontthigh, excluding cape/arms, gives practical body-axisX [355, 1082, 359, 1089, 334, 1091] (annotation uncertainty about±6nativepx, not exact hidden skeleton). ReviewedWIdle0 sameaxisapproximately240 vs pairedsupportroot254 gives+14sourceX reference. Set each pelvisaxis+14; this removes packedwingbbox/cellcolumn placement drift while retaining authentic torso/head forwardlean, wingstroke, arm/leg articulation and all six originalY/bob. Every sourceRGBA/region/poseorder stays exact. Final newly compiled physicalroot/scale/loop review required; no source/actor approval is implied."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+      "direction": "W",
+      "role": "idle",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          324,
+          480
+        ],
+        [
+          836,
+          480
+        ],
+        [
+          324,
+          992
+        ],
+        [
+          836,
+          992
+        ],
+        [
+          325,
+          1504
+        ],
+        [
+          837,
+          1504
+        ]
+      ],
+      "review_basis": "Private actualr079 Wentry4pose review plus magnified paired-stance/neck/pelvis checks. Both boots are planted in perspective; choose physical paired-support/pelvis reference, never isolated front toe. Idle anklecolumns approximately285/357 (mean321±4sourcepx), pelvis315–320 and neck301. Idle324 yields neck−23sourcepx, consistent with WHit0neck676−support701=−25. Initial hit pairedankles654/718 and support701 retain natural brace/bodybias; do not modify any hit pose/anchor. Rounded324 localX percolumn matches pairedsupport/pelvis, despite also lying near lowestsolemidpoint by coincidence. Source6subpixelbodybreathing allows324/325 variation. Currentcell256 is about68sourcepx too far left. Keep1024canvas and Yallunchanged; no toe-lock or source edit."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "c6026a38bacdc373aa138a1e4956c089475a4ac9dc16b56178a878c9fc4b0e3d",
+      "direction": "W",
+      "role": "attack",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          452,
+          476
+        ],
+        [
+          1220,
+          496
+        ],
+        [
+          452,
+          982
+        ],
+        [
+          1220,
+          978
+        ],
+        [
+          452,
+          1487
+        ],
+        [
+          1220,
+          1502
+        ]
+      ],
+      "review_basis": "Private actualr079 Wentry4pose review plus magnified paired-stance/neck/pelvis checks. Both boots are planted in perspective; choose physical paired-support/pelvis reference, never isolated front toe. Idle anklecolumns approximately285/357 (mean321±4sourcepx), pelvis315–320 and neck301. Idle324 yields neck−23sourcepx, consistent with WHit0neck676−support701=−25. Initial hit pairedankles654/718 and support701 retain natural brace/bodybias; do not modify any hit pose/anchor. Attack0pairedankles about406/505 (mean455.5), pelvis455; cell384 has the same sourcewide bias, so addconstant68sourceX to ALL six original anchors (first452). This matches sharedWstance convention while preserving complete relative lunge/swing/return trajectory, every Y and forward/back torso articulation. Do not align individual attack feet or pelvis perphase. Same1024canvas, allRGBA/regions unchanged."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+      "direction": "W",
+      "role": "death",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          452,
+          483
+        ],
+        [
+          1220,
+          451
+        ],
+        [
+          452,
+          939
+        ],
+        [
+          1220,
+          885
+        ],
+        [
+          452,
+          1377
+        ],
+        [
+          1220,
+          1365
+        ]
+      ],
+      "review_basis": "Private actualr079 Wentry4pose review plus magnified paired-stance/neck/pelvis checks. Both boots are planted in perspective; choose physical paired-support/pelvis reference, never isolated front toe. Idle anklecolumns approximately285/357 (mean321±4sourcepx), pelvis315–320 and neck301. Idle324 yields neck−23sourcepx, consistent with WHit0neck676−support701=−25. Initial hit pairedankles654/718 and support701 retain natural brace/bodybias; do not modify any hit pose/anchor. Death0pairedankles about430/490 (mean460), pelvis445; cell384 has common sourcewide bias. Addconstant68sourceX to ALL six original anchors (first452). Preserve every relative collapse/roll/corpse displacement and allY, no perphase foot/pelvis locking. Same1024canvas and explicitly reviewed expanded source regions/RGBA remain exact. Requires source-region review composition, never defaultchecker relaxation."
     }
   }
 }
