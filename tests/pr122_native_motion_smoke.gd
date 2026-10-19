@@ -15,7 +15,8 @@ func _run() -> void:
 	var expected: int = 0
 	for key: String in register.actors:
 		var actor: Dictionary = register.actors[key]
-		expected += int(actor.native_track_count)
+		for track: Dictionary in actor.tracks:
+			if track.role in ["walk", "run"]: expected += 1
 		var textures: Array[ImageTexture] = []
 		for track: Dictionary in actor.tracks:
 			var texture: ImageTexture = ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
@@ -31,6 +32,7 @@ func _run() -> void:
 		root.add_child(sprite)
 		sprite.sprite_frames = frames
 		for track: Dictionary in actor.tracks:
+			if track.role not in ["walk", "run"]: continue
 			var motion: RefCounted = motion_script.new()
 			motion.profile = profile
 			var direction: int = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"].find(track.direction)

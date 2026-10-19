@@ -17,6 +17,9 @@ import import_original_based_motion as importer
 SOURCE_MANIFEST = Path('docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json')
 REGISTER = Path('data/pr122_native_locomotion_staging.json')
 ACTORS = {'transform:393': 'halpas_393', 'transform:267': 'girtas_267'}
+CORE_ROLES = ('idle', 'attack', 'hit', 'death')
+NATIVE_ROLES = ('walk', 'run', *CORE_ROLES)
+ROLE_SECONDS = dict(idle=1.2, walk=.48, run=.48, attack=.42, hit=.22, death=.65)
 
 
 def digest(path):
@@ -47,8 +50,9 @@ def build_frames(tracks):
                       'filter_clip = true']
         poses = ',\n'.join('{"duration": 1.0, "texture": SubResource("track_%d_%d")}' % (n, phase)
                              for phase in range(6))
-        animations.append('{"frames": [%s], "loop": true, "name": &"%s", "speed": 12.5}' %
-                          (poses, track['animation']))
+        loop = str(track['role'] in ('idle', 'walk', 'run')).lower()
+        animations.append('{"frames": [%s], "loop": %s, "name": &"%s", "speed": %.9f}' %
+                          (poses, loop, track['animation'], 6 / ROLE_SECONDS[track['role']]))
     lines += ['', '[resource]', 'animations = [\n' + ',\n'.join(animations) + '\n]',
               'metadata/twilight_canvas_size = Vector2(1024, 1024)',
               'metadata/twilight_native_locomotion_staging = true',
@@ -61,7 +65,7 @@ def stage(root, key, revision=None):
     assert manifest['mythic_detail_complete'] == 0
     assert manifest['approved_history_preserved'] == 405
     records = {(row['key'], row['source']): row for row in manifest['raw_images']}
-    selected = manifest['selected_locomotion_sheets']
+    selected = {**manifest['selected_locomotion_sheets'], **manifest.get('selected_detailed_action_sheets', {})}
     register_path = root / REGISTER
     register = json.loads(register_path.read_text()) if register_path.exists() else dict(
         schema='pr122-native-locomotion-staging-v1', approved_history_preserved=405,
@@ -80,7 +84,7 @@ def stage(root, key, revision=None):
         actor_key, direction, role = identity.rsplit(':', 2)
         if actor_key != key:
             continue
-        assert role in ('walk', 'run') and direction in importer.DIRECTIONS
+        assert role in NATIVE_ROLES and direction in importer.DIRECTIONS
         record = records[(key, source)]
         assert record['direction'] == direction and record['role'] == role
         assert record['geometry']['status'] == 'GEOMETRY_PASS'
@@ -104,7 +108,7 @@ def stage(root, key, revision=None):
                            source=source, source_sha256=record['sha256'],
                            texture=previous_textures.get((source, record['sha256']),
                                        (folder / f'{direction}-{role}.png').as_posix()), geometry=geometry))
-    assert 1 <= len(tracks) <= 16
+    assert 1 <= len(tracks) <= len(NATIVE_ROLES) * 8
     fingerprints = [frame['rgba_sha256'] for track in tracks for frame in track['geometry']['frames']]
     assert len(set(fingerprints)) == len(fingerprints), 'No duplicated native poses across tracks'
     for track in tracks:
@@ -114,14 +118,18 @@ def stage(root, key, revision=None):
     preserve_write(root / frames_path, build_frames(tracks))
     missing = [f'{role}_{index}' for role in ('walk', 'run') for index in range(8)
                if f'{role}_{index}' not in {track['animation'] for track in tracks}]
+    available = {track['animation'] for track in tracks}
+    missing_core = {role: [f'{role}_{direction}' for direction in range(8)
+                          if f'{role}_{direction}' not in available] for role in CORE_ROLES}
     entry = dict(
         grade='유일', frames='res://' + frames_path.as_posix(), frames_sha256=digest(root / frames_path),
         native_track_count=len(tracks), native_pose_count=len(fingerprints),
         canvas_size=[1024, 1024], foot=[512, 640], tracks=tracks,
-        missing_locomotion=missing, missing_dedicated_roles=['idle', 'attack', 'hit', 'death'],
+        missing_locomotion=missing, missing_dedicated_roles=[role for role in CORE_ROLES if missing_core[role]],
+        missing_dedicated_by_direction=missing_core,
         production_connected=False, detailed_completed=False, completed_added=0,
         status='NATIVE_TRACKS_STAGED; incomplete character HOLD',
-        visual_review='NOT_RUN; image generation and preview tools forbidden',
+        visual_review='NOT_RUN; image tools authorized for production, no chat image attachments',
         timing_review='HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved',
         integration='Godot SpriteFrames contract only; production catalogs and profiles unchanged')
     previous = dict(register['actors'].get(key, {}))

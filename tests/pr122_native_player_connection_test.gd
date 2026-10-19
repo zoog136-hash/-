@@ -9,8 +9,13 @@ func _run() -> void:
 	var references: Dictionary = {}
 	var textures: Array[ImageTexture] = []
 	var expected: int = 0
-	for entry: Dictionary in register.actors.values():
-		expected += int(entry.native_track_count)
+	var scope: PackedStringArray = OS.get_environment("TWILIGHT_NATIVE_TEST_KEYS").split(",", false)
+	var tested_actors: int = 0
+	for key: String in register.actors:
+		if not scope.is_empty() and not scope.has(key): continue
+		var entry: Dictionary = register.actors[key]
+		for track: Dictionary in entry.tracks:
+			if track.role in ["walk", "run"]: expected += 1
 		for track: Dictionary in entry.tracks:
 			var texture := ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
 			texture.take_over_path("res://" + str(track.texture))
@@ -28,6 +33,8 @@ func _run() -> void:
 	var original_sequence: int = actor.motion.sequence
 	var checked: int = 0
 	for key: String in register.actors:
+		if not scope.is_empty() and not scope.has(key): continue
+		tested_actors += 1
 		var record: Dictionary = register.actors[key]
 		var profile: Resource = load(record.native_profile)
 		actor.motion.advance(0.0, Vector2.ZERO)
@@ -38,6 +45,7 @@ func _run() -> void:
 		var sprite: AnimatedSprite2D = actor.transform_sprite
 		assert(sprite.sprite_frames.has_animation(sprite.animation))
 		for track: Dictionary in record.tracks:
+			if track.role not in ["walk", "run"]: continue
 			var direction: int = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"].find(track.direction)
 			var velocity: Vector2 = Vector2.RIGHT.rotated(float(direction) * PI / 4.0) * profile.reference_speed
 			velocity *= 0.6 if track.role == "walk" else 1.25
@@ -58,7 +66,12 @@ func _run() -> void:
 		var previous_animation: StringName = sprite.animation
 		actor.motion.advance(1.0, Vector2.ZERO)
 		actor.motion.apply(sprite, sprite.get_meta("base_scale", Vector2.ONE))
-		assert(sprite.animation == previous_animation)
+		var idle_name: String = "idle_" + str(actor.motion.facing8)
+		if sprite.sprite_frames.has_animation(idle_name):
+			assert(str(sprite.animation) == idle_name)
+		else:
+			assert(sprite.animation == previous_animation)
+		previous_animation = sprite.animation
 		for missing: String in record.missing_locomotion:
 			assert(not sprite.sprite_frames.has_animation(missing))
 			var role: String = missing.get_slice("_", 0)
@@ -79,5 +92,5 @@ func _run() -> void:
 	actor.queue_free()
 	await process_frame
 	assert(checked == expected and expected > 0)
-	print("PR122_NATIVE_PLAYER_CONNECTION_PASS actors=%d clips=%d native_phases=%d position_collision_class_combat_sequence_preserved=true engine=%s production_catalog_switches=0 approvals_added=0" % [register.actors.size(), checked, checked * 6, Engine.get_version_info().string])
+	print("PR122_NATIVE_PLAYER_CONNECTION_PASS actors=%d clips=%d native_phases=%d position_collision_class_combat_sequence_preserved=true engine=%s production_catalog_switches=0 approvals_added=0" % [tested_actors, checked, checked * 6, Engine.get_version_info().string])
 	quit(0)

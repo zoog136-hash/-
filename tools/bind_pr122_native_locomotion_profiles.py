@@ -8,12 +8,13 @@ import statistics
 from stage_pr122_native_locomotion import preserve_write
 
 
-def main():
-    root = Path(__file__).resolve().parents[1]
+def bind(root, only_key=None):
     path = root / 'data/pr122_native_locomotion_staging.json'
     register = json.loads(path.read_text())
     catalog = json.loads((root / 'data/combat_animation_profiles.json').read_text())['profiles']
     for key, actor in register['actors'].items():
+        if only_key is not None and key != only_key:
+            continue
         assert actor['production_connected'] is False and actor['detailed_completed'] is False
         frames = root / actor['frames'].removeprefix('res://')
         assert hashlib.sha256(frames.read_bytes()).hexdigest() == actor['frames_sha256']
@@ -40,6 +41,11 @@ def main():
             f'body_kind = "{prior.get("body_kind", "humanoid")}"',
             f'pixel_scale = {scale:.12f}', f'sprite_offset = Vector2(0, {foot_offset:.12f})',
             'authored_motion_weight = 0.0', 'hit_recoil = 0.0', 'embedded_shadow = false',
+            'attack_hit_frame = 3', 'action_hit_frames = {"attack": 3}',
+            f'attack_animation_speed = {float(prior.get("attack_animation_speed", 1.0)):.9f}',
+            f'death_duration = {float(prior.get("death_duration", .65)):.9f}',
+            f'attack_hit_ratio = {float(prior.get("attack_hit_ratio", .45)):.9f}',
+            f'use_profile_hit_ratio = {str("attack_hit_ratio" in prior).lower()}',
             'metadata/twilight_native_locomotion_staging = true',
             'metadata/twilight_production_connected = false',
             'metadata/twilight_detailed_completed = false', '']
@@ -52,6 +58,14 @@ def main():
                                             production_catalog_replaced=False)
     path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     print('PR122_NATIVE_PROFILES_BOUND actors=2 complete_actors_added=0 production_switches=0')
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--key')
+    args = parser.parse_args()
+    bind(Path(__file__).resolve().parents[1], args.key)
 
 
 if __name__ == '__main__':

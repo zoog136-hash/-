@@ -9,7 +9,9 @@ func _run() -> void:
 	var register: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_native_locomotion_staging.json"))
 	var checked_tracks: int = 0
 	var checked_poses: int = 0
+	var scope: PackedStringArray = OS.get_environment("TWILIGHT_NATIVE_TEST_KEYS").split(",", false)
 	for key: String in register.actors:
+		if not scope.is_empty() and not scope.has(key): continue
 		var actor: Dictionary = register.actors[key]
 		assert(not actor.production_connected and not actor.detailed_completed)
 		var textures: Array[ImageTexture] = []
@@ -30,7 +32,8 @@ func _run() -> void:
 		for track: Dictionary in actor.tracks:
 			var animation := StringName(track.animation)
 			assert(frames.has_animation(animation))
-			assert(frames.get_frame_count(animation) == 6 and frames.get_animation_loop(animation))
+			var looping: bool = track.role in ["idle", "walk", "run"]
+			assert(frames.get_frame_count(animation) == 6 and frames.get_animation_loop(animation) == looping)
 			for phase: int in range(6):
 				var atlas := frames.get_frame_texture(animation, phase) as AtlasTexture
 				var pose: Dictionary = track.geometry.frames[phase]
@@ -47,7 +50,8 @@ func _run() -> void:
 			for tick: int in range(80):
 				await process_frame
 				seen[sprite.frame] = true
-			assert(seen.size() == 6 and sprite.is_playing())
+			assert(seen.size() == 6 and sprite.is_playing() == looping)
+			if not looping: assert(sprite.frame == 5)
 			assert(sprite.animation == animation)
 			checked_tracks += 1
 			track_index += 1
@@ -55,7 +59,9 @@ func _run() -> void:
 			assert(not frames.has_animation(missing))
 		for role: String in actor.missing_dedicated_roles:
 			for direction: int in range(8):
-				assert(not frames.has_animation(role + "_" + str(direction)))
+				var name: String = role + "_" + str(direction)
+				if not actor.has("missing_dedicated_by_direction") or actor.missing_dedicated_by_direction[role].has(name):
+					assert(not frames.has_animation(name))
 		sprite.queue_free()
 		await process_frame
 	print("PR122_NATIVE_RESOURCE_PASS tracks=%d poses=%d approvals_added=0 engine=%s" % [checked_tracks, checked_poses, Engine.get_version_info().string])

@@ -54,13 +54,26 @@ def main():
     total = sum(a['native_track_count'] for a in register['actors'].values())
     missing = sum(len(a['missing_locomotion']) for a in register['actors'].values())
     register['next_locomotion_source'] = next_target
+    actions = manifest.get('selected_detailed_action_sheets', {})
+    next_action = None
+    missing_actions = 0
+    for key in staging.ACTORS:
+        for role in ('attack', 'hit', 'death', 'idle'):
+            for direction in staging.importer.DIRECTIONS:
+                if f'{key}:{direction}:{role}' not in actions:
+                    missing_actions += 1
+                    if next_action is None and (key, direction, role) not in holds:
+                        next_action = dict(key=key, direction=direction, role=role)
+    register['next_detailed_source'] = next_action
+    register['missing_detailed_action_blocks'] = missing_actions
+    next_target = next_target or next_action
     (root / staging.REGISTER).write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     resume = root / 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md'
     next_text = '이동/달리기 원화 큐 종료; 전투 동작 또는 HOLD 보완' if next_target is None else (
         f'{next_target["key"]} {next_target["direction"]} {next_target["role"]}')
     latest = (f'- 최신 제작: {request["key"]} {request["direction"]} {request["role"]} {request["version"]} '
               f'{"신규6자세와 실제 Player 연결 PASS" if passed else "소스 HOLD 보존"}. '
-              f'현재{total}클립/{total * 6}자세, 남은 이동{missing}블록. 다음 제작: {next_text}. '
+              f'현재{total}클립/{total * 6}자세, 남은 이동{missing}블록/전용 동작{missing_actions}블록. 다음 제작: {next_text}. '
               '현재 수량은 data/pr122_native_locomotion_staging.json과 선택 소스를 우선한다.')
     lines = resume.read_text().splitlines()
     assert sum(line.startswith('- 최신 제작:') for line in lines) == 1
@@ -80,7 +93,8 @@ def main():
     remote = read_git('ls-remote', 'origin', 'refs/heads/' + BRANCH).split()[0]
     assert remote == sha, 'Remote changed after save; preserve and sync before the next clip'
     print(json.dumps(dict(status='PUSH_VERIFIED', sha=sha, clips=total, poses=total * 6,
-                          missing_locomotion=missing, next=next_target, approvals_added=0)))
+                          missing_locomotion=missing, missing_dedicated_actions=missing_actions,
+                          next=next_target, approvals_added=0)))
 
 
 if __name__ == '__main__':
