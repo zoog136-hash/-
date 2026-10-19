@@ -54,6 +54,8 @@ def update_authoring_queue(register, manifest):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--request', type=Path, required=True)
+    parser.add_argument('--local-only', action='store_true',
+                        help='Preserve a verified local commit when remote authentication is unavailable')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     def read_git(*parts):
@@ -103,6 +105,10 @@ def main():
         subprocess.run(['git', 'diff', '--cached', '--check'], cwd=root, stdout=out, stderr=subprocess.STDOUT, check=True)
         title = f'[skip ci] Author {staging.ACTORS[request["key"]]} {request["direction"]} {request["role"]} native poses' if passed else f'[skip ci] Preserve {request["key"]} {request["direction"]} {request["role"]} source HOLD'
         subprocess.run(['git', 'commit', '-m', title], cwd=root, stdout=out, stderr=subprocess.STDOUT, check=True)
+        if args.local_only:
+            print(json.dumps(dict(status='LOCAL_COMMITTED_NOT_PUSHED', sha=read_git('rev-parse', 'HEAD'),
+                                  clips=total, poses=total * 6, approvals_added=0)))
+            return
         subprocess.run(['git', 'push', 'origin', 'HEAD:refs/heads/' + BRANCH], cwd=root,
                        stdout=out, stderr=subprocess.STDOUT, check=True, timeout=60)
     sha = read_git('rev-parse', 'HEAD')

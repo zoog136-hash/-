@@ -72,9 +72,18 @@ def validate_proof(proof, source, output):
 def unselected_manifest(root, request, source):
     manifest = read_json(root / staging.SOURCE_MANIFEST)
     slot = ':'.join(request[field] for field in ('key', 'direction', 'role'))
-    require(all(slot not in manifest.get(table, {}) for table in
-                ('selected_locomotion_sheets', 'selected_detailed_action_sheets')),
-            'Slot already has a selected source; preserve it and do not repeat production')
+    selected = [manifest.get(table, {}).get(slot) for table in
+                ('selected_locomotion_sheets', 'selected_detailed_action_sheets')]
+    selected = [value for value in selected if value is not None]
+    if selected:
+        require(len(selected) == 1 and bool(request.get('corrective_reason'))
+                and request.get('replaces_selected_source') == selected[0],
+                'Selected source requires an explicit pinned corrective replacement')
+        require(any(hold.get('status') == 'HOLD' and hold.get('key') == request['key']
+                    and (hold.get('scope') == 'all_native_clips'
+                         or selected[0] in hold.get('sources', []))
+                    for hold in manifest.get('visual_quality_holds', [])),
+                'Corrective replacement requires an unresolved visual HOLD for the previous source')
     relative = source.relative_to(root).as_posix()
     records = [r for r in manifest.get('raw_images', [])
                if r.get('source') == relative and r.get('key') == request['key']
