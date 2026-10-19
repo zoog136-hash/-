@@ -20,5 +20,7 @@ jobs:
           persist-credentials: false
       - name: Check all 723 real atlases and distinguish unshipped original packs
         run: python3 tools/check_resource_integrity.py --root .
+      - name: Verify all licensed skill images and source attribution
+        run: python3 tools/skills/verify_styled_skill_icons.py
       - name: Test that missing or uncommitted art fails closed
         run: python3 -m unittest discover -s tests -p 'test_resource_integrity.py' -v
