@@ -7,7 +7,7 @@ const SHEET_DIRECTIONS = ["dir_down", "dir_up", "dir_left", "dir_right"]
 signal strike(sequence: int)
 signal cancelled(sequence: int)
 
-var profile: TwilightAnimationProfile = PROFILE.new()
+var profile: PROFILE = PROFILE.new()
 var state: String = "idle"
 var direction: Vector2 = Vector2.DOWN
 var facing8: int = 2 # clockwise: E, SE, S, SW, W, NW, N, NE
@@ -45,7 +45,7 @@ var state_clock: float = 0.0
 var frame_source: SpriteFrames = null # optional authored frames for an existing Sprite2D
 var _tracks: Dictionary = {}
 var _track_source: SpriteFrames = null
-var _resolved_profile: TwilightAnimationProfile = null
+var _resolved_profile: PROFILE = null
 var _resolved_state: String = ""
 var _resolved_facing: int = -1
 var _resolved_key: String = ""
