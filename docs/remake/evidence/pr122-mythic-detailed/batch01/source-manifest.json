@@ -5636,6 +5636,41 @@
         "assembly_proof": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/halpas-W-death-reviewed-composite-v02.assembly.json",
         "actor_approval": false
       }
+    },
+    {
+      "key": "transform:393",
+      "direction": "NE",
+      "role": "hit",
+      "version": "v03composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v03composite01.png",
+      "original_generated_file": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.png",
+      "bytes": 4650316,
+      "sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged strict complete six-pose importer PASS for exactRGBA mixed-resolution assembly in3072x4608 image with1536 cells. Perpose runtime canvas scale handled separately; no relaxation of ownership/fringe/clipping/region guards."
+      },
+      "runtime_integration_hold": {
+        "status": "RUNTIME_HOLD_PRESERVED",
+        "slot": "transform:393:NE:hit",
+        "preserved_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v03composite01.png",
+        "source_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+        "reason": "Strict existing cross-track native pose uniqueness rejected exact NEidle0/4/5 reuse. No gate or tests relaxed. Requires three genuinely new hit neutral/recovery/settle poses.",
+        "selected_source_preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png",
+        "source_geometry_status": "GEOMETRY_PASS",
+        "actor_approval_added": 0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -8948,6 +8983,46 @@
       "actor_approval": false,
       "approved_actor_change": 0,
       "detailed_completion_change": 0
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v03composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        1024,
+        2496,
+        2624,
+        2496,
+        1024,
+        1024
+      ],
+      "source_anchors": [
+        [
+          736,
+          971
+        ],
+        [
+          2254,
+          1243
+        ],
+        [
+          721,
+          2822
+        ],
+        [
+          2264,
+          2775
+        ],
+        [
+          738,
+          4048
+        ],
+        [
+          2301,
+          4049
+        ]
+      ],
+      "review_basis": "Lossless exact sixpose composite retains original source RGBA resolutions. Perpose body-scale proposal from same closed-helmet/pauldron/girdle landmarks against actual selected NEidle, never whole silhouette bbox. Waist-based abstract flight roots match idle body origin while preserving local hit head/torso/arm/wing/cape motion; no standing-foot clamp. Final actual Player/physical QA required before actor approval."
     }
   }
 }
