@@ -1240,9 +1240,7 @@ func _build_catalog_panel() -> void:
 	card_owned_label.name = "CardOwnershipSummary"
 	card_owned_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	card_controls.add_child(card_owned_label)
-	card_draw_button = UI.button("최상급팩 11회 뽑기 (검수 전용)", func() -> void:
-		if playtest_tools_enabled() and CARD_RULES.CATEGORIES.has(catalog_category):
-			card_pack_draw_requested.emit(catalog_category), Vector2(0, 42))
+	card_draw_button = UI.button("최상급팩 11회 뽑기 (검수 전용)", _request_card_pack_draw, Vector2(0, 42))
 	card_draw_button.name = "CardTopPackDraw"
 	card_controls.add_child(card_draw_button)
 	card_fusion_grade_select = OptionButton.new()
@@ -1340,6 +1338,10 @@ func _refresh_card_controls() -> void:
 	var required: int = int(CARD_RULES.FUSION_MATERIALS[grade_name])
 	card_fusion_button.text = "%s 중복 %d/%d장 합성" % [grade_name, available, required]
 	card_fusion_button.disabled = available < required
+
+func _request_card_pack_draw() -> void:
+	if playtest_tools_enabled() and CARD_RULES.CATEGORIES.has(catalog_category):
+		card_pack_draw_requested.emit(catalog_category)
 
 func _request_card_fusion() -> void:
 	if card_fusion_grade_select == null or not CARD_RULES.CATEGORIES.has(catalog_category):
