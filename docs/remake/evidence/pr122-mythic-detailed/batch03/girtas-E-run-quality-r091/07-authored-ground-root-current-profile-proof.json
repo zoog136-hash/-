@@ -1,0 +1,324 @@
+{
+  "status": "INDEPENDENT_SOURCE_ROOT_CANDIDATE_PASS_CURRENT_PROFILE_NUMERIC_REVIEW_ACTUAL_RUNTIME_HOLD",
+  "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+  "baseline_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/NativeMotionProfile.tres",
+  "baseline_profile_sha256": "88bf375090b25eea7abecfa1cc5ce7af54930c26d4ccf792a710d97d1933b785",
+  "baseline_pixel_scale": 0.227155394941,
+  "profile_scale_policy": "110/median(walk neutral_height); actual staged profile must be used for runtime/final48 checks",
+  "authored_pose_canvas_sizes": [
+    2664,
+    2560,
+    2560,
+    2256,
+    2256,
+    2048
+  ],
+  "source_native_root_anchors": [
+    [
+      679,
+      1273
+    ],
+    [
+      683,
+      1267
+    ],
+    [
+      704,
+      1310
+    ],
+    [
+      687,
+      1200
+    ],
+    [
+      755,
+      1157
+    ],
+    [
+      686,
+      1185
+    ]
+  ],
+  "selected_idle_source_anchor": [
+    210,
+    491
+  ],
+  "measured_selected_idle_near_far_projection_canonical": 20,
+  "ground_definition": "NearRIGHT currentidle plane0, farLEFT−20canonical. Grounded phases use exact support soles. AIR space is explicit new ground/root authorship using genuine opposite flexed leg art, not a floor inferred from PNG.",
+  "front_crest_is_surface_reference_not_hidden_pelvis": true,
+  "pose_rows": [
+    {
+      "phase": 0,
+      "C": 2664,
+      "source_root": [
+        679,
+        1273
+      ],
+      "front_surface_belt_crest_world": [
+        21.392171727777058,
+        -58.32641107818397
+      ],
+      "brow_world": [
+        17.986887248661525,
+        -91.94268093611934
+      ],
+      "native_pixels_unchanged": true,
+      "support_side": "farLEFT",
+      "support_sole_last_strong_native_y": 1221,
+      "support_sole_world_y": -4.540379305487376,
+      "authored_projected_ground_world_y": -4.543107898820001
+    },
+    {
+      "phase": 1,
+      "C": 2560,
+      "source_root": [
+        683,
+        1267
+      ],
+      "front_surface_belt_crest_world": [
+        21.352607124454,
+        -48.3386680434448
+      ],
+      "brow_world": [
+        26.0774393392268,
+        -85.1378420238868
+      ],
+      "native_pixels_unchanged": true,
+      "support_side": "farLEFT",
+      "support_sole_last_strong_native_y": 1217,
+      "support_sole_world_y": -4.54310789882,
+      "authored_projected_ground_world_y": -4.543107898820001
+    },
+    {
+      "phase": 2,
+      "C": 2560,
+      "source_root": [
+        704,
+        1310
+      ],
+      "front_surface_belt_crest_world": [
+        21.352607124454,
+        -59.969024264424
+      ],
+      "brow_world": [
+        27.3495095508964,
+        -90.0443985546124
+      ],
+      "native_pixels_unchanged": true,
+      "all_alpha_gt16_foreground_clearance_above_HIGHER_far_ground_world": 13.811048012412801,
+      "boot_sole_measurements": [
+        {
+          "anatomical_side": "near_RIGHT_lead",
+          "ROI_XYXY": [
+            835,
+            850,
+            930,
+            1005
+          ],
+          "last_strong_y_in_ROI": 997,
+          "gap_world": 28.4398554466132,
+          "scope": "independently reviewed fullboot sole ROI"
+        },
+        {
+          "anatomical_side": "far_LEFT_trail",
+          "ROI_XYXY": [
+            375,
+            920,
+            470,
+            1090
+          ],
+          "last_strong_y_in_ROI": 1082,
+          "gap_world": 16.1734641197992,
+          "scope": "independently reviewed fullboot sole ROI"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "C": 2256,
+      "source_root": [
+        687,
+        1200
+      ],
+      "front_surface_belt_crest_world": [
+        21.342940937435234,
+        -55.058601258890896
+      ],
+      "brow_world": [
+        32.272176393319945,
+        -97.74448313376136
+      ],
+      "native_pixels_unchanged": true,
+      "support_side": "nearRIGHT",
+      "support_sole_last_strong_native_y": 1200,
+      "support_sole_world_y": 0.0,
+      "authored_projected_ground_world_y": 0
+    },
+    {
+      "phase": 4,
+      "C": 2256,
+      "source_root": [
+        755,
+        1157
+      ],
+      "front_surface_belt_crest_world": [
+        21.342940937435234,
+        -45.98527371060925
+      ],
+      "brow_world": [
+        30.41626848571688,
+        -84.54691579080625
+      ],
+      "native_pixels_unchanged": true,
+      "support_side": "nearRIGHT",
+      "support_sole_last_strong_native_y": 1157,
+      "support_sole_world_y": 0.0,
+      "authored_projected_ground_world_y": 0
+    },
+    {
+      "phase": 5,
+      "C": 2048,
+      "source_root": [
+        686,
+        1185
+      ],
+      "front_surface_belt_crest_world": [
+        21.352607124454,
+        -59.969024264424
+      ],
+      "brow_world": [
+        29.984512132212,
+        -94.8373773878675
+      ],
+      "native_pixels_unchanged": true,
+      "all_alpha_gt16_foreground_clearance_above_HIGHER_far_ground_world": 12.8342798141665,
+      "boot_sole_measurements": [
+        {
+          "anatomical_side": "far_LEFT_lead",
+          "ROI_XYXY": [
+            980,
+            885,
+            1120,
+            1045
+          ],
+          "last_strong_y_in_ROI": 1032,
+          "gap_world": 12.8342798141665,
+          "scope": "independently reviewed fullboot sole ROI"
+        },
+        {
+          "anatomical_side": "near_RIGHT_trail_sole",
+          "ROI_XYXY": [
+            400,
+            700,
+            490,
+            775
+          ],
+          "last_strong_y_in_ROI": 774,
+          "gap_world": 46.6804336603755,
+          "scope": "partial sole patch only; conservative all-foreground bound proves fullboot"
+        }
+      ]
+    }
+  ],
+  "minimum_all_boot_clearance_required_world": 3,
+  "loop5_to0_brow_drop_world": 2.8946964517481604,
+  "loop5_to0_front_crest_drop_world": 1.6426131862400268,
+  "transition2_to3_brow_world_delta": -7.700084579148964,
+  "transition2_to3_front_crest_world_delta": 4.910423005533104,
+  "independent_visual_review": {
+    "schema": "pr122-independent-authored-root-candidate-review-v1",
+    "reviewer": "girtas_movement_source_runtime_qc",
+    "key": "transform:267",
+    "direction": "E",
+    "role": "run",
+    "status": "PASS_SCOPED_SIX_POSE_RIGID_SCALE_AUTHORED_ROOT_CANDIDATE_ACTUAL_RUNTIME_HOLD",
+    "source_visual_status": "SOURCE_PASS",
+    "raw_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+    "candidate_configuration": "/workspace/scratch/girtas-E-run-physical-layout-authoring-v01/authored-root-configuration-DRAFT-v01.json",
+    "candidate_configuration_sha256": "b3f57aae2030faf371eb4c80a4f7aa5cf49eb4c04db84e5e023258cebc9cda77",
+    "numeric_root_proof": "/workspace/scratch/girtas-E-run-physical-layout-authoring-v01/first-authored-ground-root-numeric-proof-DRAFT-v01.json",
+    "numeric_root_proof_sha256": "fb9cc1d68ce554bbcdf0d8db6b524c8820a9abd393abf2f4ddf1a069981f8435",
+    "pose_canvas_sizes": [
+      2664,
+      2560,
+      2560,
+      2256,
+      2256,
+      2048
+    ],
+    "source_native_root_anchors": [
+      [
+        679,
+        1273
+      ],
+      [
+        683,
+        1267
+      ],
+      [
+        704,
+        1310
+      ],
+      [
+        687,
+        1200
+      ],
+      [
+        755,
+        1157
+      ],
+      [
+        686,
+        1185
+      ]
+    ],
+    "visual_findings": [
+      "At common physical scale, the six rigid skull/helmet core and shoulder/waist volumes remain coherent with selected E idle. Source0/1 and3/4 use genuinely different loaded leg halves; their full equipment bbox is not used to normalize scale. Projected pauldron widths change with the arms sweeping and torso yaw, without a persistent giant shoulder/head-size switch.",
+      "The near RIGHT and far LEFT hips/boots genuinely exchange support: LEFTcontact0->LEFTload1->RIGHTleadingAIR2, RIGHTcontact3->RIGHTload4->LEFTleadingAIR5. Two complete connected leg and arm chains remain, with original RIGHT sinuous weapon/empty LEFT, HARD rays/palehair/longrobe. Both loaded source knees flex and the body descends, rather than just translating a straight leg.",
+      "Grounded roots use actual support sole and the selected E20canonical near/far projection. AIR2/5 use deliberately authored roots below both flexed boots; conservative all-foreground clearance proves both boots above the higher far-side ground, not an inferred PNG floor.",
+      "The physical sequence shows a coherent loading/rising/landing body arc and a plausible5->0 landing. Across2->3 the brow rises while the visible belt surface descends as the torso unfolds. That is a source posture change; no detached neck, scale switch or root correction to conceal a missing pose is evident. The front crest is a surface marker, not a measured hidden pelvis center.",
+      "Original clipped AIR5 c73b and boundaryHOLD remain preserved. The selected restored b686 source has complete empty LEFT fist and retains the correct flight-side chains; no padding-only endpoint repair was accepted."
+    ],
+    "numeric_profile_limit": {
+      "candidate_preview_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/NativeMotionProfile.tres",
+      "candidate_preview_scale": 0.281509916827,
+      "latest_actor_frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/SpriteFrames.tres",
+      "latest_actor_pixel_scale": 0.22715539494062983,
+      "uniform_world_scale_ratio": 0.8069179142993624,
+      "conservative_air_clearance_if_current_scale_used": {
+        "2": 13.811048012390298,
+        "5": 12.834279814145587
+      },
+      "required_followup": "Pin current actual profile in final metadata and recompute world-unit numeric evidence. SameC/anchors/relative proportions remain unchanged by this uniform scale; no new image needed for numerical rescale. Actual compiled final clip still needs focused review."
+    },
+    "evidence": {
+      "private_preview": "/workspace/scratch/girtas-E-run-authored-root-candidate-v01/private-seven-panel-authored-root-candidate.jpg",
+      "private_preview_sha256": "3a6bc28e9e01f580d4df5c7504d6e53030b9c0d392f872e8f801a44095642387",
+      "private_preview_bytes": 132737,
+      "native_face_landmark_draft": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-rigid-face-landmarks-DRAFT.json"
+    },
+    "visual_limitations": [
+      "This is static authored-candidate physical review, not actual compiled SpriteFrames/Player/Godot rendering. Final selection/texture/region/margin/actualprofile/airclearance/idle and loop transition need the focused compiled check.",
+      "No exact hidden-bone coordinates or full Girtas48/defaultcatalog/actor approval is implied. All prior raw/HOLDs and approval counts remain preserved."
+    ],
+    "preview_budget_total_bytes": 5245657,
+    "complete_clip": false,
+    "actor_approval": false,
+    "reviewed_at": "2026-10-19T15:13:36.954771+00:00"
+  },
+  "uniform_worldscale_revision": {
+    "previous_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/NativeMotionProfile.tres",
+    "previous_profile_sha256": "f34f1e3a637f7d6bb0644f1aa49ce81ab703f25ce25fa490b6d596180d8f4a88",
+    "previous_pixel_scale": 0.281509916827,
+    "new_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/NativeMotionProfile.tres",
+    "new_profile_sha256": "88bf375090b25eea7abecfa1cc5ce7af54930c26d4ccf792a710d97d1933b785",
+    "new_pixel_scale": 0.227155394941,
+    "ratio": 0.8069179143006774,
+    "source_Cs_and_native_roots_unchanged": true,
+    "new_image_or_artwork": false,
+    "reason": "Native profile pixel_scale recomputes110/median(walk neutral_height); all tracks share latest profile. Relative source physical review remains valid under uniform world rescale. Recompute from actual new staged profile before final runtime approval."
+  },
+  "actual_runtime_status": "HOLD_PENDING_NEW_PLAYER_RESOURCE_ACTION_CADENCE_FLOOR_SEAM_QC",
+  "source_pixels_mutated": false,
+  "actor_approval": false
+}

@@ -1,0 +1,59 @@
+{
+  "source": "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+  "source_anchor_crop": [
+    210,
+    491
+  ],
+  "support_samples": [
+    {
+      "side": "near_RIGHT",
+      "roi": [
+        200,
+        400,
+        300,
+        495
+      ],
+      "last_strong_y": 491,
+      "last_strong_x_span": [
+        236,
+        245
+      ],
+      "median_x": 240.5
+    },
+    {
+      "side": "far_LEFT",
+      "roi": [
+        300,
+        400,
+        427,
+        495
+      ],
+      "last_strong_y": 471,
+      "last_strong_x_span": [
+        358,
+        383
+      ],
+      "median_x": 370.5
+    }
+  ],
+  "near_minus_far_projection": 20,
+  "hip_estimates_from_Ewalk_author": {
+    "near_RIGHT": [
+      286,
+      288
+    ],
+    "far_LEFT": [
+      322,
+      286
+    ]
+  },
+  "estimated_pelvis_axis": [
+    304,
+    287
+  ],
+  "hip_offset_from_current_root": [
+    94,
+    -204
+  ],
+  "hip_axis_manual_estimate_not_final_rigid_truth": true
+}

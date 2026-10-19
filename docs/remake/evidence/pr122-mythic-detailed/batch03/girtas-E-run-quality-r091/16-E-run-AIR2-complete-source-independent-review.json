@@ -1,0 +1,41 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_FLIGHT_SOURCE_ART_FULL_ENDPOINTS_WORLD_ROOT_HOLD",
+  "raw_path": "/workspace/scratch/girtas-E-run-left-flight-key-v01/girtas-E-run-left-flight-key-v01.png",
+  "raw_sha256": "3cb7750b0b3982efd0aa99130268b041040cb56f6ac1da2bbecaf7290cd0432a",
+  "image_size": [
+    1254,
+    1254
+  ],
+  "candidate_game_phase": 2,
+  "actual_leading_leg": "anatomical_RIGHT_near",
+  "actual_trailing_leg": "anatomical_LEFT_far",
+  "strong_alpha_gt100_outer_edge_counts_LRTB": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "edge_max_alpha_LRTB": [
+    0,
+    1,
+    0,
+    1
+  ],
+  "findings": [
+    "The near/weapon-side RIGHT thigh is the forward high chain: its knee reaches imageRIGHT ahead of the pelvis, then folds back to a separate complete suspended boot. Far LEFT trails behind imageLEFT with its own bent knee/shin and complete boot. This is the intended opposite to flight5, visibly traceable from the distinct nearer thigh and trailing chain.",
+    "Both chains are flexed into a running flight design without a flat planted sole. Original E profile/slight-chest camera, pale hair, HARD narrow rays, long black-gold robe, permanent RIGHT sinuous weapon and empty LEFT fist remain coherent. All visible head/ray/blade/hand/boot endpoints are contained.",
+    "Independent raw boundary check finds zero alpha>100 pixels on all four image edges. The private full source view also shows complete gear/limb endpoints. Strict full-source geometry is separately owned by production tools.",
+    "Transparent PNG art does not establish worldfloor or actual airborne boot clearance. Full-six physical C/anchors/authored root and actual compiled review remain HOLD before AIR/clip approval."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "preview_budget_total_bytes": 2530882,
+  "reviewed_at": "2026-10-19T14:46:58.188426+00:00"
+}
