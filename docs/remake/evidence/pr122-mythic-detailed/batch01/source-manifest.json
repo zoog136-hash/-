@@ -4946,6 +4946,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "idle",
+      "version": "v04",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
+      "original_generated_file": "/workspace/scratch/halpas-NW-idle-repair-v04/halpas-NW-idle-v04.png",
+      "bytes": 2740973,
+      "sha256": "2e080bad8ba69456c89e0ac55b9293d1d622f128eb6b2828667039e64a1444ad",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -5029,7 +5048,7 @@
     "transform:393:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
     "transform:393:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png",
     "transform:393:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
-    "transform:393:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
+    "transform:393:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
     "transform:393:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
     "transform:393:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
     "transform:267:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
@@ -5271,6 +5290,23 @@
             "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
           ],
           "source_review_sha256": "657ccad253341b2ffec98899b7b5d90fb641ec168864dea9b58738795d88cf3d"
+        },
+        {
+          "slot": "transform:393:NW:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Every pose retains new canonical rear-left NW camera: articulated back/spine visible, chestfront skull hidden, helmet back/side left-away profile, nearLEFT lower-left shoulder and farRIGHT upper-right shoulder. No old N/NE/right-toe camera returned.",
+            "Both boots in all6 retain clear pointed gold toe UP-LEFT from heel/backankle LOWER-RIGHT, same coherent modest guard stance. No walkingstep/support swap or separate foot/body heading turn introduced.",
+            "NearLEFT shoulder→arm→empty fist stays lower-left ahead of cape; farRIGHT shoulder→arm→hand holds one compact purple crystal blade at upper/right side. All six retain two arm/hand chains and two legs/boots, no extra hand or gear swap.",
+            "Six actual idle articulations: neutral0, gradual opening/lift1, wider raised inhale2, eased exhale3, visibly narrowed/relaxed wingfan4, recovery opening5→0. Shoulder/back breathing, local wingroot/fan spread and delayed cape folds vary without full flightstroke or wholefigure translation.",
+            "Original gold horns, black/gold segmented back armor, TWO solid purple crystal fans/roots, burgundy cape on LEFT/back and original right-hand blade preserved with stable physical model/camera. Fine source-placement differences remain subject to native support-anchor review rather than claiming immutable pixel footposition.",
+            "All silhouettes complete and uncropped;0 alpha>100pixels touch outerimageedge. Existing unchanged geometryanalyzer+complete-region checker PASS exactly6 distinct frames. No threshold relaxation, source resampling, masking or colorchanges applied."
+          ],
+          "source_review_sha256": "b0fe25fd819982caaf931e5465474fdefaeb1830d4cdb7a4f48f87bec3a5d50c"
         }
       ],
       "compass_audit": {
