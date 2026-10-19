@@ -3338,6 +3338,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "death",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-NW-death-repair/girtas-NW-death-v02.png",
+      "bytes": 2183577,
+      "sha256": "c56534b64d850a1d906004d7e951841dc3505528269a57d06f39f7546a2a5b38",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3445,7 +3464,7 @@
     "transform:267:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
     "transform:267:SW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v01iso01.png",
     "transform:267:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
-    "transform:267:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
+    "transform:267:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
     "transform:267:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
     "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
     "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
@@ -4101,6 +4120,21 @@
             "Body scale and equipment attachment remain coherent across6, full physical spikes/boots/weapon tip visible."
           ],
           "source_review_sha256": "80f842a28ab280cbcb2037a57d15ae76d8f56b29c979675617e8595f774b2c07"
+        },
+        {
+          "slot": "transform:267:NW:death",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six retain rear-left NORTHWEST heading rather than NE: crown/head and bending torso aim upper left; back hair/back armor remain visible and no front-facing model appears. Deep buckle, fall and prone corpse are on the UP-LEFT axis, head UPPER LEFT and feet LOWER RIGHT. The weapon stays in the same anatomical RIGHT hand/image-right-side arm throughout all six; no mid-action hand swap or mirror. The free left arm braces separately.",
+            "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+            "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+            "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+          ],
+          "source_review_sha256": "af2e11067c72129c8cc0ce0868f11db77a6642817aa7417da1e82afc26418727"
         }
       ]
     }
