@@ -5671,6 +5671,31 @@
         "source_geometry_status": "GEOMETRY_PASS",
         "actor_approval_added": 0
       }
+    },
+    {
+      "key": "transform:393",
+      "direction": "SE",
+      "role": "hit",
+      "version": "v03composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
+      "original_generated_file": "/workspace/scratch/halpas-SE-hit-reviewed-composite-v03/halpas-SE-hit-v03composite01.png",
+      "bytes": 5129820,
+      "sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged strict complete six-pose importer PASS for exactRGBA mixed-resolution assembly in3072x4608 image with1536 cells. Perpose runtime canvas scale handled separately; no relaxation of ownership/fringe/clipping/region guards."
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -5734,7 +5759,7 @@
     "transform:393:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
     "transform:393:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
     "transform:393:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
-    "transform:393:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
+    "transform:393:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
     "transform:393:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-hit-v01.png",
     "transform:393:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-hit-v01iso01.png",
     "transform:393:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-hit-v01iso01.png",
@@ -6215,6 +6240,22 @@
             "Separate physicalcanvas/anchor proposal keeps old0-3 original1024/anchors byintegertranslations and proposes2048 fornew4/5 using rigidmodel/currentWidle1152 reference, explicit pelvis/actualemptyLEFTpalmfloor landmarks. This remains candidate metadata requiring actualPlayer/independent scale/root/fall QC; no corpse silhouettebbox normalization."
           ],
           "source_review_sha256": "b42bef9f9cadea2e4effa59eed63bbdeddc16d223a9115db46128e28d11cecc5"
+        },
+        {
+          "slot": "transform:393:SE:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six retain correct SE same-model camera, closed gold-horn helmet, black/gold segmented armor, TWO solid purple back crystal fan wings, same left-back burgundy cape and one original compact purple blade. No gear redesign, front/back mix or camera turn.",
+            "Exactly TWO arm chains in every frame. Original imageRIGHT blade arm stays continuously LOW from same pauldron through upperarm/elbow/forearm/wrist/grippinghand to same blade beside hip. Only original EMPTY imageLEFT arm changes. No third arm, extra downarm/empty right fist, disconnected wrist or floating blade.",
+            "Six actual phases: exact visually good SEv02 guard0; same good flinch1 with EMPTY LEFT forearm raised; NEW peak2 fist below LEFT cheek and head/torso backward recoil; NEW release3 left wrist descends to upper chest and head eases; NEW lower4 empty left hand reaches waist; exact good guard5 settles. Only good old0/1/5 reused from lossless isolation; original bad2/3/4 remain HOLD and are never in this atlas. Three newly authored+three reused.",
+            "ExactRGBA assembly proof preserves each reviewed full source crop and all alpha>16 foreground, with zero resizing, recolor, masks, mirrored poses or cleaned pixels. Six distinct visible fingerprints; unchanged strict six-pose complete-source geometry PASS at virtual2048. New explicit1536 packing cells retain1233px-wide source whole with generous transparent gutters.",
+            "Private metadata-normalized seven-cell comparison against actual selected directional idle0 reviewed all six for source physicalbody/camera/reaction flow. Closed helmet/pauldron/girdle scale and waist roots proposed from rigid landmarks, not whole silhouette bbox or standing-foot lock. Proposals keep head/torso/emptyarm/wing/cape response; actual Player runtime final QC still required."
+          ],
+          "source_review_sha256": "946b1cb91a61bde637f5de9845ebeba1058d1014fc964b9bb2e7c68b6980909e"
         }
       ],
       "compass_audit": {
@@ -9023,6 +9064,46 @@
         ]
       ],
       "review_basis": "Lossless exact sixpose composite retains original source RGBA resolutions. Perpose body-scale proposal from same closed-helmet/pauldron/girdle landmarks against actual selected NEidle, never whole silhouette bbox. Waist-based abstract flight roots match idle body origin while preserving local hit head/torso/arm/wing/cape motion; no standing-foot clamp. Final actual Player/physical QA required before actor approval."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        1024,
+        1024,
+        2688,
+        2344,
+        2344,
+        1024
+      ],
+      "source_anchors": [
+        [
+          763,
+          974
+        ],
+        [
+          2285,
+          978
+        ],
+        [
+          761,
+          2825
+        ],
+        [
+          2276,
+          2774
+        ],
+        [
+          734,
+          4321
+        ],
+        [
+          2300,
+          4047
+        ]
+      ],
+      "review_basis": "Lossless exact sixpose composite retains original source RGBA resolutions. Perpose body-scale proposal from same closed-helmet/pauldron/girdle landmarks against actual selected SEidle, never whole silhouette bbox. Waist-based abstract flight roots match idle body origin while preserving local hit head/torso/arm/wing/cape motion; no standing-foot clamp. Final actual Player/physical QA required before actor approval."
     }
   }
 }
