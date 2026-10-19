@@ -3625,6 +3625,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "W",
+      "role": "attack",
+      "version": "v02iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
+      "original_generated_file": "/workspace/scratch/girtas-W-attack-v02iso01.png",
+      "bytes": 1203698,
+      "sha256": "c6026a38bacdc373aa138a1e4956c089475a4ac9dc16b56178a878c9fc4b0e3d",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3715,7 +3734,7 @@
     "transform:267:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
     "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
     "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
-    "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
+    "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
     "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
     "transform:267:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
     "transform:267:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
@@ -4466,6 +4485,21 @@
             "Strict direct source import reports GEOMETRY_HOLD because a pose bounding rectangle includes another body. Original full bodies/tips look complete in private review, but this does not authorize unsafe direct rectangular cropping."
           ],
           "source_review_sha256": "5d5e872af7bd466af3e0d7c740e55770c7711142060670b2d985a5f547137493"
+        },
+        {
+          "slot": "transform:267:W:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 face WEST/screen-left: pale nose/profile, shoulders, hips, knees and feet maintain leftward heading; no E/right reversal.",
+            "Phase1 lifts original long blade, phase2 genuine elbow/hip load, phase3 clearly straightens same weapon shoulder/elbow into LEFT reach with full sinuous weapon, phase4 absorbs left followthrough, phase5 left guard.",
+            "Original anatomical right weapon arm remains the consistent far/forward-side arm through guard/load/contact, while nearer/free left arm balances.",
+            "Original pale face/long pale hair, narrow hard gold rays and long dark gold-trim skirt preserved; no red mask, broad feather fan, short blade or skirt replacement."
+          ],
+          "source_review_sha256": "9f0f6f3e42b53c0f75df27c1fc1d0ea263159158dff0bdcca6a0b38204555ece"
         }
       ]
     }
