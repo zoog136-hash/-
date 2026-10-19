@@ -36,7 +36,9 @@ func run() -> void:
 		await ticks(4)
 		var renderer: NativePngRenderer=world.field_renderer
 		check(renderer.chunks.size()>0,mid+" actual native chunk textures")
-		check(world.field_map.data.monster_spawn.is_empty(),mid+" no invented temple population")
+		check(not world.field_map.data.monster_spawn.is_empty() and world.field_population.slots.size()>0,mid+" provisional registered monsters populate temple")
+		check(world.field_map.data.monster_spawn.all(func(row: Dictionary) -> bool: return str(row.mode)!="boss"),mid+" no invented named temple boss")
+		for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
 		var start: Vector2=world.player.global_position
 		world._set_click_destination(start+Vector2(32,0));await ticks(24)
 		check(world.player.global_position.distance_to(start)>16,mid+" actual player moves")
