@@ -4460,6 +4460,316 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:267",
+      "direction": "S",
+      "role": "attack",
+      "version": "v03owners01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+      "original_generated_file": "/workspace/scratch/girtas-S-attack-reviewed-owner-v01/girtas-S-attack-v03owners01.png",
+      "bytes": 2491237,
+      "sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+        "base_geometry_sha256": "32af41d67fccc81f7dc3d8adb46a2d6c32e4e558c65e6dea897d7e097ee4ffa5",
+        "direction": "S",
+        "review_basis": "Original faithful S attack art PASS plus sourceSHA/ownerhash-pinned exact ALL-RGBA single-copy export. Entire original canvas including alpha0 latent RGB and faint fringe conserved once. Full six physical poses/contact3 unchanged;704px cells align original column anchors,1024virtual pixel placement exact.",
+        "regions": [
+          [
+            96,
+            45,
+            538,
+            614
+          ],
+          [
+            794,
+            67,
+            518,
+            569
+          ],
+          [
+            96,
+            797,
+            556,
+            518
+          ],
+          [
+            790,
+            773,
+            522,
+            565
+          ],
+          [
+            96,
+            1485,
+            566,
+            549
+          ],
+          [
+            744,
+            1476,
+            568,
+            568
+          ]
+        ],
+        "nearest_owner_sha256": "855989bf44830af86231700f1b5b62c9f1941f1ba5515863e6385eb5a12504b2",
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+        "source_RGBA_sha256": "1bc63608d2df4cc10dea3b4cca4c957e56d39c9e6587ddd71a510a5a15301dc1",
+        "base_geometry_sha256": "32af41d67fccc81f7dc3d8adb46a2d6c32e4e558c65e6dea897d7e097ee4ffa5",
+        "derived_geometry_sha256": "313a072948777ac413c8111168b7acd7d4cf9562b64b1629cdb31c6a5357972a",
+        "review_sha256": "7b2ebccd0fa6145278aa3b9f41aa125968bedddf16f0886c6bafb7a65db67773",
+        "review_basis": "Original faithful S attack art PASS plus sourceSHA/ownerhash-pinned exact ALL-RGBA single-copy export. Entire original canvas including alpha0 latent RGB and faint fringe conserved once. Full six physical poses/contact3 unchanged;704px cells align original column anchors,1024virtual pixel placement exact.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 494688,
+        "added_alpha_gt16_pixels": 35,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            96,
+            45,
+            538,
+            614
+          ],
+          [
+            794,
+            67,
+            518,
+            569
+          ],
+          [
+            96,
+            797,
+            556,
+            518
+          ],
+          [
+            790,
+            773,
+            522,
+            565
+          ],
+          [
+            96,
+            1485,
+            566,
+            549
+          ],
+          [
+            744,
+            1476,
+            568,
+            568
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "855989bf44830af86231700f1b5b62c9f1941f1ba5515863e6385eb5a12504b2",
+        "foreground_owner_sha256": "bf0d2a4a7efcecf4e35c9d40c95a01baa6ebc1e1ec397008f5bb5487d0985253",
+        "detached_pixels": 21,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              1091,
+              184,
+              1092,
+              185
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 554.0442220617412,
+            "owner_margin_min": 551.8081540842413
+          },
+          {
+            "row": 0,
+            "pixels": 2,
+            "bbox": [
+              330,
+              328,
+              331,
+              330
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 521.3079703975377,
+            "owner_margin_min": 517.3079703975377
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              981,
+              352,
+              982,
+              353
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 445.47727214752496,
+            "owner_margin_min": 441.47727214752496
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              1010,
+              382,
+              1011,
+              383
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 439.8226915474007,
+            "owner_margin_min": 434.8226915474007
+          },
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              1010,
+              385,
+              1011,
+              387
+            ],
+            "nearest_max": 8.06225774829855,
+            "second_nearest_min": 435.83941997024544,
+            "owner_margin_min": 427.7771622219469
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              1015,
+              385,
+              1016,
+              386
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 436.4057744805859,
+            "owner_margin_min": 432.8002232051219
+          },
+          {
+            "row": 1,
+            "pixels": 5,
+            "bbox": [
+              1006,
+              386,
+              1009,
+              388
+            ],
+            "nearest_max": 11.180339887498949,
+            "second_nearest_min": 435.0321827175548,
+            "owner_margin_min": 424.0494844582138
+          },
+          {
+            "row": 0,
+            "pixels": 2,
+            "bbox": [
+              155,
+              564,
+              157,
+              565
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 346.14014502799296,
+            "owner_margin_min": 343.9040770504932
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              943,
+              966,
+              944,
+              967
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 344.81589290518497,
+            "owner_margin_min": 342.5798249276852
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              1149,
+              976,
+              1150,
+              977
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 398.43694607804633,
+            "owner_margin_min": 393.43694607804633
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              967,
+              1019,
+              968,
+              1020
+            ],
+            "nearest_max": 3.1622776601683795,
+            "second_nearest_min": 361.55359215474544,
+            "owner_margin_min": 358.39131449457705
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              335,
+              1027,
+              336,
+              1028
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 463.9234850705448,
+            "owner_margin_min": 461.9234850705448
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              314,
+              1753,
+              315,
+              1754
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 486.49768755873856,
+            "owner_margin_min": 484.2616195812388
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              835,
+              1987,
+              836,
+              1988
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 281.2561110447202,
+            "owner_margin_min": 279.02004306722046
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -4548,7 +4858,7 @@
     "transform:393:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
     "transform:267:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
     "transform:267:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
-    "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
+    "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
     "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
     "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
     "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
@@ -5560,6 +5870,22 @@
             "Existing W derivative PNG is copied byte-identically; only reviewed atlas region metadata expands to include all current nonzero ray/AA pixels."
           ],
           "source_review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d"
+        },
+        {
+          "slot": "transform:267:S:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
+            "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
+            "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
+            "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
+            "All1,572,864 original RGBA pixels including transparent RGB/faintbackground retained exactlyonce; original S attack contact3/front heading and long sinuous weapon are unchanged."
+          ],
+          "source_review_sha256": "23874f98f7b820532c1014fee236c19d7b0885c358b11bcb99dbb37f790d7a7c"
         }
       ]
     }
