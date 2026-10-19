@@ -55,6 +55,95 @@ func _run() -> void:
 			else:
 				for role: String in ["idle", "walk", "run", "attack", "hit", "death"]:
 					check(frames.has_animation(role) and frames.get_frame_count(role) >= 2, "authored single-view action " + id + role)
+	# PR122 exact-name reuse: share the COMPLETE existing source atlas without
+	# merging distinct catalog/monster identities or altering battle contracts.
+	var shared_six: Dictionary = {
+		"transform:7":"monster:바포메트",
+		"transform:11":"monster:베레스",
+		"transform:352":"monster:알비노 뿔 개구리",
+		"monster:알비노 피쉬맨":"transform:350",
+		"transform:351":"monster:알비노 자이언트 크랩",
+		"transform:349":"monster:알비노 악어거북"
+	}
+	var profile_db: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/combat_animation_profiles.json"))["profiles"]
+	for target: String in shared_six:
+		var donor_id: String = str(shared_six[target])
+		var target_data: Dictionary = profile_db.get(target, {})
+		var donor_data: Dictionary = profile_db.get(donor_id, {})
+		check(not target_data.is_empty() and not donor_data.is_empty(), "six-way source record " + target)
+		if target_data.is_empty() or donor_data.is_empty(): continue
+		check(str(target_data.get("name","")) == str(donor_data.get("name","")), "exact same name " + target)
+		check(str(target_data.get("shared_visual_source","")) == donor_id, "explicit no-heuristic source " + target)
+		var source_path: String = str(donor_data.get("frames_path",""))
+		check(not source_path.is_empty() and source_path == str(target_data.get("frames_path","")), "reuse identical original SpriteFrames " + target)
+		if source_path.is_empty() or not ResourceLoader.exists(source_path): continue
+		for key: String in ["pixel_scale","sprite_offset","color_tint","embedded_shadow","movement_fps"]:
+			check(target_data.get(key,null) == donor_data.get(key,null), "copy only visual source metadata " + target + ":" + key)
+		var art_frames: SpriteFrames = CATALOG.frames(source_path, "directional8")
+		for direction: int in range(8):
+			for role: String in ["idle","walk","attack","hit","death"]:
+				var animation: String = role + "_" + str(direction)
+				check(art_frames.has_animation(animation) and art_frames.get_frame_count(animation) >= 2, "complete shared motion " + target + ":" + animation)
+		var split: PackedStringArray = target.split(":", false, 1)
+		var record: Dictionary = {"sourceId":split[1]} if split[0] == "transform" else {"name":split[1]}
+		var target_profile: TwilightAnimationProfile = CATALOG.for_record(split[0], record)
+		check(target_profile.frames_path == source_path and target_profile.layout == "directional8", "real actor profile uses shared source " + target)
+	# PR122 palette reuses: paths are in-project shared frames; no new PNGs.
+	# Every mapped identity keeps its own catalog/combat data and prior QA state.
+	var color_ledger_path: String = "res://data/pr122_palette_reuse_20261019.json"
+	check(FileAccess.file_exists(color_ledger_path), "PR122 palette reuse ledger")
+	if FileAccess.file_exists(color_ledger_path):
+		var ledger_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(color_ledger_path))
+		check(ledger_value is Dictionary, "PR122 palette reuse JSON")
+		if ledger_value is Dictionary:
+			var ledger: Dictionary = ledger_value as Dictionary
+			var entries: Array = ledger.get("entries", [])
+			check(entries.size() == 41, "PR122 exact palette candidate count")
+			var data_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/combat_animation_profiles.json"))
+			check(data_value is Dictionary, "PR122 source profiles JSON")
+			if data_value is Dictionary:
+				var all_profiles: Dictionary = (data_value as Dictionary).get("profiles", {})
+				for entry_value: Variant in entries:
+					if not (entry_value is Dictionary):
+						check(false, "PR122 entry dictionary")
+						continue
+					var entry: Dictionary = entry_value as Dictionary
+					var target: String = str(entry.get("target", ""))
+					var donor: String = str(entry.get("source", ""))
+					var target_data: Dictionary = all_profiles.get(target, {})
+					var donor_data: Dictionary = all_profiles.get(donor, {})
+					var native_path: String = str(target_data.get("frames_path", ""))
+					check(not target_data.is_empty() and not donor_data.is_empty(), "PR122 pair profiles: " + target)
+					var replacement: Dictionary = entry.get("superseded_by_native_pack", {})
+					if replacement.is_empty():
+						check(native_path == str(donor_data.get("frames_path","")), "PR122 same original source: " + target)
+						check(str(target_data.get("shared_visual_source","")) == donor, "PR122 explicit donor: " + target)
+						check(str(target_data.get("color_tint","")) == str(entry.get("color_tint","")), "PR122 exact tint: " + target)
+					else:
+						# Concurrent batch16 native completions supersede four unreviewed
+						# palette proxies; preserve their real resources and approval evidence.
+						check(target in ["monster:알비노 변이된 골렘", "monster:스파이더", "monster:검은숲 거미", "monster:왜곡의 타란툴라"], "PR122 explicit native replacement: " + target)
+						check(native_path == str(replacement.get("frames_path", "")) and native_path != str(entry.get("frames_path", "")), "PR122 retain reviewed native pack: " + target)
+						var decision_path: String = "res://" + str(replacement.get("completion_decision", ""))
+						check(FileAccess.file_exists(decision_path), "PR122 native decision exists: " + target)
+						if FileAccess.file_exists(decision_path):
+							var decision: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(decision_path))
+							check(str(decision.get("status", "")) == "APPROVED", "PR122 native decision approved: " + target)
+					check(bool(entry.get("identity_verified",true)) == false, "PR122 cannot promote proxy identity " + target)
+					if native_path.is_empty() or not ResourceLoader.exists(native_path):
+						check(false, "PR122 resource exists: " + target)
+						continue
+					var frames_shared: SpriteFrames = CATALOG.frames(native_path, "directional8")
+					for direction: int in range(8):
+						for role: String in ["idle","walk","attack","hit","death"]:
+							var anim: String = role + "_" + str(direction)
+							check(frames_shared.has_animation(anim) and frames_shared.get_frame_count(anim) >= 2, "PR122 shared 8-way animation: " + target + ":" + anim)
+					var parts: PackedStringArray = target.split(":", false, 1)
+					check(parts.size() == 2, "PR122 explicit ID " + target)
+					if parts.size() != 2: continue
+					var card: Dictionary = {"sourceId":parts[1]} if parts[0] == "transform" else {"name":parts[1]}
+					var actual_profile: TwilightAnimationProfile = CATALOG.for_record(parts[0], card)
+					check(actual_profile.frames_path == native_path and actual_profile.layout == "directional8", "PR122 source used by runtime lookup: " + target)
 	check(directional_count == 78, "directional coverage changed")
 	check(CATALOG.frame_cache.size() <= CATALOG.MAX_FRAME_CACHE, "unbounded frame cache")
 	actor.clear_transform_visual()

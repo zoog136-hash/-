@@ -257,6 +257,28 @@ func _build_class_frames(path: String) -> void:
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
+	# PR122 local-only comparison, NOT a production transformation approval.
+	# Both forms preserve catalog timing, combat, physics and default art.
+	var candidate: String = EXTERNAL_SPX.review_transform_source(transform_profile.profile_id)
+	if not candidate.is_empty() and EXTERNAL_SPX.chain_review_available(candidate):
+		var visual_settings := ConfigFile.new()
+		var transform_number: String = transform_profile.profile_id.trim_prefix("transform:")
+		if visual_settings.load(VISUAL_CONFIG_PATH) == OK and bool(visual_settings.get_value("visual", "spx_transform_preview_" + transform_number, false)):
+			var metadata: Dictionary = EXTERNAL_SPX.actor_metadata(candidate)
+			var reviewed_profile: TwilightAnimationProfile = transform_profile.duplicate(true) as TwilightAnimationProfile
+			reviewed_profile.frames_path = "res://assets/external_spx/actors/" + candidate + "/SpriteFrames.tres"
+			reviewed_profile.layout = "directional8"
+			reviewed_profile.animation_names.clear()
+			for role: String in ["idle", "walk", "attack", "hit"]:
+				for direction: int in range(8):
+					reviewed_profile.animation_names[role + ":" + str(direction)] = role + "_chain_" + str(direction)
+			reviewed_profile.pixel_scale = 110.0 / float(metadata.get("reference_body_height", 110.0))
+			var canvas: Array = metadata.get("canvas", [])
+			var foot: Array = metadata.get("foot_pixel", [])
+			reviewed_profile.sprite_offset = (Vector2(float(canvas[0]), float(canvas[1])) * 0.5 - Vector2(float(foot[0]), float(foot[1]))) * reviewed_profile.pixel_scale
+			reviewed_profile.color_tint = Color.WHITE
+			reviewed_profile.authored_motion_weight = 0.0
+			transform_profile = reviewed_profile
 	var frames: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(transform_profile, path)
 	var names: PackedStringArray = frames.get_animation_names()
 	var texture: Texture2D = ANIMATION_CATALOG.first_texture(frames)
