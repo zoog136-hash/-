@@ -96,12 +96,12 @@ class LosslessPreparation(unittest.TestCase):
             checkout = Path(tmp)
             for relative in ['tools/build_world_regions.py', 'data/game_db_v17.json',
                              'data/maps/field_index.json', 'data/maps/native_png_plan.json',
-                             'data/maps/native_png_pack.json']:
+                             'data/maps/native_png_pack.json', 'data/maps/native_png_review.json']:
                 target = checkout/relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(ROOT/relative, target)
             protected = {p: (checkout/p).read_bytes() for p in
-                         ['data/maps/native_png_plan.json', 'data/maps/native_png_pack.json']}
+                         ['data/maps/native_png_plan.json', 'data/maps/native_png_pack.json', 'data/maps/native_png_review.json']}
             for family in ['albino', 'escaros']:
                 subprocess.run([sys.executable, str(checkout/'tools/build_world_regions.py'),
                                 '--family', family], check=True, capture_output=True)

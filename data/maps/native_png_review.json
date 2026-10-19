@@ -1,0 +1,655 @@
+{
+  "schema": 1,
+  "revision": 2026101903,
+  "base_plan_sha256": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+  "method": "Native-resolution visual inspection of the four decoded originals; source pixels move exclusively from bounded decoded ground chunks to foreground; not server collision data.",
+  "private_art_archive": "v5 remains byte-identical; geometry review is a public code-side supplement.",
+  "full_terrain_verified": false,
+  "official_albino_boundaries_verified": false,
+  "maps": {
+    "albino_01": {
+      "source_sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "foreground": [
+        {
+          "id": "vine_stone",
+          "foot_image": [
+            3921,
+            4460
+          ],
+          "polygon_image": [
+            [
+              3898,
+              4327
+            ],
+            [
+              3924,
+              4320
+            ],
+            [
+              3941,
+              4329
+            ],
+            [
+              3949,
+              4354
+            ],
+            [
+              3941,
+              4386
+            ],
+            [
+              3944,
+              4417
+            ],
+            [
+              3955,
+              4442
+            ],
+            [
+              3935,
+              4460
+            ],
+            [
+              3905,
+              4464
+            ],
+            [
+              3886,
+              4448
+            ],
+            [
+              3884,
+              4411
+            ],
+            [
+              3886,
+              4380
+            ],
+            [
+              3880,
+              4361
+            ],
+            [
+              3885,
+              4339
+            ]
+          ],
+          "collision_correspondence": "vine_stone_base",
+          "probe_image": [
+            3921,
+            4420
+          ]
+        }
+      ],
+      "blocked_probes_add": [
+        [
+          3921,
+          4445
+        ]
+      ],
+      "collision_add": [
+        {
+          "id": "vine_stone_base",
+          "shape": "circle",
+          "center": [
+            3921,
+            4445
+          ],
+          "radius": 25
+        }
+      ]
+    },
+    "albino_02": {
+      "source_sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "foreground": [
+        {
+          "id": "south_ridge_stone",
+          "foot_image": [
+            6430,
+            3215
+          ],
+          "polygon_image": [
+            [
+              6435,
+              3098
+            ],
+            [
+              6443,
+              3105
+            ],
+            [
+              6440,
+              3122
+            ],
+            [
+              6450,
+              3130
+            ],
+            [
+              6459,
+              3166
+            ],
+            [
+              6454,
+              3180
+            ],
+            [
+              6465,
+              3192
+            ],
+            [
+              6446,
+              3210
+            ],
+            [
+              6424,
+              3218
+            ],
+            [
+              6396,
+              3206
+            ],
+            [
+              6382,
+              3190
+            ],
+            [
+              6383,
+              3170
+            ],
+            [
+              6397,
+              3150
+            ],
+            [
+              6414,
+              3129
+            ]
+          ],
+          "collision_correspondence": "south_ridge_stone_base",
+          "probe_image": [
+            6430,
+            3175
+          ]
+        }
+      ],
+      "blocked_probes_add": [
+        [
+          6430,
+          3194
+        ]
+      ],
+      "collision_add": [
+        {
+          "id": "south_ridge_stone_base",
+          "shape": "circle",
+          "center": [
+            6430,
+            3194
+          ],
+          "radius": 28
+        }
+      ]
+    },
+    "albino_03": {
+      "source_sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "foreground": [
+        {
+          "id": "purple_canopy",
+          "foot_image": [
+            10835,
+            1020
+          ],
+          "polygon_image": [
+            [
+              10799,
+              786
+            ],
+            [
+              10837,
+              782
+            ],
+            [
+              10883,
+              797
+            ],
+            [
+              10926,
+              824
+            ],
+            [
+              10960,
+              850
+            ],
+            [
+              10970,
+              870
+            ],
+            [
+              10956,
+              888
+            ],
+            [
+              10902,
+              904
+            ],
+            [
+              10882,
+              923
+            ],
+            [
+              10878,
+              960
+            ],
+            [
+              10862,
+              984
+            ],
+            [
+              10860,
+              1008
+            ],
+            [
+              10837,
+              1023
+            ],
+            [
+              10803,
+              1020
+            ],
+            [
+              10790,
+              1004
+            ],
+            [
+              10802,
+              976
+            ],
+            [
+              10791,
+              954
+            ],
+            [
+              10799,
+              928
+            ],
+            [
+              10794,
+              910
+            ],
+            [
+              10760,
+              905
+            ],
+            [
+              10719,
+              891
+            ],
+            [
+              10691,
+              868
+            ],
+            [
+              10692,
+              846
+            ],
+            [
+              10708,
+              827
+            ],
+            [
+              10747,
+              802
+            ]
+          ],
+          "collision_correspondence": "purple_canopy_base",
+          "probe_image": [
+            10835,
+            980
+          ]
+        }
+      ],
+      "blocked_probes_add": [
+        [
+          10835,
+          1005
+        ]
+      ],
+      "collision_add": [
+        {
+          "id": "purple_canopy_base",
+          "shape": "circle",
+          "center": [
+            10835,
+            1005
+          ],
+          "radius": 45
+        }
+      ]
+    },
+    "escaros_world": {
+      "source_sha256": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+      "foreground": [
+        {
+          "id": "outer_obelisk",
+          "foot_image": [
+            7388,
+            2675
+          ],
+          "polygon_image": [
+            [
+              7388,
+              2555
+            ],
+            [
+              7391,
+              2583
+            ],
+            [
+              7394,
+              2605
+            ],
+            [
+              7397,
+              2616
+            ],
+            [
+              7394,
+              2630
+            ],
+            [
+              7400,
+              2647
+            ],
+            [
+              7400,
+              2666
+            ],
+            [
+              7388,
+              2676
+            ],
+            [
+              7375,
+              2668
+            ],
+            [
+              7376,
+              2652
+            ],
+            [
+              7381,
+              2633
+            ],
+            [
+              7382,
+              2614
+            ],
+            [
+              7385,
+              2586
+            ]
+          ],
+          "collision_correspondence": "outer_obelisk_base",
+          "probe_image": [
+            7388,
+            2635
+          ]
+        }
+      ],
+      "blocked_probes_add": [
+        [
+          7388,
+          2668
+        ]
+      ],
+      "collision_add": [
+        {
+          "id": "outer_obelisk_base",
+          "shape": "circle",
+          "center": [
+            7388,
+            2668
+          ],
+          "radius": 13
+        }
+      ]
+    },
+    "yahee_temple": {
+      "source_sha256": "5f0b8eae1a651430127116cb12b5ecbf79f5c17cf8cc78b918228b833bc46528",
+      "foreground": [
+        {
+          "id": "plaza_great_statue",
+          "foot_image": [
+            5660,
+            2670
+          ],
+          "polygon_image": [
+            [
+              5642,
+              2460
+            ],
+            [
+              5654,
+              2448
+            ],
+            [
+              5665,
+              2450
+            ],
+            [
+              5676,
+              2440
+            ],
+            [
+              5687,
+              2445
+            ],
+            [
+              5682,
+              2460
+            ],
+            [
+              5687,
+              2470
+            ],
+            [
+              5687,
+              2495
+            ],
+            [
+              5694,
+              2508
+            ],
+            [
+              5697,
+              2580
+            ],
+            [
+              5703,
+              2590
+            ],
+            [
+              5701,
+              2637
+            ],
+            [
+              5689,
+              2657
+            ],
+            [
+              5660,
+              2674
+            ],
+            [
+              5636,
+              2665
+            ],
+            [
+              5620,
+              2640
+            ],
+            [
+              5623,
+              2624
+            ],
+            [
+              5622,
+              2588
+            ],
+            [
+              5625,
+              2578
+            ],
+            [
+              5625,
+              2520
+            ],
+            [
+              5615,
+              2495
+            ],
+            [
+              5614,
+              2481
+            ],
+            [
+              5624,
+              2480
+            ],
+            [
+              5634,
+              2500
+            ],
+            [
+              5640,
+              2495
+            ]
+          ],
+          "collision_correspondence": "column_7",
+          "probe_image": [
+            5660,
+            2630
+          ]
+        }
+      ],
+      "blocked_probes_add": [
+        [
+          5660,
+          2648
+        ]
+      ],
+      "collision_replace": [
+        {
+          "id": "column_7",
+          "shape": "circle",
+          "center": [
+            5660,
+            2648
+          ],
+          "radius": 38
+        }
+      ]
+    },
+    "balrog_temple": {
+      "source_sha256": "4733602c00225a447182cdc7bd07733fa4b43ac7b6875ed2520ff3dba46fc355",
+      "foreground": [
+        {
+          "id": "central_south_column",
+          "foot_image": [
+            8026,
+            4350
+          ],
+          "polygon_image": [
+            [
+              8010,
+              4142
+            ],
+            [
+              8030,
+              4137
+            ],
+            [
+              8048,
+              4144
+            ],
+            [
+              8050,
+              4155
+            ],
+            [
+              8045,
+              4168
+            ],
+            [
+              8040,
+              4173
+            ],
+            [
+              8040,
+              4300
+            ],
+            [
+              8053,
+              4311
+            ],
+            [
+              8060,
+              4330
+            ],
+            [
+              8027,
+              4350
+            ],
+            [
+              7985,
+              4336
+            ],
+            [
+              7984,
+              4318
+            ],
+            [
+              8009,
+              4303
+            ],
+            [
+              8015,
+              4173
+            ],
+            [
+              8005,
+              4166
+            ],
+            [
+              8002,
+              4155
+            ]
+          ],
+          "collision_correspondence": "central_south_column_base",
+          "probe_image": [
+            8026,
+            4310
+          ]
+        }
+      ],
+      "blocked_probes_add": [
+        [
+          8026,
+          4330
+        ]
+      ],
+      "collision_add": [
+        {
+          "id": "central_south_column_base",
+          "shape": "circle",
+          "center": [
+            8026,
+            4330
+          ],
+          "radius": 38
+        }
+      ]
+    }
+  }
+}

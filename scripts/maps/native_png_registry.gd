@@ -3,6 +3,7 @@ extends RefCounted
 ## private pack. Replacing existing Albino/Escaros geometry remains explicit
 ## until their legacy gameplay coordinates have a supported correspondence.
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
+const REVIEW_PATH := "res://data/maps/native_png_review.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 
 static func enabled() -> bool:
@@ -14,8 +15,70 @@ static func read_json(path: String) -> Dictionary:
 	if parser.parse(FileAccess.get_file_as_string(path)) != OK or not parser.data is Dictionary: return {}
 	return parser.data
 
-static func plan() -> Dictionary:
+static func base_plan() -> Dictionary:
 	return read_json(PLAN_PATH)
+
+static func plan() -> Dictionary:
+	# Geometry review belongs to code; the already delivered, hash-pinned art
+	# archive stays immutable. Reject mismatched reviews before changing a field.
+	var value: Dictionary=base_plan()
+	var review: Dictionary=read_json(REVIEW_PATH)
+	return merge_review(value,review,FileAccess.get_sha256(PLAN_PATH))
+
+static func valid_point(value: Variant, size: Array) -> bool:
+	return value is Array and value.size()==2 and (value[0] is float or value[0] is int) and (value[1] is float or value[1] is int) and is_finite(float(value[0])) and is_finite(float(value[1])) and value[0]>=0 and value[1]>=0 and value[0]<size[0] and value[1]<size[1]
+
+static func valid_polygon(points: Variant, size: Array) -> bool:
+	if not points is Array or points.size()<3: return false
+	var vertices:=PackedVector2Array()
+	for point: Variant in points:
+		if not valid_point(point,size): return false
+		vertices.append(Vector2(point[0],point[1]))
+	return not Geometry2D.triangulate_polygon(vertices).is_empty()
+
+static func merge_review(base: Dictionary, review: Dictionary, base_hash: String) -> Dictionary:
+	if review.get("schema")!=1 or review.get("base_plan_sha256","")!=base_hash or int(review.get("revision",0))<=int(base.get("revision",0)): return {}
+	var value: Dictionary=base.duplicate(true)
+	if not review.get("maps") is Dictionary: return {}
+	for mid: String in review.get("maps",{}):
+		if not value.get("maps",{}).has(mid): return {}
+		var spec: Dictionary=value.maps[mid]
+		var patch: Dictionary=review.maps[mid]
+		if patch.get("source_sha256","")!=value.sources[spec.file].sha256: return {}
+		var size: Array=value.sources[spec.file].size
+		for key: String in ["route_checks","blocked_probes"]:
+			for point: Variant in patch.get(key+"_add",[]):
+				if not valid_point(point,size): return {}
+		for points: Variant in patch.get("walk_polygons_add",[]):
+			if not valid_polygon(points,size): return {}
+		for shape: Dictionary in patch.get("collision_add",[])+patch.get("collision_replace",[]):
+			if shape.get("shape")=="circle":
+				if not valid_point(shape.get("center"),size) or float(shape.get("radius",0))<=0: return {}
+			elif shape.get("shape")=="polygon":
+				if not valid_polygon(shape.get("points"),size): return {}
+			else: return {}
+		var ids: Dictionary={}
+		for cut: Dictionary in patch.get("foreground",[]):
+			if not valid_polygon(cut.get("polygon_image"),size) or not valid_point(cut.get("foot_image"),size): return {}
+			var polygon: Array=cut.polygon_image
+			var box:=Rect2(Vector2(polygon[0][0],polygon[0][1]),Vector2.ZERO)
+			for point: Array in polygon: box=box.expand(Vector2(point[0],point[1]))
+			if box.size.x>1024 or box.size.y>1024 or str(cut.get("id","")).is_empty() or ids.has(str(cut.id)): return {}
+			ids[str(cut.id)]=true
+		for key: String in ["collision","walk_polygons","route_checks","blocked_probes"]:
+			if patch.has(key+"_add"): spec[key]=spec.get(key,[])+patch[key+"_add"]
+		for replacement: Dictionary in patch.get("collision_replace",[]):
+			var found: bool=false
+			for i: int in range(spec.collision.size()):
+				if spec.collision[i].get("id")==replacement.get("id"):
+					spec.collision[i]=replacement;found=true;break
+			if not found: return {}
+		spec["runtime_foreground"]=patch.get("foreground",[])
+	value.revision=int(review.revision)
+	return value
+
+static func review_hash() -> String:
+	return FileAccess.get_sha256(REVIEW_PATH)
 
 static func root_path() -> String:
 	var configured := OS.get_environment("TWILIGHT_NATIVE_PNG_PACK")
@@ -35,12 +98,12 @@ static func canonical(mid: String) -> String:
 static func supports(mid: String) -> bool:
 	# Identity support must survive a pack disappearing after the menu was built.
 	# load_field() then rejects the bytes; never route a known temple to tiles.
-	return plan().get("maps",{}).has(canonical(mid)) and (enabled() or mid in ["yahee_temple","balrog_temple"])
+	return base_plan().get("maps",{}).has(canonical(mid)) and (enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	if not enabled() and not installed(): return entries
-	var specs: Dictionary = plan().get("maps",{})
+	var specs: Dictionary = base_plan().get("maps",{})
 	for mid: String in ["escaros_world","yahee_temple","balrog_temple"]:
 		if mid=="escaros_world" and not enabled(): continue
 		entries.append({"id":mid,"name":specs[mid].name,"width":1,"height":1,"tile_size_world":32,"native_png":true})
@@ -50,7 +113,7 @@ static func menu_entries(records: Array) -> Array:
 	if not enabled(): return records
 	var visible: Array=records.filter(func(record: Dictionary) -> bool:
 		return str(record.id) not in ["albino_04","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"])
-	var specs: Dictionary=plan().maps
+	var specs: Dictionary=base_plan().maps
 	var menu: Array=[]
 	for record: Dictionary in visible:
 		var row: Dictionary=record.duplicate()

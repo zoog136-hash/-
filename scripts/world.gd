@@ -3833,6 +3833,7 @@ func _save_game(quiet: bool) -> void:
 	}
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = FileAccess.get_sha256(NATIVE_PNG.PLAN_PATH)
+		data["native_png_review_sha256"] = NATIVE_PNG.review_hash()
 	var result: Error = preload("res://scripts/skills/save_writer.gd").write(save_path(), data)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
@@ -3991,6 +3992,10 @@ func _load_game(quiet: bool) -> void:
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
+	if field_map is NativePngField and str(data.get("native_png_review_sha256",""))!=NATIVE_PNG.review_hash():
+		# Keep character progress, inventory and boss state; a revised obstacle
+		# must not restore the actor inside its old, now blocked pixel position.
+		compatible_layout=false
 	if field_map is OriginalPlayableField:
 		position_value = SOURCE_TRAVEL.restore_position(self,data.get("original_position",{}))
 	if position_value is Array and compatible_layout:

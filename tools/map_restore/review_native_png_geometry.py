@@ -5,6 +5,7 @@ numbers are runtime route probes. This is a review image, not proof that every
 source wall or gameplay coordinate has been established. Never publish the art.
 """
 import argparse
+import copy
 import json
 from pathlib import Path
 
@@ -15,12 +16,36 @@ from build_native_png_maps import ROOT, digest
 Image.MAX_IMAGE_PIXELS = 180_000_000
 
 
-def review(sources, plan_path, pack, output):
+def reviewed_plan(plan_path, review_path):
+    plan = json.loads(plan_path.read_text())
+    if review_path is None:
+        return plan
+    patch = json.loads(review_path.read_text())
+    if patch['base_plan_sha256'] != digest(plan_path):
+        raise ValueError('Geometry review does not match the immutable pack plan')
+    plan = copy.deepcopy(plan)
+    for mid, value in patch['maps'].items():
+        spec = plan['maps'][mid]
+        if value['source_sha256'] != plan['sources'][spec['file']]['sha256']:
+            raise ValueError('Geometry review source mismatch: '+mid)
+        for key in ['collision', 'walk_polygons', 'route_checks', 'blocked_probes']:
+            spec[key] = spec.get(key, [])+value.get(key+'_add', [])
+        replacements = {row['id']: row for row in value.get('collision_replace', [])}
+        existing = {row['id'] for row in spec['collision']}
+        if not set(replacements) <= existing:
+            raise ValueError('Unknown collision replacement: '+mid)
+        spec['collision'] = [replacements.get(row['id'], row) for row in spec['collision']]
+        spec['runtime_foreground'] = value.get('foreground', [])
+    plan['revision'] = patch['revision']
+    return plan
+
+
+def review(sources, plan_path, pack, output, review_path=None):
     output = output.resolve()
     if output.is_relative_to(ROOT):
         raise ValueError('Source-bearing review images belong outside public Git')
     output.mkdir(parents=True, exist_ok=True)
-    plan = json.loads(plan_path.read_text())
+    plan = reviewed_plan(plan_path, review_path)
     report = {}
     for mid, spec in plan['maps'].items():
         source = sources/spec['file']
@@ -51,6 +76,10 @@ def review(sources, plan_path, pack, output):
             px, py = points([point])[0]
             draw.ellipse((px-4, py-4, px+4, py+4), fill='yellow')
             draw.text((px+5, py), str(i), fill='yellow', stroke_width=1, stroke_fill='black')
+        for cut in spec.get('runtime_foreground', []):
+            draw.polygon(points(cut['polygon_image']), outline='cyan', width=2)
+            px, py = points([cut['foot_image']])[0]
+            draw.ellipse((px-3, py-3, px+3, py+3), fill='cyan')
         path = output/(mid+'.png')
         Image.alpha_composite(image, layer).save(path)
         report[mid] = dict(image_sha256=digest(path), route_checks=len(spec['route_checks']),
@@ -66,5 +95,6 @@ if __name__ == '__main__':
     parser.add_argument('--pack', type=Path, required=True)
     parser.add_argument('--plan', type=Path, default=ROOT/'data/maps/native_png_plan.json')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--review', type=Path, default=ROOT/'data/maps/native_png_review.json')
     args = parser.parse_args()
-    print(json.dumps(review(args.sources, args.plan, args.pack, args.output)))
+    print(json.dumps(review(args.sources, args.plan, args.pack, args.output, args.review)))

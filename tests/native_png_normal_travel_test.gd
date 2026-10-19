@@ -65,6 +65,18 @@ func run() -> void:
 	check(world.source_save_blocked and FileAccess.get_sha256(world.save_path())==saved_hash,"missing pack preserves the ordinary temple save byte for byte")
 	OS.set_environment("TWILIGHT_NATIVE_PNG_PACK",installed);world._load_game(true)
 	check(not world.source_save_blocked and world.active_map_id=="yahee_temple","restored pack resumes the preserved ordinary save")
+	# Review updates may close a formerly walkable pixel. Preserve progression
+	# and restore the safe entry instead of reviving inside the new obstacle.
+	world._set_map("yahee_temple",false)
+	var inspected_entry: Vector2=world.player.global_position
+	world.player.global_position=inspected_entry+Vector2(32,0);world._save_game(true)
+	var old_save: Dictionary=REGISTRY.read_json(world.save_path())
+	old_save.native_png_review_sha256="previous-review";old_save.map_layout_revision=2026101902
+	check(preload("res://scripts/skills/save_writer.gd").write(world.save_path(),old_save)==OK,"old review save fixture written through real writer")
+	world._set_map("aden_world",false);world.gold=1;world._load_game(true)
+	check(not world.source_save_blocked and world.gold==128901,"geometry revision keeps ordinary character progression")
+	check(world.active_map_id=="yahee_temple" and world.player.global_position.distance_to(inspected_entry)<1,"geometry revision resets old pixels to inspected safe entry")
+	check(world.field_population.boss_director.export_state().bosses==bosses,"geometry revision keeps legacy boss state")
 	check(FileAccess.get_sha256("res://data/game_db_v17.json")==db_hash,"combat, monsters, bosses, items and rewards remain byte-identical")
 	print("NATIVE_NORMAL_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"ordinary_temple_travel":true,"legacy_replacements":false}))
 	world.queue_free();await ticks(3);quit(0 if failures.is_empty() else 1)

@@ -7,6 +7,19 @@ func check(ok: bool, label: String) -> void:
 	if not ok: failures.append(label);printerr("NATIVE_PNG_CATALOG_FAIL: "+label)
 func _initialize() -> void:
 	var plan: Dictionary=REGISTRY.plan()
+	check(not plan.is_empty(),"review is bound to the exact immutable pack plan")
+	var base: Dictionary=REGISTRY.base_plan()
+	var review: Dictionary=REGISTRY.read_json(REGISTRY.REVIEW_PATH)
+	var base_hash: String=FileAccess.get_sha256(REGISTRY.PLAN_PATH)
+	var invalid: Dictionary=review.duplicate(true);invalid.base_plan_sha256="other-pack"
+	check(REGISTRY.merge_review(base,invalid,base_hash).is_empty(),"review for a different art plan is rejected")
+	invalid=review.duplicate(true);invalid.maps.balrog_temple.source_sha256="other-source"
+	check(REGISTRY.merge_review(base,invalid,base_hash).is_empty(),"review cannot reuse geometry on a different original PNG")
+	invalid=review.duplicate(true);invalid.maps.balrog_temple.foreground[0].polygon_image=[[1,1],[5000,1],[5000,5000],[1,5000]]
+	check(REGISTRY.merge_review(base,invalid,base_hash).is_empty(),"unbounded foreground cut is rejected")
+	invalid=review.duplicate(true);invalid.maps.balrog_temple.foreground[0].foot_image=[-1,0]
+	check(REGISTRY.merge_review(base,invalid,base_hash).is_empty(),"out-of-source foreground anchor is rejected")
+	check(base.revision<plan.revision and not base.maps.balrog_temple.has("runtime_foreground"),"review does not mutate the immutable archive plan")
 	check(plan.maps.size()==6,"three Albino, one continuous Escaros and two temples")
 	check(plan.maps.balrog_temple.name=="발록의 시전","user supplied 99111 name retained exactly")
 	check(plan.maps.yahee_temple.name=="야히의신전","user supplied 99112 name retained exactly")
