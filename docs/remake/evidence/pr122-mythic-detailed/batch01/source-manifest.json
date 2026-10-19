@@ -7196,6 +7196,74 @@
         ]
       ],
       "review_basis": "Private actualr054 Eidle/Ewalk→Erun comparison: source-native helmet/horn width and shoulder-to-hip length are comparable to Eidle/Ewalk (about90–100px helmet width; run crouch/legtrail explains shorter vertical body projection). Therefore use matching1280 virtual canvas to remove current25percent runtime enlargement. Packed bounding-box center384/1152 is behind physical pelvis and changes with wing extent. Nativebody detail review locates upper-thigh/pelvis axes approximately[486,1239,493,1243,495,1248]X (about±6sourcepx annotation uncertainty). Add10sourceX so pelvis is about−2.45worldpx relative actor root, matching reviewed Eidle physical pelvis310 vs anchor320. This aligns the physical hip pivot while retaining genuine forward torso/head run lean, wingstroke, legtrail and all original six Y anchors/bob. No PNG resampling/recolor/deletion, no actor approval. Requires final compiledTRES transition/6pose/seam review."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264",
+      "direction": "W",
+      "role": "walk",
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          244,
+          481
+        ],
+        [
+          743,
+          474
+        ],
+        [
+          245,
+          938
+        ],
+        [
+          762,
+          943
+        ],
+        [
+          244,
+          1433
+        ],
+        [
+          743,
+          1427
+        ]
+      ],
+      "review_basis": "Private actualr057 WIdle/Wwalk/Wrun physical comparison. Native shoulder-to-pelvis lengths approximately131/129/128px and crown-to-pelvis215/206/218px show shared physical bodyresolution; use reviewed WIdle1152 virtualcanvas, removing current12.5percent wholebody enlargement without wingbbox sizing. Visible central blackpelvis material immediately below waist/belt and above frontthigh, excluding cape/arms, gives practical body-axisX [230, 729, 231, 748, 230, 729] (annotation uncertainty about±6nativepx, not exact hidden skeleton). ReviewedWIdle0 sameaxisapproximately240 vs pairedsupportroot254 gives+14sourceX reference. Set each pelvisaxis+14; this removes packedwingbbox/cellcolumn placement drift while retaining authentic torso/head forwardlean, wingstroke, arm/leg articulation and all six originalY/bob. Every sourceRGBA/region/poseorder stays exact. Final newly compiled physicalroot/scale/loop review required; no source/actor approval is implied."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "3d50892007edc60ce2091584be01d9dfcd272b8a42f177eada40a209973fdd72",
+      "direction": "W",
+      "role": "run",
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          369,
+          495
+        ],
+        [
+          1096,
+          425
+        ],
+        [
+          373,
+          950
+        ],
+        [
+          1103,
+          937
+        ],
+        [
+          348,
+          1488
+        ],
+        [
+          1105,
+          1515
+        ]
+      ],
+      "review_basis": "Private actualr057 WIdle/Wwalk/Wrun physical comparison. Native shoulder-to-pelvis lengths approximately131/129/128px and crown-to-pelvis215/206/218px show shared physical bodyresolution; use reviewed WIdle1152 virtualcanvas, removing current12.5percent wholebody enlargement without wingbbox sizing. Visible central blackpelvis material immediately below waist/belt and above frontthigh, excluding cape/arms, gives practical body-axisX [355, 1082, 359, 1089, 334, 1091] (annotation uncertainty about±6nativepx, not exact hidden skeleton). ReviewedWIdle0 sameaxisapproximately240 vs pairedsupportroot254 gives+14sourceX reference. Set each pelvisaxis+14; this removes packedwingbbox/cellcolumn placement drift while retaining authentic torso/head forwardlean, wingstroke, arm/leg articulation and all six originalY/bob. Every sourceRGBA/region/poseorder stays exact. Final newly compiled physicalroot/scale/loop review required; no source/actor approval is implied."
     }
   }
 }
