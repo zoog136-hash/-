@@ -90,7 +90,9 @@ def prepare(root, request_path, generated, review_path):
     request.update(replaces_selected_source=previous, private_source_review=findings)
     name = staging.ACTORS[request['key']].rsplit('_', 1)[0]
     path = folder / f'request-{max(ordinals, default=0) + 1:03d}-{name}-{request["direction"]}-{request["role"]}-{request["version"]}.json'
-    source_batch = 'batch01' if request['role'] in ('walk', 'run') and request['key'] in ('transform:393', 'transform:267') else batch
+    source_batch = ('batch01' if request['role'] in ('walk', 'run')
+                    and request['key'] in ('transform:393', 'transform:267')
+                    and request.get('source_canvas_review') is None else batch)
     image = folder.with_name(source_batch) / f'{name}-{request["direction"]}-{request["role"]}-{request["version"]}.png'
     require(not path.exists() and not image.exists(), 'Never overwrite a request or source image')
     return path, request

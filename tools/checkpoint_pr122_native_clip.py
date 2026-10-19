@@ -100,7 +100,7 @@ def main():
     if any(hold.get('status') == 'HOLD' for hold in manifest.get('visual_quality_holds', [])):
         next_text = '유일 개체 시각 HOLD 교정 우선; 이후 ' + next_text
     latest = (f'- 최신 제작: {request["key"]} {request["direction"]} {request["role"]} {request["version"]} '
-              f'{"신규6자세와 실제 Player 연결 PASS" if passed else "소스 HOLD 보존"}. '
+              f'{"6자세와 실제 Player 연결 PASS" if passed else "소스 HOLD 보존"}. '
               f'현재{total}클립/{total * 6}자세, 남은 이동{missing}블록/전용 동작{missing_actions}블록. 다음 제작: {next_text}. '
               '현재 수량은 data/pr122_native_locomotion_staging.json과 선택 소스를 우선한다.')
     lines = resume.read_text().splitlines()
