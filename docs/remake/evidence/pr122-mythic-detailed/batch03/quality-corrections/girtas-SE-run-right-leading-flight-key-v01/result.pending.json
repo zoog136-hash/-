@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "PENDING_INDEPENDENT_SOURCE_QC",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/girtas-SE-run-right-leading-flight-key-v01.png",
+  "raw_sha256": "6cac533eae8c9a7d456ecd621132804013b8d6a2a5a4fe3257e5bd1354773299",
+  "raw_bytes": 1369910,
+  "request_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/request-girtas-SE-run-right-leading-flight-key-v01.json",
+  "request_sha256": "67e5ab122b8ff79cae10f3041730d0b145f5165e7fb011388e27e93d20850723",
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "canvas_size": 2048,
+    "distinct": null
+  },
+  "intended_game_phase": 2,
+  "intended_anatomical_support": null,
+  "intended_air_lead": "RIGHT",
+  "visual_findings": [
+    "Author has exhausted private image ledger and has NOT viewed this new source. Correct source identity/absolute SE compass/actual articulated support must be independently reviewed."
+  ],
+  "visual_limitations": [
+    "No actual source stance/identity PASS claimed yet. Source composition, rigid physical scale, all-six authored roots/AIR clearance, compiled SpriteFrames/Player/action QC and actor approval pending."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "newly_authored_pose_candidate_count": 1,
+  "approved_actors_delta": 0,
+  "preview_for_fresh_reviewer": {
+    "path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/private-independent-source-review.jpg",
+    "bytes": 85625,
+    "sha256": "94e9432f9c3238fea2ddd9eab54ff1a4d25a027934a04e2ad0661e089dfe4fd7"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "pr122-independent-source-anatomy-review-v1",
+  "status": "PASS_SCOPED_NE_TRUE_FORWARD_LEFT_PRECONTACT5_ART",
+  "independent": true,
+  "reviewer": "/root/girtas_nw_walk_author (independent reviewer; did not author NE walk source or layout)",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "walk",
+  "source": "/workspace/scratch/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03.png",
+  "source_sha256": "804f2b33b763713d2d930fe16782f56019123ebbb541b25f06ddc2fc6ef80543",
+  "source_region": [
+    220,
+    37,
+    1027,
+    1159
+  ],
+  "source_rgba_sha256": "526df7665f44a1b5d27f7afa0b59202a184d4d3ead13b7a7f839fa01ae90511e",
+  "request_sha256": "7ed16596b948d3b8c9303163b97cb2462226fa3793cff9478bd3ff472732be43",
+  "geometry_sha256": "1de63aee2037ffbd76dd9a94915a0393b42d16674d122ee941fd11db0acb3ec0",
+  "source_reference_proof_sha256": "ccd7651f5dd43f2e8c8e88bad976b1bcce56231219f86d4ed728113f66ef0dcc",
+  "correct_contact0_independent_review": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/NE-walk-true-forward-LEFT-contact0-3D-v03-independent-source-review.json",
+  "correct_contact0_independent_review_sha256": "5b5b7fcd74988db486b80796ebee030394671f8b0bab649fcb60de185a143e67",
+  "private_preview": "/workspace/scratch/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03/private-correctLEFT0-vs-newLEFTprecontact5.jpg",
+  "private_preview_sha256": "c9ea41cd315dba2123fd57c31164b7cd5731e8c85a781b4e36792136465fc4cc",
+  "private_preview_bytes": 105268,
+  "checks": {
+    "actual_NE_rear_right_camera": true,
+    "anatomical_RIGHT_near_weapon_LEFT_far_empty": true,
+    "LEFT_far_hip_thigh_shin_reaches_forward_UPRIGHT": true,
+    "forward_LEFT_heel_dorsiflexed_precontact_distinct_from_contact0": true,
+    "near_RIGHT_rear_toe_down_heel_up_walk_support": true,
+    "two_actual_leg_chains_no_swap": true,
+    "faithful_hard_gold_rays_silver_hair_long_robe_continuous_RIGHT_blade": true,
+    "source_region_and_reference_sha_verified": true
+  },
+  "findings": [
+    "The far anatomical LEFT boot stays forward and away UP-RIGHT, with its heel/sole visibly lifted compared with independently reviewed contact0. The leading chain is not the old incorrect UP-LEFT/back family.",
+    "The near anatomical RIGHT leg remains trailing DOWN-LEFT; the boot rocks onto its toe while its heel rises. This is supported walking precontact, not both-legs-folded airborne running.",
+    "Head, torso, hard gold rays, hair, robe panels, near RIGHT hand/continuous blade, and far empty LEFT hand retain the correct NE camera and model. No extra arm, boot, or weapon is visible."
+  ],
+  "scope_limitations": [
+    "Single source phase5 plus comparison to independently reviewed source0 only.",
+    "Whole six gait, actual projected world floor, runtime C/root, compiled Player and actor approval remain separate."
+  ],
+  "new_actor_approvals": 0,
+  "integration_ready": false,
+  "reviewed_at": "2026-10-19T15:41:01.605567+00:00"
+}
