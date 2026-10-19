@@ -3737,6 +3737,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "S",
+      "role": "run",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-S-run-repair/girtas-S-run-v02.png",
+      "bytes": 2518246,
+      "sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3765,7 +3784,7 @@
     "transform:393:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
     "transform:393:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
     "transform:267:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
-    "transform:267:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v01.png",
+    "transform:267:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
     "transform:267:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-walk-v01.png",
     "transform:267:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-run-v01.png",
     "transform:267:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-walk-v01.png",
@@ -4657,6 +4676,22 @@
             "Body/equipment scale and rigid spine attachment remain coherent across6, all boots/gear/long blade tip visible."
           ],
           "source_review_sha256": "8c9daba98583f83b1f1e3e84b81a1416e3718d732c2a886870008cacbd9c05d7"
+        },
+        {
+          "slot": "transform:267:S:run",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six poses keep front SOUTH face, shoulders, chest and pelvis; pale face, long white hair, chest core and thin gold radial spines match the faithful canonical and selected new S walk.",
+            "One sinuous luminous weapon remains in anatomicalRIGHT/imageLEFT hand throughout; imageRIGHT hand stays free. Long dark gold-trimmed skirt panels remain visible and flare with leg drive; no pants-only redesign.",
+            "The gait genuinely exchanges leg arrangements: phases0/3 have one boot extended/loaded and the other tucked, phases1/4 show the opposite leg arrangement with knee drive, and phases2/5 show shorter/tucked passing configurations. This is visibly faster and more articulated than the saved slow S walk; not all frames retain one leading leg.",
+            "Phase2->3 and5->0 read as compact passing/flight into a longer opposite-leg extension/landing; skirt, knees and boots articulate while front-body orientation and weapon hand remain stable.",
+            "All six complete figures and equipment fit the source without significant alpha on any outer border; strict source geometry independently finds six distinct poses."
+          ],
+          "source_review_sha256": "db4df96e7dc7797442bf9d0702bb691ece17da22876e7ac7e6dc12123505cd61"
         }
       ]
     }
