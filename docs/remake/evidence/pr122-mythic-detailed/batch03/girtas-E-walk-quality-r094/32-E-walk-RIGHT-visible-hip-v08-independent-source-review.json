@@ -1,0 +1,31 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_VISIBLE_NEAR_RIGHT_FORWARD_HEEL_CONTACT3",
+  "raw_path": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+  "raw_sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+  "candidate_game_phase": 3,
+  "actual_leading_leg": "anatomical_RIGHT_near",
+  "checks": {
+    "near_RIGHT_hip_thigh_knee_chain_visibly_exposed": true,
+    "far_LEFT_rear_toe_support": true,
+    "faithful_E_camera_original_identity_RIGHT_weapon_LEFT_empty": true,
+    "long_robe_and_two_leg_chains": true
+  },
+  "findings": [
+    "The near/weapon-side RIGHT hip now connects through an exposed broad black-gold upper-thigh plate across the natural foreground robe slit into the forward knee, greave and imageRIGHT heel-contact boot. This proximal chain is materially visible compared with the old ambiguous full6 source.",
+    "The far LEFT leg separately recedes behind the robe toward the imageLEFT rear toe, with heel raised. The forward near RIGHT heel is down and toes rolled up, giving walking double support rather than flight. Ownership is judged from the visible hip/thigh chain and foreground overlap, not a filename or sole-depth sign.",
+    "True E right-facing profile/slight chest camera matches current identity. Pale face/long pale hair, HARD thin gold rays, long dark gold-trim robe, long sinuous permanent RIGHT weapon and empty LEFT arm remain coherent. Exposed knee/greave hard armor preserves the gold-trim motif; no extra leg or shortened replacement robe."
+  ],
+  "limits": [
+    "One new actual RIGHT contact3 source is approved. Old v07 full6 remains HOLD; this does not retroactively approve its hidden opposite-chain poses or a full gait. Physical C/root, other RIGHT phases and actual compiled transitions remain unapproved."
+  ],
+  "preview_budget_total_bytes": 2820250,
+  "complete_clip": false,
+  "actor_approval": false,
+  "reviewed_at": "2026-10-19T14:48:36.004044+00:00"
+}
