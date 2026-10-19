@@ -3150,6 +3150,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "S",
+      "role": "idle",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-S-idle-repair/girtas-S-idle-v02.png",
+      "bytes": 2598975,
+      "sha256": "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3261,7 +3280,7 @@
     "transform:267:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v01iso01.png",
     "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
     "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
-    "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v01.png",
+    "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
     "transform:267:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
     "transform:267:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
     "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
@@ -3770,6 +3789,23 @@
             "Six complete disjoint silhouettes, no opaque source outer-edge clipping."
           ],
           "source_review_sha256": "7141ee4b5b4c66a12d5476350ed8c05f0111df9d751170eaa4f3c724dfac9fd8"
+        },
+        {
+          "slot": "transform:267:S:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 show actual FRONT/S face, chest and pelvis toward viewer/screenDOWN, both shoulders visible; no E profile, back or opposite-heading frame.",
+            "Original pale visible face and long pale hair, tall dark/gold head ornaments, narrow hard gold radial spikes, long dark goldtrim skirt and dark boots are preserved; no generic redmask/flamefeather/shortblade redesign.",
+            "Original long thin sinuous orange/gold weapon stays in anatomicalRIGHT hand on IMAGELEFT in every front pose. Free anatomicalLEFT hand stays IMAGERIGHT empty. Whole blade contour/tip visible, no hand swap or mirror.",
+            "Both boot soles remain planted in stable two-foot guard without stepping/raised knee. Local chest/head/shoulder/forearm posture, hair strands and cloth hem vary through inhale/peak/exhale/settle cycle while stance and facing remain steady.",
+            "Body and equipment proportions stay coherent across6; rigid gold radial spine attachments remain consistent. Full body/gear including long outer rays and blade tip are not visibly cropped.",
+            "Unchanged strict analyze rows6/phase_grid2/canvas1024/reference_rows0,3 passes with6 distinct pixel frames."
+          ],
+          "source_review_sha256": "4b4e5770137f221d7794d430ae9be0ca70f1284c6c1bea44668ac3c2f7cdab70"
         }
       ]
     }
