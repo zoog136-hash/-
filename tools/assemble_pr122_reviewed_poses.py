@@ -12,10 +12,6 @@ Source images may contain other, unselected poses. All selected connected
 alpha>16 parts and their nearest main-body foreground must fit the reviewed
 region. Ambiguous bridges/foreign bodies remain HOLD. Anatomy, timing and
 physical body scale require external review, never bbox normalization.
-
-finalize_preserved_pose_map verifies an existing stopped atlas against every
-pinned source pixel and an explicit outward output-region review. It preserves
-the original PNG and error receipt and only writes the exclusive proof JSON.
 """
 
 import argparse

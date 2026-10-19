@@ -1,0 +1,50 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_ACTUAL_R088_NW_WALK_COMPILED_LAYOUT_AND_GAIT",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "actor_key": "transform:267",
+  "revision": "r088",
+  "checkpoint": "fdfcada51670",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r088/SpriteFrames.tres",
+  "frames_sha256": "7dd3bd89334e44f602db09ca038f0f801d36698a95a1bf5c6dcd560f3750296e",
+  "source_sha256": "a9a52c4c8fda46ebcc0f9147327409420b0ca2f2deb94f83cf7e6ad6c37c5c07",
+  "pose_canvas_sizes": [
+    984,
+    944,
+    944,
+    944,
+    944,
+    984
+  ],
+  "scope": [
+    "actual_NW_idle0_to_walk0",
+    "all6_actual_TRES_regions_margins_RGBA_SHA_physicalC_roots",
+    "toeoff2_and5_projected_support_design",
+    "actual_walk5_to0_sixpose_loop"
+  ],
+  "all_eight_actual_TRES_texture_region_margin_RGBA_SHA_anchor_checks": "PASS",
+  "walk_frame_count": 6,
+  "walk_speed": 12.5,
+  "walk_loop": true,
+  "cycle_seconds": 0.48,
+  "findings": [
+    "The actual r088 TRES uses the exact six selected output crops and reviewed C[984,944,944,944,944,984], with all source/RGBA SHA, regions, margins and calculated anchors independently matching current staging records. The previously reviewed candidate is faithfully represented in the compiled resource.",
+    "Skull/helmet-core, shoulder and waist size remain coherent against the current correct NW idle baseline, and all six retain rear LEFT/NW heading, pale long hair, thin HARD gold rays, long dark gold-trim robe, far RIGHT sinuous blade and empty near LEFT arm. No prior N-camera idle alias reappears in entry.",
+    "Actual support exchanges near LEFT0/1/2 to far RIGHT3/4/5. In toeoff2 the near LEFT trailing boot has heel raised/toe down while far RIGHT reaches; in toeoff5 the far RIGHT trailing boot has heel raised/toe down while near LEFT reaches. Their supporting toes follow the authored fore/aft projected path; these are walking toe-roll designs, not both folded legs lifted as a running flight phase.",
+    "The actual roots retain UPLEFT advancing versus DOWNRIGHT trailing foot depth around the pelvis. A trailing toe below the drawn root marker is consistent with this projection; the support toes have not been flattened to the same horizontalY or artificially lifted together. The head/waist walking arc remains coherent across those different foot depths.",
+    "Idle0->walk0 and walk5->walk0 preserve physical skull/body size and heading. At the seam the same near LEFT advancing leg continues from precontact to actual contact while the far RIGHT trailing side starts swing. The six ordered distinct poses at12.5fps form a0.48s cycle without duplicate-phase or source packing jumps."
+  ],
+  "evidence": {
+    "actual_layout_measurements": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/actual-r088-NW-walk/actual-layout-measurements.json",
+    "actual_layout_measurements_sha256": "6226e47af5caedb43e27e6aa8ed9579bd288d67559200317a5a1f1583b87b946",
+    "private_preview_bytes": 123539,
+    "private_context_total_bytes": 3756085
+  },
+  "limits": [
+    "This private panel reconstructs actual compiled TRES textures/layout, not a Godot-rendering screenshot. Root separately reports focused resource/Player/action PASS for the pinned checkpoint.",
+    "Projected support judgments are scoped visual authored-gait review, not an exact3D ground-plane reconstruction from transparentPNG. Whole Girtas48/defaultcatalog/actor approval and old unused rawHOLD histories remain unchanged."
+  ],
+  "actor_approval": false,
+  "new_approvals": 0,
+  "reviewed_at": "2026-10-19T14:57:15.854073+00:00"
+}
