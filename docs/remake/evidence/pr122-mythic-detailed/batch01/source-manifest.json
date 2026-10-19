@@ -2845,6 +2845,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "SW",
+      "role": "run",
+      "version": "v02iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+      "original_generated_file": "/workspace/scratch/halpas-SW-run-v02iso01.png",
+      "bytes": 1499152,
+      "sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -2863,7 +2882,7 @@
     "transform:393:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
     "transform:393:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
     "transform:393:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
-    "transform:393:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+    "transform:393:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
     "transform:393:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
     "transform:393:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
     "transform:393:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
@@ -2996,7 +3015,23 @@
       ],
       "reason": "SW run faces right; N/NE/NW attacks reverse heading during contact/recovery",
       "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
-      "completion_change": 0
+      "completion_change": 0,
+      "corrections": [
+        {
+          "slot": "transform:393:SW:run",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "source_visual_findings": [
+            "All six helmet/face, chest, blade and leg perspectives face screen LOWER-LEFT/SOUTHWEST; no screen-right reversal.",
+            "Gold/black armor, burgundy cape, paired crystalline purple wings and the established blade hand match the correct SW walk/idle generated model at game-view scale.",
+            "New fast-flight poses show stronger forward lean, visible leg tuck/exchange and upstroke/downstroke wing/cape response; phase3 has a clear deeper tuck differing from slow walk.",
+            "All six figures appear complete and uncropped in the private comparison."
+          ],
+          "actor_approval_added": 0
+        }
+      ]
     },
     {
       "key": "transform:267",
