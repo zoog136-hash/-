@@ -71,5 +71,5 @@
 ## 기르타스 NW 걷기·NE 대기 교정 저장 — r088/r089
 
 - NW 걷기6: `fdfcada51670`, 실제 TRES 6자세·대기 진입·루프·지면 투영 독립 검토 PASS. 증거 `batch03/girtas-NW-walk-runtime-quality-r088`.
-- NE 대기6: 올바른 NE 후방 우측 카메라 새 원화, 개별 C832·두 발/골반 루트·최종 표현 동등성 독립 검토 PASS. `e4ff3da1c579`의 r089 실제 Player/프레임/공격 검사 PASS. 기존 잘못된 N 카메라 원화와 교정 이력은 보존했다. 증거 `batch03/girtas-NE-idle-quality-r089`; 실제 TRES 후속 품질 검토는 진행 중이며 NE 공격 크기 전환은 별도 HOLD다.
+- NE 대기6: 올바른 NE 후방 우측 카메라 새 원화, 개별 C832·두 발/골반 루트·최종 표현 동등성 독립 검토 PASS. `e4ff3da1c579`의 r089 실제 Player/프레임/공격 검사 PASS. 기존 잘못된 N 카메라 원화와 교정 이력은 보존했다. 증거 `batch03/girtas-NE-idle-quality-r089`; 실제 TRES 6자세·루프·몸체/발 루트 독립 검토도 PASS이며 NE 공격 크기 전환은 별도 HOLD다.
 - 상세 완료1/31, 기존 승인405/498·프레임 보완14·색상/공유54프로필 보존. 기르타스 개체 승인은0. 다음은 E/NE/W 걷기·E/NW 달리기 제작 및 나머지 미완성 방향 달리기다.
