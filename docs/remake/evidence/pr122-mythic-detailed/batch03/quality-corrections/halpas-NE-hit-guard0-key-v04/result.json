@@ -1,0 +1,46 @@
+{
+  "key": "transform:393",
+  "direction": "NE",
+  "role": "hit",
+  "version": "v04guard0",
+  "status": "GENERATED_NEW_GUARD0_SOURCE_VISUAL_AND_SINGLE_GEOMETRY_PASS",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    0
+  ],
+  "request_path": "/workspace/scratch/halpas-NE-hit-guard0-key-v04/request.json",
+  "request_sha256": "f2b41e944d7c67cdd445b9b6e8d71b0b9c847ee4e5cdbc71976a3614edf30c3a",
+  "original_generated_file": "/workspace/generated_images/exec-51b49cfe-57fb-43af-b408-97088a9dfdd3.png",
+  "raw_path": "/workspace/scratch/halpas-NE-hit-guard0-key-v04/halpas-NE-hit-guard0-v04.png",
+  "raw_png": "/workspace/scratch/halpas-NE-hit-guard0-key-v04/halpas-NE-hit-guard0-v04.png",
+  "raw_sha256": "6e7b78306912b8ae16a1d9e4fa7780b23a4f640825c0c6b16d07393289b3798e",
+  "raw_bytes": 1410684,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/halpas-NE-hit-guard0-key-v04/generated-private.jpg",
+  "private_preview_bytes": 135498,
+  "source_visual_status": "PASS",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T13:51:41.863241+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "valid_source_phases": [
+    0
+  ],
+  "visual_findings": [
+    "New actual NE rear-right combat guard0 retains rear helmet/spinal armor and exact original model/gear/cape/two crystal wing fans/low purple blade, no front pink breastplate or face.",
+    "Exactly two arms: same imageRIGHT shoulder/elbow/wrist remains continuously low gripping blade; EMPTY imageLEFT arm alone now slightly abducts/bends with closed fist at LEFT waist along cape edge. No third arm, raised empty right fist, detached blade or leftarm duplicate.",
+    "Meaningfully different from idle0 and later onset1: empty LEFT wrist lower at waist with outward braced elbow, alert shoulder/back tension, feather-root/cape pose changes. This is genuinely newly generated guard0, not reused idleRGBA or static translation.",
+    "Strict one-pose geometry2048 and complete-region PASS, zero alpha>100 outer-edge clipping. Raw/source/request/receipt unchanged; no rescale/mask/recolor."
+  ],
+  "visual_limitations": [
+    "One new game0 only. Must combine with new1/2/3 and newly authored4/5 and check cross-track uniqueness+actualnative physicalscale/flow before any actor completion."
+  ]
+}
