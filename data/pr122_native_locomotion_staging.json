@@ -7367,10 +7367,10 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r014/SpriteFrames.tres",
-      "frames_sha256": "7c75f9614e52561b44a31c12637771d24222a1d963d7d9e329a36fed5b6f8fab",
-      "native_track_count": 17,
-      "native_pose_count": 102,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r015/SpriteFrames.tres",
+      "frames_sha256": "b779356eefa3f1d8c65bc839c01feba44b0a730f8cc5bfec7bcfb7b7475d5e78",
+      "native_track_count": 18,
+      "native_pose_count": 108,
       "canvas_size": [
         1024,
         1024
@@ -9054,6 +9054,158 @@
         },
         {
           "direction": "SE",
+          "role": "attack",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v01iso01.png",
+          "source_sha256": "3f2ba6489886d67f63c88e0e2eae03308cd186850767431cee0982f44f860ab5",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r015/SE-attack.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  156,
+                  40,
+                  493,
+                  435
+                ],
+                "margin": [
+                  284,
+                  209,
+                  531,
+                  589
+                ],
+                "source_anchor": [
+                  384,
+                  471
+                ],
+                "rgba_sha256": "abb542a2ce51295e34bdb4020a0855f5e1e515beea0212225bc44d55100f9929"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  947,
+                  17,
+                  408,
+                  480
+                ],
+                "margin": [
+                  307,
+                  164,
+                  616,
+                  544
+                ],
+                "source_anchor": [
+                  1152,
+                  493
+                ],
+                "rgba_sha256": "f100f998a7b14ef53141288bc16c0f2b453aa223123aae5cf27ec249f84c40c9"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  183,
+                  568,
+                  364,
+                  400
+                ],
+                "margin": [
+                  311,
+                  244,
+                  660,
+                  624
+                ],
+                "source_anchor": [
+                  384,
+                  964
+                ],
+                "rgba_sha256": "73dc3fdbd5572492d615d4921fdb8d7fd4f7a391fd743e0b7b61675fdd62432e"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  876,
+                  569,
+                  514,
+                  401
+                ],
+                "margin": [
+                  236,
+                  243,
+                  510,
+                  623
+                ],
+                "source_anchor": [
+                  1152,
+                  966
+                ],
+                "rgba_sha256": "1cc5d13f7f3b7c8a815266a972a45e19ed5e161281b32e93135ea720f3c18340"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  161,
+                  1061,
+                  515,
+                  439
+                ],
+                "margin": [
+                  289,
+                  205,
+                  509,
+                  585
+                ],
+                "source_anchor": [
+                  384,
+                  1496
+                ],
+                "rgba_sha256": "aab17eb8943b2a18f176b96c337a4465c233545bf2f4291d9dd39247371ec3f8"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  905,
+                  1063,
+                  485,
+                  435
+                ],
+                "margin": [
+                  265,
+                  209,
+                  539,
+                  589
+                ],
+                "source_anchor": [
+                  1152,
+                  1494
+                ],
+                "rgba_sha256": "d6f512ccc9c4694ea3d551674191cdffe6d27602c2ea34385d6b0f933ffa68e6"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 412.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "SE",
           "role": "run",
           "animation": "run_1",
           "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
@@ -9984,7 +10136,6 @@
           "idle_7"
         ],
         "attack": [
-          "attack_1",
           "attack_2",
           "attack_3",
           "attack_4",
@@ -10020,8 +10171,8 @@
       "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r014/NativeMotionProfile.tres",
-      "native_profile_sha256": "b92df9d9a0e15ac47a2cf14ba417d0348cca63462027584bc7141f600b74f2c7",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r015/NativeMotionProfile.tres",
+      "native_profile_sha256": "ca5c92849443a5ecdd3bf011e219f2d802cbf50c7c4794c5e82a8c21e9901b34",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 385.5,
@@ -10032,7 +10183,7 @@
       },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 102,
+        "distinct_native_poses": 108,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -11268,6 +11419,28 @@
           "visual_approval": "NOT_RUN",
           "completed_added": 0
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r014/SpriteFrames.tres",
+        "frames_sha256": "7c75f9614e52561b44a31c12637771d24222a1d963d7d9e329a36fed5b6f8fab",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r014/NativeMotionProfile.tres",
+        "native_profile_sha256": "b92df9d9a0e15ac47a2cf14ba417d0348cca63462027584bc7141f600b74f2c7",
+        "native_track_count": 17,
+        "native_pose_count": 102,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 102,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS"
+        }
       }
     ]
   },
@@ -11277,5 +11450,5 @@
     "direction": "S",
     "role": "attack"
   },
-  "missing_detailed_action_blocks": 31
+  "missing_detailed_action_blocks": 30
 }
