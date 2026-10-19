@@ -1,0 +1,298 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "W",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v02composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "request_kind": "LOSSLESS_REVIEWED_POSE_MAP_ASSEMBLY",
+  "transparent_background": true,
+  "corrective_reason": "Replace uncorrected original W walk with six newly authored faithful model poses with actual alternating anatomicalLEFTnear/RIGHTfar contacts, support/pass and toeoff/reach. Preserve all old originals and ambiguous rejected contact artifacts. All6 individual source motion/model and fresh independent commonphysical gait candidate PASS. Actual compiled SpriteFrames/Player/loop/defaultMain and actor approval remain HOLD.",
+  "user_authorization": "Continue existing PR122 actual animation production. Private production image tools permitted; main chat images forbidden. Preserve original approvals/assets/colorprofiles.",
+  "requested_at": "2026-10-19T15:13:14.396136+00:00",
+  "prompt": "ExactRGBA assembly of six explicitly owned fully preserved dedicated W walk source poses. No resampling, mirroring, recolor, cleanup or threshold changes.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+    "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+    "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+    "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+    "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0"
+  },
+  "expected_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "layout_revised_poses": 2,
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "canvas_size": 2048,
+    "review_basis": "Strict six fully preserved original RGBA source poses, complete alpha>16 ownership, six distinct frames. Nominal2048 is NOT runtime body size: exact perposeCs/hip+projected supportroots are separately independently reviewed and pinned. Commonphysical/model/anatomy/full6gait candidate PASS; actual compiled SpriteFrames/Player/idletransition/runtime still HOLD.",
+    "assembly_proof": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.assembly.json",
+    "assembly_proof_sha256": "32cb5c0e9af45d8f9da9525b616b716947f446b64399cfdfe8bfd379e64a5c56",
+    "actor_approval": false,
+    "source_art_review": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/independent-SE-author-common-physical-six-gait-review-v02.json",
+    "source_art_review_sha256": "20f4a2232f976b1c83c7db904956f25b30d9c9f4954b44049cdfd2d46f128f75"
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "base_geometry_sha256": "2eb6cfc0a44e90d912dd4f6614474e801985c4fa250dbda8be77c55acedbf73f",
+    "direction": "W",
+    "review_basis": "Exact immutable 1536-cell six-source atlas; expand only automatic crop bounds outward to preserve ALL original alpha>16 body-owned fringe; actual topology+nearest-body guard unchanged, source colors/alpha/coordinates untouched. All six source motions separately independently reviewed. This is geometry-only, no actor/runtime approval. AUTHOR proposed physical groundroot points require additional OUTWARD TRANSPARENT padding on phases3/5; all source PNG pixels remain immutable. Independent physical review pending; strict owner/completecoverage guards unchanged.",
+    "regions": [
+      [
+        158,
+        180,
+        1220,
+        1176
+      ],
+      [
+        1924,
+        346,
+        759,
+        843
+      ],
+      [
+        388,
+        1882,
+        759,
+        844
+      ],
+      [
+        1705,
+        1746,
+        1198,
+        1147
+      ],
+      [
+        427,
+        3450,
+        681,
+        780
+      ],
+      [
+        1960,
+        3455,
+        688,
+        770
+      ]
+    ],
+    "nearest_owner_sha256": "ae044b57c5bea7d78a4765cf1c7387fd5fd3aad7a202ce60fd393edfd183a2e4",
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+  },
+  "source_provenance": {
+    "assembly_spec": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/pose-map-complete-owned-regions-v02.json",
+    "assembly_spec_sha256": "33df36b7c067a07dbb59fb809a4a1585f582ca5b97c71bf9ed2d991497c5c850",
+    "assembly_spec_inline": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "direction": "W",
+      "role": "walk",
+      "poses": [
+        {
+          "path": "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+          "source_sha256": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+          "region": [
+            16,
+            8,
+            1220,
+            1176
+          ],
+          "rgba_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase0: IndependentnearLEFTfrontcontact hip/thigh/knee/heel proven332755c6; farRIGHTreartoe, longrobe/identityPASS. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+          "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+          "region": [
+            5,
+            63,
+            759,
+            843
+          ],
+          "rgba_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase1: IndependentnearLEFTflat support/farRIGHTliftedpassing626b817e; modelandownershipPASS. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+          "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+          "region": [
+            763,
+            62,
+            759,
+            844
+          ],
+          "rgba_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+          "source_pose": 1,
+          "newly_authored": true,
+          "review_basis": "Gamephase2: IndependentnearLEFTtrailingtoe/farRIGHTreachheelhover626b817e; notwholebodyAIR. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+          "source_sha256": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+          "region": [
+            22,
+            19,
+            1198,
+            1116
+          ],
+          "rgba_sha256": "135ba522ba967e2fac2eb6e50bfbd5f6feb10b99b4c37f3ec5bd2c3a40b2b04c",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase3: IndependentfarRIGHTfrontcontact hip/thigh/frontheel vsnearLEFTrear; exactindependentreview897ec1e2010eb0ea; oppositeLEFT0 proven. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+          "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+          "region": [
+            23,
+            126,
+            681,
+            780
+          ],
+          "rgba_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase4: OriginalRIGHT4 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTflat+LEFTforegroundpassing, strict2geometryPASS; final layout/full6 independent review pending. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+          "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+          "region": [
+            792,
+            128,
+            688,
+            769
+          ],
+          "rgba_sha256": "6d0e06b35be990ca689d7c550eea30d2dfc62d3ad7db196e732ada706d6648dc",
+          "source_pose": 1,
+          "newly_authored": true,
+          "review_basis": "Gamephase5: OriginalRIGHT5 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTreartoe+LEFTforeheelhover, strict2geometryPASS; final layout/full6 independent review pending. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        }
+      ],
+      "new_dedicated_gamepose_count": 6,
+      "old_shared_or_legacy_pose_reuse_count": 0,
+      "RIGHT45_original_newly_authored": 2,
+      "RIGHT45_layout_newly_authored": 0,
+      "source_canvas_status": "NOMINAL2048 strictcoverage only; actual perposeC/root proposal pending",
+      "actor_approval": false,
+      "complete_owned_source_region_review_sha256": "57ac0ea5b075eaebf078064cc8259418f01c65beafe6fd30b4e1fbf2995c2c5d"
+    },
+    "assembly_proof": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.assembly.json",
+    "assembly_proof_sha256": "32cb5c0e9af45d8f9da9525b616b716947f446b64399cfdfe8bfd379e64a5c56",
+    "source_region_review_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/reviewed-output-regions-with-author-root-padding-PROPOSAL-v02.json",
+    "source_region_review_sha256": "7223a8229e17fab0662a11b80af7fc04bf8f2856769a0a579ac866b55ef87309",
+    "region_proof_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/author-root-padding-regions-proof-v02.json",
+    "region_proof_sha256": "b71987795de615c98d988ef574cd1e2749b9899817ec0d1294950f230e0efba3",
+    "derived_layout_geometry_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/author-layout-derived-geometry-v02.json",
+    "derived_layout_geometry_sha256": "c1e797ccdfa8ac0c903001550e48e588ce6c0c9e9510e458686b367616f9bc86",
+    "derived_layout_proof_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/author-layout-derived-proof-v02.json",
+    "derived_layout_proof_sha256": "63bdfc671d6225cb566f1b1c2911d1e2c280b78462da65037bfb18329782ea12"
+  },
+  "runtime_validation": "SOURCE_AND_COMMON_PHYSICAL_CANDIDATE_PASS_ACTUAL_COMPILED_PLAYER_HOLD",
+  "actor_approval": false,
+  "approved_actor_count_added": 0,
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "key": "transform:267",
+    "direction": "W",
+    "role": "walk",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "canvas_size": 2048,
+    "authored_pose_canvas_sizes": [
+      2560,
+      1792,
+      1792,
+      2560,
+      1728,
+      1728
+    ],
+    "source_anchors": [
+      [
+        777,
+        1328
+      ],
+      [
+        2339,
+        1179
+      ],
+      [
+        797,
+        2709
+      ],
+      [
+        2407,
+        2892
+      ],
+      [
+        802,
+        4223
+      ],
+      [
+        2328,
+        4224
+      ]
+    ],
+    "review_basis": "AUTHOR physical layout proposal only: normalize genuine rigid skull/neck/pauldron/belt to selected W idle, preserve authored alternating gait/longrobe/equipment. Contacts0/3 require different native-pixel Cs than smaller support/reach sources. Proposed hip-X/projected near/far support roots need fresh independent full6 confirmation before actual game integration. No bbox fitting, no lower-body affine changes, no source-pixel resampling. Geometry-only validation does NOT grant physical approval.",
+    "runtime_validation": "AUTHOR_PROPOSAL_INDEPENDENT_PHYSICAL_AND_ACTUAL_PLAYER_HOLD",
+    "actor_approval": false
+  },
+  "independent_physical_review": {
+    "path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/independent-SE-author-common-physical-six-gait-review-v02.json",
+    "sha256": "20f4a2232f976b1c83c7db904956f25b30d9c9f4954b44049cdfd2d46f128f75",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "original_reviewed_layout_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/reviewed-runtime-layout-AUTHOR-PROPOSAL-v01.json",
+    "original_reviewed_layout_sha256": "afb15062e69623fed1a164a17c500f07b8b95166b6c0b93418c801ed5c224fcd",
+    "status": "PASS_SCOPED_COMMON_PHYSICAL_SCALE_ANATOMY_AND_SIX_GAIT_CANDIDATE_NOT_COMPILED_RUNTIME_OR_ACTOR",
+    "actor_approval": false
+  },
+  "approval": "SOURCE_CANDIDATE_PASS_RUNTIME_AND_ACTOR_HOLD",
+  "integration_ready": true,
+  "baseline_authority": {
+    "direction": "W",
+    "role": "idle",
+    "source_path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+    "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+    "source_canvas_size": 1024,
+    "frame0_source_anchor": [
+      324,
+      480
+    ]
+  },
+  "source_candidate_status": "SOURCE_AND_COMMON_PHYSICAL_CANDIDATE_PASS_ACTUAL_RUNTIME_NOT_APPROVED",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-walk-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Six genuine newly authored faithful Wwalk poses with independently proven nearLEFT and farRIGHT opposite contacts, alternate support/passing and toeoff/reach; onefoot support, not running AIR.",
+      "Fresh independent commonphysical skull/neck/pauldron/belt and limb/anatomy/fullgait candidate PASS against selected W idle; no material bodyratio distortion found.",
+      "Exact original source RGBA preserved; perposeC/root metadata, outward transparent region padding only; no rescale/mirror/recolor/cleanup/thresholdchange.",
+      "Ready for ROOT controlled manifest/staging/Godot integration, not actor completion. Actual compiled SpriteFrames/Player/idletransition/5to0/defaultMain remain to validate."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "raw_bytes": 6169213,
+    "request_sha256": "93086534307222b39a239c667c57470bcd7a09b5495f50f6e683705548aa9935",
+    "review_sha256": "3840dee237e64ed4160f0a2e9ba36d1c4b4551b6d00aa551fecb8f6fb324f2e1"
+  },
+  "available_repository_reference_sources": {
+    "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+    "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+    "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+    "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-walk-v02composite01.png",
+  "output_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "output_bytes": 6169213,
+  "original_generated_file": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.png"
+}
