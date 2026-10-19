@@ -119,8 +119,13 @@ def _reviewed_crop(image, geometry, entry):
     selected_foreground = foreground & (geometry["owners"] == body)
     ys, xs = np.nonzero(selected_foreground)
     _require(xs.size > 0, "Empty selected foreground")
-    _require(xs.min() > 0 and ys.min() > 0 and xs.max() < image.width - 1
-             and ys.max() < image.height - 1, "Selected foreground touches source boundary")
+    # Match the established importer boundary threshold. Faint AA at a source
+    # edge is retained exactly; it is not deleted or treated as missing anatomy.
+    strong = (geometry["alpha"] > 100) & (geometry["owners"] == body)
+    strong_y, strong_x = np.nonzero(strong)
+    _require(strong_x.min() > 0 and strong_y.min() > 0
+             and strong_x.max() < image.width - 1 and strong_y.max() < image.height - 1,
+             "Selected strong foreground touches source boundary")
     _require(xs.min() >= x and ys.min() >= y and xs.max() < x + width
              and ys.max() < y + height,
              "Region omits alpha>16 foreground owned by the selected body")
@@ -133,7 +138,19 @@ def _reviewed_crop(image, geometry, entry):
                  "Region cuts an alpha>16 part or an ambiguous foreground bridge")
     crop = image.crop((x, y, x + width, y + height))
     _require(_rgba_sha(crop) == entry["rgba_sha256"], "Reviewed crop RGBA hash mismatch")
-    return crop, int(selected_foreground.sum())
+    outer = np.zeros(foreground.shape, dtype=bool)
+    outer[0, :] = outer[-1, :] = True
+    outer[:, 0] = outer[:, -1] = True
+    edge_y, edge_x = np.nonzero(selected_foreground & outer)
+    edge_review = {"strong_boundary_alpha_threshold": 100,
+                   "selected_strong_boundary_pixels": int(np.count_nonzero(strong & outer)),
+                   "retained_alpha_gt16_boundary_pixels": int(edge_x.size),
+                   "retained_boundary_max_alpha": int(geometry["alpha"][edge_y, edge_x].max())
+                   if edge_x.size else 0,
+                   "retained_boundary_pixels_xy_rgba": [
+                       {"xy": [int(ex), int(ey)], "rgba": list(image.getpixel((int(ex), int(ey))))}
+                       for ex, ey in zip(edge_x, edge_y)]}
+    return crop, int(selected_foreground.sum()), edge_review
 
 
 def _complete_output(image, geometry):
@@ -180,13 +197,14 @@ def assemble_pose_map(spec, output):
     # Every source pin above is checked before any image is opened/output is written.
     images = {path: _rgba(path) for path in set(paths)}
     geometries = {path: _source_geometry(image) for path, image in images.items()}
-    crops, foreground_counts = [], []
+    crops, foreground_counts, boundary_reviews = [], [], []
     for path, entry in zip(paths, entries):
-        crop, count = _reviewed_crop(images[path], geometries[path], entry)
+        crop, count, boundary_review = _reviewed_crop(images[path], geometries[path], entry)
         _require(crop.width <= 1216 and crop.height <= 1216,
                  "Reviewed pose exceeds spacious cell; never resize to fit")
         crops.append(crop)
         foreground_counts.append(count)
+        boundary_reviews.append(boundary_review)
     visible_hashes = [importer._visible_pose_fingerprint(np.asarray(crop)) for crop in crops]
     _require(len(set(visible_hashes)) == 6, "Duplicate visible RGBA pose in reviewed map")
     atlas = Image.new("RGBA", (2560, 3840))
@@ -207,6 +225,7 @@ def assemble_pose_map(spec, output):
                             "review_basis": entry["review_basis"],
                             "output_region": [dx, dy, *crop.size],
                             "translation": [dx - sx, dy - sy],
+                            "source_edge_antialias_review": boundary_reviews[phase],
                             "alpha_gt16_pixels": foreground_counts[phase]})
     output.parent.mkdir(parents=True, exist_ok=True)
     created = False
@@ -225,6 +244,7 @@ def assemble_pose_map(spec, output):
         heights = [crop.height for crop in crops]
         new_count = sum(entry["newly_authored"] for entry in entries)
         proof = {"schema": SCHEMA, "key": data["key"], "role": data["role"],
+                 "assembler_sha256": _sha(Path(__file__)),
                  "direction": data["direction"], "metadata_sha256": metadata_sha,
                  "metadata_path": metadata_path,
                  "metadata_hash_basis": "file_bytes" if metadata_path else "canonical_json",
