@@ -163,8 +163,10 @@ def _complete_output(image, geometry):
              "Strict output regions omit or duplicate alpha>16 pixels")
 
 
-def assemble_pose_map(spec, output):
-    """Exclusively write a 2560x3840 atlas/proof, preserving exact selected RGBA."""
+def assemble_pose_map(spec, output, *, cell_size=1280):
+    """Exclusively write a two-column atlas/proof with exact selected RGBA."""
+    _require(type(cell_size) is int and cell_size in (1280, 1536),
+             "Require explicit 1280 or 1536 pixel packing cells")
     output = Path(output).absolute()
     proof_path = output.with_suffix(".assembly.json")
     error_path = output.with_suffix(".assembly-error.json")
@@ -200,18 +202,18 @@ def assemble_pose_map(spec, output):
     crops, foreground_counts, boundary_reviews = [], [], []
     for path, entry in zip(paths, entries):
         crop, count, boundary_review = _reviewed_crop(images[path], geometries[path], entry)
-        _require(crop.width <= 1216 and crop.height <= 1216,
+        _require(crop.width <= cell_size - 64 and crop.height <= cell_size - 64,
                  "Reviewed pose exceeds spacious cell; never resize to fit")
         crops.append(crop)
         foreground_counts.append(count)
         boundary_reviews.append(boundary_review)
     visible_hashes = [importer._visible_pose_fingerprint(np.asarray(crop)) for crop in crops]
     _require(len(set(visible_hashes)) == 6, "Duplicate visible RGBA pose in reviewed map")
-    atlas = Image.new("RGBA", (2560, 3840))
+    atlas = Image.new("RGBA", (cell_size * 2, cell_size * 3))
     pose_proofs = []
     for phase, (path, entry, crop) in enumerate(zip(paths, entries, crops)):
-        dx = phase % 2 * 1280 + (1280 - crop.width) // 2
-        dy = phase // 2 * 1280 + (1280 - crop.height) // 2
+        dx = phase % 2 * cell_size + (cell_size - crop.width) // 2
+        dy = phase // 2 * cell_size + (cell_size - crop.height) // 2
         atlas.paste(crop, (dx, dy))  # No alpha mask/compositing: exact partial-alpha RGBA.
         copied = atlas.crop((dx, dy, dx + crop.width, dy + crop.height))
         _require(np.array_equal(np.asarray(copied), np.asarray(crop)), "RGBA copy mismatch")
@@ -249,7 +251,7 @@ def assemble_pose_map(spec, output):
                  "metadata_path": metadata_path,
                  "metadata_hash_basis": "file_bytes" if metadata_path else "canonical_json",
                  "output": str(output), "output_sha256": _sha(output),
-                 "output_canvas": [2560, 3840], "cell_size": [1280, 1280],
+                 "output_canvas": [cell_size * 2, cell_size * 3], "cell_size": [cell_size, cell_size],
                  "virtual_canvas_size": 2048, "poses": pose_proofs,
                  "newly_authored_poses": new_count, "reused_poses": 6 - new_count,
                  "preserved_region_rgba_exact": True, "preserved_pose_alpha_gt16": True,
@@ -280,9 +282,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--spec", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--cell-size", type=int, choices=(1280, 1536), default=1280)
     args = parser.parse_args()
     try:
-        proof = assemble_pose_map(args.spec, args.output)
+        proof = assemble_pose_map(args.spec, args.output, cell_size=args.cell_size)
         print(json.dumps({"strict_importer": proof["strict_importer"], "output": proof["output"],
                           "output_sha256": proof["output_sha256"],
                           "newly_authored_poses": proof["newly_authored_poses"],
