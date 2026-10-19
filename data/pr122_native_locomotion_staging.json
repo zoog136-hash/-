@@ -7351,7 +7351,7 @@
         "Player_position_collision_class_combat_sequence_preserved": "PASS",
         "missing_locomotion_not_replaced_or_aliased": "PASS",
         "actual_Main": "PASS_CANDIDATE_FORM_API",
-        "visual_approval": "NOT_RUN",
+        "visual_approval": "HOLD_CORRECTIVE_AUTHORING_IN_PROGRESS",
         "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS",
         "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW",
@@ -7367,6 +7367,26 @@
         "native_turn_immediate_authored_heading": "PASS",
         "native_reaction_attack_clock_legacy_preserved": "PASS",
         "native_reaction_test": "tests/pr122_native_reaction_test.gd"
+      },
+      "visual_quality_hold": {
+        "key": "transform:393",
+        "status": "HOLD",
+        "scope": "selected_clips",
+        "sources": [
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png"
+        ],
+        "slots": [
+          "transform:393:SW:run",
+          "transform:393:N:attack",
+          "transform:393:NE:attack",
+          "transform:393:NW:attack"
+        ],
+        "reason": "SW run faces right; N/NE/NW attacks reverse heading during contact/recovery",
+        "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
+        "completion_change": 0
       }
     },
     "transform:267": {
@@ -14716,7 +14736,7 @@
         "Player_position_collision_class_combat_sequence_preserved": "PASS",
         "missing_locomotion_not_replaced_or_aliased": "PASS",
         "actual_Main": "PASS_CANDIDATE_FORM_API",
-        "visual_approval": "NOT_RUN",
+        "visual_approval": "HOLD_CORRECTIVE_AUTHORING_IN_PROGRESS",
         "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS",
         "native_reaction_30_60_120fps_stationary_moving": "PASS",
@@ -14732,6 +14752,15 @@
         },
         "actual_Main_engine": "4.7.2.stable.official.ed1daf0bf",
         "actual_Main_test": "tests/pr122_native_main_connection_test.gd"
+      },
+      "visual_quality_hold": {
+        "key": "transform:267",
+        "status": "HOLD",
+        "scope": "all_native_clips",
+        "clips": 48,
+        "reason": "Original pale face, narrow gold radial spines, long dark goldtrim skirt and sinuous weapon were redesigned; several action headings reverse",
+        "private_review": "All48clips/288poses and original portrait reviewed privately; faithful identity reauthoring in progress",
+        "completion_change": 0
       }
     },
     "transform:413": {
