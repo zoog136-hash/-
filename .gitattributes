@@ -14,3 +14,7 @@ data/map_remake/private/aden/definitions/*.json -text
 # Route graph JSON is authenticated by SHA-256 at runtime. Prevent Windows
 # autocrlf from converting its single LF terminator to CRLF.
 data/aden_world_visuals/routes/*.json -text
+
+# The native PNG plan is authenticated as exact bytes by private pack records.
+# Preserve its LF bytes when a Windows checkout enables core.autocrlf.
+data/maps/native_png_*.json -text
