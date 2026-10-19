@@ -4170,6 +4170,34 @@
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-N-walk-phase4-single-edit-v01/result.json",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "N",
+      "role": "walk",
+      "version": "v03composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+      "original_generated_file": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/girtas-N-walk-reviewed-composite-v02.png",
+      "bytes": 3025328,
+      "sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+        "canvas_size": 2048,
+        "review_basis": "Exact6-pose reviewed assembly, 4new+2reused; source pixels and complete gear/AA unchanged. Existing strict importer passed six distinct complete frames at allowed2048 virtual canvas; phase4 native1078pxheight retained at full source resolution. Physical runtime scale/anchor/seam approval separate.",
+        "assembly_proof": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/girtas-N-walk-reviewed-composite-v02.assembly.json",
+        "source_art_review": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json",
+        "actor_approval": false
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -4205,7 +4233,7 @@
     "transform:267:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-run-v01.png",
     "transform:267:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-walk-v01.png",
     "transform:267:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
-    "transform:267:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
+    "transform:267:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
     "transform:267:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-run-v01.png",
     "transform:267:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-walk-v01.png",
     "transform:267:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-run-v01.png",
@@ -5186,6 +5214,22 @@
             "Raw nominal bounding rectangles still overlap, so raw strict extraction remains HOLD. One unchanged LOSSLESS repack succeeds: six distinct complete frames, all alpha>16 foreground RGBA preserved, no resampling/recoloring/new poses, maximum removed distant background alpha16. Strict original importer and complete-pose ownership check PASS for the derivative."
           ],
           "source_review_sha256": "72c9b3e8f5982bfd2c715f322064d9e69a810b9038b7fdd85eea2850de75be82"
+        },
+        {
+          "slot": "transform:267:N:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+            "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+            "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization.",
+            "Six selected regions retain exact original RGBA/provenance. Public strict6pose importer and complete coverage passed at2048. Three terminal alpha21/61/41 pixels retainedexact; full sharp blade tip privately confirmed, no strong foreground boundary clip.",
+            "Runtime proposal uses measured pelvis-axis/supportsole anchors, not old cell-center/bbox anchors."
+          ],
+          "source_review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205"
         }
       ]
     }
@@ -5341,6 +5385,368 @@
         ]
       ],
       "review_basis": "Private actual r052 TRES comparison finds Ewalk canvas1024 renders source body 25 percent larger than reviewed Eidle canvas1280. Direct native-pixel crown-to-upper-pelvis/shoulder-to-pelvis comparison is comparable (idle approximately396px crown-to-toe and112px shoulder-to-pelvis; flying walk approximately388px crown-to-bent-toe and114px shoulder-to-pelvis), so use same1280 virtual canvas, not wing bounding-box sizing. A uniform +80sourceX corrects packed-cell center lying behind hip/body; all six original per-pose Y anchors and relative intra-cycle body/leg/wing changes remain unchanged. Phase0 hip reference moves from approximately[+20.5,-46.2]world to[-3.2,-37.0]world; comparison idle approximately[-2.5,-40.4]world. Residual vertical difference is bent-knee flight, not a planted-foot requirement. Source RGBA/regions remain identical; final newly compiled TRES transition QC required. This is metadata normalization, not actor approval."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+      "canvas_size": 2048,
+      "direction": "N",
+      "key": "transform:267",
+      "role": "walk",
+      "authored_pose_canvas_sizes": [
+        1024,
+        1256,
+        1256,
+        1024,
+        2256,
+        1256
+      ],
+      "source_anchors": [
+        [
+          605,
+          882
+        ],
+        [
+          1878,
+          940
+        ],
+        [
+          599,
+          2220
+        ],
+        [
+          1888,
+          2162
+        ],
+        [
+          563,
+          3735
+        ],
+        [
+          1889,
+          3501
+        ]
+      ],
+      "review_basis": "Individual sources privately reviewed at common physical scale. Anchors use measured central back-waist/pelvis axis and LEFT support soles0/1/2 or RIGHT soles3/4/5, not cell centers or weapon/body bbox. Original RGBA unchanged. Effective canvases1024/1256/1256/1024/2256/1256 follow actual head/torso/hip/boot proportions; final runtime ground/hip/scale/seam tests remain required.",
+      "anchor_measurement_evidence": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/physical-anchor-numeric-evidence.json",
+      "anchor_measurement_evidence_sha256": "be99e85c423215918eaea360d3337fcc6f93edd6f31d8f124b5a7141e1862e48",
+      "anchor_derivation": [
+        {
+          "phase": 0,
+          "measured_crop_anchor": [
+            207,
+            489
+          ],
+          "assembled_source_anchor": [
+            605,
+            882
+          ],
+          "output_region": [
+            398,
+            393,
+            483,
+            493
+          ],
+          "support_side": "LEFT",
+          "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+          "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+          "native_x_uncertainty": 3,
+          "evidence_phase": {
+            "game_phase": 0,
+            "crop_size": [
+              483,
+              493
+            ],
+            "head_peak_x": 205.0,
+            "waist_run_midline_median_x": 207.25,
+            "waist_centers_range": [
+              206.0,
+              211.5
+            ],
+            "waist_run_edge_medians": [
+              151.0,
+              264.0
+            ],
+            "waist_band_y": [
+              237,
+              294
+            ],
+            "support_side": "LEFT",
+            "support_sole_bottom_pixel": [
+              187.0,
+              489
+            ],
+            "proposed_ground_anchor_y": 490,
+            "previous_importer_crop_anchor": [
+              216,
+              489
+            ]
+          }
+        },
+        {
+          "phase": 1,
+          "measured_crop_anchor": [
+            240,
+            604
+          ],
+          "assembled_source_anchor": [
+            1878,
+            940
+          ],
+          "output_region": [
+            1638,
+            336,
+            564,
+            608
+          ],
+          "support_side": "LEFT",
+          "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+          "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+          "native_x_uncertainty": 3,
+          "evidence_phase": {
+            "game_phase": 1,
+            "crop_size": [
+              564,
+              608
+            ],
+            "head_peak_x": 240.0,
+            "waist_run_midline_median_x": 239.5,
+            "waist_centers_range": [
+              236.0,
+              242.0
+            ],
+            "waist_run_edge_medians": [
+              167.0,
+              311.0
+            ],
+            "waist_band_y": [
+              292,
+              363
+            ],
+            "support_side": "LEFT",
+            "support_sole_bottom_pixel": [
+              201.5,
+              604
+            ],
+            "proposed_ground_anchor_y": 605,
+            "previous_importer_crop_anchor": [
+              246,
+              604
+            ]
+          }
+        },
+        {
+          "phase": 2,
+          "measured_crop_anchor": [
+            235,
+            605
+          ],
+          "assembled_source_anchor": [
+            599,
+            2220
+          ],
+          "output_region": [
+            364,
+            1615,
+            552,
+            609
+          ],
+          "support_side": "LEFT",
+          "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+          "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+          "native_x_uncertainty": 3,
+          "evidence_phase": {
+            "game_phase": 2,
+            "crop_size": [
+              552,
+              609
+            ],
+            "head_peak_x": 237.0,
+            "waist_run_midline_median_x": 235.0,
+            "waist_centers_range": [
+              232.5,
+              238.0
+            ],
+            "waist_run_edge_medians": [
+              161.0,
+              309.5
+            ],
+            "waist_band_y": [
+              292,
+              363
+            ],
+            "support_side": "LEFT",
+            "support_sole_bottom_pixel": [
+              213.5,
+              605
+            ],
+            "proposed_ground_anchor_y": 606,
+            "previous_importer_crop_anchor": [
+              238,
+              605
+            ]
+          }
+        },
+        {
+          "phase": 3,
+          "measured_crop_anchor": [
+            208,
+            489
+          ],
+          "assembled_source_anchor": [
+            1888,
+            2162
+          ],
+          "output_region": [
+            1680,
+            1673,
+            479,
+            493
+          ],
+          "support_side": "RIGHT",
+          "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+          "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+          "native_x_uncertainty": 3,
+          "evidence_phase": {
+            "game_phase": 3,
+            "crop_size": [
+              479,
+              493
+            ],
+            "head_peak_x": 203.0,
+            "waist_run_midline_median_x": 208.0,
+            "waist_centers_range": [
+              205.5,
+              212.5
+            ],
+            "waist_run_edge_medians": [
+              149.0,
+              268.0
+            ],
+            "waist_band_y": [
+              237,
+              294
+            ],
+            "support_side": "RIGHT",
+            "support_sole_bottom_pixel": [
+              246.0,
+              489
+            ],
+            "proposed_ground_anchor_y": 490,
+            "previous_importer_crop_anchor": [
+              216,
+              489
+            ]
+          }
+        },
+        {
+          "phase": 4,
+          "measured_crop_anchor": [
+            464,
+            1074
+          ],
+          "assembled_source_anchor": [
+            563,
+            3735
+          ],
+          "output_region": [
+            99,
+            2661,
+            1081,
+            1078
+          ],
+          "support_side": "RIGHT",
+          "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+          "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+          "native_x_uncertainty": 7,
+          "evidence_phase": {
+            "game_phase": 4,
+            "crop_size": [
+              1081,
+              1078
+            ],
+            "head_peak_x": 456.0,
+            "waist_run_midline_median_x": 463.5,
+            "waist_centers_range": [
+              458.5,
+              473.0
+            ],
+            "waist_run_edge_medians": [
+              330.0,
+              601.5
+            ],
+            "waist_band_y": [
+              518,
+              645
+            ],
+            "support_side": "RIGHT",
+            "support_sole_bottom_pixel": [
+              552.5,
+              1074
+            ],
+            "proposed_ground_anchor_y": 1075,
+            "previous_importer_crop_anchor": [
+              540,
+              1074
+            ]
+          }
+        },
+        {
+          "phase": 5,
+          "measured_crop_anchor": [
+            244,
+            607
+          ],
+          "assembled_source_anchor": [
+            1889,
+            3501
+          ],
+          "output_region": [
+            1645,
+            2894,
+            549,
+            611
+          ],
+          "support_side": "RIGHT",
+          "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+          "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+          "native_x_uncertainty": 3,
+          "evidence_phase": {
+            "game_phase": 5,
+            "crop_size": [
+              549,
+              611
+            ],
+            "head_peak_x": 239.0,
+            "waist_run_midline_median_x": 244.0,
+            "waist_centers_range": [
+              238.5,
+              250.0
+            ],
+            "waist_run_edge_medians": [
+              167.0,
+              318.0
+            ],
+            "waist_band_y": [
+              293,
+              365
+            ],
+            "support_side": "RIGHT",
+            "support_sole_bottom_pixel": [
+              283.0,
+              607
+            ],
+            "proposed_ground_anchor_y": 608,
+            "previous_importer_crop_anchor": [
+              235,
+              607
+            ]
+          }
+        }
+      ],
+      "runtime_validation": "NOT_RUN",
+      "actor_approval": false,
+      "new_actor_approvals": 0
     }
   }
 }

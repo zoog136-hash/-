@@ -7511,8 +7511,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/SpriteFrames.tres",
-      "frames_sha256": "0b3f5c7593a24301e4135d048cdcf7881ebe0e4fe1005648a032c7f575682ac0",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r076/SpriteFrames.tres",
+      "frames_sha256": "8340d1831419a812702a0ee68e8f993a2f6f557a472fec038605a071162d1001",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -9251,152 +9251,291 @@
           "direction": "N",
           "role": "walk",
           "animation": "walk_6",
-          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
-          "source_sha256": "ac4c1f3ad694618b251843eed65f30fed2062053b4bb625fb38af897dbcec809",
-          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r010/N-walk.png",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+          "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r076/N-walk.png",
           "geometry": {
             "image_size": [
-              1024,
-              1536
+              2560,
+              3840
             ],
             "frames": [
               {
                 "row": 0,
                 "direction": "N",
                 "region": [
-                  113,
-                  92,
-                  371,
-                  391
+                  398,
+                  393,
+                  483,
+                  493
                 ],
                 "margin": [
-                  369,
-                  253,
-                  653,
-                  633
+                  305,
+                  151,
+                  541,
+                  531
                 ],
                 "source_anchor": [
-                  256,
-                  479
+                  605,
+                  882
                 ],
-                "rgba_sha256": "d39bd40fe4a16773fa6ccf0b619f6a6246ca9407718bd3ca44fcb9fe245bbaa5"
+                "rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               },
               {
                 "row": 1,
                 "direction": "N",
                 "region": [
-                  596,
-                  92,
-                  371,
-                  383
+                  1638,
+                  336,
+                  564,
+                  608
                 ],
                 "margin": [
-                  340,
-                  261,
-                  653,
-                  641
+                  388,
+                  181,
+                  692,
+                  648
                 ],
                 "source_anchor": [
-                  768,
-                  471
+                  1878,
+                  940
                 ],
-                "rgba_sha256": "b3f366fee7e49577d7d1bdf6c0458cfb5347debd8be33308889b38e8ac516a78"
+                "rgba_sha256": "2a143f0f17c60a4870d9daa97cd0925a738ab9b25dc4daff2df57ecd58521471",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
               },
               {
                 "row": 2,
                 "direction": "N",
                 "region": [
-                  111,
-                  571,
-                  366,
-                  386
+                  364,
+                  1614,
+                  554,
+                  610
                 ],
                 "margin": [
-                  367,
-                  258,
-                  658,
-                  638
+                  393,
+                  179,
+                  702,
+                  646
                 ],
                 "source_anchor": [
-                  256,
-                  953
+                  599,
+                  2220
                 ],
-                "rgba_sha256": "98d90ef6f35c520d5d4dc2a4ea0895ef6191970a77ebd81d7011fc385b09c4fb"
+                "rgba_sha256": "e20f6ea85eee0bfe9f832d1c07daa41de05f13926f1e1b1ebfa12f4a8ae3c628",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
               },
               {
                 "row": 3,
                 "direction": "N",
                 "region": [
-                  593,
-                  571,
-                  366,
-                  387
+                  1680,
+                  1673,
+                  479,
+                  493
                 ],
                 "margin": [
-                  337,
-                  257,
-                  658,
-                  637
+                  304,
+                  151,
+                  545,
+                  531
                 ],
                 "source_anchor": [
-                  768,
-                  954
+                  1888,
+                  2162
                 ],
-                "rgba_sha256": "abd03c729aa3468422523df83ea47628ec9ef4848b82b3531913d73bef7cfaa7"
+                "rgba_sha256": "3efc58c83624ebfa814fff13a6612409bb4fd0ea43dcac56b1abe248af8f84b7",
+                "canvas_size": [
+                  1024,
+                  1024
+                ],
+                "foot": [
+                  512,
+                  640
+                ]
               },
               {
                 "row": 4,
                 "direction": "N",
                 "region": [
-                  108,
-                  1049,
-                  366,
-                  386
+                  99,
+                  2661,
+                  1081,
+                  1078
                 ],
                 "margin": [
-                  364,
-                  258,
-                  658,
-                  638
+                  664,
+                  336,
+                  1175,
+                  1178
                 ],
                 "source_anchor": [
-                  256,
-                  1431
+                  563,
+                  3735
                 ],
-                "rgba_sha256": "5631798b899570721b953092dae41c0e86f9cc708d2940a306c9440f0977d109"
+                "rgba_sha256": "f9199b2419205ed5bd76f90619a395bb60cf4de92c92110d37232d081aa31c02",
+                "canvas_size": [
+                  2256,
+                  2256
+                ],
+                "foot": [
+                  1128,
+                  1410
+                ]
               },
               {
                 "row": 5,
                 "direction": "N",
                 "region": [
-                  594,
-                  1050,
-                  371,
-                  387
+                  1645,
+                  2894,
+                  550,
+                  611
                 ],
                 "margin": [
-                  338,
-                  257,
-                  653,
-                  637
+                  384,
+                  178,
+                  706,
+                  645
                 ],
                 "source_anchor": [
-                  768,
-                  1433
+                  1889,
+                  3501
                 ],
-                "rgba_sha256": "62a4982be813c65bdfda3105683d831a01c7b906ef91b4d0220a701426b62426"
+                "rgba_sha256": "f46a585a49a061beaa3b6922c4d6ae0b10fc47115b426da3f0fe82c82f70bad5",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
               }
             ],
             "distinct_pixel_frames": 6,
-            "neutral_height": 383.0,
+            "neutral_height": 487.0,
             "canvas_size": [
-              1024,
-              1024
+              2048,
+              2048
             ],
             "foot": [
-              512,
-              640
+              1024,
+              1280
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+            "base_geometry_sha256": "7315e9142b0e3c01332c376208351cd60b7285d2e446b5322095844b719a3fbb",
+            "derived_geometry_sha256": "f66bc0ef8d5a5ef50b464a99181795fc54c8e992bb02fe56c3a4f4c4ee228346",
+            "review_sha256": "5055064f7841bccc6b3287921a45c9d0e993523b4c4486051253859be8c7e1f3",
+            "review_basis": "Individual sources privately reviewed at common physical scale. Anchors use measured central back-waist/pelvis axis and LEFT support soles0/1/2 or RIGHT soles3/4/5, not cell centers or weapon/body bbox. Original RGBA unchanged. Effective canvases1024/1256/1256/1024/2256/1256 follow actual head/torso/hip/boot proportions; final runtime ground/hip/scale/seam tests remain required.",
+            "direction": "N",
+            "pose_count": 6,
+            "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ],
+            "source_anchors": [
+              [
+                605,
+                882
+              ],
+              [
+                1878,
+                940
+              ],
+              [
+                599,
+                2220
+              ],
+              [
+                1888,
+                2162
+              ],
+              [
+                563,
+                3735
+              ],
+              [
+                1889,
+                3501
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              2048
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false,
+            "pose_canvas_sizes": [
+              1024,
+              1256,
+              1256,
+              1024,
+              2256,
+              1256
+            ],
+            "runtime_reference_canvas_size": 1024,
+            "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                1024
+              ],
+              [
+                1024,
+                1256
+              ],
+              [
+                1024,
+                1256
+              ],
+              [
+                1024,
+                1024
+              ],
+              [
+                1024,
+                2256
+              ],
+              [
+                1024,
+                1256
+              ]
+            ],
+            "pose_canvas_size_allowed_range": [
+              256,
+              4096
+            ],
+            "newly_authored_poses": 0
           }
         },
         {
@@ -14955,13 +15094,13 @@
       "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/NativeMotionProfile.tres",
-      "native_profile_sha256": "3dc8a0c861b81beb2f439b7493539586cc4d8092e5525ded70b2c748d8a84727",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r076/NativeMotionProfile.tres",
+      "native_profile_sha256": "932bb4ff396121de1734cd8b53c7718b3efc2435e29e008ea522fe315b567c41",
       "native_profile_basis": {
         "display_height": 110.0,
-        "source_reference_height": 388.5,
-        "pixel_scale": 0.28314028314028317,
-        "foot_offset_y": -36.241956241956245,
+        "source_reference_height": 390.75,
+        "pixel_scale": 0.28150991682661547,
+        "foot_offset_y": -36.03326935380678,
         "sizing_review": "HOLD; native staging only",
         "production_catalog_replaced": false
       },
@@ -15452,6 +15591,22 @@
               "Raw nominal bounding rectangles still overlap, so raw strict extraction remains HOLD. One unchanged LOSSLESS repack succeeds: six distinct complete frames, all alpha>16 foreground RGBA preserved, no resampling/recoloring/new poses, maximum removed distant background alpha16. Strict original importer and complete-pose ownership check PASS for the derivative."
             ],
             "source_review_sha256": "72c9b3e8f5982bfd2c715f322064d9e69a810b9038b7fdd85eea2850de75be82"
+          },
+          {
+            "slot": "transform:267:N:walk",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+              "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+              "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization.",
+              "Six selected regions retain exact original RGBA/provenance. Public strict6pose importer and complete coverage passed at2048. Three terminal alpha21/61/41 pixels retainedexact; full sharp blade tip privately confirmed, no strong foreground boundary clip.",
+              "Runtime proposal uses measured pelvis-axis/supportsole anchors, not old cell-center/bbox anchors."
+            ],
+            "source_review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205"
           }
         ]
       }
@@ -19884,6 +20039,29 @@
         "frames_sha256": "6937868b7c6394d1f8d09adbab9c0d411dbfeb59726b1740bd5b5556e836ff99",
         "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r074/NativeMotionProfile.tres",
         "native_profile_sha256": "414dd4d852e6b87ce082d8861e967cbcc9d39dfa1d29a1a797bfb60cd220c4ad",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/SpriteFrames.tres",
+        "frames_sha256": "0b3f5c7593a24301e4135d048cdcf7881ebe0e4fe1005648a032c7f575682ac0",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/NativeMotionProfile.tres",
+        "native_profile_sha256": "3dc8a0c861b81beb2f439b7493539586cc4d8092e5525ded70b2c748d8a84727",
         "native_track_count": 48,
         "native_pose_count": 288,
         "verification": {
