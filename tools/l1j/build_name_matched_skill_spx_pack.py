@@ -29,6 +29,7 @@ BINDINGS = ROOT / "data/skills/external_spx_name_bindings.json"
 OUTPUT_PREFIX = "assets/external_spx/skills"
 MAX_FRAME_PIXELS = 3_000_000
 MAX_CANVAS_EDGE = 2048
+MAX_DELIVERY_EDGE = 384
 
 
 @contextlib.contextmanager
@@ -174,6 +175,14 @@ def build(source: pathlib.Path, output: pathlib.Path) -> dict:
                         pictures = phase_frames(layers)
                         mapping[clip] = []
                         for index, picture in enumerate(pictures):
+                            # 1584px source frames waste Android texture memory at ~260px display.
+                            if max(picture.size) > MAX_DELIVERY_EDGE:
+                                ratio = MAX_DELIVERY_EDGE / max(picture.size)
+                                picture = picture.resize(
+                                    (max(1, round(picture.width * ratio)),
+                                     max(1, round(picture.height * ratio))),
+                                    Image.Resampling.LANCZOS,
+                                )
                             relative = (f"{OUTPUT_PREFIX}/{family}/{clip}/"
                                         f"frame_{index:03d}.png")
                             with io.BytesIO() as stream:
