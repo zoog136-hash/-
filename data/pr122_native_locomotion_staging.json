@@ -6,8 +6,8 @@
   "actors": {
     "transform:393": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r049/SpriteFrames.tres",
-      "frames_sha256": "39e369b14e7c2905751e1d5ae9b9e8905a8152354a85484c2093934553a5835b",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r050/SpriteFrames.tres",
+      "frames_sha256": "ed1e2df0d19461d7c7aa3d308efd8590c0db723067874b22129dbd5e6ac65909",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -498,13 +498,13 @@
                   451
                 ],
                 "margin": [
-                  437,
+                  373,
                   353,
                   829,
                   829
                 ],
                 "source_anchor": [
-                  256,
+                  320,
                   476
                 ],
                 "rgba_sha256": "66591853ac00ea478a0e9eaad02b7b25772f9e874723fd80d773e509fea650c2"
@@ -519,13 +519,13 @@
                   460
                 ],
                 "margin": [
-                  437,
+                  373,
                   344,
                   840,
                   820
                 ],
                 "source_anchor": [
-                  768,
+                  832,
                   477
                 ],
                 "rgba_sha256": "7c984ba0f7ba922f5f60d44491585177c85bc6407f03be6b0885c9392a895c25"
@@ -540,13 +540,13 @@
                   495
                 ],
                 "margin": [
-                  419,
+                  355,
                   309,
                   794,
                   785
                 ],
                 "source_anchor": [
-                  256,
+                  320,
                   978
                 ],
                 "rgba_sha256": "d259ea14c74b7509d904da809e7df39110a57afcfed87f49e466f35b719381d6"
@@ -561,13 +561,13 @@
                   433
                 ],
                 "margin": [
-                  440,
+                  376,
                   371,
                   834,
                   847
                 ],
                 "source_anchor": [
-                  768,
+                  832,
                   979
                 ],
                 "rgba_sha256": "05b85ef28ffdd6eed93f28dc961cd25d53828813ccf91fb157c3175997ce5e2a"
@@ -582,13 +582,13 @@
                   411
                 ],
                 "margin": [
-                  430,
+                  366,
                   393,
                   827,
                   869
                 ],
                 "source_anchor": [
-                  256,
+                  320,
                   1458
                 ],
                 "rgba_sha256": "dd64aec7b1ef8985a81f4042efe577f75dd4579607bfc4654b33ac606b01cea7"
@@ -603,13 +603,13 @@
                   439
                 ],
                 "margin": [
-                  435,
+                  371,
                   365,
                   828,
                   841
                 ],
                 "source_anchor": [
-                  768,
+                  832,
                   1459
                 ],
                 "rgba_sha256": "83d340ec639f15f67696395078ac1a7aa1202f7b6f0804dfcbac26f025197619"
@@ -630,9 +630,9 @@
             "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
             "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
             "base_geometry_sha256": "4a78c3c582a2388b72e0808a7e1a40efb50bdf1d63876ba80a9d31c81a2f56ae",
-            "derived_geometry_sha256": "5ce325911eb26701e8e28ea19269cb62edfb3b752eb3007742b7224ae869d500",
-            "review_sha256": "4828c2b047db012892bc3b188898030ce6763e22bc8ca08baee9b6eeb87b9911",
-            "review_basis": "Private uniform0.80 display comparison aligns E shoulder/hip/boot landmarks with N/S; preserve correct lateral proportions and entire PNG; virtualcanvas1280 normalizes to1024 without resampling. Final scale/loop review pending",
+            "derived_geometry_sha256": "b96fd2d1b54cc044913bbdae17a63f4b17ae2bf2f590821b0cfd266158c783ea",
+            "review_sha256": "1858ce164a63446a12a9b23aeb59514f1c95083cc23937a593b9f2bbb27426a2",
+            "review_basis": "Private magnified full lower-body review: E boots overlap in profile, so distal lowest toe is not stance center. Visible ankle/heel support column plus vertical pelvis projection selects consistent localX320 in all six poses; original cell-center256 is left of the entire leg/support envelope. Uniform +64sourceX retains true stance motion and leaves front toe6-7.5worldpx forward, matching N/S3.8-6.6 rather than falsely toe-locking. Canvas1280 already matches body height. Proposal only, final compiled alignment review remains required.",
             "direction": "E",
             "pose_count": 6,
             "canvas_size": [
@@ -645,27 +645,27 @@
             ],
             "source_anchors": [
               [
-                256,
+                320,
                 476
               ],
               [
-                768,
+                832,
                 477
               ],
               [
-                256,
+                320,
                 978
               ],
               [
-                768,
+                832,
                 979
               ],
               [
-                256,
+                320,
                 1458
               ],
               [
-                768,
+                832,
                 1459
               ]
             ],
@@ -6933,10 +6933,10 @@
                   414
                 ],
                 "margin": [
-                  317,
-                  230,
-                  594,
-                  610
+                  381,
+                  310,
+                  722,
+                  738
                 ],
                 "source_anchor": [
                   256,
@@ -6954,10 +6954,10 @@
                   432
                 ],
                 "margin": [
-                  303,
-                  212,
-                  609,
-                  592
+                  367,
+                  292,
+                  737,
+                  720
                 ],
                 "source_anchor": [
                   768,
@@ -6975,10 +6975,10 @@
                   452
                 ],
                 "margin": [
-                  307,
-                  192,
-                  578,
-                  572
+                  371,
+                  272,
+                  706,
+                  700
                 ],
                 "source_anchor": [
                   256,
@@ -6996,10 +6996,10 @@
                   413
                 ],
                 "margin": [
-                  301,
-                  231,
-                  597,
-                  611
+                  365,
+                  311,
+                  725,
+                  739
                 ],
                 "source_anchor": [
                   768,
@@ -7017,10 +7017,10 @@
                   420
                 ],
                 "margin": [
-                  311,
-                  224,
-                  569,
-                  604
+                  375,
+                  304,
+                  697,
+                  732
                 ],
                 "source_anchor": [
                   256,
@@ -7038,10 +7038,10 @@
                   415
                 ],
                 "margin": [
-                  302,
-                  229,
-                  594,
-                  609
+                  366,
+                  309,
+                  722,
+                  737
                 ],
                 "source_anchor": [
                   768,
@@ -7053,13 +7053,64 @@
             "distinct_pixel_frames": 6,
             "neutral_height": 407.5,
             "canvas_size": [
-              1024,
-              1024
+              1152,
+              1152
             ],
             "foot": [
-              512,
-              640
+              576,
+              720
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+            "base_geometry_sha256": "f656a4416b22508b9b7336464e92cea27cc06472180ab369cd8bbe4b09f88e94",
+            "derived_geometry_sha256": "2126a9ffc4a95b2bc960cc90c77267c6a10edbb4d855a3729e06593ab22c1709",
+            "review_sha256": "66667291e9498c1c3018c7ddaa16401e25c3a3d8460651a022dd1ca537fcf460",
+            "review_basis": "Private actual-profile world-foot comparison with N/S and corrected E1280: W1152 matches helmet-crown, shoulder, hip and ankle heights; W1024 is taller, W1280 visibly undersized. True side projection legitimately narrows torso. Both planted-boot support span and pelvis projection center near source localX256, so retain X256/768 and current Y; no distal-toe lock or bounding-box body normalization. Final compiled integration/render review still required.",
+            "direction": "W",
+            "pose_count": 6,
+            "canvas_size": [
+              1152,
+              1152
+            ],
+            "foot": [
+              576,
+              720
+            ],
+            "source_anchors": [
+              [
+                256,
+                455
+              ],
+              [
+                768,
+                456
+              ],
+              [
+                256,
+                968
+              ],
+              [
+                768,
+                968
+              ],
+              [
+                256,
+                1471
+              ],
+              [
+                768,
+                1471
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1152
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -7379,11 +7430,11 @@
       "detailed_completed": false,
       "completed_added": 0,
       "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
-      "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
+      "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r049/NativeMotionProfile.tres",
-      "native_profile_sha256": "b31839a6300821a48b747a64d4e4828b887e9dc378ec4f7bfb091b596fc9e1d0",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r050/NativeMotionProfile.tres",
+      "native_profile_sha256": "94ca77021f3da82a800e5e83704ca88866f527b9132f886322b97382f283c897",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 350.5,
@@ -7399,13 +7450,12 @@
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
         "actual_Player_scene_form_api": "PASS",
-        "Player_position_collision_class_combat_sequence_preserved": "PASS",
-        "missing_locomotion_not_replaced_or_aliased": "PASS",
-        "actual_Main": "NOT_RUN",
-        "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
-        "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS",
-        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        "reviewed_runtime_canvas_and_foot_layout": "PASS_ACTUAL_PLAYER",
+        "visual_approval": "HOLD_FINAL_COMPASS_AND_PHYSICAL_ANCHOR_REVIEW",
+        "actual_Main": "NOT_RUN_NEW_REVISION",
+        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW",
+        "completed_added": 0
       },
       "visual_quality_hold": {
         "key": "transform:393",
@@ -18275,6 +18325,29 @@
         "frames_sha256": "5c411cd06d397ebb3852f2b314d359013368a09893013ac87a5cedc62d17d8b3",
         "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r048/NativeMotionProfile.tres",
         "native_profile_sha256": "779f229936374a022db997a993e66581f2afd7d822570209292d414527833735",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r049/SpriteFrames.tres",
+        "frames_sha256": "39e369b14e7c2905751e1d5ae9b9e8905a8152354a85484c2093934553a5835b",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r049/NativeMotionProfile.tres",
+        "native_profile_sha256": "b31839a6300821a48b747a64d4e4828b887e9dc378ec4f7bfb091b596fc9e1d0",
         "native_track_count": 48,
         "native_pose_count": 288,
         "verification": {

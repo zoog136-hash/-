@@ -4702,7 +4702,82 @@
       "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
       "direction": "E",
       "canvas_size": 1280,
-      "review_basis": "Private uniform0.80 display comparison aligns E shoulder/hip/boot landmarks with N/S; preserve correct lateral proportions and entire PNG; virtualcanvas1280 normalizes to1024 without resampling. Final scale/loop review pending"
+      "source_anchors": [
+        [
+          320,
+          476
+        ],
+        [
+          832,
+          477
+        ],
+        [
+          320,
+          978
+        ],
+        [
+          832,
+          979
+        ],
+        [
+          320,
+          1458
+        ],
+        [
+          832,
+          1459
+        ]
+      ],
+      "review_basis": "Private magnified full lower-body review: E boots overlap in profile, so distal lowest toe is not stance center. Visible ankle/heel support column plus vertical pelvis projection selects consistent localX320 in all six poses; original cell-center256 is left of the entire leg/support envelope. Uniform +64sourceX retains true stance motion and leaves front toe6-7.5worldpx forward, matching N/S3.8-6.6 rather than falsely toe-locking. Canvas1280 already matches body height. Proposal only, final compiled alignment review remains required."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+      "direction": "W",
+      "canvas_size": 1152,
+      "source_anchors": [
+        [
+          256,
+          455
+        ],
+        [
+          768,
+          456
+        ],
+        [
+          256,
+          968
+        ],
+        [
+          768,
+          968
+        ],
+        [
+          256,
+          1471
+        ],
+        [
+          768,
+          1471
+        ]
+      ],
+      "review_basis": "Private actual-profile world-foot comparison with N/S and corrected E1280: W1152 matches helmet-crown, shoulder, hip and ankle heights; W1024 is taller, W1280 visibly undersized. True side projection legitimately narrows torso. Both planted-boot support span and pelvis projection center near source localX256, so retain X256/768 and current Y; no distal-toe lock or bounding-box body normalization. Final compiled integration/render review still required."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+      "direction": "S",
+      "role": "run",
+      "canvas_size": 1024,
+      "playback_order": [
+        0,
+        3,
+        2,
+        1,
+        4,
+        5
+      ],
+      "review_basis": "Private joint/support review:0Rlanding 3Rcompression 2LEFTpassing 1Llanding 4Ldrive 5RIGHTpassing forms one full six-frame cycle, all source poses used once, no pixels/mirrors/invented poses; raw row order remains HOLD"
     }
   }
 }
