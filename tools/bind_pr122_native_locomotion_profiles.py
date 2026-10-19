@@ -4,9 +4,52 @@ import hashlib
 import json
 from pathlib import Path
 import statistics
+from PIL import Image
 
 from stage_pr122_native_locomotion import preserve_write
 import pr122_native_production_approvals as production_approvals
+
+
+def runtime_walk_reference_height(root, actor):
+    """Measure the existing display-height convention in runtime canvas units.
+
+    Raw source resolution and transparent reviewed padding must not resize the
+    whole actor. ActorMotion normalizes each texture to the reference canvas;
+    use that same ratio while retaining every reviewed per-pose canvas.
+    """
+    reference = actor['canvas_size'][1]
+    if type(reference) is not int or reference <= 0:
+        raise ValueError('Require a positive runtime reference canvas')
+    samples = []
+    for track in actor['tracks']:
+        if track['role'] != 'walk':
+            continue
+        geometry = track['geometry']
+        frames = [frame for frame in geometry['frames'] if frame['row'] in (0, 3)]
+        if sorted(frame['row'] for frame in frames) != [0, 3]:
+            raise ValueError('Require distinct authored neutral phases 0 and 3')
+        heights = []
+        with Image.open(root / track['source']) as image:
+            alpha = image.convert('RGBA').getchannel('A')
+            for frame in frames:
+                x, y, width, height = frame['region']
+                canvas = frame.get('canvas_size', geometry['canvas_size'])[1]
+                if (type(canvas) is not int or canvas <= 0
+                        or any(type(v) is not int for v in (x, y, width, height))
+                        or min(x, y) < 0 or min(width, height) <= 0
+                        or x + width > image.width or y + height > image.height):
+                    raise ValueError('Invalid exact source region or runtime canvas')
+                bounds = alpha.crop((x, y, x + width, y + height)).point(
+                    lambda value: 255 if value > 16 else 0).getbbox()
+                if bounds is None:
+                    raise ValueError('Neutral pose has no alpha>16 source pixels')
+                heights.append((bounds[3] - bounds[1]) * reference / canvas)
+        samples.append(dict(direction=track['direction'],
+                            neutral_runtime_heights=heights,
+                            reference_height=statistics.median(heights)))
+    if not samples:
+        raise ValueError('Require an authored walking reference')
+    return statistics.median(sample['reference_height'] for sample in samples), samples
 
 
 def bind(root, only_key=None):
@@ -26,8 +69,7 @@ def bind(root, only_key=None):
         # Same 110px candidate body-height convention already used by player.gd.
         # The 1024px virtual canvas needs its own -128px foot offset, not the
         # -32px offset of the existing 256px sheets. No source pixels are scaled.
-        height = statistics.median(track['geometry']['neutral_height'] for track in actor['tracks']
-                                   if track['role'] == 'walk')
+        height, sizing_samples = runtime_walk_reference_height(root, actor)
         scale = 110.0 / height
         foot_offset = (actor['canvas_size'][1] / 2 - actor['foot'][1]) * scale
         prior = catalog[key]
@@ -56,6 +98,8 @@ def bind(root, only_key=None):
         actor['native_profile_sha256'] = hashlib.sha256(destination.read_bytes()).hexdigest()
         actor['native_profile_basis'] = dict(display_height=110.0, source_reference_height=height,
                                             pixel_scale=scale, foot_offset_y=foot_offset,
+                                            runtime_sizing_method='visible_alpha_gt16_in_reference_canvas',
+                                            walk_reference_samples=sizing_samples,
                                             sizing_review='HOLD; native staging only',
                                             production_catalog_replaced=False)
     approval_state.assert_preserved(approval_state.manifest, register)
