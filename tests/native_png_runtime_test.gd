@@ -83,7 +83,16 @@ func inspect(mid: String) -> void:
 	var spawn: Vector2=world.player.global_position
 	check(field.walkable(spawn) and field.point_clear(spawn,4),mid+" inspected ground entry")
 	check(world.player.scale==Vector2.ONE and world.player.move_speed==210,mid+" actor scale, animations and movement speed retained")
-	check(field.data.monster_spawn.is_empty() and world.monsters_root.get_child_count()==0,mid+" no invented monster placements")
+	check(not field.data.monster_spawn.is_empty() and world.field_population.slots.size()>0,mid+" actual PNG encounter slots are created")
+	for zone: Dictionary in field.data.monster_spawn:
+		var candidates: Array=field.spawn_cells.get(str(zone.id),[])
+		check(not candidates.is_empty(),mid+" has reachable encounter cells "+str(zone.id))
+		if candidates.is_empty(): continue
+		var candidate: Vector2=field.cell_to_world(candidates[0])
+		check(field.walkable(candidate) and field.point_clear(candidate,12) and field.spawn_contains(zone,candidate),mid+" post-alpha candidate remains physically valid "+str(zone.id))
+	# This suite exercises route/physics fidelity rather than combat; combat
+	# remains live in the dedicated population and player test suites.
+	for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
 	var target: Vector2=spawn+Vector2(32,0)
 	check(field.line_clear(spawn,target),mid+" actual ground segment is walkable")
 	world._set_click_destination(target)
