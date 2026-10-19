@@ -26,16 +26,26 @@ def repack(source, output, direction):
     rgba = np.array(Image.open(source).convert('RGBA'))
     height, width = rgba.shape[:2]
     assert width % 2 == 0 and height % 3 == 0
-    labels, _ = ndimage.label(rgba[:, :, 3] > 16, np.ones((3, 3)))
-    sizes = np.bincount(labels.ravel())
-    bodies = [int(i) for i in np.flatnonzero(sizes >= 200) if i]
-    assert len(bodies) == 6, 'Require exactly six separate foreground bodies'
-    large = np.isin(labels, bodies)
-    distance, nearest = ndimage.distance_transform_edt(~large, return_indices=True)
-    owners = labels[nearest[0], nearest[1]]
     foreground = rgba[:, :, 3] > 16
-    assert np.all(distance[foreground] <= 2), 'Detached foreground needs review'
-    kept = (rgba[:, :, 3] > 0) & (distance <= 2)
+    # A faint antialiased bridge can join two otherwise separate bodies. Use
+    # a second, still very low alpha seed only when every stronger pixel stays
+    # within two pixels of its body and the faint fringe stays within five.
+    # Keep ALL alpha > 16 pixels, including that fringe; never cut or recolor it.
+    for seed_alpha in (16, 32):
+        labels, _ = ndimage.label(rgba[:, :, 3] > seed_alpha, np.ones((3, 3)))
+        sizes = np.bincount(labels.ravel())
+        bodies = [int(i) for i in np.flatnonzero(sizes >= 200) if i]
+        if len(bodies) != 6:
+            continue
+        large = np.isin(labels, bodies)
+        distance, nearest = ndimage.distance_transform_edt(~large, return_indices=True)
+        if (np.all(distance[rgba[:, :, 3] > seed_alpha] <= 2)
+                and np.all(distance[foreground] <= (2 if seed_alpha == 16 else 5))):
+            break
+    else:
+        raise ValueError('Require six separate bodies with only bounded faint edge fringe')
+    owners = labels[nearest[0], nearest[1]]
+    kept = foreground | ((rgba[:, :, 3] > 0) & (distance <= 2))
     removed = (rgba[:, :, 3] > 0) & ~kept
     assert not removed.any() or int(rgba[:, :, 3][removed].max()) <= 16
     cell_width, cell_height = 768, height // 3
@@ -77,6 +87,8 @@ def repack(source, output, direction):
                  source=str(source), output=str(output), preserved_foreground_rgba=True,
                  resampled=False, recolored=False, newly_authored_poses=0,
                  foreground_alpha_threshold=16, retained_fringe_distance=2,
+                 body_seed_alpha=seed_alpha,
+                 maximum_foreground_distance=float(distance[foreground].max()),
                  removed_background_pixels=int(removed.sum()),
                  maximum_removed_alpha=int(rgba[:, :, 3][removed].max()) if removed.any() else 0,
                  foreground_pixels=int(foreground.sum()), poses=sorted(proof, key=lambda p: p['phase']),
