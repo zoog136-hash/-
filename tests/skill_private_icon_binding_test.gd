@@ -2,10 +2,11 @@ extends SceneTree
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const FALLBACK = "res://assets/skills/icons/lm_0f78dd70d9994d34.svg"
 const PRIVATE = "res://assets/skills/private_icons/lm_0f78dd70d9994d34.png"
+const STYLED = "res://assets/skills/styled_icons/lm_0f78dd70d9994d34.svg"
 
 func _initialize() -> void:
 	var row: Dictionary = {"id": "lm_0f78dd70d9994d34", "icon": FALLBACK}
-	var want: String = PRIVATE if ResourceLoader.exists(PRIVATE) else FALLBACK
+	var want: String = PRIVATE if ResourceLoader.exists(PRIVATE) else (STYLED if ResourceLoader.exists(STYLED) else FALLBACK)
 	if Catalog.preferred_icon_path(row) != want:
 		push_error("private skill icon ID override failed")
 		quit(1)

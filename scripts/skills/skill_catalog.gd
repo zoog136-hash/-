@@ -44,7 +44,10 @@ static func preferred_icon_path(record: Dictionary) -> String:
 		if not "0123456789abcdef".contains(glyph):
 			return fallback
 	var private_path: String = "res://assets/skills/private_icons/" + skill_id + ".png"
-	return private_path if ResourceLoader.exists(private_path) else fallback
+	if ResourceLoader.exists(private_path):
+		return private_path
+	var styled_path: String = "res://assets/skills/styled_icons/" + skill_id + ".svg"
+	return styled_path if ResourceLoader.exists(styled_path) else fallback
 
 static func read_json(filename: String) -> Dictionary:
 	var result: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROOT_PATH + filename))

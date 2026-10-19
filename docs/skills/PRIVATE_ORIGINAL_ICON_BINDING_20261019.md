@@ -1,3 +1,5 @@
+**2026-10-19 follow-up:** all 125 active skill IDs now have licensed 64×64 alternate fallback SVG images, with source credits, as detailed in `docs/skills/STYLED_ICON_ASSETS_20261019.md`. No original NCSOFT skill images are installed; private exact-ID PNGs still take priority over the styled fallback.
+
 # TWILIGHT private skill icon binding — 2026-10-19
 
 The live catalog contains **125 skills** across 13 job classes plus common. They currently point to 125 locally generated SVG icons. This branch adds an exact-ID private PNG override only; every absent icon keeps its current SVG.
