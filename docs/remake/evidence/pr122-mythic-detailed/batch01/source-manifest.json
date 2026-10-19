@@ -5609,6 +5609,33 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "W",
+      "role": "death",
+      "version": "v02composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
+      "original_generated_file": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/halpas-W-death-reviewed-composite-v02.png",
+      "bytes": 2781342,
+      "sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+        "canvas_size": 2048,
+        "review_basis": "ExactRGBA six-pose 4old+2new assembly with explicit1536 packing cells and unchanged32pxminimum gutters retains new corpse4 complete1233pxwidth without any resize/crop. Unchanged strict six-frame analyzer+complete guard+allalpha16 coverage PASS at allowed2048 sourcecanvas. Physical authored per-pose canvas/root proposals are separate and finalactualPlayer review pending.",
+        "assembly_proof": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/halpas-W-death-reviewed-composite-v02.assembly.json",
+        "actor_approval": false
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -5683,7 +5710,7 @@
     "transform:393:SE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-death-v01iso01.png",
     "transform:393:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-death-v01iso01.png",
     "transform:393:SW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-death-v01iso01.png",
-    "transform:393:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+    "transform:393:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
     "transform:393:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
     "transform:393:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v02iso01.png",
     "transform:393:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-death-v01.png",
@@ -6137,6 +6164,22 @@
             "Original raw PNG preserved unchanged. All6 body silhouettes are visually complete, zero alpha>100 pixels on outer source edges. Strict default geometry correctly HOLDs because a pose rectangle contains foreign neighboring body; default thresholds remain unchanged and no source pixels removed. A single lossless disjoint-body recovery is required before native integration."
           ],
           "source_review_sha256": "7ad50dc216d80f8785c3eaca85807e3a544d5caae78ee435ca7a5b1ea2b3299f"
+        },
+        {
+          "slot": "transform:393:W:death",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Original source phases0/1/2/3 are reused exactly as independently passed valid W combat-yaw collapse; no full six-frame reauthor and no pixel changes in those four poses. Old duplicated head/sword phases4/5 are entirely excluded.",
+            "New corpse4 and finalsettle5 each have exactlyONE original closed black/gold helmet/head atLEFT, ONE connectedtorso/pelvis, exactlyTWOarm chains and TWOleg/bootchains. One original crystalblade/goldguard stays continuously at anatomicalRIGHT hand nearLEFT/front; emptyLEFT palm remains separate and naturalocclusion fromcape/wings. No secondfacemask/helmet/neck atRIGHT or opposing secondblade.",
+            "New4 lowers old3 kneeling/braced sidebody to fullydown lyingpose; new5 lowers head/shoulder and relaxed emptyLEFT palm, folds fan tips/roots and cape flatter, relaxes bootstagger to finalstablecorpse. Same faithfulblack/gold armor, hornedhelmet, two rooted crystalfeatherfans and burgundyLEFTcape retained.",
+            "Generalassembler explicitly1536cell preserves allselectedRGBA and allalpha>16 pixels exactly once, maintains original32pxminimum packingmargin and all sourceownership/bridge/clippingguards. New4complete1233pxcrop is retained uncropped/unresampled. Unchangedstrictanalyzer+completecoverage PASS6 distinctposes atnominal2048.",
+            "Separate physicalcanvas/anchor proposal keeps old0-3 original1024/anchors byintegertranslations and proposes2048 fornew4/5 using rigidmodel/currentWidle1152 reference, explicit pelvis/actualemptyLEFTpalmfloor landmarks. This remains candidate metadata requiring actualPlayer/independent scale/root/fall QC; no corpse silhouettebbox normalization."
+          ],
+          "source_review_sha256": "b42bef9f9cadea2e4effa59eed63bbdeddc16d223a9115db46128e28d11cecc5"
         }
       ],
       "compass_audit": {
@@ -8804,6 +8847,107 @@
         ]
       ],
       "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful NWidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [275, 803, 316, 778, 290, 807], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 14 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+      "canvas_size": 2048,
+      "key": "transform:393",
+      "direction": "W",
+      "role": "death",
+      "authored_pose_canvas_sizes": [
+        1024,
+        1024,
+        1024,
+        1024,
+        2048,
+        2048
+      ],
+      "source_anchors": [
+        [
+          762,
+          989
+        ],
+        [
+          2317,
+          971
+        ],
+        [
+          757,
+          2469
+        ],
+        [
+          2309,
+          2426
+        ],
+        [
+          821,
+          4063
+        ],
+        [
+          2343,
+          4021
+        ]
+      ],
+      "review_basis": "4 unchanged approved-scoped source death0-3 poses retain original physical canvas1024 and original anchors through exactinteger packing translations. New corpse4/5 virtualcanvas2048 is a provisional rigid-helmet/plate/boot-size normalization against current W idle canvas1152, not silhouette/corpsebbox. Helmet/boots of new1254pxsources are about2x previoussource dimensions; actualreference comparisons remain needed. NewXanchors preserve prior3 nearpelvis relativeworldX using source landmarks oldpelvis[793,928] versus oldanchor[768,984], newpelvis~[729,755]/[729,803] and 2xcanvas. NewYanchors use actual emptyLEFT palm-floor strongalpha contact4[515,842],5[476,868], retaining continuousphysicalcollapse/settle rather than bbox-top/height locking. Final actualPlayer scale/root/trajectory private review pending; these are candidate metadata only, no finalapproval.",
+      "anchor_derivation": {
+        "source_anchors_old0_3": [
+          [
+            256,
+            530
+          ],
+          [
+            768,
+            530
+          ],
+          [
+            256,
+            983
+          ],
+          [
+            768,
+            984
+          ]
+        ],
+        "source_anchors_new4_5": [
+          [
+            679,
+            842
+          ],
+          [
+            679,
+            868
+          ]
+        ],
+        "new4_strong_palm_floor_point": [
+          515,
+          842
+        ],
+        "new5_strong_palm_floor_point": [
+          476,
+          868
+        ],
+        "old3_pelvis_approx": [
+          793,
+          928
+        ],
+        "new4_pelvis_approx": [
+          729,
+          755
+        ],
+        "new5_pelvis_approx": [
+          729,
+          803
+        ],
+        "native_W_idle_canvas": 1152,
+        "native_W_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+        "whole_silhouette_bbox_used_to_set_physical_canvas": false,
+        "source_pixel_resampling": false
+      },
+      "runtime_validation": "PENDING_ROOT_ACTUAL_PLAYER_AND_INDEPENDENT_QUALITY",
+      "actor_approval": false,
+      "approved_actor_change": 0,
+      "detailed_completion_change": 0
     }
   }
 }
