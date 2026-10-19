@@ -1,0 +1,53 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_ACTUAL_R086_SE_WALK_COMPILED_LAYOUT_AND_GAIT",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "actor_key": "transform:267",
+  "revision": "r086",
+  "checkpoint": "82ae36698936",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r086/SpriteFrames.tres",
+  "frames_sha256": "e986c0cc81b281fa36459065f1ec00de1d27792a69624d0011f97241366d974f",
+  "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+  "scope": [
+    "actualSEidle0_to_actualSEwalk0",
+    "actualSEwalk_all6_texture_crop_margin_canvas_anchor_physicalscale",
+    "opposite_support_knee_ankle_and_projected_near_far_root",
+    "actualSEwalk5_to0_sixpose_loop"
+  ],
+  "pose_canvas_sizes": [
+    2208,
+    1536,
+    1536,
+    2352,
+    1632,
+    2240
+  ],
+  "all_eight_actual_TRES_texture_region_margin_RGBA_SHA_anchor_checks": "PASS",
+  "walk_frame_count": 6,
+  "walk_speed": 12.5,
+  "walk_loop": true,
+  "cycle_seconds": 0.48,
+  "findings": [
+    "The actual r086 TRES selects the exact six authored SE crops and per-pose reviewed canvases/anchors. Source hashes, all RGBA crop hashes, regions and margins match current staging tracks. No image-fitting adjustment or source pixel edits were needed for this review.",
+    "All six retain the selected front-right SE face/chest/pelvis camera, pale hair, narrow HARD gold rays, long black-gold robe and permanent anatomical RIGHT long sinuous blade. The empty far LEFT arm remains separate and all visible legs connect through the robe without a third leg or hand-side swap.",
+    "Actual near RIGHT contact0 -> RIGHT support/LEFT passing1 -> RIGHT toe-off/LEFT reaching2 is followed by far LEFT contact3 -> LEFT support/RIGHT passing4 -> LEFT trailing toe-off/RIGHT precontact5. Knees and boots exchange their roles; this is not one support silhouette merely translated.",
+    "Actual compiled anchors retain the authored SE projected near/far support depth. Far LEFT contact/support phases3/4 sit above the near-side reference plane rather than flattening both boots. Phase5 retains the advancing near RIGHT boot and far LEFT trailing support in their projected depths.",
+    "The common physical-scale panel shows coherent skull/shoulder/waist proportions across all6; small head-height changes follow straight support, passing stance and knee bend. Walking posture is more upright and visibly higher than the relaxed SE idle, while shoulder/head scale remains coherent rather than a uniform body rescale.",
+    "The 5-to0 seam advances the same near RIGHT precontact leg into its actual planted contact; the other leg continues from trailing support into swing. Hair/robe and torso counter-movement remain continuous enough for this six-pose loop. The registered 12.5fps gives a0.48s six-frame cycle; no extra duplicate pose or reordered contact hides a missing step."
+  ],
+  "evidence": {
+    "actual_layout_measurements": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/actual-r086-SE-walk/actual-layout-measurements.json",
+    "actual_layout_measurements_sha256": "c1f2558314bf06d4851425303858ac9a7c64aa85d82020141147e21bc1653131",
+    "independent_source_projected_root_review": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json",
+    "independent_source_projected_root_review_sha256": "e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a",
+    "private_preview_bytes": 148054,
+    "private_context_total_bytes": 427532
+  },
+  "limits": [
+    "This is a private static reconstruction of actual compiled TRES textures/physical layout, not a Godot rendering screenshot. Root separately reports actual resource/Player/action focused checks PASS for this checkpoint.",
+    "This scoped pass does not establish all48 Girtas clips, default game connection, exact occluded bone centers or actor completion. Existing failed source/HOLD history remains preserved."
+  ],
+  "actor_approval": false,
+  "new_approvals": 0,
+  "reviewed_at": "2026-10-19T14:23:13.135735+00:00"
+}

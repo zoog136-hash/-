@@ -59,4 +59,11 @@
 - transform:393: 8방향 × idle/walk/run/attack/hit/death = 48클립·288자세 독립 품질 및 실제 기본 카탈로그 Main 검증 PASS.
 - 승인 이력 405/498 보존, 상세 완료 1/31. 기르타스 및 나머지 상세 30종은 미승인; 기존 프레임 보완 14종 별도 유지.
 - 증거: `docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-production-r001-approval-certificate.json`. production 리소스는 `res://assets/actors/eight_direction/native_production/halpas_393/r001/SpriteFrames.tres`; 기존 staging·원화·교정 이력·1490/54 색상 프로필을 보존했다.
-- 다음 제작: 기르타스 새 NW 대기 6자세 및 SE/SW 걷기 6자세 연결·검토, E 걷기/달리기·W/NW 걷기 제작 계속. 전체 CI 미실행.
+- 다음 제작: 기르타스 E 걷기/달리기, W/NW/NE 걷기 제작 및 나머지 방향 달리기. 새 NW 대기·SE/SW 걷기는 연결·독립 실제 TRES 검토 PASS로 보존했다. NE 대기 카메라는 추가 독립 검토 중이며 개체 승인은 아직 없다. 전체 CI 미실행.
+
+## 기르타스 이동 교정 연결 저장 — r085/r086/r087
+
+- 새 NW 대기6: 올바른 NW 카메라, 실제 NW 공격 진입·복귀·두 발/골반 루트 독립 검토 PASS. 기존 교정 이력과 재개방 HOLD 증거를 보존하고 해당 새 HOLD만 해소했다.
+- SE/SW 걷기 각각6: 실제 좌우 지지 교대·방향별 지면 투영·루프·idle 전환 독립 TRES 검토 PASS. 선택 raw SHA `fa4befe04bac…` / `5db8575ad4ef…`; source stage 저장 `82ae36698936` / `1a9a520cc727`.
+- 상세 완료1/31(하르파스), 나머지30 미완료. 기존 승인405/498·프레임 보완14 보존. 기르타스 완료/production 승인은0이며 공유·색상 프로필54와 하르파스 승인 리소스는 변경하지 않았다.
+- 현재 제작: E walk/run, W/NW/NE walk. 불명확한 발 지지 원화는 HOLD로 보존하며 3D 관절·가림 가이드로 실제 반대 지지를 제작 중이다.
