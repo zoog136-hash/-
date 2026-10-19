@@ -3188,6 +3188,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "N",
+      "role": "attack",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-N-attack-repair/girtas-N-attack-v02.png",
+      "bytes": 2139240,
+      "sha256": "99e7483f2b773740195b269395f91e0aa3f771f132904768756a650e92f48fc7",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3279,7 +3298,7 @@
     "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
     "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
     "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
-    "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v01.png",
+    "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
     "transform:267:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v01.png",
     "transform:267:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
     "transform:267:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
@@ -3842,6 +3861,22 @@
             "All six full characters have readable complete gear, spine tips and blade tips. The unchanged strict analyzer and complete-pose gate pass six complete distinct regions, with original generated pixels preserved."
           ],
           "source_review_sha256": "1973dddef8424320450e524c24de1b50e2e7e40c1880069f9a8a20f57959a71b"
+        },
+        {
+          "slot": "transform:267:N:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 are genuine NORTH rear view: rear helmet, long pale back hair, rear dark gold-trimmed skirt, face/front chest hidden.",
+            "Same original anatomical RIGHT arm (viewer-right rear) holds one long sinuous orange-gold weapon in every phase; left arm stays free.",
+            "Phase1 raises weapon, phase2 bends loaded elbow, phase3 opens the shoulder/elbow into a clear UP/NORTH extension, phase4 follows through up-right while body remains rear/N, phase5 recovers.",
+            "Six clearly changed arm/torso/knee and cloth states; no front/right body snap.",
+            "Original pale hair, narrow hard gold rays and long dark gold-trim skirt retained; no red mask, feather fan, broad short sword or leg-armor replacement."
+          ],
+          "source_review_sha256": "5d355c79e2a3a8ca2608424f49e1d5dfbf815a0bd83cfefcc8a6372c880a10fa"
         }
       ]
     }
