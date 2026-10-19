@@ -3534,6 +3534,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "attack",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-SE-attack-repair/girtas-SE-attack-v02.png",
+      "bytes": 2502556,
+      "sha256": "b1f11bf66bbfb23b49dc1a68b54d6d56dcebe69344a7a17abd3216ae2f833512",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3621,7 +3640,7 @@
     "transform:393:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
     "transform:393:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
     "transform:267:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
-    "transform:267:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v01iso01.png",
+    "transform:267:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
     "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
     "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
     "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
@@ -4328,6 +4347,21 @@
             "Full gear/boots/blade tip visible, physical spine attachments rigid, coherent body/equipment ratios across6."
           ],
           "source_review_sha256": "a7b9300015692b8afba070f466285164c484c58e0be0d77088455b6b01a8e498"
+        },
+        {
+          "slot": "transform:267:SE:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 maintain SOUTHEAST/front-right: pale face/front chest visible, nose/torso/hips/knees/boot toes point down-right; no rear NE or leftward body switch.",
+            "Original anatomical right/image-left-front arm retains the one long sinuous weapon throughout. Free left hand remains distinct and unarmed.",
+            "Phase1 retracts right arm back-left, phase2 coils shoulder/elbow/knees, phase3 visibly extends connected right arm into LOWER-RIGHT and full blade continues DOWN-RIGHT toward foreground; phase4 absorbs SE followthrough, phase5 SE guard.",
+            "Original pale face/long hair, thin hard gold rays, long dark gold-trim skirt and original long curved weapon retained; no red mask/flame feather fan/short broad sword."
+          ],
+          "source_review_sha256": "47b6f772c91e11751b06dedf78f1928d756fd547bff9d64ad9f28adcd5fe22b4"
         }
       ]
     }
