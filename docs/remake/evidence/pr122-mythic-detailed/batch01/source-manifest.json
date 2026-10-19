@@ -325,10 +325,157 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "E",
+      "role": "run",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-de4d7a30-cc81-4240-93f3-eac69137dd0e.png",
+      "bytes": 2112980,
+      "sha256": "efa8ceadcb848c73293a71b09ab717dfe8a1f95b8aab5adc955316d2a88cb44f",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "SE",
+      "role": "walk",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-2a83044e-3bcc-471f-8d6c-43a6a0d1abbe.png",
+      "bytes": 2121680,
+      "sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "SE",
+      "role": "run",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-ce935157-494a-4938-86a7-4bd1d0bda398.png",
+      "bytes": 2228665,
+      "sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "E",
+      "role": "run",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-run-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-0ea314c6-2981-469d-b85d-7b6485f18180.png",
+      "bytes": 2083067,
+      "sha256": "3073598c41ef6f431f7dc38efd63eab75e6bf4ddf56217b6931c76e39fec6d9e",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "walk",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-b0d3aa8c-3afa-4dfb-bf30-679425cb12ce.png",
+      "bytes": 2089969,
+      "sha256": "2a723c3f0ec63db71e4c0fb7bf8af15408963594c852e53c45f5400788ffcfe6",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "run",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
+      "original_generated_file": "/workspace/generated_images/exec-9dda3ca7-577c-49ba-ad3d-5037998983f7.png",
+      "bytes": 2053903,
+      "sha256": "4118a399b8dfcb3f7c23f5142c99752e194f5ed47b75cf4f92038538f5c84733",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "S",
+      "role": "walk",
+      "version": "v01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+      "original_generated_file": "/workspace/generated_images/exec-41f3f08a-1c72-46bc-b268-887e53bd6f53.png",
+      "bytes": 2137131,
+      "sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
   "mythic_detail_complete": 0,
   "broad_CI": "CANCELLED_BY_USER_PRIORITY",
-  "approved_history_preserved": 405
+  "approved_history_preserved": 405,
+  "selected_locomotion_sheets": {
+    "transform:393:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+    "transform:393:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+    "transform:393:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+    "transform:393:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
+    "transform:267:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+    "transform:267:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-run-v02.png",
+    "transform:267:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png",
+    "transform:267:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
+    "transform:393:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png"
+  },
+  "selected_locomotion_native_poses": 54,
+  "session_stop_reason": "USER_REQUEST_SAVE_COMMIT_HANDOFF; NO_MORE_IMAGE_TOOL_CALLS_OR_CHAT_IMAGES",
+  "image_tools_forbidden": true
 }

@@ -1,45 +1,38 @@
-> 최신 상태: 사용자 요청으로 제작·검증을 중단하고 전체 작성물을 저장했다. [중단 저장 인계](TWILIGHT_PR122_STOP_20261019.md)를 먼저 읽는다. 전체 로컬 회귀와 현재 HEAD 전체 CI는 미완료다.
+# TWILIGHT PR #122 새 대화 인계 — 이미지 출력 절대 금지
 
-# PR #122 — 2026-10-19 사용자 요청 중단·저장 및 새 대화 인계
+사용자의 최신 요청은 저장·커밋 및 새 대화 인계다. 반복된 채팅 이미지 첨부 때문에 용량·주간 한도를 소모했다. 아래 금지 사항을 재확인하지 말고 바로 따른다.
 
-> 후속 제작 재개 기록: [batch17 최신 상태·원화·검증](TWILIGHT_PR122_BATCH17_20261019.md). batch17 신규 승인0/누적405를 유지하며 미승인 원화67장과 실패를 보존했다. 아래는 원래 중단 저장 기록이며 원문을 유지한다. 최신 HEAD의 전체 CI는 PR/Actions에서 별도로 확인한다.
+## 반드시 지킬 지시
 
-사용자 최종 지시는 “지금 하던거 그대로 저장하고 커밋해 그리고 새대화로 이어 나갈수 있도록 프롬프트 줘”다. 이 저장에서는 추가 제작을 멈춘다. 다음 대화에서 재개 지시를 받으면 아래 상태부터 이어간다. 기존 PR #122만 사용하고 main 병합, force push, rebase, 다른 PR 수정은 하지 않는다.
+- 채팅에 이미지를 첨부하지 않는다. `image_gen`, `view_image`, `image()`, `generatedImage()`, 자동 이미지 첨부 도구, 이미지 렌더/미리보기 도구를 호출하지 않는다. 내부 검토 목적도 예외가 아니다. 사용자가 명시적으로 지시를 바꾸기 전까지 유지한다.
+- 원본 이미지·대량 파일 목록·전체 CI 로그를 대화에 출력하지 않는다. 중간 결과는 파일에 저장하고 짧은 텍스트만 보고한다. 이미지 도구 없이 가능한 기존 소스 처리·프레임 제작·데이터 연결을 진행한다.
+- 기존 PR #122, `feature/twilight-remaining106-20261016` 브랜치·커밋·작업 파일을 유지한다. 새 PR 생성, 임의 병합, rebase, 강제 push, 파일 삭제, 미커밋 파일 덮어쓰기를 하지 않는다.
+- 애니메이션 제작이 우선이다. 전체 CI를 지금 재실행하지 않는다. 제작 단계는 `[skip ci]` 커밋으로 저장한다. 실제 제작이 끝난 뒤 최종 검증한다. 공유·색상 변경·기하 통과만으로 고유 애니메이션 완성을 주장하지 않는다.
 
-저장소 `zoog136-hash/-`, PR https://github.com/zoog136-hash/-/pull/122, 브랜치 `feature/twilight-remaining106-20261016`, 대상 `feature/twilight-animation-20261013`. 이번 제작 재개 시작 SHA는 `baf194e17d2dc0d8c8fd38a11218060e7107e26d`, 마지막 로컬 제작 안전 커밋은 `d069778458783e054d4755448f00f9dd18a04e86`다. 이 인계 파일을 포함하는 최신 커밋은 `git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md`로 확인하고 실제 PR 원격 HEAD와 대조한다.
+## 저장 상태
 
-## 집계와 보존
+- 저장소: `/workspace/twilight`. 새 환경이면 GitHub `zoog136-hash/-`의 같은 브랜치를 복원한다. PR: https://github.com/zoog136-hash/-/pull/122 (open Draft).
+- 본 문서가 저장된 최신 커밋은 `git log -1`로 확인한다. 저장 전 HEAD는 `823a9b7`이다. 외부 동시 작업은 일반 merge로 이력을 보존했다. 외부에서 삭제한 기존 증거15개는 `batch01/concurrent-evidence-preservation.tar.gz` 및 SHA 장부에 보존했다.
+- `data/pr122_palette_finish_20261019.json`: 색상/공유 모션54프로필(변신33, 몬스터21) 작업은 저장됐다. runtime 매핑498/498은 고유 아트 완료가 아니다. 기존 승인405/498 이력은 보존했다. 원본 아트 미승인93, 프레임 부족14와 신화 이상 상세31종은 별도 집계이며 합산하지 않는다.
+- `docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json`: 유일·신화31종 큐. **상세 최종 완료는 0/31종**이다.
+- 같은 폴더 `source-manifest.json`: 등록 원화23장. 기하 통과 후 선택한 보행/달리기 소스9장·54자세는 할파스393 E/SE walk/run 및 S walk, 기르타스267 E/SE walk/run이다. 제작 프로필 연결·실제 게임 재생·최종 시각 승인은 미완료다.
+- `recovered-unassigned.json` 및 `recovered-unassigned/`: 중단된 호출에서 나온 미분류 원화3장과 SHA. 텍스트 provenance 확인 전 캐릭터·방향·동작을 추정해서 설치하지 않는다. 원화 PNG 총26장의 경로·크기·SHA는 `checkpoint-20261019.json`에 보존했다.
+- 실패/구버전 원화도 삭제하지 않는다. 기존 원화를 채팅으로 표시하지 않는다. `/workspace/generated_images`는 임시 경로이며 Git에 보존한 소스와 SHA를 기준으로 한다.
+- 새 소스는 기존 catalog를 바탕으로 생성한 이미지다. 원본 제3자 ZIP/SPX의 공개 재배포 허가를 의미하지 않는다. private SPX는 NOT_DELIVERED/HOLD, 이전 사신 이미지2개는 UNRECOVERED다. 원본 전체 통합 완료라고 보고하지 않는다.
 
-전수 대상 498종의 중복 없는 마지막 로컬 승인 상태는 정상 391, 기존 프레임 부족 14, SOURCE_HOLD 16, IN_PROGRESS 1, NOT_AUTHORED 76이다. 승인 이력 누적 405에는 프레임 부족 14가 포함된다. 미승인 잔여는 93이다. 이번 재개에서 6종을 실제 Main/연속 재생 검토 후 연결했으며, 새로운 원화 296자세와 별도 팔레트 수정 3건을 제작했다. 이 숫자는 최종 CI 통과나 사용자 시각 승인 수가 아니다. 병행 원격의 대체 외형 연결은 추가 완료로 합산하지 않는다.
+## 재개할 제작
 
-완료 6종: `monster:알비노 변이된 골렘` 144자세, `monster:알비노 디어` 144자세, `transform:269` 거대한 무덤 가디언 112자세 복구·보완, `monster:스파이더` 128자세, `monster:검은숲 거미`와 `monster:왜곡의 타란툴라` 각 기존 동일 참조 확인 후 스파이더 텍스처 공유. 두 거미 파생 연결은 새 원화 0장이다. 무덤 가디언은 기존 WIP 복구이며 112자세를 신규 제작했다고 계산하지 않는다.
+1. git status, 현재 브랜치/HEAD 및 원격 PR 상태를 짧게 확인한다. AGENTS.md, TWILIGHT_PROJECT_RULES.md, docs/RESOURCE_INTEGRITY_POLICY.md와 장부를 읽는다. 사용자 지시대로 같은 PR 브랜치를 유지한다.
+2. manifest·생성 요청 JSON·geometry sidecar를 텍스트로 읽는다. 미분류3장은 파일 해시 및 도구 응답의 텍스트 provenance로만 역할을 확인한다. 모르면 미확정으로 보존한다. 이미지 도구를 호출하지 않는다.
+3. 할파스393·기르타스267의 8방향 walk/run 전체32블록 중 선택 소스9블록(54자세)만 기하 통과했다. 나머지23블록은 미완료이며 미분류3장의 용도도 미확정이다. 공격·대기·피격·사망 전용 상세 소스도 미완료다. 이미 있는 소스로 가능한 처리·프로필 연결을 먼저 한다. 부족한 원화는 정확히 미완료로 기록하고 이미지 도구 금지를 우회하지 않는다.
+4. 기존 importer 기준: `tools/import_original_based_motion.py`, rows_count=6, reference_rows=[0,3], directions_axis=phase_grid2, canvas_size=1024, directions=[해당 방향]. analyze 후 require_complete_pose_regions를 통과해야 한다. 고유 자세·분리·잘림 조건을 완화하지 않는다. `batch01/save_source.py`는 원화 보존·검사 기록용이다.
+5. 과거 요청 JSON01~06은 provenance다. 새 이미지 생성 호출을 실행하라는 지시가 아니다. 새 생성은 하지 않는다.
+6. 다른31종 상세 작업과 프레임 부족14종도 남아 있다. 사용자 우선순위는 빠른 제작·유사 변신 색상 변경 우선이었으며 해당54프로필 단계는 이미 저장됐다. 신화 이상은 전용 동작의 상세 보완이 필요하다.
+7. 작은 단계별로 같은 브랜치에 커밋한다. 전체 CI는 제작이 끝나기 전 반복하지 않는다. 조기 실행한 CI33개는 전부 cancelled이며 `batch01/ci-cancellation-final.json`에 영수증을 보존했다.
 
-실물은 `assets/actors/eight_direction/original_based/`의 `albino_mutated_golem_batch16_authored`, `albino_deer_batch16_authored`, `tomb_guardian269_batch16_repaired`, `spider_project_batch16_authored`, `dark_forest_spider_batch16_project`, `distorted_tarantula_batch16_project`에 있다. `docs/remake/evidence/pr122-remaining106/batch16/`의 개체별 `*-completion-decision.json`, `*-source-preservation.json`, Main/Temporal reports, `individual-approvals.json`을 확인한다. 모든 완료본을 다시 생성하거나 일괄 덮어쓰지 않는다.
+## 검증 기록과 한계
 
-마지막 제작 승인 전수 원장은 `batch16/all498-after-spider-family.json`이다. 병행 원격 통합 후의 연결 변화와 승인 여부는 별도 `authoring-stop-20261019/remote-integration.json`을 확인한다. 과거 원장에 상속된 CI_pending=0은 새 HEAD의 통합 CI 성공을 뜻하지 않는다.
-
-저장 시 원격은 다른 작업 5커밋이 추가된 `a3eafeeb7fe81c805e15d230241016221d6d5c5f`였다. 같은 PR 브랜치의 정상 merge로 두 이력을 보존했다. 로컬 변경 프로필 6개와 원격 변경 54개 중 겹친 골렘·거미 4개는 위 실제 Main 검증 제작본을 유지했고, 나머지 원격 50개 프로필은 정확히 보존했다. 대체 외형 41개 원장 중 겹친 4개에는 `superseded_by_native_pack`와 실제 승인 근거를 기록했고 나머지 37개 후보 및 병행 SPX 선택 미리보기도 유지했다. 원격의 이름·색상 공유는 추가 완료 0종으로 집계했다. 통합 뒤 실제 Main·전수 연결·전체 CI는 사용자 중단 저장 지시에 따라 미실행이며 다음 제작의 로컬 검증에 포함한다. 두 Python 단위 세트 6+9건, 병행 공유 연결 정적 검사와 필수 리소스 검사는 저장 시 PASS다.
-
-## 바로 이어갈 미완성 제작
-
-`batch16/authoring-stop-20261019/preservation-manifest.json`이 모든 새 WIP PNG 18장(몽크 16, 여왕 2), 정확한 이미지 생성 요청·입력 경로, SHA, 실패 이유 및 복사된 제작/검증 스크립트의 원장이다. 원본 바이트를 변경하거나 폐기하지 않았다. `requests/`의 인덱스는 이전 절대 경로도 보존한다. 새 환경에서는 매니페스트의 Git 경로로 복원하고 SHA를 확인한다. `workflow-drivers/`는 당시 드라이버의 원문이며 `/workspace/runtime/batch16` 경로를 새 환경에 맞게 복원해야 한다. 이미 완료된 promote 스크립트는 재실행하지 않는다. 실패한 `stage_monk.py`의 긍정적 review 필드는 제안 입력일 뿐 승인 증거가 아니다.
-
-1. **알비노 몽크**는 인간 수도승이 아니라 원본 `atlas_3.png region[0,899,328,300]`의 흰 고릴라다. E/SE/S/SW v02 + W/NW/N/NE 총 8장으로 128자세 기하 검사는 통과했지만 SW_v02의 idle 2개가 반대쪽을 본다. 올바르게 왼쪽을 보는 SW_v03과 2열 SW_v04는 foreign-body rectangle 검사에 실패했다. 단독 SW idle 2장은 alpha>100, 8-neighbor 몸체 수 4/25로 엄격한 단일 몸체 조건에 실패했다. 보행 반대 지지발과 몸통 동작은 시각 검토 미완료다. 제작용 프로필 연결·Main 검증·완료 승인은 없다.
-2. **얼음 여왕**은 기존 검정/금색/보라 날개, 은발, 왼손 지팡이, 오른쪽 슬릿 다리를 유지한다. 새 E/S 각 16자세만 있다. E는 foreign-body rectangle 실패, S는 16개 대신 12개로 합쳐진 몸체이며 death0에 여분 지팡이도 보인다. 나머지 6방향은 미제작이다. 기존 batch14 idle과 실패 기록을 보존하며 Main/프로필 연결은 없다.
-3. 키가 크고 넓은 개체에서 16자세 한 시트가 반복해서 겹치면 검사를 완화하지 말고 역할·방향별 넓은 원본 시트로 나눈다. 골렘/디어의 방향별 3개 공격과 분리된 6~8개 보행 구조를 재사용한다. 이미지 이동/복제/반전을 원본 동작으로 표시하지 않는다. 픽셀 정리로 엄격한 몸체 검사를 우회하지 않는다.
-4. 새 `phase_grid2`는 2열 시간 순서 입력을 지원하고 phase-grid 단위 6검사를 통과했다. 완성 기준 104/112/128/144자세의 엄격한 일대일 교체 경로는 9검사를 통과했다. 이것은 여왕/몽크 원화 통과를 뜻하지 않는다. 2열의 실제 중심이 고정 셀 중심과 다를 수 있으므로 필요한 경우 검토한 명시적 source_anchors를 사용하며 프레임별 임의 배율 변경은 금지한다.
-5. 그 뒤 잔여 93종 및 기존 프레임 부족 14종의 충분한 원본을 배치 처리한다. 실패 개체를 이유와 함께 격리하고 제작 가능한 나머지를 계속한다. 프레임 부족 14 ID: 258,412,288,401,176,351,349,328,249,218,173,167,110,2. 기존 도구리/사신 보행·run 후보와 HOLD/UNRECOVERED는 완료로 바꾸지 않는다.
-
-## SPX와 비공개 자료
-
-이전 단계에서 1,700 SPX/44그룹, 14,534 레코드/14,304 유효 이미지/230 의도될 수 있는 빈 레코드를 검증했다. 본체 21624/21653은 기존 498종에 임의 대응하지 않는다. 36효과 그룹은 442 유효/486 레코드 후보 재생 검증이며 정확한 게임 스킬 연결은 0이다. CSB 후보 3개, OGG 이벤트 참조 4개, 미확보 10831/10832 등은 HOLD다. 원본 ticks·마커·run 정의·선택 레이어 코드는 이미 구현되었으나 시간/레이어 종합 승인은 PARTIAL이다.
-
-Drive 원본 폴더: https://drive.google.com/drive/folders/11fcRnrEJAanWR6fIYaor4U34_ib1DgcH ; A3: https://drive.google.com/drive/folders/1KQ42RjHIfL3eMUhietgzQ8lru4smFoW0 ; 검증 키트: https://drive.google.com/drive/folders/10oMrKaN0HKrY-WRFFNGi6HmBIYL_NPvP . A2002 ZIP SHA `d5438f74b486e42481ad34badb527794bbda10a591388c2177e580f2af8c34d7`, patch_1 ZIP SHA `7ffef58d56fcbb162897dcf846633f1dd12b97851d0e0894ad7c510656fbc7d0`. 같은 SHA는 캐시를 재사용한다.
-
-제3자 원본 SPX/PNG/CSB/OGG와 인증서·비밀은 공개 Git에 추가하지 않는다. `/workspace/private-spx`와 큰 Main 캡처·캐시는 로컬에 남아 있으며 새 환경에 영구 전달됐다고 보고하지 않는다. 비공개 백업 ZIP(488,139,444바이트, SHA `965f51e3f8ff7e61b3e769b35e4788bec2d8c6672ef8a363df39c4b6fdd6ddde`) 업로드는 이전 자동 승인 검토에서 거절되어 **NOT_DELIVERED**다. 승인 없이 재시도하거나 우회하지 않는다. 원본 Drive ZIP은 별도이며 접근 가능 여부를 다시 확인한다. 이전 미커밋 사신 PNG 2장과 QA 초안은 여전히 UNRECOVERED다.
-
-## 검증과 최종 저장
-
-Godot 기준 4.7.2 official ed1daf0bf, 실제 Main 및 OpenGL3 Compatibility를 사용했다. 로컬 6종의 Main/연속 전 프레임 검증은 개별 원장에 보존했다. 120Hz QA 시계는 실시간 성능 보증이 아니다. 무덤 가디언 원본 논리 RGBA 약306MiB, Main maxRSS 약1.51GiB로 Android 메모리 합격을 주장할 수 없다. VRAM 미측정, Android 실기기 NOT_RUN.
-
-저장 전 필수 원본 무결성 검사는 723시트/41,442프레임 PASS다. 새 HEAD 전체 통합 CI와 Android 빌드 재검증은 **NOT_RUN/PENDING**이다. 과거 baf의 33개 CI 성공은 이번 변경의 성공 증거로 재사용하지 않는다. 이 사용자 요청 중단 저장에서는 최종 전체 워크플로를 수동 실행하지 않는다. 다음 제작을 끝내고 로컬 정적·실행·전수 연결 검사 후 논리 단위 로컬 커밋을 합쳐 원격 푸시하고, 최종 게임 HEAD에서 전체 필수 CI를 검증한다. 개체 1~2종마다 원격 푸시/CI를 반복하지 않는다. main 병합은 별도 사용자 승인 전 금지한다.
+- 이전 palette 단계 `6e046b6`에서 Godot 4.7.2 관련 로컬9개 검사와 Main OpenGL 부팅이 통과했다. 새 상세 원화의 연결·완성을 증명하는 결과는 아니다.
+- 이번 저장은 기존723개 시트·41,442프레임 무결성 PASS만 확인했다. 전체 CI를 재실행하지 않았다.
+- 상세 원화는 아직 production_connected=false, detailed_completed=false다. 이미지 출력 없이 할 수 없는 승인은 미완료로 남긴다.
+- 사용자에게는 브랜치/HEAD, 완료·미완료, 바로 할 제작만 짧게 보고한다. 대량 목록·원화·로그는 출력하지 않는다. 실행되지 않는 동안 백그라운드로 계속한다고 약속하지 않는다.
