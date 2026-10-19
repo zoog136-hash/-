@@ -206,6 +206,11 @@ def main():
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--dry-run', action='store_true', help='Build the request without writing it')
     args = parser.parse_args()
+    # A producer may switch priorities after a completed, pushed unit. Never
+    # cancel an in-flight image or mutate its request just to change the queue.
+    if Path('/workspace/scratch/twilight-authoring-pause').exists():
+        print('AUTHORING_PAUSED_AT_SAVED_CHECKPOINT: priority correction; all files preserved', file=sys.stderr)
+        return 3
     try:
         relative, request = prepare(args.root, args.key, args.direction, args.role, args.version)
         if not args.dry_run:
