@@ -9293,6 +9293,40 @@
       "new_contact3_anchor_basis": "Anatomicaltwo-boot supportcenterX andfront/nearbootsole groundprojectionY; bladeextendsDOWNbelowboots so notlowestfigurepixelanchor. NewsourcewholeSfrontbodycentercontrolledagainstactualSidle, no floatingweapon.",
       "resampled": false,
       "actor_approval_added": 0
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "e3e27205c904a33343bf828f6154a45da9b8cb407ff3a1e43c704975e26dd806",
+      "direction": "NW",
+      "role": "death",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          272,
+          520
+        ],
+        [
+          784,
+          543
+        ],
+        [
+          272,
+          983
+        ],
+        [
+          784,
+          988
+        ],
+        [
+          272,
+          1410
+        ],
+        [
+          784,
+          1409
+        ]
+      ],
+      "review_basis": "Fresh independent r070 actual selected-TRES/PNG review of new NWdeath6 and faithful NWidle0 (native C1280). Source-native rigid helmet width and head/neck-to-pelvis lengths match idle closely; current C1024 gives a genuine 25% model-size entry increase. C1280 preserves rigid model size while excluding wing/cloth/corpse bounding boxes. Constant +16 source-pixel X-anchor correction aligns the entry pelvis/paired-leg-root relationship with NWidle (baseline hip-minus-root about14 source pixels, uncertainty +/-8); same correction for all6 preserves authored horizontal fall/settle trajectory. Every authored anchorY is unchanged, preserving initial fatal-flinch, leg-extension and continuous ground collapse. Back-facing NW helmet and dorsal armor remain consistent through non-180 yaw collapse, two arms/two legs/one helmet/one permanent RIGHT blade and EMPTY LEFT, one wing pair, cape/tail coherent. No order/RGBA/source edits or resampling; final compiled private review still required. Source only scoped PASS, actor stays HOLD/default OFF."
     }
   }
 }
