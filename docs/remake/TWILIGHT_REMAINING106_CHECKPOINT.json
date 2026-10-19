@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-18T15:35:07.022781+00:00",
+  "observed_utc": "2026-10-19T00:35:46.077684+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -9,27 +9,11 @@
   "user_directive": "Complete source-sufficient residuals on PR122; preserve all original approved/WIP data, use verified SPX, batch local validation and final integrated CI; no merge into main.",
   "pr100_merge": "Already merged by repository owner on2026-10-17 before this recovery; this session did not merge PR100 or merge into main.",
   "counts": {
-    "target": 498,
-    "completed": 405,
-    "remaining": 93,
-    "HOLD": 16,
-    "not_authored_or_not_connected": 79,
-    "canonical_Main_reports": 255,
-    "individual_Main_eight_direction": 121,
-    "completed_added": 8,
-    "runtime_connected": 400,
-    "locally_passed_pending_CI_APK": 1,
-    "canonical_Main_reports_preserved_PR100": 255,
-    "new_local_PASS_Main_reports": 4,
-    "connected_coverage_Main_report_paths": 259,
-    "current_source_HOLD_including_new": 18,
-    "not_started_after_two_new_source_attempts": 79,
-    "new_approved": 13,
-    "fully_completed": 400,
-    "AUTHORING": 1,
-    "NOT_STARTED": 79,
-    "runtime_connected_unapproved": 0,
-    "session_added": 6
+    "VERIFIED_COMPLETED": 391,
+    "FRAME_INSUFFICIENT": 14,
+    "SOURCE_HOLD": 16,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76
   },
   "protected_production_changed": true,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
@@ -147,7 +131,7 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "User-requested safe save. Read batch14/save-checkpoint.json and ledger. Completed394; remaining104 =HOLD19 +AUTHORING6 (5 source-reuse candidates +Queen source1) +NOT_STARTED79. Fix cadence and failed Main capture/route without weakened criteria before candidate approval.",
+  "resume": "STOPPED_BY_USER; resume only under new conversation instruction. Monk/Queen source repair, remaining93 and quality14 preserved.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -156,7 +140,7 @@
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "a34e413b4c9d95f2198b4cf914fc70fcead742a0",
+  "last_successful_pushed_code_commit": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
   "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch16/checkpoint.json",
@@ -172,7 +156,7 @@
   },
   "historical_user_directive_before_recovery": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
   "protected_production_change_scope": "No approved PNG or SpriteFrames overwritten; only5 previously incomplete identities gain candidate bindings. New common runtime native_width_ratio/HDR tint support has approved-Iguana actual Main technical baseline PASS, not full regression approval.",
-  "latest_user_priority": "지금 까지 한거 전부 커밋하고 안전하게 저장해",
+  "latest_user_priority": "지금 하던거 그대로 저장하고 커밋해 그리고 새대화로 이어 나갈수 있도록 프롬프트 줘",
   "latest_source_status": {
     "new_approved": 8,
     "approved_this_save": 0,
@@ -214,5 +198,156 @@
   "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD.",
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
   "observed_remote_main_at_save": "fc6cf088e90a273bfde38ce4807fb7b5c2a51afb",
-  "remote_main_note": "Remote main advanced since prior56f552c8. This user-requested WIP save preserves current PR branch and does not merge main; reassess upstream changes when resuming production."
+  "remote_main_note": "Remote main advanced since prior56f552c8. This user-requested WIP save preserves current PR branch and does not merge main; reassess upstream changes when resuming production.",
+  "historical_pre_stop_checkpoint": {
+    "resume": "User-requested safe save. Read batch14/save-checkpoint.json and ledger. Completed394; remaining104 =HOLD19 +AUTHORING6 (5 source-reuse candidates +Queen source1) +NOT_STARTED79. Fix cadence and failed Main capture/route without weakened criteria before candidate approval.",
+    "counts": {
+      "target": 498,
+      "completed": 405,
+      "remaining": 93,
+      "HOLD": 16,
+      "not_authored_or_not_connected": 79,
+      "canonical_Main_reports": 255,
+      "individual_Main_eight_direction": 121,
+      "completed_added": 8,
+      "runtime_connected": 400,
+      "locally_passed_pending_CI_APK": 1,
+      "canonical_Main_reports_preserved_PR100": 255,
+      "new_local_PASS_Main_reports": 4,
+      "connected_coverage_Main_report_paths": 259,
+      "current_source_HOLD_including_new": 18,
+      "not_started_after_two_new_source_attempts": 79,
+      "new_approved": 13,
+      "fully_completed": 400,
+      "AUTHORING": 1,
+      "NOT_STARTED": 79,
+      "runtime_connected_unapproved": 0,
+      "session_added": 6
+    },
+    "latest_source_status": {
+      "new_approved": 8,
+      "approved_this_save": 0,
+      "latest_Golem_raw_PNGs": 12,
+      "new_Queen_raw_PNGs": 1,
+      "HOLD": 18,
+      "AUTHORING": 6,
+      "NOT_STARTED": 79,
+      "runtime_connected_unapproved": 0,
+      "Android": "NOT_RUN",
+      "private_source_kit_body_count": 2,
+      "private_source_kit_exact_target_mapping": "UNCONFIRMED",
+      "previous_source_counts_historical": {
+        "new_approved": 2,
+        "raw_PNGs": 45,
+        "raw_PNG_bytes": 85840707,
+        "Main_technical_checks": 8786,
+        "Main_capture_PNGs": 70,
+        "source_HOLD18": true,
+        "Android": "NOT_RUN",
+        "private_source_kit_body_count": 2,
+        "private_source_kit_exact_target_mapping": "UNCONFIRMED",
+        "latest_Golem_raw_PNGs": 12,
+        "new_Queen_raw_PNGs": 1,
+        "source_HOLD19": true,
+        "unapproved_runtime_candidates": 5,
+        "approved_this_save": 0
+      },
+      "current_detail": "docs/remake/evidence/pr122-remaining106/batch14/save-checkpoint.json",
+      "batch16": {
+        "newly_drawn_poses": 296,
+        "new_completed": 6,
+        "active": "monster:알비노 몽크",
+        "proof": "docs/remake/evidence/pr122-remaining106/batch16/golem-completion-decision.json",
+        "new_palette_edits": 3
+      }
+    }
+  },
+  "state": "STOPPED_BY_USER",
+  "last_safe_commit": "d069778458783e054d4755448f00f9dd18a04e86",
+  "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
+  "current_ids": [
+    "monster:알비노 몽크",
+    "monster:얼음 여왕"
+  ],
+  "next": "Read docs/remake/TWILIGHT_PR122_RESUME_20261019.md. Stop requested: save and hand off; no further production in this turn.",
+  "handoff": "docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
+  "stopped_authoring_manifest": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/preservation-manifest.json",
+  "normal_completed": 391,
+  "approvals_total": 405,
+  "remaining_unapproved": 93,
+  "new_completed": 6,
+  "new_approved_this_batch": 6,
+  "final_CI": "NOT_RUN_FOR_NEW_HEAD",
+  "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
+  "active_authoring": {
+    "monster:알비노 몽크": {
+      "id": "monster:알비노 몽크",
+      "status": "SOURCE_HOLD",
+      "raw_PNG": 16,
+      "production_connected": false,
+      "planned_poses": 128,
+      "candidate_8_sheets": [
+        "monk-E_v02.png",
+        "monk-SE_v02.png",
+        "monk-S_v02.png",
+        "monk-SW_v02.png",
+        "monk-W.png",
+        "monk-NW.png",
+        "monk-N.png",
+        "monk-NE.png"
+      ],
+      "candidate_geometry": "128 PASS only with old SW_v02; not visual approval",
+      "failures": {
+        "monk-SW_v02.png": "idle0/idle1 face RIGHT; SW must face LEFT",
+        "monk-SW_v03.png": "Correct LEFT heading, fails unchanged foreign-body rectangle guard",
+        "monk-SW_v04.png": "2-column reframe still fails foreign-body rectangle guard",
+        "monk-SW-idle-0-v01.png": "Strict alpha>100 8-neighbor connected body count 4; patch rejected",
+        "monk-SW-idle-1-v01.png": "Strict alpha>100 8-neighbor connected body count 25; patch rejected"
+      },
+      "other_gates_pending": [
+        "Actual alternating hind support and whole-body gait review",
+        "Main playback, transitions, real contacts, lifecycle",
+        "All eight directional visual approval"
+      ],
+      "stage_monk_driver": "Failed during SW_v03 preflight before import; its positive review fields are proposed input, never approval evidence"
+    },
+    "monster:얼음 여왕": {
+      "id": "monster:얼음 여왕",
+      "status": "IN_PROGRESS_SOURCE_HOLD",
+      "raw_PNG": 2,
+      "production_connected": false,
+      "appearance": "Original black/gold/violet winged queen; left-hand staff, right slit leg, silver hair. Not white ice fairy.",
+      "failures": {
+        "queen-E-v01.png": "Foreign-body rectangle guard FAIL",
+        "queen-S-v01.png": "12 separated bodies rather than required16; adjacent figures merge. Visual death0 also has extra second staff."
+      },
+      "directions_NOT_STARTED": [
+        "SE",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "planned_roles": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3
+      },
+      "cast": "Future explicit cast=attack alias only; not extra unique poses"
+    }
+  },
+  "stop_save": {
+    "approved_total": 405,
+    "new_completed_this_resume": 6,
+    "source_HOLD": 16,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76,
+    "raw_WIP_PNG_preserved": 18,
+    "no_new_WIP_approval": true,
+    "remote_changed_concurrently": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
+    "merge_status": "PENDING_PRESERVE_BOTH_WITH_FOUR_NATIVE_APPROVED_BINDINGS_PRIORITY"
+  }
 }

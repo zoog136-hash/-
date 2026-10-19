@@ -4,14 +4,14 @@
   "branch": "feature/twilight-remaining106-20261016",
   "PR": 122,
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
-  "last_safe_commit": "8f7cc7bc",
-  "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
+  "last_safe_commit": "d069778458783e054d4755448f00f9dd18a04e86",
+  "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
   "counts": {
-    "NOT_AUTHORED": 76,
     "VERIFIED_COMPLETED": 391,
     "FRAME_INSUFFICIENT": 14,
     "SOURCE_HOLD": 16,
-    "IN_PROGRESS": 1
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76
   },
   "approved_ids": [
     "transform:413",
@@ -421,7 +421,7 @@
     "monster:왜곡의 타란툴라"
   ],
   "current_ids": [
-    "monster:스파이더",
+    "monster:알비노 몽크",
     "monster:얼음 여왕"
   ],
   "remaining_ids": [
@@ -601,7 +601,7 @@
     "tools/l1j/build_external_spx_actor_pack.py",
     "tools/l1j/spx_decode.py"
   ],
-  "next": "Finish source-ground/cadence/Main review of new128 spider matrix, then explicitly verify two identical-reference adapters. Complete new Monk128 source; retain rejected gait/model outputs.",
+  "next": "Read docs/remake/TWILIGHT_PR122_RESUME_20261019.md. Stop requested: save and hand off; no further production in this turn.",
   "source_SHA_ledger": "spx-source-ledger.json",
   "SPX_private_delivery": "NOT_PUBLICLY_DELIVERED; candidates rebuilt from accessible user Drive originals; redistribution permission HOLD",
   "Android_real_device": "NOT_RUN",
@@ -632,24 +632,35 @@
       "proof": "docs/remake/evidence/pr122-remaining106/batch16/deer-completion-decision.json"
     },
     "monster:알비노 몽크": {
-      "status": "HOLD",
-      "planned_contract": {
-        "idle": 2,
-        "walk": 6,
-        "attack": 3,
-        "hit": 2,
-        "death": 3,
-        "directions": 8,
-        "unique_poses": 128
+      "id": "monster:알비노 몽크",
+      "status": "SOURCE_HOLD",
+      "raw_PNG": 16,
+      "production_connected": false,
+      "planned_poses": 128,
+      "candidate_8_sheets": [
+        "monk-E_v02.png",
+        "monk-SE_v02.png",
+        "monk-S_v02.png",
+        "monk-SW_v02.png",
+        "monk-W.png",
+        "monk-NW.png",
+        "monk-N.png",
+        "monk-NE.png"
+      ],
+      "candidate_geometry": "128 PASS only with old SW_v02; not visual approval",
+      "failures": {
+        "monk-SW_v02.png": "idle0/idle1 face RIGHT; SW must face LEFT",
+        "monk-SW_v03.png": "Correct LEFT heading, fails unchanged foreign-body rectangle guard",
+        "monk-SW_v04.png": "2-column reframe still fails foreign-body rectangle guard",
+        "monk-SW-idle-0-v01.png": "Strict alpha>100 8-neighbor connected body count 4; patch rejected",
+        "monk-SW-idle-1-v01.png": "Strict alpha>100 8-neighbor connected body count 25; patch rejected"
       },
-      "complete_approved_source_matrix": false,
-      "source_reference": "res://assets/monsters/original/atlas_3.png region[0,899,328,300]",
-      "source_SHA256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
-      "note": "Independent authoring while deer/sourceHOLD remain; no production install.",
-      "blocker": "Whole128 matrix unavailable: six sheets fail unchanged ownership/body-count guards. All8 standalone E originals fail strict8-neighbor alpha>100 body rule; only3 qualify for unchanged3/11-pixel microrepair. Correct opposite support and stable model/camera remain unapproved.",
-      "latest_source_parts": "Batch16 complete128 geometric matrix exists with8 whole16 sheets; no runtime/profile approval",
-      "latest_source_geometry": "PASS128",
-      "current_blocker": "SW idle0/1 still face right instead of left. Two one-for-one replacements being authored; full raw matrices and old HOLD retained. Native gait and Main final review pending."
+      "other_gates_pending": [
+        "Actual alternating hind support and whole-body gait review",
+        "Main playback, transitions, real contacts, lifecycle",
+        "All eight directional visual approval"
+      ],
+      "stage_monk_driver": "Failed during SW_v03 preflight before import; its positive review fields are proposed input, never approval evidence"
     },
     "monster:알비노 변이된 골렘": {
       "status": "APPROVED",
@@ -821,22 +832,31 @@
       }
     },
     "monster:얼음 여왕": {
-      "status": "AUTHORING",
-      "planned_contract": {
+      "id": "monster:얼음 여왕",
+      "status": "IN_PROGRESS_SOURCE_HOLD",
+      "raw_PNG": 2,
+      "production_connected": false,
+      "appearance": "Original black/gold/violet winged queen; left-hand staff, right slit leg, silver hair. Not white ice fairy.",
+      "failures": {
+        "queen-E-v01.png": "Foreign-body rectangle guard FAIL",
+        "queen-S-v01.png": "12 separated bodies rather than required16; adjacent figures merge. Visual death0 also has extra second staff."
+      },
+      "directions_NOT_STARTED": [
+        "SE",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "planned_roles": {
         "idle": 2,
         "walk": 6,
         "attack": 3,
         "hit": 2,
-        "death": 3,
-        "directions": 8,
-        "unique_poses": 128
+        "death": 3
       },
-      "raw_pngs_preserved": 1,
-      "PNG_integrity": "PASS",
-      "source_geometry": "NOT_RUN",
-      "production_applied": false,
-      "blocker": "Only first idle16 raw sheet is authored, source/body/direction/model review pending. All walk/attack/hit/death still unauthored.",
-      "next": "Review idle16 strict geometry and actual left-hand staff/right-leg identity, then author remaining genuine full-body128 contract without frame copies."
+      "cast": "Future explicit cast=attack alias only; not extra unique poses"
     },
     "transform:269": {
       "status": "APPROVED",
@@ -861,11 +881,11 @@
     }
   },
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
-  "new_approved_this_batch": 5,
+  "new_approved_this_batch": 6,
   "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-spider-family.json",
-  "final_CI": "PENDING_NEW_PRODUCTION_BATCH",
+  "final_CI": "NOT_RUN_FOR_NEW_HEAD",
   "derived_navigation": "Local test bake outputs preserved in /workspace/qa/derived-navigation-before-restore; all26 original Git navigation files restored unchanged.",
-  "state": "SIX_NEW_NATIVE_BINDINGS_LOCALLY_VERIFIED; MONK128_SOURCE_REPAIR_CONTINUES",
+  "state": "STOPPED_BY_USER",
   "active": "monster:알비노 몽크",
   "newly_drawn_poses": 296,
   "preserved_prior_poses": 32,
@@ -884,5 +904,34 @@
     "attack_v02": "All4 six-pose sheets fail unchanged foreign-body rectangle guard; reframe as8 full-direction three-pose vertical sheets, never lower thresholds",
     "next": "Complete direction-separated attacks, then full144 source preflight/Main/temporal checks",
     "attack_v03": "All8 direction-separated three-phase sources PASS unchanged whole-source guards;144 total source matrix preserved, Main/temporal approval pending"
+  },
+  "historical_pre_stop_checkpoint": {
+    "state": "SIX_NEW_NATIVE_BINDINGS_LOCALLY_VERIFIED; MONK128_SOURCE_REPAIR_CONTINUES",
+    "next": "Finish source-ground/cadence/Main review of new128 spider matrix, then explicitly verify two identical-reference adapters. Complete new Monk128 source; retain rejected gait/model outputs.",
+    "active": "monster:알비노 몽크",
+    "counts": {
+      "NOT_AUTHORED": 76,
+      "VERIFIED_COMPLETED": 391,
+      "FRAME_INSUFFICIENT": 14,
+      "SOURCE_HOLD": 16,
+      "IN_PROGRESS": 1
+    },
+    "last_safe_commit": "8f7cc7bc"
+  },
+  "latest_user_priority": "지금 하던거 그대로 저장하고 커밋해 그리고 새대화로 이어 나갈수 있도록 프롬프트 줘",
+  "observed_utc": "2026-10-19T00:35:46.077684+00:00",
+  "resume": "STOPPED_BY_USER; resume only under new conversation instruction. Monk/Queen source repair, remaining93 and quality14 preserved.",
+  "handoff": "docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
+  "stopped_authoring_manifest": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/preservation-manifest.json",
+  "stop_save": {
+    "approved_total": 405,
+    "new_completed_this_resume": 6,
+    "source_HOLD": 16,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76,
+    "raw_WIP_PNG_preserved": 18,
+    "no_new_WIP_approval": true,
+    "remote_changed_concurrently": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
+    "merge_status": "PENDING_PRESERVE_BOTH_WITH_FOUR_NATIVE_APPROVED_BINDINGS_PRIORITY"
   }
 }

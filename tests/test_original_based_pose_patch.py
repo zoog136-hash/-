@@ -20,15 +20,27 @@ import original_based_motion_import_test as fixtures
 
 
 class PosePatchTest(unittest.TestCase):
-    def fixture(self, root):
+    def fixture(self, root, walk_count=3):
         recipe, keys, _ = fixtures.OriginalBasedImportTest().prepare_synthetic_import(root)
+        if walk_count != 3:
+            # Actual complete synthetic source pixels, not a forged larger proof.
+            sheet = recipe['sheets'][0]
+            rows = walk_count + 5
+            pixels = np.zeros((rows * 64, 512, 4), dtype=np.uint8)
+            for row in range(rows):
+                for direction in range(8):
+                    x, y = direction * 64, row * 64
+                    pixels[y+20:y+44, x+20:x+36] = (1+row*8+direction, 41, 91, 255)
+            Image.fromarray(pixels).save(sheet['output_path'])
+            sheet.update(rows=rows, roles={'idle':[0,1], 'walk':list(range(2,2+walk_count)),
+                                          'attack':list(range(2+walk_count,5+walk_count))})
         recipe_path = root / "baseline-recipe.json"
         recipe_path.write_text(json.dumps(recipe))
         importer.import_sheet(root, recipe, "fixture_base", keys, False)
         base = root / "assets/actors/eight_direction/original_based/fixture_base"
         proof = json.loads((base / "provenance.json").read_text())
-        # Native attack E phase1 is the first source sheet's row6.
-        index = next(i for i, f in enumerate(proof["frames"]) if f["sheet"] == 0 and f["row"] == 6 and f["direction"] == "E")
+        attack_row = recipe['sheets'][0]['roles']['attack'][1]
+        index = next(i for i, f in enumerate(proof["frames"]) if f["sheet"] == 0 and f["row"] == attack_row and f["direction"] == "E")
         source = root / "replacement.png"
         pixels = np.zeros((128, 128, 4), dtype=np.uint8)
         pixels[30:80, 40:70] = (220, 40, 90, 255)
@@ -91,6 +103,26 @@ class PosePatchTest(unittest.TestCase):
             self.assertEqual(new["baseline_history"]["full_original_provenance"], old)
             self.assertEqual((folder / "replacement-000.png").read_bytes(), Path(c["patches"][0]["output_path"]).read_bytes())
             self.assertEqual((root / "data/combat_animation_profiles.json").read_bytes(), catalog)
+
+    def test_larger_gaits_keep_every_retained_pose_and_the_failed_source(self):
+        for walk, total in [(6, 128), (8, 144)]:
+            with self.subTest(walk=walk), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                candidate, keys, base, old = self.fixture(root, walk_count=walk)
+                original_pngs = {p.name:p.read_bytes() for p in base.glob('*.png')}
+                preview = importer.validate_candidate(root, candidate, 'repaired', keys)
+                self.assertEqual((preview['poses'], preview['retained_exact']), (total, total-1))
+                importer.import_sheet(root, candidate, 'repaired', keys, False)
+                new = json.loads((base.parent/'repaired/provenance.json').read_text())
+                retired = candidate['patches'][0]['baseline_frame_index']
+                for index, frame in enumerate(old['frames']):
+                    if index != retired:
+                        self.assertEqual({k:v for k,v in new['frames'][index].items()
+                                          if k not in ['role','phase','pose_id']}, frame)
+                self.assertEqual(new['baseline_history']['retired_slots'][0]['original_frame'], old['frames'][retired])
+                for name, pixels in original_pngs.items():
+                    self.assertEqual((base/name).read_bytes(), pixels)
+                    self.assertEqual((base.parent/'repaired'/name).read_bytes(), pixels)
 
     def test_rejects_changed_sources_ambiguous_slots_missing_evidence_and_review_without_writes(self):
         for failure in ["recipe", "proof", "resource", "baseline_png", "patch_png", "slot", "old_rgba", "duplicate_slot", "phase_bool", "review", "defect", "evidence", "island", "visible_duplicate", "unchanged_bad_pose", "retained_margin"]:

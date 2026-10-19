@@ -136,17 +136,17 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
     sheet has len(directions) physical rows and rows_count physical columns. A
     directions_axis="blocks4x2" sheet places E/SE/S/SW in a phase's first
     physical row and W/NW/N/NE in its second row, using four columns.
-    phase_grid4 uses four temporal poses per physical row for one direction,
+    phase_grid2/4 use two/four temporal poses per physical row for one direction,
     so newly authored long-limbed bodies can retain generous source gutters.
     Partial-direction columns/rows sheets need an explicitly reviewed canvas.
     Pixels stay untouched; only the resulting frame indices are normalized.
     """
     selected = reviewed_directions(directions)
     direction_count = len(selected)
-    if directions_axis not in {"columns", "rows", "blocks4x2", "phase_grid4"}:
+    if directions_axis not in {"columns", "rows", "blocks4x2", "phase_grid4", "phase_grid2"}:
         raise ValueError("Unknown direction axis")
-    if directions_axis == "phase_grid4" and direction_count != 1:
-        raise ValueError("phase_grid4 requires exactly one explicitly reviewed direction")
+    if directions_axis in {"phase_grid4", "phase_grid2"} and direction_count != 1:
+        raise ValueError(directions_axis + " requires exactly one explicitly reviewed direction")
     if directions_axis == "blocks4x2" and direction_count != 8:
         raise ValueError("blocks4x2 does not support a direction subset")
     if directions_axis == "blocks4x2" and (type(rows_count) is not int or rows_count < 1):
@@ -178,11 +178,11 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
             raise ValueError(f"Expected exactly {expected} separated poses, found {len(bodies)}; review/re-author, never invent slots")
         # Normalize metadata to phase-major order, without transposing pixels.
         # Some long-weapon atlases put the eight directions in physical rows.
-        if directions_axis == "phase_grid4":
+        if directions_axis in {"phase_grid4", "phase_grid2"}:
             # Spacious single-view authoring: four temporal phases per row.
             # This changes metadata ordering only. Keep every whole-source,
             # connected-body, foreign-body, uniqueness and clipping guard.
-            columns = 4
+            columns = 2 if directions_axis == "phase_grid2" else 4
             grid_rows = (rows_count + columns - 1) // columns
             slots = [None] * rows_count
             for item in bodies:
@@ -191,10 +191,10 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 physical_row = int((y1 + y2) / 2 / source.height * grid_rows)
                 slot = physical_row * columns + column
                 if slot >= rows_count or slots[slot] is not None:
-                    raise ValueError("Each phase_grid4 cell must contain exactly one separated pose")
+                    raise ValueError("Each " + directions_axis + " cell must contain exactly one separated pose")
                 slots[slot] = item
             if any(item is None for item in slots):
-                raise ValueError("Each phase_grid4 cell must contain exactly one separated pose")
+                raise ValueError("Each " + directions_axis + " cell must contain exactly one separated pose")
             rows = [[item] for item in slots]
         elif directions_axis == "blocks4x2":
             columns = 4
@@ -243,7 +243,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 x1, y1, x2, y2 = item["box"]
                 center_x = (x1 + x2) / 2
                 column = row_index if directions_axis == "rows" else direction
-                if directions_axis == "phase_grid4":
+                if directions_axis in {"phase_grid4", "phase_grid2"}:
                     column = row_index % columns
                 if directions_axis == "blocks4x2":
                     column %= 4
@@ -256,7 +256,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                     raise ValueError("A pose rectangle includes another body; cannot safely crop")
                 width, height = x2 - x1, y2 - y1
                 anchor_x = (round(source.width / columns * (column + .5))
-                            if directions_axis in {"rows", "phase_grid4"} else column_anchors[direction])
+                            if directions_axis in {"rows", "phase_grid4", "phase_grid2"} else column_anchors[direction])
                 anchor_y = item["box"][3] - 1
                 if source_anchors is not None:
                     anchor = source_anchors[row_index * direction_count + direction]

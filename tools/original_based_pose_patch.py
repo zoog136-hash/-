@@ -110,10 +110,10 @@ def prepare(root, candidate, actor, keys, apply):
                 slots[(role, direction, phase)] = matches[0]
     counts = {r: len([s for s in slots if s[0] == r and s[1] == "E"]) for r in core.ROLES}
     expected = {(r, d, p) for r in core.ROLES for d in core.DIRECTIONS for p in range(counts[r])}
-    if (set(slots) != expected or len(slots) != len(frames) or len(frames) not in (104, 112)
+    if (set(slots) != expected or len(slots) != len(frames) or len(frames) not in (104, 112, 128, 144)
             or any(counts[r] < len(core.ROLES[r]) for r in core.ROLES)
             or set(atlases) != set(range(len(atlases)))):
-        raise ValueError("Complete unchanged104/112 baseline matrix required")
+        raise ValueError("Complete unchanged104/112/128/144 baseline matrix required")
     copies, sources = [], []
     for index, atlas in sorted(atlases.items()):
         source = core._pose_file_source(base_root, atlas["path"])
