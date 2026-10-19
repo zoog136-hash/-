@@ -7673,6 +7673,108 @@
       "reference_idle_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
       "reviewed_from_frames_sha256": "688a9913af2fa874c2e44b0748c5db046a30530333e553707b2cf3451a7fbe66",
       "actor_approval": false
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "2e080bad8ba69456c89e0ac55b9293d1d622f128eb6b2828667039e64a1444ad",
+      "direction": "NW",
+      "role": "idle",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          286,
+          479
+        ],
+        [
+          797,
+          480
+        ],
+        [
+          298,
+          997
+        ],
+        [
+          798,
+          997
+        ],
+        [
+          299,
+          1506
+        ],
+        [
+          798,
+          1498
+        ]
+      ],
+      "review_basis": "Private actualr06118pose body/root comparison against faithfulN/NE/W baseline poses. NW source-native crown/neck/shoulder-to-centralpelvis lengths are about1.25 times the existing physical reference pixel scale; use1280 virtualcanvas for all3newNWroles, excluding wingbbox and long hanging idleleg from sizing. Visible centralpelvis axis immediately below the last backwaist plate and above legroots is [300, 811, 312, 812, 313, 812]X with about±6nativepx annotation uncertainty (not exact hidden skeleton). NWidle0pelvis≈300 and actual lowerankle/bodyweight projection≈286 gives hip−root=+14sourcepx, or3.43worldpx after1280normalization. Set pelvisX−14 for allNWroles, preserving actual head/torso lean, limb/wing articulation and all originalY/bob. The chosen idle root lies near the supported/hanging ankle projection and between referenceNback andWside stance relationships; it is not an isolated toe or wholewingbbox pivot. NW torso/head remain rearLEFT despite legitimate SE trailing toes. Every sourceRGBA/region/poseorder stays exact. Final newcompiledbaseline/transition/loop review pending; no actorapproval."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+      "direction": "NW",
+      "role": "walk",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          295,
+          492
+        ],
+        [
+          802,
+          504
+        ],
+        [
+          299,
+          980
+        ],
+        [
+          802,
+          943
+        ],
+        [
+          304,
+          1461
+        ],
+        [
+          809,
+          1475
+        ]
+      ],
+      "review_basis": "Private actualr06118pose body/root comparison against faithfulN/NE/W baseline poses. NW source-native crown/neck/shoulder-to-centralpelvis lengths are about1.25 times the existing physical reference pixel scale; use1280 virtualcanvas for all3newNWroles, excluding wingbbox and long hanging idleleg from sizing. Visible centralpelvis axis immediately below the last backwaist plate and above legroots is [309, 816, 313, 816, 318, 823]X with about±6nativepx annotation uncertainty (not exact hidden skeleton). NWidle0pelvis≈300 and actual lowerankle/bodyweight projection≈286 gives hip−root=+14sourcepx, or3.43worldpx after1280normalization. Set pelvisX−14 for allNWroles, preserving actual head/torso lean, limb/wing articulation and all originalY/bob. The chosen idle root lies near the supported/hanging ankle projection and between referenceNback andWside stance relationships; it is not an isolated toe or wholewingbbox pivot. NW torso/head remain rearLEFT despite legitimate SE trailing toes. Every sourceRGBA/region/poseorder stays exact. Final newcompiledbaseline/transition/loop review pending; no actorapproval."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38",
+      "direction": "NW",
+      "role": "run",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          301,
+          501
+        ],
+        [
+          807,
+          506
+        ],
+        [
+          304,
+          968
+        ],
+        [
+          803,
+          975
+        ],
+        [
+          302,
+          1473
+        ],
+        [
+          809,
+          1487
+        ]
+      ],
+      "review_basis": "Private actualr06118pose body/root comparison against faithfulN/NE/W baseline poses. NW source-native crown/neck/shoulder-to-centralpelvis lengths are about1.25 times the existing physical reference pixel scale; use1280 virtualcanvas for all3newNWroles, excluding wingbbox and long hanging idleleg from sizing. Visible centralpelvis axis immediately below the last backwaist plate and above legroots is [315, 821, 318, 817, 316, 823]X with about±6nativepx annotation uncertainty (not exact hidden skeleton). NWidle0pelvis≈300 and actual lowerankle/bodyweight projection≈286 gives hip−root=+14sourcepx, or3.43worldpx after1280normalization. Set pelvisX−14 for allNWroles, preserving actual head/torso lean, limb/wing articulation and all originalY/bob. The chosen idle root lies near the supported/hanging ankle projection and between referenceNback andWside stance relationships; it is not an isolated toe or wholewingbbox pivot. NW torso/head remain rearLEFT despite legitimate SE trailing toes. Every sourceRGBA/region/poseorder stays exact. Final newcompiledbaseline/transition/loop review pending; no actorapproval."
     }
   }
 }
