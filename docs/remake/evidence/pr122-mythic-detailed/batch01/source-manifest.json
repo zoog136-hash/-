@@ -515,6 +515,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "W",
+      "role": "walk",
+      "version": "v01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+      "original_generated_file": "/workspace/generated_images/exec-3da469aa-22e0-43d4-bd68-073975077f61.png",
+      "bytes": 2148614,
+      "sha256": "4778576260cc3cb28cd91365565a784b71fbfcf42ac818e04c2831fe914b2de4",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -533,9 +552,10 @@
     "transform:393:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
     "transform:393:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
     "transform:393:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
-    "transform:393:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png"
+    "transform:393:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+    "transform:393:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png"
   },
-  "selected_locomotion_native_poses": 72,
+  "selected_locomotion_native_poses": 78,
   "session_stop_reason": null,
   "image_tools_forbidden": false
 }
