@@ -4927,6 +4927,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "SW",
+      "role": "attack",
+      "version": "v04",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+      "original_generated_file": "/workspace/scratch/girtas-SW-attack-layout-repair-v04/girtas-SW-attack-v04.png",
+      "bytes": 2175692,
+      "sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -5016,7 +5035,7 @@
     "transform:267:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
     "transform:267:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
     "transform:267:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
-    "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
+    "transform:267:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
     "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
     "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
     "transform:267:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
@@ -6090,6 +6109,22 @@
             "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
             "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
           }
+        },
+        {
+          "slot": "transform:267:SW:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 existing SW attack phases/order preserved: lowguard, diagonalraise, overheadload, contact3 down-left, lowerfollow and lowrecovery; revised_poses6/newly_authored_poses0.",
+            "Every pale face points left while front-left chest/stance remain SW; original six articulated movements are retained without W/NW/right-facing substitution.",
+            "All6 preserve continuous far RIGHT/image-left weapon shoulder-elbow-wrist-grip, full sinuous narrow blade and empty near LEFT/image-right hand; exactly2arm chains, no swapped ownership.",
+            "Original pale hair/face, thin gold radial spines, black/gold crown/armor and dark long gold-trimmed robe retained with complete uncropped gear.",
+            "Unchanged strict analyze+require_complete_pose_regions PASS:6distinct1024canonical frames, six alpha16 bodies, all foreground covered and outer alpha>100 clipping0. No repack needed or performed."
+          ],
+          "source_review_sha256": "d1e623ffada0b4fe23de37144de3b28d46c557b6aefbf44f3a409302c26623ac"
         }
       ]
     }

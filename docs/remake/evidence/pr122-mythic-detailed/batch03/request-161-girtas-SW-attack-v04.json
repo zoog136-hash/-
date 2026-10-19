@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "SW",
+  "role": "attack",
+  "version": "v04",
+  "source_batch": "batch03",
+  "expected_poses": 6,
+  "revised_poses": 6,
+  "newly_authored_poses": 0,
+  "operation": "ONE layout/source-fringe image edit of existing PASS six SW attack motions",
+  "corrective_reason": "SW attack v03 source visual PASS across all6, but raw importer and one strict lossless repacker HOLD from joined/far faint alpha fringe. This materially changed production edit preserves all six actions while uniformly reducing complete figures and removing only external haze for six isolated transparent cells. No same-repacker retry.",
+  "references": [
+    "/workspace/scratch/girtas-SW-attack-repair-v03/girtas-SW-attack-v03.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-attack-repair-v03/girtas-SW-attack-v03.png": "6f8394a112a7771545cca2e894663f161e96350fbaca76f849fba7b00cf2233c"
+  },
+  "reference_roles": [
+    "ONLY PRIMARY: exact existing six SW attack poses, camera, body, hands, identity, weapon, order. Composition/transparency correction only."
+  ],
+  "original_art_review": {
+    "path": "/workspace/scratch/girtas-SW-attack-repair-v03/source-visual-review.json",
+    "sha256": "a2bf044c118e692c9e5fb8a06eb992976b90d521f6edb004c9568d41efef816e",
+    "status": "SOURCE_VISUAL_PASS_GEOMETRY_HOLD"
+  },
+  "prompt": "EDIT ONLY THE COMPOSITION / SPACING / TRANSPARENCY of this existing six-pose game animation atlas. Preserve the EXACT SIX existing actions in their existing row-major order, the same SW/front-left camera, both arm chains/hand ownership, original identity and full sinuous weapon geometry. This is a layout revision of six existing finished motions, not new moves and not a redesign. The entire reference is the ONLY authority.\n\nRequired surgical layout change: uniformly SHRINK EACH ENTIRE COMPLETE FIGURE, including all its original long weapon, every thin radial gold spine, robe and hair, to ABOUT62 PERCENT of its current physical pixel scale, then place each whole figure centered in its OWN spacious cell. All six use the SAME uniform body scale and proportions. Do not shorten the weapon, narrow/remove hard spines, amputate a hand, shrink only the gear or modify its silhouette to fit. Keep the original six distinct full poses with exactly their own body, leg, elbow and blade positions.\n\nOUTPUT1024x1536, exactly TWO columns and THREE rows, each cell512x512. Cell centers are(256,256),(768,256),(256,768),(768,768),(256,1280),(768,1280). The ENTIRE physical figure including full weapon tip and every hair/spine must fit in a central350x350 rectangle at each cell center, with at least81px truly EMPTY TRANSPARENT gutter between it and EVERY cell edge. Body crown-to-boots about270-290px high, fixed physical scale across six, not the current nearly450px bodies. Leave the ample empty space: do NOT enlarge figures to fill the cell. Whole figure bounding boxes must never overlap or cross a cell line, even during the long contact3 or follow-through4 blade.\n\nCRITICAL ALPHA: remove ALL inter-character glow, haze, sparks, shadows, mist, smoke, detached particles, cast light and effect bridges. Transparent background must have exact ALPHA ZERO, including the wide clear gutters, space between spines, outside the narrow blade and empty inside the blade's bends. No outer bloom/halo, not even faint soft grey/orange alpha bridges at cell boundaries. The actual narrow orange/gold blade can remain luminous INSIDE its PHYSICAL silhouette, and preserve the small chest light inside armor. Do not delete the real hard gold spines, hair, robe edges or any physical weapon part while removing only external glow. Crisp coherent physical pixels. No ground or cast shadow.\n\nPRESERVE PHASES EXACTLY from reference, reading left-to-right then top-to-bottom:0lowguard;1rightweaponarm raised diagonally;2deeper high overhead bent-elbow LOAD;3extended RIGHT-arm down-left contact with committed forward weight and SW front-left face;4lower wider follow-through down-left with trailing hair/cloth;5LOW recovery close to guard, never overhead. Keep all these six visibly different and their anatomical weight/elbow transitions intact. Do not substitute idle poses or duplicate phases.\n\nPRESERVE CAMERA AND HANDS ALL SIX: face remains FRONT-LEFT/SW with pale nose/chin image LEFT, front chest visible and pelvis/boots diagonally down-left. No W side view, NW rear, S frontal or SE/right-facing substitution. Exactly TWO arms, two shoulders/elbows/wrists/hands. Weapon remains in the SAME anatomical RIGHT hand, the FAR arm on image LEFT, through lowguard, raise, overhead load, contact, follow and recovery. Preserve its full shoulder-to-elbow-to-wrist-to-grip continuity. Near anatomical LEFT/imageRIGHT arm is EMPTY in every pose. No mirrored/hand-swapped pose, extra hanging arm or floating blade. Preserve visible pale face, long pale hair, original black/gold crown/armor, thin narrow GOLD radial spines, long DARK gold-trimmed skirt and original boots; no closed redmask, orange feather fan, segmented pants, broad short sword or other redesign. Preserve original long thin SINUOUS blade with several S-curves and narrow tip at full relative length.\n\nExactly ONE transparent six-sprite atlas, no extra sprite, label, text, border, effects panel, background, blur or preview scenery. This is faithful uniform whole-figure reduction and clear transparent separation of existing poses. All six full figures complete, uncropped and well within spacious empty gutters.",
+  "transparent_background": true,
+  "attempt_policy": "EXACTLY ONE production layout edit; no retry if HOLD",
+  "actor_approval": false,
+  "image_chat_attachment": false,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 existing SW attack phases/order preserved: lowguard, diagonalraise, overheadload, contact3 down-left, lowerfollow and lowrecovery; revised_poses6/newly_authored_poses0.",
+      "Every pale face points left while front-left chest/stance remain SW; original six articulated movements are retained without W/NW/right-facing substitution.",
+      "All6 preserve continuous far RIGHT/image-left weapon shoulder-elbow-wrist-grip, full sinuous narrow blade and empty near LEFT/image-right hand; exactly2arm chains, no swapped ownership.",
+      "Original pale hair/face, thin gold radial spines, black/gold crown/armor and dark long gold-trimmed robe retained with complete uncropped gear.",
+      "Unchanged strict analyze+require_complete_pose_regions PASS:6distinct1024canonical frames, six alpha16 bodies, all foreground covered and outer alpha>100 clipping0. No repack needed or performed."
+    ],
+    "visual_limitations": [
+      "Layout edit redraws source textures; conservation is of six authored actions/identity, not a pixel-identical resampling proof.",
+      "Actual whole-figure bounds exceed requested350px/62% reduction in several cells, but strict complete disjoint region coverage passes without clipping/threshold changes.",
+      "Source artwork/geometry PASS only. Game assembly/connection, animation timing and fresh actual Player QA remain required; actor approval unchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+    "raw_bytes": 2175692,
+    "request_sha256": "edca2b77c15d1aa6f35914e071000dca0efb46639954570491374221b4a74e63",
+    "review_sha256": "d1e623ffada0b4fe23de37144de3b28d46c557b6aefbf44f3a409302c26623ac"
+  },
+  "available_repository_reference_sources": {
+    "6f8394a112a7771545cca2e894663f161e96350fbaca76f849fba7b00cf2233c": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v03.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+  "output_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+  "output_bytes": 2175692,
+  "original_generated_file": "/workspace/scratch/girtas-SW-attack-layout-repair-v04/girtas-SW-attack-v04.png"
+}
