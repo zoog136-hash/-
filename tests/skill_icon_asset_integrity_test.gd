@@ -35,7 +35,7 @@ func _initialize() -> void:
 			_fail("Skill book / quickslot icon precedence changed: " + id)
 			return
 		seen[id] = true
-	print("SKILL_ICON_125_TEXTURES_PASS")
+	print("SKILL_ICON_125_TEXTURES_OK")
 	quit(0)
 
 func _fail(message: String) -> void:
