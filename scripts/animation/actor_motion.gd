@@ -319,6 +319,16 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	_resolved_key = ""
 	_resolved_role = "legacy"
 	_resolved_directional = false
+	if bool(frames.get_meta("twilight_native_locomotion_staging", false)):
+		# Native WIP tracks represent exact authored actions/views. Missing run,
+		# idle, combat or headings stay unavailable; never alias a different pose.
+		var native_key: String = state + "_" + str(facing8)
+		_resolved_role = "unavailable"
+		if frames.has_animation(native_key) and frames.get_frame_count(native_key) > 0:
+			_resolved_key = native_key
+			_resolved_role = state
+			_resolved_directional = true
+		return
 	var roles: Array[String] = [state]
 	if presenting_attack and state in ["attack", "recovery"]:
 		if attack_style == "bow": roles.push_front("ranged_attack")
@@ -395,7 +405,9 @@ func apply_frames(sprite: Node2D) -> void:
 		return
 	_resolve_frames(frames)
 	var key: String = _resolved_key
-	if key.is_empty(): return
+	# A partial native library must never invent an unavailable role/direction
+	# or send an invalid animation name to the sprite during a form switch.
+	if key.is_empty() or not frames.has_animation(key) or frames.get_frame_count(key) == 0: return
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
