@@ -1,0 +1,122 @@
+{
+  "status": "CONFIRMED_NEW_SOURCE_CAMERA_HOLD_REOPEN_PRIOR_PASS_HISTORY_PRESERVED",
+  "schema": "pr122-independent-selected-source-camera-hold-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "independent": true,
+  "source_author_independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "idle",
+  "slot": "transform:267:NE:idle",
+  "scope": "CURRENT_SELECTED_SOURCE_PHASE0_CAMERA_CONFIRMED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+  "source_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+  "phase": 0,
+  "actual_frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r087/SpriteFrames.tres",
+  "actual_frames_sha256": "8396e581e899eb48af9c5ceeee154d08d7daa5cac4a900b7920660148b87e61f",
+  "actual_revision": "r087",
+  "comparison_records": [
+    {
+      "animation": "idle_6",
+      "phase": 0,
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
+      "source_sha256": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r057/N-idle.png",
+      "region": [
+        43,
+        10,
+        468,
+        481
+      ],
+      "margin": [
+        299,
+        163,
+        556,
+        543
+      ],
+      "rgba_sha256": "204c0254b0018d84e1ec2fc181bde7641e7f2e5f9d4e956478461fea3b31460e",
+      "canvas": 1024,
+      "source_anchor": [
+        256.0,
+        487.0
+      ],
+      "scale": 0.2505694760820046,
+      "actual_TRES_SHA_region_margin_RGBA_independently_verified": true
+    },
+    {
+      "animation": "idle_7",
+      "phase": 0,
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+      "source_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r061/NE-idle.png",
+      "region": [
+        45,
+        4,
+        472,
+        493
+      ],
+      "margin": [
+        301,
+        151,
+        552,
+        531
+      ],
+      "rgba_sha256": "bead3bafe7543800febc039c9444df9a7326e2d941f8bde2a531a1e1e897dc55",
+      "canvas": 1024,
+      "source_anchor": [
+        256.0,
+        493.0
+      ],
+      "scale": 0.2505694760820046,
+      "actual_TRES_SHA_region_margin_RGBA_independently_verified": true
+    },
+    {
+      "animation": "attack_7",
+      "phase": 0,
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
+      "source_sha256": "4bd4289392f51d407f8d33acb870d1b33a13066e0fc1b8140c43d4375be1c5e9",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r059/NE-attack.png",
+      "region": [
+        209,
+        43,
+        417,
+        427
+      ],
+      "margin": [
+        337,
+        217,
+        607,
+        597
+      ],
+      "rgba_sha256": "6a30d6233690423ef6b7f37db9f23a4f7eb323e3bf84da8d40c06bdc23101130",
+      "canvas": 1024,
+      "source_anchor": [
+        384.0,
+        466.0
+      ],
+      "scale": 0.2505694760820046,
+      "actual_TRES_SHA_region_margin_RGBA_independently_verified": true
+    }
+  ],
+  "visual_findings": [
+    "The actual selected NE idle0 has the same essentially axial N/back setup as selected N idle0: crown and back-hair center over a nearly centered rear pelvis, both pauldrons/upper arms exposed with little near/far shoulder foreshortening, a near-symmetric hard-ray fan, and boots splaying to the two sides around a rear-facing pelvis. The slight hair sweep/arm variation does not turn its torso/hips/boots into NE.",
+    "Correct NE attackguard0 instead shows a clear rear-RIGHT/NE three-quarter body: shoulder masses overlap, the imageRIGHT/weapon-side shoulder and arm form the near plane while the other shoulder recedes, the head is seen obliquely from behind, and hip/boot axes turn diagonally toward upper-right. This is a whole-body heading difference across skull/shoulders/pelvis/boots, not a complaint about rounded hair or ordinary attack-body yaw.",
+    "Consequently current selected NE idle0 -> correct NE guard0 changes from N-like axial back to actual NE rear-right camera at entry. This is source orientation and cannot be repaired by canvas/anchor adjustment or relabeling. A newly authored faithful NE idle source is needed while retaining prior source/Player pass history.",
+    "The guard also appears smaller under the present C1024 physical layout. That is a separate rigid-scale issue requiring its own focused calibration/review, not evidence that the idle camera is correct or authorization to change either source silently. No attack-source or whole-actor approval is revoked by this new idle-specific finding."
+  ],
+  "private_evidence_files": [
+    {
+      "path": "/workspace/scratch/girtas-current-NEidle-camera-review/private-actual-Nidle-NEidle-NEguard-camera-comparison.jpg",
+      "sha256": "ef666348c9a2f586bb3afac09afd96f26697a276d359a54f00d31b1c1f28cfbf",
+      "bytes": 47778
+    }
+  ],
+  "numeric_evidence": {
+    "path": "/workspace/scratch/girtas-current-NEidle-camera-review/actual-camera-comparison-evidence.json",
+    "sha256": "8d8fe57147e5e1545b5196d9fe187c94f2266d7faebd27dcfa34bda08075046c"
+  },
+  "private_context_total_bytes": 1600313,
+  "no_actor_approval": true,
+  "no_prior_pass_deleted": true,
+  "created_at": "2026-10-19T14:34:49.277834+00:00"
+}

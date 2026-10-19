@@ -18885,6 +18885,22 @@
               "geometry_and_actual_Player": "PASS",
               "actor_approval_added": 0
             }
+          },
+          {
+            "schema": "pr122-reopened-source-hold-v1",
+            "status": "HOLD",
+            "slot": "transform:267:NE:idle",
+            "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+            "source_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-camera-HOLD-r087-independent.json",
+            "evidence_sha256": "4c5364351bfc2653d133a5ad71c8152ab5f558fc8ce81b301c0c4837bba3808e",
+            "reason": "New independent actual-TRES comparison proves current NEidle remains axial N-back, while true NEattackguard is rear-right three-quarter: shoulder/head/pelvis/boots camera changes at idle entry/return. Prior source/Player PASS history preserved; requires new NEidle six actual breathing poses.",
+            "prior_corrections_count": 39,
+            "prior_corrections_sha256": "e11b2bb937bd023ddf5afc6e61cb1a7ecd8c324083488218c979f760280a48c1",
+            "key": "transform:267",
+            "direction": "NE",
+            "role": "idle",
+            "id": "3bfbe284f36d5ffc257052eac87e726a234d8d0130f84a2fd0ea20d57a4d4e5f"
           }
         ]
       }
