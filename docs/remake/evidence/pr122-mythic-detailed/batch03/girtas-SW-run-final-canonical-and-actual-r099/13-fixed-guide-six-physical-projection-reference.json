@@ -1,0 +1,500 @@
+{
+  "status": "FIXED_GUIDE_PROJECTED_JOINT_AND_GROUND_AUTHORITY_ONLY_NOT_SOURCE_OR_RUNTIME_APPROVAL",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "guide_pins": [
+    {
+      "path": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/constantbone-joint-and-ground-authority.json",
+      "sha256": "7acd0d93a614e20264c50811847289602bd61ac4a286b10b3d80eb410679add4"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+      "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+    }
+  ],
+  "projection_max_error_against_blender_native": 8.969769186251142e-05,
+  "frames": [
+    {
+      "phase": 0,
+      "pelvis_world": [
+        0,
+        0,
+        1.03
+      ],
+      "pelvis_native768": [
+        384.0,
+        376.40296047221176
+      ],
+      "head_core_world": [
+        0,
+        0.13,
+        1.85
+      ],
+      "head_core_native768": [
+        362.8978831778492,
+        181.20695386633753
+      ],
+      "actor_origin_ground_world": [
+        0,
+        0,
+        0
+      ],
+      "actor_origin_ground_native768": [
+        384.0,
+        637.2346509262744
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            343.09435816013854,
+            364.08343691363626
+          ],
+          "knee": [
+            321.1474030438965,
+            504.19152030330105
+          ],
+          "ankle": [
+            404.77746887104075,
+            472.6675066770849
+          ],
+          "center": [
+            391.7915508266403,
+            500.5917600765227
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.27,
+          "ground_under_foot_center_native768": [
+            391.7915508266403,
+            596.1695723976894
+          ]
+        },
+        "LEFT": {
+          "hip": [
+            424.90564183986146,
+            388.72248403078726
+          ],
+          "knee": [
+            363.09166271601026,
+            514.8810945483791
+          ],
+          "ankle": [
+            353.4830925956589,
+            651.3790089044373
+          ],
+          "center": [
+            340.4971745512584,
+            679.303262303875
+          ],
+          "is_support": true,
+          "ground_clearance_world": 0,
+          "ground_under_foot_center_native768": [
+            340.4971745512584,
+            699.3798030995331
+          ]
+        }
+      }
+    },
+    {
+      "phase": 1,
+      "pelvis_world": [
+        0,
+        0,
+        0.89
+      ],
+      "pelvis_native768": [
+        384.0,
+        411.8558116018902
+      ],
+      "head_core_world": [
+        0,
+        0.19,
+        1.71
+      ],
+      "head_core_native768": [
+        353.15844464454887,
+        222.40891599001787
+      ],
+      "actor_origin_ground_world": [
+        0,
+        0,
+        0
+      ],
+      "actor_origin_ground_native768": [
+        384.0,
+        637.2346509262744
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            343.09435816013854,
+            399.5362880433147
+          ],
+          "knee": [
+            304.2491119896302,
+            539.375247064751
+          ],
+          "ankle": [
+            386.9218315599901,
+            464.00690892123765
+          ],
+          "center": [
+            373.9359135155896,
+            491.9311623206755
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.32,
+          "ground_under_foot_center_native768": [
+            373.9359135155896,
+            606.7096092200262
+          ]
+        },
+        "LEFT": {
+          "hip": [
+            424.90564183986146,
+            424.1753351604657
+          ],
+          "knee": [
+            356.3468178760747,
+            541.4606609096443
+          ],
+          "ankle": [
+            402.1802852621606,
+            624.9835691652465
+          ],
+          "center": [
+            389.19436721776015,
+            652.9078225646844
+          ],
+          "is_support": true,
+          "ground_clearance_world": 0,
+          "ground_under_foot_center_native768": [
+            389.19436721776015,
+            670.6342481295236
+          ]
+        }
+      }
+    },
+    {
+      "phase": 2,
+      "pelvis_world": [
+        0,
+        0,
+        1.14
+      ],
+      "pelvis_native768": [
+        384.0,
+        348.5471488703216
+      ],
+      "head_core_world": [
+        0,
+        0.21,
+        1.96
+      ],
+      "head_core_native768": [
+        349.9119651334488,
+        161.01662358978325
+      ],
+      "actor_origin_ground_world": [
+        0,
+        0,
+        0
+      ],
+      "actor_origin_ground_native768": [
+        384.0,
+        637.2346509262744
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            343.09435816013854,
+            336.22762531174607
+          ],
+          "knee": [
+            284.8646677567798,
+            465.9308830061617
+          ],
+          "ankle": [
+            268.42532940483585,
+            604.795337071234
+          ],
+          "center": [
+            255.43941136043537,
+            632.7195904706718
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.1,
+          "ground_under_foot_center_native768": [
+            255.43941136043537,
+            676.6571263137162
+          ]
+        },
+        "LEFT": {
+          "hip": [
+            424.90564183986146,
+            360.8666724288971
+          ],
+          "knee": [
+            414.51459429336245,
+            497.6808330160211
+          ],
+          "ankle": [
+            493.0817115729639,
+            499.43801443062733
+          ],
+          "center": [
+            480.09579352856343,
+            527.3622678300652
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.24,
+          "ground_under_foot_center_native768": [
+            480.09579352856343,
+            616.9758788521724
+          ]
+        }
+      }
+    },
+    {
+      "phase": 3,
+      "pelvis_world": [
+        0,
+        0,
+        1.03
+      ],
+      "pelvis_native768": [
+        384.0,
+        376.40296047221176
+      ],
+      "head_core_world": [
+        0,
+        0.13,
+        1.85
+      ],
+      "head_core_native768": [
+        362.8978831778492,
+        181.20695386633753
+      ],
+      "actor_origin_ground_world": [
+        0,
+        0,
+        0
+      ],
+      "actor_origin_ground_native768": [
+        384.0,
+        637.2346509262744
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            343.09435816013854,
+            364.08343691363626
+          ],
+          "knee": [
+            281.28037903628734,
+            490.2420474312281
+          ],
+          "ankle": [
+            271.67180891593597,
+            626.7399617872862
+          ],
+          "center": [
+            258.6858908715355,
+            654.664215186724
+          ],
+          "is_support": true,
+          "ground_clearance_world": 0,
+          "ground_under_foot_center_native768": [
+            258.6858908715355,
+            674.7407559823821
+          ]
+        },
+        "LEFT": {
+          "hip": [
+            424.90564183986146,
+            388.72248403078726
+          ],
+          "knee": [
+            402.9586867236194,
+            528.8305674204521
+          ],
+          "ankle": [
+            486.5887525507637,
+            497.3065537942359
+          ],
+          "center": [
+            473.6028345063632,
+            525.2308071936737
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.27,
+          "ground_under_foot_center_native768": [
+            473.6028345063632,
+            620.8086195148404
+          ]
+        }
+      }
+    },
+    {
+      "phase": 4,
+      "pelvis_world": [
+        0,
+        0,
+        0.89
+      ],
+      "pelvis_native768": [
+        384.0,
+        411.8558116018902
+      ],
+      "head_core_world": [
+        0,
+        0.19,
+        1.71
+      ],
+      "head_core_native768": [
+        353.15844464454887,
+        222.40891599001787
+      ],
+      "actor_origin_ground_world": [
+        0,
+        0,
+        0
+      ],
+      "actor_origin_ground_native768": [
+        384.0,
+        637.2346509262744
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            343.09435816013854,
+            399.5362880433147
+          ],
+          "knee": [
+            274.53553419635176,
+            516.8216137924933
+          ],
+          "ankle": [
+            320.3690015824377,
+            600.3445220480955
+          ],
+          "center": [
+            307.3830835380372,
+            628.2687754475334
+          ],
+          "is_support": true,
+          "ground_clearance_world": 0,
+          "ground_under_foot_center_native768": [
+            307.3830835380372,
+            645.9952010123725
+          ]
+        },
+        "LEFT": {
+          "hip": [
+            424.90564183986146,
+            424.1753351604657
+          ],
+          "knee": [
+            386.0603956693531,
+            564.014294181902
+          ],
+          "ankle": [
+            468.733115239713,
+            488.6459560383887
+          ],
+          "center": [
+            455.7471971953126,
+            516.5702094378265
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.32,
+          "ground_under_foot_center_native768": [
+            455.7471971953126,
+            631.3486563371772
+          ]
+        }
+      }
+    },
+    {
+      "phase": 5,
+      "pelvis_world": [
+        0,
+        0,
+        1.14
+      ],
+      "pelvis_native768": [
+        384.0,
+        348.5471488703216
+      ],
+      "head_core_world": [
+        0,
+        0.21,
+        1.96
+      ],
+      "head_core_native768": [
+        349.9119651334488,
+        161.01662358978325
+      ],
+      "actor_origin_ground_world": [
+        0,
+        0,
+        0
+      ],
+      "actor_origin_ground_native768": [
+        384.0,
+        637.2346509262744
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            343.09435816013854,
+            336.22762531174607
+          ],
+          "knee": [
+            332.70331061363953,
+            473.04178589887005
+          ],
+          "ankle": [
+            411.270427893241,
+            474.7989673134763
+          ],
+          "center": [
+            398.2845098488405,
+            502.7232207129141
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.24,
+          "ground_under_foot_center_native768": [
+            398.2845098488405,
+            592.3368317350214
+          ]
+        },
+        "LEFT": {
+          "hip": [
+            424.90564183986146,
+            360.8666724288971
+          ],
+          "knee": [
+            366.6759514365027,
+            490.5699301233127
+          ],
+          "ankle": [
+            350.23661308455877,
+            629.434384188385
+          ],
+          "center": [
+            337.2506950401583,
+            657.3586375878228
+          ],
+          "is_support": false,
+          "ground_clearance_world": 0.1,
+          "ground_under_foot_center_native768": [
+            337.2506950401583,
+            701.2961734308672
+          ]
+        }
+      }
+    }
+  ],
+  "rule": "Final sources require real anatomy/rigid-size assessment and independent physical review. AIR root must preserve flight height; never anchor lowest airborne sole or impose standing near/far depth as invariant."
+}
