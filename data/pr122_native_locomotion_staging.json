@@ -1,0 +1,821 @@
+{
+  "schema": "pr122-native-locomotion-staging-v1",
+  "approved_history_preserved": 405,
+  "detailed_complete": 0,
+  "detailed_total": 31,
+  "actors": {
+    "transform:393": {
+      "grade": "유일",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/SpriteFrames.tres",
+      "frames_sha256": "98e79b82b197b4da50965d0b703689c9ee77366b05359a22c1546f09617c107f",
+      "native_track_count": 5,
+      "native_pose_count": 30,
+      "canvas_size": [
+        1024,
+        1024
+      ],
+      "foot": [
+        512,
+        640
+      ],
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+          "source_sha256": "efa8ceadcb848c73293a71b09ab717dfe8a1f95b8aab5adc955316d2a88cb44f",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/E-run.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  42,
+                  95,
+                  469,
+                  360
+                ],
+                "margin": [
+                  298,
+                  284,
+                  555,
+                  664
+                ],
+                "source_anchor": [
+                  256,
+                  451
+                ],
+                "rgba_sha256": "45f47fa4637a8bc6da28a54657b20bcfe698b9664fd74296b97de20809f18e55"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  545,
+                  156,
+                  459,
+                  284
+                ],
+                "margin": [
+                  289,
+                  360,
+                  565,
+                  740
+                ],
+                "source_anchor": [
+                  768,
+                  436
+                ],
+                "rgba_sha256": "6a574d60f4341e5cff6f0c8709025941981ba1745d9ddbd060d6d67f292a04fa"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  61,
+                  559,
+                  471,
+                  374
+                ],
+                "margin": [
+                  317,
+                  270,
+                  553,
+                  650
+                ],
+                "source_anchor": [
+                  256,
+                  929
+                ],
+                "rgba_sha256": "fa7002cf129f90258cef234d64d87b01b0af5ef55e89d20b59bf8d12b4bd1949"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  550,
+                  585,
+                  454,
+                  347
+                ],
+                "margin": [
+                  294,
+                  297,
+                  570,
+                  677
+                ],
+                "source_anchor": [
+                  768,
+                  928
+                ],
+                "rgba_sha256": "5b9748c7e9b4b45d3e8e54f8295670a6bc4399e2a294256c4cf4308af566545a"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  43,
+                  1067,
+                  487,
+                  325
+                ],
+                "margin": [
+                  299,
+                  319,
+                  537,
+                  699
+                ],
+                "source_anchor": [
+                  256,
+                  1388
+                ],
+                "rgba_sha256": "7fa197a0f8be5f7f9fd41db40200e4e60f66c5cdf882993dbc5d86b5acc802e4"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  558,
+                  1038,
+                  446,
+                  372
+                ],
+                "margin": [
+                  302,
+                  272,
+                  578,
+                  652
+                ],
+                "source_anchor": [
+                  768,
+                  1406
+                ],
+                "rgba_sha256": "234c9fe5acf6d945cd94031077ed511bd7afa923507c88ec7eb832a2e54268d0"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 347.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "walk",
+          "animation": "walk_0",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+          "source_sha256": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/E-walk.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  56,
+                  90,
+                  464,
+                  364
+                ],
+                "margin": [
+                  312,
+                  280,
+                  560,
+                  660
+                ],
+                "source_anchor": [
+                  256,
+                  450
+                ],
+                "rgba_sha256": "fafe522c08b05eb51f68036e85e8bc1755fbc9b75c4c8d664d65a02ef43535f6"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  559,
+                  138,
+                  437,
+                  313
+                ],
+                "margin": [
+                  303,
+                  331,
+                  587,
+                  711
+                ],
+                "source_anchor": [
+                  768,
+                  447
+                ],
+                "rgba_sha256": "0e2f7bfa51c49277c5e2f701ea0c4f5d6b68bf9d0bcabeac9a76b78002c931b6"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  59,
+                  581,
+                  438,
+                  349
+                ],
+                "margin": [
+                  315,
+                  295,
+                  586,
+                  675
+                ],
+                "source_anchor": [
+                  256,
+                  926
+                ],
+                "rgba_sha256": "781f306ed9c9a521904e5a0dd169e0641b5f4f577b2fbb8d715dc274ae794cc6"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  547,
+                  598,
+                  454,
+                  325
+                ],
+                "margin": [
+                  291,
+                  319,
+                  570,
+                  699
+                ],
+                "source_anchor": [
+                  768,
+                  919
+                ],
+                "rgba_sha256": "163c349e32401367654ae5a5d484c64d2dd0f9a626869cfb0b9064f305fd6d17"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  57,
+                  1064,
+                  456,
+                  378
+                ],
+                "margin": [
+                  313,
+                  266,
+                  568,
+                  646
+                ],
+                "source_anchor": [
+                  256,
+                  1438
+                ],
+                "rgba_sha256": "e07b5dc1698b1c1069898eaa92d5d8b874ac6888dd08a89938cf4aa9cfad108b"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  554,
+                  1126,
+                  439,
+                  302
+                ],
+                "margin": [
+                  298,
+                  342,
+                  585,
+                  722
+                ],
+                "source_anchor": [
+                  768,
+                  1424
+                ],
+                "rgba_sha256": "45f54533e69ddbecdef2883c27d5b9f12b629d9739f6b096450146e313f83bd1"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 338.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "walk",
+          "animation": "walk_2",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+          "source_sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/S-walk.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  99,
+                  117,
+                  368,
+                  362
+                ],
+                "margin": [
+                  355,
+                  282,
+                  656,
+                  662
+                ],
+                "source_anchor": [
+                  256,
+                  475
+                ],
+                "rgba_sha256": "6a1a6728ae82abe930df58685bc0296371bc3c5374aa2ed0417b831b16d08544"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  584,
+                  123,
+                  358,
+                  353
+                ],
+                "margin": [
+                  328,
+                  291,
+                  666,
+                  671
+                ],
+                "source_anchor": [
+                  768,
+                  472
+                ],
+                "rgba_sha256": "a8b029707879f48e8448a8a797150e8f1e965bf784309fa2c8d490f230e2b23b"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  70,
+                  605,
+                  431,
+                  346
+                ],
+                "margin": [
+                  326,
+                  298,
+                  593,
+                  678
+                ],
+                "source_anchor": [
+                  256,
+                  947
+                ],
+                "rgba_sha256": "dbbdabfd2ed343a90403f7a8d87b52135b364d45d2d25ca447d4e3e5ddb83e4b"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  535,
+                  653,
+                  447,
+                  306
+                ],
+                "margin": [
+                  279,
+                  338,
+                  577,
+                  718
+                ],
+                "source_anchor": [
+                  768,
+                  955
+                ],
+                "rgba_sha256": "9c526de11bff1ce641a87170b5868cef7937eef09a59bec2ea2d16932ba4b73d"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  63,
+                  1098,
+                  424,
+                  328
+                ],
+                "margin": [
+                  319,
+                  316,
+                  600,
+                  696
+                ],
+                "source_anchor": [
+                  256,
+                  1422
+                ],
+                "rgba_sha256": "937fdd30c647a72145db80c6f123fd7586f82137a8e382b1c3f994f984228d22"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  575,
+                  1044,
+                  378,
+                  387
+                ],
+                "margin": [
+                  319,
+                  257,
+                  646,
+                  637
+                ],
+                "source_anchor": [
+                  768,
+                  1427
+                ],
+                "rgba_sha256": "2b78c03941cc7cf3f3d6398cd6631dd793400cba33ab6a5d9501c1128e03ef25"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 328.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
+          "source_sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/SE-run.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  38,
+                  91,
+                  477,
+                  395
+                ],
+                "margin": [
+                  294,
+                  249,
+                  547,
+                  629
+                ],
+                "source_anchor": [
+                  256,
+                  482
+                ],
+                "rgba_sha256": "371d9013510e88be4c968eff1ef7633ba1a71b1c2c595caef4076d38920a4e92"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  548,
+                  145,
+                  457,
+                  344
+                ],
+                "margin": [
+                  292,
+                  300,
+                  567,
+                  680
+                ],
+                "source_anchor": [
+                  768,
+                  485
+                ],
+                "rgba_sha256": "bd956577507265c850760ebc031cd61a2d300a86e7732cab84d88252227e4595"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  50,
+                  587,
+                  491,
+                  355
+                ],
+                "margin": [
+                  306,
+                  289,
+                  533,
+                  669
+                ],
+                "source_anchor": [
+                  256,
+                  938
+                ],
+                "rgba_sha256": "3acacba88dfd7be8728465bc0b7b78482e231f08a7598e83ab39bcb2234fb101"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  556,
+                  593,
+                  460,
+                  350
+                ],
+                "margin": [
+                  300,
+                  294,
+                  564,
+                  674
+                ],
+                "source_anchor": [
+                  768,
+                  939
+                ],
+                "rgba_sha256": "80e89326c26ea1ed2823cb1f40ade38cdc3052ea571fa983210cdfcece0932a3"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  49,
+                  1013,
+                  490,
+                  426
+                ],
+                "margin": [
+                  305,
+                  218,
+                  534,
+                  598
+                ],
+                "source_anchor": [
+                  256,
+                  1435
+                ],
+                "rgba_sha256": "2dfe1db1480f12dafd30483c06d20bd20c487542ed44419e1287421abae9684b"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  567,
+                  1105,
+                  443,
+                  325
+                ],
+                "margin": [
+                  311,
+                  319,
+                  581,
+                  699
+                ],
+                "source_anchor": [
+                  768,
+                  1426
+                ],
+                "rgba_sha256": "62b5a653693b9e00f2d6b3797633c0b9a48b51570aec695635b0d89fdcfbf507"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 366.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "walk",
+          "animation": "walk_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+          "source_sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/SE-walk.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  62,
+                  101,
+                  446,
+                  377
+                ],
+                "margin": [
+                  318,
+                  267,
+                  578,
+                  647
+                ],
+                "source_anchor": [
+                  256,
+                  474
+                ],
+                "rgba_sha256": "5df0ac443c6bf6a18959b4c3617ad517bf0e5486aac68dd4706855ac2fde6c9f"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  565,
+                  162,
+                  430,
+                  313
+                ],
+                "margin": [
+                  309,
+                  331,
+                  594,
+                  711
+                ],
+                "source_anchor": [
+                  768,
+                  471
+                ],
+                "rgba_sha256": "bd39fdd363d37d6b53d279fa9e171a79c18ca00da1e7f128abec9b5f9eb3bced"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  68,
+                  589,
+                  430,
+                  343
+                ],
+                "margin": [
+                  324,
+                  301,
+                  594,
+                  681
+                ],
+                "source_anchor": [
+                  256,
+                  928
+                ],
+                "rgba_sha256": "ab4cffa050bbe8680f11e53d2576dff27b4e5eef8bdba4698b7455daa9b96074"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  574,
+                  590,
+                  426,
+                  354
+                ],
+                "margin": [
+                  318,
+                  290,
+                  598,
+                  670
+                ],
+                "source_anchor": [
+                  768,
+                  940
+                ],
+                "rgba_sha256": "ceef365330e5c26c53634f60fb8bab646c2ac89e6a5887c3386c39d4581a7a36"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  52,
+                  1068,
+                  479,
+                  351
+                ],
+                "margin": [
+                  308,
+                  293,
+                  545,
+                  673
+                ],
+                "source_anchor": [
+                  256,
+                  1415
+                ],
+                "rgba_sha256": "170275edbb9e1f4871d5ac94f05f8469a84d5390ca361070bcade4081b1fe31d"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  558,
+                  1080,
+                  438,
+                  347
+                ],
+                "margin": [
+                  302,
+                  297,
+                  586,
+                  677
+                ],
+                "source_anchor": [
+                  768,
+                  1423
+                ],
+                "rgba_sha256": "c766fa56cf775b50cd9ced1ebc534ca276661380b65d22632ac46e4030545498"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 359.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        }
+      ],
+      "missing_locomotion": [
+        "walk_3",
+        "walk_4",
+        "walk_5",
+        "walk_6",
+        "walk_7",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "missing_dedicated_roles": [
+        "idle",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "completed_added": 0,
+      "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
+      "visual_review": "NOT_RUN; image generation and preview tools forbidden",
+      "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
+      "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
+      "verification": {
+        "source_sha256_and_saved_geometry": "PASS",
+        "distinct_native_poses": 30,
+        "spriteframes_parse_and_all_frame_cycles": "PASS",
+        "auxiliary_engine": "4.6.3.stable.official.7d41c59c4",
+        "required_engine_4_7_2": "NOT_RUN",
+        "actual_Main": "NOT_RUN",
+        "visual_approval": "NOT_RUN",
+        "completed_added": 0
+      }
+    }
+  }
+}
