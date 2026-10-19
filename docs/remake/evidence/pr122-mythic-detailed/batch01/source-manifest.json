@@ -2590,5 +2590,15 @@
     "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
     "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png"
   },
-  "selected_detailed_action_native_poses": 342
+  "selected_detailed_action_native_poses": 342,
+  "authoring_holds": [
+    {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "idle",
+      "request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-089-girtas-SE-idle-v01.json",
+      "status": "HOLD",
+      "reason": "service output not returned across session interruption; no image bytes received"
+    }
+  ]
 }

@@ -43,6 +43,8 @@ def main():
     next_target = None
     holds = {(r.get('key'), r.get('direction'), r.get('role')) for r in manifest['raw_images']
              if r.get('geometry', {}).get('status') == 'HOLD'}
+    holds.update((r.get('key'), r.get('direction'), r.get('role'))
+                 for r in manifest.get('authoring_holds', []) if r.get('status') == 'HOLD')
     for key in staging.ACTORS:
         for direction in staging.importer.DIRECTIONS:
             for role in ('walk', 'run'):
