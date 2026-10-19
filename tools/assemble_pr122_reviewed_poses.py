@@ -12,6 +12,10 @@ Source images may contain other, unselected poses. All selected connected
 alpha>16 parts and their nearest main-body foreground must fit the reviewed
 region. Ambiguous bridges/foreign bodies remain HOLD. Anatomy, timing and
 physical body scale require external review, never bbox normalization.
+
+finalize_preserved_pose_map verifies an existing stopped atlas against every
+pinned source pixel and an explicit outward output-region review. It preserves
+the original PNG and error receipt and only writes the exclusive proof JSON.
 """
 
 import argparse
@@ -163,15 +167,10 @@ def _complete_output(image, geometry):
              "Strict output regions omit or duplicate alpha>16 pixels")
 
 
-def assemble_pose_map(spec, output, *, cell_size=1280):
-    """Exclusively write a two-column atlas/proof with exact selected RGBA."""
+def _prepare_pose_map(spec, output, cell_size):
+    """Validate every source and rebuild the exact intended atlas in memory."""
     _require(type(cell_size) is int and cell_size in (1280, 1536),
              "Require explicit 1280 or 1536 pixel packing cells")
-    output = Path(output).absolute()
-    proof_path = output.with_suffix(".assembly.json")
-    error_path = output.with_suffix(".assembly-error.json")
-    if any(path.exists() for path in (output, proof_path, error_path)):
-        raise FileExistsError("Refuse existing atlas/proof/error receipt: " + str(output))
     data, base, metadata_sha, metadata_path = _read_spec(spec)
     _require(data.get("schema") == SCHEMA, "Require schema " + SCHEMA)
     _require(isinstance(data.get("key"), str) and bool(data["key"].strip()), "Require explicit actor key")
@@ -229,6 +228,44 @@ def assemble_pose_map(spec, output, *, cell_size=1280):
                             "translation": [dx - sx, dy - sy],
                             "source_edge_antialias_review": boundary_reviews[phase],
                             "alpha_gt16_pixels": foreground_counts[phase]})
+    return data, metadata_sha, metadata_path, crops, pose_proofs, atlas
+
+
+def _assembly_proof(data, metadata_sha, metadata_path, crops, pose_proofs, output, cell_size, geometry):
+    entries = data["poses"]
+    heights = [crop.height for crop in crops]
+    new_count = sum(entry["newly_authored"] for entry in entries)
+    proof = {"schema": SCHEMA, "key": data["key"], "role": data["role"],
+             "assembler_sha256": _sha(Path(__file__)),
+             "direction": data["direction"], "metadata_sha256": metadata_sha,
+             "metadata_path": metadata_path,
+             "metadata_hash_basis": "file_bytes" if metadata_path else "canonical_json",
+             "output": str(output), "output_sha256": _sha(output),
+             "output_canvas": [cell_size * 2, cell_size * 3], "cell_size": [cell_size, cell_size],
+             "virtual_canvas_size": 2048, "poses": pose_proofs,
+             "newly_authored_poses": new_count, "reused_poses": 6 - new_count,
+             "preserved_region_rgba_exact": True, "preserved_pose_alpha_gt16": True,
+             "resampled": False, "mirrored": False, "recolored": False,
+             "cleaned_pixels": 0, "strict_importer": "PASS", "geometry": geometry,
+             "approval": False, "visual_approval": "NOT_RUN",
+             "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+             "external_physical_scale_review": data.get("physical_scale_review"),
+             "region_height_span": [min(heights), max(heights)],
+             "possible_region_height_mismatch": max(heights) / min(heights) > 1.15,
+             "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."}
+    return proof
+
+
+def assemble_pose_map(spec, output, *, cell_size=1280):
+    """Exclusively write a two-column atlas/proof with exact selected RGBA."""
+    _require(type(cell_size) is int and cell_size in (1280, 1536),
+             "Require explicit 1280 or 1536 pixel packing cells")
+    output = Path(output).absolute()
+    proof_path = output.with_suffix(".assembly.json")
+    error_path = output.with_suffix(".assembly-error.json")
+    if any(path.exists() for path in (output, proof_path, error_path)):
+        raise FileExistsError("Refuse existing atlas/proof/error receipt: " + str(output))
+    data, metadata_sha, metadata_path, crops, pose_proofs, atlas = _prepare_pose_map(spec, output, cell_size)
     output.parent.mkdir(parents=True, exist_ok=True)
     created = False
     try:
@@ -243,26 +280,7 @@ def assemble_pose_map(spec, output, *, cell_size=1280):
         importer.require_complete_pose_regions(output, geometry)
         _require(geometry["distinct_pixel_frames"] == 6, "Require six distinct final poses")
         _complete_output(atlas, geometry)
-        heights = [crop.height for crop in crops]
-        new_count = sum(entry["newly_authored"] for entry in entries)
-        proof = {"schema": SCHEMA, "key": data["key"], "role": data["role"],
-                 "assembler_sha256": _sha(Path(__file__)),
-                 "direction": data["direction"], "metadata_sha256": metadata_sha,
-                 "metadata_path": metadata_path,
-                 "metadata_hash_basis": "file_bytes" if metadata_path else "canonical_json",
-                 "output": str(output), "output_sha256": _sha(output),
-                 "output_canvas": [cell_size * 2, cell_size * 3], "cell_size": [cell_size, cell_size],
-                 "virtual_canvas_size": 2048, "poses": pose_proofs,
-                 "newly_authored_poses": new_count, "reused_poses": 6 - new_count,
-                 "preserved_region_rgba_exact": True, "preserved_pose_alpha_gt16": True,
-                 "resampled": False, "mirrored": False, "recolored": False,
-                 "cleaned_pixels": 0, "strict_importer": "PASS", "geometry": geometry,
-                 "approval": False, "visual_approval": "NOT_RUN",
-                 "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
-                 "external_physical_scale_review": data.get("physical_scale_review"),
-                 "region_height_span": [min(heights), max(heights)],
-                 "possible_region_height_mismatch": max(heights) / min(heights) > 1.15,
-                 "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."}
+        proof = _assembly_proof(data, metadata_sha, metadata_path, crops, pose_proofs, output, cell_size, geometry)
         with proof_path.open("x") as stream:
             stream.write(json.dumps(proof, indent=2) + "\n")
         return proof
@@ -278,14 +296,69 @@ def assemble_pose_map(spec, output, *, cell_size=1280):
         raise
 
 
+def finalize_preserved_pose_map(spec, output, source_region_review, *, cell_size=1280):
+    """Verify an unchanged failed atlas with explicit strict output regions.
+
+    No PNG is written, padded, cleaned or repacked. The old error receipt stays
+    unchanged. Source pins, complete per-body RGBA, the entire expected atlas,
+    six unique poses and all original coverage/ownership guards are rechecked.
+    """
+    from pr122_reviewed_source_regions import apply_reviewed_regions
+
+    output = Path(output).absolute()
+    proof_path = output.with_suffix(".assembly.json")
+    error_path = output.with_suffix(".assembly-error.json")
+    _require(output.is_file() and not output.is_symlink(), "Require a preserved regular PNG")
+    _require(error_path.is_file() and not error_path.is_symlink(), "Require the preserved failed-atlas receipt")
+    if proof_path.exists():
+        raise FileExistsError("Refuse an existing assembly proof: " + str(proof_path))
+    error_sha = _sha(error_path)
+    failed = json.loads(error_path.read_text())
+    _require(failed.get("status") == "STOP_PRESERVED_NOT_APPROVED"
+             and failed.get("approval") is False and failed.get("success_proof_emitted") is False
+             and Path(failed.get("output", "")).resolve() == output.resolve(),
+             "Failed-atlas receipt does not identify this exact unapproved output")
+    if isinstance(source_region_review, (str, Path)):
+        source_region_review = json.loads(Path(source_region_review).read_text())
+    before_sha = _sha(output)
+    data, metadata_sha, metadata_path, crops, pose_proofs, expected = _prepare_pose_map(spec, output, cell_size)
+    actual = _rgba(output)
+    _require(actual.size == expected.size and np.array_equal(np.asarray(actual), np.asarray(expected)),
+             "Preserved atlas differs from the exact pinned six-source assembly")
+    base = importer.analyze(output, rows_count=6, reference_rows=[0, 3],
+                            directions_axis="phase_grid2", canvas_size=2048,
+                            directions=[data["direction"]])
+    geometry, region_proof = apply_reviewed_regions(output, base, source_region_review)
+    importer.require_complete_pose_regions(output, geometry)
+    _require(geometry["distinct_pixel_frames"] == 6, "Require six distinct final poses")
+    _complete_output(actual, geometry)
+    _require(_sha(output) == before_sha and _sha(error_path) == error_sha,
+             "Preserved atlas or original error receipt changed during validation")
+    proof = _assembly_proof(data, metadata_sha, metadata_path, crops, pose_proofs, output, cell_size, geometry)
+    proof.update(finalization="EXISTING_IMMUTABLE_ATLAS_WITH_REVIEWED_OUTPUT_REGIONS",
+                 source_region_review=source_region_review, source_region_proof=region_proof,
+                 original_failed_receipt={"path": str(error_path), "sha256": error_sha},
+                 atlas_and_original_error_unchanged=True)
+    with proof_path.open("x") as stream:
+        stream.write(json.dumps(proof, indent=2) + "\n")
+    return proof
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--spec", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--cell-size", type=int, choices=(1280, 1536), default=1280)
+    parser.add_argument("--finalize-preserved", action="store_true")
+    parser.add_argument("--output-regions-review", type=Path)
     args = parser.parse_args()
     try:
-        proof = assemble_pose_map(args.spec, args.output, cell_size=args.cell_size)
+        if args.finalize_preserved:
+            _require(args.output_regions_review is not None, "Explicit output region review is required")
+            proof = finalize_preserved_pose_map(args.spec, args.output, args.output_regions_review, cell_size=args.cell_size)
+        else:
+            _require(args.output_regions_review is None, "Output review requires --finalize-preserved")
+            proof = assemble_pose_map(args.spec, args.output, cell_size=args.cell_size)
         print(json.dumps({"strict_importer": proof["strict_importer"], "output": proof["output"],
                           "output_sha256": proof["output_sha256"],
                           "newly_authored_poses": proof["newly_authored_poses"],
