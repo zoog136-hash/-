@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Retime only the five existing unapproved, exact-body project candidates.
+"""Retime explicitly planned unapproved, exact-body project candidates.
 
 Derived from current DB speed and explicit displayed height/width. This keeps
 the approved source cadence per travelled stride, not a newly measured gait.
@@ -31,12 +31,12 @@ def records(root):
     return result
 
 
-def prepare(root):
+def prepare(root, plan_path='docs/remake/evidence/pr122-remaining106/batch13/family-reuse-plan.json'):
     read = lambda p: json.loads((root / p).read_text())
     catalog = read('data/combat_animation_profiles.json')
     profiles = catalog['profiles']
     monsters = records(root)
-    plan = read('docs/remake/evidence/pr122-remaining106/batch13/family-reuse-plan.json')
+    plan = read(plan_path)
     result = []
     for case in plan['cases']:
         key, source_key = case['target'], case['source']
@@ -69,12 +69,13 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1])
     p.add_argument('--report',type=Path,required=True)
+    p.add_argument('--plan',type=Path,default=Path('docs/remake/evidence/pr122-remaining106/batch13/family-reuse-plan.json'))
     p.add_argument('--apply',action='store_true')
     a = p.parse_args()
     root = a.root.resolve()
     path = root/'data/combat_animation_profiles.json'
     original = path.read_text()
-    catalog, result = prepare(root)
+    catalog, result = prepare(root, a.plan)
     updated = register_profiles(original,catalog,[r['id'] for r in result])
     if a.apply:
         path.write_text(updated)

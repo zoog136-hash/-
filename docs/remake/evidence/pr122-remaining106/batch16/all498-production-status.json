@@ -2,11 +2,11 @@
   "target": 498,
   "unique_ids": 498,
   "session_start_approval_preserved": 394,
-  "session_added": 8,
-  "approvals_total": 402,
+  "session_added": 9,
+  "approvals_total": 403,
   "status_counts": {
-    "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 388,
+    "NOT_AUTHORED": 78,
+    "VERIFIED_COMPLETED": 389,
     "FRAME_INSUFFICIENT": 14,
     "SOURCE_HOLD": 16,
     "IN_PROGRESS": 1
@@ -3240,9 +3240,9 @@
       "id": "monster:스파이더",
       "name": "스파이더",
       "approval_preserved": false,
-      "production_status": "NOT_AUTHORED",
-      "reason": "No identity-compatible licensed source for spider",
-      "frames_path": ""
+      "production_status": "VERIFIED_COMPLETED",
+      "reason": "Batch16 newly authored128 native poses, actual Main3208 and continuous81257 checks with preserved Iguana; original poison/melee AI retained. No SPX-original claim.",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/SpriteFrames.tres"
     },
     {
       "id": "monster:시커",
@@ -3998,5 +3998,5 @@
     }
   ],
   "unrecovered_assets_note": "Previous Reaper PNG2 and QA draft remain UNRECOVERED, not additional lost species. Large QA archives preserved in start commit; all156 tracked PR122 PNG restored/SHA checked.",
-  "batch16_added": 3
+  "batch16_added": 4
 }

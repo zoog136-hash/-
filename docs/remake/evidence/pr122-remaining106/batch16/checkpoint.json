@@ -7,8 +7,8 @@
   "last_safe_commit": "fb6b02c5",
   "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch15/checkpoint.json",
   "counts": {
-    "NOT_AUTHORED": 79,
-    "VERIFIED_COMPLETED": 388,
+    "NOT_AUTHORED": 78,
+    "VERIFIED_COMPLETED": 389,
     "FRAME_INSUFFICIENT": 14,
     "SOURCE_HOLD": 16,
     "IN_PROGRESS": 1
@@ -415,7 +415,8 @@
     "monster:에바 왕국 상어전사",
     "monster:알비노 변이된 골렘",
     "monster:알비노 디어",
-    "transform:269"
+    "transform:269",
+    "monster:스파이더"
   ],
   "current_ids": [
     "monster:스파이더",
@@ -497,7 +498,6 @@
     "monster:분노의 데스 리퍼",
     "monster:분노의 데스 서번트",
     "monster:사라만다",
-    "monster:스파이더",
     "monster:알비노 데몬",
     "monster:알비노 드라이어드",
     "monster:알비노 몽크",
@@ -840,6 +840,11 @@
       "runtime_connected": true,
       "proof": "docs/remake/evidence/pr122-remaining106/batch16/tomb-completion-decision.json",
       "remaining_device_limit": "Android device/VRAM not run; no device budget approval"
+    },
+    "monster:스파이더": {
+      "status": "APPROVED",
+      "runtime_connected": true,
+      "proof": "docs/remake/evidence/pr122-remaining106/batch16/spider-completion-decision.json"
     }
   },
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
@@ -847,20 +852,20 @@
   "final_all498_ledger": "docs/remake/evidence/pr122-remaining106/batch16/all498-after-tomb.json",
   "final_CI": "PENDING_NEW_PRODUCTION_BATCH",
   "derived_navigation": "Local test bake outputs preserved in /workspace/qa/derived-navigation-before-restore; all26 original Git navigation files restored unchanged.",
-  "state": "GOLEM_DEER_TOMB269_LOCALLY_COMPLETED; SPIDER128_ACTUAL_MAIN_RUNNING",
-  "active": "monster:스파이더",
-  "newly_drawn_poses": 168,
+  "state": "FOUR_NATIVE_TARGETS_LOCALLY_COMPLETED; TWO_PINNED_SPIDER_ADAPTERS_AND_MONK_SOURCE_CONTINUE",
+  "active": "monster:검은숲 거미",
+  "newly_drawn_poses": 296,
   "preserved_prior_poses": 32,
   "complete_native_matrix": 144,
   "new_source_PNG": 16,
   "total_pack_PNG": 18,
   "runtime_profile_applied": true,
   "actual_Main": "PASS",
-  "new_completed": 3,
+  "new_completed": 4,
   "remaining_ids_source": "../batch15/all498-production-status.json",
-  "normal_completed": 388,
-  "approvals_total": 402,
-  "remaining_unapproved": 96,
+  "normal_completed": 389,
+  "approvals_total": 403,
+  "remaining_unapproved": 95,
   "deer_source_failures": {
     "attack_v01": "Identity drift: antler rack shape; preserved outside pack",
     "attack_v02": "All4 six-pose sheets fail unchanged foreign-body rectangle guard; reframe as8 full-direction three-pose vertical sheets, never lower thresholds",
