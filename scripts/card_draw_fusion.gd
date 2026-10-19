@@ -115,12 +115,16 @@ func _receive(category: String, entry: Dictionary) -> Dictionary:
 	}
 
 func draw_pack(category: String) -> Dictionary:
-	# Pack consumption/pricing belongs to the caller, never to this probability
-	# service. The current caller is debug-only until real packs are implemented.
+	return draw_cards(category, PACK_SIZE)
+
+func draw_cards(category: String, count: int) -> Dictionary:
+	# Valid counts are exactly the supported ticket sizes; validation precedes mutation.
+	if count != 1 and count != PACK_SIZE:
+		return {"ok": false, "error": "지원하지 않는 뽑기권 수량"}
 	if not can_draw(category):
 		return {"ok": false, "error": "추첨할 등급 카드가 부족합니다"}
 	var results: Array = []
-	for _index: int in range(PACK_SIZE):
+	for _index: int in range(count):
 		var grade: String = _roll_draw_grade()
 		var card: Dictionary = _sample_card(category, grade)
 		if card.is_empty():
