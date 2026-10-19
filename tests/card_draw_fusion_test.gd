@@ -94,8 +94,8 @@ func _run() -> void:
 	fusion.rng.seed = 55
 	var common_id: String = "source:변신-고급-0"
 	fusion.import_state({
-		"owned": {"변신": {common_id: true}},
-		"spare": {"변신": {common_id: 4}},
+		"owned": {"변신": {"source:변신-고급-0": true}},
+		"spare": {"변신": {"source:변신-고급-0": 4}},
 		"pity": {}
 	})
 	_check(fusion.spare_count("변신", "고급") == 4, "four duplicate materials imported")
@@ -120,8 +120,8 @@ func _run() -> void:
 	pity_case.rng.seed = 90816
 	var rare_id: String = "source:마법인형-희귀-0"
 	pity_case.import_state({
-		"owned": {"마법인형": {rare_id: true}},
-		"spare": {"마법인형": {rare_id: 200}},
+		"owned": {"마법인형": {"source:마법인형-희귀-0": true}},
+		"spare": {"마법인형": {"source:마법인형-희귀-0": 200}},
 		"pity": {"마법인형": {"희귀": 19}}
 	})
 	var encountered_failure: bool = false
@@ -141,8 +141,8 @@ func _run() -> void:
 	myth.configure(_fixture())
 	var myth_id: String = "source:성물-신화-0"
 	myth.import_state({
-		"owned": {"성물": {myth_id: true}},
-		"spare": {"성물": {myth_id: 4}},
+		"owned": {"성물": {"source:성물-신화-0": true}},
+		"spare": {"성물": {"source:성물-신화-0": 4}},
 		"pity": {}
 	})
 	var top: Dictionary = myth.fuse("성물", "신화")
