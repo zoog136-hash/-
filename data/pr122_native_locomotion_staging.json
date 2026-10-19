@@ -6,8 +6,8 @@
   "actors": {
     "transform:393": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/SpriteFrames.tres",
-      "frames_sha256": "931cf43bbbcdc3ed635c6972956408e44b8f603ab83f0347de7317e1b5986a90",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r069/SpriteFrames.tres",
+      "frames_sha256": "e3c8262d5339bdbb40077c7c25597a3e281b2b02343ed1e3ddf1b4f4c8063620",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -346,13 +346,13 @@
                   476
                 ],
                 "margin": [
-                  298,
-                  168,
-                  552,
-                  548
+                  362,
+                  328,
+                  808,
+                  804
                 ],
                 "source_anchor": [
-                  256,
+                  320,
                   483
                 ],
                 "rgba_sha256": "fa5142ac68636480abf926232f80c2e5e22341a43b18f2573ac7ec3b145bdbe4"
@@ -367,13 +367,13 @@
                   484
                 ],
                 "margin": [
-                  295,
-                  160,
-                  574,
-                  540
+                  375,
+                  320,
+                  830,
+                  796
                 ],
                 "source_anchor": [
-                  768,
+                  816,
                   490
                 ],
                 "rgba_sha256": "ccb436d707a3823a2f6a660493813236e77d1f3b413f2d946e76d0d323df9751"
@@ -388,13 +388,13 @@
                   495
                 ],
                 "margin": [
-                  288,
-                  149,
-                  513,
-                  529
+                  344,
+                  309,
+                  769,
+                  785
                 ],
                 "source_anchor": [
-                  256,
+                  328,
                   993
                 ],
                 "rgba_sha256": "1b0afa5d051da6744773d65478b515ecbada6bafef332d677f3fecab478d0a29"
@@ -409,13 +409,13 @@
                   486
                 ],
                 "margin": [
-                  298,
-                  158,
-                  575,
-                  538
+                  372,
+                  318,
+                  831,
+                  794
                 ],
                 "source_anchor": [
-                  768,
+                  822,
                   993
                 ],
                 "rgba_sha256": "e44cca53e798825fc31c751d1d2acb4ff314950169d09ac725bf916984b170c3"
@@ -430,13 +430,13 @@
                   493
                 ],
                 "margin": [
-                  297,
-                  151,
-                  551,
-                  531
+                  359,
+                  311,
+                  807,
+                  787
                 ],
                 "source_anchor": [
-                  256,
+                  322,
                   1500
                 ],
                 "rgba_sha256": "5d898bfa16a10b3acaa83c85d8136aa1cac004a0e82341789af40763bda37c9e"
@@ -451,13 +451,13 @@
                   492
                 ],
                 "margin": [
-                  302,
-                  152,
-                  570,
-                  532
+                  374,
+                  312,
+                  826,
+                  788
                 ],
                 "source_anchor": [
-                  768,
+                  824,
                   1499
                 ],
                 "rgba_sha256": "0204f5b67c0ac4b8fa1877c6fd51711451ee103abeebc35bee1ac7cd374c9444"
@@ -466,13 +466,64 @@
             "distinct_pixel_frames": 6,
             "neutral_height": 475.0,
             "canvas_size": [
-              1024,
-              1024
+              1280,
+              1280
             ],
             "foot": [
-              512,
-              640
+              640,
+              800
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1",
+            "base_geometry_sha256": "656b83080616c3a2f18f8f4d53ce0177e874d591dae5d6128e6a800542f7d3f2",
+            "derived_geometry_sha256": "ab7e16bf94ce2ebceb1f617d8f4319cbaa6b826441088c202f5a6d3434e6eaf6",
+            "review_sha256": "da9792fb8cb46b55ba8d0b1a98aacbf217c529c13bccf4c082cf46da6c487663",
+            "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful Eidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [330, 826, 338, 832, 332, 834], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 10 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD.",
+            "direction": "E",
+            "pose_count": 6,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ],
+            "source_anchors": [
+              [
+                320,
+                483
+              ],
+              [
+                816,
+                490
+              ],
+              [
+                328,
+                993
+              ],
+              [
+                822,
+                993
+              ],
+              [
+                322,
+                1500
+              ],
+              [
+                824,
+                1499
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1280
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -1411,10 +1462,10 @@
                   445
                 ],
                 "margin": [
-                  281,
-                  199,
-                  535,
-                  579
+                  409,
+                  359,
+                  791,
+                  835
                 ],
                 "source_anchor": [
                   384,
@@ -1432,13 +1483,13 @@
                   456
                 ],
                 "margin": [
-                  279,
-                  188,
-                  539,
-                  568
+                  393,
+                  348,
+                  795,
+                  824
                 ],
                 "source_anchor": [
-                  1152,
+                  1166,
                   481
                 ],
                 "rgba_sha256": "d1aeffa6a97beeaa64c1589f1c49674695cf9f44467bec9d02af09c568c5a104"
@@ -1453,13 +1504,13 @@
                   481
                 ],
                 "margin": [
-                  269,
-                  163,
-                  498,
-                  543
+                  379,
+                  323,
+                  754,
+                  799
                 ],
                 "source_anchor": [
-                  384,
+                  402,
                   1005
                 ],
                 "rgba_sha256": "61d44d8cc141b7e03356527ae444060048b79f390fc42ced20202ada0714ec9a"
@@ -1474,13 +1525,13 @@
                   466
                 ],
                 "margin": [
-                  276,
-                  178,
-                  535,
-                  558
+                  402,
+                  338,
+                  791,
+                  814
                 ],
                 "source_anchor": [
-                  1152,
+                  1154,
                   998
                 ],
                 "rgba_sha256": "797f5b80e2b6f9837a5a60825524cbe47bbea9136854a64ab07d1820a6fb34d1"
@@ -1495,13 +1546,13 @@
                   451
                 ],
                 "margin": [
-                  288,
-                  193,
-                  540,
-                  573
+                  410,
+                  353,
+                  796,
+                  829
                 ],
                 "source_anchor": [
-                  384,
+                  390,
                   1502
                 ],
                 "rgba_sha256": "546bd48c6dc5b339617af7101676d1f7f4ca144f2749d5c047388d8aa731d67b"
@@ -1516,13 +1567,13 @@
                   460
                 ],
                 "margin": [
-                  276,
-                  184,
-                  542,
-                  564
+                  403,
+                  344,
+                  798,
+                  820
                 ],
                 "source_anchor": [
-                  1152,
+                  1153,
                   1507
                 ],
                 "rgba_sha256": "215cbb7f5953bf49e40e6d308ff03cffe24a664d041e29b9b58595ead220d1b2"
@@ -1531,13 +1582,64 @@
             "distinct_pixel_frames": 6,
             "neutral_height": 449.5,
             "canvas_size": [
-              1024,
-              1024
+              1280,
+              1280
             ],
             "foot": [
-              512,
-              640
+              640,
+              800
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3",
+            "base_geometry_sha256": "a227ff7f4a15c71dac42dec616802a1eb8ffd97eac4af94e83b25b5107e9fc75",
+            "derived_geometry_sha256": "3e73796d0f00e257de43e6ec5107f4ddd6becf19fdc4762f0331351479b0d346",
+            "review_sha256": "9c17347b2793496251bd03c519fc782aed0ed2701f380ff9bba555cd49cdda0d",
+            "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful Nidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [402, 1184, 420, 1172, 408, 1171], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 18 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD.",
+            "direction": "N",
+            "pose_count": 6,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ],
+            "source_anchors": [
+              [
+                384,
+                475
+              ],
+              [
+                1166,
+                481
+              ],
+              [
+                402,
+                1005
+              ],
+              [
+                1154,
+                998
+              ],
+              [
+                390,
+                1502
+              ],
+              [
+                1153,
+                1507
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1280
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -3374,13 +3476,13 @@
                   477
                 ],
                 "margin": [
-                  283,
-                  167,
-                  550,
-                  547
+                  406,
+                  327,
+                  806,
+                  803
                 ],
                 "source_anchor": [
-                  256,
+                  261,
                   474
                 ],
                 "rgba_sha256": "efe20a7ddc9e7fe8ca4e276f933898dede6e31419a8152809471aa526088a52f"
@@ -3395,13 +3497,13 @@
                   417
                 ],
                 "margin": [
-                  291,
-                  227,
-                  560,
-                  607
+                  398,
+                  387,
+                  816,
+                  863
                 ],
                 "source_anchor": [
-                  768,
+                  789,
                   472
                 ],
                 "rgba_sha256": "ba2392062f32099e2f1b9628e5c9ead5365abda41a44e450b14991f3c89fe849"
@@ -3416,13 +3518,13 @@
                   353
                 ],
                 "margin": [
-                  284,
-                  291,
-                  549,
-                  671
+                  366,
+                  451,
+                  805,
+                  927
                 ],
                 "source_anchor": [
-                  256,
+                  302,
                   971
                 ],
                 "rgba_sha256": "69453bea200f68aa755dea9397f753f41243a388f60b96b132e0da22809991d8"
@@ -3437,13 +3539,13 @@
                   439
                 ],
                 "margin": [
-                  273,
-                  205,
-                  547,
-                  585
+                  405,
+                  365,
+                  803,
+                  841
                 ],
                 "source_anchor": [
-                  768,
+                  764,
                   978
                 ],
                 "rgba_sha256": "88201425971b17002c11485214c8e0f70116d95fcbfcb622b3f0ca422b370855"
@@ -3458,13 +3560,13 @@
                   481
                 ],
                 "margin": [
-                  278,
-                  163,
-                  545,
-                  543
+                  386,
+                  323,
+                  801,
+                  799
                 ],
                 "source_anchor": [
-                  256,
+                  276,
                   1498
                 ],
                 "rgba_sha256": "8b3cc0c55101bef863b03130185f8b2058e008da7d502fc6c125f4dfd4309959"
@@ -3479,13 +3581,13 @@
                   485
                 ],
                 "margin": [
-                  282,
-                  159,
-                  550,
-                  539
+                  385,
+                  319,
+                  806,
+                  795
                 ],
                 "source_anchor": [
-                  768,
+                  793,
                   1498
                 ],
                 "rgba_sha256": "007cc15df3c24e232760383548e5a029c49954ff07244d654e988fc57b483e69"
@@ -3494,13 +3596,64 @@
             "distinct_pixel_frames": 6,
             "neutral_height": 452.0,
             "canvas_size": [
-              1024,
-              1024
+              1280,
+              1280
             ],
             "foot": [
-              512,
-              640
+              640,
+              800
             ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4",
+            "base_geometry_sha256": "49ad6369314e8e08842822d0f22b2dcfd00b2c1ab079715274bd79d5928135c2",
+            "derived_geometry_sha256": "8ba71cf7d890e31a2061bb440227bf87df7d3a6942ce425b14113c355eafe6da",
+            "review_sha256": "438f61ee8a9d3560cfd241ca8f7e82fadee17542205bd60b055e6653f2d27932",
+            "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful NWidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [275, 803, 316, 778, 290, 807], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 14 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD.",
+            "direction": "NW",
+            "pose_count": 6,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ],
+            "source_anchors": [
+              [
+                261,
+                474
+              ],
+              [
+                789,
+                472
+              ],
+              [
+                302,
+                971
+              ],
+              [
+                764,
+                978
+              ],
+              [
+                276,
+                1498
+              ],
+              [
+                793,
+                1498
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1280
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
           }
         },
         {
@@ -7926,11 +8079,11 @@
       "detailed_completed": false,
       "completed_added": 0,
       "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
-      "visual_review": "HOLD; corrective clip reviewed, final actor quality remains pending",
+      "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/NativeMotionProfile.tres",
-      "native_profile_sha256": "87e520c5d799cbfdf8baf8a0c81450c70b2d16316e4f95b7cbd5c1e667dd456c",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r069/NativeMotionProfile.tres",
+      "native_profile_sha256": "1c2aeac0d719f064bbd374ddd681184256d3bb573e2eff68d23f3afeae6c1dca",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 362.25,
@@ -7949,725 +8102,9 @@
         "Player_position_collision_class_combat_sequence_preserved": "PASS",
         "missing_locomotion_not_replaced_or_aliased": "PASS",
         "actual_Main": "NOT_RUN",
-        "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+        "visual_approval": "NOT_RUN",
         "completed_added": 0,
-        "actual_Player_dedicated_actions_and_markers": "PASS",
-        "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
-      },
-      "visual_quality_hold": {
-        "key": "transform:393",
-        "status": "HOLD",
-        "scope": "selected_clips",
-        "sources": [
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
-          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png"
-        ],
-        "slots": [
-          "transform:393:SW:run",
-          "transform:393:N:attack",
-          "transform:393:NE:attack",
-          "transform:393:NW:attack",
-          "transform:393:E:idle",
-          "transform:393:E:walk",
-          "transform:393:E:run",
-          "transform:393:W:idle",
-          "transform:393:W:walk",
-          "transform:393:W:run",
-          "transform:393:NW:idle",
-          "transform:393:NW:walk",
-          "transform:393:NW:run",
-          "transform:393:N:death",
-          "transform:393:NW:hit",
-          "transform:393:NW:death",
-          "transform:393:N:hit",
-          "transform:393:E:hit",
-          "transform:393:SE:hit",
-          "transform:393:NE:hit",
-          "transform:393:S:attack",
-          "transform:393:W:death"
-        ],
-        "reason": "SW run and N/NE/NW attack heading defects; NW locomotion/front view and E/W versus SE/SW cardinal separation require correction",
-        "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
-        "completion_change": 0,
-        "corrections": [
-          {
-            "slot": "transform:393:SW:run",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "source_visual_findings": [
-              "All six helmet/face, chest, blade and leg perspectives face screen LOWER-LEFT/SOUTHWEST; no screen-right reversal.",
-              "Gold/black armor, burgundy cape, paired crystalline purple wings and the established blade hand match the correct SW walk/idle generated model at game-view scale.",
-              "New fast-flight poses show stronger forward lean, visible leg tuck/exchange and upstroke/downstroke wing/cape response; phase3 has a clear deeper tuck differing from slow walk.",
-              "All six figures appear complete and uncropped in the private comparison."
-            ],
-            "actor_approval_added": 0
-          },
-          {
-            "slot": "transform:393:N:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "source_visual_findings": [
-              "All six poses retain the back of helmet and back armor, north-facing shoulders/hips/feet and the same cape side; no front/right body reversal.",
-              "Anticipation phase1 lifts the established weapon; phase2 clearly bends both arms into a rear-view load; phase3 extends the same weapon straight screen-UP/NORTH above the helmet with readable elbow/arm extension.",
-              "Phase4 completes the attack arc while remaining rear-facing, phase5 returns to the same rear guard and same anatomical weapon hand.",
-              "Six complete figures, distinct guard/anticipation/load/contact/follow-through/recovery, same established gold-black armor, burgundy cape, crystalline wing structure and equipment at game-view scale."
-            ],
-            "actor_approval_added": 0
-          },
-          {
-            "slot": "transform:393:NE:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Absolute compass review: all six poses aim NORTH-EAST/screen upper-right AWAY from the camera. Back of helmet and back segmented torso armor remain visible; these are rear-right views, distinct from southeast front-right views with a visible front face/breastplate.",
-              "Phase0 holds a rear-right guard; phase1 bends the actual weapon arm overhead while the back remains visible; phase2 loads without turning face or chest toward the viewer.",
-              "Phase3 extends the same weapon and anatomical striking arm diagonally upper-right toward a target farther away. The helmet and torso retain their rear-right heading rather than facing screen lower-right.",
-              "Phase4 follows through along that upper-right-away strike line while showing back armor; phase5 returns to the same rear-right guard. Six visibly different articulated guard/anticipation/load/contact/follow-through/recovery poses.",
-              "The established gold/black armor, burgundy/black cape, gold horned helmet, purple crystalline wings and single purple-bladed weapon are preserved from the original portrait and correct native NE walk/idle references.",
-              "At shared source-pixel resolution, translated only onto a common foot baseline, new neutral attack body scale is close to NE walk. No image scaling or bbox-height normalization was performed."
-            ],
-            "source_review_sha256": "ff13239209d03922311cd2f86ad892a57008c8d3f494ba18749a5cda9039fe72"
-          },
-          {
-            "slot": "transform:393:E:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six helmet nose/visor, foreshortened sternum, pelvis and side-view legs retain true screen-RIGHT heading; this is clearly different from the old front-right/SE model.",
-              "Near/far shoulders and hips occlude as a coherent lateral elevated-camera view; helmet and shoulder upper planes remain visible. No concrete camera-elevation mismatch identified at game-view detail.",
-              "Black/gold helmet and armor, burgundy cape, crystalline wings, single established blade and anatomical weapon hand remain coherent. Far wing is naturally occluded by lateral projection.",
-              "Six articulated idle phases vary wing joints, feather spread, cape fold and shoulder/hip response while retaining exact heading; no translation-only or view-rotation sequence.",
-              "Complete, uncropped figures. Source physical pixel height is larger than N/S references, but private QC-only uniform0.80x display aligns shoulder, hip and boot landmarks closely; no isolated torso/limb elongation remains evident."
-            ],
-            "source_review_sha256": "9fcb6ec666457bc89edd591286faa8ca3ce18aa623503e0d3f8e26f4b9ffd5fb"
-          },
-          {
-            "slot": "transform:393:W:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six visor/nose, foreshortened sternum, pelvis, knees and planted boot toes face true screen-LEFT; clearly distinct from old SW front-left diagonal model.",
-              "Near arm is the unarmed left fist, visibly hanging on the near side; established weapon is held by far right arm with hand/blade visible ahead to LEFT, preserving anatomical right-handed occlusion instead of mirroring the EAST view.",
-              "Existing black/gold helmet and plates, burgundy cape, two crystalline wings and the single blade remain coherent with N/S/E model; far parts naturally occlude in the opposite-side view.",
-              "Six gentle living-idle changes in shoulder/wing-joint tension, feather spread, cape folds and local body weight while both boots remain in a grounded same-heading stance.",
-              "All six figures appear complete and uncropped. No specific anatomical ratio or elevated-camera mismatch seen; source pixel body size is larger than request/reference target and requires separate runtime compensation."
-            ],
-            "source_review_sha256": "983482bd104803f8ccf757e22fc0fd5c7659591a4819861a913444da57dcff99"
-          },
-          {
-            "slot": "transform:393:E:walk",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six retain the same genuine horizontal RIGHT visor/nose and lateral sternum/pelvis, without SE/front-facing snap or weapon-hand swap.",
-              "Coherent slow airborne cycle is visibly articulated: raised wings0, stronger down/back sweep1-2, joint recovery3, raised/open upstroke4-5, cape lag and hip/knee tuck/extension. No required ground contact was invented.",
-              "Existing helmet, black/gold armor, single same-hand blade, crystalline wings and burgundy cape stay coherent. No duplicate static idle or whole-image translation substituted for flight.",
-              "Fixed0.75-pixel-scale contact review avoids misleading per-bbox thumbnail normalization; helmet/body physical scale stays coherent while wing/leg poses change."
-            ],
-            "source_review_sha256": "44e188e450e8f365da4b04bbd872be11c7e37d5de67dd8bf0f69f4affa8dd1ae",
-            "scoped_runtime_visual_review": {
-              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r053-E-walk.json",
-              "sha256": "05b4ae1e8c9dcc92b2f0b248c9348ee6ef4706bed97df0af58c4799fb521873b",
-              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
-              "review_status": "PASS_SCOPED_E_IDLE_WALK_RUNTIME_LAYOUT"
-            }
-          },
-          {
-            "slot": "transform:393:E:run",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 visor/nose, lateral chest, pelvis and motion heading remain horizontal RIGHT/EAST, distinct from old SE/front-facing run. No view turn or mirrored weapon-hand swap seen.",
-              "New genuine fast-flight body posture uses stronger forward lean and trailing/tucked knees/ankles versus slow E walk; cape streams backward and changes fold/lag with wingstroke. Both legs airborne, no invented grounded contact requirement.",
-              "Dedicated full6 wingbeat sequence is visible:0 HIGH raised crystal fan,1 horizontal power sweep,2 LOW down/back fan toward hip/lower-left,3 low-rear partially recovered sweep,4 middle/raised recovery,5 late raised return toward0. Rotations occur at gold shoulder/back wingroot; not whole-image translation or replay-speed reuse.",
-              "Existing two-arm/two-leg model, same nearRIGHT weapon arm with single broad purple crystal blade, horn crown, black/gold plates, crimson tattered cape and established crystalline fan structure retained. Far wing/root remains naturally layered and largely occluded as in lateral E reference. No extra arm/weapon or detached equipment observed.",
-              "Entire six silhouettes appear complete, no strong opaque pixels touch outerimageedge. Physical head/torso/gear scale is coherent across phases while knees/wingfan/cape articulate.",
-              "Raw strict importer detects one pose rectangle containing another body; native geometry remains HOLD pending lossless disjoint-pose layout, no cropping or threshold relaxation applied."
-            ],
-            "source_review_sha256": "2d63c4d0e030c3a21c7fabee2b97f59a71bbbab0d84da15ef89b14ebcc0182e6",
-            "scoped_runtime_visual_review": {
-              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r056-E-run.json",
-              "sha256": "054360a8fbd30fd8fd8f5e5b0c019048ba5685e6debcb7657e10dba19db33e52",
-              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
-              "review_status": "PASS_SCOPED_E_RUN_RUNTIME_TRANSITION_AND_LOOP"
-            }
-          },
-          {
-            "slot": "transform:393:W:walk",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 helmet/visor/nose profiles, foreshortened lateral chest, pelvis and motion heading remain true horizontal LEFT/WEST, distinct from old SW/front-left selected movement. No source-heading blending or horizontal mirror used.",
-              "Near anatomicalLEFT free fist remains visible hanging on the near side; far anatomicalRIGHT hand/forearm carries the sole purple crystal blade ahead/LEFT. Two connected arms/hands and two legs/boots remain coherent, no near-hand blade transfer.",
-              "A new genuine normal slow airborne wingcycle is visible:0 HIGH raised crystal fan,1 broad horizontal sweep,2 DOWN/BACK feather fan below shoulder toward hip/lowerRIGHT,3 low-rear recovery with partly closed fan,4 rising middle/upper recovery,5 high opening returning toward0. Gold-root articulation and fan parts remain coherent.",
-              "Body has gentle leftward lean, both boots airborne with local knee/ankle tuck/trail changes; cape follows through behind toward RIGHT with distinct delayed folds. No invented grounded walking contacts or forced alternating leg requirement.",
-              "Original gold horn crown, black/gold segmented armor, established solid crystalline fan wings/root layering, burgundy cape, same farRIGHT compact purple blade and W physical model remain intact. Far wing naturally overlaps/occludes as in W identity source.",
-              "All silhouettes appear complete and uncropped; no opaque alpha>100pixels touch outerimageedge. Strict unchanged geometry+complete-region checker PASS with exactly6 distinct frames. Source pixel scale remains unmodified; runtime physical scale/bodyroot requires separate review."
-            ],
-            "source_review_sha256": "ffff780d8018ae1cf0767d36a7f18609b538a3e4df9206318307b88d2ceacfa1",
-            "scoped_runtime_visual_reviews": [
-              {
-                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r058-W-walk-run-final.json",
-                "sha256": "0da646d051df0302f73631f27bae1065fac634cbf480cc04c512b35d00494af2",
-                "review_status": "PASS_SCOPED_W_WALK_RUN_RUNTIME_TRANSITIONS_AND_LOOPS",
-                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
-              }
-            ]
-          },
-          {
-            "slot": "transform:393:W:run",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 visor/nose/chest/hip axes retain genuine LEFT/WEST lateral elevated-camera model, no SW/front-left turn, hand mirror or broad front-chest snap.",
-              "NearLEFT free fist remains visible with its connected near arm; farRIGHT hand carries sole compact purple crystal blade aheadLEFT. Exactly two coherent arm/hand chains and two legs/boots, with natural partial occlusion during flight. Gold horns/plates, crystalline fan feathers/roots and burgundy cape remain faithful.",
-              "New full wingbeat0HIGH→1horizontalpower→2LOWbelowshoulder/downback→3lowrearfollowthrough→4risingmiddle→5latehighreturn is visibly articulated, with changing gold-root angle and fan closure; not slowwalk replay/duplicate stills.",
-              "Stronger whole-torso forward lean, hips/knees/boots trailing rearRIGHT and cape streaming more horizontally distinguish dedicated fast run from gentle Wwalk. Feet stay airborne; no ground contacts imposed.",
-              "Complete fullsilhouettes appear uncropped; no alpha>100pixels touch outerimageedge. Raw strictimporter detects overlapping pose rectangles, so geometry remains HOLD for lossless disjointsplit rather than altered thresholds/cropped figures.",
-              "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
-            ],
-            "source_review_sha256": "657ccad253341b2ffec98899b7b5d90fb641ec168864dea9b58738795d88cf3d",
-            "scoped_runtime_visual_reviews": [
-              {
-                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r058-W-walk-run-final.json",
-                "sha256": "0da646d051df0302f73631f27bae1065fac634cbf480cc04c512b35d00494af2",
-                "review_status": "PASS_SCOPED_W_WALK_RUN_RUNTIME_TRANSITIONS_AND_LOOPS",
-                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
-              }
-            ]
-          },
-          {
-            "slot": "transform:393:NW:idle",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "Every pose retains new canonical rear-left NW camera: articulated back/spine visible, chestfront skull hidden, helmet back/side left-away profile, nearLEFT lower-left shoulder and farRIGHT upper-right shoulder. No old N/NE/right-toe camera returned.",
-              "Both boots in all6 retain clear pointed gold toe UP-LEFT from heel/backankle LOWER-RIGHT, same coherent modest guard stance. No walkingstep/support swap or separate foot/body heading turn introduced.",
-              "NearLEFT shoulder→arm→empty fist stays lower-left ahead of cape; farRIGHT shoulder→arm→hand holds one compact purple crystal blade at upper/right side. All six retain two arm/hand chains and two legs/boots, no extra hand or gear swap.",
-              "Six actual idle articulations: neutral0, gradual opening/lift1, wider raised inhale2, eased exhale3, visibly narrowed/relaxed wingfan4, recovery opening5→0. Shoulder/back breathing, local wingroot/fan spread and delayed cape folds vary without full flightstroke or wholefigure translation.",
-              "Original gold horns, black/gold segmented back armor, TWO solid purple crystal fans/roots, burgundy cape on LEFT/back and original right-hand blade preserved with stable physical model/camera. Fine source-placement differences remain subject to native support-anchor review rather than claiming immutable pixel footposition.",
-              "All silhouettes complete and uncropped;0 alpha>100pixels touch outerimageedge. Existing unchanged geometryanalyzer+complete-region checker PASS exactly6 distinct frames. No threshold relaxation, source resampling, masking or colorchanges applied."
-            ],
-            "source_review_sha256": "b0fe25fd819982caaf931e5465474fdefaeb1830d4cdb7a4f48f87bec3a5d50c",
-            "scoped_runtime_visual_reviews": [
-              {
-                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r062-NW-idle-walk-run-final.json",
-                "sha256": "7075f7807115fb7bfa3235b455c8b4a5326c63cae38f89967a5e5a8bb6548042",
-                "review_status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
-                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
-              }
-            ]
-          },
-          {
-            "slot": "transform:393:NW:walk",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six show the same rear-upperLEFT helmet/profile, dorsal spine/back armor and rear-left pelvis with nearLEFT empty arm and original single purple blade in farRIGHT hand. No frontal breastplate/face or NE/right-facing torso turn is visible.",
-              "All six visible paired leg chains descend from coherent pelvis exits through distinct bent knees, trailing calves and continuous ankle/boot openings. Extended ankles continue into the pointed boots LOWER-RIGHT behind the NW-flying body. This is plausible natural plantarflexion; a canvas-direction difference from the standing canonical is not evidence of an anatomical 180-degree boot reversal.",
-              "Independent review traced both legs separately for each authored phase and found no visible extra/disconnected leg, reversed boot or knee/ankle contradiction. Armor/cape obscure exact hip sockets and some joint centers, which limits hidden-skeleton certainty without constituting an observed defect.",
-              "Six distinct normal-flight poses articulate original wing roots/fans through HIGH→mid→LOW→lower return→midrise→HIGH, with changing trailing knee positions and cape lag. This is a new animated cycle, not repeated/tinted canonical art.",
-              "Source geometry retains six distinct complete physical RGBA regions and unchanged PNG pixels. Requested sparse320px/96px gutters were not met (regions about442–467px wide); actual strict complete coverage passes, with no strong outer-edge alpha. Layout/body scale must be reviewed in the actual runtime separately rather than inventing a source-art defect from resolution alone."
-            ],
-            "source_review_sha256": "d83da0817df58262708de58e7793c0c335af6a6e81a13ce6c9add33a06c8abc0",
-            "scoped_runtime_visual_reviews": [
-              {
-                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r062-NW-idle-walk-run-final.json",
-                "sha256": "7075f7807115fb7bfa3235b455c8b4a5326c63cae38f89967a5e5a8bb6548042",
-                "review_status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
-                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
-              }
-            ]
-          },
-          {
-            "slot": "transform:393:NW:run",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 preserve validated rear-left/NW head/helmet side-back, exposed gold-edged spine/back armor, pelvis and shoulder/arm plane, no frontal skull/chest/face or N/NE heading snap. Original body faces diagonally UP-LEFT while legs trail behind.",
-              "NearLEFT free fist/arm remains lower-left with continuous shoulder/elbow/wrist chain; farRIGHT arm still owns sole compact purple crystal blade upper/right. Same two arms/hands, two legs, no mirrored ownership or extra equipment.",
-              "New dedicated fullwingcycle:0HIGH,1middlepower,2LOWdownback,3lowfollowthrough/recovery,4middleupstroke,5highreturn. Actual gold-root/fan articulation, fan opening and delayed cape waves distinguish six newly drawn poses.",
-              "Compared with gentle NWwalk, body/hip axis has stronger upper-left aerodynamic lean, lower limbs stream farther back/downRIGHT with energetic knee/ankle changes and cape response. Body physical proportions remain coherent while posture changes; source is not a tinted/sharedplayback substitution.",
-              "Across all6 visible hip exits/knees/shins/ankle rims/boots form continuous plausible flight chains. Down/backSE pointed toes follow extended/plantarflexed trailing ankles; they are not treated as idletoe heading or a standalone180degree bootreversal. Armor/cape occlude proximal hip sockets, recorded as hiddengeometry uncertainty rather than observed defect.",
-              "Both established crystalline featherfans/roots, gold horns, narrow dark/gold backplates, burgundyLEFT/back cape and single samehand blade remain faithful and complete. Existing strictanalyzer+complete-region coverage PASS exactly6 distinct frames;0 alpha>100pixels touch outerimageedge."
-            ],
-            "source_review_sha256": "e21a266ece5cca8fe6691bf05438e0465e9894f9e3c574651bc9d4029d4d3dc5",
-            "scoped_runtime_visual_reviews": [
-              {
-                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r062-NW-idle-walk-run-final.json",
-                "sha256": "7075f7807115fb7bfa3235b455c8b4a5326c63cae38f89967a5e5a8bb6548042",
-                "review_status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
-                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
-              }
-            ]
-          },
-          {
-            "slot": "transform:393:N:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six preserve due NORTH pure rear plane: closed helmet rear plates, rear spinal/hip armor, purple fan roots and burgundy LEFT-back cape. No frontal face or pink chest breastplate appears during reaction.",
-              "Two arms throughout: anatomical RIGHT/imageRIGHT shoulder-elbow-wrist stays low and continuously holds the same compact purple blade. EMPTY anatomical LEFT/imageLEFT arm alone extends then bends toward helmet at peak2 and lowers through recovery. No extra right empty fist, disconnected grip or third arm.",
-              "Six distinct reaction poses: low guard0; empty LEFT arm lifts outward1 while head/shoulders recoil; left elbow folds to head/upper torso at2; releases3; drops4; settles5. Wings fan/root and cape folds respond without turning the north-facing torso or replacing the reaction with a weapon attack.",
-              "Same gold horns, black/gold plate segments, full purple crystal fan wings, original blade and torn burgundy cape. Complete uncut silhouettes; zero alpha>100 pixels on outer image edge. Existing flight/overlapping legs match reference; no standing-foot direction test imposed."
-            ],
-            "source_review_sha256": "40b1a9832f3a1f91bde50f6e922586d84149201cf75c336ece97c87f926e7fda"
-          },
-          {
-            "slot": "transform:393:E:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six preserve due EAST pure side profile: helmet snout points right and narrow side armor/hip plane stays E through head recoil. No rear/front three-quarter camera swap.",
-              "Exactly two arm chains: near anatomical RIGHT shoulder-elbow-low forearm-hand continuously grips original blade low at hip all six. Far EMPTY LEFT forearm emerges in front of upper torso at1, bends near helmet peak2, releases3, lowers4 and returns5. No third arm, extra right empty fist, disconnected weapon or grip swap.",
-              "Clear six-phase hit response: guard0; left arm lift/head recoil1; peak2 torso/head rear lean and bent empty LEFT hand; release3; lower-hand/wing-cape recovery4; settle5. Blade stays low rather than becoming an attack swing.",
-              "Exact same gold-horn helmet, black/gold plate segmentation, original purple fan wings, crystal blade and left-back burgundy cape. Existing hovering two-leg chains match idle reference. All silhouettes fully present, zero alpha>100 outer-edge pixels. Unchanged strict six-frame geometry and complete-pose checks PASS."
-            ],
-            "source_review_sha256": "964e8076a9a6b06d8c0e1695616884867cb5f844fd5a33a7698bb63418fd6652"
-          },
-          {
-            "slot": "transform:393:NW:hit",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six retain the current genuine NW rear-up-left head/torso/pelvis camera, segmented dorsal armor and nearLEFT empty arm/farRIGHT sword ownership. No frontal pink chest, SW downleft or NE right-facing substitute.",
-              "Two complete continuous arm chains in every pose. NearLEFT shoulder→elbow→forearm→empty fist bends inward at1/2 and returns; farRIGHT shoulder→elbow→forearm→hand remains connected to the purple sword, no additional wrist or hand. Both leg chains and original two shoulder-root feather fans remain.",
-              "Six actual reaction phases: poised initial0, contracted shoulders and bent LEFT arm1, deepest bowed head/back and compressed knees2 with both fans folded, release3, straightening4 and near-neutral recovery5. Sword position, wing joint fold, torso curvature and cape lag change together without camera turn or duplicate stills.",
-              "Same black/gold armor, gold horned rear helmet, segmented dorsal plates, two original solid purple crystal fans and burgundy LEFT cape retained. Complete horns/wings/blade/boots are uncropped.",
-              "Unmodified geometry analyzer and complete-region guard PASS six distinct frames at virtual canvas1024. Raw PNG unchanged, no resampling/masking/recoloring or threshold relaxation; zero strong outer-edge clipping."
-            ],
-            "source_review_sha256": "ea54c122b53fda69be90dd27e7f2893737198c8cfebbd116b64023d981c5c3a6"
-          },
-          {
-            "slot": "transform:393:NW:attack",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 preserve correctNWrear-left head/back/hip/shoulder plane, hiddenfrontskull/chest, originalgoldhorn/blackgoldarmor/twocrystalwingfans/cape/compactpurpleblade.",
-              "Exactlytwoarms/hands throughout: nearLEFTlower-leftempty, samefarRIGHTsolebladegrip through0guard,1raise,2loaded,3elbowextension-UPLEFTcontact,4cross-frontfollow,5guardrecovery. No leftoverdownRIGHTarm or newthirdattackarm.",
-              "Follow4 independentanatomyPASS finds nearLEFTfreechain andweaponforearm/elbow continuous, farRIGHThumerus occludedbyhelmet/nearpauldron; no explicitsecondsocket, armduplication, separatedelbow orhandswap. OriginalUNRESOLVEDrecord preserved andindependentreportSHApinned.",
-              "Actualguard→raise→load→contact3UPLEFT→follow→recover withwing/cape response, sourceposeorder unchanged. GroundedNWleg/kneechains coherent; genuinehip/kneelunge retainedrelativeheel support.",
-              "ExactRGBA assembly reuses3validkeys andadds3newmissingkeys. Sixuniquevisiblefingerprints, everyselectedalpha>16 pixelcoveredonce, unchangedstrict6completegeometry nominal2048PASS. Noresampling/mirror/recolor/cleanedpixels orgearclipping.",
-              "Anatomicalhelmet/pauldron/backplate/pelvis comparisonagainstactualN/NE/W andNWidleC1280 supports perposeC [1208,1208,2648,2768,2768,1208] andgroundsupport metadata. Pythonlayoutmodule validates all6fit andsourceRGBA unchanged; actualcompiledphysical/game approval remains pending."
-            ],
-            "source_review_sha256": "0c9ac14b2d7340bc5dae508b607768e6d219a53e83881d3e2aa089c7543761a8"
-          },
-          {
-            "slot": "transform:393:NW:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All6 retain genuine NW rear-up-left body/head/pelvis, gold-rimmed dark dorsal plates and rear helmet. Initial0 and buckling1/kneeling2 match current correct NW guard; no immediate frontal pink breastplate, SW/downleft or NE/right-facing camera.",
-              "Six physical death phases: rear guard0, bowed shoulders with softened knees1, clear low two-knee collapse2, continuous rear/side torso fall3 with legs extending, low lateral settling4 and fully down stable rear-facing corpse5. There is no get-up, standing final pose, duplicate still, disappearing torso or arbitrary viewpoint swap.",
-              "NearLEFT shoulder→upperarm→elbow→forearm→empty hand remains a single connected chain, reaching floor on descent; farRIGHT shoulder→arm→wrist→hand continuously retains original purple sword as weapon arm rotates with fall. Exactly two arm chains and two articulated leg/boot chains throughout.",
-              "Original gold horned helmet, black/gold armor, two separate shoulder-root solid purple feather fans, burgundy LEFT cape and compact broad purple sword remain through corpse5. Wingfans fold gradually and cape pools as body falls; both attachments retained, no extra hands/arms/wingpair or membrane redesign.",
-              "Unchanged analyzer and complete-region guard PASS six distinct full-body regions at canvas1024. Original generated PNG bytes preserved, no masking/resampling/recoloring, importer thresholds unchanged; all full crown/wings/cape/sword/feet remain available."
-            ],
-            "source_review_sha256": "0e17583f5fe309b44ea685e0ead1833592d457f4232f62ad8e70d5bf9aefff53"
-          },
-          {
-            "slot": "transform:393:N:death",
-            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
-            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v02iso01.png",
-            "source_visual_status": "PASS",
-            "geometry_and_actual_Player": "PASS",
-            "actor_approval_added": 0,
-            "source_visual_findings": [
-              "All six preserve genuine N rear-up model: rear closed helmet plates, central gold dorsal seam and dark segmented back armor are visible; front face, skull chest and frontal pink gem remain hidden. Initialguard0, buckling1 and kneeling2 retain straight rear-UP entry rather than original frontal/SE jump.",
-              "Six actual nonlooping death phases: rear guard0, bowed upperback and buckled knees1, clear low double-knee collapse2, rear/side forward fall3 with knees/hips opening toward prone, settled rear-side body4 and fully down low stable rear corpse5. Side shift during fall is continuously authored from bowed rear posture, no sudden frontal body or upright final pose.",
-              "Exactly two arm/hand chains: anatomicalRIGHT imageRIGHT forearm/hand remains connected to the original purple crystal sword in all6; emptyLEFT hand starts imageLEFT, reaches down during kneeling and is naturally occluded under the near cape/wing as body becomes prone. No extra arm/wrist/hand or weapon hand-swap. Two leg/boot chains remain with physical kneeling→extension.",
-              "Gold horns, black/gold plate landmarks, original two separate purple featherfans at two back shoulder roots, burgundy LEFT cape and purple sword remain through final corpse. Fans fold/settle and cape pools over ground-level body; no membrane, new wings or disappearing equipment.",
-              "Original raw PNG preserved unchanged. All6 body silhouettes are visually complete, zero alpha>100 pixels on outer source edges. Strict default geometry correctly HOLDs because a pose rectangle contains foreign neighboring body; default thresholds remain unchanged and no source pixels removed. A single lossless disjoint-body recovery is required before native integration."
-            ],
-            "source_review_sha256": "7ad50dc216d80f8785c3eaca85807e3a544d5caae78ee435ca7a5b1ea2b3299f"
-          }
-        ],
-        "compass_audit": {
-          "scope": "24 selected idle/walk/run clips",
-          "source": {
-            "schema": 1,
-            "actor": "transform:393",
-            "reviewed_at": "2026-10-19T10:23:36.320766+00:00",
-            "reviewed_contact_revision": "r046",
-            "current_register_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r046/SpriteFrames.tres",
-            "scope": "Actual compass orientation of selected idle/walk/run; not approval by matching old direction labels.",
-            "method": "Eight private enlarged JPEG contacts, each current selected idle/walk/run phases0 and3; previous private all-six-phase direction contacts were also reviewed. New SWrun all6 privately reviewed. Source pixels read only.",
-            "private_new_contact_payload_bytes": 1707196,
-            "max_private_jpeg_bytes": 225165,
-            "main_chat_images_forwarded": 0,
-            "orientation_result": "HOLD",
-            "hold_directions": [
-              "E",
-              "W",
-              "NW"
-            ],
-            "hold_clips": 9,
-            "compass_pass_only_clips": 15,
-            "directions": [
-              {
-                "direction": "E",
-                "status": "HOLD_INSUFFICIENT_CARDINAL_DIAGONAL_SEPARATION",
-                "expected": "Projected screen-right facing distinct from SE; elevated isometric view may expose chest and torso twist.",
-                "observed": "Front-right/down-right three-quarter view, essentially same as SE.",
-                "evidence": "Across idle/walk/run the nose/visor projects diagonally down-right, with the same visible cheek/mask side and nearly the same shoulder/pelvis foreshortening as SE. Front-knee overlap and boot geometry also retain the diagonal model; no reliable right-versus-downright view change is visible. Chest visibility alone is NOT a failure criterion. Airborne trailing toes do not independently prove facing; no numerical heading angle is asserted.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
-                    "sha256": "77fdf18c910fdf1e80da6d6e05fcf4e1217472267a916d3f38bf9e2a1274880e"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
-                    "sha256": "efa8ceadcb848c73293a71b09ab717dfe8a1f95b8aab5adc955316d2a88cb44f"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
-                    "sha256": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a"
-                  }
-                ],
-                "per_role": {
-                  "idle": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
-                  "walk": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
-                  "run": "Forward lean is stronger, but nose/mask and pelvis retain the diagonal view; HOLD until a clear cardinal-versus-diagonal heading separation is shown."
-                }
-              },
-              {
-                "direction": "SE",
-                "status": "COMPASS_PASS_ONLY",
-                "expected": "Front-right/down-right",
-                "observed": "Clear front-right/down-right three-quarter body.",
-                "evidence": "Face/front gold mouth-mask and purple breastplate visible; front hip/knee surfaces face down-right. Distinct from the dorsal NE sheets.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
-                    "sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
-                    "sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
-                    "sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b"
-                  }
-                ]
-              },
-              {
-                "direction": "S",
-                "status": "COMPASS_PASS_ONLY",
-                "expected": "Front/down",
-                "observed": "Clear direct front/down.",
-                "evidence": "Front mask/eyes and symmetrical purple-gold breastplate visible; pelvis/front knees and toes point toward bottom, paired shoulders shown symmetrically.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
-                    "sha256": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
-                    "sha256": "d34c9acd6dba4f03a8a911a4e5d7dfe1276dd906eb68964b2ccd5dd311b2bced"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
-                    "sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86"
-                  }
-                ]
-              },
-              {
-                "direction": "SW",
-                "status": "COMPASS_PASS_ONLY",
-                "expected": "Front-left/down-left",
-                "observed": "Clear front-left/down-left; corrected SW run now agrees.",
-                "evidence": "Front mask and purple breastplate visible at leftward angle; pelvis/knees and blade project down-left, cape trails right. New SW run v02 retains this heading throughout its six privately reviewed phases.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png",
-                    "sha256": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
-                    "sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
-                    "sha256": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a"
-                  }
-                ]
-              },
-              {
-                "direction": "W",
-                "status": "HOLD_INSUFFICIENT_CARDINAL_DIAGONAL_SEPARATION",
-                "expected": "Projected screen-left facing distinct from SW; elevated isometric view may expose chest and torso twist.",
-                "observed": "Front-left/down-left three-quarter view, essentially same as SW.",
-                "evidence": "Across idle/walk/run the nose/visor projects diagonally down-left, with the same visible cheek/mask side and nearly the same shoulder/pelvis foreshortening as SW. Front-knee overlap and boot geometry also retain the diagonal model; no reliable left-versus-downleft view change is visible. Chest visibility alone is NOT a failure criterion. Airborne trailing toes do not independently prove facing; no numerical heading angle is asserted.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
-                    "sha256": "e1a5d8f10346ce0d165f883fcba50554f22c925a7fd57ec53b5316f7ddcf2710"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
-                    "sha256": "dc1a63e8a0ca7c2867c5960bb2d21a1c1f655029b0930081d1d350c1b0c34c8f"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
-                    "sha256": "4778576260cc3cb28cd91365565a784b71fbfcf42ac818e04c2831fe914b2de4"
-                  }
-                ],
-                "per_role": {
-                  "idle": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
-                  "walk": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
-                  "run": "Forward lean is stronger, but nose/mask and pelvis retain the diagonal view; HOLD until a clear cardinal-versus-diagonal heading separation is shown."
-                }
-              },
-              {
-                "direction": "NW",
-                "status": "HOLD",
-                "expected": "Rear-left/up-left, away from viewer",
-                "observed": "Front/left-lateral-looking view; insufficient genuine rear-left orientation.",
-                "evidence": "Helmet lower/front gold surfaces and a broad bright gold breast/side surface remain presented toward viewer. Clear dorsal spine/back-cape occlusion and rear hip/heel presentation of the NE model are absent. Legs/front knee surfaces appear exposed. Not a reliable compass-separated rear-left view; matching these existing sheets does not validate new NW attacks.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
-                    "sha256": "bf6b450bfadfc06928b2abf20befd59c7f122287344a22f3cd13a052c1be6477"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
-                    "sha256": "8aeb92cb8e3c0cd164ca8c35fb9befb1deb214982517e3cb66c3df164d2189d0"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
-                    "sha256": "90f3918feaef084f63e3eeffa3301245069ff662bb5a3ca901d3f849f4fc5345"
-                  }
-                ]
-              },
-              {
-                "direction": "N",
-                "status": "COMPASS_PASS_ONLY",
-                "expected": "Rear/up, away from viewer",
-                "observed": "Clear direct rear/up.",
-                "evidence": "Back of closed helmet, vertical dorsal gold spine, back armor plates and rear cape attachment visible; face and purple front breastplate hidden. Pelvis/back leg projection agrees with rear view.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
-                    "sha256": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-run-v01.png",
-                    "sha256": "6a590f4d8e5df5cde61cf8e99c4e92ded2a5302106a50e0b75fd92639ccaebdb"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
-                    "sha256": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68"
-                  }
-                ]
-              },
-              {
-                "direction": "NE",
-                "status": "COMPASS_PASS_ONLY",
-                "expected": "Rear-right/up-right, away from viewer",
-                "observed": "Clear rear-right/up-right.",
-                "evidence": "Back of closed helmet and dorsal spine/back plates visible, front mask/purple breastplate hidden. Cape covers rear-left side, rear hip/calf/heel surfaces trail lower-left. Distinct from front-right SE.",
-                "roles": [
-                  "idle",
-                  "walk",
-                  "run"
-                ],
-                "selected_sources": [
-                  {
-                    "role": "idle",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
-                    "sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33"
-                  },
-                  {
-                    "role": "run",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
-                    "sha256": "91b6af3ca3bfdba82a37a70169cb1dc170454fbcd069b5aa25d8f8300af22a5f"
-                  },
-                  {
-                    "role": "walk",
-                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
-                    "sha256": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea"
-                  }
-                ]
-              }
-            ],
-            "N_attack_v02_scratch": "Previously privately inspected; all6 remain rear-facing and contact3 points UP; compass source PASS only, no game or actor approval.",
-            "correction_to_previous_review": "The prior broad no-obvious-defect observations compared some directions with existing mislabeled sheets. They are superseded by this absolute compass audit; matching existing NW sources is insufficient.",
-            "remaining_limits": [
-              "Tiny original108x132 portrait limits exact identity landmarks.",
-              "COMPASS_PASS_ONLY is not full visual-quality approval, actor approval, game integration or detailed completion.",
-              "No game temporal playback or actual Main render inspected."
-            ],
-            "approved_count_unchanged": 405,
-            "detailed_complete_unchanged": 0,
-            "repository_mutations": false,
-            "cardinal_audit_criterion": "Compare projected nose/visor, mask/cheek visibility, shoulder and pelvis foreshortening plus knee/boot overlap with diagonal counterpart. Do not require anatomically flat profiles, hidden chest, or derive heading from cape/wing/airborne trailing-foot direction."
-          },
-          "approval_change": 0
-        },
-        "independent_quality_findings": [
-          {
-            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-first-three-source-holds-r062.json",
-            "sha256": "3aeddd3fb0c1bda652d6892c286269d9c90d281ccaf20605e5528b391f6ed0e9",
-            "status": "HOLD",
-            "actor_approvals_added": 0
-          },
-          {
-            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-N-hit-source-hold-r062.json",
-            "sha256": "00dc1b290220492fedc465911a0786000abc69ba87494041ed93784176f4c867",
-            "status": "HOLD",
-            "actor_approvals_added": 0
-          },
-          {
-            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-E-SE-NE-hit-anatomy-holds-r062.json",
-            "sha256": "a0ac9dd733129b5c501bb7ca7d778dc2783d404eef91366c0555fbb24bc5337d",
-            "status": "HOLD",
-            "actor_approvals_added": 0
-          },
-          {
-            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-S-attack-contact3-anatomy-hold-r062.json",
-            "sha256": "d6c5e8e2c9c335482e2708deb5bae5be728c3924a4b475a9df6aa7ca06ed9564",
-            "status": "HOLD",
-            "actor_approvals_added": 0
-          },
-          {
-            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/confirmed-W-death-corpses4-5-duplicate-hold-r062.json",
-            "sha256": "722d2dbcad9066b745c53d95e3e23736e64a6f5478e3aeb5dfb1dddb19e2d55d",
-            "status": "HOLD",
-            "actor_approvals_added": 0
-          },
-          {
-            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/initial-r062-47-track-review-result.json",
-            "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645",
-            "status": "HOLD",
-            "actor_approvals_added": 0
-          }
-        ]
+        "actual_Player_dedicated_actions_and_markers": "PASS"
       }
     },
     "transform:267": {
@@ -20490,6 +19927,29 @@
         "frames_sha256": "555df5d5c3a6ad5c9f1bb96e73e81ab3c7f3158d63d278933567ddcb97219159",
         "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r067/NativeMotionProfile.tres",
         "native_profile_sha256": "1b78a073b050ba81f622d30e68cade30feffd08dc58bae11ea303a8b71148b3f",
+        "native_track_count": 48,
+        "native_pose_count": 288,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 288,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS",
+          "actual_Main_default_catalog": "NOT_ENABLED_PENDING_QUALITY_REVIEW"
+        }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/SpriteFrames.tres",
+        "frames_sha256": "931cf43bbbcdc3ed635c6972956408e44b8f603ab83f0347de7317e1b5986a90",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/NativeMotionProfile.tres",
+        "native_profile_sha256": "87e520c5d799cbfdf8baf8a0c81450c70b2d16316e4f95b7cbd5c1e667dd456c",
         "native_track_count": 48,
         "native_pose_count": 288,
         "verification": {

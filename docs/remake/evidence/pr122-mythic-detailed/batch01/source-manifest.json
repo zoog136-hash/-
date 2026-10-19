@@ -8702,6 +8702,108 @@
       ],
       "resampled": false,
       "actor_approval_added": 0
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v02iso01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3",
+      "direction": "N",
+      "role": "hit",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          384,
+          475
+        ],
+        [
+          1166,
+          481
+        ],
+        [
+          402,
+          1005
+        ],
+        [
+          1154,
+          998
+        ],
+        [
+          390,
+          1502
+        ],
+        [
+          1153,
+          1507
+        ]
+      ],
+      "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful Nidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [402, 1184, 420, 1172, 408, 1171], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 18 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1",
+      "direction": "E",
+      "role": "hit",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          320,
+          483
+        ],
+        [
+          816,
+          490
+        ],
+        [
+          328,
+          993
+        ],
+        [
+          822,
+          993
+        ],
+        [
+          322,
+          1500
+        ],
+        [
+          824,
+          1499
+        ]
+      ],
+      "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful Eidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [330, 826, 338, 832, 332, 834], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 10 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4",
+      "direction": "NW",
+      "role": "hit",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          261,
+          474
+        ],
+        [
+          789,
+          472
+        ],
+        [
+          302,
+          971
+        ],
+        [
+          764,
+          978
+        ],
+        [
+          276,
+          1498
+        ],
+        [
+          793,
+          1498
+        ]
+      ],
+      "review_basis": "Independent private actual r065 selected source RGBA and normalized-frame inspection versus current faithful NWidle. The new source-native helmet/neck/shoulder/pelvis lengths match the physical model after C1280 normalization; N baseline C1024 has approximately 0.8 the native pixel detail of the new source, while E/NW idle baselines already use C1280. In particular E native head/neck and hip coordinates match the old E source in raw pixels, so earlier rough C1368 estimate is rejected after exact raw-coordinate grid comparison; wing/cape bbox variation does not size the body. Visible pelvis/paired-leg-root X annotations are approximately [275, 803, 316, 778, 290, 807], with about +/-8 native px uncertainty, not a claim of hidden exact skeleton. Use pelvisX minus 14 source pixels to match the existing directional idle hip-minus-root relationship; for N the reference offset is converted from C1024 to C1280. Preserve every original source-anchor Y, all authored recoil/head/torso lean, limb articulation, wing/cloth cycle, pose order and source RGBA. Six coherent physical poses and exactly two arms retain permanent RIGHT blade and empty LEFT; final newly compiled idle/hit0/hit5 transition review remains pending. Source approval is scoped and actor remains HOLD."
     }
   }
 }
