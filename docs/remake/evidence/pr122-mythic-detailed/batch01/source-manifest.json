@@ -3644,6 +3644,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "idle",
+      "version": "v03",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+      "original_generated_file": "/workspace/scratch/girtas-SE-idle-repair/girtas-SE-idle-v02.png",
+      "bytes": 2648070,
+      "sha256": "e3b15578727710866b76c6495ad1b538156b35d74820061c362713db48441071",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3761,7 +3780,7 @@
     "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
     "transform:267:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
     "transform:267:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
-    "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png"
+    "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png"
   },
   "selected_detailed_action_native_poses": 384,
   "authoring_holds": [
@@ -4500,6 +4519,22 @@
             "Original pale face/long pale hair, narrow hard gold rays and long dark gold-trim skirt preserved; no red mask, broad feather fan, short blade or skirt replacement."
           ],
           "source_review_sha256": "9f0f6f3e42b53c0f75df27c1fc1d0ea263159158dff0bdcca6a0b38204555ece"
+        },
+        {
+          "slot": "transform:267:SE:idle",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All6 show actual FRONT-RIGHT/SE: pale front/right face and centered front chest visible, torso/pelvis and near boot toe project DOWNRIGHT; not E pureprofile, NE back view or opposing turn.",
+            "AnatomicalRIGHT near arm remains imageLEFT/lower side and grips same long thin sinuous orange/gold blade; farLEFT hand imageRIGHT is empty/braced. No hand swap or additional weapon.",
+            "Original pale face/long pale hair, tall gold/black head ornaments, thin rigid gold radial spikes and long dark goldtrim skirt are faithful, without old redmask/flamefeather/shortblade redesign.",
+            "Both soles remain planted in stable guard. Chest/shoulder/head/forearm and gentle hair/robe lag visibly change through breathing/settling, not a walk, attack or rigid tint/translation substitute.",
+            "Body/equipment ratios coherent across6; full physical spines, boots, robe and long curved blade tip visible."
+          ],
+          "source_review_sha256": "4720c3da0c4b06c2edb371e00701f2c95293bd272ad419db183dbe6f9fbdfdc2"
         }
       ]
     }
