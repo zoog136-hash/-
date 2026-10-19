@@ -1,0 +1,28 @@
+{
+  "state": "SOURCE_BATCH_QUARANTINED; TARGETED_LOCAL_GATES_PASS; FULL_REGRESSION_AND_FINAL_HEAD_CI_PENDING",
+  "approved_total": 405,
+  "new_approvals": 0,
+  "remaining": 93,
+  "counts": {
+    "NOT_AUTHORED": 75,
+    "VERIFIED_COMPLETED": 391,
+    "FRAME_INSUFFICIENT": 14,
+    "SOURCE_HOLD": 17,
+    "IN_PROGRESS": 1
+  },
+  "raw_new_PNGs": 67,
+  "staged_candidate_native_poses": 384,
+  "selected_new_source_poses": 272,
+  "preserved_monk_source_poses": 112,
+  "production_connected_new_species": 0,
+  "preserved_prior_six_Main": "PASS 10518 + 250861 + 69815 checks; not new approvals",
+  "candidate_status": {
+    "monk": "SOURCE_HOLD; Main3128 + continuous81257 PASS, visual gait FAIL",
+    "queen": "SOURCE_HOLD; v1 cast alias344 failures preserved, v2 Main3932 + combined continuous121966 PASS, visual gait/scale/contact HOLD",
+    "gnoll": "SOURCE_HOLD; Main1626 + combined continuous121966 PASS, visual gait/contact HOLD"
+  },
+  "local_full_regression": "RUNNING; initial catalog failure and corrected targeted PASS both preserved",
+  "final_CI": "PENDING exact final HEAD; historical CI never reused",
+  "private_backup": "NOT_DELIVERED",
+  "old_reaper": "UNRECOVERED"
+}

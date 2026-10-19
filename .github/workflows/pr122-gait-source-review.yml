@@ -1,6 +1,7 @@
 name: PR122 wolf and wild dog source review
 
 on:
+  workflow_dispatch:
   push:
     branches: [feature/twilight-remaining106-20261016]
     paths:

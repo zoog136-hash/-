@@ -1,0 +1,62 @@
+{
+	"cases": [
+		{
+			"checks": 69815,
+			"failures": [],
+			"folder": "tomb_guardian269_batch16_repaired",
+			"full_pose_capture": true,
+			"incoming_directions": 8,
+			"lifecycle": {
+				"attempt_limit": 200,
+				"death_callbacks": 1,
+				"death_track": "death_7",
+				"ground_drops": [
+					{
+						"created_at": 1792375063.27273,
+						"expires_at": 1792375663.27273,
+						"grade": "일반",
+						"hunt_batch": "7c17f12df1c9810032f68508199d6ba7",
+						"id": "7a06815d092059f36d9c1ac89817a866",
+						"item_name": "HP 물약",
+						"map_id": "aden_world",
+						"position": [
+							25512.0,
+							22844.0
+						],
+						"quantity": 1,
+						"state": "ground"
+					}
+				],
+				"hit_pose": true,
+				"hp_end": 0,
+				"hp_start": 300,
+				"manual_pickup": true,
+				"player_hp": 1749,
+				"weapon_attempts": 6
+			},
+			"monster_directions": 8,
+			"name": "거대한 무덤 가디언",
+			"physics_ticks": 2000,
+			"player_directions": 8,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-transform-batch-preserved/preserved-tomb269/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch17/Preserved-Tomb269-Main/transform/report-cases/preserved-tomb269.json",
+			"screenshots": 250,
+			"slug": "preserved-tomb269",
+			"transform_id": "269"
+		}
+	],
+	"checks": 69815,
+	"config": "res://tests/fixtures/pr122_batch17_preserved_tomb269.json",
+	"engine_processes": 1,
+	"failures": [],
+	"metadata": {
+		"batch": "pr122-batch17-preserved-tomb269",
+		"scope": "Current production Tomb269 after remote integration. Preserve its prior approval; this fixture grants zero new approvals."
+	},
+	"process_id": 5242,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/runtime/batch17/Preserved-Tomb269-Main/transform/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

@@ -36,6 +36,34 @@ class PhaseGridTest(unittest.TestCase):
             self.assertEqual([f['source_anchor'][0] for f in geometry['frames']],[48,144]*8)
             self.assertEqual(geometry['distinct_pixel_frames'],16)
 
+    def test_three_columns_keep_six_walk_phases_and_source_bytes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path, _ = self.fixture(Path(tmp), 6, columns=3)
+            before = path.read_bytes()
+            geometry = self.analyze(path, 6, columns=3)
+            core.require_complete_pose_regions(path, geometry)
+            self.assertEqual(path.read_bytes(), before)
+            self.assertEqual(geometry['distinct_pixel_frames'], 6)
+            self.assertEqual([f['source_anchor'][0] for f in geometry['frames']], [48,144,240]*2)
+            # The same PNG must never be silently reinterpreted as a 2-column source.
+            with self.assertRaises(ValueError):
+                self.analyze(path, 6, columns=2)
+
+    def test_three_columns_retain_whole_source_and_uniqueness_guards(self):
+        for fault in ['omitted_piece', 'duplicate', 'clipping']:
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as tmp:
+                path, pixels = self.fixture(Path(tmp), 6, columns=3)
+                if fault == 'omitted_piece':
+                    pixels[5:9, 5:9] = [255,255,255,255]
+                elif fault == 'duplicate':
+                    pixels[121:161, 224:246] = [40,90,180,255]
+                else:
+                    pixels[0:26,32:54] = [40,90,180,255]
+                Image.fromarray(pixels).save(path)
+                with self.assertRaises(ValueError):
+                    geometry = self.analyze(path, 6, columns=3)
+                    core.require_complete_pose_regions(path, geometry)
+
     def test_all_eight_phases_in_row_major_order_without_pixel_changes(self):
         with tempfile.TemporaryDirectory() as tmp:
             path, _ = self.fixture(Path(tmp))

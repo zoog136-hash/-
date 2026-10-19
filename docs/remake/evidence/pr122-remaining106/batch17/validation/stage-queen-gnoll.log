@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/runtime/batch17/stage_queen_gnoll.py", line 36, in <module>
+    gnoll.append(sheet(f'gnoll-{d}-complete16-{version}',d,roles,[0,1],'idle'))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/runtime/batch17/stage_queen_gnoll.py", line 14, in sheet
+    core.require_complete_pose_regions(path,core.analyze(path,check['rows'],reference_rows,directions_axis=check['axis'],directions=[direction],canvas_size=canvas))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/import_original_based_motion.py", line 270, in analyze
+    raise ValueError("Pose cannot fit the foot-anchored canvas")
+ValueError: Pose cannot fit the foot-anchored canvas

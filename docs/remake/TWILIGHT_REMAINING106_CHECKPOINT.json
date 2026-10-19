@@ -11,9 +11,12 @@
   "counts": {
     "VERIFIED_COMPLETED": 391,
     "FRAME_INSUFFICIENT": 14,
-    "SOURCE_HOLD": 16,
+    "SOURCE_HOLD": 17,
     "IN_PROGRESS": 1,
-    "NOT_AUTHORED": 76
+    "NOT_AUTHORED": 75,
+    "completed": 405,
+    "remaining": 93,
+    "HOLD": 17
   },
   "protected_production_changed": true,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
@@ -143,7 +146,7 @@
   "last_successful_pushed_code_commit": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch16/checkpoint.json",
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json",
   "recovery": {
     "completed_real_Git_bytes_verified": 392,
     "completed_not_in_Git": 0,
@@ -192,11 +195,21 @@
       "active": "monster:알비노 몽크",
       "proof": "docs/remake/evidence/pr122-remaining106/batch16/golem-completion-decision.json",
       "new_palette_edits": 3
+    },
+    "batch17": {
+      "raw_new_PNGs": 67,
+      "new_completed": 0,
+      "active": [
+        "monster:알비노 몽크",
+        "monster:얼음 여왕",
+        "monster:놀"
+      ],
+      "proof": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json"
     }
   },
   "last_successful_pushed_code_commit_is_previous_checkpoint": true,
   "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD.",
-  "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch16/individual-approvals.json",
+  "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch17/individual-approvals.json",
   "observed_remote_main_at_save": "fc6cf088e90a273bfde38ce4807fb7b5c2a51afb",
   "remote_main_note": "Remote main advanced since prior56f552c8. This user-requested WIP save preserves current PR branch and does not merge main; reassess upstream changes when resuming production.",
   "historical_pre_stop_checkpoint": {
@@ -351,5 +364,10 @@
     "merge_status": "PRESERVED_BOTH_HISTORIES; four native approved profiles retained, remote proxy candidates preserved",
     "merge_audit": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/remote-integration.json"
   },
-  "final_runtime_audit": "PENDING_AFTER_CONCURRENT_SAME_PR_MERGE"
+  "final_runtime_audit": "PENDING_AFTER_CONCURRENT_SAME_PR_MERGE",
+  "validation_at_current_commit": {
+    "local_full_regression": "RUNNING; initial catalog failure and corrected targeted PASS preserved",
+    "full_CI": "PENDING exact final HEAD; no historical success reuse",
+    "newly_approved": 0
+  }
 }

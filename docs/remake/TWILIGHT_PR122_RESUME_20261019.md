@@ -1,5 +1,7 @@
 # PR #122 — 2026-10-19 사용자 요청 중단·저장 및 새 대화 인계
 
+> 후속 제작 재개 기록: [batch17 최신 상태·원화·검증](TWILIGHT_PR122_BATCH17_20261019.md). batch17 신규 승인0/누적405를 유지하며 미승인 원화67장과 실패를 보존했다. 아래는 원래 중단 저장 기록이며 원문을 유지한다. 최신 HEAD의 전체 CI는 PR/Actions에서 별도로 확인한다.
+
 사용자 최종 지시는 “지금 하던거 그대로 저장하고 커밋해 그리고 새대화로 이어 나갈수 있도록 프롬프트 줘”다. 이 저장에서는 추가 제작을 멈춘다. 다음 대화에서 재개 지시를 받으면 아래 상태부터 이어간다. 기존 PR #122만 사용하고 main 병합, force push, rebase, 다른 PR 수정은 하지 않는다.
 
 저장소 `zoog136-hash/-`, PR https://github.com/zoog136-hash/-/pull/122, 브랜치 `feature/twilight-remaining106-20261016`, 대상 `feature/twilight-animation-20261013`. 이번 제작 재개 시작 SHA는 `baf194e17d2dc0d8c8fd38a11218060e7107e26d`, 마지막 로컬 제작 안전 커밋은 `d069778458783e054d4755448f00f9dd18a04e86`다. 이 인계 파일을 포함하는 최신 커밋은 `git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md`로 확인하고 실제 PR 원격 HEAD와 대조한다.

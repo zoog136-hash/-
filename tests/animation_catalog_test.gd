@@ -66,6 +66,20 @@ func _run() -> void:
 		"transform:349":"monster:알비노 악어거북"
 	}
 	var profile_db: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/combat_animation_profiles.json"))["profiles"]
+	# Pin the six pre-merge approved bodies and their complete immutable packs.
+	# They remain FRAME_INSUFFICIENT; unapproved name/palette aliases cannot
+	# replace their prior approval or count as new production completions.
+	var prior_path := "res://data/pr122_prior_approved_native_20261019.json"
+	check(FileAccess.get_sha256(prior_path) == "ae1e35791d4c796f639f2c7ef60a26d50a874793fba2eb97f547bd18cfd29f1d", "exact pinned pre-merge approval preservation")
+	var prior: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(prior_path))
+	var prior_records: Dictionary = prior.get("records", {})
+	check(prior_records.size() == 6 and int(prior.get("newly_approved", -1)) == 0, "preserve six prior approvals without promotion")
+	for key: String in ["transform:176", "transform:351", "transform:349", "transform:167", "transform:110", "transform:2"]:
+		var saved: Dictionary = prior_records.get(key, {})
+		check(not saved.is_empty() and profile_db.get(key, {}) == saved.get("approved_profile", {}), "exact prior approved profile " + key)
+		check(str(saved.get("preserved_status", "")) == "FRAME_INSUFFICIENT", "prior frame shortage retained " + key)
+		for path: String in saved.get("resources_sha256", {}):
+			check(FileAccess.get_sha256(path) == str(saved.resources_sha256[path]), "immutable prior approval source " + path)
 	for target: String in shared_six:
 		var donor_id: String = str(shared_six[target])
 		var target_data: Dictionary = profile_db.get(target, {})
@@ -73,12 +87,19 @@ func _run() -> void:
 		check(not target_data.is_empty() and not donor_data.is_empty(), "six-way source record " + target)
 		if target_data.is_empty() or donor_data.is_empty(): continue
 		check(str(target_data.get("name","")) == str(donor_data.get("name","")), "exact same name " + target)
-		check(str(target_data.get("shared_visual_source","")) == donor_id, "explicit no-heuristic source " + target)
 		var source_path: String = str(donor_data.get("frames_path",""))
-		check(not source_path.is_empty() and source_path == str(target_data.get("frames_path","")), "reuse identical original SpriteFrames " + target)
+		if target in ["transform:351", "transform:349"]:
+			# Same names cannot displace these distinct, previously approved packs.
+			source_path = str(prior_records.get(target, {}).get("approved_profile", {}).get("frames_path", ""))
+			check(not source_path.is_empty() and source_path == str(target_data.get("frames_path", ""))
+				and source_path != str(donor_data.get("frames_path", "")), "retain distinct prior native identity " + target)
+		else:
+			check(str(target_data.get("shared_visual_source","")) == donor_id, "explicit no-heuristic source " + target)
+			check(not source_path.is_empty() and source_path == str(target_data.get("frames_path","")), "reuse identical original SpriteFrames " + target)
 		if source_path.is_empty() or not ResourceLoader.exists(source_path): continue
-		for key: String in ["pixel_scale","sprite_offset","color_tint","embedded_shadow","movement_fps"]:
-			check(target_data.get(key,null) == donor_data.get(key,null), "copy only visual source metadata " + target + ":" + key)
+		if target not in ["transform:351", "transform:349"]:
+			for key: String in ["pixel_scale","sprite_offset","color_tint","embedded_shadow","movement_fps"]:
+				check(target_data.get(key,null) == donor_data.get(key,null), "copy only visual source metadata " + target + ":" + key)
 		var art_frames: SpriteFrames = CATALOG.frames(source_path, "directional8")
 		for direction: int in range(8):
 			for role: String in ["idle","walk","attack","hit","death"]:
@@ -115,7 +136,14 @@ func _run() -> void:
 					var native_path: String = str(target_data.get("frames_path", ""))
 					check(not target_data.is_empty() and not donor_data.is_empty(), "PR122 pair profiles: " + target)
 					var replacement: Dictionary = entry.get("superseded_by_native_pack", {})
-					if replacement.is_empty():
+					var prior_replacement: Dictionary = entry.get("prior_approved_native", {})
+					if not prior_replacement.is_empty():
+						check(target == "transform:176" and prior_records.has(target), "explicit prior captain preservation")
+						check(native_path == str(prior_replacement.get("frames_path", ""))
+							and native_path == str(prior_records.get(target, {}).get("approved_profile", {}).get("frames_path", "")), "prior captain native binding")
+						check(str(prior_replacement.get("status", "")) == "FRAME_INSUFFICIENT"
+							and int(prior_replacement.get("newly_approved", -1)) == 0, "captain shortage retained, no approval")
+					elif replacement.is_empty():
 						check(native_path == str(donor_data.get("frames_path","")), "PR122 same original source: " + target)
 						check(str(target_data.get("shared_visual_source","")) == donor, "PR122 explicit donor: " + target)
 						check(str(target_data.get("color_tint","")) == str(entry.get("color_tint","")), "PR122 exact tint: " + target)

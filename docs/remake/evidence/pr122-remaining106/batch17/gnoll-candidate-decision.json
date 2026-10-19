@@ -1,0 +1,20 @@
+{
+  "id": "monster:놀",
+  "status": "SOURCE_HOLD",
+  "production_connected": false,
+  "newly_approved": 0,
+  "native_poses": 128,
+  "source_reference": "existing project image, not recovered SPX",
+  "actual_Main_technical_checks": 1625,
+  "actual_Main_technical_failures": [],
+  "continuous_with_baseline_checks": 121966,
+  "continuous_failures": [],
+  "visual_rejection_reasons": [
+    "E walking does not clearly exchange the hind support paw over the full cycle. E attack pose1 is a raised/backward preparation while real contact metadata uses1; visual contact approval is HOLD."
+  ],
+  "visual_evidence": "docs/remake/evidence/pr122-remaining106/batch17/Candidate-Main-visual-rejection/gnoll-candidate-actual-Main-walk.png",
+  "visual_evidence_sha256": "4761162c70604bfd571a88aaa19d935dc038cea13214937cfe226103b69b4a3c",
+  "final_user_visual_approval": false,
+  "Android_real_device": "NOT_RUN",
+  "actual_Main_checks_scope": "individual gnoll case from preserved failing v1 aggregate"
+}

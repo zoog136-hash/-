@@ -1,6 +1,7 @@
 name: PR122 Tomb269 additive probe parse
 
 on:
+  workflow_dispatch:
   push:
     branches: [feature/twilight-remaining106-20261016]
     paths:
