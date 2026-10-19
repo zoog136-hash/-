@@ -31,7 +31,7 @@
         "id": "native_room_4",
         "source_map": "albino_01",
         "source_zone": "room_4",
-        "walk_polygon": 4,
+        "walk_polygon": 1,
         "max_count": 4
       },
       {
@@ -52,14 +52,14 @@
         "id": "native_room_7",
         "source_map": "albino_01",
         "source_zone": "room_7",
-        "walk_polygon": 4,
+        "walk_polygon": 3,
         "max_count": 4
       },
       {
         "id": "native_boss",
         "source_map": "albino_01",
         "source_zone": "boss",
-        "walk_polygon": 5,
+        "walk_polygon": 4,
         "max_count": 1
       }
     ],
@@ -117,8 +117,14 @@
         "id": "native_boss",
         "source_map": "albino_02",
         "source_zone": "boss",
-        "walk_polygon": 1,
-        "max_count": 1
+        "walk_polygon": 0,
+        "max_count": 1,
+        "rect_override": [
+          7180,
+          2500,
+          520,
+          410
+        ]
       }
     ],
     "albino_03": [
