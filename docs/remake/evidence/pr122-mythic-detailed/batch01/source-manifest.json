@@ -912,6 +912,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "E",
+      "role": "attack",
+      "version": "v01iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png",
+      "original_generated_file": "/workspace/scratch/halpas-E-attack-v01iso01.png",
+      "bytes": 1433391,
+      "sha256": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -954,5 +973,9 @@
   },
   "selected_locomotion_native_poses": 192,
   "session_stop_reason": null,
-  "image_tools_forbidden": false
+  "image_tools_forbidden": false,
+  "selected_detailed_action_sheets": {
+    "transform:393:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png"
+  },
+  "selected_detailed_action_native_poses": 6
 }
