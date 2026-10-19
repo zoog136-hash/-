@@ -53,3 +53,10 @@
 - 비공개 시각 검토: 할파스 SW run/N·NE·NW attack 방향 교정, 기르타스48클립 원형 외형 복원 HOLD. 기존 원화·리비전 전부 보존, 기본 게임 적용·승인 추가0.
 
 - 8방향 절대 방향 추가 검토: 할파스 E/W/NW의 대기·이동·달리기9클립은 방향 분리 HOLD. 수정 완료 SW run/N·NE attack은 새 원본·Player PASS와 함께 보존, 최종 승인 추가0.
+
+## 하르파스 최초 상세 제작 승인 — 실제 기본 Main 연결
+
+- transform:393: 8방향 × idle/walk/run/attack/hit/death = 48클립·288자세 독립 품질 및 실제 기본 카탈로그 Main 검증 PASS.
+- 승인 이력 405/498 보존, 상세 완료 1/31. 기르타스 및 나머지 상세 30종은 미승인; 기존 프레임 보완 14종 별도 유지.
+- 증거: `docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-production-r001-approval-certificate.json`. production 리소스는 `res://assets/actors/eight_direction/native_production/halpas_393/r001/SpriteFrames.tres`; 기존 staging·원화·교정 이력·1490/54 색상 프로필을 보존했다.
+- 다음 제작: 기르타스 새 NW 대기 6자세 및 SE/SW 걷기 6자세 연결·검토, E 걷기/달리기·W/NW 걷기 제작 계속. 전체 CI 미실행.
