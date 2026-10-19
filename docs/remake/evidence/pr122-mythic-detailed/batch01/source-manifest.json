@@ -10828,6 +10828,331 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "run",
+      "version": "v03composite01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png",
+      "original_generated_file": "/workspace/scratch/girtas-SE-run-reviewed-composite-v01/girtas-SE-run-v03composite01.png",
+      "bytes": 8205050,
+      "sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+        "canvas_size": 2048,
+        "key": "transform:267",
+        "direction": "SE",
+        "role": "run",
+        "review_basis": "Independent actual six dedicated SE RUN source/rigid skull-pauldron-waist/support/load/opposite AIR and new projected-ground/root arc candidate PASS: /workspace/scratch/girtas-private-qc-v02-20261019/SE-run-whole6-final-source-physical-candidate-independent-QC-v01.json SHA 75f88328f421d52f57ca08c0cf0f750bb6421b88d913250b819f4c901af0000e. Exact original sourceRGBA/all2,744,151 alpha>16 pixels retained; current profile numeric pin 13a674145c53299c7cc61a6843b02f2da26cad75fa09ed1a74f753473947c346. Actual new SpriteFrames/Player/action/cadence/floor/seam/wholeactor approval remains HOLD.",
+        "assembly_proof": "/workspace/scratch/girtas-SE-run-reviewed-composite-v01/girtas-SE-run-v03composite01.assembly.json",
+        "assembly_proof_sha256": "e23d94ff184bc7af4df60e5ca9e4cf766161e06b2523e0560e678657b521d972",
+        "actual_image_size": [
+          3072,
+          4608
+        ],
+        "actor_approval": false
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+        "base_geometry_sha256": "4ce8a1b04416d5e3a610cc4f2961985352818788ed2f06db8699756e37e67ff2",
+        "direction": "SE",
+        "review_basis": "Outward-only exact source regions plus explicit transparent authored projected ground/AIR root space under unchanged owner/alpha/boundary guards. Independent actual six dedicated SE RUN source/rigid skull-pauldron-waist/support/load/opposite AIR and new projected-ground/root arc candidate PASS: /workspace/scratch/girtas-private-qc-v02-20261019/SE-run-whole6-final-source-physical-candidate-independent-QC-v01.json SHA 75f88328f421d52f57ca08c0cf0f750bb6421b88d913250b819f4c901af0000e. Exact original sourceRGBA/all2,744,151 alpha>16 pixels retained; current profile numeric pin 13a674145c53299c7cc61a6843b02f2da26cad75fa09ed1a74f753473947c346. Actual new SpriteFrames/Player/action/cadence/floor/seam/wholeactor approval remains HOLD.",
+        "regions": [
+          [
+            197,
+            184,
+            1142,
+            1231
+          ],
+          [
+            1700,
+            198,
+            1208,
+            1202
+          ],
+          [
+            223,
+            1753,
+            1089,
+            1279
+          ],
+          [
+            1819,
+            1731,
+            969,
+            1151
+          ],
+          [
+            195,
+            3263,
+            1145,
+            1154
+          ],
+          [
+            1716,
+            3296,
+            1176,
+            1265
+          ]
+        ],
+        "nearest_owner_sha256": "058850df8a894bbd2b398d79df3df5c671339f5a796a10010c60f27210efd499"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+        "source_RGBA_sha256": "11e191e34c674ae1b1974d33fa5d15ce0c9f00758d42c0305318847f0b5b3b43",
+        "base_geometry_sha256": "4ce8a1b04416d5e3a610cc4f2961985352818788ed2f06db8699756e37e67ff2",
+        "derived_geometry_sha256": "629d65330762bb14d5d2d8c3af0bbc513552264a6ea1aecceea75532b82b2f6f",
+        "review_sha256": "be905cf7fc02542d3aa82c6b609e39f8ab78a377c3d126080aa411a65c6b218e",
+        "review_basis": "Outward-only exact source regions plus explicit transparent authored projected ground/AIR root space under unchanged owner/alpha/boundary guards. Independent actual six dedicated SE RUN source/rigid skull-pauldron-waist/support/load/opposite AIR and new projected-ground/root arc candidate PASS: /workspace/scratch/girtas-private-qc-v02-20261019/SE-run-whole6-final-source-physical-candidate-independent-QC-v01.json SHA 75f88328f421d52f57ca08c0cf0f750bb6421b88d913250b819f4c901af0000e. Exact original sourceRGBA/all2,744,151 alpha>16 pixels retained; current profile numeric pin 13a674145c53299c7cc61a6843b02f2da26cad75fa09ed1a74f753473947c346. Actual new SpriteFrames/Player/action/cadence/floor/seam/wholeactor approval remains HOLD.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 2744151,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            197,
+            184,
+            1142,
+            1231
+          ],
+          [
+            1700,
+            198,
+            1208,
+            1202
+          ],
+          [
+            223,
+            1753,
+            1089,
+            1279
+          ],
+          [
+            1819,
+            1731,
+            969,
+            1151
+          ],
+          [
+            195,
+            3263,
+            1145,
+            1154
+          ],
+          [
+            1716,
+            3296,
+            1176,
+            1265
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "058850df8a894bbd2b398d79df3df5c671339f5a796a10010c60f27210efd499",
+        "foreground_owner_sha256": "330c01342bd2a561e17e96e87a8a3701abfac58c296a79d7dc67fbcb8718e440",
+        "detached_pixels": 18,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2556,
+              1022,
+              2557,
+              1023
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 713.1227103381297,
+            "owner_margin_min": 710.8866423606298
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              899,
+              1930,
+              900,
+              1931
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 644.3919614644491,
+            "owner_margin_min": 642.1558934869493
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              1167,
+              1964,
+              1168,
+              1965
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 617.4301579935985,
+            "owner_margin_min": 615.4301579935985
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              706,
+              2060,
+              707,
+              2061
+            ],
+            "nearest_max": 5.385164807134504,
+            "second_nearest_min": 846.7969059934029,
+            "owner_margin_min": 841.4117411862684
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              711,
+              2073,
+              712,
+              2074
+            ],
+            "nearest_max": 4.242640687119285,
+            "second_nearest_min": 855.614983506016,
+            "owner_margin_min": 851.3723428188966
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              666,
+              2308,
+              667,
+              2309
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 965.9917183910015,
+            "owner_margin_min": 963.9917183910015
+          },
+          {
+            "row": 5,
+            "pixels": 2,
+            "bbox": [
+              2570,
+              3386,
+              2571,
+              3388
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 514.557091098743,
+            "owner_margin_min": 512.3210231212431
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1114,
+              3450,
+              1115,
+              3451
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 599.801633875734,
+            "owner_margin_min": 596.801633875734
+          },
+          {
+            "row": 4,
+            "pixels": 2,
+            "bbox": [
+              1024,
+              3460,
+              1025,
+              3462
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 620.378110510034,
+            "owner_margin_min": 617.5496833852878
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2432,
+              3468,
+              2433,
+              3469
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 617.4957489732217,
+            "owner_margin_min": 615.2596809957219
+          },
+          {
+            "row": 5,
+            "pixels": 3,
+            "bbox": [
+              2281,
+              3552,
+              2283,
+              3554
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 744.6938968462142,
+            "owner_margin_min": 740.5707912205966
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2245,
+              3569,
+              2246,
+              3570
+            ],
+            "nearest_max": 7.810249675906654,
+            "second_nearest_min": 775.0541916537192,
+            "owner_margin_min": 767.2439419778125
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2261,
+              3599,
+              2262,
+              3600
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 796.1538795986615,
+            "owner_margin_min": 793.3254524739153
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2096,
+              3780,
+              2097,
+              3781
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 769.0409611977765,
+            "owner_margin_min": 766.8048932202767
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -10842,7 +11167,7 @@
     "transform:267:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png",
     "transform:267:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-run-v03composite02.png",
     "transform:267:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
-    "transform:267:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
+    "transform:267:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png",
     "transform:393:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
     "transform:393:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
     "transform:393:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
@@ -12567,6 +12892,25 @@
             "Current r095 actual profile AIR numerical conservative full-foreground gaps above higher far-ground plane:3.506/5.926world; new actual staged profile must be checked again."
           ],
           "source_review_sha256": "966c55ab2059d125e3c1674b1a23e5bf8de9449e0266bbd1f7a2b7e2ea9923d7"
+        },
+        {
+          "slot": "transform:267:SE:run",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "At fixedCs[2304,2304,2304,2168,2168,2304], visible skull/neck/nearpauldron/waist core have a reasonable common character scale against selectedSEidle. Torso pitch, knee flex and hiddenhip interval explain projection changes; no actual uniform longleg/bodyratio defect warrants pose regeneration.",
+            "Actual0farLEFTcontact→1farLEFTflexedload→2nearRIGHTleadingAIR→3nearRIGHTcontact→4nearRIGHTflexedload→5farLEFTleadingAIR→0 retains genuine oppositehip-to-boot chains and readable complete recoveryboots.",
+            "Semantically traced supportboots0/1/3/4 sit on the declared authoredprojected farLEFT/nearRIGHT supportplanes; recoveryboots visibly clear them. Source4 grounding uses actualbootY1135, never lowerweaponendpoint1177.",
+            "AIR2/5 use explicit authoredroots with every originalalpha>16 foregroundpixel above the HIGHER declaredsupportplane by11.22449world. Thus bothcompleteboots clear thatplane without invented sourcefloor labels. Body/head/waist arcs and5→0 are plausible run contact/compression/flight transitions.",
+            "The whitewaistdiamond is only a moving frontsurface registrationmarker. Its first-half near-constant contact/load height does not certify a hiddenpelvis nor contradict visible knee/torso compression. No exact hiddenbone metrology demanded.",
+            "Same-direction actualcurrentwalk/attack structuralhilt crosscheck withdraws idle-only gearHOLD; originalsourcegear retained. No source/art/C/root change needed.",
+            "Six distinct newly authored source poses and all2,744,151 alpha>16 pixels retained exactly; complete gear/actual opposing support-load-AIR source work independently accepted.",
+            "Rigid physical C/support/root/AIR arc candidate independently accepted under latest pinned normalized profile; actual compiled runtime/final actor remainsHOLD."
+          ],
+          "source_review_sha256": "c9b30a7be4616b2bf9271ddf1198cd433908d917150a9271a7688ab26b5b6bd2"
         }
       ],
       "reopened_source_holds": [
@@ -15301,6 +15645,54 @@
       "review_basis": "Independent six source/model/equipment/rigid-C and authored projected-pelvis-root/full-cycle candidate PASS: /workspace/scratch/girtas-W-run-reviewed-composite-v01/independent-SE-author-commonphysical-v03-final-review.json SHA 65d537b60cd0f3e67dcf7dd94fa29eb8af58e98cad6bed52f209a091313c73e0. Rigid eye/ear/chin ratios0.985–1.034 to selected W idle, arm-rotated pauldrons consistent. Actual pelvis inference uncertainty20native; no ornamental belt-V/bbox fitting. AIR2/5 corrected hip floor and opposite contact3/load4 root corrections preserve coherent arc, no source pixel edits. Actual compiled Player and future profile worldscale need fresh QC.",
       "runtime_validation": "INDEPENDENT_SOURCE_AND_FULL_SIX_PHYSICAL_CANDIDATE_PASS_ACTUAL_PLAYER_HOLD",
       "actor_approval": false
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+      "canvas_size": 2048,
+      "direction": "SE",
+      "key": "transform:267",
+      "role": "run",
+      "authored_pose_canvas_sizes": [
+        2304,
+        2304,
+        2304,
+        2168,
+        2168,
+        2304
+      ],
+      "source_anchors": [
+        [
+          902,
+          1406
+        ],
+        [
+          2459,
+          1391
+        ],
+        [
+          950,
+          3023
+        ],
+        [
+          2422,
+          2873
+        ],
+        [
+          864,
+          4371
+        ],
+        [
+          2475,
+          4552
+        ]
+      ],
+      "review_basis": "Independent actual six dedicated SE RUN source/rigid skull-pauldron-waist/support/load/opposite AIR and new projected-ground/root arc candidate PASS: /workspace/scratch/girtas-private-qc-v02-20261019/SE-run-whole6-final-source-physical-candidate-independent-QC-v01.json SHA 75f88328f421d52f57ca08c0cf0f750bb6421b88d913250b819f4c901af0000e. Exact original sourceRGBA/all2,744,151 alpha>16 pixels retained; current profile numeric pin 13a674145c53299c7cc61a6843b02f2da26cad75fa09ed1a74f753473947c346. Actual new SpriteFrames/Player/action/cadence/floor/seam/wholeactor approval remains HOLD.",
+      "anchor_measurement_evidence": "/workspace/scratch/girtas-SE-run-integration-package-v03composite01/authored-ground-root-config.json",
+      "anchor_measurement_evidence_sha256": "84eea04d4a8e2e1f38d6924ef5348c32648020afcdc49b7f7c3aa1d4a3563f67",
+      "runtime_validation": "HOLD_PENDING_ACTUAL_GAME_AND_FRESH_PRIVATE_RUNTIME_QC",
+      "actor_approval": false,
+      "new_actor_approvals": 0
     }
   },
   "runtime_layout_attempt_holds": [
