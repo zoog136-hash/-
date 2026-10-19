@@ -3300,6 +3300,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NE",
+      "role": "death",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-NE-death-repair/girtas-NE-death-v02.png",
+      "bytes": 2182885,
+      "sha256": "9fcdeb96092eb523c0d958fc5d60b21e5d9d5c4be1a56cfa4aed3525fa8e0b73",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3409,7 +3428,7 @@
     "transform:267:W:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
     "transform:267:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
     "transform:267:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
-    "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
+    "transform:267:NE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
     "transform:267:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
     "transform:267:S:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
     "transform:267:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
@@ -4032,6 +4051,21 @@
             "Long pale hair, hard narrow gold radial spikes and dark long gold-trim skirt retained; no red mask/feather fan/short broad blade/leg-armor replacement."
           ],
           "source_review_sha256": "1173ffd381801ac9478fcb0aea792ed448743f1a1a8e2c3cde9c3438a25d989a"
+        },
+        {
+          "slot": "transform:267:NE:death",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six retain rear-right NORTHEAST heading: back of head/long hair and back armor dominate, with no front chest model or east-facing intermediate replacement. The body progressively bends and falls along the diagonal; impact/corpse have head UPPER RIGHT and both feet LOWER LEFT with boot soles visible. Complete body lies prone at the end; the single weapon remains beside its original right-hand side.",
+            "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+            "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+            "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+          ],
+          "source_review_sha256": "f252ba5ab9fc3f6926863668184c4eb14e183c1b8c8f27ec31d0afdb0f05994b"
         }
       ]
     }
