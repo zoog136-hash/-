@@ -7813,6 +7813,570 @@
         "visual_approval": "NOT_RUN",
         "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS"
+      },
+      "visual_quality_hold": {
+        "key": "transform:393",
+        "status": "HOLD",
+        "scope": "selected_clips",
+        "sources": [
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
+          "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png"
+        ],
+        "slots": [
+          "transform:393:SW:run",
+          "transform:393:N:attack",
+          "transform:393:NE:attack",
+          "transform:393:NW:attack",
+          "transform:393:E:idle",
+          "transform:393:E:walk",
+          "transform:393:E:run",
+          "transform:393:W:idle",
+          "transform:393:W:walk",
+          "transform:393:W:run",
+          "transform:393:NW:idle",
+          "transform:393:NW:walk",
+          "transform:393:NW:run"
+        ],
+        "reason": "SW run and N/NE/NW attack heading defects; NW locomotion/front view and E/W versus SE/SW cardinal separation require correction",
+        "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
+        "completion_change": 0,
+        "corrections": [
+          {
+            "slot": "transform:393:SW:run",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "source_visual_findings": [
+              "All six helmet/face, chest, blade and leg perspectives face screen LOWER-LEFT/SOUTHWEST; no screen-right reversal.",
+              "Gold/black armor, burgundy cape, paired crystalline purple wings and the established blade hand match the correct SW walk/idle generated model at game-view scale.",
+              "New fast-flight poses show stronger forward lean, visible leg tuck/exchange and upstroke/downstroke wing/cape response; phase3 has a clear deeper tuck differing from slow walk.",
+              "All six figures appear complete and uncropped in the private comparison."
+            ],
+            "actor_approval_added": 0
+          },
+          {
+            "slot": "transform:393:N:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "source_visual_findings": [
+              "All six poses retain the back of helmet and back armor, north-facing shoulders/hips/feet and the same cape side; no front/right body reversal.",
+              "Anticipation phase1 lifts the established weapon; phase2 clearly bends both arms into a rear-view load; phase3 extends the same weapon straight screen-UP/NORTH above the helmet with readable elbow/arm extension.",
+              "Phase4 completes the attack arc while remaining rear-facing, phase5 returns to the same rear guard and same anatomical weapon hand.",
+              "Six complete figures, distinct guard/anticipation/load/contact/follow-through/recovery, same established gold-black armor, burgundy cape, crystalline wing structure and equipment at game-view scale."
+            ],
+            "actor_approval_added": 0
+          },
+          {
+            "slot": "transform:393:NE:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Absolute compass review: all six poses aim NORTH-EAST/screen upper-right AWAY from the camera. Back of helmet and back segmented torso armor remain visible; these are rear-right views, distinct from southeast front-right views with a visible front face/breastplate.",
+              "Phase0 holds a rear-right guard; phase1 bends the actual weapon arm overhead while the back remains visible; phase2 loads without turning face or chest toward the viewer.",
+              "Phase3 extends the same weapon and anatomical striking arm diagonally upper-right toward a target farther away. The helmet and torso retain their rear-right heading rather than facing screen lower-right.",
+              "Phase4 follows through along that upper-right-away strike line while showing back armor; phase5 returns to the same rear-right guard. Six visibly different articulated guard/anticipation/load/contact/follow-through/recovery poses.",
+              "The established gold/black armor, burgundy/black cape, gold horned helmet, purple crystalline wings and single purple-bladed weapon are preserved from the original portrait and correct native NE walk/idle references.",
+              "At shared source-pixel resolution, translated only onto a common foot baseline, new neutral attack body scale is close to NE walk. No image scaling or bbox-height normalization was performed."
+            ],
+            "source_review_sha256": "ff13239209d03922311cd2f86ad892a57008c8d3f494ba18749a5cda9039fe72"
+          },
+          {
+            "slot": "transform:393:E:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six helmet nose/visor, foreshortened sternum, pelvis and side-view legs retain true screen-RIGHT heading; this is clearly different from the old front-right/SE model.",
+              "Near/far shoulders and hips occlude as a coherent lateral elevated-camera view; helmet and shoulder upper planes remain visible. No concrete camera-elevation mismatch identified at game-view detail.",
+              "Black/gold helmet and armor, burgundy cape, crystalline wings, single established blade and anatomical weapon hand remain coherent. Far wing is naturally occluded by lateral projection.",
+              "Six articulated idle phases vary wing joints, feather spread, cape fold and shoulder/hip response while retaining exact heading; no translation-only or view-rotation sequence.",
+              "Complete, uncropped figures. Source physical pixel height is larger than N/S references, but private QC-only uniform0.80x display aligns shoulder, hip and boot landmarks closely; no isolated torso/limb elongation remains evident."
+            ],
+            "source_review_sha256": "9fcb6ec666457bc89edd591286faa8ca3ce18aa623503e0d3f8e26f4b9ffd5fb"
+          },
+          {
+            "slot": "transform:393:W:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six visor/nose, foreshortened sternum, pelvis, knees and planted boot toes face true screen-LEFT; clearly distinct from old SW front-left diagonal model.",
+              "Near arm is the unarmed left fist, visibly hanging on the near side; established weapon is held by far right arm with hand/blade visible ahead to LEFT, preserving anatomical right-handed occlusion instead of mirroring the EAST view.",
+              "Existing black/gold helmet and plates, burgundy cape, two crystalline wings and the single blade remain coherent with N/S/E model; far parts naturally occlude in the opposite-side view.",
+              "Six gentle living-idle changes in shoulder/wing-joint tension, feather spread, cape folds and local body weight while both boots remain in a grounded same-heading stance.",
+              "All six figures appear complete and uncropped. No specific anatomical ratio or elevated-camera mismatch seen; source pixel body size is larger than request/reference target and requires separate runtime compensation."
+            ],
+            "source_review_sha256": "983482bd104803f8ccf757e22fc0fd5c7659591a4819861a913444da57dcff99"
+          },
+          {
+            "slot": "transform:393:E:walk",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six retain the same genuine horizontal RIGHT visor/nose and lateral sternum/pelvis, without SE/front-facing snap or weapon-hand swap.",
+              "Coherent slow airborne cycle is visibly articulated: raised wings0, stronger down/back sweep1-2, joint recovery3, raised/open upstroke4-5, cape lag and hip/knee tuck/extension. No required ground contact was invented.",
+              "Existing helmet, black/gold armor, single same-hand blade, crystalline wings and burgundy cape stay coherent. No duplicate static idle or whole-image translation substituted for flight.",
+              "Fixed0.75-pixel-scale contact review avoids misleading per-bbox thumbnail normalization; helmet/body physical scale stays coherent while wing/leg poses change."
+            ],
+            "source_review_sha256": "44e188e450e8f365da4b04bbd872be11c7e37d5de67dd8bf0f69f4affa8dd1ae",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r053-E-walk.json",
+              "sha256": "05b4ae1e8c9dcc92b2f0b248c9348ee6ef4706bed97df0af58c4799fb521873b",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_E_IDLE_WALK_RUNTIME_LAYOUT"
+            }
+          },
+          {
+            "slot": "transform:393:E:run",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 visor/nose, lateral chest, pelvis and motion heading remain horizontal RIGHT/EAST, distinct from old SE/front-facing run. No view turn or mirrored weapon-hand swap seen.",
+              "New genuine fast-flight body posture uses stronger forward lean and trailing/tucked knees/ankles versus slow E walk; cape streams backward and changes fold/lag with wingstroke. Both legs airborne, no invented grounded contact requirement.",
+              "Dedicated full6 wingbeat sequence is visible:0 HIGH raised crystal fan,1 horizontal power sweep,2 LOW down/back fan toward hip/lower-left,3 low-rear partially recovered sweep,4 middle/raised recovery,5 late raised return toward0. Rotations occur at gold shoulder/back wingroot; not whole-image translation or replay-speed reuse.",
+              "Existing two-arm/two-leg model, same nearRIGHT weapon arm with single broad purple crystal blade, horn crown, black/gold plates, crimson tattered cape and established crystalline fan structure retained. Far wing/root remains naturally layered and largely occluded as in lateral E reference. No extra arm/weapon or detached equipment observed.",
+              "Entire six silhouettes appear complete, no strong opaque pixels touch outerimageedge. Physical head/torso/gear scale is coherent across phases while knees/wingfan/cape articulate.",
+              "Raw strict importer detects one pose rectangle containing another body; native geometry remains HOLD pending lossless disjoint-pose layout, no cropping or threshold relaxation applied."
+            ],
+            "source_review_sha256": "2d63c4d0e030c3a21c7fabee2b97f59a71bbbab0d84da15ef89b14ebcc0182e6",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r056-E-run.json",
+              "sha256": "054360a8fbd30fd8fd8f5e5b0c019048ba5685e6debcb7657e10dba19db33e52",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_E_RUN_RUNTIME_TRANSITION_AND_LOOP"
+            }
+          },
+          {
+            "slot": "transform:393:W:walk",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 helmet/visor/nose profiles, foreshortened lateral chest, pelvis and motion heading remain true horizontal LEFT/WEST, distinct from old SW/front-left selected movement. No source-heading blending or horizontal mirror used.",
+              "Near anatomicalLEFT free fist remains visible hanging on the near side; far anatomicalRIGHT hand/forearm carries the sole purple crystal blade ahead/LEFT. Two connected arms/hands and two legs/boots remain coherent, no near-hand blade transfer.",
+              "A new genuine normal slow airborne wingcycle is visible:0 HIGH raised crystal fan,1 broad horizontal sweep,2 DOWN/BACK feather fan below shoulder toward hip/lowerRIGHT,3 low-rear recovery with partly closed fan,4 rising middle/upper recovery,5 high opening returning toward0. Gold-root articulation and fan parts remain coherent.",
+              "Body has gentle leftward lean, both boots airborne with local knee/ankle tuck/trail changes; cape follows through behind toward RIGHT with distinct delayed folds. No invented grounded walking contacts or forced alternating leg requirement.",
+              "Original gold horn crown, black/gold segmented armor, established solid crystalline fan wings/root layering, burgundy cape, same farRIGHT compact purple blade and W physical model remain intact. Far wing naturally overlaps/occludes as in W identity source.",
+              "All silhouettes appear complete and uncropped; no opaque alpha>100pixels touch outerimageedge. Strict unchanged geometry+complete-region checker PASS with exactly6 distinct frames. Source pixel scale remains unmodified; runtime physical scale/bodyroot requires separate review."
+            ],
+            "source_review_sha256": "ffff780d8018ae1cf0767d36a7f18609b538a3e4df9206318307b88d2ceacfa1",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r058-W-walk-run-final.json",
+                "sha256": "0da646d051df0302f73631f27bae1065fac634cbf480cc04c512b35d00494af2",
+                "review_status": "PASS_SCOPED_W_WALK_RUN_RUNTIME_TRANSITIONS_AND_LOOPS",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:393:W:run",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 visor/nose/chest/hip axes retain genuine LEFT/WEST lateral elevated-camera model, no SW/front-left turn, hand mirror or broad front-chest snap.",
+              "NearLEFT free fist remains visible with its connected near arm; farRIGHT hand carries sole compact purple crystal blade aheadLEFT. Exactly two coherent arm/hand chains and two legs/boots, with natural partial occlusion during flight. Gold horns/plates, crystalline fan feathers/roots and burgundy cape remain faithful.",
+              "New full wingbeat0HIGH→1horizontalpower→2LOWbelowshoulder/downback→3lowrearfollowthrough→4risingmiddle→5latehighreturn is visibly articulated, with changing gold-root angle and fan closure; not slowwalk replay/duplicate stills.",
+              "Stronger whole-torso forward lean, hips/knees/boots trailing rearRIGHT and cape streaming more horizontally distinguish dedicated fast run from gentle Wwalk. Feet stay airborne; no ground contacts imposed.",
+              "Complete fullsilhouettes appear uncropped; no alpha>100pixels touch outerimageedge. Raw strictimporter detects overlapping pose rectangles, so geometry remains HOLD for lossless disjointsplit rather than altered thresholds/cropped figures.",
+              "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
+            ],
+            "source_review_sha256": "657ccad253341b2ffec98899b7b5d90fb641ec168864dea9b58738795d88cf3d",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r058-W-walk-run-final.json",
+                "sha256": "0da646d051df0302f73631f27bae1065fac634cbf480cc04c512b35d00494af2",
+                "review_status": "PASS_SCOPED_W_WALK_RUN_RUNTIME_TRANSITIONS_AND_LOOPS",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:393:NW:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Every pose retains new canonical rear-left NW camera: articulated back/spine visible, chestfront skull hidden, helmet back/side left-away profile, nearLEFT lower-left shoulder and farRIGHT upper-right shoulder. No old N/NE/right-toe camera returned.",
+              "Both boots in all6 retain clear pointed gold toe UP-LEFT from heel/backankle LOWER-RIGHT, same coherent modest guard stance. No walkingstep/support swap or separate foot/body heading turn introduced.",
+              "NearLEFT shoulder→arm→empty fist stays lower-left ahead of cape; farRIGHT shoulder→arm→hand holds one compact purple crystal blade at upper/right side. All six retain two arm/hand chains and two legs/boots, no extra hand or gear swap.",
+              "Six actual idle articulations: neutral0, gradual opening/lift1, wider raised inhale2, eased exhale3, visibly narrowed/relaxed wingfan4, recovery opening5→0. Shoulder/back breathing, local wingroot/fan spread and delayed cape folds vary without full flightstroke or wholefigure translation.",
+              "Original gold horns, black/gold segmented back armor, TWO solid purple crystal fans/roots, burgundy cape on LEFT/back and original right-hand blade preserved with stable physical model/camera. Fine source-placement differences remain subject to native support-anchor review rather than claiming immutable pixel footposition.",
+              "All silhouettes complete and uncropped;0 alpha>100pixels touch outerimageedge. Existing unchanged geometryanalyzer+complete-region checker PASS exactly6 distinct frames. No threshold relaxation, source resampling, masking or colorchanges applied."
+            ],
+            "source_review_sha256": "b0fe25fd819982caaf931e5465474fdefaeb1830d4cdb7a4f48f87bec3a5d50c",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r062-NW-idle-walk-run-final.json",
+                "sha256": "7075f7807115fb7bfa3235b455c8b4a5326c63cae38f89967a5e5a8bb6548042",
+                "review_status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:393:NW:walk",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six show the same rear-upperLEFT helmet/profile, dorsal spine/back armor and rear-left pelvis with nearLEFT empty arm and original single purple blade in farRIGHT hand. No frontal breastplate/face or NE/right-facing torso turn is visible.",
+              "All six visible paired leg chains descend from coherent pelvis exits through distinct bent knees, trailing calves and continuous ankle/boot openings. Extended ankles continue into the pointed boots LOWER-RIGHT behind the NW-flying body. This is plausible natural plantarflexion; a canvas-direction difference from the standing canonical is not evidence of an anatomical 180-degree boot reversal.",
+              "Independent review traced both legs separately for each authored phase and found no visible extra/disconnected leg, reversed boot or knee/ankle contradiction. Armor/cape obscure exact hip sockets and some joint centers, which limits hidden-skeleton certainty without constituting an observed defect.",
+              "Six distinct normal-flight poses articulate original wing roots/fans through HIGH→mid→LOW→lower return→midrise→HIGH, with changing trailing knee positions and cape lag. This is a new animated cycle, not repeated/tinted canonical art.",
+              "Source geometry retains six distinct complete physical RGBA regions and unchanged PNG pixels. Requested sparse320px/96px gutters were not met (regions about442–467px wide); actual strict complete coverage passes, with no strong outer-edge alpha. Layout/body scale must be reviewed in the actual runtime separately rather than inventing a source-art defect from resolution alone."
+            ],
+            "source_review_sha256": "d83da0817df58262708de58e7793c0c335af6a6e81a13ce6c9add33a06c8abc0",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r062-NW-idle-walk-run-final.json",
+                "sha256": "7075f7807115fb7bfa3235b455c8b4a5326c63cae38f89967a5e5a8bb6548042",
+                "review_status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:393:NW:run",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 preserve validated rear-left/NW head/helmet side-back, exposed gold-edged spine/back armor, pelvis and shoulder/arm plane, no frontal skull/chest/face or N/NE heading snap. Original body faces diagonally UP-LEFT while legs trail behind.",
+              "NearLEFT free fist/arm remains lower-left with continuous shoulder/elbow/wrist chain; farRIGHT arm still owns sole compact purple crystal blade upper/right. Same two arms/hands, two legs, no mirrored ownership or extra equipment.",
+              "New dedicated fullwingcycle:0HIGH,1middlepower,2LOWdownback,3lowfollowthrough/recovery,4middleupstroke,5highreturn. Actual gold-root/fan articulation, fan opening and delayed cape waves distinguish six newly drawn poses.",
+              "Compared with gentle NWwalk, body/hip axis has stronger upper-left aerodynamic lean, lower limbs stream farther back/downRIGHT with energetic knee/ankle changes and cape response. Body physical proportions remain coherent while posture changes; source is not a tinted/sharedplayback substitution.",
+              "Across all6 visible hip exits/knees/shins/ankle rims/boots form continuous plausible flight chains. Down/backSE pointed toes follow extended/plantarflexed trailing ankles; they are not treated as idletoe heading or a standalone180degree bootreversal. Armor/cape occlude proximal hip sockets, recorded as hiddengeometry uncertainty rather than observed defect.",
+              "Both established crystalline featherfans/roots, gold horns, narrow dark/gold backplates, burgundyLEFT/back cape and single samehand blade remain faithful and complete. Existing strictanalyzer+complete-region coverage PASS exactly6 distinct frames;0 alpha>100pixels touch outerimageedge."
+            ],
+            "source_review_sha256": "e21a266ece5cca8fe6691bf05438e0465e9894f9e3c574651bc9d4029d4d3dc5",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/halpas-r062-NW-idle-walk-run-final.json",
+                "sha256": "7075f7807115fb7bfa3235b455c8b4a5326c63cae38f89967a5e5a8bb6548042",
+                "review_status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          }
+        ],
+        "compass_audit": {
+          "scope": "24 selected idle/walk/run clips",
+          "source": {
+            "schema": 1,
+            "actor": "transform:393",
+            "reviewed_at": "2026-10-19T10:23:36.320766+00:00",
+            "reviewed_contact_revision": "r046",
+            "current_register_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r046/SpriteFrames.tres",
+            "scope": "Actual compass orientation of selected idle/walk/run; not approval by matching old direction labels.",
+            "method": "Eight private enlarged JPEG contacts, each current selected idle/walk/run phases0 and3; previous private all-six-phase direction contacts were also reviewed. New SWrun all6 privately reviewed. Source pixels read only.",
+            "private_new_contact_payload_bytes": 1707196,
+            "max_private_jpeg_bytes": 225165,
+            "main_chat_images_forwarded": 0,
+            "orientation_result": "HOLD",
+            "hold_directions": [
+              "E",
+              "W",
+              "NW"
+            ],
+            "hold_clips": 9,
+            "compass_pass_only_clips": 15,
+            "directions": [
+              {
+                "direction": "E",
+                "status": "HOLD_INSUFFICIENT_CARDINAL_DIAGONAL_SEPARATION",
+                "expected": "Projected screen-right facing distinct from SE; elevated isometric view may expose chest and torso twist.",
+                "observed": "Front-right/down-right three-quarter view, essentially same as SE.",
+                "evidence": "Across idle/walk/run the nose/visor projects diagonally down-right, with the same visible cheek/mask side and nearly the same shoulder/pelvis foreshortening as SE. Front-knee overlap and boot geometry also retain the diagonal model; no reliable right-versus-downright view change is visible. Chest visibility alone is NOT a failure criterion. Airborne trailing toes do not independently prove facing; no numerical heading angle is asserted.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+                    "sha256": "77fdf18c910fdf1e80da6d6e05fcf4e1217472267a916d3f38bf9e2a1274880e"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
+                    "sha256": "efa8ceadcb848c73293a71b09ab717dfe8a1f95b8aab5adc955316d2a88cb44f"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+                    "sha256": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a"
+                  }
+                ],
+                "per_role": {
+                  "idle": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
+                  "walk": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
+                  "run": "Forward lean is stronger, but nose/mask and pelvis retain the diagonal view; HOLD until a clear cardinal-versus-diagonal heading separation is shown."
+                }
+              },
+              {
+                "direction": "SE",
+                "status": "COMPASS_PASS_ONLY",
+                "expected": "Front-right/down-right",
+                "observed": "Clear front-right/down-right three-quarter body.",
+                "evidence": "Face/front gold mouth-mask and purple breastplate visible; front hip/knee surfaces face down-right. Distinct from the dorsal NE sheets.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
+                    "sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
+                    "sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+                    "sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b"
+                  }
+                ]
+              },
+              {
+                "direction": "S",
+                "status": "COMPASS_PASS_ONLY",
+                "expected": "Front/down",
+                "observed": "Clear direct front/down.",
+                "evidence": "Front mask/eyes and symmetrical purple-gold breastplate visible; pelvis/front knees and toes point toward bottom, paired shoulders shown symmetrically.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
+                    "sha256": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
+                    "sha256": "d34c9acd6dba4f03a8a911a4e5d7dfe1276dd906eb68964b2ccd5dd311b2bced"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+                    "sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86"
+                  }
+                ]
+              },
+              {
+                "direction": "SW",
+                "status": "COMPASS_PASS_ONLY",
+                "expected": "Front-left/down-left",
+                "observed": "Clear front-left/down-left; corrected SW run now agrees.",
+                "evidence": "Front mask and purple breastplate visible at leftward angle; pelvis/knees and blade project down-left, cape trails right. New SW run v02 retains this heading throughout its six privately reviewed phases.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png",
+                    "sha256": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+                    "sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
+                    "sha256": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a"
+                  }
+                ]
+              },
+              {
+                "direction": "W",
+                "status": "HOLD_INSUFFICIENT_CARDINAL_DIAGONAL_SEPARATION",
+                "expected": "Projected screen-left facing distinct from SW; elevated isometric view may expose chest and torso twist.",
+                "observed": "Front-left/down-left three-quarter view, essentially same as SW.",
+                "evidence": "Across idle/walk/run the nose/visor projects diagonally down-left, with the same visible cheek/mask side and nearly the same shoulder/pelvis foreshortening as SW. Front-knee overlap and boot geometry also retain the diagonal model; no reliable left-versus-downleft view change is visible. Chest visibility alone is NOT a failure criterion. Airborne trailing toes do not independently prove facing; no numerical heading angle is asserted.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
+                    "sha256": "e1a5d8f10346ce0d165f883fcba50554f22c925a7fd57ec53b5316f7ddcf2710"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
+                    "sha256": "dc1a63e8a0ca7c2867c5960bb2d21a1c1f655029b0930081d1d350c1b0c34c8f"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+                    "sha256": "4778576260cc3cb28cd91365565a784b71fbfcf42ac818e04c2831fe914b2de4"
+                  }
+                ],
+                "per_role": {
+                  "idle": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
+                  "walk": "Nose/visor, visible cheek, shoulder/pelvis overlap remain essentially the diagonal counterpart; HOLD until cardinal heading is visibly distinct.",
+                  "run": "Forward lean is stronger, but nose/mask and pelvis retain the diagonal view; HOLD until a clear cardinal-versus-diagonal heading separation is shown."
+                }
+              },
+              {
+                "direction": "NW",
+                "status": "HOLD",
+                "expected": "Rear-left/up-left, away from viewer",
+                "observed": "Front/left-lateral-looking view; insufficient genuine rear-left orientation.",
+                "evidence": "Helmet lower/front gold surfaces and a broad bright gold breast/side surface remain presented toward viewer. Clear dorsal spine/back-cape occlusion and rear hip/heel presentation of the NE model are absent. Legs/front knee surfaces appear exposed. Not a reliable compass-separated rear-left view; matching these existing sheets does not validate new NW attacks.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png",
+                    "sha256": "bf6b450bfadfc06928b2abf20befd59c7f122287344a22f3cd13a052c1be6477"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v01.png",
+                    "sha256": "8aeb92cb8e3c0cd164ca8c35fb9befb1deb214982517e3cb66c3df164d2189d0"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
+                    "sha256": "90f3918feaef084f63e3eeffa3301245069ff662bb5a3ca901d3f849f4fc5345"
+                  }
+                ]
+              },
+              {
+                "direction": "N",
+                "status": "COMPASS_PASS_ONLY",
+                "expected": "Rear/up, away from viewer",
+                "observed": "Clear direct rear/up.",
+                "evidence": "Back of closed helmet, vertical dorsal gold spine, back armor plates and rear cape attachment visible; face and purple front breastplate hidden. Pelvis/back leg projection agrees with rear view.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
+                    "sha256": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-run-v01.png",
+                    "sha256": "6a590f4d8e5df5cde61cf8e99c4e92ded2a5302106a50e0b75fd92639ccaebdb"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
+                    "sha256": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68"
+                  }
+                ]
+              },
+              {
+                "direction": "NE",
+                "status": "COMPASS_PASS_ONLY",
+                "expected": "Rear-right/up-right, away from viewer",
+                "observed": "Clear rear-right/up-right.",
+                "evidence": "Back of closed helmet and dorsal spine/back plates visible, front mask/purple breastplate hidden. Cape covers rear-left side, rear hip/calf/heel surfaces trail lower-left. Distinct from front-right SE.",
+                "roles": [
+                  "idle",
+                  "walk",
+                  "run"
+                ],
+                "selected_sources": [
+                  {
+                    "role": "idle",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+                    "sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33"
+                  },
+                  {
+                    "role": "run",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
+                    "sha256": "91b6af3ca3bfdba82a37a70169cb1dc170454fbcd069b5aa25d8f8300af22a5f"
+                  },
+                  {
+                    "role": "walk",
+                    "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
+                    "sha256": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea"
+                  }
+                ]
+              }
+            ],
+            "N_attack_v02_scratch": "Previously privately inspected; all6 remain rear-facing and contact3 points UP; compass source PASS only, no game or actor approval.",
+            "correction_to_previous_review": "The prior broad no-obvious-defect observations compared some directions with existing mislabeled sheets. They are superseded by this absolute compass audit; matching existing NW sources is insufficient.",
+            "remaining_limits": [
+              "Tiny original108x132 portrait limits exact identity landmarks.",
+              "COMPASS_PASS_ONLY is not full visual-quality approval, actor approval, game integration or detailed completion.",
+              "No game temporal playback or actual Main render inspected."
+            ],
+            "approved_count_unchanged": 405,
+            "detailed_complete_unchanged": 0,
+            "repository_mutations": false,
+            "cardinal_audit_criterion": "Compare projected nose/visor, mask/cheek visibility, shoulder and pelvis foreshortening plus knee/boot overlap with diagonal counterpart. Do not require anatomically flat profiles, hidden chest, or derive heading from cape/wing/airborne trailing-foot direction."
+          },
+          "approval_change": 0
+        }
       }
     },
     "transform:267": {
@@ -15767,6 +16331,613 @@
         "visual_approval": "NOT_RUN",
         "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS"
+      },
+      "visual_quality_hold": {
+        "key": "transform:267",
+        "status": "HOLD",
+        "scope": "all_native_clips",
+        "clips": 48,
+        "reason": "Original pale face, narrow gold radial spines, long dark goldtrim skirt and sinuous weapon were redesigned; several action headings reverse",
+        "private_review": "All48clips/288poses and original portrait reviewed privately; faithful identity reauthoring in progress",
+        "completion_change": 0,
+        "corrections": [
+          {
+            "slot": "transform:267:E:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six poses retain the corrected pale exposed face, long pale hair, narrow hard gold radial back spines, dark gold-trim long skirt and long thin sinuous weapon. No prior red V mask, orange feather fan or short broad sword.",
+              "All six head/chest orientations remain east/right with the same weapon hand; no front-facing reversal appears during the collapse.",
+              "Distinct upright fatal recoil, bowed failing knees, low knee buckle, forward falling/landing pose, grounded impact and settled horizontal corpse are present. Final head lies screen right and feet left; the spine array follows the fallen torso rather than remaining a standing ghost.",
+              "Full silhouette including weapon and physical golden spines is visible, with no source outer-edge clipping. Six large disjoint foreground bodies are available."
+            ],
+            "source_review_sha256": "cc971ebd817c42652fabe87cfc46d95d88a05e946765ef16615546191357bab6"
+          },
+          {
+            "slot": "transform:267:E:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Identity review against only the original portrait and faithful canonical reference: pale visible face, long pale/white hair, original gold head structure, dark gold-edged armor, long dark gold-trimmed skirt, thin radial gold back-spines and the single long sinuous glowing original weapon are retained. No red mask, broad replacement wings or short-skirt redesign.",
+              "Absolute compass: all six figures retain EAST/screen-right heading. Pale face remains a right-facing profile, including the tilted-up head during recoil; no south-facing front-body or back-view substitution.",
+              "Phase0 is stable guard; phase1 visibly tips the torso/head backward and raises the free arm; phase2 has maximum backward torso/head recoil, extended neck and different hip/knee articulation. This is actual body reaction, not opacity, tint or rigid global translation.",
+              "Phase3 shows a wide counterbalance/stagger stance, flexed knees and torso recovery; phase4 regains guard with recovering shoulders/hips; phase5 settles into stable east guard. All six silhouettes and joint positions are distinct.",
+              "The same anatomical right hand continuously holds the one sinuous weapon low at the near side; it follows wrist/body inertia without becoming an offensive swing or switching hands. The free hand remains unarmed.",
+              "Long hair, skirt and radial spines respond consistently with torso lean while the body/gear remain recognizable and complete. The original lower legs and boots are present without an extra leg or disconnected body copy.",
+              "Unchanged strict source analyzer and complete-pose-region gate pass six complete distinct poses. No generated pixel resampling, masking, recoloring, cropping, atlas repair or gate relaxation was performed."
+            ],
+            "source_review_sha256": "da555d57f829fea65dcc064836e88947ffc32bd4d2f7366cbe84937c29c2eca9"
+          },
+          {
+            "slot": "transform:267:S:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six poses retain exposed pale face, long pale hair, narrow hard golden radial back spines, dark long gold-trim skirt and a long thin sinuous weapon in the same original right hand. Prior red-mask/flame-feather/broad-blade redesign absent.",
+              "South-facing front chest/pelvis heading persists into a forward/down-axis fall. During bending/falling the back naturally becomes visible, with head toward screen bottom and boots trailing screen top; no lateral east/west corpse or north reversal.",
+              "Six articulated phases show upright fatal recoil, bent failing knees, deep buckle/hand reach, forward falling/landing, low ground impact and settled fully prone corpse. Final head, hand and hair settle after phase4; the physical back-spine array lies with the fallen torso rather than floating as an upright ghost.",
+              "Every body, both boots, long hair, full spine silhouette and entire sinuous weapon remain visible; all six silhouettes are separate and no opaque foreground touches the outer image edge."
+            ],
+            "source_review_sha256": "7cea2f5e38b607bd5d843f6517ee90e7064e17b41db41a2c96478efa814b96a2"
+          },
+          {
+            "slot": "transform:267:E:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Exact original/canonical major identity retained: pale visible face and long pale hair, tall gold/black head ornaments, narrow rigid gold radial spikes, long dark goldtrim skirt, long thin sinuous orange/gold weapon in anatomical right/near hand. No redmask/flamefeather/shortblade redesign.",
+              "All6 consistently lookE/right at matching camera and maintain model/equipment scale and silhouette. Entire body, every spike, boots and weapon tip visibly preserved.",
+              "Both boots remain planted in matching staggered stance; no walk step, raised knee or attack. Pelvis stays stable while subtle chest/shoulder/head posture follows inhale/peak/exhale/settle cycle.",
+              "Local hair strands, robe hem, right wrist and shoulder/forearm shape respond across breathing phases rather than a simple global translation/tint. Phase2 reads as the lifted inhale state and later phases settle toward0.",
+              "Weapon remains the same long curved contour and low grip, with small coherent wrist response, not a material/shape replacement. Rigid spike attachments remain stable.",
+              "Strict original analyzer rows6/phase_grid2/canvas1024/reference_rows0/3 passes with6 distinct pixel frames."
+            ],
+            "source_review_sha256": "564b772476020739685da9b2f8699fddb8d9ca9ea2e3ee454b0335fb09d9dbc7"
+          },
+          {
+            "slot": "transform:267:S:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Absolute compass: all six figures show SOUTH/screen-down front view, with frontal pale face and front chest emblem/armor visible. No left/right body yaw or side-view substitution occurs during recoil.",
+              "Anatomical right hand is consistently at IMAGE LEFT and holds the same one long sinuous original weapon in all six phases. IMAGE RIGHT is the unarmed left hand. The weapon stays low, without an offensive slash or hand swap.",
+              "Phase0 braces; phase1 lifts chin and pitches shoulders/chest backward-away; phase2 has maximum coherent torso/head recoil and a different free elbow/hip/knee configuration. Face remains frontal while the neck pitches back.",
+              "Phase3 uses staggered original feet and flexed knees to counterbalance, with lowered shoulders and an extending free arm. Phase4 regains the torso over the feet; phase5 settles into frontal guard with distinct foot/arm/hair placement.",
+              "Actual articulated head, shoulders, torso, arms, hips, knees and support stance change through the sequence; this is not global translation, tint/opacity, repeated portrait frames or an attack sequence.",
+              "Pale uncovered face, long pale/white hair, thin radial gold back-spines, original gold head structure, dark gold-trimmed armor and long dark skirt remain faithful to the original/canonical identity. The full weapon and boot/spine tips remain visible.",
+              "Unchanged strict analyzer plus complete-pose-region gate pass six complete distinct poses. Generated pixels remain untouched; no cropping, resampling, manual body edits, broad glow masking or validator relaxation."
+            ],
+            "source_review_sha256": "3f27dca9786e4e4d6c0f18d806730199b325d625ae2f2b2ef0a164e83eccdee4"
+          },
+          {
+            "slot": "transform:267:S:walk",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Original-faithful pale face/hair, narrow gold radial spines, dark long gold-trim skirt and long thin sinuous weapon persist; same anatomical right weapon hand/image-left.",
+              "All six remain front/SOUTH, without heading flips or whole-model mirroring.",
+              "Genuine alternating gait:0-2 right support with left swing/knee flex;3-5 left support with right swing/knee flex. Both boots and altered lower-leg articulation are visible.",
+              "Whole pelvis/knee/boot inspection confirms plausible opposite contact exchanges2->3 and5->0. The initial phase-label-only HOLD has been preserved and explicitly superseded by motion-reassessment.json.",
+              "Six complete disjoint silhouettes, no opaque source outer-edge clipping."
+            ],
+            "source_review_sha256": "7141ee4b5b4c66a12d5476350ed8c05f0111df9d751170eaa4f3c724dfac9fd8"
+          },
+          {
+            "slot": "transform:267:S:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 show actual FRONT/S face, chest and pelvis toward viewer/screenDOWN, both shoulders visible; no E profile, back or opposite-heading frame.",
+              "Original pale visible face and long pale hair, tall dark/gold head ornaments, narrow hard gold radial spikes, long dark goldtrim skirt and dark boots are preserved; no generic redmask/flamefeather/shortblade redesign.",
+              "Original long thin sinuous orange/gold weapon stays in anatomicalRIGHT hand on IMAGELEFT in every front pose. Free anatomicalLEFT hand stays IMAGERIGHT empty. Whole blade contour/tip visible, no hand swap or mirror.",
+              "Both boot soles remain planted in stable two-foot guard without stepping/raised knee. Local chest/head/shoulder/forearm posture, hair strands and cloth hem vary through inhale/peak/exhale/settle cycle while stance and facing remain steady.",
+              "Body and equipment proportions stay coherent across6; rigid gold radial spine attachments remain consistent. Full body/gear including long outer rays and blade tip are not visibly cropped.",
+              "Unchanged strict analyze rows6/phase_grid2/canvas1024/reference_rows0,3 passes with6 distinct pixel frames."
+            ],
+            "source_review_sha256": "4b4e5770137f221d7794d430ae9be0ca70f1284c6c1bea44668ac3c2f7cdab70"
+          },
+          {
+            "slot": "transform:267:N:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Absolute compass: all six show NORTH/screen-up BACK views, back of the gold head structure and long pale back-hair, back armor/skirt and rear boots. No front face, frontal chest emblem, breastplate or east/right-facing profile appears in any phase.",
+              "Anatomical RIGHT weapon hand is consistently IMAGE RIGHT, while IMAGE LEFT is the unarmed left hand. The same single long sinuous original blade remains low to the right, never becoming a slash or a second weapon.",
+              "Phase0 is back guard; phase1 raises the free arm, shifts shoulder/hip balance and reacts through the head/hair; phase2 has the strongest spread free-arm/elbow and shoulder/head/hip response with bent support and pronounced pale-hair lag while retaining the back-facing model.",
+              "Phase3 visibly countersteps an original foot and flexes the knees to regain balance, phase4 recovers the torso over the feet, and phase5 settles into stable NORTH/back guard. Genuine joint and stance changes distinguish the six drawings; they are not translated/tinted/opacity variants.",
+              "Long pale hair drapes over the upper back, narrow hard-gold radial shoulder/back-spines retain their thin original form, long dark gold-trimmed skirt and full original boots/weapon preserve the faithful canonical identity. No redesigned red mask or broad substitute wings are used.",
+              "All six full characters have readable complete gear, spine tips and blade tips. The unchanged strict analyzer and complete-pose gate pass six complete distinct regions, with original generated pixels preserved."
+            ],
+            "source_review_sha256": "1973dddef8424320450e524c24de1b50e2e7e40c1880069f9a8a20f57959a71b"
+          },
+          {
+            "slot": "transform:267:N:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 are genuine NORTH rear view: rear helmet, long pale back hair, rear dark gold-trimmed skirt, face/front chest hidden.",
+              "Same original anatomical RIGHT arm (viewer-right rear) holds one long sinuous orange-gold weapon in every phase; left arm stays free.",
+              "Phase1 raises weapon, phase2 bends loaded elbow, phase3 opens the shoulder/elbow into a clear UP/NORTH extension, phase4 follows through up-right while body remains rear/N, phase5 recovers.",
+              "Six clearly changed arm/torso/knee and cloth states; no front/right body snap.",
+              "Original pale hair, narrow hard gold rays and long dark gold-trim skirt retained; no red mask, feather fan, broad short sword or leg-armor replacement."
+            ],
+            "source_review_sha256": "5d355c79e2a3a8ca2608424f49e1d5dfbf815a0bd83cfefcc8a6372c880a10fa"
+          },
+          {
+            "slot": "transform:267:NE:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Absolute compass: all six are rear-right NORTH-EAST views, with back helmet, long pale back-hair and back armor visible, plus right-side depth and oblique boots distinguishing the new direction from the straight-N rear guide. No front face/breastplate or front-right EAST substitution occurs.",
+              "Phase0 braces; phases1-2 show actual shoulder/head/hip recoil, raised free-arm counterbalance and hair/skirt lag; phase3 makes a clear original-foot counterstep with flexed knees; phases4-5 settle back to the same rear-right guard. Joint changes are genuine, not global translations or color/opacity variations.",
+              "The same anatomical right weapon arm is the near/right arm, with the single long sinuous original blade at image right throughout. The other hand remains free even during cross-body counterbalance. No attack slash, mirror or hand swap.",
+              "Faithful pale back-hair, narrow hard-gold radial spines, exact gold head structure, dark gold-trimmed long skirt/armor and original weapon/boots are maintained. Full body and gear are present.",
+              "Unchanged strict analyze plus complete-pose-region gate pass six complete distinct poses; generated pixels remain untouched."
+            ],
+            "source_review_sha256": "3576cdddf2e0c5bd84be370fc7ba2985275bb6250c0c9f6e5af7697e26a93e48"
+          },
+          {
+            "slot": "transform:267:N:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 actual source poses are unambiguous N/backUP: back helmet and long pale hair/back torso visible, no face/eyes/front chest star, both boots face away.",
+              "Original anatomicalRIGHT hand is imageRIGHT and holds same long thin sinuous orange/gold blade; free left hand imageLEFT is empty.",
+              "Original thin hard gold radial spines, tall head ornaments, long dark goldtrim skirt and opaque dark/gold armor are retained, not redmask/flamefeather redesign.",
+              "Feet remain planted in a stable stance; local back/shoulder/elbow response and clear coherent pale-hair/robe settling variation form a restrained idle without step or weapon attack.",
+              "All physical equipment/boots/blade tips remain visible; radial spine attachments stay rigid and body scale is coherent across6."
+            ],
+            "source_review_sha256": "c71d6bb38b4881bfe82e6e32428e4fe64878c84891245ffacbe145491d409808"
+          },
+          {
+            "slot": "transform:267:N:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six maintain true NORTH full-rear heading: only back of crown/head and long hair/back armor are visible, with original right-hand weapon on image right. No front face/chest or intermediate east turn. Fall and final prone corpse have head toward screen TOP, feet toward BOTTOM, and visible boot soles/flattened torso establish the physical forward fall.",
+              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+            ],
+            "source_review_sha256": "7bc287283a5752eb87451d58ae3555d9408c046c27ff8072cf0b9797a282ba02"
+          },
+          {
+            "slot": "transform:267:NE:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 remain rear NORTHEAST: back helmet/hair/armor/skirt dominate, face/front chest hidden, body/pelvis/boots point upper-right.",
+              "Same original anatomical right arm holds the long sinuous orange-gold weapon; left arm remains free with connected elbows/hands.",
+              "Phase1 weapon raises NE, phase2 visibly bends loaded elbow and knees, phase3 straightens shoulder/elbow into a real UP-RIGHT reach with full weapon projected NE, phase4 follows through NE, phase5 rear NE guard.",
+              "Long pale hair, hard narrow gold radial spikes and dark long gold-trim skirt retained; no red mask/feather fan/short broad blade/leg-armor replacement."
+            ],
+            "source_review_sha256": "1173ffd381801ac9478fcb0aea792ed448743f1a1a8e2c3cde9c3438a25d989a"
+          },
+          {
+            "slot": "transform:267:NE:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six retain rear-right NORTHEAST heading: back of head/long hair and back armor dominate, with no front chest model or east-facing intermediate replacement. The body progressively bends and falls along the diagonal; impact/corpse have head UPPER RIGHT and both feet LOWER LEFT with boot soles visible. Complete body lies prone at the end; the single weapon remains beside its original right-hand side.",
+              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+            ],
+            "source_review_sha256": "f252ba5ab9fc3f6926863668184c4eb14e183c1b8c8f27ec31d0afdb0f05994b"
+          },
+          {
+            "slot": "transform:267:NE:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 show stable NE/back-right view: back/hair dominates, right shoulder/arm and right-facing-away boot perspective visible, no pale front face/cheststar and no SE/front turn.",
+              "Original anatomicalRIGHT hand remains the projected right/lower near-side hand with same long thin sinuous orange/gold weapon; free farLEFT hand stays empty.",
+              "Original tall head ornaments, pale back hair, thin rigid gold radial spines, long dark goldtrim skirt and opaque dark/gold armor stay faithful; no redmask/flamefeather redesign.",
+              "Both boots remain planted; small local back/shoulder/elbow pose and clear hair/robe lag vary through breathing/settling rather than a step, attack or global tint/translation.",
+              "Body scale and equipment attachment remain coherent across6, full physical spikes/boots/weapon tip visible."
+            ],
+            "source_review_sha256": "80f842a28ab280cbcb2037a57d15ae76d8f56b29c979675617e8595f774b2c07"
+          },
+          {
+            "slot": "transform:267:NW:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six retain rear-left NORTHWEST heading rather than NE: crown/head and bending torso aim upper left; back hair/back armor remain visible and no front-facing model appears. Deep buckle, fall and prone corpse are on the UP-LEFT axis, head UPPER LEFT and feet LOWER RIGHT. The weapon stays in the same anatomical RIGHT hand/image-right-side arm throughout all six; no mid-action hand swap or mirror. The free left arm braces separately.",
+              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+            ],
+            "source_review_sha256": "af2e11067c72129c8cc0ce0868f11db77a6642817aa7417da1e82afc26418727"
+          },
+          {
+            "slot": "transform:267:NW:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Actual6 poses remain BACK-LEFT/NW, not NE: left boot toe projects screenLEFT while opposite boot reads rear/heel, left near shoulder/arm silhouette is exposed, helmet/back axis and pale back-hair placement turn left-away. No front face/cheststar and no right-facing boot/helmet reversal.",
+              "AnatomicalRIGHT weapon remains the far/right projected arm with same long thin sinuous glowing blade on imageRIGHT; nearLEFT hand imageLEFT is empty. It is not a simple mirrored NE sprite/hand swap.",
+              "Original tall dark/gold ornaments, long pale back hair, thin hard gold radial spikes and long dark goldtrim skirt remain faithful without redmask/flamefeather redesign.",
+              "Both feet remain planted throughout6, while back/shoulder/elbow posture and clearly moving hair/robe lag create locally articulated idle/settle states.",
+              "Full gear/boots/blade tip visible, physical spine attachments rigid, coherent body/equipment ratios across6."
+            ],
+            "source_review_sha256": "a7b9300015692b8afba070f466285164c484c58e0be0d77088455b6b01a8e498"
+          },
+          {
+            "slot": "transform:267:SE:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 maintain SOUTHEAST/front-right: pale face/front chest visible, nose/torso/hips/knees/boot toes point down-right; no rear NE or leftward body switch.",
+              "Original anatomical right/image-left-front arm retains the one long sinuous weapon throughout. Free left hand remains distinct and unarmed.",
+              "Phase1 retracts right arm back-left, phase2 coils shoulder/elbow/knees, phase3 visibly extends connected right arm into LOWER-RIGHT and full blade continues DOWN-RIGHT toward foreground; phase4 absorbs SE followthrough, phase5 SE guard.",
+              "Original pale face/long hair, thin hard gold rays, long dark gold-trim skirt and original long curved weapon retained; no red mask/flame feather fan/short broad sword."
+            ],
+            "source_review_sha256": "47b6f772c91e11751b06dedf78f1928d756fd547bff9d64ad9f28adcd5fe22b4"
+          },
+          {
+            "slot": "transform:267:SE:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six retain front-right SOUTHEAST heading: visible pale face and front chest/waist point down-right without rear or east-only model substitution. There are exactly TWO coherent arms/hands: anatomical right holds the sinuous weapon at the viewer-left body side, free left arm braces separately. The diagonal fall and full prone corpse have head LOWER RIGHT and feet UPPER LEFT, with both arms and both boots retained through impact/settling.",
+              "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+              "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+              "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+            ],
+            "source_review_sha256": "32d379b9650714bc974aabf7979354c07ea81cd2c51599fd40316ba63a7862bc"
+          },
+          {
+            "slot": "transform:267:SE:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v02iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Absolute compass: all six keep SOUTH-EAST/front-right DOWN-RIGHT heading, with pale front-right facial surfaces and original front chest armor visible. This is distinct from the horizontal EAST side profile and from rear-right/back view.",
+              "Phase0 braces; phases1-2 pitch the torso/head back toward upper-left opposite the incoming front-right hit, with maximum genuine chest/neck recoil at2 while yaw stays front-right. The free arm, hips and knees visibly articulate rather than translating the whole figure.",
+              "Phase3 adopts a balanced bent-knee stagger/counterstep; phase4 brings the torso back over the feet; phase5 settles into the same front-right guard. Long hair/skirt lag follows the body and all six drawings are distinct.",
+              "Anatomical RIGHT weapon hand remains at near/image-left side and holds the same one full long sinuous original blade low, without an attacking slash or hand swap. The image-right hand stays unarmed.",
+              "Pale visible face, long pale hair, original gold head structure, narrow hard-gold radial spines, long dark gold-trimmed skirt/armor and original boots remain faithful. No red mask, broad replacement wing or short-skirt redesign.",
+              "Strict direct source import reports GEOMETRY_HOLD because a pose bounding rectangle includes another body. Original full bodies/tips look complete in private review, but this does not authorize unsafe direct rectangular cropping."
+            ],
+            "source_review_sha256": "5d5e872af7bd466af3e0d7c740e55770c7711142060670b2d985a5f547137493"
+          },
+          {
+            "slot": "transform:267:W:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 face WEST/screen-left: pale nose/profile, shoulders, hips, knees and feet maintain leftward heading; no E/right reversal.",
+              "Phase1 lifts original long blade, phase2 genuine elbow/hip load, phase3 clearly straightens same weapon shoulder/elbow into LEFT reach with full sinuous weapon, phase4 absorbs left followthrough, phase5 left guard.",
+              "Original anatomical right weapon arm remains the consistent far/forward-side arm through guard/load/contact, while nearer/free left arm balances.",
+              "Original pale face/long pale hair, narrow hard gold rays and long dark gold-trim skirt preserved; no red mask, broad feather fan, short blade or skirt replacement."
+            ],
+            "source_review_sha256": "9f0f6f3e42b53c0f75df27c1fc1d0ea263159158dff0bdcca6a0b38204555ece",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r080-W-entry-final.json",
+                "sha256": "915df8a6da44ab866732948bdf11dabf99d492dae341c1c515b3068c52384390",
+                "review_status": "PASS_SCOPED_W_ENTRY_PHYSICAL_ROOT_CONTINUITY",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:267:SE:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 show actual FRONT-RIGHT/SE: pale front/right face and centered front chest visible, torso/pelvis and near boot toe project DOWNRIGHT; not E pureprofile, NE back view or opposing turn.",
+              "AnatomicalRIGHT near arm remains imageLEFT/lower side and grips same long thin sinuous orange/gold blade; farLEFT hand imageRIGHT is empty/braced. No hand swap or additional weapon.",
+              "Original pale face/long pale hair, tall gold/black head ornaments, thin rigid gold radial spikes and long dark goldtrim skirt are faithful, without old redmask/flamefeather/shortblade redesign.",
+              "Both soles remain planted in stable guard. Chest/shoulder/head/forearm and gentle hair/robe lag visibly change through breathing/settling, not a walk, attack or rigid tint/translation substitute.",
+              "Body/equipment ratios coherent across6; full physical spines, boots, robe and long curved blade tip visible."
+            ],
+            "source_review_sha256": "4720c3da0c4b06c2edb371e00701f2c95293bd272ad419db183dbe6f9fbdfdc2"
+          },
+          {
+            "slot": "transform:267:NW:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "New correct NW idle/death conditioning resolves the v02 guard reversal: ALL SIX now retain BACK-LEFT/NORTHWEST heading. The near left boot toe projects LEFT, the far right boot reads back/heel, and helmet/back torso aim upper-left away, including guards0/5.",
+              "The near anatomical LEFT arm is visibly empty at image left; the far anatomical RIGHT hand keeps the single original long sinuous weapon at image right. No mirroring, hand swap, front face/cheststar or right-facing guard is present.",
+              "Phase0 braces; phase1 begins genuine backward shoulder/head/hip reaction opposite the upper-left heading; phase2 has maximum actual back-pitch, knee flexion and counterbalancing free-left arm/hair lag while retaining back-left yaw. Phase3 countersteps and regains balance;4-5 settle into the same NW guard.",
+              "Long pale upper-back hair, exact gold head structure, narrow hard-gold radial spines, dark gold-trimmed long skirt/armor and original boots/blade remain faithful. All original body/gear tips are visible and six phases have distinct joint/stance articulation.",
+              "Unchanged strict analyzer plus complete-region gate pass six complete distinct source poses. No source pixels were moved or edited. Prior v02 HOLD request/result/raw SHA are unchanged."
+            ],
+            "source_review_sha256": "aa93c040c0822b309eda0a46ed49b4c578707d1a804e6917fd339dc454e782e1"
+          },
+          {
+            "slot": "transform:267:W:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 are consistently LEFT/W lateral: pale face has clear left silhouette/profile rather than front-facing eyes, head/chin/nose and both boot toes aim left, torso/pelvis keep matching left axis. No SW-facing front-head replacement or opposite-heading frame.",
+              "Near anatomicalLEFT arm is foreground/camera-side on projected right and its hand stays EMPTY; anatomicalRIGHT/FAR arm projects left of torso with same sinuous weapon grip. Correct far-weapon/near-free layering is visible, not a mirrored E hand swap.",
+              "Original visible pale face and long pale hair, tall gold/black ornaments, thin hard gold radial spines, long dark goldtrim skirt and long thin curved weapon remain faithful.",
+              "Both boot soles stay planted; local chest/shoulder/head/forearm and clear hair/robe lag vary through breathing/settling without a walking step or attack.",
+              "Body/equipment scale and rigid spine attachment remain coherent across6, all boots/gear/long blade tip visible."
+            ],
+            "source_review_sha256": "8c9daba98583f83b1f1e3e84b81a1416e3718d732c2a886870008cacbd9c05d7"
+          },
+          {
+            "slot": "transform:267:S:run",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six poses keep front SOUTH face, shoulders, chest and pelvis; pale face, long white hair, chest core and thin gold radial spines match the faithful canonical and selected new S walk.",
+              "One sinuous luminous weapon remains in anatomicalRIGHT/imageLEFT hand throughout; imageRIGHT hand stays free. Long dark gold-trimmed skirt panels remain visible and flare with leg drive; no pants-only redesign.",
+              "The gait genuinely exchanges leg arrangements: phases0/3 have one boot extended/loaded and the other tucked, phases1/4 show the opposite leg arrangement with knee drive, and phases2/5 show shorter/tucked passing configurations. This is visibly faster and more articulated than the saved slow S walk; not all frames retain one leading leg.",
+              "Phase2->3 and5->0 read as compact passing/flight into a longer opposite-leg extension/landing; skirt, knees and boots articulate while front-body orientation and weapon hand remain stable.",
+              "All six complete figures and equipment fit the source without significant alpha on any outer border; strict source geometry independently finds six distinct poses."
+            ],
+            "source_review_sha256": "db4df96e7dc7797442bf9d0702bb691ece17da22876e7ac7e6dc12123505cd61"
+          },
+          {
+            "slot": "transform:267:SW:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v03iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Correct original-faithful SW/front-left initial model: pale face/nose LEFT, wider front chest/waist than W and down/left near-boot toe. No old right-facing initial pose.",
+              "All six retain exactly TWO arm chains: original far anatomicalRIGHT bears the full sinuous weapon; foreground anatomicalLEFT is empty and braces. No side swap, extra fist or hand.",
+              "Whole-body progression is a coherent leftward side/forward death fall from the SW stance: knee failure, low buckle, horizontal chest over the same bracing forearm, grounded impact and relaxed full prone corpse.",
+              "The final corpse is approximately W-aligned because the character falls/rolls laterally LEFT. This is acceptable physically continuous motion, with no new face plane, anatomical heading snap, boot-side flip or model replacement. Initial axis-only HOLD is preserved and superseded by motion-reassessment.json.",
+              "Long pale hair, long dark gold-trim skirt, narrow attached gold radial spines, exposed pale face and full original sinuous weapon remain coherent. Six complete disjoint bodies, no outer-edge clipping."
+            ],
+            "source_review_sha256": "98fd431694272306abf4b075157137488271cf7be07a90eff72816f80980db7c"
+          },
+          {
+            "slot": "transform:267:SW:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "The new actual LEFT-facing SW idle v03 as FIRST compass master resolves the v02 right-looking guard/impact failure: ALL SIX now keep pale nose/chin and helmet aiming LEFT, with front-LEFT SOUTHWEST chest/pelvis and down-left boots. Guards0/5 and impacts1/2 do not reverse toward right.",
+              "Phase0 braces; phase1 visibly pitches shoulder/chest/head backward while keeping LEFT yaw; phase2 is the strongest genuine torso/neck recoil, chin lifts but pale face/nose remains LEFT; phase3 adopts flexed-knee counterbalance and free-arm extension; phases4-5 recover the same front-left guard.",
+              "Anatomical RIGHT far/image-left arm continuously holds the one original long sinuous weapon low, while the near anatomical LEFT/image-right hand stays empty. Original grip and full blade remain visible, without attack slash, hand swap or mirror.",
+              "Original pale exposed face, long pale/white hair, exact gold head structure, narrow hard-gold radial spines, long dark gold-trimmed skirt/armor and original boots remain faithful. Six actual joint/stance changes, no tint/opacity or global translation substitute.",
+              "Unchanged strict analyze plus complete-region gate pass six complete distinct poses. The v02 HOLD request/result/raw checksums are unchanged and no source pixel has been patched, cropped, mirrored, resampled or spliced."
+            ],
+            "source_review_sha256": "bece9c5c2cf3b73228da4d3f47b894837ad9843bac4070094e06dd5087aae353"
+          },
+          {
+            "slot": "transform:267:SW:idle",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Actual ALL6 face FRONTLEFT/SW: pale nose/chin point LEFT, front-left pale face/chest remain visible, pelvis and both boot toe projections aim DOWNLEFT. None defaults to right-facing/SE or rear view.",
+              "AnatomicalRIGHT FAR shoulder/arm projects imageLEFT and grips original long thin sinuous orange/gold blade. Near anatomicalLEFT shoulder/arm is foreground imageRIGHT and its hand EMPTY. Correct layered arm assignment rather than mirrored SE swap.",
+              "Original pale human face, long pale hair, tall gold/dark ornaments, thin hard gold radial spines, long DARK goldtrim skirt and black/gold armor are retained; no redmask/flamefeather/shortblade redesign.",
+              "Both boot soles/pelvis anchor remain planted in stable guard; real local chest/shoulder/head/forearm and hair/robe lag vary through six restrained inhale/exhale/settle poses without stepping or attack.",
+              "Full body/gear/rigid spine attachments and entire same long curved blade/tip remain visible and coherent across6.",
+              "Unchanged strict geometry analyzer rows6/phase_grid2/canvas1024/reference_rows0,3 passes6 distinct physical frames."
+            ],
+            "source_review_sha256": "d84189bbd51c0ea4b4a8c1592d1f8c6a43131aedc03cdd40deba8e93f7f6b0a5"
+          },
+          {
+            "slot": "transform:267:E:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All six original E attack phase constructions/order are retained: low guard0, raised same-hand anticipation1, bent-knee load2, E/right extended contact3, down-right follow-through4 and low recovery5. None was replaced by idle or another direction.",
+              "Every pale face/head, torso/pelvis and leg heading remains E/right. Long pale hair, crown, narrow hard gold radial spikes, long dark goldtrim skirt and original armor/boots remain original-faithful.",
+              "Exactly TWO arm/hand chains in each pose; original anatomicalRIGHT retains the single long thin sinuous orange-gold weapon throughout. Contact3 still extends RIGHT with repeated narrow S-curves and taper, not a short broad blade, and the free left arm is distinct.",
+              "Outside diffuse glow/haze is substantially removed. At alpha>16 the edited raw has SIX complete separate connected foreground bodies, compared with the prior blocking bridge. No opaque source outer-edge clipping.",
+              "Raw nominal bounding rectangles still overlap, so raw strict extraction remains HOLD. One unchanged LOSSLESS repack succeeds: six distinct complete frames, all alpha>16 foreground RGBA preserved, no resampling/recoloring/new poses, maximum removed distant background alpha16. Strict original importer and complete-pose ownership check PASS for the derivative."
+            ],
+            "source_review_sha256": "72c9b3e8f5982bfd2c715f322064d9e69a810b9038b7fdd85eea2850de75be82"
+          },
+          {
+            "slot": "transform:267:N:walk",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+              "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+              "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization.",
+              "Six selected regions retain exact original RGBA/provenance. Public strict6pose importer and complete coverage passed at2048. Three terminal alpha21/61/41 pixels retainedexact; full sharp blade tip privately confirmed, no strong foreground boundary clip.",
+              "Runtime proposal uses measured pelvis-axis/supportsole anchors, not old cell-center/bbox anchors."
+            ],
+            "source_review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r076-N-walk.json",
+              "sha256": "a93e87899bf7ffc623c79a7dc29248f31ed2cbe9ee06a1bdc274405ef60f92c3",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_NATIVE_N_WALK_RUNTIME_VISUAL_QC"
+            }
+          },
+          {
+            "slot": "transform:267:W:hit",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v03composite01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Complete near anatomical LEFT shoulder/arm route has been rebuilt, not merely a fist removed. Shoulder pauldron rotates into a visible upper arm descending forward-left to an elbow, then forearm runs across the foreground breastplate to wrist and raised OPEN empty hand. No hanging upper-arm stump or wrong opposite-chest emergence remains.",
+              "Original far anatomical RIGHT weapon-bearing arm is separate, its wrist/hand still grips the same full long sinuous blade low image-left. Exactly two connected arm chains and two hands are visible.",
+              "Actual maximum head/torso backward recoil, bent supporting knees and hips, LEFT facial/body yaw and same isometric camera remain. Long pale hair, pale face, original gold head structure, narrow hard-gold back spines, long dark gold-trimmed skirt and boots preserve the faithful model.",
+              "Uniform DISPLAY-only0.377 comparison places the new higher-resolution pose alongside source phase2 and retained neighbors1/3. Head/torso/hip/boots ratios and full weapon/spine proportions are consistent; source resolution itself is not a defect. A rounded2720 virtual-canvas candidate is only a proposal requiring actual runtime proof.",
+              "Fresh independent reviewer confirms the new continuous LEFT chain, separate RIGHT weapon chain, no remnant/extra arm, and consistent normalized model/camera at moderately high confidence. Source extraction under unchanged gate finds one complete distinct pose.",
+              "All6 selected source regions retain exact original RGBA, one new corrected phase2 and five unchanged approved source-art poses; strict6 importer/complete coverage passed at2048 source canvas.",
+              "Independent arm anatomy review remains PASS for unchanged new source. Strong-support anchors and per-pose2720 native resolution correction are proposals; hip-minus-support compression/recoil/backstep remains represented, no playback reorder."
+            ],
+            "source_review_sha256": "daf149dedaccb627564586bbcef3204e2a88e20fddf5e0612a441a783c7f9850",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r080-W-entry-final.json",
+                "sha256": "915df8a6da44ab866732948bdf11dabf99d492dae341c1c515b3068c52384390",
+                "review_status": "PASS_SCOPED_W_ENTRY_PHYSICAL_ROOT_CONTINUITY",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:267:W:death",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
+              "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
+              "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
+              "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
+              "Existing W derivative PNG is copied byte-identically; only reviewed atlas region metadata expands to include all current nonzero ray/AA pixels."
+            ],
+            "source_review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r079-W-death.json",
+              "sha256": "b07ab4c965129440b5cfad02542cc5c66ca7bf73bcea05ed56f87d94c1520117",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
+            },
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r080-W-entry-final.json",
+                "sha256": "915df8a6da44ab866732948bdf11dabf99d492dae341c1c515b3068c52384390",
+                "review_status": "PASS_SCOPED_W_ENTRY_PHYSICAL_ROOT_CONTINUITY",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          },
+          {
+            "slot": "transform:267:S:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
+              "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
+              "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
+              "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
+              "All1,572,864 original RGBA pixels including transparent RGB/faintbackground retained exactlyonce; original S attack contact3/front heading and long sinuous weapon are unchanged."
+            ],
+            "source_review_sha256": "23874f98f7b820532c1014fee236c19d7b0885c358b11bcb99dbb37f790d7a7c",
+            "scoped_runtime_visual_review": {
+              "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r079-S-attack.json",
+              "sha256": "d548b512def6d6f811bcf406c6ab96d1708030b5a38ad23c7e96bbad9d535de6",
+              "scope": "Exact clip and immutable revision in evidence; actor approval remains HOLD",
+              "review_status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA"
+            }
+          },
+          {
+            "slot": "transform:267:SW:attack",
+            "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
+            "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+            "source_visual_status": "PASS",
+            "geometry_and_actual_Player": "PASS",
+            "actor_approval_added": 0,
+            "source_visual_findings": [
+              "All6 existing SW attack phases/order preserved: lowguard, diagonalraise, overheadload, contact3 down-left, lowerfollow and lowrecovery; revised_poses6/newly_authored_poses0.",
+              "Every pale face points left while front-left chest/stance remain SW; original six articulated movements are retained without W/NW/right-facing substitution.",
+              "All6 preserve continuous far RIGHT/image-left weapon shoulder-elbow-wrist-grip, full sinuous narrow blade and empty near LEFT/image-right hand; exactly2arm chains, no swapped ownership.",
+              "Original pale hair/face, thin gold radial spines, black/gold crown/armor and dark long gold-trimmed robe retained with complete uncropped gear.",
+              "Unchanged strict analyze+require_complete_pose_regions PASS:6distinct1024canonical frames, six alpha16 bodies, all foreground covered and outer alpha>100 clipping0. No repack needed or performed."
+            ],
+            "source_review_sha256": "d1e623ffada0b4fe23de37144de3b28d46c557b6aefbf44f3a409302c26623ac",
+            "scoped_runtime_visual_reviews": [
+              {
+                "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/native-runtime-quality-reviews/girtas-r082-SW-attack-compiled-final.json",
+                "sha256": "40f1c2f0ea905db0b6e54d73abd32f035c9c7b6ca94680f7d51c879ca65a9914",
+                "review_status": "PASS_ACTUAL_COMPILED_LAYOUT_SOURCE_PROOF",
+                "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
+              }
+            ]
+          }
+        ]
       }
     },
     "transform:413": {
