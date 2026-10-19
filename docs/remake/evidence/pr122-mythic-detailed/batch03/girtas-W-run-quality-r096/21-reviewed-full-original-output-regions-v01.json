@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+  "source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+  "base_geometry_sha256": "aab25853b7e9de566978cc61a81525ca3e60e7f31f3cd2e99caef0bd9a173015",
+  "direction": "W",
+  "review_basis": "Expand automatic body bounds outward to the six exact full original PNG rectangles. Every original source RGBA pixel is preserved, with no crop/resampling/mirroring/recolor/cleanup. Explicit disjoint1536 packing cells keep all transparent and AA edges. Same immutable failed atlas, unchanged six physicalbody/nearestowner/coverage guards. Source6 independently PASS separately, physical C/root/AIR/runtime remain pending.",
+  "regions": [
+    [
+      141,
+      141,
+      1254,
+      1254
+    ],
+    [
+      1677,
+      141,
+      1254,
+      1254
+    ],
+    [
+      141,
+      1677,
+      1254,
+      1254
+    ],
+    [
+      1677,
+      1677,
+      1254,
+      1254
+    ],
+    [
+      141,
+      3213,
+      1254,
+      1254
+    ],
+    [
+      1677,
+      3213,
+      1254,
+      1254
+    ]
+  ],
+  "nearest_owner_sha256": "8c7494b2b2be022f1641873f51a44c1923f8df98cc3b774ac8fadda3a3f78013",
+  "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+}
