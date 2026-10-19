@@ -14736,10 +14736,10 @@
     },
     "transform:413": {
       "grade": "신화",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r003/SpriteFrames.tres",
-      "frames_sha256": "5fe5f1c72ccc29487be5946f23d02f7a4ab3030ad725cf4b036fc212773ed368",
-      "native_track_count": 3,
-      "native_pose_count": 18,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r004/SpriteFrames.tres",
+      "frames_sha256": "a7b4d2a40e3498e3ffe1672c105bf15876330134671390a06eca62002779082d",
+      "native_track_count": 4,
+      "native_pose_count": 24,
       "canvas_size": [
         1024,
         1024
@@ -15055,6 +15055,158 @@
         },
         {
           "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-run-v01.png",
+          "source_sha256": "e3ba5dbf91377ae79663b72e6e8f67c438ca645b7c5589056b1e799d2deb0139",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r004/SE-run.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  70,
+                  23,
+                  370,
+                  473
+                ],
+                "margin": [
+                  326,
+                  171,
+                  654,
+                  551
+                ],
+                "source_anchor": [
+                  256,
+                  492
+                ],
+                "rgba_sha256": "785a7ee4682bf7c6fc6d946d8486a7d84d64d4a5da9837f16c3beb544a202b40"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  606,
+                  45,
+                  365,
+                  443
+                ],
+                "margin": [
+                  350,
+                  201,
+                  659,
+                  581
+                ],
+                "source_anchor": [
+                  768,
+                  484
+                ],
+                "rgba_sha256": "089c281055da79be045e5e4fa71561299492fa07e2734a5ade09e1b069103689"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  90,
+                  548,
+                  408,
+                  421
+                ],
+                "margin": [
+                  346,
+                  223,
+                  616,
+                  603
+                ],
+                "source_anchor": [
+                  256,
+                  965
+                ],
+                "rgba_sha256": "29a6758a593f37ab5c234205d9aec247abfc3e2042f3cb3f46e23079fb377b6b"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  609,
+                  535,
+                  369,
+                  458
+                ],
+                "margin": [
+                  353,
+                  186,
+                  655,
+                  566
+                ],
+                "source_anchor": [
+                  768,
+                  989
+                ],
+                "rgba_sha256": "a145ad0800fa1cca940ce4569dbf4ae50761f563b4e6eca7bbf5a084f145974f"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  74,
+                  1011,
+                  392,
+                  443
+                ],
+                "margin": [
+                  330,
+                  201,
+                  632,
+                  581
+                ],
+                "source_anchor": [
+                  256,
+                  1450
+                ],
+                "rgba_sha256": "c41f34fc91d7f825b6f4cdd7e4345677c1f6cfd63184aacecb3dcb124cfc3d69"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  593,
+                  1039,
+                  403,
+                  417
+                ],
+                "margin": [
+                  337,
+                  227,
+                  621,
+                  607
+                ],
+                "source_anchor": [
+                  768,
+                  1452
+                ],
+                "rgba_sha256": "60b6a0c8eae00828f9fd75e08ecfc3e1209237020cb9150ad4a8b873fa10037e"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 459.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          }
+        },
+        {
+          "direction": "SE",
           "role": "walk",
           "animation": "walk_1",
           "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-walk-v01.png",
@@ -15213,7 +15365,6 @@
         "walk_5",
         "walk_6",
         "walk_7",
-        "run_1",
         "run_2",
         "run_3",
         "run_4",
@@ -15276,8 +15427,8 @@
       "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r003/NativeMotionProfile.tres",
-      "native_profile_sha256": "765ee63b64307e4e96b218d445cdbe63878eec977d0467d2223bcdbe2d92101e",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r004/NativeMotionProfile.tres",
+      "native_profile_sha256": "0c880fa466710a85801eeba531b3b1efa1d04a987bfc6b3834430577cf2fdee2",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 439.75,
@@ -15288,7 +15439,7 @@
       },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 18,
+        "distinct_native_poses": 24,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -17249,13 +17400,34 @@
           "visual_approval": "NOT_RUN",
           "completed_added": 0
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r003/SpriteFrames.tres",
+        "frames_sha256": "5fe5f1c72ccc29487be5946f23d02f7a4ab3030ad725cf4b036fc212773ed368",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r003/NativeMotionProfile.tres",
+        "native_profile_sha256": "765ee63b64307e4e96b218d445cdbe63878eec977d0467d2223bcdbe2d92101e",
+        "native_track_count": 3,
+        "native_pose_count": 18,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 18,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0
+        }
       }
     ]
   },
   "next_locomotion_source": {
     "key": "transform:413",
-    "direction": "SE",
-    "role": "run"
+    "direction": "S",
+    "role": "walk"
   },
   "next_detailed_source": {
     "key": "transform:413",
@@ -17263,5 +17435,5 @@
     "role": "attack"
   },
   "missing_detailed_action_blocks": 32,
-  "missing_locomotion_blocks": 13
+  "missing_locomotion_blocks": 12
 }
