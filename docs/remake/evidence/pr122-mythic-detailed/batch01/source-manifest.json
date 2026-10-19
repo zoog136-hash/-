@@ -6436,6 +6436,40 @@
       "actor_approval": false,
       "approved_actor_change": 0,
       "detailed_completion_change": 0
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03iso01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "7cdf37a20cd14c2f53adb7fed226c879b4a4f0162ab8ddde5ce9e2a42ef5b874",
+      "direction": "E",
+      "role": "run",
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          496,
+          500
+        ],
+        [
+          1249,
+          444
+        ],
+        [
+          503,
+          947
+        ],
+        [
+          1253,
+          933
+        ],
+        [
+          505,
+          1490
+        ],
+        [
+          1258,
+          1519
+        ]
+      ],
+      "review_basis": "Private actualr054 Eidle/Ewalk→Erun comparison: source-native helmet/horn width and shoulder-to-hip length are comparable to Eidle/Ewalk (about90–100px helmet width; run crouch/legtrail explains shorter vertical body projection). Therefore use matching1280 virtual canvas to remove current25percent runtime enlargement. Packed bounding-box center384/1152 is behind physical pelvis and changes with wing extent. Nativebody detail review locates upper-thigh/pelvis axes approximately[486,1239,493,1243,495,1248]X (about±6sourcepx annotation uncertainty). Add10sourceX so pelvis is about−2.45worldpx relative actor root, matching reviewed Eidle physical pelvis310 vs anchor320. This aligns the physical hip pivot while retaining genuine forward torso/head run lean, wingstroke, legtrail and all original six Y anchors/bob. No PNG resampling/recolor/deletion, no actor approval. Requires final compiledTRES transition/6pose/seam review."
     }
   }
 }
