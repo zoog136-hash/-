@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-19T00:35:46.077684+00:00",
+  "observed_utc": "2026-10-19T02:55:02.085476+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -134,7 +134,7 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "STOPPED_BY_USER; resume only under new conversation instruction. Monk/Queen source repair, remaining93 and quality14 preserved.",
+  "resume": "STOPPED_BY_USER; no further authoring/tests/CI until new user instruction",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -143,7 +143,7 @@
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "Resolve this checkpoint commit with checkpoint_commit_resolution and compare actual PR122 remote HEAD; current CI result is tracked in PR122 body."
   },
-  "last_successful_pushed_code_commit": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
+  "last_successful_pushed_code_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
   "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json",
@@ -159,7 +159,7 @@
   },
   "historical_user_directive_before_recovery": "Continue real production on PR122 without ending after checkpoints/CI waits/HOLD. PR100 merge remains stopped; no new PR.",
   "protected_production_change_scope": "No approved PNG or SpriteFrames overwritten; only5 previously incomplete identities gain candidate bindings. New common runtime native_width_ratio/HDR tint support has approved-Iguana actual Main technical baseline PASS, not full regression approval.",
-  "latest_user_priority": "지금 하던거 그대로 저장하고 커밋해 그리고 새대화로 이어 나갈수 있도록 프롬프트 줘",
+  "latest_user_priority": "계속 메시지 용량초과 오류가 발생한다 그만하고 지금까지 작성내용 다 저장해",
   "latest_source_status": {
     "new_approved": 8,
     "approved_this_save": 0,
@@ -208,7 +208,7 @@
     }
   },
   "last_successful_pushed_code_commit_is_previous_checkpoint": true,
-  "last_successful_pushed_code_commit_role": "Previous pushed checkpoint, not this new HEAD; resolve this checkpoint with checkpoint_commit_resolution and compare live PR HEAD.",
+  "last_successful_pushed_code_commit_role": "Previous production checkpoint; latest stop-save commit resolved from this file git log",
   "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch17/individual-approvals.json",
   "observed_remote_main_at_save": "fc6cf088e90a273bfde38ce4807fb7b5c2a51afb",
   "remote_main_note": "Remote main advanced since prior56f552c8. This user-requested WIP save preserves current PR branch and does not merge main; reassess upstream changes when resuming production.",
@@ -276,23 +276,74 @@
     }
   },
   "state": "STOPPED_BY_USER",
-  "last_safe_commit": "d069778458783e054d4755448f00f9dd18a04e86",
+  "last_safe_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
   "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
   "current_ids": [
     "monster:알비노 몽크",
     "monster:얼음 여왕"
   ],
-  "next": "Read docs/remake/TWILIGHT_PR122_RESUME_20261019.md. Stop requested: save and hand off; no further production in this turn.",
-  "handoff": "docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
-  "stopped_authoring_manifest": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/preservation-manifest.json",
+  "next": "Read docs/remake/TWILIGHT_PR122_STOP_20261019.md; preserve SOURCE_HOLD and incomplete full regression/CI",
+  "handoff": "docs/remake/TWILIGHT_PR122_STOP_20261019.md",
+  "stopped_authoring_manifest": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json",
   "normal_completed": 391,
   "approvals_total": 405,
   "remaining_unapproved": 93,
   "new_completed": 6,
   "new_approved_this_batch": 6,
-  "final_CI": "NOT_RUN_FOR_NEW_HEAD",
+  "final_CI": "NOT_VERIFIED; manual workflow dispatch HTTP401; no historical success reuse",
   "current_safe_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md",
   "active_authoring": {
+    "monster:알비노 몽크": {
+      "status": "SOURCE_HOLD",
+      "native_poses": 128,
+      "production_connected": false,
+      "details": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json"
+    },
+    "monster:얼음 여왕": {
+      "status": "SOURCE_HOLD",
+      "native_poses": 128,
+      "production_connected": false,
+      "details": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json"
+    },
+    "monster:놀": {
+      "status": "SOURCE_HOLD",
+      "native_poses": 128,
+      "production_connected": false,
+      "details": "docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json"
+    }
+  },
+  "stop_save": {
+    "approved_total": 405,
+    "new_completed_this_resume": 0,
+    "SOURCE_HOLD": 17,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 75,
+    "raw_new_PNG_preserved": 67,
+    "exact_new_requests": 67,
+    "all_current_work_archive": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json",
+    "previous_work_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
+    "private_backup": "NOT_DELIVERED",
+    "old_reaper": "UNRECOVERED"
+  },
+  "final_runtime_audit": "TARGETED_PRIOR_NATIVE_PASS; FULL_REGRESSION_INTERRUPTED_BY_USER",
+  "validation_at_current_commit": {
+    "local_full_regression": "INTERRUPTED_BY_USER; partial PASS149 FAIL1 SKIP4; separate corrected catalog PASS; not full PASS",
+    "full_CI": "NOT_VERIFIED; manual dispatch failed HTTP401; exact final HEAD CI not verified",
+    "newly_approved": 0
+  },
+  "historical_batch16_stop_save": {
+    "approved_total": 405,
+    "new_completed_this_resume": 6,
+    "source_HOLD": 16,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76,
+    "raw_WIP_PNG_preserved": 18,
+    "no_new_WIP_approval": true,
+    "remote_changed_concurrently": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
+    "merge_status": "PRESERVED_BOTH_HISTORIES; four native approved profiles retained, remote proxy candidates preserved",
+    "merge_audit": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/remote-integration.json"
+  },
+  "historical_batch16_active_authoring": {
     "monster:알비노 몽크": {
       "id": "monster:알비노 몽크",
       "status": "SOURCE_HOLD",
@@ -351,23 +402,5 @@
       },
       "cast": "Future explicit cast=attack alias only; not extra unique poses"
     }
-  },
-  "stop_save": {
-    "approved_total": 405,
-    "new_completed_this_resume": 6,
-    "source_HOLD": 16,
-    "IN_PROGRESS": 1,
-    "NOT_AUTHORED": 76,
-    "raw_WIP_PNG_preserved": 18,
-    "no_new_WIP_approval": true,
-    "remote_changed_concurrently": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
-    "merge_status": "PRESERVED_BOTH_HISTORIES; four native approved profiles retained, remote proxy candidates preserved",
-    "merge_audit": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/remote-integration.json"
-  },
-  "final_runtime_audit": "PENDING_AFTER_CONCURRENT_SAME_PR_MERGE",
-  "validation_at_current_commit": {
-    "local_full_regression": "RUNNING; initial catalog failure and corrected targeted PASS preserved",
-    "full_CI": "PENDING exact final HEAD; no historical success reuse",
-    "newly_approved": 0
   }
 }

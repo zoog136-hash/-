@@ -1,5 +1,5 @@
 {
-  "state": "SOURCE_BATCH_QUARANTINED; TARGETED_LOCAL_GATES_PASS; FULL_REGRESSION_AND_FINAL_HEAD_CI_PENDING",
+  "state": "STOPPED_BY_USER; ALL_CURRENT_WORK_PRESERVED; NO_NEW_PRODUCTION_OR_CI",
   "approved_total": 405,
   "new_approvals": 0,
   "remaining": 93,
@@ -21,8 +21,14 @@
     "queen": "SOURCE_HOLD; v1 cast alias344 failures preserved, v2 Main3932 + combined continuous121966 PASS, visual gait/scale/contact HOLD",
     "gnoll": "SOURCE_HOLD; Main1626 + combined continuous121966 PASS, visual gait/contact HOLD"
   },
-  "local_full_regression": "RUNNING; initial catalog failure and corrected targeted PASS both preserved",
-  "final_CI": "PENDING exact final HEAD; historical CI never reused",
+  "local_full_regression": "INTERRUPTED_BY_USER; PASS149 FAIL1 SKIP4 in partial log; corrected catalog targeted recheck PASS; no full-suite claim",
+  "final_CI": "NOT_VERIFIED; manual dispatch HTTP401; no successful manual dispatch claimed; historical CI not reused",
   "private_backup": "NOT_DELIVERED",
-  "old_reaper": "UNRECOVERED"
+  "old_reaper": "UNRECOVERED",
+  "stopped_at_utc": "2026-10-19T02:52:14.991375+00:00",
+  "stop_reason": "Repeated message capacity errors; user requested stop and save everything",
+  "source_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
+  "stop_preservation": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json",
+  "handoff": "docs/remake/TWILIGHT_PR122_STOP_20261019.md",
+  "resume_only_on_new_instruction": true
 }

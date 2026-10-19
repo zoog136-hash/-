@@ -1,3 +1,5 @@
+> 사용자 요청으로 중단 저장했다. [최신 인계](../../../TWILIGHT_PR122_STOP_20261019.md), [전체 작성물 분할 보존](authoring-stop-20261019/preservation-manifest.json)을 먼저 확인한다. 아래 진행 중/미전달 문구는 당시 기록이며 최신 상태는 checkpoint.json과 중단 영수증을 따른다. 신규 승인0, 전체 회귀/CI 미완료.
+
 # PR #122 batch17 — 2026-10-19 제작 재개
 
 시작 원격/깨끗한 작업 트리 HEAD는 `bc4ce605510a42a5db78f0ba9df8d8e63f39e68a`, 확인한 main은 `fc6cf088e90a273bfde38ce4807fb7b5c2a51afb`였다. 기존 PR/브랜치/대상 브랜치를 유지한다. 이 디렉터리의 기록은 제작·검증 증거이며 새로운 외형 승인을 의미하지 않는다.
