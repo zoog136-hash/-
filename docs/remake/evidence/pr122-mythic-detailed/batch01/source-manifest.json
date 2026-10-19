@@ -3169,6 +3169,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "N",
+      "role": "hit",
+      "version": "v02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
+      "original_generated_file": "/workspace/scratch/girtas-N-hit-repair/girtas-N-hit-v02.png",
+      "bytes": 2432087,
+      "sha256": "50d291ae065c0ff97ab81595bdcec245497ca230a6f3b66b60f2e5cf45c43154",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3269,7 +3288,7 @@
     "transform:267:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v01.png",
     "transform:267:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v01.png",
     "transform:267:NW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v01.png",
-    "transform:267:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v01.png",
+    "transform:267:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
     "transform:267:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v01.png",
     "transform:267:E:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
     "transform:267:SE:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v01iso01.png",
@@ -3806,6 +3825,23 @@
             "Unchanged strict analyze rows6/phase_grid2/canvas1024/reference_rows0,3 passes with6 distinct pixel frames."
           ],
           "source_review_sha256": "4b4e5770137f221d7794d430ae9be0ca70f1284c6c1bea44668ac3c2f7cdab70"
+        },
+        {
+          "slot": "transform:267:N:hit",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Absolute compass: all six show NORTH/screen-up BACK views, back of the gold head structure and long pale back-hair, back armor/skirt and rear boots. No front face, frontal chest emblem, breastplate or east/right-facing profile appears in any phase.",
+            "Anatomical RIGHT weapon hand is consistently IMAGE RIGHT, while IMAGE LEFT is the unarmed left hand. The same single long sinuous original blade remains low to the right, never becoming a slash or a second weapon.",
+            "Phase0 is back guard; phase1 raises the free arm, shifts shoulder/hip balance and reacts through the head/hair; phase2 has the strongest spread free-arm/elbow and shoulder/head/hip response with bent support and pronounced pale-hair lag while retaining the back-facing model.",
+            "Phase3 visibly countersteps an original foot and flexes the knees to regain balance, phase4 recovers the torso over the feet, and phase5 settles into stable NORTH/back guard. Genuine joint and stance changes distinguish the six drawings; they are not translated/tinted/opacity variants.",
+            "Long pale hair drapes over the upper back, narrow hard-gold radial shoulder/back-spines retain their thin original form, long dark gold-trimmed skirt and full original boots/weapon preserve the faithful canonical identity. No redesigned red mask or broad substitute wings are used.",
+            "All six full characters have readable complete gear, spine tips and blade tips. The unchanged strict analyzer and complete-pose gate pass six complete distinct regions, with original generated pixels preserved."
+          ],
+          "source_review_sha256": "1973dddef8424320450e524c24de1b50e2e7e40c1880069f9a8a20f57959a71b"
         }
       ]
     }
