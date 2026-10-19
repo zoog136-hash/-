@@ -9328,5 +9328,64 @@
       ],
       "review_basis": "Fresh independent r070 actual selected-TRES/PNG review of new NWdeath6 and faithful NWidle0 (native C1280). Source-native rigid helmet width and head/neck-to-pelvis lengths match idle closely; current C1024 gives a genuine 25% model-size entry increase. C1280 preserves rigid model size while excluding wing/cloth/corpse bounding boxes. Constant +16 source-pixel X-anchor correction aligns the entry pelvis/paired-leg-root relationship with NWidle (baseline hip-minus-root about14 source pixels, uncertainty +/-8); same correction for all6 preserves authored horizontal fall/settle trajectory. Every authored anchorY is unchanged, preserving initial fatal-flinch, leg-extension and continuous ground collapse. Back-facing NW helmet and dorsal armor remain consistent through non-180 yaw collapse, two arms/two legs/one helmet/one permanent RIGHT blade and EMPTY LEFT, one wing pair, cape/tail coherent. No order/RGBA/source edits or resampling; final compiled private review still required. Source only scoped PASS, actor stays HOLD/default OFF."
     }
-  }
+  },
+  "runtime_layout_attempt_holds": [
+    {
+      "status": "REQUEST_SCHEMA_HOLD_PRESERVED",
+      "reason": "Invalid source_canvas_review status rejected before source copy. No geometry/runtime gate changed. Preserve exact raw and proposal; corrected metadata requires new authoring request version, not new art.",
+      "raw_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6.png",
+      "sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "bytes": 6290901,
+      "request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-178-girtas-N-run-v03composite02.json",
+      "unselected_runtime_layout": {
+        "status": "REVIEWED_LAYOUT_PROPOSAL",
+        "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+        "canvas_size": 2048,
+        "direction": "N",
+        "key": "267",
+        "role": "run",
+        "authored_pose_canvas_sizes": [
+          2240,
+          2384,
+          2240,
+          784,
+          2320,
+          2392
+        ],
+        "source_anchors": [
+          [
+            676,
+            1332
+          ],
+          [
+            2233,
+            1311
+          ],
+          [
+            690,
+            2900
+          ],
+          [
+            2277,
+            2497
+          ],
+          [
+            692,
+            4368
+          ],
+          [
+            2226,
+            4519
+          ]
+        ],
+        "review_basis": "Actual newly authored six-key ground/root arc; rigidhead marker C proposal plus supportsole anchors and explicitly airborne metadata. ExactRGBA source/transparent AIRpadding verified. Full6 physical/source review and final runtime remain HOLD. Numeric arc /workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json SHA256 451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+        "anchor_measurement_evidence": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json",
+        "anchor_measurement_evidence_sha256": "451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+        "runtime_validation": "HOLD_PENDING_PRIVATE_FULL6_AND_ACTUAL_PLAYER",
+        "actor_approval": false,
+        "new_actor_approvals": 0
+      },
+      "actor_approval_added": 0
+    }
+  ]
 }
