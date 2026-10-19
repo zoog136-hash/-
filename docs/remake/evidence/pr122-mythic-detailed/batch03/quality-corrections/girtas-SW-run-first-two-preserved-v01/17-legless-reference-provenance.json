@@ -1,0 +1,58 @@
+{
+  "status": "QC_PREINSPECTED_LEGLESS_IDENTITY_ONLY_NOT_NEW_ANIMATION",
+  "references": [
+    {
+      "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+      "sha256": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+      "source": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-idle0-exactRGBA.png",
+      "source_sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+      "exact_crop": [
+        0,
+        0,
+        486,
+        260
+      ]
+    },
+    {
+      "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+      "sha256": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+      "source": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-attack0-exactRGBA.png",
+      "source_sha256": "cfb1f5a3f33113ad1ccb02d02ca8a9fa776c127599ef39690c368c85aba17078",
+      "exact_crop": [
+        0,
+        0,
+        388,
+        205
+      ]
+    },
+    {
+      "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+      "sha256": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+      "source": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-idle0-exactRGBA.png",
+      "source_sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+      "exact_crop": [
+        248,
+        290,
+        38,
+        70
+      ]
+    },
+    {
+      "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png",
+      "sha256": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f",
+      "source": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-idle0-exactRGBA.png",
+      "source_sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+      "exact_crop": [
+        0,
+        310,
+        150,
+        189
+      ]
+    }
+  ],
+  "independent_reference_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-reference-legless-crops-independent-QC-v01.json",
+    "sha256": "64504bf296863f951b3db9afbf89a5fa320dee146e976707678581fb357dc72c"
+  },
+  "farRIGHT_blade_orientation": "Low imageLEFT grip to FORWARD_DOWNLEFT sinuous tip; nearLEFT empty; no oldgenericRUNlegs referenced."
+}

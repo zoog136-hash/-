@@ -1,0 +1,370 @@
+{
+  "status": "PRODUCTION_3D_GUIDE_ONLY_NOT_FINAL_ART_OR_APPROVAL",
+  "actor": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "contact_phases": [
+    0,
+    3
+  ],
+  "fixed_leg_bone_lengths": [
+    0.52,
+    0.52
+  ],
+  "fixed_arm_bone_lengths": [
+    0.32,
+    0.27
+  ],
+  "max_bone_length_error": 1e-09,
+  "camera": [
+    -5,
+    7,
+    5
+  ],
+  "forward_PLUS_Y": "DOWNLEFT",
+  "anatomicalRIGHT_PLUS_X": "FAR_ORANGE_permanent_sinuousweapon",
+  "anatomicalLEFT_MINUS_X": "NEAR_BLUE_EMPTY_hand",
+  "frames": [
+    {
+      "phase": 0,
+      "name": "LEFT_HEEL_LANDING_otherleg_REAR_AIR",
+      "camera": [
+        -5,
+        7,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "RIGHT_far": [
+        1,
+        0,
+        0
+      ],
+      "LEFT_near": [
+        -1,
+        0,
+        0
+      ],
+      "fixed_thigh_length": 0.52,
+      "fixed_shin_length": 0.52,
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            0.18,
+            0.135204642698053,
+            0.5278847696067249
+          ],
+          "ankle": [
+            0.18,
+            -0.38,
+            0.4574278597797138
+          ],
+          "actual_bone_lengths": [
+            0.5199999999999999,
+            0.52
+          ],
+          "center": [
+            0.18,
+            -0.3,
+            0.37742785977971377
+          ],
+          "rotationX": -0.45,
+          "ground_clearance": 0.27,
+          "is_support": false,
+          "projected_native768": {
+            "hip": [
+              343.09435272216797,
+              364.0835266113281
+            ],
+            "knee": [
+              321.14739990234375,
+              504.1915512084961
+            ],
+            "ankle": [
+              404.77748107910156,
+              472.66754150390625
+            ],
+            "center": [
+              391.7915496826172,
+              500.59178924560547
+            ]
+          }
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            -0.18,
+            0.380806217396423,
+            0.6759002615191191
+          ],
+          "ankle": [
+            -0.18,
+            0.44,
+            0.15928038569059416
+          ],
+          "actual_bone_lengths": [
+            0.52,
+            0.5200000000000001
+          ],
+          "center": [
+            -0.18,
+            0.52,
+            0.07928038569059416
+          ],
+          "rotationX": 0.2,
+          "ground_clearance": 0,
+          "is_support": true,
+          "projected_native768": {
+            "hip": [
+              424.90562438964844,
+              388.72254180908203
+            ],
+            "knee": [
+              363.09166717529297,
+              514.8811111450195
+            ],
+            "ankle": [
+              353.48311614990234,
+              651.3790283203125
+            ],
+            "center": [
+              340.49718475341797,
+              679.3032760620117
+            ]
+          }
+        }
+      },
+      "arms": {
+        "RIGHT": {
+          "shoulder": [
+            0.31,
+            0.1,
+            1.54
+          ],
+          "elbow": [
+            0.4613928085660937,
+            0.09512835817337323,
+            1.2581197335385408
+          ],
+          "wrist": [
+            0.43,
+            0.09000000000000001,
+            0.99
+          ],
+          "owns_weapon": true,
+          "actual_bone_lengths": [
+            0.3200000000000002,
+            0.26999999999999985
+          ]
+        },
+        "LEFT": {
+          "shoulder": [
+            -0.31,
+            0.1,
+            1.54
+          ],
+          "elbow": [
+            -0.48221580650288637,
+            0.024224160843522163,
+            1.2811569236183977
+          ],
+          "wrist": [
+            -0.43,
+            -0.06,
+            1.03
+          ],
+          "owns_weapon": false,
+          "actual_bone_lengths": [
+            0.32,
+            0.27
+          ]
+        }
+      },
+      "render": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing0-fixedbone.png",
+      "render_sha256": "2dfe43a9001e2a5d489a2139dd6a534b70285da19ab6b8b39da79d2c46d1e6e5"
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT_HEEL_LANDING_otherleg_REAR_AIR",
+      "camera": [
+        -5,
+        7,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "RIGHT_far": [
+        1,
+        0,
+        0
+      ],
+      "LEFT_near": [
+        -1,
+        0,
+        0
+      ],
+      "fixed_thigh_length": 0.52,
+      "fixed_shin_length": 0.52,
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            0.18,
+            0.380806217396423,
+            0.6759002615191191
+          ],
+          "ankle": [
+            0.18,
+            0.44,
+            0.15928038569059416
+          ],
+          "actual_bone_lengths": [
+            0.52,
+            0.5200000000000001
+          ],
+          "center": [
+            0.18,
+            0.52,
+            0.07928038569059416
+          ],
+          "rotationX": 0.2,
+          "ground_clearance": 0,
+          "is_support": true,
+          "projected_native768": {
+            "hip": [
+              343.09435272216797,
+              364.0835266113281
+            ],
+            "knee": [
+              281.2803726196289,
+              490.2420959472656
+            ],
+            "ankle": [
+              271.6718215942383,
+              626.739990234375
+            ],
+            "center": [
+              258.6859130859375,
+              654.6642379760742
+            ]
+          }
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            -0.18,
+            0.135204642698053,
+            0.5278847696067249
+          ],
+          "ankle": [
+            -0.18,
+            -0.38,
+            0.4574278597797138
+          ],
+          "actual_bone_lengths": [
+            0.5199999999999999,
+            0.52
+          ],
+          "center": [
+            -0.18,
+            -0.3,
+            0.37742785977971377
+          ],
+          "rotationX": -0.45,
+          "ground_clearance": 0.27,
+          "is_support": false,
+          "projected_native768": {
+            "hip": [
+              424.90562438964844,
+              388.72254180908203
+            ],
+            "knee": [
+              402.9586944580078,
+              528.8305892944336
+            ],
+            "ankle": [
+              486.58872985839844,
+              497.30657958984375
+            ],
+            "center": [
+              473.60284423828125,
+              525.230827331543
+            ]
+          }
+        }
+      },
+      "arms": {
+        "RIGHT": {
+          "shoulder": [
+            0.31,
+            0.1,
+            1.54
+          ],
+          "elbow": [
+            0.4613928085660937,
+            0.09512835817337323,
+            1.2581197335385408
+          ],
+          "wrist": [
+            0.43,
+            0.09000000000000001,
+            0.99
+          ],
+          "owns_weapon": true,
+          "actual_bone_lengths": [
+            0.3200000000000002,
+            0.26999999999999985
+          ]
+        },
+        "LEFT": {
+          "shoulder": [
+            -0.31,
+            0.1,
+            1.54
+          ],
+          "elbow": [
+            -0.4264777907897833,
+            0.2279131150770592,
+            1.2707953209098801
+          ],
+          "wrist": [
+            -0.43,
+            0.35,
+            1.03
+          ],
+          "owns_weapon": false,
+          "actual_bone_lengths": [
+            0.31999999999999995,
+            0.27000000000000013
+          ]
+        }
+      },
+      "render": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing3-fixedbone.png",
+      "render_sha256": "69796407b4046532123b3bf291a76ae9b35be0597cf28fd7e674f3ffd4ae90c5"
+    }
+  ],
+  "source_imagegen_must_preserve": "Actual landing LEFTheel0/RIGHTHeel3 with opposite rearAIR, constant proportions and correctSWface/hips, no alllegs-same or terminalpush mislabeledlanding."
+}
