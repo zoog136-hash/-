@@ -1,0 +1,74 @@
+{
+  "schema": "pr122-independent-source-anatomy-review-v1",
+  "status": "PASS_SCOPED_NE_TRUE_FORWARD_SIX_WALK_SOURCE_GAIT",
+  "reviewer": "/root/girtas_nw_walk_author (independent reviewer; did not author NE walk source or layout)",
+  "independent": true,
+  "key": "transform:267",
+  "role": "walk",
+  "direction": "NE",
+  "source": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/girtas-NE-walk-reviewed-composite-v04.png",
+  "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+  "exact_map_sha256": "f61d712aa61e0768ff2209e4fe067d13dd747a33248f1914c645697c77515b6e",
+  "assembly_sha256": "3a6d095d1404f9dd3d6b9967fb6b7be0c74a8387064ce8c49582372bdfe2f5e0",
+  "exact_six_RGBA_proof": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/independent-v04-six-exact-source-output-pin-proof-nw-author.json",
+  "exact_six_RGBA_proof_sha256": "b63c9e81f3455659cbfb12d995120accc48a9109b5115da2809e661e371fa612",
+  "private_previews": [
+    {
+      "path": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/private-NE-walk-six-source-v04.jpg",
+      "bytes": 149488,
+      "sha256": "2fd883ccefe235d8e8e4379869e1731831d862c87cd567cb335a8a9e9d7c17f3"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/independent-four-lower-chains-detail-private-nw-author.jpg",
+      "bytes": 146913,
+      "sha256": "b8d822316718539f098ef469455a4d4a5632374175a7493c86a4dc877184f7bd"
+    }
+  ],
+  "native_detail_ROI_proof_sha256": "52284b3b500a460dc209cbaa36afbba0317504b9493122312bb9b4186646810e",
+  "phase_findings": [
+    {
+      "phase": 0,
+      "finding": "Far anatomical LEFT leading chain genuinely reaches forward/away UP-RIGHT, with near RIGHT trailing DOWN-LEFT. Corrected0 is not the old UP-LEFT/back family."
+    },
+    {
+      "phase": 1,
+      "finding": "Far LEFT stays the stance limb while near RIGHT flexes and advances from its rear phase; both separate shin/boot chains are visible under the natural long-robe openings."
+    },
+    {
+      "phase": 2,
+      "finding": "Near RIGHT hip/thigh/knee/shin genuinely reaches forward UP-RIGHT; far LEFT trails toward DOWN-LEFT with heel raised/toe down."
+    },
+    {
+      "phase": 3,
+      "finding": "The corrected near RIGHT contact retains the actual source2 leading hip/knee/shin extent instead of retracting it. Far LEFT remains the trailing limb."
+    },
+    {
+      "phase": 4,
+      "finding": "Near RIGHT shin/boot supports under the body with a visible opposite far LEFT recovering boot; this is the opposite stance half-cycle to1."
+    },
+    {
+      "phase": 5,
+      "finding": "Corrected far LEFT leading heel stays forward UP-RIGHT and hovers before0 while near RIGHT rear toe remains supporting. It leads smoothly into corrected0 without reversing the global forward axis."
+    }
+  ],
+  "checks": {
+    "true_NE_rear_right_camera_all6": true,
+    "anatomical_RIGHT_near_continuous_blade_LEFT_far_empty_all6": true,
+    "actual_opposite_support_half_cycles_0to2_vs3to5": true,
+    "corrected0_5_actual_UPRIGHT_forward_axis": true,
+    "source2_to3_forward_RIGHT_chain_extent_retained": true,
+    "six_distinct_new_RGBA_frames": true,
+    "two_legs_arms_no_extra_head_or_weapon": true,
+    "faithful_hard_gold_rays_silver_hair_long_robe": true,
+    "walk_rear_toe_support_not_two_folded_RUNNING_AIR_keys": true
+  },
+  "scope_limitations": [
+    "This is source camera/model/leg-ownership/phase-order evidence. The equal-crop-height six-panel preview is not a physical-size or world-floor proof.",
+    "Per-pose rigid C, projected root, actual support floor/toe plane, entry/exit body-size continuity and compiled Player remain separate pending physical review.",
+    "Garment-panel tips are not anatomical hips; hidden hips are not inferred from garment V points."
+  ],
+  "physical_layout_status": "PENDING_INDEPENDENT_REVIEW",
+  "integration_ready": false,
+  "new_actor_approvals": 0,
+  "reviewed_at": "2026-10-19T15:47:22.184705+00:00"
+}
