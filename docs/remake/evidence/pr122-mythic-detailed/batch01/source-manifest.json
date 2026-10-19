@@ -5129,6 +5129,206 @@
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-NW-attack-phase3-repair-v04/result.json",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "attack",
+      "version": "v05assembled01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+      "original_generated_file": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/girtas-NW-attack-v05assembled01.png",
+      "bytes": 3308212,
+      "sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+        "canvas_size": 2048,
+        "review_basis": "Six distinct exact-copy poses fit strict2048 canonical geometry; complete alpha16 coverage validated by pinned explicit reviewed source regions."
+      },
+      "source_region_review": {
+        "schema": 1,
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+        "base_geometry_sha256": "23404c273cd6e0579866b13ba69a1989085707970dcd9a9bc28467f75cc59bda",
+        "direction": "NW",
+        "review_basis": "Six exact pinned source rectangles copied once into separated spacious cells; expand each automatic alpha100+3 rectangle only to its known complete copied RGBA rectangle. This preserves original source pixels and all owned alpha>16 without changing thresholds, anchors, role/order or body scale.",
+        "regions": [
+          [
+            168,
+            196,
+            944,
+            887
+          ],
+          [
+            1753,
+            393,
+            334,
+            494
+          ],
+          [
+            468,
+            1692,
+            344,
+            455
+          ],
+          [
+            1490,
+            1503,
+            859,
+            833
+          ],
+          [
+            231,
+            2779,
+            817,
+            843
+          ],
+          [
+            1452,
+            2661,
+            937,
+            1078
+          ]
+        ],
+        "nearest_owner_sha256": "8b48b4ff5d80ca7b94dc1ee37bc5de28c56c383fd7ce079ddb769cef3d00a8c7",
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+        "source_RGBA_sha256": "7e202f9ed692ee51dc6f52b15291e0a460513da8a19abe8b889b9bbf56be5444",
+        "base_geometry_sha256": "23404c273cd6e0579866b13ba69a1989085707970dcd9a9bc28467f75cc59bda",
+        "derived_geometry_sha256": "ca2377f3cc0f132ed4ec064f85c96437db6325ebdfd6d2e5f30743e7df5463c6",
+        "review_sha256": "4046a6f15d4e1431e53898158aac56bb58f04582db0a2f842a89d4392acc29ee",
+        "review_basis": "Six exact pinned source rectangles copied once into separated spacious cells; expand each automatic alpha100+3 rectangle only to its known complete copied RGBA rectangle. This preserves original source pixels and all owned alpha>16 without changing thresholds, anchors, role/order or body scale.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1127564,
+        "added_alpha_gt16_pixels": 5,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            168,
+            196,
+            944,
+            887
+          ],
+          [
+            1753,
+            393,
+            334,
+            494
+          ],
+          [
+            468,
+            1692,
+            344,
+            455
+          ],
+          [
+            1490,
+            1503,
+            859,
+            833
+          ],
+          [
+            231,
+            2779,
+            817,
+            843
+          ],
+          [
+            1452,
+            2661,
+            937,
+            1078
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "8b48b4ff5d80ca7b94dc1ee37bc5de28c56c383fd7ce079ddb769cef3d00a8c7",
+        "foreground_owner_sha256": "a1d908af1fb36e6abaf9a7b829b9847ca47fa460b54dcdc9750c9889c6a4ed6b",
+        "detached_pixels": 5,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              476,
+              570,
+              477,
+              571
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1135.2378605384865,
+            "owner_margin_min": 1133.0017925609868
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              432,
+              703,
+              433,
+              704
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1008.0515859815905,
+            "owner_margin_min": 1005.2231588568443
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2063,
+              1722,
+              2064,
+              1723
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 845.1159683735718,
+            "owner_margin_min": 842.879900396072
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              1709,
+              2822,
+              1710,
+              2823
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 599.4964553690038,
+            "owner_margin_min": 597.4964553690038
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              619,
+              3289,
+              620,
+              3290
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 839.4313551446598,
+            "owner_margin_min": 837.19528716716
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -5222,7 +5422,7 @@
     "transform:267:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
     "transform:267:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
     "transform:267:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
-    "transform:267:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
+    "transform:267:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
     "transform:267:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
     "transform:267:SE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v02iso01.png",
     "transform:267:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
@@ -6464,6 +6664,20 @@
               "scope": "Only exact immutable clip/revision and review in evidence; actor approval remains HOLD"
             }
           ]
+        },
+        {
+          "slot": "transform:267:NW:attack",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "Source reviewers verified NW rear heading and original pale hair, thin hard gold rays, long dark goldtrim robe, empty near LEFT and far RIGHT sinuous-weapon chain in the four new keys and two retained old keys.",
+            "The corrected guard0 and recovery5 are low phases; contact3 and follow4 retain the actual low strike and follow motion, not copied loaded poses.",
+            "The assembler preserves all six selected RGBA crops exactly; candidate private sequence and absolute helmet/rigid-torso comparison are recorded in composite-review-packet-v02 and candidate-composite-layout-qc-v02."
+          ],
+          "source_review_sha256": "d76c9486fbf7fcab50b3dbbbc08c82e8932731504a8cb1ff5fb1f7b9154f1880"
         }
       ]
     }
@@ -7881,6 +8095,48 @@
         ]
       ],
       "review_basis": "Private actualr06118pose body/root comparison against faithfulN/NE/W baseline poses. NW source-native crown/neck/shoulder-to-centralpelvis lengths are about1.25 times the existing physical reference pixel scale; use1280 virtualcanvas for all3newNWroles, excluding wingbbox and long hanging idleleg from sizing. Visible centralpelvis axis immediately below the last backwaist plate and above legroots is [315, 821, 318, 817, 316, 823]X with about±6nativepx annotation uncertainty (not exact hidden skeleton). NWidle0pelvis≈300 and actual lowerankle/bodyweight projection≈286 gives hip−root=+14sourcepx, or3.43worldpx after1280normalization. Set pelvisX−14 for allNWroles, preserving actual head/torso lean, limb/wing articulation and all originalY/bob. The chosen idle root lies near the supported/hanging ankle projection and between referenceNback andWside stance relationships; it is not an isolated toe or wholewingbbox pivot. NW torso/head remain rearLEFT despite legitimate SE trailing toes. Every sourceRGBA/region/poseorder stays exact. Final newcompiledbaseline/transition/loop review pending; no actorapproval."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "canvas_size": 2048,
+      "direction": "NW",
+      "role": "attack",
+      "authored_pose_canvas_sizes": [
+        1696,
+        832,
+        832,
+        1472,
+        1472,
+        2264
+      ],
+      "source_anchors": [
+        [
+          592,
+          1040
+        ],
+        [
+          1950,
+          871
+        ],
+        [
+          671,
+          2128
+        ],
+        [
+          2168,
+          2297
+        ],
+        [
+          885,
+          3584
+        ],
+        [
+          1823,
+          3724
+        ]
+      ],
+      "review_basis": "Absolute comparison against selected faithful native NW idle0 (C1024, sourceSHA4a140dd2...): match original helmet/head and rigid shoulder/torso scale, checking neutral guard/recovery crown-to-support span as supporting evidence; exclude large weapon/rays from scale inference. Different old/new source pixel resolutions require six virtual canvases. The centroid/depth of two visible soles supplies a candidate body root, avoiding the rejected single-heel pivot that exaggerated stance widening into whole-body translation. Both foot advance/spread and torso loading remain authored. Approximate manual landmark proposal only; final compiled/Player visual QC remains HOLD."
     }
   }
 }
