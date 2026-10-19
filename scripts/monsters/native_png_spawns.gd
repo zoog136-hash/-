@@ -66,6 +66,11 @@ static func build(mid: String, spec: Dictionary, portals: Array) -> Array:
 		var polygons: Array = _polygons_for(spec,record)
 		var box: Array = _bounding_rect(polygons)
 		if box.is_empty(): return []
+		if record.has("rect_override"):
+			var special: Array = record.rect_override
+			if special.size()!=4 or special[2]<=0 or special[3]<=0: return []
+			if special[0]<box[0] or special[1]<box[1] or special[0]+special[2]>box[0]+box[2] or special[1]+special[3]>box[1]+box[3]: return []
+			box=special.duplicate(true)
 		var source: Dictionary = {}
 		var roster_source: String = str(record.get("source_map",""))
 		if not roster_source.is_empty():
