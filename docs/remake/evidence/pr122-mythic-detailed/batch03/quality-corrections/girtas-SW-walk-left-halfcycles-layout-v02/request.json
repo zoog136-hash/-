@@ -1,0 +1,33 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SW",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "layout_only_same_two_authored_walk_poses",
+  "expected_poses": 2,
+  "requested_poses": 2,
+  "intended_game_phases": [
+    1,
+    2
+  ],
+  "references": [
+    "/workspace/scratch/girtas-SW-walk-left-halfcycles-v01/girtas-SW-walk-left-halfcycles-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-walk-left-halfcycles-v01/girtas-SW-walk-left-halfcycles-v01.png": "d85d39eb8e3a378c410aee44d60e30838f613a3835b921ff748f0154aa7bfe51"
+  },
+  "transparent_background": true,
+  "corrective_reason": "SameactualSWgame1/2 sourceanatomyPASSbutforeignbodyrect+strictpartialrepackHOLD. Singlemateriallayoutrevision makesfullfiguresdisjoint withroomyalpha0gutters; no guardrelaxation oridenticalrepackretry. Preserveoriginalraw/HOLD.",
+  "prompt": "Repair ONLY THE LAYOUT/TRANSPARENT SEPARATION of these TWO already authored correct GIRTAS SW WALK poses. EXACTsame two figures and SAME ordered actual leg/arm/joint poses as FIRST source, leftfiguregame1 thenrightfiguregame2. Do not change/supportswap/duplicate legs, reface, restyle or altergear. Not a6sheet or newlyinventedmotion. Current sourcewholecloth/bladeenvelopes get too close/overlap; both complete characters must become truly separated.\n\nLEFT figure is NEAR anatomicalLEFT flatgrounded support leg LOWER-RIGHT, FAR anatomicalRIGHT bentpassingknee andshortbootraised behind. RIGHT figure is NEAR LEFT trailingUPPER-RIGHT heelraised/toesupport, FAR RIGHT longforwardLOWER-LEFT reach/toe-upbeforeheelcontact. Preserve exactly those DIFFERENT actual wholebody/leg silhouettes, both connectedtwolegchains, originalclothwind andequipmentpositions. No standingcopy, no swapofwhichlegislong, no contactposesubstitution. KeepbothcameraSOUTHWEST/down-left palevisibleface/front3/4 chest; nearLEFTemptyhand IMAGERIGHT, farRIGHTholdsoriginalLONG SINUOUSweaponatIMAGELEFT. Originalpalehair/horncrown/narrowHARDgoldspines/LONGdarkgoldtrimrobe/blackgoldarmor fullyretained, nofeatherflamefan/redmask/pants/extralimb/newgear.\n\nSTRICT NEW WIDE LAYOUT: output transparent wide2048x1024PNG requested, exactly TWO isolated figures in2columns1row. UNIFORMLY SHRINK both fullfigures enough that each WHOLE GEAR ENVELOPE is <=560pixelswide and<=650pixelshigh. This includes entirelongblade, ALL hardspinetips and fullsweptrobe/clothtails/boots. Put leftwholefigure centered atx480 andrightwholefigure centeredx1568, verticallycenteredy512. At least250px truealpha0 empty space BETWEEN closestedgesofeveryrobe/blade/spine, >=150px alpha0 margins allouteredges. DoNOT crop, shorten or bend blade/spines/robe tofakefit. No pixels/components fromonefiguretouchorbridgeother, evenfaint glow/haze. Ifmodelmustfitactualdifferentcanvas, preserveproportionallysame LARGErelativegutters andsmall completefigures. Renderfullfinegame-spritedetail despite roomyemptyspace.\n\nBackground and allgaps absolutealpha0. Hardopaqueweapon/armor/shapes withshine INSIDEsolidcontour; NO outwardglow/haze/auras/shadows/particles/motiontrails/blur/floor/lines/grid/text or labels. Exactly2 distinct original WALK poses, transparentnegative spacearoundeach, no bodyorclothtipfragmentcopiedacrossgutter. This is separation-only repair, do not redraw newmotion/alteranatomy.",
+  "requested_at": "2026-10-19T13:48:15.768798+00:00",
+  "newly_authored_pose_target": 0,
+  "layout_revised_poses": 2,
+  "new_motion_poses_created": 0,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "generation_budget": "One layout-only correction, anyfailurepreservedHOLD noidenticalretry."
+}

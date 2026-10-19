@@ -1,0 +1,58 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SW",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "two_same_support_walk_halfcycle_poses",
+  "expected_poses": 2,
+  "requested_poses": 2,
+  "intended_game_phases": [
+    4,
+    5
+  ],
+  "intended_anatomical_support": "RIGHT",
+  "references": [
+    "/workspace/scratch/girtas-SW-walk-right-contact-key-v01/girtas-SW-walk-right-contact-key-v01.png",
+    "/workspace/scratch/girtas-SW-walk-right-halfcycles-v01/two-halfcycle-joint-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-walk-right-contact-key-v01/girtas-SW-walk-right-contact-key-v01.png": "7f9ac777d7495622cf0d003bd376e690162d7bfefb560e3802705325a7b539a8",
+    "/workspace/scratch/girtas-SW-walk-right-halfcycles-v01/two-halfcycle-joint-production-guide.png": "3a58fbcb874c13f1ad757a39e62dbd4f6ffb7c45f041458e27c056a84f115e01"
+  },
+  "transparent_background": true,
+  "corrective_reason": "BothoppositeSWcontactkeysvalid. Authoronly2missingRIGHTsupportwalkintermediates withoutredoingcontacts; actualankle/kneeproofofgait, no6copysameleg.",
+  "prompt": "Create TWO actual newly authored SOUTHWEST WALK intermediateposes of exact GIRTAS from FIRST correct RIGHT-FORWARD CONTACT key. Exactly2 isolated completefigures, LEFT thenRIGHT. Not6sheet, notsamecontactcopied. FIRST establishes exactreal RIGHT support chain/model/camera, changeactualjoints for phases[4, 5]. SECOND contains two masked-leg targets only; GREEN anatomicalRIGHT FAR/imageLEFT weapon-side, MAGENTA anatomicalLEFT NEAR/imageRIGHT empty/freehand side. No guidecolors/marks in final.\n\nFIXED exact SW FRONT3/4camera, originalPALE visibleface looks DOWNLEFT, frontchest turnedLEFT. NEAR LEFT arm/leg at IMAGERIGHT, LEFT handEMPTY. FAR RIGHT arm/leg at IMAGELEFT, RIGHT handholdsSAMEoriginal longSINUOUSweapon at IMAGELEFT; actualcontinuousfarRIGHTarm, noleftweaponswap. Twohipchains keepanatomicalside identities. Samehead/shoulder/hip proportions, longPALEhair, horncrown, narrowHARD straightGOLD radialspines, blackgoldarmor and LONG DARK GOLDTRIM layeredrobe; part/fold existingcloth toread2actualknees/shins/boots, no pants/substitute/extra limbs.\n\nLEFT FIGURE game4: RIGHT FAR SUPPORT MIDSTANCE + NEAR LEFT PASSING. FarRIGHT leg below weapon-side IMAGELEFT hip is LONG and grounded LOWER-LEFT, RIGHTbootFLAT with softknee load. NearLEFT leg IMAGERIGHT is SHORT passing: LEFTknee bends UP underpelvis, LEFTboot clearly ABOVE plantedRIGHTboot at centerRIGHT. Bodyweight comes overRIGHTankle. Notleftplanted orfrontLEFTreach yet. Actual bentLEFTpassingknee distinctfromsourcecontact3.\nRIGHT FIGURE game5: RIGHT FAR TERMINALSTANCE/TOEOFF + NEAR LEFT FORWARD REACH. SameFAR RIGHT leg now trails UP-LEFT, RIGHT heelRAISES with only RIGHTforefoot/toes supportingground at LEFT. NEAR LEFT thigh/knee unfolds forward and DOWN: LEFTboot approaches heelcontact at LOWER-RIGHT, toes slightlyUP/LEFT. This nearLEFT longforwardreach is distinctfrom shortpassing4 andnextbecomescontact0. RIGHTsupportheelUP, LEFTreachingheel notyetflat. GenuinegroundedWALK, notbothair. DO NOT keepRIGHTlongfrontplanted andLEFTshorttrailing. PreservehipchainswhileactuallymovingLEFTforward.\n\nBoth intermediateposes require coherent realhip/knee/ankle motion, modestpelvis counterrotation/bob and naturalemptyLEFT armcounterbalance withstableRIGHTweaponarm. Originalrobe/hairdelay responds tostep, not merelycloak/flamechange oncopiedlegs. Everyhards p ine/crowntip/fullblade andboots visible. Noattack/run/jump/crouch, no redmask/flamefeatherfan/wings/newgear/shortbroadsword/handtransfer/extraarms/legs. Samefine originalgameart.\n\nOUTPUT transparent requested2048x1024 PNG, TWO COLUMNS ONE ROW. Eachfullgearfigure<=760x800 insideown1024square with>=120pxalpha0 outergutter and>=220pxtruealpha0 BETWEEN closestgear. Samephysicalmodelscale bothfigures; shrinkuniformlyifneeded, neverclipblade/spinetip. Hardopaqueweaponinternalshine, NO outwardbloom/haze/effects/particles/shadow/ground/text/labels/grid/coloredguide/blur/trails/duplicates. Leftfigure passingphase, rightfigure toeoff+oppositereach, TWO distinctactualankle/knee/boot configurations.",
+  "requested_at": "2026-10-19T13:40:10.146822+00:00",
+  "source_contact_receipt": {
+    "key": "transform:267",
+    "direction": "SW",
+    "role": "walk",
+    "source_kind": "single_faithful_locomotion_contact_keypose",
+    "expected_poses": 1,
+    "intended_game_phase": 3,
+    "original_generated_file": "/workspace/generated_images/exec-5c624761-217b-47f5-b725-2c622cafb4bc.png",
+    "raw_path": "/workspace/scratch/girtas-SW-walk-right-contact-key-v01/girtas-SW-walk-right-contact-key-v01.png",
+    "raw_png": "/workspace/scratch/girtas-SW-walk-right-contact-key-v01/girtas-SW-walk-right-contact-key-v01.png",
+    "raw_sha256": "7f9ac777d7495622cf0d003bd376e690162d7bfefb560e3802705325a7b539a8",
+    "raw_bytes": 1369890,
+    "image_size": [
+      1254,
+      1254
+    ],
+    "request_path": "/workspace/scratch/girtas-SW-walk-right-contact-key-v01/request.json",
+    "request_sha256": "952f67d4c9568e72958b24bdfc118520a1c7960355b46d94115a580f2b7688d0",
+    "imagegen_attempts": 1,
+    "source_visual_status": "PENDING_PRIVATE_REVIEW",
+    "complete_clip": false,
+    "actor_approval": false
+  },
+  "source_contact_review_sha256": "7a99047b4a37400afd913de94ef516fcc9fbf9049b6ff15a58b7c8fc163e3e6d",
+  "newly_authored_pose_target": 2,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true
+}
