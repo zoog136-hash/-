@@ -80,7 +80,7 @@
 ## 기르타스 NE 공격·E 달리기·W 걷기 실제 연결 저장 — r090/r091/r092
 
 - NE 공격6: 원화4bd428… 보존, 각 머리/갑옷 실측 C856/848/808/824/896/848와 실제 두 발 루트 적용. `f0f6b8cbc3e1` 실제 Player/공격 검사 및 NE 대기→공격6→대기 실제 TRES 범위 품질 PASS. 증거 `batch03/girtas-NE-attack-quality-r090`.
-- E 달리기6: 전용 착지/압축/AIR 원화 e7e35e5f… 선택, 실제 Player/프레임/공격 검사 PASS로 `79f47b3458f9` 정상 push. 원본 RGBA·원본 오류 영수증을 보존한 엄격 outward 소스 기하 증명과 독립 6자세/물리 후보 PASS, 25개 증거 JSON을 `batch03/girtas-E-run-quality-r091`에 저장했다. 실제 TRES 후속 QC 진행 중.
-- W 걷기6: 원화05997491… 그대로 Cs2560/1792/1792/2560/1728/1728·실제 지지 루트 적용, 독립 원화/물리 후보 PASS 및 실제 Player/프레임/공격 검사 PASS. `2641ed40b10a` 정상 push, 실제 TRES 후속 QC 진행 중.
-- 기르타스 미교정 이동7슬롯: E walk, NE walk/run, NW run, SE run, SW run, W run. E 걷기0/3 접지 및 NE 걷기 LEFT0/5 전진 동작은 실제 원화 검토/국소 교정 중; NW 달리기6 후보 검토, SE/W 달리기 신규 제작 중이다. 기존 원화/미승인/HOLD/교정 이력은 모두 보존했다.
+- E 달리기6: 전용 착지/압축/AIR 원화 e7e35e5f… 선택, 실제 Player/프레임/공격 검사 PASS로 `79f47b3458f9` 정상 push. 원본 RGBA·원본 오류 영수증을 보존한 엄격 outward 소스 기하 증명과 독립 6자세/물리 후보 PASS, 25개 증거 JSON을 `batch03/girtas-E-run-quality-r091`에 저장했다. 실제 TRES 대기→달리기6→루프·두 AIR 지면 이격 범위 독립 품질 PASS.
+- W 걷기6: 원화05997491… 그대로 Cs2560/1792/1792/2560/1728/1728·실제 지지 루트 적용, 독립 원화/물리 후보 PASS 및 실제 Player/프레임/공격 검사 PASS. `2641ed40b10a` 정상 push, 실제 TRES 대기→걷기6→루프 범위 독립 품질 PASS. 증거 `batch03/girtas-W-walk-quality-r092`.
+- 기르타스 미교정 이동7슬롯: E walk, NE walk/run, NW run, SE run, SW run, W run. E 걷기는 실제 보행 접지 검토 중(중립 대기 발 간격20을 보행 불변으로 강제하지 않음), NE 걷기 LEFT0/5는 실제 3D 전진 원화 교정 중; NW 달리기6 후보 검토, SE/W 달리기 신규 제작 중이다. 기존 원화/미승인/HOLD/교정 이력은 모두 보존했다.
 - 상세 완료1/31·기존 승인405/498·프레임 보완14·색상/공유54 유지. 기르타스 기본 게임 카탈로그 적용/전체48클립 최종 승인은 아직0이며 전체 CI/수동 Actions는 실행하지 않았다.
