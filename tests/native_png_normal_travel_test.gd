@@ -55,7 +55,13 @@ func run() -> void:
 	var saved_hash: String=FileAccess.get_sha256(world.save_path())
 	var installed: String=OS.get_environment("TWILIGHT_NATIVE_PNG_PACK")
 	OS.set_environment("TWILIGHT_NATIVE_PNG_PACK",OS.get_user_data_dir()+"/absent-pack")
-	world._set_map("aden_world",false);world._load_game(true);world._save_game(true)
+	world._set_map("aden_world",false)
+	world.pending_attack={"probe":true,"id":999}
+	var combat_generation: int=world.combat_generation
+	world._set_map("balrog_temple",false)
+	check(world.active_map_id=="aden_world" and not world.field_map is NativePngField,"pack removed after registration cannot create an empty substitute temple")
+	check(world.combat_generation==combat_generation and world.pending_attack=={"probe":true,"id":999},"failed private map entry preserves pending combat")
+	world._load_game(true);world._save_game(true)
 	check(world.source_save_blocked and FileAccess.get_sha256(world.save_path())==saved_hash,"missing pack preserves the ordinary temple save byte for byte")
 	OS.set_environment("TWILIGHT_NATIVE_PNG_PACK",installed);world._load_game(true)
 	check(not world.source_save_blocked and world.active_map_id=="yahee_temple","restored pack resumes the preserved ordinary save")

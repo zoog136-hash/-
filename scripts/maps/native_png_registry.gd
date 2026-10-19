@@ -33,7 +33,9 @@ static func canonical(mid: String) -> String:
 	return mid
 
 static func supports(mid: String) -> bool:
-	return plan().get("maps",{}).has(canonical(mid)) and (enabled() or (mid in ["yahee_temple","balrog_temple"] and installed()))
+	# Identity support must survive a pack disappearing after the menu was built.
+	# load_field() then rejects the bytes; never route a known temple to tiles.
+	return plan().get("maps",{}).has(canonical(mid)) and (enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []

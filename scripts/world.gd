@@ -1153,7 +1153,6 @@ func _connect_signals() -> void:
 		hud.connect("playtest_aden_grant_requested",_grant_playtest_aden)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
-	_clear_combat_actions()
 	map_id = NATIVE_PNG.canonical(map_id)
 	if not maps_by_id.has(map_id):
 		return
@@ -1185,6 +1184,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
+	_clear_combat_actions()
 	if is_instance_valid(world_interactions):
 		world_interactions.cancel_gesture()
 		world_interactions.clear_selection()
