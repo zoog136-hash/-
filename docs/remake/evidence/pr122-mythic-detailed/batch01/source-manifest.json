@@ -8943,6 +8943,413 @@
       "source_review": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-NW-run-RIGHT-load-key-v05/result.json",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:267",
+      "direction": "E",
+      "role": "walk",
+      "version": "v14six",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png",
+      "original_generated_file": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/girtas-E-walk-v14six.png",
+      "bytes": 8652531,
+      "sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+        "canvas_size": 2048,
+        "review_basis": "ExactRGBA full1254source×6 in1536cells; source/outputsource region outward metadata includes1previously omitted alpha16fringe pixel. Tested strict finalizer, unchanged raw PNG/error receipts, complete sourceownership. Actual rigidmarker perposeC/root QC separate, no bbox normalization."
+      },
+      "source_region_review": {
+        "schema": 1,
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+        "base_geometry_sha256": "b364c1a905fec67c35c80cea61006000a6c76f2da4a07be6f5ffc198a6905aef",
+        "direction": "E",
+        "review_basis": "Metadata-only outward union of each exact1254fullRGBA pasted source rectangle with unchanged automatic region. Six disjoint1536cells, strict physical owner rule and allalpha16 coverage, no source pixel edit/resizing/mirror. Source individual6 anatomy independently PASS. Physical/runtimeapproval remains separate.",
+        "regions": [
+          [
+            141,
+            141,
+            1254,
+            1254
+          ],
+          [
+            1677,
+            141,
+            1254,
+            1254
+          ],
+          [
+            141,
+            1677,
+            1254,
+            1254
+          ],
+          [
+            1677,
+            1677,
+            1254,
+            1254
+          ],
+          [
+            141,
+            3213,
+            1254,
+            1254
+          ],
+          [
+            1677,
+            3213,
+            1254,
+            1254
+          ]
+        ],
+        "nearest_owner_sha256": "95903ffd1765abc9ecbdf1727cf7c2761f70b85c2a302a0cabec6ca89bfec3e1"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+        "source_RGBA_sha256": "8f2b2bbd2fd352a5d7ca10324a7bd10a22dbffbdb80105ab88dbe17c5e8aec06",
+        "base_geometry_sha256": "b364c1a905fec67c35c80cea61006000a6c76f2da4a07be6f5ffc198a6905aef",
+        "derived_geometry_sha256": "b2592430eac88aa94377b1dc939df8bc1e06da9e4c5c319dd4f1a7883de6f93b",
+        "review_sha256": "18dd28b55f8a160bc7eae3301138b1bb3e438d7bd54ea092a39e29e746b14f98",
+        "review_basis": "Metadata-only outward union of each exact1254fullRGBA pasted source rectangle with unchanged automatic region. Six disjoint1536cells, strict physical owner rule and allalpha16 coverage, no source pixel edit/resizing/mirror. Source individual6 anatomy independently PASS. Physical/runtimeapproval remains separate.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 3161571,
+        "added_alpha_gt16_pixels": 1,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            141,
+            141,
+            1254,
+            1254
+          ],
+          [
+            1677,
+            141,
+            1254,
+            1254
+          ],
+          [
+            141,
+            1677,
+            1254,
+            1254
+          ],
+          [
+            1677,
+            1677,
+            1254,
+            1254
+          ],
+          [
+            141,
+            3213,
+            1254,
+            1254
+          ],
+          [
+            1677,
+            3213,
+            1254,
+            1254
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "95903ffd1765abc9ecbdf1727cf7c2761f70b85c2a302a0cabec6ca89bfec3e1",
+        "foreground_owner_sha256": "12623d156f9be92b9d1cbc4f043977f37a7bcb011606be1dc259e86b511c32e4",
+        "detached_pixels": 33,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              659,
+              532,
+              660,
+              533
+            ],
+            "nearest_max": 11.661903789690601,
+            "second_nearest_min": 1188.075755160419,
+            "owner_margin_min": 1176.4138513707285
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              721,
+              1992,
+              722,
+              1993
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 671.0,
+            "owner_margin_min": 668.1715728752538
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              646,
+              2078,
+              647,
+              2079
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 757.0323639052692,
+            "owner_margin_min": 754.203936780523
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              853,
+              2230,
+              854,
+              2231
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 918.5341583196566,
+            "owner_margin_min": 915.7057311949104
+          },
+          {
+            "row": 3,
+            "pixels": 5,
+            "bbox": [
+              2306,
+              2297,
+              2308,
+              2301
+            ],
+            "nearest_max": 6.324555320336759,
+            "second_nearest_min": 930.0344079656408,
+            "owner_margin_min": 924.2034560707955
+          },
+          {
+            "row": 5,
+            "pixels": 2,
+            "bbox": [
+              2273,
+              3577,
+              2275,
+              3578
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 737.6103307302576,
+            "owner_margin_min": 735.4589909730126
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2245,
+              3594,
+              2246,
+              3595
+            ],
+            "nearest_max": 9.0,
+            "second_nearest_min": 752.7682246216294,
+            "owner_margin_min": 743.7682246216294
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2178,
+              3672,
+              2179,
+              3673
+            ],
+            "nearest_max": 5.385164807134504,
+            "second_nearest_min": 829.0,
+            "owner_margin_min": 823.6148351928655
+          },
+          {
+            "row": 5,
+            "pixels": 2,
+            "bbox": [
+              2173,
+              3678,
+              2174,
+              3680
+            ],
+            "nearest_max": 8.54400374531753,
+            "second_nearest_min": 835.0095807833584,
+            "owner_margin_min": 826.4655770380408
+          },
+          {
+            "row": 5,
+            "pixels": 3,
+            "bbox": [
+              2179,
+              3741,
+              2180,
+              3744
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 898.0005567927004,
+            "owner_margin_min": 893.0005567927004
+          },
+          {
+            "row": 5,
+            "pixels": 4,
+            "bbox": [
+              2174,
+              3743,
+              2176,
+              3746
+            ],
+            "nearest_max": 8.06225774829855,
+            "second_nearest_min": 900.0022222194788,
+            "owner_margin_min": 892.3864491136148
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2178,
+              3745,
+              2179,
+              3746
+            ],
+            "nearest_max": 4.123105625617661,
+            "second_nearest_min": 902.0,
+            "owner_margin_min": 897.8768943743823
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2175,
+              3747,
+              2176,
+              3748
+            ],
+            "nearest_max": 7.0,
+            "second_nearest_min": 904.0022123866734,
+            "owner_margin_min": 897.0022123866734
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2174,
+              3749,
+              2175,
+              3750
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 906.0049668738026,
+            "owner_margin_min": 898.0049668738026
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2000,
+              3884,
+              2001,
+              3885
+            ],
+            "nearest_max": 13.892443989449804,
+            "second_nearest_min": 760.3453162872775,
+            "owner_margin_min": 746.4528722978276
+          },
+          {
+            "row": 5,
+            "pixels": 2,
+            "bbox": [
+              2118,
+              3933,
+              2120,
+              3934
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 844.0379138403678,
+            "owner_margin_min": 841.2094867156216
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2092,
+              3944,
+              2093,
+              3945
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 815.806962461096,
+            "owner_margin_min": 812.9785353363498
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2089,
+              3946,
+              2090,
+              3947
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 812.2622729143586,
+            "owner_margin_min": 810.0262049368588
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2080,
+              3952,
+              2081,
+              3953
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 801.6314614584435,
+            "owner_margin_min": 799.3953934809437
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2030,
+              4014,
+              2031,
+              4015
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 732.355787851779,
+            "owner_margin_min": 728.750236576315
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2025,
+              4016,
+              2026,
+              4017
+            ],
+            "nearest_max": 4.47213595499958,
+            "second_nearest_min": 726.9731769467152,
+            "owner_margin_min": 722.5010409917156
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -8954,7 +9361,7 @@
     "transform:393:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
     "transform:393:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
     "transform:393:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
-    "transform:267:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+    "transform:267:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png",
     "transform:267:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-run-v03composite02.png",
     "transform:267:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
     "transform:267:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-run-v02.png",
@@ -10624,6 +11031,28 @@
             "Ready for ROOT controlled manifest/staging/Godot integration, not actor completion. Actual compiled SpriteFrames/Player/idletransition/5to0/defaultMain remain to validate."
           ],
           "source_review_sha256": "3840dee237e64ed4160f0a2e9ba36d1c4b4551b6d00aa551fecb8f6fb324f2e1"
+        },
+        {
+          "slot": "transform:267:E:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six actual individual SOURCEPASS, visible anatomical leg support swaps; fixed nearRIGHTblade and EMPTYLEFT, faithful longrobe/hardgoldrays.",
+            "Source1 bare upperthigh restored with actual blackgold underarmor; original badsource/HOLD preserved.",
+            "Exact sourceRGBA6, no resample/mirror/recolor/cleanup; strict ownership allalpha16 covered exactly once, foreignpixels0.",
+            "Current other47tracks282geometryhashes plus new6: all288unique; actual stageguard unchanged.",
+            "Source0/1/2 far LEFT support/contact/load/toeoff and near RIGHT passing-to-forward-reach; source3/4/5 near RIGHT support/contact/load/toeoff and far LEFT passing-to-forward-reach are genuine opposite chains.",
+            "Forward foot placement is parallel to E heading on both halves, including2-to3 settling and5-to0 heel-contact entry.",
+            "Both actual boot contacts0/3 fit a common oblique projected ground with a narrower walking foot lane than idle; no actual sole penetration or hidden relabelling to AIR observed.",
+            "Single support1/2/4/5 retains the intended flat sole or rear toe on that projected plane, and the opposite boot is visibly above its projected plane. Runtime numeric clearance remains a separate compiled check.",
+            "At unchanged C and roots, rigid skull/helmetcore, near pauldron, torso and boot proportions remain coherent against the actual compiled E idle.",
+            "Initial15-20percent belt-to-sole concern is not evidence of a uniform leg enlargement: the visible front V-tip is a shifting garment surface, not the anatomical pelvis. Enlarged exact common-world views show credible hip/slit-to-knee-to-ankle chains, extended/upright0 versus the relaxed/foreshortened idle, and no uniform elongation of exposed leg segments.",
+            "Hard gold rays, pale hair, long robe, original RIGHT sinuous blade and empty LEFT remain faithful; no temporary shared animation or colour-only completion."
+          ],
+          "source_review_sha256": "96e57cc7cd0222c9474d7839ce4cfee256461cab32a71b8f0ec03f84a7ca6254"
         }
       ],
       "reopened_source_holds": [
@@ -13222,6 +13651,46 @@
       "review_basis": "AUTHOR physical layout proposal only: normalize genuine rigid skull/neck/pauldron/belt to selected W idle, preserve authored alternating gait/longrobe/equipment. Contacts0/3 require different native-pixel Cs than smaller support/reach sources. Proposed hip-X/projected near/far support roots need fresh independent full6 confirmation before actual game integration. No bbox fitting, no lower-body affine changes, no source-pixel resampling. Geometry-only validation does NOT grant physical approval.",
       "runtime_validation": "AUTHOR_PROPOSAL_INDEPENDENT_PHYSICAL_AND_ACTUAL_PLAYER_HOLD",
       "actor_approval": false
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        2256,
+        2408,
+        2352,
+        2352,
+        2408,
+        2304
+      ],
+      "source_anchors": [
+        [
+          788,
+          1349
+        ],
+        [
+          2331,
+          1357
+        ],
+        [
+          845,
+          2835
+        ],
+        [
+          2341,
+          2877
+        ],
+        [
+          755,
+          4461
+        ],
+        [
+          2361,
+          4427
+        ]
+      ],
+      "review_basis": "Independent fixed-C/root physical/gait candidate PASS /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-six-fixed-C-physical-gait-independent-candidate-review.json SHA256=fb881a0b75cbc2e5860a8e3fba40110f544ee5d23604d36520a8aea2f13276ca. Actual common-world7 and zoom4 preserve rigid skull/pauldron/torso/boot proportions, natural hip/slit/knee/ankle chains, oblique narrower walk contacts and6phase5→0 flow. Eye/chin native marker Cs, actual alpha100 soles, canonical crest-rootX and actual projectedground validated; no wholebbox normalization, no forcedneutral20, no source pixel/limb change or AIR relabel. Actual compiledTRES/Player and actor approval remain separate."
     }
   },
   "runtime_layout_attempt_holds": [
