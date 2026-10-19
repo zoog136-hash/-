@@ -16,7 +16,8 @@ import import_original_based_motion as importer
 
 SOURCE_MANIFEST = Path('docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json')
 REGISTER = Path('data/pr122_native_locomotion_staging.json')
-ACTORS = {'transform:393': 'halpas_393', 'transform:267': 'girtas_267'}
+ACTORS = {'transform:393': 'halpas_393', 'transform:267': 'girtas_267',
+          'transform:413': 'thunder_female_413'}
 CORE_ROLES = ('idle', 'attack', 'hit', 'death')
 NATIVE_ROLES = ('walk', 'run', *CORE_ROLES)
 ROLE_SECONDS = dict(idle=1.2, walk=.48, run=.48, attack=.42, hit=.22, death=.65)
@@ -122,7 +123,8 @@ def stage(root, key, revision=None):
     missing_core = {role: [f'{role}_{direction}' for direction in range(8)
                           if f'{role}_{direction}' not in available] for role in CORE_ROLES}
     entry = dict(
-        grade='유일', frames='res://' + frames_path.as_posix(), frames_sha256=digest(root / frames_path),
+        grade=next(row['grade'] for row in json.loads((root / 'docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json').read_text()) if row['id'] == key),
+        frames='res://' + frames_path.as_posix(), frames_sha256=digest(root / frames_path),
         native_track_count=len(tracks), native_pose_count=len(fingerprints),
         canvas_size=[1024, 1024], foot=[512, 640], tracks=tracks,
         missing_locomotion=missing, missing_dedicated_roles=[role for role in CORE_ROLES if missing_core[role]],

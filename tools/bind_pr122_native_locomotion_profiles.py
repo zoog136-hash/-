@@ -57,7 +57,7 @@ def bind(root, only_key=None):
                                             sizing_review='HOLD; native staging only',
                                             production_catalog_replaced=False)
     path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
-    print('PR122_NATIVE_PROFILES_BOUND actors=2 complete_actors_added=0 production_switches=0')
+    print(f'PR122_NATIVE_PROFILES_BOUND actors={len(register["actors"])} complete_actors_added=0 production_switches=0')
 
 
 def main():

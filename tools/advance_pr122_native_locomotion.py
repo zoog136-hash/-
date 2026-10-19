@@ -21,7 +21,9 @@ def write_json(path, value):
 
 def preserve_action(root, source, request):
     key, direction, role = (request[field] for field in ('key', 'direction', 'role'))
-    folder = root / 'docs/remake/evidence/pr122-mythic-detailed/batch03'
+    batch = request.get('source_batch', 'batch03')
+    assert batch in ('batch03', 'batch04'), 'Use a dedicated preserved authoring batch'
+    folder = root / 'docs/remake/evidence/pr122-mythic-detailed' / batch
     folder.mkdir(exist_ok=True)
     name = staging.ACTORS[key].rsplit('_', 1)[0]
     dest = folder / f'{name}-{direction}-{role}-{request["version"]}.png'
@@ -65,7 +67,7 @@ def main():
     assert source.is_file() and not source.is_symlink()
     log_prefix = Path('/tmp') / ('twilight-' + staging.ACTORS[key] + '-' + args.revision)
     save_log = log_prefix.with_suffix('.save.log')
-    if role in ('walk', 'run'):
+    if role in ('walk', 'run') and key in ('transform:393', 'transform:267'):
         with save_log.open('w') as out:
             subprocess.run([sys.executable, str(root / 'docs/remake/evidence/pr122-mythic-detailed/batch01/save_source.py'),
                             '--source', str(source), '--key', key, '--direction', direction,

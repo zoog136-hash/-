@@ -10,6 +10,47 @@ import stage_pr122_native_locomotion as staging
 BRANCH = 'feature/twilight-remaining106-20261016'
 
 
+def update_authoring_queue(register, manifest):
+    """Update missing-source pointers, including actors not registered yet.
+
+    A saved raw HOLD never creates a fake actor. A run or core-action request
+    requires the selected same-heading native walk used by its authoring prompt.
+    """
+    selected = manifest.get('selected_locomotion_sheets', {})
+    actions = manifest.get('selected_detailed_action_sheets', {})
+    holds = {(r.get('key'), r.get('direction'), r.get('role')) for r in manifest.get('raw_images', [])
+             if r.get('geometry', {}).get('status') == 'HOLD'}
+    holds.update((r.get('key'), r.get('direction'), r.get('role'))
+                 for r in manifest.get('authoring_holds', []) if r.get('status') == 'HOLD')
+    next_movement = None
+    missing_movement = 0
+    next_action = None
+    missing_actions = 0
+    for key in staging.ACTORS:
+        for direction in staging.importer.DIRECTIONS:
+            has_walk = f'{key}:{direction}:walk' in selected
+            for role in ('walk', 'run'):
+                if f'{key}:{direction}:{role}' in selected:
+                    continue
+                missing_movement += 1
+                if (next_movement is None and (key, direction, role) not in holds
+                        and (role == 'walk' or has_walk)):
+                    next_movement = dict(key=key, direction=direction, role=role)
+        for role in ('attack', 'hit', 'death', 'idle'):
+            for direction in staging.importer.DIRECTIONS:
+                if f'{key}:{direction}:{role}' in actions:
+                    continue
+                missing_actions += 1
+                if (next_action is None and (key, direction, role) not in holds
+                        and f'{key}:{direction}:walk' in selected):
+                    next_action = dict(key=key, direction=direction, role=role)
+    register['next_locomotion_source'] = next_movement
+    register['next_detailed_source'] = next_action
+    register['missing_locomotion_blocks'] = missing_movement
+    register['missing_detailed_action_blocks'] = missing_actions
+    return missing_movement, missing_actions, next_movement or next_action
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--request', type=Path, required=True)
@@ -27,11 +68,12 @@ def main():
     assert passed or request['status'] == 'GENERATED_HOLD_NOT_APPROVED'
     source = root / request['output_source']
     assert staging.digest(source) == request['output_sha256']
-    actor = register['actors'][request['key']]
+    actor = register['actors'].get(request['key'])
     names = [request['output_source'], str(args.request), str(staging.SOURCE_MANIFEST),
              str(staging.REGISTER), 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md',
              'tools/checkpoint_pr122_native_clip.py']
     if passed:
+        assert actor is not None, 'A passed clip requires a real staged and verified actor'
         assert actor['verification']['actual_Player_scene_form_api'] == 'PASS'
         assert actor['verification']['required_engine_4_7_2'] == 'PASS'
         assert any(t['source'] == request['output_source'] for t in actor['tracks'])
@@ -39,36 +81,8 @@ def main():
                   str(Path(actor['frames'].removeprefix('res://')).parent)]
     for protected in ('data/combat_animation_profiles.json', 'data/pr122_palette_finish_20261019.json'):
         assert subprocess.run(['git', 'diff', '--quiet', '--', protected], cwd=root).returncode == 0
-    selected = manifest['selected_locomotion_sheets']
-    next_target = None
-    holds = {(r.get('key'), r.get('direction'), r.get('role')) for r in manifest['raw_images']
-             if r.get('geometry', {}).get('status') == 'HOLD'}
-    holds.update((r.get('key'), r.get('direction'), r.get('role'))
-                 for r in manifest.get('authoring_holds', []) if r.get('status') == 'HOLD')
-    for key in staging.ACTORS:
-        for direction in staging.importer.DIRECTIONS:
-            for role in ('walk', 'run'):
-                if f'{key}:{direction}:{role}' not in selected and (key, direction, role) not in holds:
-                    next_target = dict(key=key, direction=direction, role=role)
-                    break
-            if next_target: break
-        if next_target: break
     total = sum(a['native_track_count'] for a in register['actors'].values())
-    missing = sum(len(a['missing_locomotion']) for a in register['actors'].values())
-    register['next_locomotion_source'] = next_target
-    actions = manifest.get('selected_detailed_action_sheets', {})
-    next_action = None
-    missing_actions = 0
-    for key in staging.ACTORS:
-        for role in ('attack', 'hit', 'death', 'idle'):
-            for direction in staging.importer.DIRECTIONS:
-                if f'{key}:{direction}:{role}' not in actions:
-                    missing_actions += 1
-                    if next_action is None and (key, direction, role) not in holds:
-                        next_action = dict(key=key, direction=direction, role=role)
-    register['next_detailed_source'] = next_action
-    register['missing_detailed_action_blocks'] = missing_actions
-    next_target = next_target or next_action
+    missing, missing_actions, next_target = update_authoring_queue(register, manifest)
     (root / staging.REGISTER).write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
     resume = root / 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md'
     next_text = '이동/달리기 원화 큐 종료; 전투 동작 또는 HOLD 보완' if next_target is None else (

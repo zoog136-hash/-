@@ -84,8 +84,8 @@ def unselected_manifest(root, request, source):
     require(records[0].get('sha256') == digest(source), 'Manifest source digest differs')
 
 
-def next_request(root, request, version):
-    batch = root / BATCH
+def next_request(root, request, version, relative_batch=BATCH):
+    batch = root / relative_batch
     ordinals = []
     for path in batch.glob('request-*.json'):
         match = re.fullmatch(r'request-(\d+)-.+\.json', path.name)
@@ -104,6 +104,10 @@ def next_request(root, request, version):
 
 def next_revision(root, key):
     register = read_json(root / staging.REGISTER)
+    if key not in register['actors']:
+        first = root / 'assets/actors/eight_direction/native_locomotion_staging' / staging.ACTORS[key] / 'r001'
+        require(not first.exists(), 'First revision already exists; preserve it')
+        return 'r001'
     frames = register['actors'][key]['frames']
     require(frames.startswith('res://'), 'Require a native resource path')
     path = repo_file(root, frames.removeprefix('res://'))
@@ -118,14 +122,15 @@ def next_revision(root, key):
 def prepare(root, request_path, scratch=Path('/workspace/scratch')):
     root = root.resolve()
     request_path = repo_file(root, request_path)
-    require(request_path.parent == root / BATCH, 'Require a saved batch03 action request')
+    batch = request_path.parent.relative_to(root)
+    require(batch in (BATCH, BATCH.with_name('batch04')), 'Require a preserved native authoring batch')
     parent_digest = digest(request_path)
     request = read_json(request_path)
     require(request.get('status') == 'GENERATED_HOLD_NOT_APPROVED', 'Require an unapproved raw HOLD')
     require(request.get('kind') != 'pixel_preserving_derived_source', 'Never derive a repeated derivative')
     require(request.get('key') in staging.ACTORS
             and request.get('direction') in staging.importer.DIRECTIONS
-            and request.get('role') in staging.CORE_ROLES, 'Require a supported dedicated action')
+            and request.get('role') in staging.NATIVE_ROLES, 'Require a supported authored role')
     version = request.get('version', '')
     require(re.fullmatch(r'[a-zA-Z0-9_-]+', version) is not None, 'Unsafe source version')
     version += 'iso01'
@@ -133,7 +138,7 @@ def prepare(root, request_path, scratch=Path('/workspace/scratch')):
     require(digest(source) == request.get('output_sha256'), 'Saved source digest changed')
     require(source.stat().st_size == request.get('output_bytes'), 'Saved source byte count changed')
     unselected_manifest(root, request, source)
-    next_request(root, request, version)
+    next_request(root, request, version, batch)
     next_revision(root, request['key'])
     scratch = scratch.resolve()
     scratch.mkdir(parents=True, exist_ok=True)
@@ -151,7 +156,7 @@ def prepare(root, request_path, scratch=Path('/workspace/scratch')):
     # Recheck after the pixel operation: another unit may have advanced the queue.
     require(digest(request_path) == parent_digest, 'Parent request changed during recovery')
     unselected_manifest(root, request, source)
-    path = next_request(root, request, version)
+    path = next_request(root, request, version, batch)
     revision = next_revision(root, request['key'])
     derivative = {k: v for k, v in request.items()
                   if not k.startswith(('output', 'original_generated'))}
