@@ -11153,6 +11153,159 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "run",
+      "version": "v03composite03",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png",
+      "original_generated_file": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/girtas-NW-run-reviewed-composite-candidate-v03.png",
+      "bytes": 5099379,
+      "sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "canvas_size": 2048,
+        "review_basis": "ExactRGBA strictownedalpha16 complete6pose composition, nominal2048 plus individually reviewed6Cs and authored support/flightground roots. Independent actualsource/gait/gear and physicalcandidate PASS; actualcompiledPlayer/actor remains HOLD.",
+        "assembly_proof": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/assembly-proof.candidate.json",
+        "assembly_proof_sha256": "f7b9cd48304da2510f240df252afcffb9e386bc5f3d177f82e9c125afed317e1",
+        "source_art_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+        "source_art_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+        "physical_candidate_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+        "physical_candidate_review_sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010",
+        "actor_approval": false
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "base_geometry_sha256": "0dca59dad22c112b8a655ab6419a0ee680c9f1316a06a83cb04d9026e22c02f2",
+        "direction": "NW",
+        "review_basis": "Outward-only completeownedalpha16 exact source rectangles plus transparent authoredAIRgroundroot space. No source pixels/alpha threshold/ownership relaxed. Source/physical candidate evidence is independent; no geometry-only actor approval.",
+        "regions": [
+          [
+            430,
+            413,
+            419,
+            453
+          ],
+          [
+            1351,
+            109,
+            1138,
+            1062
+          ],
+          [
+            134,
+            1352,
+            1011,
+            1262
+          ],
+          [
+            1420,
+            1354,
+            1001,
+            1132
+          ],
+          [
+            126,
+            2636,
+            1028,
+            1127
+          ],
+          [
+            1691,
+            2957,
+            457,
+            486
+          ]
+        ],
+        "nearest_owner_sha256": "b17e7c5c69af2851aefc72923ae3307da0cbb556fe0ddf86ae053243816e62a7"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "source_RGBA_sha256": "5b3391ecfbf8d7ead9d2be83041ff20665400a0e37b4eb7bf07c9ebaf07a7a1d",
+        "base_geometry_sha256": "0dca59dad22c112b8a655ab6419a0ee680c9f1316a06a83cb04d9026e22c02f2",
+        "derived_geometry_sha256": "e92473ef7607561dd09d790bdfb006137d95744425ba62a1f3b9c10b51bfb15b",
+        "review_sha256": "5e8292a29162e51fc8a66016e2e0f4afec928461e2f75ed07ef8ee97e76d6ed9",
+        "review_basis": "Outward-only completeownedalpha16 exact source rectangles plus transparent authoredAIRgroundroot space. No source pixels/alpha threshold/ownership relaxed. Source/physical candidate evidence is independent; no geometry-only actor approval.",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1854623,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            430,
+            413,
+            419,
+            453
+          ],
+          [
+            1351,
+            109,
+            1138,
+            1062
+          ],
+          [
+            134,
+            1352,
+            1011,
+            1262
+          ],
+          [
+            1420,
+            1354,
+            1001,
+            1132
+          ],
+          [
+            126,
+            2636,
+            1028,
+            1127
+          ],
+          [
+            1691,
+            2957,
+            457,
+            486
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "b17e7c5c69af2851aefc72923ae3307da0cbb556fe0ddf86ae053243816e62a7",
+        "foreground_owner_sha256": "540022b321b36d32708fb6f1a1bccab380e6587ddfc4164ecb1af8598e1cab96",
+        "detached_pixels": 1,
+        "detached_fragments": [
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              580,
+              3224,
+              581,
+              3225
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 818.443644975022,
+            "owner_margin_min": 816.2075769975222
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -11187,7 +11340,7 @@
     "transform:267:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-walk-v02composite01.png",
     "transform:267:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-run-v02composite01.png",
     "transform:267:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
-    "transform:267:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
+    "transform:267:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png",
     "transform:267:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
     "transform:267:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-run-v03composite03.png",
     "transform:267:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-walk-v03composite04.png",
@@ -12911,6 +13064,21 @@
             "Rigid physical C/support/root/AIR arc candidate independently accepted under latest pinned normalized profile; actual compiled runtime/final actor remainsHOLD."
           ],
           "source_review_sha256": "c9b30a7be4616b2bf9271ddf1198cd433908d917150a9271a7688ab26b5b6bd2"
+        },
+        {
+          "slot": "transform:267:NW:run",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "0nearLEFT forwardlanding→1nearLEFT deepflatload with distinct farRIGHT recovery→2actualfarRIGHT leadingAIR→3farRIGHT forwardlanding→4farRIGHT load with nearLEFT passing/recovery→5nearLEFT leadingAIR→0 is genuine opposite-chain NW run progression.",
+            "Both half-cycles and5→0 retain complete boots/limbs through longrobe occlusion; no sameLEFTlead alias or missingrecoveryboot remains in selected sources.",
+            "Correct NW rear-left camera, pale hair, rigid hardgoldrays/crown/pauldrons, longdarkgoldtrimrobe and permanentRIGHT sinuousblade/smallcollar hilt are consistent.",
+            "All6 selected source-region RGBA bytearrays equal assembled output-region arrays exactly; no source rescale/mirror/recolor/alpha workaround."
+          ],
+          "source_review_sha256": "650a20fc1f1d353d90521c879e7bb3ca7e819a2fdf9a64c46417583d1c2e78ce"
         }
       ],
       "reopened_source_holds": [
@@ -15693,6 +15861,57 @@
       "runtime_validation": "HOLD_PENDING_ACTUAL_GAME_AND_FRESH_PRIVATE_RUNTIME_QC",
       "actor_approval": false,
       "new_actor_approvals": 0
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "key": "transform:267",
+      "role": "run",
+      "direction": "NW",
+      "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+      "canvas_size": 2048,
+      "authored_pose_canvas_sizes": [
+        848,
+        2096,
+        2392,
+        2376,
+        2280,
+        872
+      ],
+      "source_anchors": [
+        [
+          565,
+          811
+        ],
+        [
+          1799,
+          1047
+        ],
+        [
+          540,
+          2605
+        ],
+        [
+          1817,
+          2449
+        ],
+        [
+          539,
+          3635
+        ],
+        [
+          1880,
+          3410
+        ]
+      ],
+      "review_basis": "Candidate individuallymeasured NWrigidhelmet/skull/pauldron/waist size with explicitlyauthoredposteriorwaist/pelvis/ground smallRUNarc contact245/load225/flight310; actualnear/far/foreaftfootdepth retained. SOURCEwhole6PASS butindependentphysical/floor/AIRreviewpending. No hiddenbone/PNGfloor/bboxnormalization claim. Independent exactwhole6 source/camera/gear/gait and C/body/pelvis/sole/AIR candidate PASS now pinned. Actual compiledPlayer/actor approval remains HOLD.",
+      "anchor_measurement_evidence": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/authored-ground-root-config.json",
+      "anchor_measurement_evidence_sha256": "6ece860407b2afefcb29c65263cdd66e5bf02182f0966c42c55fbee9c2d37274",
+      "runtime_validation": "INDEPENDENT_SOURCE_AND_PHYSICAL_CANDIDATE_PASS_ACTUAL_COMPILED_PLAYER_HOLD",
+      "actor_approval": false,
+      "independent_source_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+      "independent_source_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+      "independent_physical_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+      "independent_physical_review_sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010"
     }
   },
   "runtime_layout_attempt_holds": [
