@@ -3864,6 +3864,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:393",
+      "direction": "E",
+      "role": "walk",
+      "version": "v03iso01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
+      "original_generated_file": "/workspace/scratch/halpas-E-walk-v03iso01.png",
+      "bytes": 1648971,
+      "sha256": "0676e2d482daaef489610cb96f524810d7952f83ddf3706bd82a0b4ec154c292",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 1024
+      },
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -3873,7 +3892,7 @@
   "selected_locomotion_sheets": {
     "transform:393:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png",
     "transform:393:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
-    "transform:393:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+    "transform:393:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
     "transform:393:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
     "transform:267:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
     "transform:267:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-run-v02.png",
@@ -4111,6 +4130,21 @@
             "All six figures appear complete and uncropped. No specific anatomical ratio or elevated-camera mismatch seen; source pixel body size is larger than request/reference target and requires separate runtime compensation."
           ],
           "source_review_sha256": "983482bd104803f8ccf757e22fc0fd5c7659591a4819861a913444da57dcff99"
+        },
+        {
+          "slot": "transform:393:E:walk",
+          "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+          "replacement_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
+          "source_visual_status": "PASS",
+          "geometry_and_actual_Player": "PASS",
+          "actor_approval_added": 0,
+          "source_visual_findings": [
+            "All six retain the same genuine horizontal RIGHT visor/nose and lateral sternum/pelvis, without SE/front-facing snap or weapon-hand swap.",
+            "Coherent slow airborne cycle is visibly articulated: raised wings0, stronger down/back sweep1-2, joint recovery3, raised/open upstroke4-5, cape lag and hip/knee tuck/extension. No required ground contact was invented.",
+            "Existing helmet, black/gold armor, single same-hand blade, crystalline wings and burgundy cape stay coherent. No duplicate static idle or whole-image translation substituted for flight.",
+            "Fixed0.75-pixel-scale contact review avoids misleading per-bbox thumbnail normalization; helmet/body physical scale stays coherent while wing/leg poses change."
+          ],
+          "source_review_sha256": "44e188e450e8f365da4b04bbd872be11c7e37d5de67dd8bf0f69f4affa8dd1ae"
         }
       ],
       "compass_audit": {
