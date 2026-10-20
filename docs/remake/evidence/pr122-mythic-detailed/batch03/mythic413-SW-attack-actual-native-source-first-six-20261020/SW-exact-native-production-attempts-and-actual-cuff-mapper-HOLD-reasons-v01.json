@@ -1,0 +1,49 @@
+{
+  "schema": "MYTHIC413_SW_PRODUCTION_STAGE_PROVENANCE_NOT_SOURCE_APPROVAL_V01",
+  "status": "ACTUAL_PRODUCTION_SAVED_FINAL_LEFT_MAPPER_PATCH_RENDERING",
+  "fixed_source_sha256": "145ab2a2ee58ae4f3c2c15cdd6d37a6d55eb1716533246c7ca145d4d6e8bf4e8",
+  "once_registration_sha256": "5093a7f32fac498ee1c4effb69dc9603939cee1bb1ccc62c099a24761a1bb4a1",
+  "C": 2496.0,
+  "bodyunit": 2.4375,
+  "root": [
+    667.65625,
+    1003.5996691442447
+  ],
+  "first_WEBP_attempts_preserved": true,
+  "final_format": "six ordinary lossless RGBA PNG directly from in-memory original-source render",
+  "actual_fixes": [
+    {
+      "issue": "Original lowerstaff right fin stranded in cloak owner",
+      "native_bbox": [
+        381,
+        862,
+        401,
+        1006
+      ],
+      "actual_source_pixels": 1293,
+      "resolution": "Exact original sourceRGBA/AA owner transferred to full rigidstaff; independent local native linework PASS, no cloakgold transferred"
+    },
+    {
+      "issue": "Outerleft cloak lag remained nonzero at fixed x440 attachment",
+      "resolution": "Actual sourceUV lag taper now reaches zero at x440; no source deletion or donor cloth"
+    },
+    {
+      "issue": "Whitepuff/rim/body arm source owners left sleeve fragments",
+      "resolution": "Complete own upper/puff/rim source ownership; correct visible blue/white elbow511443,337 actual rim pixels reclaimed, true blue head backing1482 preserved in BODY"
+    },
+    {
+      "issue": "Actual LEFT cuff field local negative determinant",
+      "observed_strike_minimum_Jacobian": -0.019780786860298924,
+      "failed_mapper_support_native": 36,
+      "final_real_mapper_support_native": 72,
+      "predicted_same_source_positive_minimum": 0.412536,
+      "threshold_relaxed": false,
+      "hand_targets_matrices_root_or_C_changed": false,
+      "final_actual_six_pending_separate_addendum": true
+    }
+  ],
+  "original_source_files_overwritten": false,
+  "source_approval_added": 0,
+  "actor_approvals_added": 0,
+  "private_previews_and_live_image_ledger_excluded": true
+}
