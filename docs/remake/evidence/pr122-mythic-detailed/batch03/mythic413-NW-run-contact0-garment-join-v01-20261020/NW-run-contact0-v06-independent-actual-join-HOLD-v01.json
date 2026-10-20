@@ -1,0 +1,53 @@
+{
+  "schema": "independent-private-actual-NW-run-contact0-v06-gate-v1",
+  "status": "HOLD_SAME_UPPERHIP_TO_FARLEG_CONTOUR_JOIN",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v06-original-hem-restored.png",
+    "sha256": "8ee2ca11c418ca717abf45a219bb1d06c18e8f014d3af19f17ee6e67c3ef4160",
+    "bytes": 764329
+  },
+  "author_provenance": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-original-hem-restore-exact-provenance-v02.json",
+    "sha256": "8c79400b4f08f62048449b3a3d200f3432dbcb9d538a91ff832517856538ada6",
+    "bytes": 3900
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "independent_pixel_checks": {
+    "changed_pixels_vs_v04": 58996,
+    "changed_outside_restore_mask": 0,
+    "restored_mask_pixels_not_equal_original_master": 0,
+    "protected_new_actual_arm_nearboot_farleg_changed_pixels": 0,
+    "changed_outside_original_service_editmask": 0,
+    "lowerbody_y760_down_changed_pixels": 0
+  },
+  "closed_findings": [
+    "Restored original bodice/necktrim/waist identity retained.",
+    "Actual new rear LEFTarm/gauntlet/hand remains unchanged.",
+    "Doubled white/gold hem removed.",
+    "Naturaltoeout actual shoe/leg candidate unchanged."
+  ],
+  "single_remaining_contour_defect": {
+    "locator_xyxy": [
+      595,
+      710,
+      725,
+      748
+    ],
+    "actual_visible_read": "Hard clipped black triangular patch with straight/jagged upperhip edge and a small exposed background notch. Original upperhip and actual new farleg must join as coherent anatomy.",
+    "possible_origin_not_asserted": "Broad near-black material protection may have retained service garment shadow as foreground. Exact material identity should be traced from actual source.",
+    "minimum_next_fix": "Trace the actual new farleg silhouette/AA and the body restoration edge; do not keep all dark pixels in a broad polygon. Preserve real new leg material and clear residual garment contour. No model rerender requested."
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger.json",
+    "sha256": "06ae5ff85949adab9f83703c3560ccd16ffa64ad7b71bfe88d9f97510bf4a447",
+    "bytes": 4859
+  },
+  "source_phase_approved": false,
+  "allow_dependent_LOAD": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

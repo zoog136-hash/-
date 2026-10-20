@@ -1,0 +1,54 @@
+{
+  "schema": "independent-private-actual-NW-run-contact0-v05-gate-v1",
+  "status": "HOLD_ONE_SEMANTIC_RESTORE_CONTOUR_DEFECT_SKIRT_DOUBLE_HEM",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v05-original-garment-restored.png",
+    "sha256": "6198225e982f3193102f39b92d6fbf0bed2c55b5c85b7c1c6350565846029807",
+    "bytes": 770625
+  },
+  "author_provenance": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-garment-restore-exact-provenance-v01.json",
+    "sha256": "37f64d970c85958e84c366dc61bc429e38d29b89b32bb916f0826c8f6b5ec68d",
+    "bytes": 4221
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "independent_pixel_checks": {
+    "changed_pixels": 48369,
+    "changed_outside_restore_mask": 0,
+    "restored_mask_pixels_not_equal_original_master": 0,
+    "protected_new_actual_arm_changed_pixels": 0,
+    "changed_outside_original_service_editmask": 0,
+    "lowerbody_y720_down_changed_pixels": 0
+  },
+  "positive_findings": [
+    "Original bluegold crossed-back bodice/necktrim and waist ornament identity restored.",
+    "New actual LEFT free-arm/gauntlet/hand occlusion preserved; rear swing remains coherent.",
+    "Lower leg/sole unchanged from v04 coherent static naturaltoeout candidate.",
+    "Torso retained density from original source; fixed C2560 unchanged."
+  ],
+  "single_blocker": {
+    "name": "Restoration-mask contour leaves residual v04 skirt below restored original shorter skirt",
+    "locator_xyxy": [
+      585,
+      665,
+      810,
+      725
+    ],
+    "actual_visible_artifact": "Two disconnected gold/white hem bands and a horizontal skin cutout/transition; original skirt and service longer skirt both remain visible.",
+    "evidence": "One narrow native master915/v04/v05 hem-strip comparison, not hypothetical pixel-diff warning."
+  },
+  "minimum_next_fix": "Expand semantic restoration/occlusion mask to remove residual v04 garment pixels beyond original garment silhouette. Retain actual new arm/hand and actual new boots/legs. Exact original body/upper-hip RGBA may restore newly exposed area only where anatomically coherent; never resurrect old trailing leg. No body model rerender is needed if this closes via masks. Reinspect one finite corrected hem crop.",
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger.json",
+    "sha256": "41df82d713a332990bcbef6e5ff92fc87c503f2fb749ef3185122fb0d558f9f8",
+    "bytes": 3876
+  },
+  "source_phase_approved": false,
+  "allow_dependent_LOAD": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}
