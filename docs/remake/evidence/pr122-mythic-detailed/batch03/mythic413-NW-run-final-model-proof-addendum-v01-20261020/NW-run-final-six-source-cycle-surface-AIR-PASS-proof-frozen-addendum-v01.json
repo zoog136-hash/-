@@ -1,0 +1,68 @@
+{
+  "schema": "TWILIGHT_PR122_MYTHIC413_NW_RUN_FINAL_SOURCE_CYCLE_AND_FINITE_SURFACE_MODEL_PASS_FREEZE_V01",
+  "files": [
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/NWrunSixActualRig01-exact-request-source-cycle-PASS-v01.json",
+      "sha256": "e2d2aff4a67d45afc738b2a0aa03ba44c630f386dd76878a7e03e86f92418f48",
+      "bytes": 6913
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/RUN-final-six-independent-rig-surface-AIR-model-PASS-v01.json",
+      "sha256": "f33c637ca5a9f22a1c1ab879c298ea283ea18d23f00c4afef65d4a90603dfc5f",
+      "bytes": 18512
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/audit-final-six-physical-model-v01.py",
+      "sha256": "ffaa4359f8963b11cc53e3ba24b25c14edd7844b52e80e255931c233b121ed77",
+      "bytes": 10280
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/RUN-final-six-exact-cycle-review-inputs-v01.json",
+      "sha256": "4b36d00a31bbd6fbb81c7d67bd5ede0315d153d9681733311ca2077505a364e2",
+      "bytes": 2998
+    }
+  ],
+  "production_dependency_freeze": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/NW-run-post-v09-complete-actual-production-frozen-allowlist-v01.json",
+    "sha256": "536ae16a7edd2fb0ba621dcd20247bed2a3479771bac9dcf1a1fa571059414c3",
+    "bytes": 78684
+  },
+  "final_source_roster": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/Mythic413-NW-run-final-six-actual-source-roster-v01.json",
+    "sha256": "92f75e0bf221fa58aa1e7c73da197d3ad0b005d8881adbb453760568ed449aa7",
+    "bytes": 12688
+  },
+  "actual_causal_surface_model": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/final-six-actual-causal-rig-and-full-foot-surface-AIR-bounds-v01.json",
+    "sha256": "153dff6932bd7fef3943bb5bc7ea957775508994b3a928b63602b74d685707e2",
+    "bytes": 45753
+  },
+  "exact_request_binding": {
+    "request_path": "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/request-NWrunSixActualRig01.json",
+    "request_sha256": "3e5a0214cf0e14992e95267a82cef842faec1ad55c873419d7e6dc3d48575702",
+    "raw_path": "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/thunder_female-NW-run-six-actual-poses-r001.png",
+    "raw_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+    "packing_proof_sha256": "5f6c1839c10b05660b63d3b316c59e49f0506f4e7aa299e9cfb5031cac27d890"
+  },
+  "source_and_visible_cycle_PASS": true,
+  "observed_heelclock_and_genuine_rigid3D_footroll_PASS": true,
+  "declared_compatible_causal_rig_and_full_rendered_RGBA_surface_AIR_PASS": true,
+  "model_scope": "One explicitly authored compatible 2.5D shoe/body surface and depth/thickness model; not unique recovery of hidden physical anatomy. Full native-pixel identity, joint/control projection, fixed250bones, rigid canonical boottriangle, exact16.8world plant clocks and conservative AIR surface bounds independently verified.",
+  "source_pngs_changed_after_final_roster": false,
+  "reference_clock": {
+    "speed_world": 210,
+    "hz": 12.5,
+    "step_world": 16.8
+  },
+  "actual_run_clock": {
+    "speed_world": 262.5,
+    "hz": 15.625,
+    "dt_seconds": 0.064,
+    "step_world": 16.8,
+    "existing_rule": "12.5 * speed / 210"
+  },
+  "native_game_validation": "PENDING_ROOT_OWNED_WHEN_THIS_PROOF_ADDENDUM_FROZEN",
+  "whole_actor_approvals_added": 0,
+  "completed_detailed_actors_unchanged": "2/31",
+  "private_previews_and_live_ledgers_excluded": true
+}

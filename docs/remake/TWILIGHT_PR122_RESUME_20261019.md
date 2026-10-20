@@ -154,3 +154,10 @@
 - `28f9801d2d79bfc84699fe2d8db5fcefbf980f30` 정상 push: NW WALK6도 r012 실제 Godot 리소스/Player 검사를 통과했다. actor413은 12클립/72자세, 전체108클립/648자세, 이동 미완료4슬롯이다. N/NW WALK12자세는 다시 제작하지 않는다. 상세2/31·미완료29종은 유지한다.
 - RUN의 실제 C2560/padding source를 명목2048로 먼저 검사하던 순서를 고쳐, 명시된 실제 canvas/anchor에서 온전한 원화가 들어가는지 검사한다. 원화 축소·장창 자름·root이동·임계값 완화는 없다. 독립17개 fixture·추가9개 경계 사례와 기존 N 실제 geometry/proof 완전동일 검증을 보존했다. 원래 프로필/54색상·1490표/승인267·393을 변경하지 않았다. 후속 연결은 batch03 `mythic413-actual-physical-C-fit-production-v04-20261020`에 보존한 v04 도구/핀을 사용한다.
 - N RUN 전용 첫6 원화/renderer v01~v03 및 미완료 잔선 상태는 `mythic413-N-run-first-six-actual-v01-through-v03-20261020`에 보존했다. NW RUN 실제6은 마지막 ankle source-over/전체cycle 검토 중, NE WALK0/1은 C2432·공통root 등록 및 flat-contact pair PASS로2~5 제작 중, N ATTACK은 STRIKE3를 포함한 전용6 제작을 시작했다. 이 후보들을 개체 승인으로 계산하지 않는다.
+
+
+## 2026-10-20 NW RUN r013 / transformation walk scope
+
+- Actual Mythic thunder_female_413 NW RUN six poses passed source/cycle and the two scoped Godot resource/actual Player tests; r013 commit `1fd8c73bd0b59f8248b3eff3f3ce984168a86d0d` pushed and verified. Native totals 109 clips / 654 poses; actor413 13 clips / 78 poses. Original r010 profile literals retained. Detailed approvals remain 2/31; historical 405/498, short-frame14 and color/shared54 unchanged.
+- User scope change: no further WALK production for transformations of Mythic and lower grades. UNIQUE transformations and BOSSES retain their existing WALK requirements. Preserve already authored/connected WALK assets and unfinished NE WALK originals; omitted roles are not new completions or approvals. NE WALK partial source0/1/2 and all requests/rigs/QC are frozen; no full NE WALK/game approval.
+- Continue actual N RUN, NE RUN, N ATTACK, N HIT and N DEATH production. N RUN v04-v06 and actual N ATTACK STRIKE3 source/QC are saved, with unfinished/full-cycle/native-game status retained. No PR100 work, CI rerun, catalog-profile rewrite, or approved-actor changes.

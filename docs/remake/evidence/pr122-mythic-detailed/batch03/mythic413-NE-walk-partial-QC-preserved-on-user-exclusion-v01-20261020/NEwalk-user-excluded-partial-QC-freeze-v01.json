@@ -1,0 +1,96 @@
+{
+  "schema": "PR122-user-excluded-partial-work-QC-freeze-v1",
+  "status": "FROZEN_USER_EXCLUDED_MYTHIC_TRANSFORM_WALK_NO_FURTHER_PRODUCTION_OR_QC",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "walk",
+  "exclusion_scope": "Latest user instruction conveyed by root excludes new WALK production for Mythic-and-below transformations; bosses excluded from that policy.",
+  "actual_partial_assets_preserved": [
+    {
+      "phase": "0",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-CONTACT0-contralateral-arm-v03/NE-CONTACT0-actual-native-contralateral-LEFT-arm-v03.png",
+        "sha256": "6fbb8e7f0e08ef2f289ed31634333aa566229bbbef446a50e91b92b1c6704a72",
+        "bytes": 750819
+      },
+      "current_QC_status": "PENDING_NEW_ARM_REVIEW_NOT_VIEWED"
+    },
+    {
+      "phase": "1",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-LOAD1-semantic-and-RIGHTstaff-finish-v04/NE-LOAD1-actual-native-semantic-RIGHTstaff-finished-v04.png",
+        "sha256": "665fb8df6c6fa274f453900c552ef3c2dc0e14a9a013f277b6dbe659b1acae98",
+        "bytes": 721494
+      },
+      "current_QC_status": "STATIC_FLATCONTACT_UNIT_AND_BOUNDED_REPINS_REVIEWED"
+    },
+    {
+      "phase": "2",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-terminal2-rigid-toeoff-v03/NE-terminal2-actual-native-rigid-toeoff-v03.png",
+        "sha256": "9a446f45fda339b5c6400273964891699a869cbf3b289991d679ba6dcba1e320",
+        "bytes": 784799
+      },
+      "current_QC_status": "PENDING_NEW_ARM_REVIEW_NOT_VIEWED"
+    }
+  ],
+  "fixed_body_reference_only": {
+    "physical_C": 2432,
+    "bodyunit": 2.375,
+    "common_rig_root": [
+      716.2291666666666,
+      1054.2766007046484
+    ],
+    "permitted_dependency": "Preserved body/material/handedness reference for NErun; not permission to resume WALK."
+  },
+  "initial_scope_clarification": "Original raw0 static body/equipment viability did not grant final arm-phase or cycle approval. Its rear freeLEFT arm needed a forward finalphase0 for actual RIGHTlead; that newer arm candidate is now frozen unreviewed.",
+  "frozen_proof_allowlist": [
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NE-99ffa7-first-source-C2432-independent-static-body-PASS-v01.json",
+      "sha256": "5fb2856c9760952a39d54c9597795d6965ad3cad4d321a9ccf8bd3f47dcc3ffe",
+      "bytes": 3519
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NE-first-source-view52-frozen.json",
+      "sha256": "536a4abfe45321c16348f4760d79038231cc86588efb95dd1b9b159c6001f104",
+      "bytes": 24928
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NE-LOAD1-e25b76-independent-static-flat-contact-pair-PASS-v01.json",
+      "sha256": "72d93a5a4e8cf1eb5503a70e07e287060ba8998946c73504ce8ecfc56c2ce4c8",
+      "bytes": 3395
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NE-LOAD1-view54-frozen.json",
+      "sha256": "5e5d920141324db333765c7da8584ee4c4d8d1aeb8ba39438ddd3f2fdf6114e1",
+      "bytes": 25865
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NE-LOAD1-33c3a1-independent-bounded-speck-finish-repin-v01.json",
+      "sha256": "952e8b0bd181e5412addf050d9d6a45463d1c7427472b8636c96e532462aa735",
+      "bytes": 1632
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NE-LOAD1-665fb8-independent-original-staff-edge-repin-v01.json",
+      "sha256": "0939fc9d9bce50ea68f61bdb2f4275fa7b69f00c233fa464424835e5d2f0b2db",
+      "bytes": 1942
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NE-terminal2-b88587-independent-source-rigid-toeoff-PASS-v01.json",
+      "sha256": "9b16376eff4cf9337fa12a10e8159e6418610b37dce6d4e7a29300539fdefc2e",
+      "bytes": 3221
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NE2-and-Nattack-arm-view59-frozen.json",
+      "sha256": "3360eaae62e7f32737c264fcdb075efc4f56e94a73fe65d129d1a6510867587c",
+      "bytes": 28314
+    }
+  ],
+  "file_count": 8,
+  "proof_bytes": 92816,
+  "whole_walk_cycle_status": "NOT_APPROVED_INCOMPLETE_EXCLUDED",
+  "actual_walk_game_binding": "NOT_PERFORMED",
+  "new_image_views_after_stop_instruction": 0,
+  "new_source_pixels_modified_by_reviewer": 0,
+  "actor_approvals_added": 0
+}
