@@ -1,0 +1,109 @@
+{
+  "schema": "PR122-author-one-time-direction-source-body-registration-v1",
+  "status": "PROVISIONAL_ONE_TIME_NE_BODY_REGISTRATION_INDEPENDENT_REVIEW_PENDING",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/NE-contact0-actual-native-background-AA-clean-r002.png",
+    "sha256": "99ffa7da2332144f3d449e9e23881bbaa130ace3027e837518148b705d92c127",
+    "native_size": [
+      1254,
+      1254
+    ]
+  },
+  "reference_N": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+    "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+    "physical_C": 1920,
+    "bodyunit": 1.875,
+    "common_rig_root": [
+      662.8125,
+      917.6920531878804
+    ],
+    "visible_hem_center": [
+      650,
+      638
+    ]
+  },
+  "NE_fixed_candidate_physical_C": 2432,
+  "NE_fixed_candidate_bodyunit": 2.375,
+  "one_time_density_ratio": 1.2666666666666666,
+  "common_rig_root_in_unpadded_frame": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "one_time_root_registration": {
+    "method": "same reference body-ground offset from visible central gold hem proxy; native body/pelvis registration, no foot fitting",
+    "NE_visible_central_hem_proxy": [
+      700,
+      700
+    ],
+    "NE_hem_proxy_uncertainty_pixels": 10,
+    "equation": "NE_root = NE_hem + (N_root - N_hem)*(2432/1920)",
+    "root_is_authored_common_coordinate_anchor_not_claimed_unique_hidden3D_pelvis": true
+  },
+  "actual_marker_observations": {
+    "N": {
+      "gold_bun_crown": [
+        639,
+        239
+      ],
+      "nape_proxy": [
+        645,
+        390
+      ],
+      "upper_back_goldbar": [
+        650,
+        519
+      ],
+      "waist_diamond": [
+        649,
+        550
+      ]
+    },
+    "NE": {
+      "gold_bun_crown": [
+        667,
+        199
+      ],
+      "nape_proxy": [
+        708,
+        394
+      ],
+      "upper_back_belt_goldbar": [
+        700,
+        557
+      ],
+      "waist_diamond_same_back_ornament": [
+        644,
+        600
+      ],
+      "visible_hem_proxy": [
+        700,
+        700
+      ]
+    },
+    "nape_uncertainty": 10,
+    "garment_marker_uncertainty": 4,
+    "hairstyle_view_uncertainty": 10
+  },
+  "registration_independent_checks": {
+    "helmet_crown_height_N": 0.35348544436868773,
+    "helmet_crown_height_NE": 0.3516762338423719,
+    "nape_height_N": 0.2748396110353544,
+    "nape_height_NE": 0.2714953127897403,
+    "NE_upper_back_nape_span": 163,
+    "N_upper_back_nape_span_scaled": 163.4,
+    "NE_waist_nape_span": 206,
+    "N_waist_nape_span_scaled": 202.66666666666666
+  },
+  "NE_local_ground_step_per_equal_phase": [
+    -132.23325357766257,
+    119.00992821989632
+  ],
+  "gait_phase_convention": "actual RIGHT-near CONTACT0/LOAD1/TERMINAL2 then LEFT-far CONTACT3/LOAD4/TERMINAL5; no re-service for internal LEFTlead convention",
+  "forbidden": "no alpha-height normalization, no wholeframe resampling, no perpose C or perpose root/foot-fit; every NE pose uses this common C/root after independent first-source gate",
+  "source_or_cycle_or_actor_approval_added": 0
+}

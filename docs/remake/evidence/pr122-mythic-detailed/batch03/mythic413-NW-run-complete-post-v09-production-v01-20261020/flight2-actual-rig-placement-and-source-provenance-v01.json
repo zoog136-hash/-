@@ -1,0 +1,169 @@
+{
+  "status": "ACTUAL_FLIGHT2_POSE_RENDERED_PENDING_INDEPENDENT_ART_AND_AIR_QC",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482"
+  },
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight2-actual-rig-v01/thunder_female-NW-run-flight2-actual-rig-v01.png",
+    "sha256": "45c7d604d7c3ad04f2d419ba27a1275f2dff457d9d93dd60b740f53cb79cdae4",
+    "bytes": 803521,
+    "canvas": [
+      1536,
+      1536
+    ],
+    "alpha16_bbox": [
+      317,
+      0,
+      1033,
+      1197
+    ]
+  },
+  "rig_common_root_in_unpadded_frame": [
+    669.0,
+    1267.95
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "native_C": 2560,
+  "source_body_density_factor": 2.5,
+  "whole_source_resampled": false,
+  "actual_art_part_projection": true,
+  "body_node_bob_and_lean": [
+    -2.0,
+    -38.0
+  ],
+  "source_heel0_marker": [
+    583.5,
+    1191.0
+  ],
+  "target_flight2_near_heel_marker": [
+    815.5,
+    1196.0
+  ],
+  "exact_plant_source_delta": null,
+  "flight_both_feet_authored_air_pending_rig_QC": true,
+  "same_heel_part_rigid_translation": [
+    232.0,
+    5.0
+  ],
+  "genuine_new_trailing_knee": [
+    662.1877957782449,
+    892.932381205845
+  ],
+  "genuine_far_driving_knee": [
+    500.77241893647545,
+    700.600676439554
+  ],
+  "parts": [
+    {
+      "part": "Lwhole_trailing_flight_thigh_shin",
+      "method": "continuous nativewidth curved actual-material skeletal skinning",
+      "source_knots": [
+        [
+          610,
+          692
+        ],
+        [
+          566,
+          900
+        ],
+        [
+          564,
+          1075
+        ]
+      ],
+      "target_knots": [
+        [
+          608.0,
+          654.0
+        ],
+        [
+          662.1877957782449,
+          892.932381205845
+        ],
+        [
+          796.0,
+          1080.0
+        ]
+      ]
+    },
+    {
+      "part": "Rwhole_driving_flight_thigh_shin",
+      "method": "continuous nativewidth curved actual-material skeletal skinning",
+      "source_knots": [
+        [
+          705,
+          705
+        ],
+        [
+          642,
+          785
+        ],
+        [
+          750,
+          858
+        ]
+      ],
+      "target_knots": [
+        [
+          703.0,
+          667.0
+        ],
+        [
+          500.77241893647545,
+          700.600676439554
+        ],
+        [
+          585.0,
+          882.0
+        ]
+      ]
+    },
+    {
+      "part": "Lactual_airborne_heel_and_stiletto",
+      "method": "EXACT rigid translation, no foot geometry scaling",
+      "translation": [
+        232.0,
+        5.0
+      ]
+    },
+    {
+      "part": "Ractual_foot",
+      "method": "rigid native boot placement",
+      "translation": [
+        -165.0,
+        24.0
+      ]
+    },
+    {
+      "part": "Larm_true_shoulder_rotation",
+      "angle_degrees": 30,
+      "source_shoulder": [
+        559.0,
+        383.0
+      ],
+      "target_shoulder": [
+        557.0,
+        345.0
+      ]
+    }
+  ],
+  "uv_endpoint_policy": "outside first/last longitudinal domain transparent except explicit8native actualjointoverlap; no100px endpointrowextrusion",
+  "tarsal_bridge": "65native local continuous inversefield converges to same rigidshoe UV; no shoegeometry change",
+  "actual_skirt_occluder_removed_from_leg_material": true,
+  "near_shaft_semantic_matte": "true anatomical near contour excludes adjacent far thigh; broad body removal unchanged",
+  "actual_tarsal_leather_surface": "finite original own black shaft material UV surface behind complete rigid shoe, target polygon and layer retained",
+  "original_profile_preserved": true,
+  "feet_true_tarsal_annotation_uncertainty_xy": [
+    8,
+    8
+  ],
+  "foot_sampling": "BICUBIC subpixel rigid affine; no geometric resize/rotation; not bit-copy after fractional placement",
+  "clean_shoe_material_sources": "untouchedsource0 actualRGBA+exactsemanticwholeheelcountermattes, no coatcolourfilter",
+  "source_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}
