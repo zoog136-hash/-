@@ -87,7 +87,8 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--prefix="):
 			prefix = argument.trim_prefix("--prefix=")
-	check(world.maps.filter(func(m: Dictionary) -> bool: return not str(m.get("id",m.get("map_id",""))).begins_with("l1_")).size()==25,"all 25 TWILIGHT map IDs are preserved alongside optional source regions")
+	for assertion: Dictionary in preload("res://tests/map_catalog_assertions.gd").checks(world):
+		check(bool(assertion.ok),str(assertion.label))
 	var tested: int = 0
 	var authored_variant_probes: int = 0
 	var families: Dictionary = {}

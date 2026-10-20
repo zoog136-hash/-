@@ -59,9 +59,12 @@ func _run() -> void:
 	await process_frame
 	var map_count: int = 0
 	var dense_count: int = 0
-	var boss_count: int = 0
-	# This suite verifies all 25 authored regions and their authored population caps.
-	# Imported source regions have independent limits/rules and dedicated tests.
+	var boss_keys: Dictionary = {}
+	for assertion: Dictionary in preload("res://tests/map_catalog_assertions.gd").checks(world):
+		check(bool(assertion.ok),str(assertion.label))
+	# Visit every registered field. Escaros aliases share boss lives and must
+	# never be counted as newly created bosses; native actors use their actual
+	# four-pixel source foot instead of the legacy 24-pixel clearance probe.
 	for legacy: Dictionary in world.maps:
 		var id: String = str(legacy.id)
 		world._set_map(id,false)
@@ -74,9 +77,14 @@ func _run() -> void:
 			var mob := slot.monster as TwilightMonster
 			if not is_instance_valid(mob): continue
 			check(slot.region.monster_types.has(mob.monster_name),"only assigned species "+id)
-			check(field.walkable(mob.global_position) and field.point_clear(mob.global_position) and not field.is_safe(mob.global_position),"safe/blocked spawn excluded "+id)
+			var padding: float=24.0
+			if field is NativePngField:
+				var foot: CircleShape2D=mob.get_node("CollisionShape2D").shape as CircleShape2D
+				check(foot!=null and is_equal_approx(foot.radius,4.0),"actual native monster foot matches collision policy "+id)
+				padding=foot.radius if foot!=null else 24.0
+			check(field.walkable(mob.global_position) and field.point_clear(mob.global_position,padding) and not field.is_safe(mob.global_position),"safe/blocked spawn excluded "+id)
 			if str(slot.region.get("mode",""))=="boss":
-				boss_count += 1
+				boss_keys[population.boss_director.key(str(field.data.map_id),slot.region)]=true
 				check(mob.is_boss and mob.ai.has("special"),"boss has a separate skill "+id)
 		for region: Dictionary in field.data.monster_spawn:
 			if str(region.get("mode",""))!="dense": continue
@@ -119,7 +127,7 @@ func _run() -> void:
 					check(not slot.monster.dead and slot.monster.hp==slot.monster.max_hp and slot.monster.motion.death_clock==0.,"pooled actor fully reset")
 			check(alive==int(region.max_count) and population.available.size()<=64,"continuous bounded dense respawn "+id)
 		await process_frame
-	check(map_count==25 and dense_count==4 and boss_count==28,"all maps/four dense/twenty-eight unique boss zones covered")
+	check(map_count==world.maps.size() and dense_count==4 and boss_keys.size()==28,"every registered field/four dense areas/twenty-eight distinct persisted boss lives covered")
 	world._set_map("oman_10",false)
 	pause_actors()
 	# Reproduce cleanup at the corpse-return boundary. A queued actor must never
@@ -214,7 +222,7 @@ func _run() -> void:
 	for slot: Dictionary in world.field_population.slots:
 		if str(slot.region.get("mode",""))=="boss" and is_instance_valid(slot.monster): live_bosses += 1
 	check(live_bosses==1,"one live boss identity per map")
-	print("MONSTER_WORLD covered species=",displayed," maps=",map_count," dense=",dense_count," boss_zones=",boss_count," checks=",checks)
+	print("MONSTER_WORLD covered species=",displayed," maps=",map_count," dense=",dense_count," distinct_boss_lives=",boss_keys.size()," checks=",checks)
 	world.queue_free()
 	await process_frame
 	print("MONSTER_WORLD_OK" if failures.is_empty() else "MONSTER_WORLD_FAILED")
