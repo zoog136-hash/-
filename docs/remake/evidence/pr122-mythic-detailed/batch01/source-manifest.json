@@ -16354,6 +16354,516 @@
         "detached_fragments": [],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "NW",
+      "role": "death",
+      "version": "NWdeathSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-death-NWdeathSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-ipreswib/reviewed-source.png",
+      "bytes": 2368984,
+      "sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+        "base_geometry_sha256": "60ca913c500958bd6253e756e3a537dd71aa7b9b16f80441067ca9b6e13ae2b0",
+        "direction": "NW",
+        "regions": [
+          [
+            568,
+            140,
+            622,
+            1108
+          ],
+          [
+            2080,
+            202,
+            632,
+            1046
+          ],
+          [
+            481,
+            1880,
+            673,
+            904
+          ],
+          [
+            1956,
+            2046,
+            724,
+            731
+          ],
+          [
+            355,
+            3854,
+            779,
+            471
+          ],
+          [
+            1883,
+            3854,
+            780,
+            481
+          ]
+        ],
+        "nearest_owner_sha256": "f31388a50c09e53675bc9c1c59de1ada63b2e178cd81b57adc6c22f7489919de",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof cf338feabc88246e6547e3f720ba29243786c69724bb8b6e92b92aae6ca1813c"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+        "source_RGBA_sha256": "8fe5b3ac28f4a04f2a81ad285e163655f33a26615dd428c2a1145b28cacbc199",
+        "base_geometry_sha256": "60ca913c500958bd6253e756e3a537dd71aa7b9b16f80441067ca9b6e13ae2b0",
+        "derived_geometry_sha256": "60ca913c500958bd6253e756e3a537dd71aa7b9b16f80441067ca9b6e13ae2b0",
+        "review_sha256": "dfd18cd48259db07a72370213ff12865b81163e3d385cfdbe9e4fbea093aee04",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof cf338feabc88246e6547e3f720ba29243786c69724bb8b6e92b92aae6ca1813c",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 780677,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            568,
+            140,
+            622,
+            1108
+          ],
+          [
+            2080,
+            202,
+            632,
+            1046
+          ],
+          [
+            481,
+            1880,
+            673,
+            904
+          ],
+          [
+            1956,
+            2046,
+            724,
+            731
+          ],
+          [
+            355,
+            3854,
+            779,
+            471
+          ],
+          [
+            1883,
+            3854,
+            780,
+            481
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "f31388a50c09e53675bc9c1c59de1ada63b2e178cd81b57adc6c22f7489919de",
+        "foreground_owner_sha256": "3492454812e0e74fcc690857f02243acd6e39a3035ccc5db93ab1166a06dea0a",
+        "detached_pixels": 554,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              782,
+              530,
+              783,
+              531
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1349.7925766576136,
+            "owner_margin_min": 1346.9641495328674
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              852,
+              544,
+              853,
+              545
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1278.5882840070137,
+            "owner_margin_min": 1276.352216029514
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              703,
+              551,
+              704,
+              552
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1336.7004152015513,
+            "owner_margin_min": 1334.7004152015513
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              801,
+              563,
+              802,
+              564
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1320.0742403365048,
+            "owner_margin_min": 1317.838172359005
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              811,
+              575,
+              812,
+              576
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1308.0061161936515,
+            "owner_margin_min": 1305.7700482161517
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2360,
+              581,
+              2361,
+              582
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1233.3896383544009,
+            "owner_margin_min": 1231.1535703769011
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2209,
+              597,
+              2210,
+              598
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1085.0626710010808,
+            "owner_margin_min": 1082.8266030235811
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2307,
+              600,
+              2308,
+              601
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1177.1236128801427,
+            "owner_margin_min": 1174.2951857553965
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              863,
+              614,
+              864,
+              615
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1250.9296542971551,
+            "owner_margin_min": 1247.9296542971551
+          },
+          {
+            "row": 1,
+            "pixels": 20,
+            "bbox": [
+              2362,
+              714,
+              2371,
+              720
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 1201.2197967066643,
+            "owner_margin_min": 1196.2197967066643
+          },
+          {
+            "row": 0,
+            "pixels": 3,
+            "bbox": [
+              596,
+              849,
+              599,
+              850
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1056.524964210501,
+            "owner_margin_min": 1049.3217841793337
+          },
+          {
+            "row": 1,
+            "pixels": 5,
+            "bbox": [
+              2125,
+              928,
+              2128,
+              930
+            ],
+            "nearest_max": 22.02271554554524,
+            "second_nearest_min": 939.652063265973,
+            "owner_margin_min": 918.2511287069402
+          },
+          {
+            "row": 0,
+            "pixels": 6,
+            "bbox": [
+              700,
+              993,
+              706,
+              994
+            ],
+            "nearest_max": 8.94427190999916,
+            "second_nearest_min": 896.7719888578144,
+            "owner_margin_min": 887.8277169478152
+          },
+          {
+            "row": 0,
+            "pixels": 7,
+            "bbox": [
+              692,
+              994,
+              699,
+              995
+            ],
+            "nearest_max": 6.324555320336759,
+            "second_nearest_min": 896.6660470877661,
+            "owner_margin_min": 890.3414917674293
+          },
+          {
+            "row": 0,
+            "pixels": 5,
+            "bbox": [
+              686,
+              995,
+              691,
+              996
+            ],
+            "nearest_max": 4.123105625617661,
+            "second_nearest_min": 896.7547044760903,
+            "owner_margin_min": 892.6315988504726
+          },
+          {
+            "row": 0,
+            "pixels": 143,
+            "bbox": [
+              869,
+              1114,
+              878,
+              1151
+            ],
+            "nearest_max": 37.44329045369811,
+            "second_nearest_min": 735.4515619672039,
+            "owner_margin_min": 699.8403401035282
+          },
+          {
+            "row": 1,
+            "pixels": 96,
+            "bbox": [
+              2405,
+              1141,
+              2414,
+              1166
+            ],
+            "nearest_max": 32.7566787083184,
+            "second_nearest_min": 901.3500984634106,
+            "owner_margin_min": 868.9860784014905
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              696,
+              2190,
+              697,
+              2191
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 955.5841145603039,
+            "owner_margin_min": 952.7556874355577
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              767,
+              2191,
+              768,
+              2192
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 949.1601550844831,
+            "owner_margin_min": 946.9240871069833
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              772,
+              2199,
+              773,
+              2200
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 956.820777366378,
+            "owner_margin_min": 954.5847093888782
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              721,
+              2220,
+              722,
+              2221
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 982.1792097168418,
+            "owner_margin_min": 979.943141739342
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              733,
+              2230,
+              735,
+              2231
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 990.7598094392,
+            "owner_margin_min": 987.9313823144538
+          },
+          {
+            "row": 2,
+            "pixels": 5,
+            "bbox": [
+              577,
+              2554,
+              580,
+              2556
+            ],
+            "nearest_max": 17.46424919657298,
+            "second_nearest_min": 1302.0,
+            "owner_margin_min": 1284.535750803427
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              2098,
+              2571,
+              2100,
+              2572
+            ],
+            "nearest_max": 40.311288741492746,
+            "second_nearest_min": 948.3295840582007,
+            "owner_margin_min": 908.018295316708
+          },
+          {
+            "row": 3,
+            "pixels": 43,
+            "bbox": [
+              2473,
+              2707,
+              2479,
+              2718
+            ],
+            "nearest_max": 21.93171219946131,
+            "second_nearest_min": 1198.5407794480755,
+            "owner_margin_min": 1177.2279935945585
+          },
+          {
+            "row": 2,
+            "pixels": 53,
+            "bbox": [
+              890,
+              2712,
+              903,
+              2725
+            ],
+            "nearest_max": 17.08800749063506,
+            "second_nearest_min": 1088.7469862185612,
+            "owner_margin_min": 1076.0190641572033
+          },
+          {
+            "row": 4,
+            "pixels": 2,
+            "bbox": [
+              542,
+              4195,
+              544,
+              4196
+            ],
+            "nearest_max": 37.12142238654117,
+            "second_nearest_min": 1357.8103696761193,
+            "owner_margin_min": 1321.5750278121325
+          },
+          {
+            "row": 4,
+            "pixels": 72,
+            "bbox": [
+              945,
+              4255,
+              955,
+              4274
+            ],
+            "nearest_max": 29.410882339705484,
+            "second_nearest_min": 971.1395368328899,
+            "owner_margin_min": 942.8817690775517
+          },
+          {
+            "row": 5,
+            "pixels": 77,
+            "bbox": [
+              2478,
+              4262,
+              2495,
+              4281
+            ],
+            "nearest_max": 28.30194339616981,
+            "second_nearest_min": 1352.5623830345128,
+            "owner_margin_min": 1335.8947316737717
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -16486,9 +16996,10 @@
     "transform:413:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-idle-NidleSixActualRig01.png",
     "transform:413:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-hit-NEhitSixActualRig01.png",
     "transform:413:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-idle-NEidleSixActualRig01.png",
-    "transform:413:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-attack-NEattackSixActualRig02.png"
+    "transform:413:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-attack-NEattackSixActualRig02.png",
+    "transform:413:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-death-NWdeathSixActualRig01.png"
   },
-  "selected_detailed_action_native_poses": 444,
+  "selected_detailed_action_native_poses": 450,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -21749,6 +22260,48 @@
         2432,
         2432,
         2432
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-death-NWdeathSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+      "direction": "NW",
+      "role": "death",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          769,
+          1186
+        ],
+        [
+          2305,
+          1186
+        ],
+        [
+          769,
+          2722
+        ],
+        [
+          2305,
+          2722
+        ],
+        [
+          769,
+          4258
+        ],
+        [
+          2305,
+          4258
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2048,
+        2048,
+        2048,
+        2048,
+        2048,
+        2048
       ],
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
