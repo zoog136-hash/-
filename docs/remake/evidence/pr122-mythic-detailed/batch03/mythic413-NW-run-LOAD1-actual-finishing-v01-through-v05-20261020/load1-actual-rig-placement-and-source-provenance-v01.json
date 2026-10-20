@@ -1,0 +1,200 @@
+{
+  "status": "ACTUAL_LOAD1_POSE_RENDERED_PENDING_INDEPENDENT_ART_AND_PLANT_QC",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482"
+  },
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v01/thunder_female-NW-run-load1-actual-rig-v01.png",
+    "sha256": "b2cd33cdf9b6e512fa0f35a74bd24a002b590f5e35de56e3d0b14bc53d272050",
+    "bytes": 808426,
+    "canvas": [
+      1536,
+      1536
+    ],
+    "alpha16_bbox": [
+      323,
+      85,
+      1039,
+      1317
+    ]
+  },
+  "rig_common_root_in_unpadded_frame": [
+    669.0,
+    1267.95
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "native_C": 2560,
+  "source_body_density_factor": 2.5,
+  "whole_source_resampled": false,
+  "actual_art_part_projection": true,
+  "body_node_bob_and_lean": [
+    4.0,
+    70.0
+  ],
+  "source_heel0_marker": [
+    583.5,
+    1191.0
+  ],
+  "target_heel1_marker": [
+    722.6928985028028,
+    1316.2736086525224
+  ],
+  "exact_plant_source_delta": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "same_heel_part_rigid_translation": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "genuine_new_support_knee": [
+    577.9547668598952,
+    1004.3339455542197
+  ],
+  "genuine_far_passing_knee": [
+    642.1845582729242,
+    968.8058222727473
+  ],
+  "parts": [
+    {
+      "part": "Rthigh",
+      "source_joint_a": [
+        705,
+        705
+      ],
+      "source_joint_b": [
+        720,
+        813
+      ],
+      "target_joint_a": [
+        709.0,
+        775.0
+      ],
+      "target_joint_b": [
+        642.1845582729242,
+        968.8058222727473
+      ],
+      "transverse_scale": 1.0
+    },
+    {
+      "part": "Rshin",
+      "source_joint_a": [
+        720,
+        813
+      ],
+      "source_joint_b": [
+        775,
+        861
+      ],
+      "target_joint_a": [
+        642.1845582729242,
+        968.8058222727473
+      ],
+      "target_joint_b": [
+        669.0,
+        1167.0
+      ],
+      "transverse_scale": 1.0
+    },
+    {
+      "part": "Rfoot",
+      "source_joint_a": [
+        775,
+        861
+      ],
+      "source_joint_b": [
+        800,
+        904
+      ],
+      "target_joint_a": [
+        669.0,
+        1167.0
+      ],
+      "target_joint_b": [
+        694.0,
+        1210.0
+      ],
+      "transverse_scale": 1.0
+    },
+    {
+      "part": "Lthigh",
+      "source_joint_a": [
+        610,
+        692
+      ],
+      "source_joint_b": [
+        566,
+        900
+      ],
+      "target_joint_a": [
+        614.0,
+        762.0
+      ],
+      "target_joint_b": [
+        577.9547668598952,
+        1004.3339455542197
+      ],
+      "transverse_scale": 1.0
+    },
+    {
+      "part": "Lshin",
+      "source_joint_a": [
+        566,
+        900
+      ],
+      "source_joint_b": [
+        547,
+        1082
+      ],
+      "target_joint_a": [
+        577.9547668598952,
+        1004.3339455542197
+      ],
+      "target_joint_b": [
+        686.1928985028028,
+        1207.2736086525224
+      ],
+      "transverse_scale": 1.0
+    },
+    {
+      "part": "Lfoot",
+      "source_joint_a": [
+        547,
+        1082
+      ],
+      "source_joint_b": [
+        583.5,
+        1191
+      ],
+      "target_joint_a": [
+        686.1928985028028,
+        1207.2736086525224
+      ],
+      "target_joint_b": [
+        722.6928985028028,
+        1316.2736086525224
+      ],
+      "transverse_scale": 1.0
+    },
+    {
+      "part": "Larm_true_shoulder_rotation",
+      "angle_degrees": 15,
+      "source_shoulder": [
+        559.0,
+        383.0
+      ],
+      "target_shoulder": [
+        563.0,
+        453.0
+      ]
+    }
+  ],
+  "original_profile_preserved": true,
+  "source_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}
