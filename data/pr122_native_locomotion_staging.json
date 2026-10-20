@@ -20882,10 +20882,10 @@
     },
     "transform:413": {
       "grade": "신화",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r019/SpriteFrames.tres",
-      "frames_sha256": "0b5bc7a098a6278ce062f9720e48ea681be8484bd824f8f2ac2fd87523b85351",
-      "native_track_count": 19,
-      "native_pose_count": 114,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r020/SpriteFrames.tres",
+      "frames_sha256": "13e8d88c9e6bf51ce87dc9168f75d694dc215682c1c2efff9c689489d8b7d9e5",
+      "native_track_count": 20,
+      "native_pose_count": 120,
       "canvas_size": [
         1024,
         1024
@@ -22942,6 +22942,298 @@
               [
                 1024,
                 2432
+              ]
+            ],
+            "pose_canvas_size_allowed_range": [
+              256,
+              4096
+            ],
+            "newly_authored_poses": 0
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "attack",
+          "animation": "attack_5",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-attack-NWattackSixActualRig01.png",
+          "source_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r020/NW-attack.png",
+          "geometry": {
+            "image_size": [
+              3072,
+              4608
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  463,
+                  15,
+                  607,
+                  1105
+                ],
+                "margin": [
+                  846,
+                  237,
+                  1441,
+                  943
+                ],
+                "source_anchor": [
+                  641,
+                  1058
+                ],
+                "rgba_sha256": "4817103c97f6b6884e981fe6d4b700adb15995a30a23632d3f6a8b577f6d75d1",
+                "canvas_size": [
+                  2048,
+                  2048
+                ],
+                "foot": [
+                  1024,
+                  1280
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  1999,
+                  85,
+                  600,
+                  1035
+                ],
+                "margin": [
+                  846,
+                  307,
+                  1448,
+                  1013
+                ],
+                "source_anchor": [
+                  2177,
+                  1058
+                ],
+                "rgba_sha256": "3c3f9534a9b1f29f9a345214256c03787f776183b851639310895c34f44413c5",
+                "canvas_size": [
+                  2048,
+                  2048
+                ],
+                "foot": [
+                  1024,
+                  1280
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  463,
+                  1666,
+                  687,
+                  990
+                ],
+                "margin": [
+                  846,
+                  352,
+                  1361,
+                  1058
+                ],
+                "source_anchor": [
+                  641,
+                  2594
+                ],
+                "rgba_sha256": "d6686473678fecadca0077d3ba6feacd40449e5de9e7eb58fd6484ad6b2d15bd",
+                "canvas_size": [
+                  2048,
+                  2048
+                ],
+                "foot": [
+                  1024,
+                  1280
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  1668,
+                  1750,
+                  939,
+                  906
+                ],
+                "margin": [
+                  515,
+                  436,
+                  1109,
+                  1142
+                ],
+                "source_anchor": [
+                  2177,
+                  2594
+                ],
+                "rgba_sha256": "41f9b989571672853d48037b5a6b6a8d3134feea1237bd669dbe794d8d66cbb8",
+                "canvas_size": [
+                  2048,
+                  2048
+                ],
+                "foot": [
+                  1024,
+                  1280
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  88,
+                  3346,
+                  985,
+                  846
+                ],
+                "margin": [
+                  471,
+                  496,
+                  1063,
+                  1202
+                ],
+                "source_anchor": [
+                  641,
+                  4130
+                ],
+                "rgba_sha256": "ac66c913c3660d409afa8bdcbc65bc3fe182a0f48fca66e25757785306045562",
+                "canvas_size": [
+                  2048,
+                  2048
+                ],
+                "foot": [
+                  1024,
+                  1280
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1999,
+                  3086,
+                  610,
+                  1106
+                ],
+                "margin": [
+                  846,
+                  236,
+                  1438,
+                  942
+                ],
+                "source_anchor": [
+                  2177,
+                  4130
+                ],
+                "rgba_sha256": "9ad459eb52067e7bfb8f335cbbf87798eabe99900f8b7889b5a4e3f56651fa80",
+                "canvas_size": [
+                  2048,
+                  2048
+                ],
+                "foot": [
+                  1024,
+                  1280
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 999.5,
+            "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+            "base_geometry_sha256": "2a321d54c7508ef30d2e59ef8a5b61a6ea61c23c1781937e687d62d5b787d517",
+            "derived_geometry_sha256": "67f18093c2e38facb42bb114a2e04ab8207830e5fa1c92dacf03b45c436d67c6",
+            "review_sha256": "f65086d77129ff65a61452931492fcb554996a909dc8605c9c97b6d412df63d2",
+            "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing.",
+            "direction": "NW",
+            "pose_count": 6,
+            "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ],
+            "source_anchors": [
+              [
+                641,
+                1058
+              ],
+              [
+                2177,
+                1058
+              ],
+              [
+                641,
+                2594
+              ],
+              [
+                2177,
+                2594
+              ],
+              [
+                641,
+                4130
+              ],
+              [
+                2177,
+                4130
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              2048
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false,
+            "source_region_review_sha256": "dc4500f13a604429992221adfa908f753d99db39e1761b5e10cdb1f64aad2a93",
+            "pose_canvas_sizes": [
+              2048,
+              2048,
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "runtime_reference_canvas_size": 1024,
+            "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                2048
+              ],
+              [
+                1024,
+                2048
+              ],
+              [
+                1024,
+                2048
+              ],
+              [
+                1024,
+                2048
+              ],
+              [
+                1024,
+                2048
+              ],
+              [
+                1024,
+                2048
               ]
             ],
             "pose_canvas_size_allowed_range": [
@@ -25068,7 +25360,6 @@
           "attack_2",
           "attack_3",
           "attack_4",
-          "attack_5",
           "attack_7"
         ],
         "hit": [
@@ -25110,8 +25401,8 @@
         "policy_sha256": "770ae33ff628f37b71cef0f071914578d132e00439c1820f931c8e5eb12b2758",
         "omission_grants_approval": false
       },
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r019/NativeMotionProfile.tres",
-      "native_profile_sha256": "46e3f2b2741e9c963fd971e35c5393b3bd9c5eb67cf3696da0efb67f53c5182b",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r020/NativeMotionProfile.tres",
+      "native_profile_sha256": "89c7743335ed6511dae385b3e232b86acab249613c20955682c02a64b09e7a98",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 464.0,
@@ -25131,7 +25422,7 @@
       },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 114,
+        "distinct_native_poses": 120,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -50225,6 +50516,28 @@
           "completed_added": 0,
           "actual_Player_dedicated_actions_and_markers": "PASS"
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r019/SpriteFrames.tres",
+        "frames_sha256": "0b5bc7a098a6278ce062f9720e48ea681be8484bd824f8f2ac2fd87523b85351",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r019/NativeMotionProfile.tres",
+        "native_profile_sha256": "46e3f2b2741e9c963fd971e35c5393b3bd9c5eb67cf3696da0efb67f53c5182b",
+        "native_track_count": 19,
+        "native_pose_count": 114,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 114,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0,
+          "actual_Player_dedicated_actions_and_markers": "PASS"
+        }
       }
     ]
   },
@@ -50234,6 +50547,6 @@
     "direction": "E",
     "role": "attack"
   },
-  "missing_detailed_action_blocks": 28,
+  "missing_detailed_action_blocks": 27,
   "missing_locomotion_blocks": 0
 }
