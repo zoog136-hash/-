@@ -43,16 +43,19 @@ func _run() -> void:
 	_check(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"), "isolated save path required")
 	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
 	_check(staging.hero_total_in_498 == 109 and staging.pending_total == 25, "exact roster")
-	var frames_path: String = staging.actors["transform:179"].frames
+	var target_ids := OS.get_environment("TWILIGHT_HERO_TEST_IDS").split(",", false)
+	if target_ids.is_empty(): target_ids = PackedStringArray(["179", "182"])
+	var frames_path: String = staging.actors["transform:" + target_ids[0]].frames
 	var revision: String = frames_path.get_base_dir().get_file()
-	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + revision + "-visible-main/"
+	var group: String = frames_path.get_base_dir().get_base_dir().get_file()
+	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + group + "-" + revision + "-visible-main/"
 	DirAccess.make_dir_recursive_absolute(evidence)
 	var image := Image.load_from_file(frames_path.get_base_dir() + "/run.png")
 	var live := ImageTexture.create_from_image(image)
 	live.take_over_path(frames_path.get_base_dir() + "/run.png")
 	textures.append(live)
-	var source: SpriteFrames = load("res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres")
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(frames_path.get_base_dir() + "/rig-proof.json"))
+	var source: SpriteFrames = load(str(proof.source))
 	_check(proof.frames.size() == 48, "48 actual articulated poses")
 	for direction: int in range(8):
 		var unique: Dictionary = {}
@@ -72,7 +75,14 @@ func _run() -> void:
 				var hip := Vector2(leg.hip[0], leg.hip[1])
 				var knee := Vector2(leg.knee[0], leg.knee[1])
 				var ankle := Vector2(leg.ankle[0], leg.ankle[1])
-				_check(absf(hip.distance_to(knee) - 12.0) < .02 and absf(knee.distance_to(ankle) - 12.0) < .02, "fixed bone lengths")
+				var lengths: Array = leg.bone_lengths
+				_check(absf(hip.distance_to(knee) - float(lengths[0])) < .02 and absf(knee.distance_to(ankle) - float(lengths[1])) < .02, "source-fitted bone lengths remain fixed")
+				if leg.has("source_joints"):
+					var original: Dictionary = leg.source_joints
+					var source_hip := Vector2(original.hip[0], original.hip[1])
+					var source_knee := Vector2(original.knee[0], original.knee[1])
+					var source_ankle := Vector2(original.ankle[0], original.ankle[1])
+					_check(absf(source_hip.distance_to(source_knee) - float(lengths[0])) < .02 and absf(source_knee.distance_to(source_ankle) - float(lengths[1])) < .02, "bind lengths measured from preserved source joints")
 	var world: Node = load("res://Main.tscn").instantiate()
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(world)
@@ -85,9 +95,10 @@ func _run() -> void:
 	var strikes: Array[int] = []
 	player.attack_strike.connect(func(sequence: int) -> void: strikes.append(sequence))
 	var results: Array = []
-	for sid: String in ["179", "182"]:
+	for sid: String in target_ids:
 		var key := "transform:" + sid
 		var entry: Dictionary = staging.actors[key]
+		_check(entry.frames == frames_path, "one immutable body group per validation run")
 		_check(not entry.final_approved and not entry.production_connected, "candidate never auto-approved")
 		var row: Dictionary = {}
 		for item: Dictionary in world.catalog_db["변신"]:
@@ -190,11 +201,11 @@ func _run() -> void:
 		print("HERO_MAIN_TECHNICAL_FAIL checks=%d" % checks)
 		quit(1)
 		return
-	var result := {"schema": "hero-parallel-validation-v1", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "checks": checks, "captures": captures, "actors": results, "default_game_connections": 0, "new_final_approvals": 0, "visual_identity_and_contact_quality": "HOLD", "existing_player_width_ratio_preserved": 0.9}
+	var result := {"schema": "hero-parallel-validation-v1", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "checks": checks, "captures": captures, "actors": results, "frames_sha256": FileAccess.get_sha256(frames_path), "run_png_sha256": FileAccess.get_sha256(frames_path.get_base_dir() + "/run.png"), "default_game_connections": 0, "new_final_approvals": 0, "visual_identity_and_contact_quality": "HOLD", "existing_player_width_ratio_preserved": 0.9}
 	var suffix := "opengl" if captures > 0 else "headless"
 	var file := FileAccess.open(evidence + "validation-" + suffix + ".json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(result, "  ") + "\n")
-	print("HERO_MAIN_TECHNICAL_PASS actors=2 directions=8 roles=5 checks=%d captures=%d approvals=0 default_game_connections=0" % [checks, captures])
+	print("HERO_MAIN_TECHNICAL_PASS actors=%d directions=8 roles=5 checks=%d captures=%d approvals=0 default_game_connections=0" % [target_ids.size(), checks, captures])
 	quit(0)
 
 func player_camera_update(world: Node) -> void:

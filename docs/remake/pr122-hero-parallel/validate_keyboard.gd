@@ -47,7 +47,9 @@ func _run() -> void:
 	var checked := 0
 	var moved := 0
 	var failures: Array = []
-	for sid: String in ["179", "182"]:
+	var target_ids := OS.get_environment("TWILIGHT_HERO_TEST_IDS").split(",", false)
+	if target_ids.is_empty(): target_ids = PackedStringArray(["179", "182"])
+	for sid: String in target_ids:
 		var record: Dictionary = {}
 		for row: Dictionary in world.catalog_db["변신"]:
 			if str(row.sourceId) == sid: record = row
@@ -69,9 +71,13 @@ func _run() -> void:
 	world.queue_free()
 	await process_frame
 	var success := failures.is_empty() and moved > 0
-	var folder: String = staging.actors["transform:179"].frames.get_base_dir().get_file()
-	var result := {"schema": "hero-parallel-real-keyboard-physics-v1", "engine": Engine.get_version_info().string, "status": "PASS" if success else "FAIL", "cases": 16, "compared_physics_ticks": checked, "cases_with_actual_displacement": moved, "fields": ["position_x", "position_y", "velocity_x", "velocity_y"], "failures": failures, "new_approvals": 0}
-	var file := FileAccess.open("res://docs/remake/pr122-hero-parallel/evidence/" + folder + "/keyboard-physics.json", FileAccess.WRITE)
+	var actor: Dictionary = staging.actors["transform:" + target_ids[0]]
+	var folder: String = actor.frames.get_base_dir().get_file()
+	var group: String = actor.frames.get_base_dir().get_base_dir().get_file()
+	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + group + "-" + folder + "-visible-main/"
+	DirAccess.make_dir_recursive_absolute(evidence)
+	var result := {"schema": "hero-parallel-real-keyboard-physics-v1", "engine": Engine.get_version_info().string, "status": "PASS" if success else "FAIL", "cases": target_ids.size() * 8, "compared_physics_ticks": checked, "cases_with_actual_displacement": moved, "fields": ["position_x", "position_y", "velocity_x", "velocity_y"], "failures": failures, "new_approvals": 0, "frames_sha256": FileAccess.get_sha256(actor.frames), "run_png_sha256": FileAccess.get_sha256(actor.frames.get_base_dir() + "/run.png")}
+	var file := FileAccess.open(evidence + "keyboard-physics.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(result, "  ") + "\n")
-	print("HERO_KEYBOARD_PHYSICS_%s cases=16 compared_ticks=%d moving_cases=%d approvals=0" % ["PASS" if success else "FAIL", checked, moved])
+	print("HERO_KEYBOARD_PHYSICS_%s cases=%d compared_ticks=%d moving_cases=%d approvals=0" % ["PASS" if success else "FAIL", target_ids.size() * 8, checked, moved])
 	quit(0 if success else 1)

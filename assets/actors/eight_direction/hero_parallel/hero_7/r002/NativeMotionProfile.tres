@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_t04oj"]
+
+[resource]
+script = ExtResource("1_t04oj")
+profile_id = "transform:7"
+resource_path_hint = "res://assets/catalog/626d89e940ee6d7cd7446881.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/baphomet_hero/r002/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+movement_cadence_width_ratio = 1.054968287526427
+attack_hit_ratio = 0.44
+attack_hit_frame = 1
+action_hit_frames = {
+"attack": 1.0
+}
+color_tint = Color(0.99756664, 0.9842835, 0.99964213, 1)
+native_width_ratio = 1.054968287526427
+sprite_offset = Vector2(0, -17.64103)
+pixel_scale = 0.5512821718750001
+death_duration = 0.65
+idle_amplitude = 0.35
+stride_bob = 1.7
+stride_lean = 0.018
+hit_recoil = 0.0
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

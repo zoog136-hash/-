@@ -1,0 +1,78 @@
+{
+  "lance": {
+    "group": "lance_shared",
+    "revision": "r041",
+    "targets": [
+      "179",
+      "182"
+    ],
+    "source": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+    "source_donor": "transform:176 via transform:44",
+    "profile_prefix": "lance_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      -6,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {
+      "1": {
+        "track": "idle_1",
+        "frame": 1
+      }
+    }
+  },
+  "beres": {
+    "group": "beres_hero",
+    "revision": "r002",
+    "targets": [
+      "11"
+    ],
+    "source": "res://assets/actors/eight_direction/original_based/beres_project_source/SpriteFrames.tres",
+    "source_donor": "monster:베레스",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "knee_lateral_limit": 6.0,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {},
+    "continuous_cloth_mesh": true
+  },
+  "baphomet": {
+    "group": "baphomet_hero",
+    "revision": "r002",
+    "targets": [
+      "7"
+    ],
+    "source": "res://assets/actors/eight_direction/original_based/baphomet_project_source/SpriteFrames.tres",
+    "source_donor": "monster:바포메트",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "knee_lateral_limit": 6.0,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {},
+    "continuous_cloth_mesh": true
+  }
+}

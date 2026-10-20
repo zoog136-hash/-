@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_0owws"]
+
+[resource]
+script = ExtResource("1_0owws")
+profile_id = "transform:11"
+resource_path_hint = "res://assets/catalog/73d5ffcf7bd47bbbd9ff5338.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/beres_hero/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+movement_cadence_width_ratio = 1.054968287526427
+attack_hit_ratio = 0.44
+attack_hit_frame = 1
+action_hit_frames = {
+"attack": 1.0
+}
+color_tint = Color(1.002963, 0.9722457, 0.9643588, 1)
+native_width_ratio = 1.054968287526427
+sprite_offset = Vector2(0, -17.64103)
+pixel_scale = 0.5512821718750001
+death_duration = 0.65
+idle_amplitude = 0.35
+stride_bob = 1.7
+stride_lean = 0.018
+hit_recoil = 0.0
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false
