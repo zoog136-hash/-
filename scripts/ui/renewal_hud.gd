@@ -45,6 +45,8 @@ const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
+const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
+var equipment_collection_button: Button
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
@@ -792,6 +794,7 @@ func _navigate(section: String) -> void:
 	if class_picker_initial:
 		return
 	match section:
+		"equipment_collections": open_equipment_collections()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -1014,7 +1017,7 @@ func toggle_menu() -> void:
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1024,7 +1027,7 @@ func toggle_menu() -> void:
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon(section_id)
+		artwork.texture = UI.icon("inventory" if section_id == "equipment_collections" else section_id)
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
@@ -1062,6 +1065,10 @@ func open_catalog(category: String) -> void:
 	workspace.mount(catalog_panel)
 	catalog_panel.show()
 	catalog_category = category
+	if equipment_collection_button != null:
+		equipment_collection_button.disabled = category != "아이템"
+		equipment_collection_button.text = "장비 컬렉션" if category == "아이템" else "컬렉션"
+		equipment_collection_button.tooltip_text = "장비 등록 · 각인 구분 없음" if category == "아이템" else "카드 컬렉션은 장비 컬렉션과 별도입니다"
 	catalog_grade_filter = "전체"
 	item_grade_filter = "전체"
 	item_slot_filter = "all"
@@ -1163,6 +1170,9 @@ func _build_catalog_panel() -> void:
 		catalog_grade_buttons[grade_name] = grade_button
 	for title: String in ["컬렉션"]:
 		var unavailable := UI.button(title,Callable(),Vector2(124,36))
+		equipment_collection_button = unavailable
+		unavailable.name = "EquipmentCollectionShortcut"
+		unavailable.pressed.connect(open_equipment_collections)
 		unavailable.disabled = true
 		unavailable.tooltip_text = "현재 게임에 카드 보유·중복 재료 및 "+title+" 시스템이 없어 사용할 수 없습니다"
 		catalog_grade_column.add_child(unavailable)
@@ -1842,3 +1852,10 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 		populate.call()
 	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
 	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))
+
+
+func open_equipment_collections() -> void:
+	_open_window("equipment_collections","장비 컬렉션","등록 장비 소모 · 요구 강화 일치 · 각인 구분 없음")
+	var screen := EquipmentCollectionsUI.new()
+	workspace.mount(screen)
+	screen.configure(self)

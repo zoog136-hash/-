@@ -38,6 +38,8 @@ const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
+const EQUIPMENT_COLLECTION_RUNTIME = preload("res://scripts/collections/equipment_collection_runtime.gd")
+var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
@@ -504,6 +506,7 @@ func _load_data() -> void:
 			image_records[name] = "res://assets/ui/rune.png"
 	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
+	equipment_collections.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -769,7 +772,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result
+	return result + equipment_collections.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -866,7 +869,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
-	return result
+	return result + int(equipment_collections.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
 	var base: int = 0
@@ -887,7 +890,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
-	return result
+	return result + int(equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
@@ -916,7 +919,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result
+	return result + int(equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	if target == null:
@@ -3801,6 +3804,7 @@ func _update_hud() -> void:
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
+	character_state["equipment_collection_bonuses"] = equipment_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	hud.set_character_state(character_state)
 	if hud.has_method("set_card_collection_state"):
@@ -3823,14 +3827,20 @@ func _refresh_combat_hud() -> void:
 func save_path() -> String:
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
 
-func _save_game(quiet: bool) -> void:
+func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if equipment_collections.save_blocked:
+		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
+		return ERR_UNAVAILABLE
+	for key: String in collection_override:
+		if key not in ["inventory","item_instances","equipment_collections"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
-		return
+		return ERR_UNAVAILABLE
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
-		return
-	_sync_item_instances()
+		return ERR_UNAVAILABLE
+	# The collection transaction already validated a staged inventory; do not mutate live gear before disk commit.
+	if not collection_override.has("inventory"): _sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -3856,6 +3866,7 @@ func _save_game(quiet: bool) -> void:
 		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
+		"equipment_collections": equipment_collections.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
@@ -3886,13 +3897,16 @@ func _save_game(quiet: bool) -> void:
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
 		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
-	var result: Error = preload("res://scripts/skills/save_writer.gd").write(save_path(), data)
+	data.merge(equipment_collections.extra_save_fields, false)
+	data.merge(collection_override, true)
+	var result: Error = equipment_collections.write_save(save_path(), data)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
-		return
+		return result
 	if not quiet:
 		hud.show_message("저장 완료")
+	return OK
 
 func _load_game(quiet: bool) -> void:
 	if not FileAccess.file_exists(save_path()):
@@ -3905,17 +3919,24 @@ func _load_game(quiet: bool) -> void:
 	var save_parser: JSON = JSON.new()
 	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(save_path()))
 	if parse_error != OK:
+		equipment_collections.save_blocked = true
 		if not quiet:
 			hud.show_message("저장 데이터가 손상되었습니다")
 			hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var value: Variant = save_parser.data
 	if not (value is Dictionary):
+		equipment_collections.save_blocked = true
 		if not quiet:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var collection_error: String = equipment_collections.check_load(data)
+	if not collection_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(collection_error)
+		return
 	var saved_map_id: String = str(data.get("map_id", ""))
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
@@ -3952,6 +3973,7 @@ func _load_game(quiet: bool) -> void:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
+	if not equipment_collections.accept_load(data): return
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
@@ -4038,6 +4060,7 @@ func _load_game(quiet: bool) -> void:
 	for raw_id: Variant in item_instances.keys():
 		if str(raw_id).is_valid_int():
 			next_item_instance_id = maxi(next_item_instance_id, int(str(raw_id)) + 1)
+	next_item_instance_id = maxi(next_item_instance_id, equipment_collections.next_safe_id())
 	_sync_item_instances()
 	_normalize_equipment_slots()
 	_attach_missing_equipment_instance_ids()
@@ -5646,6 +5669,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(_source_catalog_record("아이템", item_value as Dictionary))
+	var collection_record: Dictionary = equipment_collections.stat_record()
+	if not collection_record.is_empty(): records.append(collection_record)
 	return records
 
 func _normalized_weapon_type(raw_type: String) -> String:
@@ -6051,6 +6076,8 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 	return clampf(value, 0.5, 2.0)
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
+	if bool(record.get("_equipment_collection_bonus",false)):
+		return maxf(0.0,float(record.get("collection_attack_speed",0.0)))
 	var value: float = CATALOG_EFFECTS.attack_speed_percent(record)
 	if str(record.get("slot", "")) == "weapon":
 		value += _weapon_intrinsic_attack_speed_percent(record)
@@ -6378,7 +6405,7 @@ func _critical_damage(raw_damage: int) -> int:
 # Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
 # Keep monster critical hits on _critical_damage so player gear never buffs enemies.
 func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
-	var final_damage: int = _critical_damage(raw_damage)
+	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat"))
 	var option_key: String = ""
 	match attack_type:
 		"ranged":
@@ -6391,7 +6418,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus)
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
