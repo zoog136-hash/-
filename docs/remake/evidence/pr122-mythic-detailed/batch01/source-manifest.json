@@ -21250,6 +21250,1867 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "E",
+      "role": "death",
+      "version": "EdeathSixActualRig02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-death-EdeathSixActualRig02.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-kk38z1vj/reviewed-source.png",
+      "bytes": 6720529,
+      "sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+        "canonical_preflight": {
+          "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+          "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+          "packing_proof_sha256": "ee9f0b7a95cd5b53cdb57e9cb3fecf9d2b1c24336d0388885813cca57ad818b4",
+          "direction": "E",
+          "canonical_canvas": 2048,
+          "physical_canvases": [
+            2816,
+            2816,
+            2816,
+            2816,
+            2816,
+            2816
+          ],
+          "root_float": [
+            738.7916666666666,
+            1098.2150113422247
+          ],
+          "root_integer": [
+            739,
+            1098
+          ],
+          "tile_size": 2304,
+          "storage_translations": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "atlas_origins": [
+            [
+              0,
+              0
+            ],
+            [
+              2304,
+              0
+            ],
+            [
+              0,
+              2304
+            ],
+            [
+              2304,
+              2304
+            ],
+            [
+              0,
+              4608
+            ],
+            [
+              2304,
+              4608
+            ]
+          ],
+          "source_anchors": [
+            [
+              995,
+              1354
+            ],
+            [
+              3299,
+              1354
+            ],
+            [
+              995,
+              3658
+            ],
+            [
+              3299,
+              3658
+            ],
+            [
+              995,
+              5962
+            ],
+            [
+              3299,
+              5962
+            ]
+          ]
+        },
+        "canonical_preflight_sha256": "83bd940e7a35df79a5c66e1849f5ed5db8561f814a039e4d24cfd05b0d28abc5",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+        "base_geometry_sha256": "0a3468f78884eb55f2d551ea53ab49faf9b5d2c51f4e35983eddee8d2704771a",
+        "direction": "E",
+        "regions": [
+          [
+            538,
+            248,
+            747,
+            1231
+          ],
+          [
+            2582,
+            214,
+            999,
+            1259
+          ],
+          [
+            195,
+            2676,
+            1253,
+            1343
+          ],
+          [
+            2687,
+            3048,
+            1343,
+            1147
+          ],
+          [
+            519,
+            5663,
+            1314,
+            863
+          ],
+          [
+            2830,
+            5692,
+            1311,
+            880
+          ]
+        ],
+        "nearest_owner_sha256": "c8a3db8417f894e7cb41153074304c2fdfb1790a263eeb33ceeecfe0514dbfc9",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof ee9f0b7a95cd5b53cdb57e9cb3fecf9d2b1c24336d0388885813cca57ad818b4"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+        "source_RGBA_sha256": "349b6e2605e3489aa3b78851c8ebfbbc9e7b0d8f098f1aab5f73e3d2ca266efe",
+        "base_geometry_sha256": "0a3468f78884eb55f2d551ea53ab49faf9b5d2c51f4e35983eddee8d2704771a",
+        "derived_geometry_sha256": "46c38cba6d429ab43bb74b6b812a0fe153e1cc78b5cb7004302e12b83d180a40",
+        "review_sha256": "36e827b773f3658b428e2a82c5522edba24dc1b666ebda9474cd2713616af914",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof ee9f0b7a95cd5b53cdb57e9cb3fecf9d2b1c24336d0388885813cca57ad818b4",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 2475554,
+        "added_alpha_gt16_pixels": 15,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            538,
+            248,
+            747,
+            1231
+          ],
+          [
+            2582,
+            214,
+            999,
+            1259
+          ],
+          [
+            195,
+            2676,
+            1253,
+            1343
+          ],
+          [
+            2687,
+            3048,
+            1343,
+            1147
+          ],
+          [
+            519,
+            5663,
+            1314,
+            863
+          ],
+          [
+            2830,
+            5692,
+            1311,
+            880
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "c8a3db8417f894e7cb41153074304c2fdfb1790a263eeb33ceeecfe0514dbfc9",
+        "foreground_owner_sha256": "5ad4a48e6c2c03bf41358835c1559f3dca9e8aa8e264cb90dde6687a44830238",
+        "detached_pixels": 1029,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              1027,
+              549,
+              1028,
+              550
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1735.3230246844535,
+            "owner_margin_min": 1732.4945975597072
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              837,
+              552,
+              838,
+              553
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1912.0054916239126,
+            "owner_margin_min": 1909.7694236464129
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              834,
+              587,
+              835,
+              588
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1903.089067805288,
+            "owner_margin_min": 1900.2606406805419
+          },
+          {
+            "row": 1,
+            "pixels": 3,
+            "bbox": [
+              3207,
+              604,
+              3210,
+              606
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1944.972236305701,
+            "owner_margin_min": 1942.7361683282013
+          },
+          {
+            "row": 0,
+            "pixels": 2,
+            "bbox": [
+              1055,
+              774,
+              1056,
+              776
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1630.222684175386,
+            "owner_margin_min": 1627.7312927260784
+          },
+          {
+            "row": 1,
+            "pixels": 6,
+            "bbox": [
+              3178,
+              803,
+              3182,
+              805
+            ],
+            "nearest_max": 7.0,
+            "second_nearest_min": 1898.4040665780296,
+            "owner_margin_min": 1893.9799922914156
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2966,
+              823,
+              2967,
+              824
+            ],
+            "nearest_max": 26.076809620810597,
+            "second_nearest_min": 1685.8333250947437,
+            "owner_margin_min": 1659.7565154739332
+          },
+          {
+            "row": 1,
+            "pixels": 5,
+            "bbox": [
+              3071,
+              830,
+              3074,
+              832
+            ],
+            "nearest_max": 28.284271247461902,
+            "second_nearest_min": 1790.5909638999076,
+            "owner_margin_min": 1763.1319034644157
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3152,
+              1156,
+              3153,
+              1157
+            ],
+            "nearest_max": 16.1245154965971,
+            "second_nearest_min": 1891.6876063451914,
+            "owner_margin_min": 1875.5630908485944
+          },
+          {
+            "row": 1,
+            "pixels": 78,
+            "bbox": [
+              3119,
+              1160,
+              3149,
+              1194
+            ],
+            "nearest_max": 24.413111231467404,
+            "second_nearest_min": 1864.7973080203649,
+            "owner_margin_min": 1840.3841967888975
+          },
+          {
+            "row": 0,
+            "pixels": 10,
+            "bbox": [
+              805,
+              1175,
+              807,
+              1181
+            ],
+            "nearest_max": 46.61544808322666,
+            "second_nearest_min": 1782.0982015590498,
+            "owner_margin_min": 1735.482753475823
+          },
+          {
+            "row": 0,
+            "pixels": 4,
+            "bbox": [
+              805,
+              1221,
+              806,
+              1225
+            ],
+            "nearest_max": 43.657759905886145,
+            "second_nearest_min": 1739.5243602778319,
+            "owner_margin_min": 1696.8043415512443
+          },
+          {
+            "row": 1,
+            "pixels": 10,
+            "bbox": [
+              2822,
+              1222,
+              2825,
+              1227
+            ],
+            "nearest_max": 8.94427190999916,
+            "second_nearest_min": 1571.0343726347937,
+            "owner_margin_min": 1562.1267003888338
+          },
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              3088,
+              1226,
+              3089,
+              1228
+            ],
+            "nearest_max": 31.304951684997057,
+            "second_nearest_min": 1836.9477401385157,
+            "owner_margin_min": 1805.6427884535185
+          },
+          {
+            "row": 1,
+            "pixels": 4,
+            "bbox": [
+              3085,
+              1229,
+              3087,
+              1231
+            ],
+            "nearest_max": 32.2490309931942,
+            "second_nearest_min": 1834.0482545451196,
+            "owner_margin_min": 1801.7992235519255
+          },
+          {
+            "row": 1,
+            "pixels": 11,
+            "bbox": [
+              2984,
+              1237,
+              2988,
+              1243
+            ],
+            "nearest_max": 40.80441152620633,
+            "second_nearest_min": 1733.580110638098,
+            "owner_margin_min": 1693.101485577605
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2815,
+              1241,
+              2816,
+              1242
+            ],
+            "nearest_max": 24.186773244895647,
+            "second_nearest_min": 1564.7507788782211,
+            "owner_margin_min": 1540.5640056333255
+          },
+          {
+            "row": 1,
+            "pixels": 7,
+            "bbox": [
+              2803,
+              1263,
+              2807,
+              1267
+            ],
+            "nearest_max": 48.02082881417188,
+            "second_nearest_min": 1554.1563627897933,
+            "owner_margin_min": 1506.1355339756215
+          },
+          {
+            "row": 1,
+            "pixels": 5,
+            "bbox": [
+              2845,
+              1263,
+              2847,
+              1266
+            ],
+            "nearest_max": 11.704699910719626,
+            "second_nearest_min": 1595.8900338055878,
+            "owner_margin_min": 1584.7701605980267
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2847,
+              1267,
+              2848,
+              1268
+            ],
+            "nearest_max": 13.341664064126334,
+            "second_nearest_min": 1598.1317217300957,
+            "owner_margin_min": 1584.7900576659695
+          },
+          {
+            "row": 1,
+            "pixels": 4,
+            "bbox": [
+              2967,
+              1281,
+              2969,
+              1284
+            ],
+            "nearest_max": 61.032778078668514,
+            "second_nearest_min": 1718.8513606475692,
+            "owner_margin_min": 1658.173185177421
+          },
+          {
+            "row": 1,
+            "pixels": 10,
+            "bbox": [
+              2792,
+              1287,
+              2795,
+              1292
+            ],
+            "nearest_max": 67.95586803212802,
+            "second_nearest_min": 1544.7462574804963,
+            "owner_margin_min": 1477.0827509547973
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2841,
+              1291,
+              2842,
+              1292
+            ],
+            "nearest_max": 27.202941017470888,
+            "second_nearest_min": 1593.8309195143631,
+            "owner_margin_min": 1566.6279784968922
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2839,
+              1293,
+              2840,
+              1294
+            ],
+            "nearest_max": 29.732137494637012,
+            "second_nearest_min": 1591.9940326521328,
+            "owner_margin_min": 1562.2618951574957
+          },
+          {
+            "row": 1,
+            "pixels": 6,
+            "bbox": [
+              2835,
+              1295,
+              2839,
+              1297
+            ],
+            "nearest_max": 34.539832078341085,
+            "second_nearest_min": 1588.247461827029,
+            "owner_margin_min": 1553.7076297486879
+          },
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              2883,
+              1413,
+              2884,
+              1415
+            ],
+            "nearest_max": 102.17631819555841,
+            "second_nearest_min": 1639.2574538491506,
+            "owner_margin_min": 1537.0811356535921
+          },
+          {
+            "row": 1,
+            "pixels": 3,
+            "bbox": [
+              2711,
+              1425,
+              2714,
+              1426
+            ],
+            "nearest_max": 147.07821048680188,
+            "second_nearest_min": 1481.635920190922,
+            "owner_margin_min": 1335.9719232664931
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              1124,
+              3085,
+              1126,
+              3086
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1628.4670705912356,
+            "owner_margin_min": 1625.4670705912356
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              1127,
+              3085,
+              1128,
+              3086
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1628.4204002652386,
+            "owner_margin_min": 1625.4204002652386
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              798,
+              3167,
+              799,
+              3168
+            ],
+            "nearest_max": 81.02468759581859,
+            "second_nearest_min": 1692.2485042097098,
+            "owner_margin_min": 1611.2238166138914
+          },
+          {
+            "row": 2,
+            "pixels": 5,
+            "bbox": [
+              893,
+              3229,
+              895,
+              3232
+            ],
+            "nearest_max": 50.21951811795888,
+            "second_nearest_min": 1754.433526811432,
+            "owner_margin_min": 1704.7847604622066
+          },
+          {
+            "row": 2,
+            "pixels": 8,
+            "bbox": [
+              1005,
+              3258,
+              1009,
+              3262
+            ],
+            "nearest_max": 10.816653826391969,
+            "second_nearest_min": 1789.382575080019,
+            "owner_margin_min": 1780.3271899418817
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              3380,
+              3281,
+              3382,
+              3282
+            ],
+            "nearest_max": 22.360679774997898,
+            "second_nearest_min": 1824.6657228106194,
+            "owner_margin_min": 1802.3050430356216
+          },
+          {
+            "row": 3,
+            "pixels": 3,
+            "bbox": [
+              3434,
+              3389,
+              3436,
+              3391
+            ],
+            "nearest_max": 32.7566787083184,
+            "second_nearest_min": 1937.7525641835698,
+            "owner_margin_min": 1905.1949229913703
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              3712,
+              3432,
+              3713,
+              3433
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1991.1710122438003,
+            "owner_margin_min": 1988.9349442663006
+          },
+          {
+            "row": 3,
+            "pixels": 13,
+            "bbox": [
+              2935,
+              3449,
+              2940,
+              3454
+            ],
+            "nearest_max": 9.219544457292887,
+            "second_nearest_min": 1567.4980063783175,
+            "owner_margin_min": 1558.2784619210247
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2918,
+              3457,
+              2919,
+              3458
+            ],
+            "nearest_max": 24.73863375370596,
+            "second_nearest_min": 1551.910113376416,
+            "owner_margin_min": 1527.17147962271
+          },
+          {
+            "row": 3,
+            "pixels": 5,
+            "bbox": [
+              2890,
+              3466,
+              2893,
+              3468
+            ],
+            "nearest_max": 49.33558553417604,
+            "second_nearest_min": 1526.1775781343401,
+            "owner_margin_min": 1476.841992600164
+          },
+          {
+            "row": 3,
+            "pixels": 4,
+            "bbox": [
+              3642,
+              3466,
+              3645,
+              3468
+            ],
+            "nearest_max": 7.810249675906654,
+            "second_nearest_min": 2018.9296669275034,
+            "owner_margin_min": 2011.1895026767281
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2894,
+              3467,
+              2895,
+              3468
+            ],
+            "nearest_max": 45.221676218380054,
+            "second_nearest_min": 1530.2957230548611,
+            "owner_margin_min": 1485.074046836481
+          },
+          {
+            "row": 3,
+            "pixels": 13,
+            "bbox": [
+              3650,
+              3471,
+              3657,
+              3475
+            ],
+            "nearest_max": 7.810249675906654,
+            "second_nearest_min": 2024.4905532009775,
+            "owner_margin_min": 2017.8561936602273
+          },
+          {
+            "row": 3,
+            "pixels": 13,
+            "bbox": [
+              2863,
+              3474,
+              2868,
+              3480
+            ],
+            "nearest_max": 70.51950084905593,
+            "second_nearest_min": 1501.9201043996982,
+            "owner_margin_min": 1431.4006035506422
+          },
+          {
+            "row": 3,
+            "pixels": 6,
+            "bbox": [
+              3518,
+              3483,
+              3520,
+              3487
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 2031.0711459719967,
+            "owner_margin_min": 2028.835077994497
+          },
+          {
+            "row": 3,
+            "pixels": 7,
+            "bbox": [
+              2917,
+              3502,
+              2920,
+              3506
+            ],
+            "nearest_max": 13.601470508735444,
+            "second_nearest_min": 1560.3848884169572,
+            "owner_margin_min": 1546.7834179082217
+          },
+          {
+            "row": 2,
+            "pixels": 11,
+            "bbox": [
+              465,
+              3508,
+              469,
+              3513
+            ],
+            "nearest_max": 9.848857801796104,
+            "second_nearest_min": 2064.204689462748,
+            "owner_margin_min": 2057.4613694720924
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2916,
+              3508,
+              2917,
+              3509
+            ],
+            "nearest_max": 14.560219778561036,
+            "second_nearest_min": 1560.2724121127053,
+            "owner_margin_min": 1545.7121923341442
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2914,
+              3511,
+              2915,
+              3512
+            ],
+            "nearest_max": 15.231546211727817,
+            "second_nearest_min": 1558.9756252103496,
+            "owner_margin_min": 1543.7440789986217
+          },
+          {
+            "row": 3,
+            "pixels": 5,
+            "bbox": [
+              2886,
+              3521,
+              2889,
+              3523
+            ],
+            "nearest_max": 35.22782990761707,
+            "second_nearest_min": 1533.9338316889682,
+            "owner_margin_min": 1498.7060017813512
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              451,
+              3522,
+              452,
+              3523
+            ],
+            "nearest_max": 25.96150997149434,
+            "second_nearest_min": 2080.9060526607154,
+            "owner_margin_min": 2054.944542689221
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              2890,
+              3522,
+              2892,
+              3523
+            ],
+            "nearest_max": 31.304951684997057,
+            "second_nearest_min": 1538.056565929875,
+            "owner_margin_min": 1506.7516142448778
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2893,
+              3522,
+              2894,
+              3523
+            ],
+            "nearest_max": 28.635642126552707,
+            "second_nearest_min": 1540.9766383693168,
+            "owner_margin_min": 1512.340996242764
+          },
+          {
+            "row": 2,
+            "pixels": 6,
+            "bbox": [
+              428,
+              3539,
+              434,
+              3541
+            ],
+            "nearest_max": 51.62363799656123,
+            "second_nearest_min": 2100.837214064907,
+            "owner_margin_min": 2051.1091077417077
+          },
+          {
+            "row": 2,
+            "pixels": 13,
+            "bbox": [
+              1173,
+              3547,
+              1177,
+              3555
+            ],
+            "nearest_max": 6.324555320336759,
+            "second_nearest_min": 1690.6285813270756,
+            "owner_margin_min": 1686.048771962616
+          },
+          {
+            "row": 2,
+            "pixels": 11,
+            "bbox": [
+              407,
+              3555,
+              411,
+              3561
+            ],
+            "nearest_max": 72.69112738154499,
+            "second_nearest_min": 2114.022705649114,
+            "owner_margin_min": 2042.502717163205
+          },
+          {
+            "row": 2,
+            "pixels": 5,
+            "bbox": [
+              470,
+              3556,
+              473,
+              3558
+            ],
+            "nearest_max": 12.041594578792296,
+            "second_nearest_min": 2110.883227466645,
+            "owner_margin_min": 2099.812114593186
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              470,
+              3560,
+              471,
+              3561
+            ],
+            "nearest_max": 14.212670403551895,
+            "second_nearest_min": 2109.588822495986,
+            "owner_margin_min": 2095.376152092434
+          },
+          {
+            "row": 3,
+            "pixels": 8,
+            "bbox": [
+              2689,
+              3573,
+              2692,
+              3576
+            ],
+            "nearest_max": 209.02152999152983,
+            "second_nearest_min": 1357.807423753457,
+            "owner_margin_min": 1148.7978545945307
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              454,
+              3580,
+              455,
+              3581
+            ],
+            "nearest_max": 29.427877939124322,
+            "second_nearest_min": 2090.6259828099332,
+            "owner_margin_min": 2061.198104870809
+          },
+          {
+            "row": 2,
+            "pixels": 7,
+            "bbox": [
+              447,
+              3581,
+              453,
+              3584
+            ],
+            "nearest_max": 36.124783736376884,
+            "second_nearest_min": 2088.0407084154276,
+            "owner_margin_min": 2052.983159860603
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              810,
+              3592,
+              811,
+              3593
+            ],
+            "nearest_max": 17.4928556845359,
+            "second_nearest_min": 2053.2805458582616,
+            "owner_margin_min": 2035.7876901737257
+          },
+          {
+            "row": 2,
+            "pixels": 12,
+            "bbox": [
+              614,
+              3593,
+              621,
+              3598
+            ],
+            "nearest_max": 42.42640687119285,
+            "second_nearest_min": 2069.0408405829016,
+            "owner_margin_min": 2026.614433711709
+          },
+          {
+            "row": 2,
+            "pixels": 84,
+            "bbox": [
+              768,
+              3593,
+              809,
+              3610
+            ],
+            "nearest_max": 25.238858928247925,
+            "second_nearest_min": 2055.4731815326613,
+            "owner_margin_min": 2037.6686877178965
+          },
+          {
+            "row": 3,
+            "pixels": 16,
+            "bbox": [
+              3021,
+              3612,
+              3029,
+              3616
+            ],
+            "nearest_max": 49.73932046178355,
+            "second_nearest_min": 1687.7230222995715,
+            "owner_margin_min": 1637.983701837788
+          },
+          {
+            "row": 2,
+            "pixels": 5,
+            "bbox": [
+              580,
+              3625,
+              583,
+              3628
+            ],
+            "nearest_max": 63.28506932918696,
+            "second_nearest_min": 2039.0353111214135,
+            "owner_margin_min": 1975.7502417922267
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              722,
+              3627,
+              724,
+              3628
+            ],
+            "nearest_max": 32.449961479175904,
+            "second_nearest_min": 2042.587085046804,
+            "owner_margin_min": 2010.1371235676281
+          },
+          {
+            "row": 2,
+            "pixels": 4,
+            "bbox": [
+              718,
+              3628,
+              721,
+              3630
+            ],
+            "nearest_max": 33.28663395418648,
+            "second_nearest_min": 2040.3573216473628,
+            "owner_margin_min": 2007.3421736089244
+          },
+          {
+            "row": 3,
+            "pixels": 5,
+            "bbox": [
+              2978,
+              3631,
+              2981,
+              3633
+            ],
+            "nearest_max": 74.54528824815154,
+            "second_nearest_min": 1651.240140015982,
+            "owner_margin_min": 1576.9097962793894
+          },
+          {
+            "row": 3,
+            "pixels": 5,
+            "bbox": [
+              2818,
+              3661,
+              2821,
+              3663
+            ],
+            "nearest_max": 120.34118164618461,
+            "second_nearest_min": 1507.5440292077708,
+            "owner_margin_min": 1387.5295024643594
+          },
+          {
+            "row": 2,
+            "pixels": 5,
+            "bbox": [
+              266,
+              3666,
+              270,
+              3668
+            ],
+            "nearest_max": 219.25555865245468,
+            "second_nearest_min": 2025.086911715149,
+            "owner_margin_min": 1807.3003867879863
+          },
+          {
+            "row": 3,
+            "pixels": 6,
+            "bbox": [
+              3094,
+              3697,
+              3097,
+              3699
+            ],
+            "nearest_max": 38.600518131237564,
+            "second_nearest_min": 1781.0628849088962,
+            "owner_margin_min": 1742.4623667776586
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              3098,
+              3697,
+              3100,
+              3698
+            ],
+            "nearest_max": 37.656340767525464,
+            "second_nearest_min": 1784.8834695856197,
+            "owner_margin_min": 1747.2271288180941
+          },
+          {
+            "row": 3,
+            "pixels": 94,
+            "bbox": [
+              3146,
+              3697,
+              3189,
+              3700
+            ],
+            "nearest_max": 29.614185789921695,
+            "second_nearest_min": 1831.0789169230254,
+            "owner_margin_min": 1801.6510389839011
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              3190,
+              3698,
+              3191,
+              3699
+            ],
+            "nearest_max": 20.8806130178211,
+            "second_nearest_min": 1873.2458461184426,
+            "owner_margin_min": 1852.3652331006215
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              3250,
+              3702,
+              3251,
+              3703
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1931.9777431430207,
+            "owner_margin_min": 1929.1493160182745
+          },
+          {
+            "row": 2,
+            "pixels": 3,
+            "bbox": [
+              440,
+              3711,
+              442,
+              3713
+            ],
+            "nearest_max": 104.92378186092989,
+            "second_nearest_min": 1959.903058827145,
+            "owner_margin_min": 1855.0570853926256
+          },
+          {
+            "row": 2,
+            "pixels": 9,
+            "bbox": [
+              813,
+              3798,
+              817,
+              3802
+            ],
+            "nearest_max": 48.16637831516918,
+            "second_nearest_min": 1876.8465573935446,
+            "owner_margin_min": 1828.7827419328999
+          },
+          {
+            "row": 3,
+            "pixels": 8,
+            "bbox": [
+              3093,
+              3929,
+              3097,
+              3933
+            ],
+            "nearest_max": 55.02726596879042,
+            "second_nearest_min": 1772.4629756358804,
+            "owner_margin_min": 1717.43570966709
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1250,
+              5845,
+              1251,
+              5846
+            ],
+            "nearest_max": 21.840329667841555,
+            "second_nearest_min": 1658.705820813323,
+            "owner_margin_min": 1636.8654911454814
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3558,
+              5874,
+              3559,
+              5875
+            ],
+            "nearest_max": 21.840329667841555,
+            "second_nearest_min": 1683.1711142958698,
+            "owner_margin_min": 1661.3307846280281
+          },
+          {
+            "row": 4,
+            "pixels": 12,
+            "bbox": [
+              744,
+              5894,
+              749,
+              5898
+            ],
+            "nearest_max": 66.84309986827361,
+            "second_nearest_min": 1905.7190244104718,
+            "owner_margin_min": 1840.53310843464
+          },
+          {
+            "row": 4,
+            "pixels": 12,
+            "bbox": [
+              820,
+              5894,
+              826,
+              5898
+            ],
+            "nearest_max": 8.602325267042627,
+            "second_nearest_min": 1894.3922508287453,
+            "owner_margin_min": 1887.4116040074532
+          },
+          {
+            "row": 4,
+            "pixels": 9,
+            "bbox": [
+              773,
+              5895,
+              778,
+              5899
+            ],
+            "nearest_max": 47.38143096192854,
+            "second_nearest_min": 1902.6951936660796,
+            "owner_margin_min": 1855.313762704151
+          },
+          {
+            "row": 5,
+            "pixels": 10,
+            "bbox": [
+              3066,
+              5902,
+              3072,
+              5906
+            ],
+            "nearest_max": 64.66065264130884,
+            "second_nearest_min": 1246.7978986186974,
+            "owner_margin_min": 1182.2627612057486
+          },
+          {
+            "row": 5,
+            "pixels": 7,
+            "bbox": [
+              3095,
+              5904,
+              3101,
+              5907
+            ],
+            "nearest_max": 45.967379738244816,
+            "second_nearest_min": 1275.6978482383672,
+            "owner_margin_min": 1229.7304685001225
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3126,
+              5906,
+              3127,
+              5907
+            ],
+            "nearest_max": 22.627416997969522,
+            "second_nearest_min": 1306.2289232749365,
+            "owner_margin_min": 1283.601506276967
+          },
+          {
+            "row": 5,
+            "pixels": 9,
+            "bbox": [
+              3143,
+              5906,
+              3149,
+              5909
+            ],
+            "nearest_max": 8.602325267042627,
+            "second_nearest_min": 1322.8775453533106,
+            "owner_margin_min": 1314.2752200862678
+          },
+          {
+            "row": 4,
+            "pixels": 7,
+            "bbox": [
+              542,
+              5915,
+              545,
+              5918
+            ],
+            "nearest_max": 206.24257562394823,
+            "second_nearest_min": 1970.2284131541703,
+            "owner_margin_min": 1764.5085502161464
+          },
+          {
+            "row": 5,
+            "pixels": 9,
+            "bbox": [
+              2863,
+              5923,
+              2866,
+              5926
+            ],
+            "nearest_max": 203.7694775966214,
+            "second_nearest_min": 1042.905556606158,
+            "owner_margin_min": 839.3987734539941
+          },
+          {
+            "row": 4,
+            "pixels": 7,
+            "bbox": [
+              783,
+              5935,
+              786,
+              5938
+            ],
+            "nearest_max": 13.038404810405298,
+            "second_nearest_min": 1940.5988766357668,
+            "owner_margin_min": 1928.4333515751705
+          },
+          {
+            "row": 4,
+            "pixels": 8,
+            "bbox": [
+              746,
+              5939,
+              751,
+              5943
+            ],
+            "nearest_max": 33.015148038438355,
+            "second_nearest_min": 1950.265879309793,
+            "owner_margin_min": 1917.4145482080066
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              780,
+              5939,
+              781,
+              5940
+            ],
+            "nearest_max": 13.601470508735444,
+            "second_nearest_min": 1945.1406118838813,
+            "owner_margin_min": 1931.5391413751458
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              777,
+              5941,
+              778,
+              5942
+            ],
+            "nearest_max": 13.892443989449804,
+            "second_nearest_min": 1947.5618090320008,
+            "owner_margin_min": 1933.6693650425511
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              752,
+              5943,
+              753,
+              5944
+            ],
+            "nearest_max": 26.40075756488817,
+            "second_nearest_min": 1953.40216033463,
+            "owner_margin_min": 1927.0014027697418
+          },
+          {
+            "row": 5,
+            "pixels": 6,
+            "bbox": [
+              3103,
+              5944,
+              3107,
+              5946
+            ],
+            "nearest_max": 13.0,
+            "second_nearest_min": 1279.2701043954712,
+            "owner_margin_min": 1266.2701043954712
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3100,
+              5947,
+              3101,
+              5948
+            ],
+            "nearest_max": 13.892443989449804,
+            "second_nearest_min": 1276.1022686289684,
+            "owner_margin_min": 1262.2098246395187
+          },
+          {
+            "row": 5,
+            "pixels": 5,
+            "bbox": [
+              3066,
+              5948,
+              3069,
+              5951
+            ],
+            "nearest_max": 32.202484376209235,
+            "second_nearest_min": 1242.150554482024,
+            "owner_margin_min": 1209.9480701058148
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3097,
+              5949,
+              3098,
+              5950
+            ],
+            "nearest_max": 13.892443989449804,
+            "second_nearest_min": 1272.93676197995,
+            "owner_margin_min": 1259.0443179905003
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3070,
+              5950,
+              3071,
+              5951
+            ],
+            "nearest_max": 28.30194339616981,
+            "second_nearest_min": 1245.954252771746,
+            "owner_margin_min": 1217.6523093755761
+          },
+          {
+            "row": 5,
+            "pixels": 2,
+            "bbox": [
+              3072,
+              5951,
+              3074,
+              5952
+            ],
+            "nearest_max": 26.40075756488817,
+            "second_nearest_min": 1247.8577643305346,
+            "owner_margin_min": 1221.4570067656464
+          },
+          {
+            "row": 4,
+            "pixels": 5,
+            "bbox": [
+              1266,
+              5956,
+              1268,
+              5959
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1652.206403570692,
+            "owner_margin_min": 1646.0210539921009
+          },
+          {
+            "row": 5,
+            "pixels": 5,
+            "bbox": [
+              3574,
+              5985,
+              3576,
+              5988
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1746.6110042021378,
+            "owner_margin_min": 1739.0384571297602
+          },
+          {
+            "row": 4,
+            "pixels": 3,
+            "bbox": [
+              624,
+              6032,
+              627,
+              6033
+            ],
+            "nearest_max": 121.07848694132248,
+            "second_nearest_min": 2064.4343050821453,
+            "owner_margin_min": 1943.7830096244882
+          },
+          {
+            "row": 5,
+            "pixels": 4,
+            "bbox": [
+              2940,
+              6040,
+              2942,
+              6042
+            ],
+            "nearest_max": 123.30855606972291,
+            "second_nearest_min": 1111.180003419788,
+            "owner_margin_min": 987.871447350065
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3677,
+              6040,
+              3678,
+              6041
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1848.1193143301111,
+            "owner_margin_min": 1845.8832463526114
+          },
+          {
+            "row": 4,
+            "pixels": 4,
+            "bbox": [
+              784,
+              6063,
+              788,
+              6064
+            ],
+            "nearest_max": 27.313000567495326,
+            "second_nearest_min": 2066.9167859398694,
+            "owner_margin_min": 2040.010873429997
+          },
+          {
+            "row": 4,
+            "pixels": 12,
+            "bbox": [
+              833,
+              6063,
+              840,
+              6065
+            ],
+            "nearest_max": 19.235384061671343,
+            "second_nearest_min": 2048.9131265136643,
+            "owner_margin_min": 2029.939460552654
+          },
+          {
+            "row": 5,
+            "pixels": 5,
+            "bbox": [
+              3099,
+              6071,
+              3102,
+              6073
+            ],
+            "nearest_max": 36.6742416417845,
+            "second_nearest_min": 1270.0393694685217,
+            "owner_margin_min": 1233.3651278267373
+          },
+          {
+            "row": 5,
+            "pixels": 14,
+            "bbox": [
+              3147,
+              6071,
+              3154,
+              6074
+            ],
+            "nearest_max": 30.14962686336267,
+            "second_nearest_min": 1318.0379357211234,
+            "owner_margin_min": 1287.8883088577606
+          },
+          {
+            "row": 4,
+            "pixels": 5,
+            "bbox": [
+              789,
+              6088,
+              792,
+              6090
+            ],
+            "nearest_max": 6.082762530298219,
+            "second_nearest_min": 2091.1609215935537,
+            "owner_margin_min": 2085.4248731427097
+          },
+          {
+            "row": 5,
+            "pixels": 5,
+            "bbox": [
+              3100,
+              6107,
+              3103,
+              6109
+            ],
+            "nearest_max": 6.0,
+            "second_nearest_min": 1271.8321430125911,
+            "owner_margin_min": 1265.8321430125911
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1475,
+              6108,
+              1476,
+              6109
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1415.1784339792632,
+            "owner_margin_min": 1412.9423660017635
+          },
+          {
+            "row": 4,
+            "pixels": 3,
+            "bbox": [
+              1438,
+              6124,
+              1440,
+              6127
+            ],
+            "nearest_max": 6.4031242374328485,
+            "second_nearest_min": 1447.0342083033145,
+            "owner_margin_min": 1440.8166241076483
+          },
+          {
+            "row": 4,
+            "pixels": 11,
+            "bbox": [
+              1444,
+              6132,
+              1450,
+              6138
+            ],
+            "nearest_max": 5.830951894845301,
+            "second_nearest_min": 1435.197895762114,
+            "owner_margin_min": 1429.9921375074869
+          },
+          {
+            "row": 5,
+            "pixels": 4,
+            "bbox": [
+              3746,
+              6156,
+              3749,
+              6159
+            ],
+            "nearest_max": 4.242640687119285,
+            "second_nearest_min": 1919.3524949836599,
+            "owner_margin_min": 1915.1098542965406
+          },
+          {
+            "row": 4,
+            "pixels": 92,
+            "bbox": [
+              911,
+              6164,
+              950,
+              6172
+            ],
+            "nearest_max": 15.0,
+            "second_nearest_min": 1924.9109070292059,
+            "owner_margin_min": 1909.9109070292059
+          },
+          {
+            "row": 5,
+            "pixels": 10,
+            "bbox": [
+              3752,
+              6164,
+              3758,
+              6169
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 1925.7564747392128,
+            "owner_margin_min": 1922.7550441091364
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              951,
+              6172,
+              952,
+              6173
+            ],
+            "nearest_max": 16.0,
+            "second_nearest_min": 1922.8055023844715,
+            "owner_margin_min": 1906.8055023844715
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              959,
+              6173,
+              960,
+              6174
+            ],
+            "nearest_max": 16.0312195418814,
+            "second_nearest_min": 1914.7433248349503,
+            "owner_margin_min": 1898.7121052930688
+          },
+          {
+            "row": 5,
+            "pixels": 86,
+            "bbox": [
+              3221,
+              6181,
+              3259,
+              6191
+            ],
+            "nearest_max": 10.0,
+            "second_nearest_min": 1397.162839471477,
+            "owner_margin_min": 1392.2490830199174
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3260,
+              6190,
+              3261,
+              6191
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 1436.8027004428966,
+            "owner_margin_min": 1432.8027004428966
+          },
+          {
+            "row": 4,
+            "pixels": 5,
+            "bbox": [
+              931,
+              6304,
+              934,
+              6306
+            ],
+            "nearest_max": 12.083045973594572,
+            "second_nearest_min": 1929.4398150758682,
+            "owner_margin_min": 1919.1441849348812
+          },
+          {
+            "row": 4,
+            "pixels": 2,
+            "bbox": [
+              1480,
+              6305,
+              1481,
+              6307
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1383.3351004004778,
+            "owner_margin_min": 1380.404857588696
+          },
+          {
+            "row": 5,
+            "pixels": 9,
+            "bbox": [
+              3215,
+              6323,
+              3221,
+              6325
+            ],
+            "nearest_max": 21.37755832643195,
+            "second_nearest_min": 1410.7320794537848,
+            "owner_margin_min": 1390.1165513256965
+          },
+          {
+            "row": 4,
+            "pixels": 13,
+            "bbox": [
+              1221,
+              6329,
+              1225,
+              6335
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 1637.5835856529584,
+            "owner_margin_min": 1631.796905708951
+          },
+          {
+            "row": 5,
+            "pixels": 11,
+            "bbox": [
+              3529,
+              6358,
+              3534,
+              6364
+            ],
+            "nearest_max": 8.54400374531753,
+            "second_nearest_min": 1726.441716363457,
+            "owner_margin_min": 1717.8977126181396
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -21394,9 +23255,10 @@
     "transform:413:S:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-hit-ShitSixActualRig01.png",
     "transform:413:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-idle-SWidleSixActualRig01.png",
     "transform:413:SW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-hit-SWhitSixActualRig01.png",
-    "transform:413:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-attack-SEattackSixActualRig01.png"
+    "transform:413:SE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-attack-SEattackSixActualRig01.png",
+    "transform:413:E:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-death-EdeathSixActualRig02.png"
   },
-  "selected_detailed_action_native_poses": 516,
+  "selected_detailed_action_native_poses": 522,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -27162,6 +29024,151 @@
         2816,
         2816
       ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-death-EdeathSixActualRig02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+      "direction": "E",
+      "role": "death",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          995,
+          1354
+        ],
+        [
+          3299,
+          1354
+        ],
+        [
+          995,
+          3658
+        ],
+        [
+          3299,
+          3658
+        ],
+        [
+          995,
+          5962
+        ],
+        [
+          3299,
+          5962
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2816,
+        2816,
+        2816,
+        2816,
+        2816,
+        2816
+      ],
+      "canonical_preflight": {
+        "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+        "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+        "packing_proof_sha256": "ee9f0b7a95cd5b53cdb57e9cb3fecf9d2b1c24336d0388885813cca57ad818b4",
+        "direction": "E",
+        "canonical_canvas": 2048,
+        "physical_canvases": [
+          2816,
+          2816,
+          2816,
+          2816,
+          2816,
+          2816
+        ],
+        "root_float": [
+          738.7916666666666,
+          1098.2150113422247
+        ],
+        "root_integer": [
+          739,
+          1098
+        ],
+        "tile_size": 2304,
+        "storage_translations": [
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        "atlas_origins": [
+          [
+            0,
+            0
+          ],
+          [
+            2304,
+            0
+          ],
+          [
+            0,
+            2304
+          ],
+          [
+            2304,
+            2304
+          ],
+          [
+            0,
+            4608
+          ],
+          [
+            2304,
+            4608
+          ]
+        ],
+        "source_anchors": [
+          [
+            995,
+            1354
+          ],
+          [
+            3299,
+            1354
+          ],
+          [
+            995,
+            3658
+          ],
+          [
+            3299,
+            3658
+          ],
+          [
+            995,
+            5962
+          ],
+          [
+            3299,
+            5962
+          ]
+        ]
+      },
+      "canonical_preflight_sha256": "83bd940e7a35df79a5c66e1849f5ed5db8561f814a039e4d24cfd05b0d28abc5",
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
   },
