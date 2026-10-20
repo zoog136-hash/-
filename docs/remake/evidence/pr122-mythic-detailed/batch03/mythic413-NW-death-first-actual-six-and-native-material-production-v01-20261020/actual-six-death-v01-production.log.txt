@@ -1,0 +1,16 @@
+/workspace/scratch/mythic413-NW-death-author-20261020-v01/author-NW-DEATH6-dedicated-native-joints-and-floor-v01.py:107: RuntimeWarning: invalid value encountered in divide
+  floorroot=rootworld+V*hit;floorroot[2]=floor;Vflat=np.array([V[0],V[1],0.]);Vflat/=np.linalg.norm(Vflat)
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/linalg/_linalg.py:2431: RuntimeWarning: invalid value encountered in det
+  r = _umath_linalg.det(a, signature=signature)
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-NW-death-author-20261020-v01/author-NW-DEATH6-dedicated-native-joints-and-floor-v01.py", line 142, in <module>
+    coatroot=pelvic_at([775,650]);coat=cloth(farcoat,[775,650],coatroot,max(0,st['pelvis']-[0,8,15,20,20,20][phase]),st['yaw'],'far_blue_gold_coat')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/mythic413-NW-death-author-20261020-v01/author-NW-DEATH6-dedicated-native-joints-and-floor-v01.py", line 108, in cloth
+    a.alpha_composite(plane(lower,[source_root[0],cut],floorroot,U,Vflat,name+'_floor_drape'));return a
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/mythic413-NW-death-author-20261020-v01/author-NW-DEATH6-dedicated-native-joints-and-floor-v01.py", line 73, in plane
+    A=np.array([[U[0],V[0]],[CAM*U[1]-U[2],CAM*V[1]-V[2]]]);assert abs(np.linalg.det(A))>.004,(name,A)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('far_blue_gold_coat_floor_drape', array([[ 1., nan],
+       [ 0., nan]]))
