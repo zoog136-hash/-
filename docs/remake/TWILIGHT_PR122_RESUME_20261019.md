@@ -161,3 +161,9 @@
 - Actual Mythic thunder_female_413 NW RUN six poses passed source/cycle and the two scoped Godot resource/actual Player tests; r013 commit `1fd8c73bd0b59f8248b3eff3f3ce984168a86d0d` pushed and verified. Native totals 109 clips / 654 poses; actor413 13 clips / 78 poses. Original r010 profile literals retained. Detailed approvals remain 2/31; historical 405/498, short-frame14 and color/shared54 unchanged.
 - User scope change: no further WALK production for transformations of Mythic and lower grades. UNIQUE transformations and BOSSES retain their existing WALK requirements. Preserve already authored/connected WALK assets and unfinished NE WALK originals; omitted roles are not new completions or approvals. NE WALK partial source0/1/2 and all requests/rigs/QC are frozen; no full NE WALK/game approval.
 - Continue actual N RUN, NE RUN, N ATTACK, N HIT and N DEATH production. N RUN v04-v06 and actual N ATTACK STRIKE3 source/QC are saved, with unfinished/full-cycle/native-game status retained. No PR100 work, CI rerun, catalog-profile rewrite, or approved-actor changes.
+
+
+## 2026-10-20 N RUN r014 actual game continuation
+
+- Actual N RUN six dedicated joint/foot/arm/staff poses passed independent source, full visible cycle, declared shoe/staff AIR model, exact RGBA packing, and scoped Godot resource/actual Player tests. r014 `e34d468114aa0516db6f8edf0194cee6bbc79cf7` pushed/verified. Totals 110 clips / 660 poses; actor413 14 clips / 84 poses. Detailed approvals remain 2/31, incomplete29; no actor approval for an individual clip.
+- N RUN v07-v08 final sources/model/QC/request/SHA and real N ATTACK v04-v06 articulated frames/materials/failed intermediates are preserved. N ATTACK full-cycle, N HIT and N DEATH quality/game gates remain pending. User-authorized Mythic-and-lower transformation WALK omission remains active; UNIQUE/boss WALK requirements and all existing assets are preserved.
