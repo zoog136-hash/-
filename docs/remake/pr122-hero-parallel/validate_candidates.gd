@@ -1,0 +1,204 @@
+extends SceneTree
+## Real Main, in-memory candidate injection only; no default catalog writes.
+const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+const SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const ROLES := ["idle", "run", "attack", "hit", "death"]
+var textures: Array[ImageTexture] = []
+var checks: int = 0
+var captures: int = 0
+var failed: bool = false
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _check(condition: bool, message: String) -> void:
+	if not condition:
+		push_error("HERO_VALIDATION_FAIL " + message)
+		failed = true
+	checks += 1
+
+func _fingerprint(world: Node) -> String:
+	return JSON.stringify([world.hp, world.gold, world.inventory, world.equipped_items,
+		world.equipped_catalog, world._normal_attack_interval(), world._current_weapon_type(),
+		world.player.position, world.player.get_node("CollisionShape2D").transform,
+		world.player.class_sprite.sprite_frames.resource_path, world.player.move_speed,
+		world.player.attack_speed_multiplier, world.player.equipment_move_speed_multiplier])
+
+func _settings(profile: Resource) -> Dictionary:
+	var result: Dictionary = {}
+	for field: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "pixel_scale", "native_width_ratio", "movement_cadence_width_ratio", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration", "body_kind", "floating", "attack_hit_frame", "action_hit_frames", "attack_animation_speed"]:
+		result[field] = profile.get(field)
+	result.sprite_offset = [profile.sprite_offset.x, profile.sprite_offset.y]
+	result.color_tint = profile.color_tint.to_html()
+	if profile.use_profile_hit_ratio: result.attack_hit_ratio = profile.attack_hit_ratio
+	return result
+
+func _tick(player: Node, velocity: Vector2 = Vector2.ZERO) -> void:
+	player.motion.advance(1.0 / 240.0, velocity)
+	player.motion.apply(player.transform_sprite, player.transform_sprite.get_meta("base_scale", Vector2.ONE))
+
+func _run() -> void:
+	_check(Engine.get_version_info().string.begins_with("4.7.2"), "wrong engine")
+	_check(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"), "isolated save path required")
+	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	_check(staging.hero_total_in_498 == 109 and staging.pending_total == 25, "exact roster")
+	var frames_path: String = staging.actors["transform:179"].frames
+	var revision: String = frames_path.get_base_dir().get_file()
+	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + revision + "-visible-main/"
+	DirAccess.make_dir_recursive_absolute(evidence)
+	var image := Image.load_from_file(frames_path.get_base_dir() + "/run.png")
+	var live := ImageTexture.create_from_image(image)
+	live.take_over_path(frames_path.get_base_dir() + "/run.png")
+	textures.append(live)
+	var source: SpriteFrames = load("res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres")
+	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(frames_path.get_base_dir() + "/rig-proof.json"))
+	_check(proof.frames.size() == 48, "48 actual articulated poses")
+	for direction: int in range(8):
+		var unique: Dictionary = {}
+		for phase: int in range(6):
+			var row: Dictionary = proof.frames[direction * 6 + phase]
+			var region := image.get_region(Rect2i(phase * 256, direction * 256, 256, 256))
+			var hash := HashingContext.new()
+			hash.start(HashingContext.HASH_SHA256)
+			hash.update(region.get_data())
+			var value := hash.finish().hex_encode()
+			_check(value == row.rgba_sha256 and not unique.has(value), "unique actual RGBA")
+			unique[value] = true
+			var box := region.get_used_rect()
+			_check(box.position.x > 0 and box.position.y > 0 and box.end.x < 256 and box.end.y < 256, "no clipping")
+			_check(row.support == ("AIR" if phase % 3 == 2 else ("A" if phase < 3 else "B")), "alternating support model")
+			for leg: Dictionary in row.legs:
+				var hip := Vector2(leg.hip[0], leg.hip[1])
+				var knee := Vector2(leg.knee[0], leg.knee[1])
+				var ankle := Vector2(leg.ankle[0], leg.ankle[1])
+				_check(absf(hip.distance_to(knee) - 12.0) < .02 and absf(knee.distance_to(ankle) - 12.0) < .02, "fixed bone lengths")
+	var world: Node = load("res://Main.tscn").instantiate()
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	root.add_child(world)
+	_check(CLASS_QA.enter_game(world), "actual Main class confirmation entered gameplay")
+	world.hud._close_workspace()
+	await process_frame
+	player_camera_update(world)
+	world.save_timer = -10000.0
+	var player: Node = world.player
+	var strikes: Array[int] = []
+	player.attack_strike.connect(func(sequence: int) -> void: strikes.append(sequence))
+	var results: Array = []
+	for sid: String in ["179", "182"]:
+		var key := "transform:" + sid
+		var entry: Dictionary = staging.actors[key]
+		_check(not entry.final_approved and not entry.production_connected, "candidate never auto-approved")
+		var row: Dictionary = {}
+		for item: Dictionary in world.catalog_db["변신"]:
+			if str(item.sourceId) == sid: row = item
+		_check(not row.is_empty() and row.grade == "영웅", "correct Main character")
+		var before_catalog := JSON.stringify(row)
+		var baseline: Resource = CATALOG.for_record("transform", row, row.image_path)
+		var profile: Resource = load(entry.native_profile)
+		var candidate := row.duplicate(true)
+		candidate.animation_profile = _settings(profile)
+		var before := _fingerprint(world)
+		player.motion.dead = false
+		world._apply_transform_visual(candidate)
+		_check(player.transform_active and player.motion.profile.profile_id == key, "real Main transformation API")
+		_check(not SCOPE.requires_walk(key), "hero walk excluded")
+		for field: String in ["attack_hit_ratio", "attack_hit_frame", "attack_animation_speed", "death_duration", "pixel_scale", "native_width_ratio", "reference_speed", "sprite_offset", "color_tint"]:
+			_check(profile.get(field) == baseline.get(field), "preserve prior field " + field)
+		var sprite: AnimatedSprite2D = player.transform_sprite
+		var frames: SpriteFrames = sprite.sprite_frames
+		_check(sprite.is_visible_in_tree(), "actual player visible in tree")
+		var rendered := Image.create(6 * 160, 8 * 5 * 160, false, Image.FORMAT_RGBA8)
+		var rendered_phases: int = 0
+		_check(frames.get_animation_names().size() == 40, "five roles x eight directions")
+		for direction: int in range(8):
+			var aim := Vector2.RIGHT.rotated(float(direction) * PI / 4.0)
+			_check(not frames.has_animation("walk_" + str(direction)), "no copied walk")
+			for role: String in ROLES:
+				var track := role + "_" + str(direction)
+				_check(frames.has_animation(track), "missing role " + track)
+				if role != "run":
+					_check(frames.get_frame_count(track) == source.get_frame_count(track), "legacy action length")
+					for index: int in range(source.get_frame_count(track)):
+						_check(frames.get_frame_texture(track, index).region == source.get_frame_texture(track, index).region, "legacy texture region")
+						_check(frames.get_frame_texture(track, index).margin == source.get_frame_texture(track, index).margin, "legacy anchors")
+						_check(frames.get_frame_texture(track, index).atlas.resource_path == source.get_frame_texture(track, index).atlas.resource_path, "legacy actual texture")
+				player.motion.dead = false
+				player.motion.advance(3.0, Vector2.ZERO)
+				player.motion.face(aim)
+				var velocity := Vector2.ZERO
+				var strike_start := strikes.size()
+				var sequence: int = -1
+				match role:
+					"run": velocity = aim * profile.reference_speed
+					"attack": sequence = player.start_combat_attack(player.global_position + aim, .9, profile.motion_style)
+					"hit": player.motion.react(false, -aim)
+					"death": player.motion.die()
+				var seen: Dictionary = {}
+				var rendered_unique: Dictionary = {}
+				var released := false
+				for tick: int in range(300):
+					_tick(player, velocity)
+					if str(sprite.animation) == track and not seen.has(sprite.frame):
+						seen[sprite.frame] = true
+						if DisplayServer.get_name() != "headless":
+							await process_frame
+							await RenderingServer.frame_post_draw
+							var screen := root.get_texture().get_image()
+							var center: Vector2 = sprite.get_global_transform_with_canvas().origin
+							_check(root.get_visible_rect().has_point(center), "actual character centered inside Main viewport")
+							var crop := Rect2i(Vector2i(center) - Vector2i(80, 80), Vector2i(160, 160)).intersection(Rect2i(Vector2i.ZERO, screen.get_size()))
+							rendered.blit_rect(screen, crop, Vector2i(sprite.frame * 160, (ROLES.find(role) * 8 + direction) * 160))
+							if role == "run":
+								var digest := HashingContext.new()
+								digest.start(HashingContext.HASH_SHA256)
+								digest.update(screen.get_region(crop).get_data())
+								rendered_unique[digest.finish().hex_encode()] = true
+							rendered_phases += 1
+					if role == "attack" and strikes.size() > strike_start and not released:
+						_check(strikes.size() == strike_start + 1 and strikes.back() == sequence, "one authoritative strike")
+						_check(str(sprite.animation) == track and sprite.frame == profile.attack_hit_frame, "same strike pose and timing")
+						released = true
+				_check(seen.size() == frames.get_frame_count(track), "all phases actually played " + key + "/" + track)
+				if role == "run" and DisplayServer.get_name() != "headless":
+					_check(rendered_unique.size() == 6, "six visible distinct Main run poses; no hidden character/overlay")
+				_check((strikes.size() == strike_start + 1 and released) if role == "attack" else strikes.size() == strike_start, "no extra strikes")
+				var base: Vector2 = sprite.get_meta("base_scale", Vector2.ONE)
+				_check(not sprite.flip_h and sprite.scale.is_equal_approx(base), "preserve existing Main scale without extra width distortion")
+				_check(is_equal_approx(base.x / base.y, player.TRANSFORM_WIDTH_SCALE), "existing player width policy preserved")
+				_check(_fingerprint(world) == before and JSON.stringify(row) == before_catalog, "Main game invariants")
+			# Omitted WALK must select dedicated RUN even at low real speed.
+			player.motion.dead = false
+			player.motion.advance(3.0, Vector2.ZERO)
+			_tick(player, aim * profile.reference_speed * .3)
+			_check(str(sprite.animation) == "run_" + str(direction), "low-speed dedicated run")
+		player.motion.dead = false
+		_tick(player)
+		if not DisplayServer.get_name() == "headless":
+			await process_frame
+			await RenderingServer.frame_post_draw
+			var path := evidence + "Main-" + sid + ".png"
+			_check(root.get_texture().get_image().save_png(path) == OK, "actual Main rendered to file")
+			_check(rendered.save_webp(evidence + "Main-all-poses-" + sid + ".webp", false) == OK, "all real Main pose captures saved losslessly")
+			_check(rendered_phases == 128, "every candidate phase actually rendered")
+			captures += 1
+		results.append({"id": key, "roles": 5, "directions": 8, "rendered_phases": rendered_phases, "status": "TECHNICAL_MAIN_CANDIDATE_PASS", "visual_identity_approval": false})
+	player.clear_transform_visual()
+	world.queue_free()
+	await process_frame
+	if failed:
+		print("HERO_MAIN_TECHNICAL_FAIL checks=%d" % checks)
+		quit(1)
+		return
+	var result := {"schema": "hero-parallel-validation-v1", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "checks": checks, "captures": captures, "actors": results, "default_game_connections": 0, "new_final_approvals": 0, "visual_identity_and_contact_quality": "HOLD", "existing_player_width_ratio_preserved": 0.9}
+	var suffix := "opengl" if captures > 0 else "headless"
+	var file := FileAccess.open(evidence + "validation-" + suffix + ".json", FileAccess.WRITE)
+	file.store_string(JSON.stringify(result, "  ") + "\n")
+	print("HERO_MAIN_TECHNICAL_PASS actors=2 directions=8 roles=5 checks=%d captures=%d approvals=0 default_game_connections=0" % [checks, captures])
+	quit(0)
+
+func player_camera_update(world: Node) -> void:
+	world.player.camera.make_current()
+	world.player.camera.reset_smoothing()
+	world.player.camera.force_update_scroll()
+	if world.field_renderer != null: world.field_renderer.refresh_visible()

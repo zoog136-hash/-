@@ -1,0 +1,5 @@
+# Keep actual verification and failed-attempt logs with this isolated batch.
+!*.log
+# The exact rendered RGBA is delivered as lossless WebP, verified in encoding.json.
+# Keep the much larger redundant PNGs locally; never ignore production art.
+evidence/r005-visible-main/Main-all-poses-*.png

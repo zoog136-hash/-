@@ -1,0 +1,13 @@
+{
+  "status": "INVALID_AS_VISUAL_EVIDENCE",
+  "reason": "Initial Main class selection overlay hid the character; ROI run captures had one unique image. Technical motion/controller assertions remain separate.",
+  "affected": [
+    "evidence/Main-*.png",
+    "evidence/r003/Main-*.png",
+    "evidence/r005/Main-*.png"
+  ],
+  "replacement": "evidence/r005-visible-main",
+  "replacement_run_unique_per_direction": 6,
+  "replacement_rgba_encoding": "PASS",
+  "new_approvals": 0
+}

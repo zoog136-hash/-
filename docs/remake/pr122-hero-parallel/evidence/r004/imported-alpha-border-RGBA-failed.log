@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-hero-parallel/docs/remake/pr122-hero-parallel/check_artifacts.py", line 102, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/twilight-hero-parallel/docs/remake/pr122-hero-parallel/check_artifacts.py", line 69, in main
+    assert image.crop((0, drop, 256, hip + drop)).tobytes() == matrices[direction].crop((0, 0, 256, hip)).tobytes()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

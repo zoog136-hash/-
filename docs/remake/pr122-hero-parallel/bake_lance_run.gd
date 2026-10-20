@@ -1,0 +1,232 @@
+extends SceneTree
+## Articulated common run candidate. Source identity / final visual review HOLD.
+## Bone transforms are baked without whole-character X scaling or frame repetition.
+const OUT := "res://assets/actors/eight_direction/hero_parallel/lance_shared/r005/"
+const SOURCE := "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres"
+const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+const DIRECTIONS := ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _canvas(texture: AtlasTexture) -> Image:
+	var image := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	# Import-time alpha-border repair can change transparent / edge RGB. Read
+	# the preserved PNG bytes for the source-material contract instead.
+	var source := Image.new()
+	assert(source.load_png_from_buffer(FileAccess.get_file_as_bytes(texture.atlas.resource_path)) == OK)
+	image.blit_rect(source, Rect2i(texture.region), Vector2i(texture.margin.position))
+	return image
+
+func _leg(skeleton: Skeleton2D, point: Vector2, lengths: Vector2) -> Array[Bone2D]:
+	var thigh := Bone2D.new()
+	thigh.set_autocalculate_length_and_angle(false)
+	thigh.length = lengths.x
+	thigh.bone_angle = PI / 2.0
+	thigh.position = point
+	thigh.rest = thigh.transform
+	skeleton.add_child(thigh)
+	var shin := Bone2D.new()
+	shin.set_autocalculate_length_and_angle(false)
+	shin.length = lengths.y
+	shin.bone_angle = PI / 2.0
+	shin.position = Vector2(0, lengths.x)
+	shin.rest = shin.transform
+	thigh.add_child(shin)
+	var boot := Bone2D.new()
+	boot.set_autocalculate_length_and_angle(false)
+	boot.length = 4
+	boot.position = Vector2(0, lengths.y)
+	boot.rest = boot.transform
+	shin.add_child(boot)
+	return [thigh, shin, boot]
+
+func _pose(bones: Array[Bone2D], hip: Vector2, ankle: Vector2, lengths: Vector2, bend_sign: float) -> void:
+	var delta := ankle - hip
+	var distance := clampf(delta.length(), absf(lengths.x - lengths.y) + .01, lengths.x + lengths.y - .01)
+	var bearing := delta.angle()
+	var bend := acos(clampf((lengths.x * lengths.x + distance * distance - lengths.y * lengths.y) / (2.0 * lengths.x * distance), -1.0, 1.0))
+	var knee := hip + Vector2.from_angle(bearing + bend * bend_sign) * lengths.x
+	bones[0].position = hip
+	bones[0].rotation = (knee - hip).angle() - PI / 2.0
+	bones[1].rotation = (ankle - knee).angle() - PI / 2.0 - bones[0].rotation
+	bones[2].rotation = -(bones[0].rotation + bones[1].rotation)
+
+func _raster_piece(source: Image, result: Image, rect: Rect2i, source_root: Vector2, bone: Bone2D) -> void:
+	# Inverse nearest sampling from the ORIGINAL source part, with rotation and
+	# translation only. Bone lengths and local material widths remain fixed.
+	var warp := bone.global_transform * Transform2D(0.0, -source_root)
+	var inverse := warp.affine_inverse()
+	var corners: Array[Vector2] = [Vector2(rect.position), Vector2(rect.end), Vector2(rect.position.x, rect.end.y), Vector2(rect.end.x, rect.position.y)]
+	var bounds := Rect2(warp * corners[0], Vector2.ZERO)
+	for corner: Vector2 in corners: bounds = bounds.expand(warp * corner)
+	var area := Rect2i(bounds.grow(2)).intersection(Rect2i(0, 0, 256, 256))
+	for y: int in range(area.position.y, area.end.y):
+		for x: int in range(area.position.x, area.end.x):
+			var q := Vector2i((inverse * Vector2(x + .5, y + .5)).floor())
+			if not rect.has_point(q): continue
+			var color := source.get_pixelv(q)
+			if color.a > 0.0: result.set_pixel(x, y, color)
+
+func _write_json(path: String, value: Variant) -> void:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	assert(file != null)
+	file.store_string(JSON.stringify(value, "  ") + "\n")
+
+func _skin_vertex(point: Vector2, center: Vector2, bones: Array[Bone2D], root_down: float) -> Vector2:
+	var rigid := point + Vector2(0, root_down)
+	var thigh: Vector2 = bones[0].global_transform * (point - center)
+	var shin: Vector2 = bones[1].global_transform * (point - center - Vector2(0, 12))
+	var boot: Vector2 = bones[2].global_transform * (point - center - Vector2(0, 24))
+	var y := point.y - center.y
+	if y < 5: return rigid.lerp(thigh, clampf(y / 5.0, 0, 1))
+	if y < 15: return thigh.lerp(shin, clampf((y - 9.0) / 6.0, 0, 1))
+	return shin.lerp(boot, clampf((y - 21.0) / 5.0, 0, 1))
+
+func _triangle(source: Image, result: Image, uv: Array[Vector2], positions: Array[Vector2]) -> void:
+	var a: Vector2 = positions[0]
+	var b: Vector2 = positions[1]
+	var c: Vector2 = positions[2]
+	var determinant: float = (b - a).cross(c - a)
+	if absf(determinant) < .00001: return
+	var bounds := Rect2(a, Vector2.ZERO).expand(b).expand(c).grow(1)
+	var area := Rect2i(bounds).intersection(Rect2i(0, 0, 256, 256))
+	for y: int in range(area.position.y, area.end.y):
+		for x: int in range(area.position.x, area.end.x):
+			var relative := Vector2(x + .5, y + .5) - a
+			var u: float = relative.cross(c - a) / determinant
+			var v: float = (b - a).cross(relative) / determinant
+			if u < -.001 or v < -.001 or u + v > 1.001: continue
+			var sample := Vector2i((uv[0] * (1.0 - u - v) + uv[1] * u + uv[2] * v).floor())
+			if sample.x < 0 or sample.y < 0 or sample.x >= 256 or sample.y >= 256: continue
+			var color := source.get_pixelv(sample)
+			if color.a > 0: result.set_pixel(x, y, color)
+
+func _raster_skin(source: Image, result: Image, rect: Rect2i, center: Vector2, bones: Array[Bone2D], root_down: float) -> void:
+	# Continuous two-pixel triangulation with linear bone weights bridges the
+	# original hip/knee/ankle material. No disconnected rigid limb rectangles.
+	for y: int in range(rect.position.y, rect.end.y, 2):
+		for x: int in range(rect.position.x, rect.end.x, 2):
+			var uv: Array[Vector2] = [Vector2(x, y), Vector2(mini(x + 2, rect.end.x), y), Vector2(x, mini(y + 2, rect.end.y)), Vector2(mini(x + 2, rect.end.x), mini(y + 2, rect.end.y))]
+			var points: Array[Vector2] = []
+			for point: Vector2 in uv: points.append(_skin_vertex(point, center, bones, root_down))
+			_triangle(source, result, [uv[0], uv[1], uv[2]], [points[0], points[1], points[2]])
+			_triangle(source, result, [uv[1], uv[3], uv[2]], [points[1], points[3], points[2]])
+
+func _run() -> void:
+	assert(Engine.get_version_info().string.begins_with("4.7.2"))
+	var verify_only: bool = OS.get_environment("TWILIGHT_HERO_VERIFY_BAKE") == "1"
+	assert(verify_only or not FileAccess.file_exists(OUT + "run.png"), "Preserve prior output; select a new revision before baking")
+	DirAccess.make_dir_recursive_absolute(OUT)
+	var source: SpriteFrames = load(SOURCE)
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+	# Preserve exact approved donor attack/hit/death textures and durations.
+	# These are inherited legacy clips, not newly authored or visually approved.
+	for key: StringName in source.get_animation_names():
+		if str(key).begins_with("walk_"): continue
+		frames.add_animation(key)
+		frames.set_animation_loop(key, source.get_animation_loop(key))
+		frames.set_animation_speed(key, source.get_animation_speed(key))
+		for index: int in range(source.get_frame_count(key)):
+			frames.add_frame(key, source.get_frame_texture(key, index), source.get_frame_duration(key, index))
+	var atlas := Image.create(256 * 6, 256 * 8, false, Image.FORMAT_RGBA8)
+	var proofs: Array = []
+	var rig_root := Node2D.new()
+	root.add_child(rig_root)
+	for direction: int in range(8):
+		var neutral := _canvas(source.get_frame_texture("idle_" + str(direction), 0))
+		var box := neutral.get_used_rect()
+		var ground: float = float(box.end.y)
+		var hip_y: float = ground - 28.0
+		var split: int = box.get_center().x
+		# Initial partitions are an explicit unreviewed fit. They are saved so
+		# seam/leg/weapon checks can reject the candidate, never silently approved.
+		var lower := Rect2i(box.position.x, int(hip_y), box.size.x, 28)
+		var skeleton := Skeleton2D.new()
+		rig_root.add_child(skeleton)
+		var lengths := Vector2(12, 12)
+		var centers := [Vector2(split - 4, hip_y), Vector2(split + 4, hip_y)]
+		var legs: Array = [_leg(skeleton, centers[0], lengths), _leg(skeleton, centers[1], lengths)]
+		var forward := Vector2(cos(direction * PI / 4.0), sin(direction * PI / 4.0) * .45)
+		var hashes: Dictionary = {}
+		for phase: int in range(6):
+			var result := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+			var stage: int = phase % 3
+			var root_down: float = [9.0, 11.0, 3.0][stage]
+			result.blit_rect(neutral, Rect2i(0, 0, 256, int(hip_y)), Vector2i(0, int(root_down)))
+			var pose: Dictionary = {"direction": DIRECTIONS[direction], "phase": phase, "support": "AIR" if stage == 2 else ("A" if phase < 3 else "B"), "root_down": root_down, "legs": []}
+			for leg_index: int in range(2):
+				var supporting: bool = (phase < 3) == (leg_index == 0)
+				var step: float = ([12.0, -3.0, -11.0] if supporting else [-11.0, 7.0, 12.0])[stage]
+				var lift: float = ([0.0, 0.0, 5.0] if supporting else [9.0, 13.0, 5.0])[stage]
+				var hip: Vector2 = centers[leg_index] + Vector2(0, root_down)
+				var ankle := Vector2(centers[leg_index].x, ground - 4.0) + forward * step - Vector2(0, lift)
+				var bones: Array[Bone2D] = legs[leg_index]
+				_pose(bones, hip, ankle, lengths, -1.0 if forward.x >= 0 else 1.0)
+				var left: int = lower.position.x if leg_index == 0 else split
+				var width: int = split - lower.position.x if leg_index == 0 else lower.end.x - split
+				_raster_skin(neutral, result, Rect2i(left, int(hip_y), width, 28), centers[leg_index], bones, root_down)
+				var actual_ankle: Vector2 = bones[2].global_position
+				assert(actual_ankle.distance_to(ankle) < .02)
+				pose.legs.append({"leg": leg_index, "hip": [hip.x, hip.y], "knee": [bones[1].global_position.x, bones[1].global_position.y], "ankle": [actual_ankle.x, actual_ankle.y], "lift": lift, "bone_lengths": [12, 12]})
+			# Foreground upper armour / weapon remains the exact donor material.
+			# A lifted thigh passes behind that layer rather than overwriting it.
+			result.blit_rect(neutral, Rect2i(0, 0, 256, int(hip_y)), Vector2i(0, int(root_down)))
+			var hasher := HashingContext.new()
+			hasher.start(HashingContext.HASH_SHA256)
+			hasher.update(result.get_data())
+			var hash_value := hasher.finish().hex_encode()
+			assert(not hashes.has(hash_value), "Repeated run pose is forbidden")
+			hashes[hash_value] = true
+			pose["rgba_sha256"] = hash_value
+			pose["source_partition"] = {"split_x": split, "hip_y": hip_y, "ground_y": ground, "review": "HEURISTIC_FIT_HOLD"}
+			proofs.append(pose)
+			atlas.blit_rect(result, Rect2i(0, 0, 256, 256), Vector2i(phase * 256, direction * 256))
+		skeleton.queue_free()
+	if verify_only:
+		var saved := Image.new()
+		assert(saved.load_png_from_buffer(FileAccess.get_file_as_bytes(OUT + "run.png")) == OK)
+		assert(saved.get_data() == atlas.get_data(), "Rebake must match all 48 saved RGBA poses exactly")
+		print("HERO_RUN_REPRODUCIBLE_RGBA_PASS poses=48 writes=0 approvals=0")
+		quit(0)
+		return
+	assert(atlas.save_png(OUT + "run.png") == OK)
+	var texture := ImageTexture.create_from_image(atlas)
+	texture.take_over_path(OUT + "run.png")
+	for direction: int in range(8):
+		var key := "run_" + str(direction)
+		frames.add_animation(key)
+		frames.set_animation_speed(key, 18.0)
+		frames.set_animation_loop(key, true)
+		for phase: int in range(6):
+			var view := AtlasTexture.new()
+			view.atlas = texture
+			view.region = Rect2(phase * 256, direction * 256, 256, 256)
+			view.filter_clip = true
+			frames.add_frame(key, view)
+	frames.set_meta("twilight_native_locomotion_staging", true)
+	frames.set_meta("hero_parallel_candidate", true)
+	frames.set_meta("final_approved", false)
+	assert(ResourceSaver.save(frames, OUT + "SpriteFrames.tres") == OK)
+	var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))["변신"]
+	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	for sid: String in ["179", "182"]:
+		var row: Dictionary = {}
+		for item: Dictionary in catalog:
+			if str(item.sourceId) == sid: row = item
+		assert(not row.is_empty() and row.grade == "영웅")
+		var profile: Resource = CATALOG.for_record("transform", row, row.image_path)
+		profile.frames_path = OUT + "SpriteFrames.tres"
+		profile.movement_fps = 18.0
+		profile.set_meta("hero_parallel_candidate", true)
+		profile.set_meta("final_approved", false)
+		var folder := "res://assets/actors/eight_direction/hero_parallel/lance_" + sid + "/r005/"
+		DirAccess.make_dir_recursive_absolute(folder)
+		assert(ResourceSaver.save(profile, folder + "NativeMotionProfile.tres") == OK)
+		var entry: Dictionary = staging.actors["transform:" + sid]
+		entry.merge({"status": "RIG_CANDIDATE_QUALITY_HOLD", "frames": OUT + "SpriteFrames.tres", "native_profile": folder + "NativeMotionProfile.tres", "rig": OUT + "rig-proof.json", "source_donor": "transform:176 via transform:44", "source_frames_sha256": FileAccess.get_sha256(SOURCE), "new_run_poses": 48, "independent_validation": "NOT_RUN", "quality_holds": ["ORIGINAL_CHARACTER_IDENTITY", "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS", "FOOT_CONTACT_CADENCE_VISUAL_REVIEW", "PALETTE_WEAPON_IDENTITY_REVIEW"], "production_connected": false, "final_approved": false}, true)
+	_write_json(OUT + "rig-proof.json", {"schema": "hero-parallel-bone-run-v1", "engine": Engine.get_version_info().string, "source": SOURCE, "source_sha256": FileAccess.get_sha256(SOURCE), "new_unique_run_poses": 48, "method": "Skeleton2D/Bone2D fixed-length IK, continuous linear blend skin triangles, nearest source material, shared 8 directions", "scope": "CANDIDATE_NOT_VISUAL_ORIGINAL_IDENTITY_APPROVAL", "frames": proofs})
+	_write_json("res://data/pr122_hero_parallel_staging.json", staging)
+	print("HERO_RUN_BAKE_OK unique_run_poses=48 shared_targets=2 walk_tracks=0 approvals=0")
+	quit(0)
