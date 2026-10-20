@@ -14828,6 +14828,138 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "NE",
+      "role": "run",
+      "version": "NErunSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-run-NErunSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-zut_makq/reviewed-source.png",
+      "bytes": 4428115,
+      "sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+        "base_geometry_sha256": "f71f7ef081dfba27efa29ba58a8638460bece90d1e2d5e720a81f365ca3037f4",
+        "direction": "NE",
+        "regions": [
+          [
+            395,
+            196,
+            768,
+            1044
+          ],
+          [
+            1927,
+            266,
+            768,
+            1044
+          ],
+          [
+            397,
+            1694,
+            768,
+            1044
+          ],
+          [
+            1931,
+            1732,
+            768,
+            1044
+          ],
+          [
+            391,
+            3338,
+            768,
+            1044
+          ],
+          [
+            1933,
+            3230,
+            768,
+            1044
+          ]
+        ],
+        "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 1cd81578c0a1fd2c5f7bd5ac19a1f9be7d453364e6396b7c65360e2439266fba"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+        "source_RGBA_sha256": "0fdc3ffec3c387c9273fdf3b73e2a112ffee4e9d3902a5f2075e362c3981b59a",
+        "base_geometry_sha256": "f71f7ef081dfba27efa29ba58a8638460bece90d1e2d5e720a81f365ca3037f4",
+        "derived_geometry_sha256": "548e1e432a63cb1389eaef46bc40b0370bf7cb4061f7d2b9b65d7e8fe9a476fb",
+        "review_sha256": "806e66c5eb1c2578c47106e1aec4f9238f5db8d83fa4a5705269e384c5f03f65",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 1cd81578c0a1fd2c5f7bd5ac19a1f9be7d453364e6396b7c65360e2439266fba",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1611287,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            395,
+            196,
+            768,
+            1044
+          ],
+          [
+            1927,
+            266,
+            768,
+            1044
+          ],
+          [
+            397,
+            1694,
+            768,
+            1044
+          ],
+          [
+            1931,
+            1732,
+            768,
+            1044
+          ],
+          [
+            391,
+            3338,
+            768,
+            1044
+          ],
+          [
+            1933,
+            3230,
+            768,
+            1044
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+        "foreground_owner_sha256": "2ee726bf27303bfd30ced3570df7ec24474401a1ef638d3cdfba59fcbb657960",
+        "detached_pixels": 0,
+        "detached_fragments": [],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -14880,9 +15012,10 @@
     "transform:413:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
     "transform:413:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-walk-NWwalkSixActualRig01.png",
     "transform:413:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-run-NWrunSixActualRig01.png",
-    "transform:413:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-run-NrunSixActualRig01.png"
+    "transform:413:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-run-NrunSixActualRig01.png",
+    "transform:413:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-run-NErunSixActualRig01.png"
   },
-  "selected_locomotion_native_poses": 276,
+  "selected_locomotion_native_poses": 282,
   "session_stop_reason": null,
   "image_tools_forbidden": false,
   "selected_detailed_action_sheets": {
@@ -19922,6 +20055,48 @@
         1920,
         1920,
         1920
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-run-NErunSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+      "direction": "NE",
+      "role": "run",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          844,
+          1182
+        ],
+        [
+          2380,
+          1182
+        ],
+        [
+          844,
+          2718
+        ],
+        [
+          2380,
+          2718
+        ],
+        [
+          844,
+          4254
+        ],
+        [
+          2380,
+          4254
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2432,
+        2432,
+        2432,
+        2432,
+        2432,
+        2432
       ],
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
