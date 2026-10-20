@@ -140,3 +140,11 @@
 - N CONTACT0/LOAD1의 국소 피부·ankle 마감도 완료하여 실제 원화 및 heel 단위 pair PASS를 받았다(`68b325d54e6719268676c06b2d14ff8d9e104478c0dae284301c932de00d7837`). 최종 source0 `1bc3bfac`·LOAD1 `e30aa65c`는 C1920·공통 root `[662.8125,917.6920531878804]`·실제 발 alpha/재질·상체/RIGHT 창을 유지하며 다음 terminal2를 제작한다.
 - NW 실제 terminal2 `cc7b28ba8631`도 SOURCE/LOAD1→2 단위 pair PASS(`313199147b49ee5878545c9cc2cf61534ae7c157f7513bf492d67615f3a6789c`)를 받았다. heel 약22native 상승, RIGHT AIR 최소4.68world는 명시한 모델 범위의 확인이며 전체 주기 승인은 아니다. 6자세 공통 root `[641,1058.3]`·C2048·저장 translation `[0,0]`을 최초 source0 기준으로 고정했다(`314a496a63c7b2dcab52e61d20c52d53d4953fb404aefca6ecf65d12ddb0b5a5`). 다음 RIGHT contact3/4/5를 제작한다.
 - 신규 게임 SpriteFrames 채택 전이다. 상세 승인 2/31종·미완료29종·신화413 기존10클립/60자세, 기존405/498·별도14종·54색상/공유프로필·1490프로필표를 변경하지 않았다.
+
+
+2026-10-20 — 신화413 N WALK 실제 게임 연결 저장
+- 원격 검증 커밋 `95688d1dd9152f194010c6cbc6c6d26b9b1b8c4d`에서 N WALK 6자세를 r011에 연결했다. 전체 native 107클립/642자세, 신화413 11클립/66자세이며 이동 미완료 슬롯은 5개다. 기존 10클립의 원화·프레임 계약 및 r010 물리 프로필 리터럴을 그대로 유지했다.
+- 실제 source/cycle(5→0 포함) PASS: raw `868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c`, request `83758626665f095dcf6d91e05331d27704309afb12e96ebb35020274854d89d1`, 최종 독립 proof v02 `a01a52b13c27f642cf235d3f48a8a627eb1177d68fc37f83c7f764cf8bf6d47b`. C1920·공통 float root 및 모든 자세에 동일한 정수 반올림만 사용했다. 가려진 toe는 측정된 bitmap 접점이 아닌 명시 rig control 한계로 기록했다.
+- 기존 Godot 리소스·실제 Player 검사를 통과했으며 전체/수동 CI는 실행하지 않았다. 상세 승인 2/31종·미완료29종, 기존405/498·별도14종·54색상/공유프로필·1490프로필표는 유지한다. 한 이동 클립의 연결을 개체 전체 승인으로 계산하지 않는다.
+- 다음 제작: NW WALK 0~4 원화/단위 pair PASS, 마지막5의 body/장비 및 전체6 순환 검토; NW RUN 실제6 원화 제작 및 footroll/관절/전체 순환 검토; N RUN 전용6 제작; NE WALK 신규 원화 및 최초 단일 밀도·root 등록. 기존 승인267/393·PR100은 재제작하지 않는다.
+- N 최종 원화·renderer·provenance·QC 및 N RUN 실제 재질 handoff는 batch03 `mythic413-N-walk-source-cycle-PASS-v09-20261020`에 보존했다. 실제 runtime 증명과 아직 적용하지 않은 RUN physical-C fit 수정 제안은 `mythic413-N-r011-runtime-and-physical-C-proposal-v01-20261020`에 보존했다. RUN padding을 기존 nominal2048에 억지로 맞추기 위한 축소·root 이동을 하지 않는다.

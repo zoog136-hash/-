@@ -1,0 +1,80 @@
+{
+  "schema": "pr122-physical-canvas-proposal-final-handoff-v1",
+  "status": "UNAPPLIED_SCRATCH_ONLY_ROOT_PRIORITIZES_N_FIRST_CLIP",
+  "original_tool": {
+    "path": "/workspace/twilight/tools/pr122_reviewed_runtime_layout.py",
+    "sha256": "ebb9a0be9caf8c44c43f48aa2abb5e208bc26450a620538fc4e638c398a3e13b",
+    "unchanged": true
+  },
+  "proposal": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/pr122_reviewed_runtime_layout_physical_canvas_proposal.py",
+    "sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+    "key_lines": {
+      "validate_authored_sizes_before_layout": [
+        101
+      ],
+      "size_schema_helper": [
+        24
+      ],
+      "actual_physical_fit_helper": [
+        37
+      ],
+      "reject_actual_physical_overflow": [
+        48
+      ],
+      "retain_canonical_seed_reanalysis": [
+        111
+      ],
+      "reviewed_region_ownership_call": [
+        126
+      ],
+      "complete_region_check": [
+        133
+      ],
+      "final_source_sha_check": [
+        140
+      ]
+    }
+  },
+  "exact_short_diff": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/physical-canvas-proposal-exact.diff",
+    "sha256": "d5d0278c4cd0aaceeae67995bc740284ee53c96eb8943e85d4bc5f1629580b09",
+    "bytes": 5426,
+    "lines": 88,
+    "context_lines": 1
+  },
+  "integrity_audit": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/v03-integrity-audit.json",
+    "sha256": "d58ad1225275f01e8150a91c2d17141964f08582789c9419b71425570a0677e3"
+  },
+  "fixture_source": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/check-physical-canvas-proposal.py",
+    "sha256": "9d4e0ebc6dbfe469b37cc2ef64a804d1a2d1ee3f04b4b7f6ef5198d8fd55abaa"
+  },
+  "fixture_report": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/physical-canvas-fit-proposal-fixtures.json",
+    "sha256": "8d76b72bea2c04c8d170f03e93e606c4ad1a69383a4cdb890f40e108b85ce5d3",
+    "checks": 17,
+    "status": "PASS_PURE_NUMERIC_HELPER_AND_STATIC_GUARDS_ONLY"
+  },
+  "findings": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/physical-canvas-fit-findings.json",
+    "sha256": "c5178ce2ccc537252676ea16996f75cd6da059b6bd01a00219a021c73b38649b"
+  },
+  "meaning": "This preserves every real fit, exact pose/source/ownership and integer-canvas gate, but uses the actual authored physicalC for fit rather than rejecting against an intermediate nominalC. It grants no source, motion or actor approval.",
+  "unchanged": [
+    "official layout tool",
+    "all canonical integrationpins",
+    "approved393 and267 assets",
+    "repository/index/HEAD"
+  ],
+  "not_run": [
+    "apply",
+    "Git",
+    "Godot",
+    "CI",
+    "image tools",
+    "actual source PNG processing"
+  ],
+  "first_frozen_allowlist_sha256": "8f2aa49ca9bcbefe84bcc5338dbd5741e22da181c44c52cc341a08407bc28e5a"
+}
