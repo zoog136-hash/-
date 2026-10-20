@@ -13647,6 +13647,138 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "N",
+      "role": "hit",
+      "version": "NhitSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-hit-NhitSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-ohfqepya/reviewed-source.png",
+      "bytes": 2084626,
+      "sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+        "base_geometry_sha256": "39f3c3b4d31dd1178cb20ef5145632c0bc74df2b9b183f82fed3d1dbdaed19e0",
+        "direction": "N",
+        "regions": [
+          [
+            33,
+            23,
+            1205,
+            1213
+          ],
+          [
+            1569,
+            23,
+            1205,
+            1213
+          ],
+          [
+            33,
+            1559,
+            1205,
+            1213
+          ],
+          [
+            1569,
+            1559,
+            1205,
+            1213
+          ],
+          [
+            33,
+            3095,
+            1205,
+            1213
+          ],
+          [
+            1569,
+            3094,
+            1205,
+            1214
+          ]
+        ],
+        "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 3cab8a9e501bc006a2db3e6d2fe927b66de122223988755a79053a2d857d1abc"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+        "source_RGBA_sha256": "c08f99904fc5d8831e38f1810487db914c289ebe9ce0b2f87048de6bbf901faf",
+        "base_geometry_sha256": "39f3c3b4d31dd1178cb20ef5145632c0bc74df2b9b183f82fed3d1dbdaed19e0",
+        "derived_geometry_sha256": "cb83c35d64d1f54facad8c6b90dec9225ecb7a6232afbc4e0a9206015356eb4f",
+        "review_sha256": "486a3e57d14dc6b71907c4dea835c3f5c52bf799424ba78814f64e54beb36a70",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 3cab8a9e501bc006a2db3e6d2fe927b66de122223988755a79053a2d857d1abc",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 908771,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            33,
+            23,
+            1205,
+            1213
+          ],
+          [
+            1569,
+            23,
+            1205,
+            1213
+          ],
+          [
+            33,
+            1559,
+            1205,
+            1213
+          ],
+          [
+            1569,
+            1559,
+            1205,
+            1213
+          ],
+          [
+            33,
+            3095,
+            1205,
+            1213
+          ],
+          [
+            1569,
+            3094,
+            1205,
+            1214
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+        "foreground_owner_sha256": "a4d3d12eb51912c95195293e2dc2137709822311495436c1ef0554b7bd72c205",
+        "detached_pixels": 0,
+        "detached_fragments": [],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -13768,9 +13900,10 @@
     "transform:267:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
     "transform:267:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
     "transform:267:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v03.png",
-    "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png"
+    "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+    "transform:413:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-hit-NhitSixActualRig01.png"
   },
-  "selected_detailed_action_native_poses": 384,
+  "selected_detailed_action_native_poses": 390,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -18560,6 +18693,48 @@
         [
           2327,
           4118
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        1920,
+        1920,
+        1920,
+        1920,
+        1920,
+        1920
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-hit-NhitSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+      "direction": "N",
+      "role": "hit",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          663,
+          918
+        ],
+        [
+          2199,
+          918
+        ],
+        [
+          663,
+          2454
+        ],
+        [
+          2199,
+          2454
+        ],
+        [
+          663,
+          3990
+        ],
+        [
+          2199,
+          3990
         ]
       ],
       "authored_pose_canvas_sizes": [
