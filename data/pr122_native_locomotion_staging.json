@@ -20882,10 +20882,10 @@
     },
     "transform:413": {
       "grade": "신화",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/SpriteFrames.tres",
-      "frames_sha256": "6b68a6d91c5376cbe3839354b50677614ce83386f34354545c44a191c59e39ca",
-      "native_track_count": 10,
-      "native_pose_count": 60,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r011/SpriteFrames.tres",
+      "frames_sha256": "0843c5c76ea97fa0c124bef69e24a62e70eb060d70133812ca66555cb0b9e8f3",
+      "native_track_count": 11,
+      "native_pose_count": 66,
       "canvas_size": [
         1024,
         1024
@@ -21197,6 +21197,298 @@
               512,
               640
             ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "walk",
+          "animation": "walk_6",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
+          "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r011/N-walk.png",
+          "geometry": {
+            "image_size": [
+              3072,
+              4608
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  0,
+                  0,
+                  1536,
+                  1536
+                ],
+                "margin": [
+                  297,
+                  282,
+                  384,
+                  384
+                ],
+                "source_anchor": [
+                  663,
+                  918
+                ],
+                "rgba_sha256": "30d937e02c5bc00e628fbbb44f9765139d80eb077020ecba11e66dbebb0f31fa",
+                "canvas_size": [
+                  1920,
+                  1920
+                ],
+                "foot": [
+                  960,
+                  1200
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  1536,
+                  0,
+                  1536,
+                  1536
+                ],
+                "margin": [
+                  297,
+                  282,
+                  384,
+                  384
+                ],
+                "source_anchor": [
+                  2199,
+                  918
+                ],
+                "rgba_sha256": "9af1448e83bf75ccb9c7ac7925e6f60fe99c0bbdcedc20573d138235f343ec11",
+                "canvas_size": [
+                  1920,
+                  1920
+                ],
+                "foot": [
+                  960,
+                  1200
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  0,
+                  1536,
+                  1536,
+                  1536
+                ],
+                "margin": [
+                  297,
+                  282,
+                  384,
+                  384
+                ],
+                "source_anchor": [
+                  663,
+                  2454
+                ],
+                "rgba_sha256": "490f60738adf214ca7fa9cc6e6a0898662028777d3728705bd645c47c7484af3",
+                "canvas_size": [
+                  1920,
+                  1920
+                ],
+                "foot": [
+                  960,
+                  1200
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  1536,
+                  1536,
+                  1536,
+                  1536
+                ],
+                "margin": [
+                  297,
+                  282,
+                  384,
+                  384
+                ],
+                "source_anchor": [
+                  2199,
+                  2454
+                ],
+                "rgba_sha256": "921d0917adb45ea598e79f7881d0f3c902388134e7edb8161caf6cfb0fc4c325",
+                "canvas_size": [
+                  1920,
+                  1920
+                ],
+                "foot": [
+                  960,
+                  1200
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  0,
+                  3072,
+                  1536,
+                  1536
+                ],
+                "margin": [
+                  297,
+                  282,
+                  384,
+                  384
+                ],
+                "source_anchor": [
+                  663,
+                  3990
+                ],
+                "rgba_sha256": "8baaf4034c542d0a16ceefd36468202c0354db60d809697aa82809fef40f692e",
+                "canvas_size": [
+                  1920,
+                  1920
+                ],
+                "foot": [
+                  960,
+                  1200
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1536,
+                  3072,
+                  1536,
+                  1536
+                ],
+                "margin": [
+                  297,
+                  282,
+                  384,
+                  384
+                ],
+                "source_anchor": [
+                  2199,
+                  3990
+                ],
+                "rgba_sha256": "2fd8a247d909f2ec091826c568251bebfb3fe635ffc73d04ea7a9e8932b4b142",
+                "canvas_size": [
+                  1920,
+                  1920
+                ],
+                "foot": [
+                  960,
+                  1200
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 895.0,
+            "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+            "base_geometry_sha256": "2b3761dccc878743d3136160aeae0370e764bbf9132306f21046c4d0e52d2dcb",
+            "derived_geometry_sha256": "e80b958359f3f31770f75707f9be5c24b83577da3041c78749fabcbf50ca1d48",
+            "review_sha256": "4739c6c5782092fe626dea7cd702f4e3c64ab0dac7d56c504d19860aed43b77e",
+            "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing.",
+            "direction": "N",
+            "pose_count": 6,
+            "canvas_size": [
+              2048,
+              2048
+            ],
+            "foot": [
+              1024,
+              1280
+            ],
+            "source_anchors": [
+              [
+                663,
+                918
+              ],
+              [
+                2199,
+                918
+              ],
+              [
+                663,
+                2454
+              ],
+              [
+                2199,
+                2454
+              ],
+              [
+                663,
+                3990
+              ],
+              [
+                2199,
+                3990
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              2048
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false,
+            "source_region_review_sha256": "c9480d42c9ab155f6f67a530f64e1a0eaa31ac51cbe1940ae8d793b4abc02d56",
+            "pose_canvas_sizes": [
+              1920,
+              1920,
+              1920,
+              1920,
+              1920,
+              1920
+            ],
+            "runtime_reference_canvas_size": 1024,
+            "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                1920
+              ],
+              [
+                1024,
+                1920
+              ],
+              [
+                1024,
+                1920
+              ],
+              [
+                1024,
+                1920
+              ],
+              [
+                1024,
+                1920
+              ],
+              [
+                1024,
+                1920
+              ]
+            ],
+            "pose_canvas_size_allowed_range": [
+              256,
+              4096
+            ],
+            "newly_authored_poses": 0
           }
         },
         {
@@ -22418,7 +22710,6 @@
       ],
       "missing_locomotion": [
         "walk_5",
-        "walk_6",
         "walk_7",
         "run_5",
         "run_6",
@@ -22479,8 +22770,8 @@
       "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
-      "native_profile_sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r011/NativeMotionProfile.tres",
+      "native_profile_sha256": "c1dceffbf417e0946b836a07471e9c32c4bf497c710272ec267bbceb4b71af06",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 464.0,
@@ -22489,9 +22780,18 @@
         "sizing_review": "HOLD; native staging only",
         "production_catalog_replaced": false
       },
+      "retained_native_profile_source": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
+        "sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+        "literal_changes": [
+          "frames_path"
+        ],
+        "reference_height_remeasured": false,
+        "source_pixels_resampled": false
+      },
       "verification": {
         "source_sha256_and_saved_geometry": "PASS",
-        "distinct_native_poses": 60,
+        "distinct_native_poses": 66,
         "spriteframes_parse_and_all_frame_cycles": "PASS",
         "required_engine_4_7_2": "PASS",
         "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
@@ -47391,6 +47691,27 @@
           "visual_approval": "NOT_RUN",
           "completed_added": 0
         }
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/SpriteFrames.tres",
+        "frames_sha256": "6b68a6d91c5376cbe3839354b50677614ce83386f34354545c44a191c59e39ca",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
+        "native_profile_sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+        "native_track_count": 10,
+        "native_pose_count": 60,
+        "verification": {
+          "source_sha256_and_saved_geometry": "PASS",
+          "distinct_native_poses": 60,
+          "spriteframes_parse_and_all_frame_cycles": "PASS",
+          "required_engine_4_7_2": "PASS",
+          "required_engine_version": "4.7.2.stable.official.ed1daf0bf",
+          "actual_Player_scene_form_api": "PASS",
+          "Player_position_collision_class_combat_sequence_preserved": "PASS",
+          "missing_locomotion_not_replaced_or_aliased": "PASS",
+          "actual_Main": "NOT_RUN",
+          "visual_approval": "NOT_RUN",
+          "completed_added": 0
+        }
       }
     ]
   },
@@ -47405,5 +47726,5 @@
     "role": "attack"
   },
   "missing_detailed_action_blocks": 32,
-  "missing_locomotion_blocks": 6
+  "missing_locomotion_blocks": 5
 }

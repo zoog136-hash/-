@@ -12075,6 +12075,633 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "N",
+      "role": "walk",
+      "version": "NwalkSixActualRig02",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-4h90c6wm/reviewed-source.png",
+      "bytes": 2701707,
+      "sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+        "base_geometry_sha256": "316129350f9a95fba8ab08f0b7a64285d11efe95469e68970fda1ecd0af9dc86",
+        "direction": "N",
+        "regions": [
+          [
+            0,
+            0,
+            1536,
+            1536
+          ],
+          [
+            1536,
+            0,
+            1536,
+            1536
+          ],
+          [
+            0,
+            1536,
+            1536,
+            1536
+          ],
+          [
+            1536,
+            1536,
+            1536,
+            1536
+          ],
+          [
+            0,
+            3072,
+            1536,
+            1536
+          ],
+          [
+            1536,
+            3072,
+            1536,
+            1536
+          ]
+        ],
+        "nearest_owner_sha256": "0317c2f0eca43852d1785196a279b01a59721c3d7b9a3982555f46d044881d0b",
+        "review_basis": "Full disjoint authored tiles retain exact RGBA and empty ground; immutable packing proof 10b9b45d4ed518df211801d9ee1e8d0885ec052f7d142f81abbbcfb4d4447d02"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+        "source_RGBA_sha256": "63f781c53133e3f4d1f6e56c4386e4fde80de5d932081083f840ea18fddfbd88",
+        "base_geometry_sha256": "316129350f9a95fba8ab08f0b7a64285d11efe95469e68970fda1ecd0af9dc86",
+        "derived_geometry_sha256": "2b3761dccc878743d3136160aeae0370e764bbf9132306f21046c4d0e52d2dcb",
+        "review_sha256": "c9480d42c9ab155f6f67a530f64e1a0eaa31ac51cbe1940ae8d793b4abc02d56",
+        "review_basis": "Full disjoint authored tiles retain exact RGBA and empty ground; immutable packing proof 10b9b45d4ed518df211801d9ee1e8d0885ec052f7d142f81abbbcfb4d4447d02",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 918082,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            0,
+            0,
+            1536,
+            1536
+          ],
+          [
+            1536,
+            0,
+            1536,
+            1536
+          ],
+          [
+            0,
+            1536,
+            1536,
+            1536
+          ],
+          [
+            1536,
+            1536,
+            1536,
+            1536
+          ],
+          [
+            0,
+            3072,
+            1536,
+            1536
+          ],
+          [
+            1536,
+            3072,
+            1536,
+            1536
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "0317c2f0eca43852d1785196a279b01a59721c3d7b9a3982555f46d044881d0b",
+        "foreground_owner_sha256": "93abc863defa1225c92b8bd5d347812e90bee1a2935583a1c74ffbb10c8cc054",
+        "detached_pixels": 328,
+        "detached_fragments": [
+          {
+            "row": 3,
+            "pixels": 75,
+            "bbox": [
+              2047,
+              2097,
+              2065,
+              2121
+            ],
+            "nearest_max": 22.80350850198276,
+            "second_nearest_min": 1116.552730505819,
+            "owner_margin_min": 1109.552730505819
+          },
+          {
+            "row": 2,
+            "pixels": 43,
+            "bbox": [
+              491,
+              2101,
+              503,
+              2115
+            ],
+            "nearest_max": 12.36931687685298,
+            "second_nearest_min": 1075.5208040758673,
+            "owner_margin_min": 1069.8206282034942
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              734,
+              2191,
+              735,
+              2193
+            ],
+            "nearest_max": 8.06225774829855,
+            "second_nearest_min": 1017.8261148152959,
+            "owner_margin_min": 1010.210341709432
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              2290,
+              2197,
+              2291,
+              2199
+            ],
+            "nearest_max": 8.54400374531753,
+            "second_nearest_min": 1015.0832478176359,
+            "owner_margin_min": 1006.5392440723183
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2286,
+              2207,
+              2287,
+              2208
+            ],
+            "nearest_max": 15.524174696260024,
+            "second_nearest_min": 1006.368222868747,
+            "owner_margin_min": 990.844048172487
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2279,
+              2241,
+              2280,
+              2242
+            ],
+            "nearest_max": 11.0,
+            "second_nearest_min": 972.9727642642418,
+            "owner_margin_min": 961.9727642642418
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2278,
+              2245,
+              2279,
+              2246
+            ],
+            "nearest_max": 10.0,
+            "second_nearest_min": 969.0639813758429,
+            "owner_margin_min": 959.0639813758429
+          },
+          {
+            "row": 3,
+            "pixels": 4,
+            "bbox": [
+              2274,
+              2255,
+              2276,
+              2259
+            ],
+            "nearest_max": 8.06225774829855,
+            "second_nearest_min": 956.4360930036047,
+            "owner_margin_min": 949.1559831143242
+          },
+          {
+            "row": 3,
+            "pixels": 3,
+            "bbox": [
+              2273,
+              2261,
+              2275,
+              2264
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 951.5398047375633,
+            "owner_margin_min": 944.2596948482827
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2272,
+              2265,
+              2273,
+              2266
+            ],
+            "nearest_max": 7.0710678118654755,
+            "second_nearest_min": 949.6341400771141,
+            "owner_margin_min": 942.5630722652486
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2271,
+              2269,
+              2272,
+              2270
+            ],
+            "nearest_max": 7.0710678118654755,
+            "second_nearest_min": 945.7378072172012,
+            "owner_margin_min": 938.6667394053356
+          },
+          {
+            "row": 3,
+            "pixels": 9,
+            "bbox": [
+              2269,
+              2271,
+              2272,
+              2280
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 935.9594008289034,
+            "owner_margin_min": 927.9594008289034
+          },
+          {
+            "row": 2,
+            "pixels": 59,
+            "bbox": [
+              655,
+              2350,
+              659,
+              2388
+            ],
+            "nearest_max": 9.848857801796104,
+            "second_nearest_min": 836.5100118946575,
+            "owner_margin_min": 826.6611540928614
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              2273,
+              2373,
+              2274,
+              2375
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 841.0071343335917,
+            "owner_margin_min": 839.0071343335917
+          },
+          {
+            "row": 2,
+            "pixels": 6,
+            "bbox": [
+              659,
+              2390,
+              660,
+              2396
+            ],
+            "nearest_max": 11.0,
+            "second_nearest_min": 828.4781228252198,
+            "owner_margin_min": 817.4781228252198
+          },
+          {
+            "row": 3,
+            "pixels": 6,
+            "bbox": [
+              2215,
+              2396,
+              2216,
+              2402
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 822.0097323024831,
+            "owner_margin_min": 814.0097323024831
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              660,
+              2400,
+              661,
+              2401
+            ],
+            "nearest_max": 11.704699910719626,
+            "second_nearest_min": 823.3796208311206,
+            "owner_margin_min": 811.6749209204011
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2216,
+              2406,
+              2217,
+              2407
+            ],
+            "nearest_max": 9.219544457292887,
+            "second_nearest_min": 816.912480012394,
+            "owner_margin_min": 807.6929355551011
+          },
+          {
+            "row": 2,
+            "pixels": 3,
+            "bbox": [
+              703,
+              2436,
+              704,
+              2439
+            ],
+            "nearest_max": 53.23532661682466,
+            "second_nearest_min": 777.9389436196134,
+            "owner_margin_min": 724.7036170027887
+          },
+          {
+            "row": 3,
+            "pixels": 3,
+            "bbox": [
+              2259,
+              2442,
+              2260,
+              2445
+            ],
+            "nearest_max": 57.0,
+            "second_nearest_min": 772.984475911386,
+            "owner_margin_min": 715.984475911386
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              539,
+              3675,
+              540,
+              3676
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1058.1871290088536,
+            "owner_margin_min": 1055.1871290088536
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2207,
+              3717,
+              2208,
+              3718
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1142.1751179219411,
+            "owner_margin_min": 1140.1751179219411
+          },
+          {
+            "row": 4,
+            "pixels": 2,
+            "bbox": [
+              761,
+              3721,
+              762,
+              3723
+            ],
+            "nearest_max": 8.54400374531753,
+            "second_nearest_min": 1109.1798772065783,
+            "owner_margin_min": 1101.1176194582797
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              757,
+              3731,
+              758,
+              3732
+            ],
+            "nearest_max": 9.0,
+            "second_nearest_min": 1118.672427478214,
+            "owner_margin_min": 1109.672427478214
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              750,
+              3765,
+              751,
+              3766
+            ],
+            "nearest_max": 6.0,
+            "second_nearest_min": 1151.7556164395291,
+            "owner_margin_min": 1145.7556164395291
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              749,
+              3769,
+              750,
+              3770
+            ],
+            "nearest_max": 5.830951894845301,
+            "second_nearest_min": 1155.6366210881342,
+            "owner_margin_min": 1149.8056691932888
+          },
+          {
+            "row": 4,
+            "pixels": 4,
+            "bbox": [
+              745,
+              3779,
+              747,
+              3783
+            ],
+            "nearest_max": 5.830951894845301,
+            "second_nearest_min": 1165.2986741604059,
+            "owner_margin_min": 1160.199654646813
+          },
+          {
+            "row": 4,
+            "pixels": 3,
+            "bbox": [
+              744,
+              3785,
+              746,
+              3788
+            ],
+            "nearest_max": 6.082762530298219,
+            "second_nearest_min": 1171.1771855701425,
+            "owner_margin_min": 1165.0944230398443
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              743,
+              3789,
+              744,
+              3790
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 1174.9740422664663,
+            "owner_margin_min": 1170.9740422664663
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              742,
+              3793,
+              743,
+              3794
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1178.8659805083867,
+            "owner_margin_min": 1175.8659805083867
+          },
+          {
+            "row": 4,
+            "pixels": 2,
+            "bbox": [
+              741,
+              3795,
+              743,
+              3797
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 1180.8577391032334,
+            "owner_margin_min": 1177.2521878277694
+          },
+          {
+            "row": 5,
+            "pixels": 9,
+            "bbox": [
+              2263,
+              3868,
+              2264,
+              3877
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1295.231639514724,
+            "owner_margin_min": 1292.231639514724
+          },
+          {
+            "row": 5,
+            "pixels": 7,
+            "bbox": [
+              2264,
+              3884,
+              2266,
+              3891
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1311.262750176333,
+            "owner_margin_min": 1309.262750176333
+          },
+          {
+            "row": 5,
+            "pixels": 59,
+            "bbox": [
+              2204,
+              3886,
+              2208,
+              3924
+            ],
+            "nearest_max": 7.0,
+            "second_nearest_min": 1286.8224430744126,
+            "owner_margin_min": 1280.0508925446577
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2267,
+              3908,
+              2268,
+              3909
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1335.3984424133496,
+            "owner_margin_min": 1333.3984424133496
+          },
+          {
+            "row": 5,
+            "pixels": 6,
+            "bbox": [
+              2208,
+              3926,
+              2209,
+              3932
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 1292.8634885400702,
+            "owner_margin_min": 1287.8634885400702
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2209,
+              3936,
+              2210,
+              3937
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 1294.5644055048015,
+            "owner_margin_min": 1289.5644055048015
+          },
+          {
+            "row": 4,
+            "pixels": 3,
+            "bbox": [
+              730,
+              3966,
+              731,
+              3969
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 1237.061841623126,
+            "owner_margin_min": 1229.061841623126
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -12123,9 +12750,10 @@
     "transform:413:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-walk-v01.png",
     "transform:413:SW:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-run-v01.png",
     "transform:413:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
-    "transform:413:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-v01.png"
+    "transform:413:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-v01.png",
+    "transform:413:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png"
   },
-  "selected_locomotion_native_poses": 252,
+  "selected_locomotion_native_poses": 258,
   "session_stop_reason": null,
   "image_tools_forbidden": false,
   "selected_detailed_action_sheets": {
@@ -16827,6 +17455,48 @@
       "independent_source_review_sha256": "62d1416a42ff1b0fd940f461b37112ec5bb31251a5140112a26fccb1ccf8d322",
       "independent_physical_review": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-run-whole6-new-contacts-v02-independent-physical-PASS.json",
       "independent_physical_review_sha256": "1a23acdea4b402fc59dc3e58aa9d039fa4d8842384676b07f47a7577e0990139"
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+      "direction": "N",
+      "role": "walk",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          663,
+          918
+        ],
+        [
+          2199,
+          918
+        ],
+        [
+          663,
+          2454
+        ],
+        [
+          2199,
+          2454
+        ],
+        [
+          663,
+          3990
+        ],
+        [
+          2199,
+          3990
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        1920,
+        1920,
+        1920,
+        1920,
+        1920,
+        1920
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
   },
   "runtime_layout_attempt_holds": [
