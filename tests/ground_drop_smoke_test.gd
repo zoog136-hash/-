@@ -23,6 +23,13 @@ func _run() -> void:
 	var player: TwilightPlayer = world.get("player") as TwilightPlayer
 	var drops: Node = world.get("drops_root") as Node
 	var inventory: Dictionary = world.get("inventory") as Dictionary
+	if world.get("field_map") is NativePngField:
+		# The arrival plaza is intentionally compact. Exercise the unchanged
+		# long pickup route and adjacent AUTO loot on real reachable combat floor.
+		var origin: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(200,0),Vector2(213,0)])
+		_check(origin.is_finite(),"active PNG map has a clear distant pickup fixture")
+		if not origin.is_finite(): world.queue_free(); _finish(); return
+		player.global_position = origin
 	world.call("_clear_drops")
 	var initial_count: int = int(inventory.get("HP 물약", 0))
 	var drop: Button = world.call("_spawn_ground_drop", "HP 물약", player.global_position) as Button

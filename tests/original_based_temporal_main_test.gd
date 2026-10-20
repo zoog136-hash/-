@@ -440,6 +440,9 @@ func temporal_run_case(spec: Dictionary) -> void:
 	print("PR100_TEMPORAL_CASE " + JSON.stringify(temporal_results.back()))
 
 func run() -> void:
+	# Temporal pose review checks the original A3 renderer's faded props and
+	# unobstructed portrait envelopes, independently of current-map gameplay.
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,str(get_script().resource_path)): return
 	temporal_wall_start = Time.get_ticks_usec()
 	temporal_original_max_fps = Engine.max_fps
 	temporal_render = DisplayServer.get_name() != "headless"

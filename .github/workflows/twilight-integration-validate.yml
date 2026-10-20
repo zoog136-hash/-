@@ -54,7 +54,7 @@ jobs:
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-combat-render.log; then exit 1; fi
           grep -q 'COMBAT_RENDER' test-results/integration-combat-render.log
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-regions"
-          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee test-results/integration-regions-render.log
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd -- --legacy-map-layouts 2>&1 | tee test-results/integration-regions-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-regions-render.log; then exit 1; fi
       - name: Monster-crowd and authored-state animation regression
         if: ${{ hashFiles('tests/capture_combat_crowd.gd') != '' }}

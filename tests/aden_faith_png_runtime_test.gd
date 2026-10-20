@@ -14,8 +14,15 @@ func check(ok: bool,label: String) -> void:
 	if not ok: failures.append(label);printerr("ADEN_FAITH_FAIL: "+label)
 func ticks(n: int) -> void:
 	for i: int in range(n): await physics_frame
+func pause_population_for_routes() -> void:
+	# This suite measures player physics/rendering/save routes. The separate
+	# aden_faith_png_monster_spawns_test runs live AI, combat and respawns.
+	if is_instance_valid(world.field_population): world.field_population.set_process(false)
+	for monster: Node in world.monsters_root.get_children():
+		monster.set_process(false);monster.set_physics_process(false)
 func inspect(mid: String, spec: Dictionary) -> void:
 	world._set_map(mid,false);world.portal_cooldown=10000
+	pause_population_for_routes()
 	check(world.active_map_id==mid and world.field_map is NativePngField,mid+" actual PNG field")
 	if not world.field_map is NativePngField: return
 	var field: NativePngField=world.field_map
@@ -23,7 +30,8 @@ func inspect(mid: String, spec: Dictionary) -> void:
 	world.player.camera.position_smoothing_enabled=false
 	check(await renderer.settle_visible(),mid+" all visible real chunks ready")
 	check(field.png_manifest.source_sha256==REGISTRY.plan().sources[spec.file].sha256,mid+" actual source SHA identity")
-	check(field.data.monster_spawn.is_empty(),mid+" no unproven population migration")
+	check(not field.data.monster_spawn.is_empty(),mid+" actual local monster encounters installed")
+	check(field.data.monster_spawn.all(func(row: Dictionary) -> bool: return row.get("coordinate_evidence","")=="reviewed_png_walk_polygons_local_unverified_original_positions"),mid+" local placement provenance retained")
 	check(field.walkable(world.player.global_position),mid+" entry on inspected floor")
 	var walked: float=0
 	for raw: Array in spec.route_checks:
@@ -69,12 +77,14 @@ func inspect(mid: String, spec: Dictionary) -> void:
 	var before: Vector2=world.player.global_position
 	var alternate: String="faith_01" if mid=="aden_world" else "aden_world"
 	world._set_map(alternate,false);world._load_game(true)
+	pause_population_for_routes()
 	check(world.active_map_id==mid and world.field_map is NativePngField,mid+" save restores native field")
 	check(world.player.global_position.distance_to(before)<16,mid+" saved source pixel coordinates restored")
 	for portal: Dictionary in spec.portals:
 		check(field.walkable(Vector2(portal.position[0],portal.position[1])),mid+" portal stands on reviewed floor: "+str(portal.id))
 		check(world.use_field_portal(str(portal.id)) and world.active_map_id==str(portal.target_map),mid+" actual portal loads target: "+str(portal.id))
 		world._set_map(mid,false)
+		pause_population_for_routes()
 	# A real move into the return portal must trigger ordinary world travel.
 	if mid!="aden_world":
 		world.portal_cooldown=0;world.set_process(true)

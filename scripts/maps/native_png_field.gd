@@ -36,10 +36,16 @@ func inside_navigable_area(point: Vector2) -> bool:
 
 var png_manifest: Dictionary
 var png_root: String
+var landing_candidates := PackedVector2Array()
+var landing_candidates_ready: bool = false
+const LANDING_BODY_OFFSETS := [Vector2(4,0),Vector2(-4,0),Vector2(0,4),Vector2(0,-4),
+	Vector2(2.83,2.83),Vector2(-2.83,2.83),Vector2(2.83,-2.83),Vector2(-2.83,-2.83)]
 
 func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_root: String) -> void:
 	png_manifest = manifest
 	png_root = local_root
+	landing_candidates.clear()
+	landing_candidates_ready = false
 	var spec: Dictionary = plan.maps[mid]
 	var spawn: Array = spec.spawn
 	var portals: Array = [{"id":"aden_return","name":"아덴 귀환","position":[spawn[0]-60,spawn[1]],"target_map":"aden_world","radius":18}]
@@ -54,12 +60,14 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
 		"spawn_position":spawn,"navigable_polygons":spec.walk_polygons,
+		"portal_connected_regions":bool(spec.get("portal_connected_regions",false)),
+		"constrain_all_population_patrol":mid in NATIVE_SPAWNS.EXTRA_MAP_IDS,
 		"collision":spec.get("collision",[]),"monster_spawn":NATIVE_SPAWNS.build(mid,spec,portals),"npc_spawn":[],"portal":portals,"teleport":[],
 		"regions":spec.get("regions",[]),"surfaces":[],"roads":[],"water":[],"props":[],"bridges":[],
-		"safe_zone":[],"combat_zone":[],"boss_zone":[],"route_checks":spec.route_checks,
+		"safe_zone":spec.get("safe_zone",[]),"combat_zone":spec.get("combat_zone",[]),"boss_zone":spec.get("boss_zone",[]),"route_checks":spec.route_checks,
 		"minimap":{"title":spec.name},"collision_scope":spec.collision_scope,
-		"population_status":"LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES",
-		"spawn_layout_revision":"native_png_spawns_20261019"}
+		"population_status":spec.get("population_status","LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES"),
+		"spawn_layout_revision":"aden_faith_png_spawns_20261020_v2" if mid in NATIVE_SPAWNS.EXTRA_MAP_IDS else "native_png_spawns_20261019"}
 	value["runtime_foreground"]=spec.get("runtime_foreground",[])
 	index_walk_polygons(spec.walk_polygons)
 	configure(value)
@@ -80,6 +88,108 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 			if not point_clear(cell_to_world(cell),12.0): continue
 			candidates.append(cell)
 		spawn_cells[zone_id]=candidates
+
+func _portal_endpoint(raw: Variant) -> Vector2:
+	if not raw is Array or raw.size()!=2: return Vector2.INF
+	if not (raw[0] is float or raw[0] is int) or not (raw[1] is float or raw[1] is int): return Vector2.INF
+	var point := Vector2(float(raw[0]),float(raw[1]))
+	if not point.is_finite() or not walkable(point) or not point_clear(point,4.0): return Vector2.INF
+	for offset: Vector2 in LANDING_BODY_OFFSETS:
+		if not walkable(point+offset): return Vector2.INF
+	return point
+
+func _flood_portal_component(start: Vector2i) -> void:
+	if not astar.is_in_boundsv(start) or astar.is_point_solid(start): return
+	if reachable[start.y*width+start.x]!=0: return
+	var queue: Array[Vector2i] = [start]
+	reachable[start.y*width+start.x]=1
+	var cursor: int = 0
+	while cursor<queue.size():
+		var cell: Vector2i = queue[cursor]
+		cursor+=1
+		for offset: Vector2i in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]:
+			var next: Vector2i = cell+offset
+			if not astar.is_in_boundsv(next) or astar.is_point_solid(next): continue
+			var key: int = next.y*width+next.x
+			if reachable[key]==0:
+				reachable[key]=1
+				queue.append(next)
+
+func _build_reachability() -> void:
+	super._build_reachability()
+	landing_candidates.clear()
+	landing_candidates_ready=false
+	if not bool(data.get("portal_connected_regions",false)): return
+	var portals: Array = data.get("portal",[])
+	# A reviewed island counts as accessible only through an actual same-map
+	# portal whose source is already reachable. Nothing changes the solid grid
+	# or invents an AStar path across the unreviewed terrain between islands.
+	for _iteration: int in range(portals.size()):
+		var changed: bool = false
+		for portal: Dictionary in portals:
+			if str(portal.get("target_map",""))!=str(data.map_id): continue
+			if int(portal.get("target_layout_revision",-1))!=int(data.layout_revision): continue
+			var source: Vector2 = _portal_endpoint(portal.get("position",[]))
+			var target: Vector2 = _portal_endpoint(portal.get("target_position",[]))
+			if not source.is_finite() or not target.is_finite(): continue
+			var source_cell: Vector2i = world_to_cell(source)
+			var target_cell: Vector2i = world_to_cell(target)
+			if reachable[source_cell.y*width+source_cell.x]==0: continue
+			if reachable[target_cell.y*width+target_cell.x]!=0: continue
+			_flood_portal_component(target_cell)
+			changed=true
+		if not changed: break
+
+func _build_landing_candidates() -> void:
+	if landing_candidates_ready: return
+	landing_candidates.clear()
+	# Sparse PNG maps have a large transparent canvas. Sample the final actual
+	# connected floor, after its alpha guard, rather than retrying canvas pixels.
+	for y: int in range(height):
+		for x: int in range(width):
+			if reachable[y*width+x]==0: continue
+			var cell := Vector2i(x,y)
+			if astar.is_point_solid(cell): continue
+			var point: Vector2 = cell_to_world(cell)
+			# Keep the existing consumable clearance contract at explicit obstacles.
+			# Also check the real native 4px foot against polygon/alpha grid edges.
+			if not point_clear(point): continue
+			var allowed: bool = true
+			for offset: Vector2 in LANDING_BODY_OFFSETS:
+				if not walkable(point+offset):
+					allowed=false
+					break
+			if not allowed: continue
+			for portal: Dictionary in data.get("portal",[]):
+				var raw: Array = portal.get("position",[])
+				if raw.size()!=2: continue
+				var radius: float = float(portal.get("radius",18))+4.0
+				if point.distance_squared_to(Vector2(raw[0],raw[1]))<=radius*radius:
+					allowed=false
+					break
+			if allowed: landing_candidates.append(point)
+	landing_candidates_ready=true
+
+func _landing_matches(point: Vector2, from: Vector2, minimum_squared: float, maximum_squared: float, avoid_safe: bool) -> bool:
+	var distance: float = point.distance_squared_to(from)
+	return distance>=minimum_squared and distance<=maximum_squared and (not avoid_safe or not is_safe(point))
+
+func random_landing(random: RandomNumberGenerator, from: Vector2, min_distance: float = 160.0, max_distance: float = INF, avoid_safe: bool = false) -> Vector2:
+	if not from.is_finite() or min_distance<0.0 or max_distance<min_distance: return Vector2.INF
+	_build_landing_candidates()
+	if landing_candidates.is_empty(): return Vector2.INF
+	var minimum_squared: float = min_distance*min_distance
+	var maximum_squared: float = max_distance*max_distance
+	# Ordinary broad requests return quickly. A rare distance window still gets
+	# an exhaustive fallback, so valid landings cannot fail due to bad luck.
+	for attempt: int in range(mini(64,landing_candidates.size())):
+		var candidate: Vector2 = landing_candidates[random.randi_range(0,landing_candidates.size()-1)]
+		if _landing_matches(candidate,from,minimum_squared,maximum_squared,avoid_safe): return candidate
+	var start: int = random.randi_range(0,landing_candidates.size()-1)
+	for offset: int in range(landing_candidates.size()):
+		var candidate: Vector2 = landing_candidates[(start+offset)%landing_candidates.size()]
+		if _landing_matches(candidate,from,minimum_squared,maximum_squared,avoid_safe): return candidate
+	return Vector2.INF
 
 func solid_rectangles() -> Array[Rect2i]:
 	# Merge equal runs vertically. No cell changes its solid/walking ownership.

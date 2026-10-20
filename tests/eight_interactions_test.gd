@@ -286,6 +286,19 @@ func run() -> void:
 
 	# Manual navigation wins over auto path replacement. AUTO resumes after arrival.
 	world.world_interactions.clear_selection()
+	if world.field_map is NativePngField:
+		# Screen-space selection above is independent of floor shape. The actual
+		# movement/AUTO stage needs a real 50px route and a reachable live actor.
+		var origin: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(50,0),Vector2(100,0)])
+		check(origin.is_finite(),"active PNG map has a clear manual navigation and AUTO fixture")
+		if not origin.is_finite(): finish(); return
+		world.player.global_position = origin
+		if actors.size() == 3:
+			actors[1].global_position = origin+Vector2(100,0)
+			actors[1].home_position = actors[1].global_position
+		world.player.camera.reset_smoothing()
+		world.player.camera.force_update_scroll()
+		await frames()
 	world.player.set_auto_enabled(true)
 	world.player.clear_click_path()
 	var goal: Vector2 = world.player.global_position+Vector2(50,0)

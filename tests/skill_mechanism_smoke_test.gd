@@ -228,6 +228,13 @@ func _run() -> void:
 	world.call("_on_job_class_selected", "기사")
 	world.set("mp", 999)
 	world.call("_tick_skill_cooldowns", 60.0)
+	if world.get("field_map") is NativePngField:
+		# Keep the full charge distance and real path/LOS assertions, using a
+		# reviewed combat floor instead of the compact safe arrival plaza.
+		var origin: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(180,0),Vector2(-30,0)])
+		_expect(origin.is_finite(), "active PNG map has a clear charge fixture")
+		if not origin.is_finite(): world.queue_free(); _finish(); return
+		player.global_position = origin
 	var start_position: Vector2 = player.global_position
 	var charge_position: Vector2 = Vector2.ZERO
 	for radius: int in [180, 140, 220]:

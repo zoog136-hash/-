@@ -154,6 +154,9 @@ func services_and_travel(id: String) -> void:
 	service_reports.append({"map":id,"portals":arrivals,"npc_action":"EXISTING_GUIDE_DIALOGUE"})
 
 func run() -> void:
+	# Preserve the A3 source-to-source return/foot and original-grid contracts.
+	# Native PNG portal landings remain covered on the active installed maps.
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/remake_source_runtime_test.gd"): return
 	if not REGISTRY.installed("oman_01"):
 		print("REMAKE_SOURCE_RUNTIME_SKIP: private A3 pack absent; no source play claim")
 		quit(); return

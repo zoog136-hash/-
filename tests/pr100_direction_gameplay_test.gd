@@ -92,6 +92,14 @@ func find_clearing() -> Vector2:
 		if existing_skeleton == null: existing_skeleton = actor as TwilightMonster
 		if anchors.size() < 20: anchors.append(actor.global_position)
 	normal = existing_skeleton
+	if world.field_map is NativePngField:
+		# Active PNG spawn cells are the bounded reviewed floor candidates.
+		# Retain the same 150px, eight-direction, non-safe combat clearance;
+		# additionally sweep the 4px foot over the <=44.1px input stage.
+		var offsets: Array = []
+		for direction: int in range(8): offsets.append(screen_direction(direction) * 150.)
+		var point: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,offsets,50.0)
+		return point if point.is_finite() and route_clear(point,150.) else Vector2.INF
 	for slot: Dictionary in world.field_population.slots:
 		var actor: Variant = slot.get("monster")
 		if not is_instance_valid(actor) or actor.dead: continue
@@ -127,6 +135,8 @@ func db_actor(name_value: String) -> TwilightMonster:
 	actor.position = center + Vector2(40,0)
 	actor.setup(record,world.player,world,world._monster_texture(record))
 	# Match the real FieldPopulation spawn configuration in this same map.
+	if world.field_map is NativePngField:
+		preload("res://scripts/maps/source_body_profile.gd").apply(actor,true)
 	actor.collision_mask = 4
 	actor.died.connect(world._on_monster_died)
 	actor.player_hit.connect(world._on_player_hit)
@@ -342,7 +352,28 @@ func staff_normal_attack(target: TwilightMonster, spec: Dictionary, transformed:
 		"hp_before":hp_before,"hp_after":target.hp,"hits":target.damage_hit_count-hits_before})
 
 func monster_start_distance() -> float: return 140.
-func prepare_monster_direction(_direction: int) -> bool: return true
+func prepare_monster_direction(direction: int) -> bool:
+	if not world.field_map is NativePngField: return true
+	# The directional QA stage relocates an existing skeleton from its small
+	# habitat to this real clearing. Keep patrol enforcement active by binding
+	# only this paused slot's fixture to the clearing's actual reviewed patrol.
+	var slot_id: int = int(normal.get_meta("field_slot",-1))
+	# Other inherited art suites instantiate an unbound DB actor. They have no
+	# population habitat to relocate and retain their existing patrol behavior.
+	if slot_id<0: return true
+	if slot_id>=world.field_population.slots.size(): return false
+	var start: Vector2 = center-screen_direction(direction)*monster_start_distance()
+	for region: Dictionary in world.field_map.data.get("monster_spawn",[]):
+		var patrol: Dictionary = region.get("patrol_region",{})
+		if patrol.is_empty(): continue
+		if not world.field_map.REGION_GEOMETRY.contains(patrol,center) or not world.field_map.REGION_GEOMETRY.contains(patrol,start): continue
+		var slot: Dictionary = world.field_population.slots[slot_id]
+		var fixture: Dictionary = slot.region.duplicate(true)
+		fixture["patrol_region"] = patrol.duplicate(true)
+		slot.region = fixture
+		report.setup["qa_patrol_relocation"] = str(region.id)
+		return true
+	return false
 
 func monster_case() -> void:
 	check(is_instance_valid(normal),"existing field skeleton actor")
@@ -458,6 +489,17 @@ func lifecycle_case() -> void:
 	world._clear_drops()
 	world.player.position = center
 	normal.position = center+Vector2(40,0)
+	if world.field_map is NativePngField:
+		# The native grid uses 16px cells, so the old 40px fixture is outside a
+		# one-cell sword's range. Select a legal contact without changing reach.
+		var in_reach: bool = false
+		for distance: float in [40.,30.,20.,10.]:
+			normal.position = center+Vector2(distance,0)
+			if world.field_map.walkable(normal.position) and world.field_map.point_clear(normal.position) and not world.field_map.is_safe(normal.position) and world._target_in_current_weapon_range(normal) and world._has_line_of_sight_world(center,normal.position):
+				in_reach = true
+				break
+		check(in_reach,"existing field monster placed inside actual equipped weapon reach")
+		if not in_reach: return
 	normal.home_position = normal.position
 	normal.motion.cancel_attack()
 	world._select_monster(normal)

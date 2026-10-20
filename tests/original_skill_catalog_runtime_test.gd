@@ -14,6 +14,11 @@ func run() -> void:
 	world.set_process(false)
 	world.level = 90
 	world._clear_monsters()
+	var combat_point: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(10,0)])
+	check(combat_point.is_finite(), "active map has clear, non-safe catalog cast positions")
+	if not combat_point.is_finite():
+		world.queue_free(); await process_frame; quit(1); return
+	world.player.global_position = combat_point
 	var dummy: TwilightMonster = (load("res://scenes/Monster.tscn") as PackedScene).instantiate()
 	world.monsters_root.add_child(dummy)
 	dummy.setup({"name":"도감 실행 검사","hp":10000000,"lv":1,"ac":0,"mr":0},world.player,world,null)

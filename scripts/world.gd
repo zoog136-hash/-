@@ -21,6 +21,14 @@ const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
+# PR #137's shipped entry-only PNG plan (594438d). Only this reviewed layout
+# upgrade may cross a plan hash; unknown plans still fail before state changes.
+const NATIVE_PNG_SAVE_MIGRATIONS: Dictionary = {
+	"6dddc9772b9b1605a0aeaaa1b3a52e6ae88aa99ecb7d3e9b4ddd9946fdb83da4": {
+		"from_revision":2026102001,"to_revision":2026102002,
+		"map_ids":["aden_world","faith_01","faith_02","faith_03","faith_04"]
+	}
+}
 const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
@@ -1555,6 +1563,7 @@ func _monster_texture(record: Dictionary) -> Texture2D:
 
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
 	if field_map is OriginalPlayableField: return (field_map as OriginalPlayableField).random_landing(rng,near,min_distance,max_distance)
+	if field_map is NativePngField: return (field_map as NativePngField).random_landing(rng,near,min_distance,max_distance)
 	# Display tiles and navigation cells can have different dimensions.
 	if astar == null or not astar.region.has_area(): return _spawn_position_fallback()
 	var region: Rect2i = astar.region
@@ -3951,10 +3960,29 @@ func _load_game(quiet: bool) -> void:
 		# Validate prospective PNG migrations too, before mutating character
 		# state. A corrupt default pack must not overwrite an old ordinary save.
 		var native_saved_field: PlayableField=NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if requested_native else null
-		if native_saved_field==null or (has_native_position and str(data.native_png_plan_sha256)!=NATIVE_PNG.plan_hash(NATIVE_PNG.canonical(saved_map_id))):
+		var saved_plan: String=str(data.get("native_png_plan_sha256",""))
+		var plan_changed: bool=has_native_position and saved_plan!=NATIVE_PNG.plan_hash(NATIVE_PNG.canonical(saved_map_id))
+		var migration: Dictionary=NATIVE_PNG_SAVE_MIGRATIONS.get(saved_plan,{})
+		var known_native_upgrade: bool=(native_saved_field!=null and plan_changed and not migration.is_empty()
+			and saved_map_id in migration.map_ids
+			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
+			and int(native_saved_field.data.layout_revision)==int(migration.to_revision)
+			and str(data.get("native_png_review_sha256",""))==saved_plan)
+		if native_saved_field==null or (plan_changed and not known_native_upgrade):
 			source_save_blocked=true
 			hud.show_message("PNG 팩 누락·변경: 저장 파일을 보존합니다")
 			return
+		if known_native_upgrade:
+			# Keep every distinct original byte-for-byte, including later imports
+			# of another old character. Loading alone never rewrites the save.
+			var original_hash: String=FileAccess.get_sha256(save_path())
+			var backup_path: String=save_path()+".pre-aden-faith-population-"+original_hash
+			if (not FileAccess.file_exists(backup_path) and DirAccess.copy_absolute(save_path(),backup_path)!=OK) or FileAccess.get_sha256(backup_path)!=original_hash:
+				source_save_blocked=true
+				hud.show_message("이전 PNG 저장 백업 실패: 저장 파일을 보존합니다")
+				return
+			data=data.duplicate(true)
+			data["position"]=[];data["map_layout_revision"]=-1
 		if not has_native_position and not FileAccess.file_exists(save_path()+".pre-native-png"):
 			if DirAccess.copy_absolute(save_path(),save_path()+".pre-native-png")!=OK:
 				source_save_blocked=true
@@ -6674,10 +6702,22 @@ func use_field_portal(portal_id: String) -> bool:
 				if landing.x >= 0:
 					player.global_position = field_map.cell_to_world(landing)
 		elif portal.has("target_position"):
-			var cell: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
-			if cell.x < 0:
-				return false
-			player.global_position = field_map.cell_to_world(cell)
+			if field_map is NativePngField:
+				# Reviewed PNG pockets can share one map through explicit travel
+				# gates. Never project stale coordinates onto a different floor.
+				if int(portal.get("target_layout_revision", -1)) != int(field_map.data.layout_revision): return false
+				var destination: Vector2 = COORD.array_vector(portal["target_position"])
+				if not field_map.walkable(destination) or not field_map.point_clear(destination, 4.0): return false
+				var cell: Vector2i = field_map.world_to_cell(destination)
+				if field_map.reachable[cell.y * field_map.width + cell.x] == 0: return false
+				for offset: Vector2 in NativePngField.LANDING_BODY_OFFSETS:
+					if not field_map.walkable(destination + offset): return false
+				player.global_position = destination
+			else:
+				var cell: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
+				if cell.x < 0:
+					return false
+				player.global_position = field_map.cell_to_world(cell)
 		player.camera.reset_smoothing()
 		player.camera.force_update_scroll()
 		if field_renderer != null:

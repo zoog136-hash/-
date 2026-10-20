@@ -927,6 +927,10 @@ func _move_on_map() -> void:
 	move_and_slide()
 
 func _patrol_allows(point: Vector2) -> bool:
-	if not is_instance_valid(world_controller) or not is_boss: return true
+	if not is_instance_valid(world_controller): return true
+	# New PNG encounters opt normals into their authored habitat/portal limits.
+	# Older fields keep their existing free-roaming normal-monster behavior.
+	var field: Variant = world_controller.field_map
+	if not is_boss and (field==null or not bool(field.data.get("constrain_all_population_patrol",false))): return true
 	var population: Node = world_controller.field_population
 	return not is_instance_valid(population) or not population.has_method("destination_allowed") or population.destination_allowed(self,point)

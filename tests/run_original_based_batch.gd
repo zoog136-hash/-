@@ -106,6 +106,9 @@ func finish_batch() -> void:
 	quit(0 if batch_failures.is_empty() else 1)
 
 func run() -> void:
+	# The canonical multi-subject art batch includes long spell lanes and A3
+	# foreground isolation. Keep every case on that explicit scene fixture.
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,str(get_script().resource_path)): return
 	quit_on_finish = false
 	batch_report_path = OS.get_environment("TWILIGHT_PR100_BATCH_REPORT")
 	if batch_report_path.is_empty(): batch_report_path = "user://pr100-batch15.json"

@@ -50,7 +50,9 @@ func _initialize() -> void:
 	var plan: Dictionary=REGISTRY.plan()
 	check(not cfg.is_empty() and not plan.is_empty(),"hash-pinned spawn layout and reviewed PR128 geometry")
 	for mid: String in REGISTRY.read_json(REGISTRY.EXTRA_PLAN_PATH).maps:
-		check(PLACEMENT.build(mid,plan.maps[mid],plan.maps[mid].portals).is_empty(),mid+" unproven new source encounters remain absent")
+		var extra_rows: Array=PLACEMENT.build(mid,plan.maps[mid],plan.maps[mid].portals)
+		check(not extra_rows.is_empty() and extra_rows.size()==PLACEMENT.extra_layout().get("maps",{}).get(mid,[]).size(),mid+" separately hash-pinned local encounters are complete")
+		check(extra_rows.all(func(row: Dictionary) -> bool: return row.get("coordinate_evidence","")=="reviewed_png_walk_polygons_local_unverified_original_positions"),mid+" local placements do not claim original server coordinates")
 	var original: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json")) as Dictionary
 	var registered: Dictionary={}
 	for monster: Dictionary in CATALOG.expand(original.get("몬스터",[])):

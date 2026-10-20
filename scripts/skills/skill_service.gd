@@ -182,6 +182,12 @@ func cast(record: Dictionary) -> bool:
 	if mode == "heal" and world.hp >= world._effective_max_hp() and not bool(skill.get("overflow_shield", false)) and skill.get("statuses", []).is_empty(): return false
 	if mode == "convert" and world.mp >= world._effective_max_mp(): return false
 	if mode == "cleanse" and not world.player.is_poisoned(): return false
+	var teleport_landing: Vector2 = Vector2.INF
+	if mode == "teleport":
+		teleport_landing = world._random_walkable_position(world.player.global_position, 96, 600)
+		if not teleport_landing.is_finite():
+			world.hud.show_message("이동 가능한 위치가 없습니다")
+			return false
 	# Validation ends here. Costs and cooldowns happen once, before the marker.
 	if not spend(skill): return false
 	var id := str(skill.id)
@@ -211,7 +217,7 @@ func cast(record: Dictionary) -> bool:
 		"convert": world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
 		"teleport":
 			world._clear_combat_actions()
-			world.player.global_position = world._random_walkable_position(world.player.global_position, 96, 600)
+			world.player.global_position = teleport_landing
 			world.player.clear_click_path()
 			world.player.camera.reset_smoothing()
 			vfx.emit_skill(id, "impact", world.player.global_position)
