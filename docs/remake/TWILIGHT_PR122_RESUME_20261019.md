@@ -236,3 +236,13 @@
 - E ATTACK final native0a8f44c0/source4c0bf75d closed all hand/shaft/cape ownership. Original1792 PNGs are preserved. Lossless uniform shipping-only dx285 maps declared storage128 to413128 while physicalC2816/root/pose/world coordinates remain identical; request6be30315/raw2df61e3a/exact8bda0fe4 passed using the unchanged v07 tools. Earlier r001/v08-r002 metadata HOLDs are preserved and unused, with no core code or quality threshold change. E ATTACK game connection is next.
 - S IDLE6 and HIT6 source/loop/reaction and exact packets6cb92a96/638c7600 are complete and preserved for subsequent game connection. SW IDLE/HIT actual6 reached independent stationary SOURCE PASS eb045fbd/c82514e9; shallow-front SW/turnout limitations do not imply RUN approval. New W rawfc440f25 is made once and preserved; one-time body registration/source gate precedes actual W core production.
 - E DEATH final18b832df/source37ebdb07 closed actual108/floor and calf-thigh raydepth occlusion. Its r001 transport request remains HOLD at the intermediary canonical2048 expanded-region fit despite authoredC2816; the raw/source are preserved and a read-only numeric diagnosis proceeds without art remake or guard relaxation. SE ATTACK source ownership cleanup, SE DEATH and S ATTACK actual6 production continue. All historical405/separate14/54color-shared profiles/1490table and approved267/393 remain preserved; no new WALK/full CI/PR100 work.
+
+
+### 2026-10-20 — E ATTACK r032 / S IDLE r033 / S HIT r034 저장
+
+- 기존 브랜치와 PR122를 유지. r032 `fd31ebe995c5a671639671ada12c90e3d39be655`, r033 `f1ec61099385db08353e102e234ed7d1a8e7121f`, r034 `14a9d9088405434672cb1edb409cd6f54dc51ef3` 각각 원래 범위의 게임 리소스·실제 Player/동작 검증을 통과하고 정상 push 확인.
+- 413번 실제 게임 연결 34동작/204자세: 필수 27동작 + 이미 보존된 선택 WALK 7동작. 전체 130동작/780자세. 413번 필수 40동작 중 13동작 연결이 남아 있으며, 개체 전체 승인은 아직 아님.
+- 상세 승인 2/31종, 미완료 29종. 기존 405/498, 프레임 부족 14종, 54 색상/공유 프로필과 1490 테이블은 유지. 유일 변신과 보스·몬스터의 WALK 유지, 신화 이하 변신의 WALK 요구 제외 정책 유지; 저장된 원화/WALK는 삭제하지 않음.
+- source archive v40–v45는 각 단계 [skip ci] 커밋·정상 push로 `ddb88b5341056221641143c3bf7846eb245ae4df`까지 보존. v46은 SE DEATH v02–v05 실제 원화·원재질·실패 단계와 실물 skin-HOLD/수치 증거를 별도로 보존하며 승인 수치를 올리지 않음.
+- 다음 게임 연결: SW IDLE/HIT, SE ATTACK은 실제6 SOURCE와 exact 패킷 검토 통과. E DEATH는 원화 SOURCE 통과 후 기존 고정-root 사전검사 연결 문제를 optional canonical bridge로 격리 해결했으나, matching core3/도구/pin 적용과 기존 단위·게임 검증 전까지 런타임 채택 보류. 기존 실패 패킷과 로그 보존, 임계값 완화 없음.
+- S ATTACK의 진짜 cloak 누락703px/장창 장식 소유/팔꿈치 연결, W IDLE/HIT hidden-cloth 새 원화 합성, SE DEATH skin 샘플링 최종 검토를 계속 진행. SW/W ATTACK 전용 제작자와 S→SW→W DEATH 제작자 작업 지속. 새 원화는 채팅에 첨부하지 않음. PR100 재개/완료 개체 재제작/수동 CI 없음.
