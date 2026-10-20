@@ -1,0 +1,198 @@
+{
+  "status": "UNEXECUTED_V09_OPTIONAL_DECLARED_ROOT_CANONICAL_PIN_BRIDGE_PROPOSAL",
+  "files": [
+    {
+      "source": "/workspace/twilight/tools/pr122_reviewed_runtime_layout.py",
+      "source_sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+      "proposed": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122_reviewed_runtime_layout.py",
+      "proposed_sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2",
+      "exact_reverse_restores_original": true,
+      "replacements": [
+        {
+          "old": "import json\n",
+          "new": "import json\nimport math\n"
+        },
+        {
+          "old": "def _pose_identity(frame):",
+          "new": "\ndef declared_canonical_preflight_kwargs(canvas_review, layout_review, source_sha, direction, canvas):\n    \"\"\"Optional exact declared-root seed; absent descriptors retain legacy kwargs.\"\"\"\n    a = (canvas_review or {}).get(\"canonical_preflight\")\n    b = (layout_review or {}).get(\"canonical_preflight\")\n    if a != b:\n        raise ValueError(\"Canonical preflight must be identical in canvas and layout reviews\")\n    if a is None:\n        return {}\n    required = {\"status\", \"source_sha256\", \"packing_proof_sha256\", \"direction\",\n                \"canonical_canvas\", \"physical_canvases\", \"root_float\", \"root_integer\",\n                \"tile_size\", \"storage_translations\", \"atlas_origins\", \"source_anchors\"}\n    if not isinstance(a, dict) or set(a) != required:\n        raise ValueError(\"Exact complete declared canonical preflight required\")\n    if a[\"status\"] != \"REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1\" or canvas != 2048 or a[\"canonical_canvas\"] != canvas:\n        raise ValueError(\"Declared bridge preserves canonical2048\")\n    if a[\"source_sha256\"] != source_sha or a[\"direction\"] != direction or direction not in importer.DIRECTIONS:\n        raise ValueError(\"Declared preflight source/direction mismatch\")\n    for field in (\"source_sha256\", \"packing_proof_sha256\"):\n        if not isinstance(a[field], str) or len(a[field]) != 64 or any(c not in \"0123456789abcdef\" for c in a[field]):\n            raise ValueError(\"Declared preflight exact SHA256 required\")\n    pin = _digest(a)\n    if any((r or {}).get(\"canonical_preflight_sha256\") != pin for r in (canvas_review, layout_review)):\n        raise ValueError(\"Declared canonical preflight pin mismatch\")\n    sizes = a[\"physical_canvases\"]\n    if not isinstance(sizes, list) or len(sizes) != 6 or any(type(v) is not int or not 256 <= v <= 4096 or v % 8 for v in sizes) or len(set(sizes)) != 1:\n        raise ValueError(\"Six identical declared physical body canvases required\")\n    if (layout_review or {}).get(\"authored_pose_canvas_sizes\") != sizes:\n        raise ValueError(\"Canonical bridge physical C differs from final authored C\")\n    root = a[\"root_float\"]\n    if not isinstance(root, list) or len(root) != 2 or any(type(v) not in (int,float) or not math.isfinite(v) for v in root):\n        raise ValueError(\"One finite declared root required\")\n    rounded = [math.floor(v + .5) for v in root]\n    if not isinstance(a[\"root_integer\"], list) or len(a[\"root_integer\"]) != 2 or any(type(v) is not int for v in a[\"root_integer\"]) or a[\"root_integer\"] != rounded:\n        raise ValueError(\"Only one common declared-root rounding allowed\")\n    tile = a[\"tile_size\"]\n    if type(tile) is not int or tile not in (1536,2304):\n        raise ValueError(\"Unchanged explicit storage sizes required\")\n    offsets = a[\"storage_translations\"]\n    if not isinstance(offsets, list) or len(offsets) != 6 or any(not isinstance(v,list) or len(v) != 2 or any(type(x) is not int or x < 0 for x in v) for v in offsets):\n        raise ValueError(\"Explicit six storage-only translations required\")\n    origins = [[tile*(i%2), tile*(i//2)] for i in range(6)]\n    if not isinstance(a[\"atlas_origins\"], list) or len(a[\"atlas_origins\"]) != 6 or any(not isinstance(v,list) or len(v) != 2 or any(type(x) is not int for x in v) for v in a[\"atlas_origins\"]) or a[\"atlas_origins\"] != origins:\n        raise ValueError(\"Fixed phase-grid tile origins required\")\n    anchors = [[rounded[j]+offsets[i][j]+origins[i][j] for j in (0,1)] for i in range(6)]\n    if not isinstance(a[\"source_anchors\"], list) or len(a[\"source_anchors\"]) != 6 or any(not isinstance(v,list) or len(v) != 2 or any(type(x) is not int for x in v) for v in a[\"source_anchors\"]) or a[\"source_anchors\"] != anchors or (layout_review or {}).get(\"source_anchors\") != anchors:\n        raise ValueError(\"Only declared root plus storage plus tile origin may seed canonical geometry\")\n    return {\"source_anchors\": anchors}\n\ndef _pose_identity(frame):"
+        },
+        {
+          "old": "    sizes = _validated_authored_canvas_sizes(review, canvas)\n",
+          "new": "    sizes = _validated_authored_canvas_sizes(review, canvas)\n    canonical_kwargs = declared_canonical_preflight_kwargs(review, review, source_sha, direction, base_canvas[0])\n    if canonical_kwargs and canonical_kwargs[\"source_anchors\"] != [f.get(\"source_anchor\") for f in frames]:\n        raise ValueError(\"Declared canonical roots differ from exact base geometry\")\n"
+        },
+        {
+          "old": "        canonical = importer.analyze(path, rows_count=6, reference_rows=[0, 3],\n                                     directions_axis=\"phase_grid2\", canvas_size=base_canvas[0],\n                                     directions=[direction])",
+          "new": "        canonical = importer.analyze(path, rows_count=6, reference_rows=[0, 3],\n                                     directions_axis=\"phase_grid2\", canvas_size=base_canvas[0],\n                                     directions=[direction], **canonical_kwargs)"
+        }
+      ]
+    },
+    {
+      "source": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py",
+      "source_sha256": "d20c10d0c11978a16e70e5a68600b174e7cfe47c9f3b39095701647cd319b66d",
+      "proposed": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122-build-authored-clip-request-v07.py",
+      "proposed_sha256": "40ec010741afcc5d442793292943188af89f28a72fa04b5785c63b1095e5e938",
+      "exact_reverse_restores_original": true,
+      "replacements": [
+        {
+          "old": "from pr122_reviewed_runtime_layout import apply_reviewed_layout",
+          "new": "from pr122_reviewed_runtime_layout import apply_reviewed_layout, declared_canonical_preflight_kwargs"
+        },
+        {
+          "old": "    base = advance.staging.importer.analyze(atlas, rows_count=6, reference_rows=[0,3],\n        directions_axis='phase_grid2', canvas_size=2048, directions=[direction])",
+          "new": "    canonical_preflight = dict(status='REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1',\n        source_sha256=sha(raw), packing_proof_sha256=sha(packing_bytes), direction=direction,\n        canonical_canvas=2048, physical_canvases=[canvas]*6, root_float=root,\n        root_integer=root_integer, tile_size=tile,\n        storage_translations=[f['storage_translation'] for f in frames],\n        atlas_origins=[f['atlas_origin'] for f in frames], source_anchors=anchors)\n    canonical_pin = regions._digest(canonical_preflight)\n    canonical_seed_review = dict(canonical_preflight=canonical_preflight,\n        canonical_preflight_sha256=canonical_pin, authored_pose_canvas_sizes=[canvas]*6,\n        source_anchors=anchors)\n    canonical_kwargs = declared_canonical_preflight_kwargs(canonical_seed_review,\n        canonical_seed_review, sha(raw), direction, 2048)\n    base = advance.staging.importer.analyze(atlas, rows_count=6, reference_rows=[0,3],\n        directions_axis='phase_grid2', canvas_size=2048, directions=[direction], **canonical_kwargs)"
+        },
+        {
+          "old": "        authored_pose_canvas_sizes=[canvas]*6,",
+          "new": "        authored_pose_canvas_sizes=[canvas]*6, canonical_preflight=canonical_preflight,\n        canonical_preflight_sha256=canonical_pin,"
+        },
+        {
+          "old": "source_sha256=sha(raw),\n            canvas_size=2048, review_basis=",
+          "new": "source_sha256=sha(raw),\n            canonical_preflight=canonical_preflight, canonical_preflight_sha256=canonical_pin,\n            canvas_size=2048, review_basis="
+        }
+      ]
+    },
+    {
+      "source": "/workspace/twilight/tools/advance_pr122_native_locomotion.py",
+      "source_sha256": "972f2492a653ea948d7d15cee0c0a5888f7e64bcdc646f89dbebd12a9db274eb",
+      "proposed": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/advance_pr122_native_locomotion.py",
+      "proposed_sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e",
+      "exact_reverse_restores_original": true,
+      "replacements": [
+        {
+          "old": "from pr122_reviewed_source_regions import apply_reviewed_regions",
+          "new": "from pr122_reviewed_source_regions import apply_reviewed_regions\nfrom pr122_reviewed_runtime_layout import declared_canonical_preflight_kwargs"
+        },
+        {
+          "old": "        result = staging.importer.analyze(dest, rows_count=6, reference_rows=[0, 3],\n                                         directions_axis='phase_grid2', canvas_size=canvas,\n                                         directions=[direction])",
+          "new": "        canonical_kwargs = declared_canonical_preflight_kwargs(canvas_review, request.get(\"reviewed_runtime_layout\"), staging.digest(dest), direction, canvas)\n        if canonical_kwargs:\n            assert canvas_review[\"canonical_preflight\"][\"packing_proof_sha256\"] == request.get(\"authored_packing_proof_sha256\")\n        result = staging.importer.analyze(dest, rows_count=6, reference_rows=[0, 3],\n                                         directions_axis='phase_grid2', canvas_size=canvas,\n                                         directions=[direction], **canonical_kwargs)"
+        }
+      ]
+    },
+    {
+      "source": "/workspace/twilight/tools/stage_pr122_native_locomotion.py",
+      "source_sha256": "6cc5c9933015c9a5bf8c17d5daac04bb3ebb585cb5609420bf3f6b90d0623b7b",
+      "proposed": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/stage_pr122_native_locomotion.py",
+      "proposed_sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701",
+      "exact_reverse_restores_original": true,
+      "replacements": [
+        {
+          "old": "        geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],\n                                    directions_axis='phase_grid2', canvas_size=canvas,\n                                    directions=[direction])",
+          "new": "        canonical_kwargs = reviewed_layout.declared_canonical_preflight_kwargs(\n            record.get('source_canvas_review'), manifest.get('reviewed_runtime_layouts', {}).get(source),\n            record['sha256'], direction, canvas)\n        geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],\n                                    directions_axis='phase_grid2', canvas_size=canvas,\n                                    directions=[direction], **canonical_kwargs)"
+        }
+      ]
+    },
+    {
+      "source": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/integrate_new_413_clip_retaining_profile_v06.py",
+      "source_sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+      "proposed": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/integrate_new_413_clip_retaining_profile_v07.py",
+      "proposed_sha256": "1de7ddb84a69582cd2e91434126b84ead57524d98ead53e259b288d9e418c60c",
+      "exact_reverse_restores_original": true,
+      "replacements": [
+        {
+          "old": "from pr122_reviewed_runtime_layout import apply_reviewed_layout",
+          "new": "from pr122_reviewed_runtime_layout import apply_reviewed_layout, declared_canonical_preflight_kwargs"
+        },
+        {
+          "old": "    geometry = advance.staging.importer.analyze(frozen_raw, rows_count=6, reference_rows=[0,3], directions_axis='phase_grid2', canvas_size=canvas, directions=[direction])",
+          "new": "    canonical_kwargs = declared_canonical_preflight_kwargs(canvas_review, request.get('reviewed_runtime_layout'), raw_sha, direction, canvas)\n    if canonical_kwargs:\n        require(canvas_review['canonical_preflight']['packing_proof_sha256'] == request.get('authored_packing_proof_sha256'), 'Exact declared canonical packing pin required')\n    geometry = advance.staging.importer.analyze(frozen_raw, rows_count=6, reference_rows=[0,3], directions_axis='phase_grid2', canvas_size=canvas, directions=[direction], **canonical_kwargs)"
+        },
+        {
+          "old": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+          "new": "b80d47c7d34e43df2718e2709d05e7dd6c5e5669b4dd6e5244f1aebe3ec78d08"
+        }
+      ]
+    }
+  ],
+  "canonical_pins": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/canonical-input-pins.json",
+    "sha256": "b80d47c7d34e43df2718e2709d05e7dd6c5e5669b4dd6e5244f1aebe3ec78d08"
+  },
+  "example": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/Edeath-r001-declared-canonical-preflight-example.json",
+    "sha256": "d8b8d2ccdbd8dd684f771c1dfb91e8e0857d354625c262e672641de646a69f24"
+  },
+  "static_checks": {
+    "all_AST_valid": true,
+    "all_exact_reverse_restore": true,
+    "legacy_absent_descriptor_kwargs_unchanged": true,
+    "tampered_pin_rejected": true,
+    "rehashed_perpose_anchor_change_rejected": true,
+    "Edeath_six_math_fits": [
+      {
+        "phase": 0,
+        "nominal2048_declared_root_edges": [
+          567,
+          174,
+          734,
+          643
+        ]
+      },
+      {
+        "phase": 1,
+        "nominal2048_declared_root_edges": [
+          307,
+          140,
+          742,
+          649
+        ]
+      },
+      {
+        "phase": 2,
+        "nominal2048_declared_root_edges": [
+          224,
+          298,
+          571,
+          407
+        ]
+      },
+      {
+        "phase": 3,
+        "nominal2048_declared_root_edges": [
+          412,
+          670,
+          293,
+          231
+        ]
+      },
+      {
+        "phase": 4,
+        "nominal2048_declared_root_edges": [
+          548,
+          981,
+          186,
+          204
+        ]
+      },
+      {
+        "phase": 5,
+        "nominal2048_declared_root_edges": [
+          555,
+          1010,
+          182,
+          158
+        ]
+      }
+    ]
+  },
+  "unchanged": [
+    "import_original_based_motion.py",
+    "pr122_reviewed_source_regions.py",
+    "packer",
+    "nominal canonical2048",
+    "physical body C/root",
+    "region/ownership/alpha/RGBA/unique6 guards",
+    "profile literals",
+    "all existing tests and actual runtime files"
+  ],
+  "required_adoption_scope": [
+    "review and apply three core tool copies: runtime_layout, advance, stage",
+    "use matching new builder/integrator and canonical-input-pins together",
+    "persist identical descriptor+digest in canvas review and runtime layout review; recompute canonical geometry, region base hash, ownership pin, expanded geometry, layout review/proof and selected-source saved geometry consistently",
+    "run existing default tests unchanged plus scoped actual request/runtime validation before integration; not run in this prototype"
+  ],
+  "repository_changes": 0,
+  "existing_scratch_changes": 0,
+  "apply_or_pipeline_retry": 0,
+  "images": 0,
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,205 @@
+{
+  "schema": "PR122-independent-final-exact-request-source-cycle-review-v1",
+  "status": "PASS_EXACT_E_DEATH_SOURCE_REQUEST_BINDING_PENDING_MATCHING_RUNTIME_ADOPTION",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "E",
+  "role": "death",
+  "version": "EdeathSixActualRig02",
+  "request_sha256": "d5010be95bc58557ab0956e7ee0498f95cf2c4978c5d71e591d5be45022a38bb",
+  "request_path": "/workspace/scratch/mythic413-E-death-declared-canonical-request-r002-20261020/request-EdeathSixActualRig02.json",
+  "raw_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+  "raw_bytes": 6720529,
+  "raw_path": "/workspace/scratch/mythic413-E-death-actual-packed-r001-20261020/thunder_female-E-death-six-actual-poses-r001.png",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/own-E-DEATH-six-actual-native-source-contract-v04.json",
+    "sha256": "18b832df83293eb8408650181a78d4bd5f37529666156b47a8c87d8615eaff7f",
+    "bytes": 163100
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Edeath-v04-18b832-independent-final-actual-source-held-cycle-PASS-v01.json",
+    "sha256": "37ebdb076dba5866d2ca584d971b1ba0c5659dc6966569a4a0c930b464cbc535",
+    "bytes": 14401
+  },
+  "exact_source_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/EdeathSixActualRig02-independent-exact-source-shipping-storage-binding-v01.json",
+    "sha256": "02ebac66d160c1de50afb0bb9d83fa74ca8d9f28bb4b359c53c9606d1d078de9",
+    "bytes": 13314
+  },
+  "canonical_declared_descriptor": {
+    "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+    "source_sha256": "6e57a8caa9210a46b08a2c4cb1bba2d9e2ec1e08504c58609ab35d8454f4b827",
+    "packing_proof_sha256": "ee9f0b7a95cd5b53cdb57e9cb3fecf9d2b1c24336d0388885813cca57ad818b4",
+    "direction": "E",
+    "canonical_canvas": 2048,
+    "physical_canvases": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "root_float": [
+      738.7916666666666,
+      1098.2150113422247
+    ],
+    "root_integer": [
+      739,
+      1098
+    ],
+    "tile_size": 2304,
+    "storage_translations": [
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ]
+    ],
+    "atlas_origins": [
+      [
+        0,
+        0
+      ],
+      [
+        2304,
+        0
+      ],
+      [
+        0,
+        2304
+      ],
+      [
+        2304,
+        2304
+      ],
+      [
+        0,
+        4608
+      ],
+      [
+        2304,
+        4608
+      ]
+    ],
+    "source_anchors": [
+      [
+        995,
+        1354
+      ],
+      [
+        3299,
+        1354
+      ],
+      [
+        995,
+        3658
+      ],
+      [
+        3299,
+        3658
+      ],
+      [
+        995,
+        5962
+      ],
+      [
+        3299,
+        5962
+      ]
+    ]
+  },
+  "canonical_declared_descriptor_sha256": "83bd940e7a35df79a5c66e1849f5ed5db8561f814a039e4d24cfd05b0d28abc5",
+  "isolated_builder_provenance": {
+    "path": "/workspace/scratch/mythic413-E-death-declared-canonical-request-r002-20261020/isolated-three-copy-preload-provenance-v01.json",
+    "sha256": "38db37319ea07977e0912ac0bc0ce5294fe1441a01af0ebd70bc1b3c2fb3e66f",
+    "bytes": 1427
+  },
+  "required_matching_module_copies": {
+    "pr122_reviewed_runtime_layout": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122_reviewed_runtime_layout.py",
+      "sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2"
+    },
+    "stage_pr122_native_locomotion": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/stage_pr122_native_locomotion.py",
+      "sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701"
+    },
+    "advance_pr122_native_locomotion": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/advance_pr122_native_locomotion.py",
+      "sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e"
+    }
+  },
+  "required_runtime_adoption": [
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval."
+  ],
+  "runtime_adoption_approved": false,
+  "runtime_tests_run": 0,
+  "proposal_pipeline_executed_by_this_audit": false,
+  "physical_canvas": 2816,
+  "common_unpadded_root": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "original_reviewed_storage": [
+    256,
+    256
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "uniform_extra_shipping_translation": [
+    0,
+    0
+  ],
+  "uniform_integer_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "loop": false,
+  "cycle_seconds": null,
+  "runtime_cycle_seconds": 0.8,
+  "resource_role_seconds": 0.65,
+  "phase_seconds": 0.13333333333333333,
+  "intended_contact_frame": null,
+  "held_dead_terminal": true,
+  "visual_findings": [
+    "The dedicated ownE six-source sequence shows loss of balance, leg compression, knees catching the fall, torso collapse, ground settling, then a held face-up terminal. The direction, head/bun/blue ribbons, white skirt, blue/gold cloth and character body unit remain consistent.",
+    "Native actual knee/ankle0/2/5 and RIGHTelbow2/5 checks show original directional black/gold leather folds and complete curved white/gold cuff material with natural connected joints. Both complete original boots and the entire RIGHT hand/grip/double-ended staff remain complete and unclipped.",
+    "The held supine terminal visibly remains collapsed; it does not recover or loop toward the living guard. The torso/head visible-front plane settles above its declared finite back support hull; runtime death .8seconds and unchanged resource .65seconds are recorded separately.",
+    "The v03 calf lip crossing the exposed phase2 thigh was held. Finalv04 preserves all108 original source/raster materials, fixed bones and surface/floor parameters, and resolves only existing thigh/calf self-occlusion by their true declared ray depth. The corrected actual phase2 native region now has a natural uninterrupted thigh/boot rim; other changed0/1 overlaps follow the same independently checked selection.",
+    "All108 actual editable rasters and the12 recomputed overlap maps reproduce the final six PNGs exactly. Every original source and selected actual raster texel quad retains the prior finite floor bound, min guarded Z1; fixed318.725 femur/tibia lengths and wholeRIGHTforegrip/pole source Gram remain exact."
+  ],
+  "visual_limitations": [
+    "This approves the exact visible six-source fall/joints/held-terminal scope, not full actor approval, game tests or production binding.",
+    "Source3D material capture, minimum-norm camera-plane transverse vectors and the terminal60native unseen-back support thickness are explicit compatible authored choices, not uniquely recovered hidden anatomy or a perpendicular anatomical muscle section.",
+    "The actual v03 whole-six and necessary0/2/5 joints were viewed once; only the corrected phase2 overlap was viewed again. Final0/1 changes are confined to original overlapping near/far material with actor alpha, source rasters, pose and floor unchanged.",
+    "No source bitmap resizing, wholeactor mirror, root/C/alpha-height fit, threshold relaxation, new image service or material deletion was used for this correction.",
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval.",
+    "Final packing uses one identical integer shipping translation for all6, exact reverseRGBA reconstruction, transparent padding only, and one common integer root quantization. Every original native world-space point is unchanged. No new source/image view or physical/body/profile fit was introduced."
+  ],
+  "images_forwarded": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}
