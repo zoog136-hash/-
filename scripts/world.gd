@@ -3884,8 +3884,8 @@ func _save_game(quiet: bool) -> void:
 		"next_item_instance_id":next_item_instance_id
 	}
 	if field_map is NativePngField:
-		data["native_png_plan_sha256"] = FileAccess.get_sha256(NATIVE_PNG.PLAN_PATH)
-		data["native_png_review_sha256"] = NATIVE_PNG.review_hash()
+		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
+		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
 	var result: Error = preload("res://scripts/skills/save_writer.gd").write(save_path(), data)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
@@ -3919,7 +3919,7 @@ func _load_game(quiet: bool) -> void:
 	var saved_map_id: String = str(data.get("map_id", ""))
 	if data.has("native_png_plan_sha256"):
 		var native_saved_field: PlayableField = NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if NATIVE_PNG.supports(saved_map_id) else null
-		if native_saved_field == null or str(data.native_png_plan_sha256) != FileAccess.get_sha256(NATIVE_PNG.PLAN_PATH):
+		if native_saved_field == null or str(data.native_png_plan_sha256) != NATIVE_PNG.plan_hash(NATIVE_PNG.canonical(saved_map_id)):
 			source_save_blocked = true
 			hud.show_message("PNG 팩 누락·변경: 저장 파일을 보존합니다")
 			return
@@ -4045,7 +4045,7 @@ func _load_game(quiet: bool) -> void:
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
-	if field_map is NativePngField and str(data.get("native_png_review_sha256",""))!=NATIVE_PNG.review_hash():
+	if field_map is NativePngField and str(data.get("native_png_review_sha256",""))!=NATIVE_PNG.review_hash(active_map_id):
 		# Keep character progress, inventory and boss state; a revised obstacle
 		# must not restore the actor inside its old, now blocked pixel position.
 		compatible_layout=false

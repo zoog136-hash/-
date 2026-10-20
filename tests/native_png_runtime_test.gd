@@ -54,7 +54,7 @@ func inspect_foreground(renderer: NativePngRenderer, field: NativePngField) -> v
 		world.player.clear_click_path();world.player.velocity=Vector2.ZERO
 		world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
 		# Staged decoding is a frame-budget policy, not missing source pixels.
-		for _load_pass: int in range(32): renderer.refresh_visible()
+		check(await renderer.settle_visible(),"asynchronous real visible PNGs fully ready")
 		var probe:=DepthProbe.new();probe.position=foot-Vector2(0,10);world.add_child(probe)
 		await ticks(3);await RenderingServer.frame_post_draw
 		var target:=foot-Vector2(0,40)
@@ -77,7 +77,7 @@ func inspect(mid: String) -> void:
 	var field: NativePngField=world.field_map
 	var renderer: NativePngRenderer=world.field_renderer
 	await ticks(3)
-	world.player.camera.reset_smoothing();world.player.camera.force_update_scroll();renderer.refresh_visible()
+	world.player.camera.reset_smoothing();world.player.camera.force_update_scroll();check(await renderer.settle_visible(),mid+" actual visible PNGs ready")
 	check(renderer.chunks.size()>0,mid+" real PNG textures loaded")
 	check(renderer.get_node_or_null("Terrain")==null,mid+" original PNG is the sole terrain renderer")
 	for sprite: Sprite2D in renderer.chunks.values():
@@ -94,6 +94,9 @@ func inspect(mid: String) -> void:
 		check(field.walkable(candidate) and field.point_clear(candidate,12) and field.spawn_contains(zone,candidate),mid+" post-alpha candidate remains physically valid "+str(zone.id))
 	# This suite exercises route/physics fidelity rather than combat; combat
 	# remains live in the dedicated population and player test suites.
+	# The population wake loop would re-enable distant actors as the route
+	# reaches them. Freeze it too: combat has its own live population suites.
+	world.field_population.set_process(false)
 	for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
 	var target: Vector2=spawn+Vector2(32,0)
 	check(field.line_clear(spawn,target),mid+" actual ground segment is walkable")
@@ -124,13 +127,13 @@ func inspect(mid: String) -> void:
 	world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
 	for zoom: float in [1.0,.6,1.4]:
 		world.player.camera.zoom=Vector2.ONE*zoom
-		world.player.camera.force_update_scroll();renderer.refresh_visible();await ticks(2)
+		world.player.camera.force_update_scroll();check(await renderer.settle_visible(),mid+" asynchronous camera view fully loaded");await ticks(2)
 		check(renderer.decoded_pixels<=renderer.MAX_VISIBLE_PIXELS,mid+" bounded live image memory at zoom "+str(zoom))
 	world.player.camera.zoom=Vector2.ONE
 	world.player.camera.force_update_scroll();renderer.refresh_visible()
 	var previous_chunks: Array=renderer.chunks.keys()
 	world.player.camera.offset=Vector2(1600,0)
-	world.player.camera.force_update_scroll();renderer.refresh_visible();await ticks(2)
+	world.player.camera.force_update_scroll();check(await renderer.settle_visible(),mid+" asynchronous camera view fully loaded");await ticks(2)
 	check(renderer.chunks.keys()!=previous_chunks and renderer.chunks.size()>0,mid+" camera pan loads distant native chunks and releases previous textures")
 	world.player.camera.offset=Vector2.ZERO
 	world.player.camera.force_update_scroll();renderer.refresh_visible()
@@ -157,7 +160,7 @@ func inspect(mid: String) -> void:
 	await ticks(45)
 	world.set_process(false)
 	check(world.active_map_id=="aden_world",mid+" walking into real return portal loads existing Aden")
-	records.append({"map_id":mid,"png_sha256":field.png_manifest.source_sha256,"loaded_chunks":loaded_chunks,"peak_rgba_bytes":peak_bytes,"collision_sides":found,"walked_path_pixels":traversed,"route_targets":REGISTRY.plan().maps[mid].route_checks.size(),"playable_scope":"MANUALLY_TRACED_FLOORS_AND_ROUTES","full_map_verified":false,"monster_spawn":"NOT_MAPPED"})
+	records.append({"map_id":mid,"png_sha256":field.png_manifest.source_sha256,"loaded_chunks":loaded_chunks,"peak_rgba_bytes":peak_bytes,"collision_sides":found,"walked_path_pixels":traversed,"route_targets":REGISTRY.plan().maps[mid].route_checks.size(),"playable_scope":"MANUALLY_TRACED_FLOORS_AND_ROUTES","full_map_verified":false,"monster_spawn":"LOCAL_LAYOUT; ORIGINAL_COORDINATES_UNVERIFIED"})
 
 func run() -> void:
 	if not REGISTRY.enabled() or OS.get_environment("TWILIGHT_NATIVE_PNG_PACK").is_empty():
@@ -177,7 +180,7 @@ func run() -> void:
 	var sentinel:=FileAccess.open(normal_path,FileAccess.WRITE);sentinel.store_string("normal-save-preservation-sentinel");sentinel.close()
 	var normal_hash: String=FileAccess.get_sha256(normal_path)
 	var db_hash: String=FileAccess.get_sha256("res://data/game_db_v17.json")
-	for mid: String in REGISTRY.plan().maps: await inspect(mid)
+	for mid: String in REGISTRY.base_plan().maps: await inspect(mid)
 	for alias: String in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]:
 		world._set_map(alias,false);check(world.active_map_id=="escaros_world",alias+" shares one continuous field")
 	world._set_map("albino_04",false);check(world.active_map_id=="albino_03","legacy fourth zone has safe native-session route")

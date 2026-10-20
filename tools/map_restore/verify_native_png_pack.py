@@ -54,9 +54,10 @@ def verify(pack, plan_path):
                 split.load()
                 if split.size != tuple(manifest['bounds'][2:]):
                     raise ValueError('Split canvas mismatch')
-    proof = index['albino_partition']
-    if not proof['rgba_roundtrip'] or proof['omitted_pixels'] or proof['duplicated_pixels']:
-        raise ValueError('Original pixel ownership proof failed')
+    if any(mid.startswith('albino_') for mid in index['maps']):
+        proof = index['albino_partition']
+        if not proof['rgba_roundtrip'] or proof['omitted_pixels'] or proof['duplicated_pixels']:
+            raise ValueError('Original pixel ownership proof failed')
     return dict(maps=len(index['maps']), chunks=chunks, foreground_cuts=foregrounds, decoded_chunk_pixels=rgba_pixels,
                 plan_sha256=index['plan_sha256'], all_chunk_sha256_verified=True,
                 production_complete=False, android_device='NOT_RUN')

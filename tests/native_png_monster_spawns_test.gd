@@ -49,6 +49,8 @@ func _initialize() -> void:
 	var cfg: Dictionary=PLACEMENT.layout()
 	var plan: Dictionary=REGISTRY.plan()
 	check(not cfg.is_empty() and not plan.is_empty(),"hash-pinned spawn layout and reviewed PR128 geometry")
+	for mid: String in REGISTRY.read_json(REGISTRY.EXTRA_PLAN_PATH).maps:
+		check(PLACEMENT.build(mid,plan.maps[mid],plan.maps[mid].portals).is_empty(),mid+" unproven new source encounters remain absent")
 	var original: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json")) as Dictionary
 	var registered: Dictionary={}
 	for monster: Dictionary in CATALOG.expand(original.get("몬스터",[])):
@@ -57,7 +59,7 @@ func _initialize() -> void:
 	var ids: Dictionary={}
 	var normal_count: int=0
 	var boss_count: int=0
-	for mid: String in plan.get("maps",{}):
+	for mid: String in REGISTRY.base_plan().get("maps",{}):
 		var spec: Dictionary=plan.maps[mid]
 		var manifest_rows: Array=cfg.get("maps",{}).get(mid,[])
 		var built: Array=PLACEMENT.build(mid,spec,spec.get("portals",[]))

@@ -3,6 +3,37 @@ class_name NativePngField
 ## Pixel coordinates come from the decoded PNG, not an assumed server map ID.
 ## Hand-traced floors share one navigation/physics mesh. Unreviewed pockets stay solid.
 const NATIVE_SPAWNS = preload("res://scripts/monsters/native_png_spawns.gd")
+const FLOOR_BUCKET: int=512
+var floor_buckets: Dictionary={}
+var floor_polygons_empty: bool=true
+
+func index_walk_polygons(raw: Array) -> void:
+	floor_buckets.clear();floor_polygons_empty=raw.is_empty()
+	for points: Array in raw:
+		var polygon:=PackedVector2Array()
+		for point: Array in points: polygon.append(Vector2(point[0],point[1]))
+		if polygon.is_empty(): continue
+		var box:=Rect2(polygon[0],Vector2.ZERO)
+		for point: Vector2 in polygon: box=box.expand(point)
+		# Godot polygon edge tests tolerate float rounding near a vertex.
+		# Expand only the broad phase; exact membership still uses the source polygon.
+		box=box.grow(1)
+		var low:=Vector2i((box.position/FLOOR_BUCKET).floor())
+		var high:=Vector2i((box.end/FLOOR_BUCKET).floor())
+		for y: int in range(low.y,high.y+1):
+			for x: int in range(low.x,high.x+1):
+				var key:=Vector2i(x,y)
+				if not floor_buckets.has(key): floor_buckets[key]=[]
+				floor_buckets[key].append(polygon)
+
+func inside_navigable_area(point: Vector2) -> bool:
+	if floor_polygons_empty: return true
+	# Exact polygon tests remain unchanged. Broad phase avoids scanning all
+	# 114 Escaros floor polygons for every grid cell or moving monster.
+	for polygon: PackedVector2Array in floor_buckets.get(Vector2i((point/FLOOR_BUCKET).floor()),[]):
+		if Geometry2D.is_point_in_polygon(point,polygon): return true
+	return false
+
 var png_manifest: Dictionary
 var png_root: String
 
@@ -18,7 +49,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	portals=spec.get("portals",portals)
 	var value: Dictionary = {
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
-		"layout_revision":int(plan.revision),"bounds":manifest.bounds,"native_png":true,
+		"layout_revision":int(spec.get("layout_revision",plan.revision)),"bounds":manifest.bounds,"native_png":true,
 		"navigation":{"cell_size":16,"clearance":4,"use_baked_cache":false},
 		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
@@ -30,6 +61,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		"population_status":"LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES",
 		"spawn_layout_revision":"native_png_spawns_20261019"}
 	value["runtime_foreground"]=spec.get("runtime_foreground",[])
+	index_walk_polygons(spec.walk_polygons)
 	configure(value)
 	# This mask only excludes transparent source pixels. Actual water, walls and
 	# obstacles still come from the independent visual trace, never PNG colours.

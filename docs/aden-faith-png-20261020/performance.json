@@ -1,0 +1,162 @@
+{
+  "base_main": "5a5c4ff54565e26c58a145dabe749e8c41fc7a24",
+  "engine": "4.7.2-stable (official)",
+  "renderer": "Compatibility OpenGL / llvmpipe; NOT Android hardware",
+  "real_main_and_png": true,
+  "android_device": "NOT_RUN",
+  "workload": "Same private v5, actual Main, three 480-frame walking routes; max_fps=60. Map entry excluded from stream timer; frame intervals include path requests/shader/rendering.",
+  "before": [
+    {
+      "chunk_set_changes": 5,
+      "frames": {
+        "max_usec": 541261,
+        "over_16667_usec": 236,
+        "p50_usec": 16659,
+        "p95_usec": 17293,
+        "p99_usec": 31834,
+        "samples": 480
+      },
+      "map": "albino_03",
+      "map_load_usec": 721460,
+      "peak_rgba_bytes": 25438956,
+      "player_displacement": 427.587493896484,
+      "png_source": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "real_main": true,
+      "stream_main_thread": {
+        "max_usec": 38343,
+        "over_16667_usec": 4,
+        "p50_usec": 2,
+        "p95_usec": 86,
+        "p99_usec": 156,
+        "samples": 480
+      }
+    },
+    {
+      "chunk_set_changes": 5,
+      "frames": {
+        "max_usec": 263677,
+        "over_16667_usec": 480,
+        "p50_usec": 29222,
+        "p95_usec": 42572,
+        "p99_usec": 52254,
+        "samples": 480
+      },
+      "map": "escaros_world",
+      "map_load_usec": 5919716,
+      "peak_rgba_bytes": 25179108,
+      "player_displacement": 625.026550292969,
+      "png_source": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+      "real_main": true,
+      "stream_main_thread": {
+        "max_usec": 31218,
+        "over_16667_usec": 3,
+        "p50_usec": 2,
+        "p95_usec": 134,
+        "p99_usec": 196,
+        "samples": 480
+      }
+    },
+    {
+      "chunk_set_changes": 9,
+      "frames": {
+        "max_usec": 79993,
+        "over_16667_usec": 228,
+        "p50_usec": 16662,
+        "p95_usec": 16934,
+        "p99_usec": 21662,
+        "samples": 480
+      },
+      "map": "yahee_temple",
+      "map_load_usec": 716236,
+      "peak_rgba_bytes": 25267016,
+      "player_displacement": 1822.06616210938,
+      "png_source": "5f0b8eae1a651430127116cb12b5ecbf79f5c17cf8cc78b918228b833bc46528",
+      "real_main": true,
+      "stream_main_thread": {
+        "max_usec": 35369,
+        "over_16667_usec": 4,
+        "p50_usec": 2,
+        "p95_usec": 163,
+        "p99_usec": 485,
+        "samples": 480
+      }
+    }
+  ],
+  "after": [
+    {
+      "chunk_set_changes": 7,
+      "frames": {
+        "max_usec": 92857,
+        "over_16667_usec": 231,
+        "p50_usec": 16656,
+        "p95_usec": 18398,
+        "p99_usec": 24419,
+        "samples": 480
+      },
+      "map": "albino_03",
+      "map_load_usec": 756262,
+      "peak_rgba_bytes": 44542700,
+      "player_displacement": 427.587493896484,
+      "png_source": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "real_main": true,
+      "stream_main_thread": {
+        "max_usec": 563,
+        "over_16667_usec": 0,
+        "p50_usec": 13,
+        "p95_usec": 318,
+        "p99_usec": 454,
+        "samples": 480
+      }
+    },
+    {
+      "chunk_set_changes": 13,
+      "frames": {
+        "max_usec": 168309,
+        "over_16667_usec": 480,
+        "p50_usec": 27473,
+        "p95_usec": 42158,
+        "p99_usec": 47363,
+        "samples": 480
+      },
+      "map": "escaros_world",
+      "map_load_usec": 4005641,
+      "peak_rgba_bytes": 71316452,
+      "player_displacement": 625.031555175781,
+      "png_source": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+      "real_main": true,
+      "stream_main_thread": {
+        "max_usec": 3284,
+        "over_16667_usec": 0,
+        "p50_usec": 14,
+        "p95_usec": 348,
+        "p99_usec": 529,
+        "samples": 480
+      }
+    },
+    {
+      "chunk_set_changes": 11,
+      "frames": {
+        "max_usec": 52699,
+        "over_16667_usec": 217,
+        "p50_usec": 16655,
+        "p95_usec": 17013,
+        "p99_usec": 20679,
+        "samples": 480
+      },
+      "map": "yahee_temple",
+      "map_load_usec": 698668,
+      "peak_rgba_bytes": 71404360,
+      "player_displacement": 1817.96069335938,
+      "png_source": "5f0b8eae1a651430127116cb12b5ecbf79f5c17cf8cc78b918228b833bc46528",
+      "real_main": true,
+      "stream_main_thread": {
+        "max_usec": 774,
+        "over_16667_usec": 0,
+        "p50_usec": 11,
+        "p95_usec": 364,
+        "p99_usec": 516,
+        "samples": 480
+      }
+    }
+  ]
+}

@@ -28,7 +28,15 @@ func _run() -> void:
 	print("FIELD load_ms=",Time.get_ticks_msec()-started)
 	var field: PlayableField = world.field_map
 	check(field != null and field.bounds.size == Vector2(12288,8192),"map load and actual field extent")
-	check(world.maps.size()==25,"preserve 25 existing map IDs")
+	var historical: Array=JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v18.json"))
+	var expected_ids: Dictionary={}
+	for row: Dictionary in historical:
+		expected_ids[str(row.id)]=true
+		check(world.maps_by_id.has(str(row.id)),"historical persistent map ID retained: "+str(row.id))
+	for row: Dictionary in preload("res://scripts/maps/native_png_registry.gd").catalog_entries():
+		check(str(row.id) in ["escaros_world","yahee_temple","balrog_temple"],"only separately registered native fields extend catalog")
+		expected_ids[str(row.id)]=true
+	check(world.maps.size()==expected_ids.size(),"catalog preserves all historical IDs and has no duplicate or unexplained native entries")
 	check(field.walkable(world.player.global_position) and field.point_clear(world.player.global_position),"player spawn has body clearance")
 	check(world.player.global_position.distance_to(Vector2(2420,4100))<40,"authored player spawn")
 	check(field.is_safe(Vector2(1600,4100)),"town safe zone")

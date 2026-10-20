@@ -20,11 +20,16 @@ func _initialize() -> void:
 	invalid=review.duplicate(true);invalid.maps.balrog_temple.foreground[0].foot_image=[-1,0]
 	check(REGISTRY.merge_review(base,invalid,base_hash).is_empty(),"out-of-source foreground anchor is rejected")
 	check(base.revision<plan.revision and not base.maps.balrog_temple.has("runtime_foreground"),"review does not mutate the immutable archive plan")
-	check(plan.maps.size()==6,"three Albino, one continuous Escaros and two temples")
+	check(base.maps.size()==6,"immutable v5 retains three Albino, continuous Escaros and two temples")
+	check(plan.maps.size()==11,"five independently sourced Aden/Faith replacements join the six existing native fields")
+	var extra: Dictionary=REGISTRY.read_json(REGISTRY.EXTRA_PLAN_PATH)
+	for mid: String in ["aden_world","faith_01","faith_02","faith_03","faith_04"]:
+		check(plan.maps.has(mid) and extra.maps.has(mid),"existing persistent ID receives its own PNG: "+mid)
+		check(REGISTRY.plan_hash(mid)==FileAccess.get_sha256(REGISTRY.EXTRA_PLAN_PATH),"per-map save marker selects new pack: "+mid)
 	check(plan.maps.balrog_temple.name=="발록의 시전","user supplied 99111 name retained exactly")
 	check(plan.maps.yahee_temple.name=="야히의신전","user supplied 99112 name retained exactly")
 	for source: Dictionary in plan.sources.values():
-		check(source.server_map_id==null and source.collision_data_id==null,"PNG number never becomes server/collision ID")
+		check(source.get("server_map_id")==null and source.get("collision_data_id")==null,"PNG number never becomes server/collision ID")
 		check(str(source.sha256).length()==64 and source.decoded,"original byte provenance recorded")
 	var baseline: Array=JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v18.json"))
 	var ids: Array=baseline.map(func(row: Dictionary) -> String: return str(row.id))

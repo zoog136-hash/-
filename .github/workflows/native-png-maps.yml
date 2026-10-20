@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - 'data/maps/native_png*'
+      - 'data/maps/aden_faith_png*'
       - 'data/monsters/native_png_spawn_layout.json'
       - 'scripts/monsters/native_png_spawns.gd'
       - 'scripts/maps/native_png*'
       - 'scripts/maps/field_minimap.gd'
       - 'scripts/world.gd'
       - 'tests/native_png*'
+      - 'tests/aden_faith_png*'
       - 'tools/map_restore/*native_png*'
       - '.github/workflows/native-png-maps.yml'
   workflow_dispatch:
@@ -43,7 +45,7 @@ jobs:
       - name: Parse project and preserve ordinary game/save contracts
         run: |
           mkdir -p native-png-ci
-          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_monster_spawns_test,native_png_runtime_test,native_png_normal_travel_test,native_png_review_runtime_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_polygon_index_test,native_png_monster_spawns_test,native_png_runtime_test,native_png_normal_travel_test,native_png_review_runtime_test,native_png_streaming_test,aden_faith_png_runtime_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test
       - name: State private integration scope
         if: always()
         run: |

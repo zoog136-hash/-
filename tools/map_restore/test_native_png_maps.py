@@ -91,17 +91,53 @@ class LosslessPreparation(unittest.TestCase):
             self.assertIsNone(source['server_map_id'])
             self.assertIsNone(source['collision_data_id'])
 
+    def test_independent_pack_compiles_without_old_albino_source(self):
+        # Deliberately synthetic CODE regression; never counted as real PNG QA.
+        from build_native_png_maps import digest
+        from verify_native_png_pack import verify
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root/'independent.png'
+            Image.new('RGBA', (70, 50), (20, 80, 140, 255)).save(source)
+            plan = root/'plan.json'
+            plan.write_text(json.dumps({'sources': {'independent.png': {
+                'sha256': digest(source), 'bytes': source.stat().st_size, 'size': [70, 50]}},
+                'maps': {'independent': {'file': 'independent.png', 'collision_scope': 'CODE_FIXTURE'}}}))
+            build(root, plan, root/'pack')
+            report = verify(root/'pack', plan)
+            self.assertEqual(report['maps'], 1)
+            self.assertTrue(report['all_chunk_sha256_verified'])
+            self.assertFalse((root/'13474.png').exists())
+
+    def test_five_new_sources_reuse_persistent_ids_without_guessed_population(self):
+        plan = json.loads((ROOT/'data/maps/aden_faith_png_plan.json').read_text())
+        expected = {'aden_world': 'Aden.png', 'faith_01': '13398.png',
+                    'faith_02': '13401.png', 'faith_03': '13417.png', 'faith_04': '13472.png'}
+        self.assertEqual({mid: row['file'] for mid, row in plan['maps'].items()}, expected)
+        historical = {row['id'] for row in json.loads((ROOT/'data/maps_v18.json').read_text())}
+        self.assertTrue(set(expected) <= historical)
+        self.assertEqual(len({s['sha256'] for s in plan['sources'].values()}), 5)
+        for row in plan['sources'].values():
+            self.assertIsNone(row['server_map_id'])
+            self.assertIsNone(row['collision_data_id'])
+        for row in plan['maps'].values():
+            self.assertTrue(row['route_checks'] and row['blocked_probes'] and row['portals'])
+            self.assertNotIn('monster_spawn', row)
+            self.assertFalse(row['full_terrain_collision_verified'])
+
     def test_legacy_regeneration_preserves_private_png_configuration(self):
         with tempfile.TemporaryDirectory() as tmp:
             checkout = Path(tmp)
             for relative in ['tools/build_world_regions.py', 'data/game_db_v17.json',
                              'data/maps/field_index.json', 'data/maps/native_png_plan.json',
-                             'data/maps/native_png_pack.json', 'data/maps/native_png_review.json']:
+                             'data/maps/native_png_pack.json', 'data/maps/native_png_review.json',
+                             'data/maps/aden_faith_png_plan.json', 'data/maps/aden_faith_png_pack.json']:
                 target = checkout/relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(ROOT/relative, target)
             protected = {p: (checkout/p).read_bytes() for p in
-                         ['data/maps/native_png_plan.json', 'data/maps/native_png_pack.json', 'data/maps/native_png_review.json']}
+                         ['data/maps/native_png_plan.json', 'data/maps/native_png_pack.json', 'data/maps/native_png_review.json',
+                          'data/maps/aden_faith_png_plan.json', 'data/maps/aden_faith_png_pack.json']}
             for family in ['albino', 'escaros']:
                 subprocess.run([sys.executable, str(checkout/'tools/build_world_regions.py'),
                                 '--family', family], check=True, capture_output=True)

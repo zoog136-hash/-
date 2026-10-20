@@ -1,0 +1,675 @@
+{
+  "schema": 1,
+  "revision": 2026102001,
+  "source_map_id_policy": "PNG_NUMBER_IS_NOT_SERVER_MAP_ID",
+  "activation": "VERIFIED_PRIVATE_PACK_IN_ORDINARY_GAME; legacy opt-out retained",
+  "sources": {
+    "Aden.png": {
+      "sha256": "c0af339cbc2dbba5fb2e65c3c7f01d9467507545d7b91cbb331f5bbd51128730",
+      "bytes": 107386586,
+      "size": [
+        15728,
+        7987
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "alpha_bbox": [
+        1967,
+        369,
+        14007,
+        7987
+      ],
+      "decoded": true,
+      "source_status": "ACTUAL_BYTES_ACQUIRED_AND_DECODED",
+      "server_map_id": null,
+      "collision_data_id": null
+    },
+    "13398.png": {
+      "sha256": "1bf9d61b7b12c12b5dca0d0e8d0ac6c36c57aeab975fe5a7b60e82814880ea3b",
+      "bytes": 32263011,
+      "size": [
+        9216,
+        4608
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "alpha_bbox": [
+        621,
+        212,
+        8570,
+        4321
+      ],
+      "decoded": true,
+      "source_status": "ACTUAL_BYTES_ACQUIRED_AND_DECODED",
+      "server_map_id": null,
+      "collision_data_id": null
+    },
+    "13401.png": {
+      "sha256": "17785cf69b7af227f9cbc25c84adf21976bc30018fab2a8c162b76d896edb0d2",
+      "bytes": 40006391,
+      "size": [
+        9216,
+        4608
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "alpha_bbox": [
+        621,
+        212,
+        8570,
+        4321
+      ],
+      "decoded": true,
+      "source_status": "ACTUAL_BYTES_ACQUIRED_AND_DECODED",
+      "server_map_id": null,
+      "collision_data_id": null
+    },
+    "13417.png": {
+      "sha256": "7348875ceec9a599a69aab980d2bb455a4aede9f0fe9e880793e2cd56314e5d1",
+      "bytes": 32614986,
+      "size": [
+        12288,
+        6144
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "alpha_bbox": [
+        839,
+        708,
+        9925,
+        5382
+      ],
+      "decoded": true,
+      "source_status": "ACTUAL_BYTES_ACQUIRED_AND_DECODED",
+      "server_map_id": null,
+      "collision_data_id": null
+    },
+    "13472.png": {
+      "sha256": "534110cd42d6f5730515360c18a5b1840c4f80353d72b01a7496fb3854ca3a6e",
+      "bytes": 37563010,
+      "size": [
+        9216,
+        4608
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "alpha_bbox": [
+        621,
+        212,
+        8570,
+        4321
+      ],
+      "decoded": true,
+      "source_status": "ACTUAL_BYTES_ACQUIRED_AND_DECODED",
+      "server_map_id": null,
+      "collision_data_id": null
+    }
+  },
+  "maps": {
+    "aden_world": {
+      "name": "아덴",
+      "file": "Aden.png",
+      "layout_revision": 2026102001,
+      "spawn": [
+        11750,
+        2940
+      ],
+      "walk_polygons": [
+        [
+          [
+            11650,
+            2910
+          ],
+          [
+            11735,
+            2867
+          ],
+          [
+            11880,
+            2938
+          ],
+          [
+            11795,
+            2980
+          ]
+        ]
+      ],
+      "route_checks": [
+        [
+          11750,
+          2940
+        ],
+        [
+          11700,
+          2915
+        ],
+        [
+          11745,
+          2895
+        ],
+        [
+          11815,
+          2930
+        ],
+        [
+          11785,
+          2950
+        ]
+      ],
+      "blocked_probes": [
+        [
+          11762,
+          2921
+        ],
+        [
+          11800,
+          2800
+        ],
+        [
+          11700,
+          3010
+        ],
+        [
+          11840,
+          3000
+        ]
+      ],
+      "collision": [
+        {
+          "id": "palace_plaza_fountain",
+          "shape": "circle",
+          "center": [
+            11762,
+            2921
+          ],
+          "radius": 14
+        }
+      ],
+      "portals": [
+        {
+          "id": "faith_entry",
+          "name": "신념의 탑 입장",
+          "position": [
+            11705,
+            2910
+          ],
+          "target_map": "faith_01",
+          "radius": 18
+        },
+        {
+          "id": "albino_entry",
+          "name": "알비노 분지",
+          "position": [
+            11795,
+            2920
+          ],
+          "target_map": "albino_01",
+          "radius": 18
+        },
+        {
+          "id": "yahee_entry",
+          "name": "야히의신전",
+          "position": [
+            11820,
+            2935
+          ],
+          "target_map": "yahee_temple",
+          "radius": 18
+        }
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_HALL_AND_CONNECTED_ROUTES_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "LEGACY_ROSTERS_PRESERVED_NO_UNPROVEN_COORDINATE_TRANSFORM",
+      "review_method": "SOURCE_RGBA_NATIVE_PIXEL_CROP_VISUAL_TRACE; conservative 16px floor grid; all off-route pockets closed"
+    },
+    "faith_01": {
+      "name": "신념의 탑 1층",
+      "file": "13398.png",
+      "layout_revision": 2026102001,
+      "spawn": [
+        4460,
+        2760
+      ],
+      "walk_polygons": [
+        [
+          [
+            4230,
+            2730
+          ],
+          [
+            4420,
+            2635
+          ],
+          [
+            4710,
+            2780
+          ],
+          [
+            4520,
+            2875
+          ]
+        ]
+      ],
+      "route_checks": [
+        [
+          4460,
+          2760
+        ],
+        [
+          4320,
+          2730
+        ],
+        [
+          4430,
+          2690
+        ],
+        [
+          4520,
+          2740
+        ],
+        [
+          4480,
+          2800
+        ]
+      ],
+      "blocked_probes": [
+        [
+          4600,
+          2742
+        ],
+        [
+          4500,
+          2300
+        ],
+        [
+          4400,
+          2600
+        ]
+      ],
+      "collision": [
+        {
+          "id": "hall_column",
+          "shape": "circle",
+          "center": [
+            4600,
+            2742
+          ],
+          "radius": 25
+        }
+      ],
+      "portals": [
+        {
+          "id": "aden_return",
+          "name": "아덴 귀환",
+          "position": [
+            4380,
+            2760
+          ],
+          "target_map": "aden_world",
+          "radius": 18
+        },
+        {
+          "id": "next_floor",
+          "name": "다음 층",
+          "position": [
+            4540,
+            2760
+          ],
+          "target_map": "faith_02",
+          "radius": 18
+        }
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_HALL_AND_CONNECTED_ROUTES_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "LEGACY_ROSTERS_PRESERVED_NO_UNPROVEN_COORDINATE_TRANSFORM",
+      "review_method": "SOURCE_RGBA_NATIVE_PIXEL_CROP_VISUAL_TRACE; conservative 16px floor grid; all off-route pockets closed"
+    },
+    "faith_02": {
+      "name": "신념의 탑 2층",
+      "file": "13401.png",
+      "layout_revision": 2026102001,
+      "spawn": [
+        4460,
+        2760
+      ],
+      "walk_polygons": [
+        [
+          [
+            4230,
+            2730
+          ],
+          [
+            4420,
+            2635
+          ],
+          [
+            4690,
+            2770
+          ],
+          [
+            4520,
+            2855
+          ],
+          [
+            4445,
+            2818
+          ],
+          [
+            4390,
+            2810
+          ]
+        ]
+      ],
+      "route_checks": [
+        [
+          4460,
+          2760
+        ],
+        [
+          4320,
+          2730
+        ],
+        [
+          4430,
+          2690
+        ],
+        [
+          4520,
+          2740
+        ],
+        [
+          4480,
+          2800
+        ]
+      ],
+      "blocked_probes": [
+        [
+          4600,
+          2742
+        ],
+        [
+          4500,
+          2300
+        ],
+        [
+          4500,
+          2900
+        ]
+      ],
+      "collision": [
+        {
+          "id": "corrupted_hall_column",
+          "shape": "circle",
+          "center": [
+            4600,
+            2742
+          ],
+          "radius": 30
+        }
+      ],
+      "portals": [
+        {
+          "id": "aden_return",
+          "name": "아덴 귀환",
+          "position": [
+            4380,
+            2760
+          ],
+          "target_map": "aden_world",
+          "radius": 18
+        },
+        {
+          "id": "next_floor",
+          "name": "다음 층",
+          "position": [
+            4540,
+            2760
+          ],
+          "target_map": "faith_03",
+          "radius": 18
+        },
+        {
+          "id": "previous_floor",
+          "name": "이전 층",
+          "position": [
+            4470,
+            2700
+          ],
+          "target_map": "faith_01",
+          "radius": 18
+        }
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_HALL_AND_CONNECTED_ROUTES_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "LEGACY_ROSTERS_PRESERVED_NO_UNPROVEN_COORDINATE_TRANSFORM",
+      "review_method": "SOURCE_RGBA_NATIVE_PIXEL_CROP_VISUAL_TRACE; conservative 16px floor grid; all off-route pockets closed"
+    },
+    "faith_04": {
+      "name": "신념의 탑 4층",
+      "file": "13472.png",
+      "layout_revision": 2026102001,
+      "spawn": [
+        4460,
+        2760
+      ],
+      "walk_polygons": [
+        [
+          [
+            4230,
+            2730
+          ],
+          [
+            4420,
+            2635
+          ],
+          [
+            4710,
+            2780
+          ],
+          [
+            4520,
+            2875
+          ],
+          [
+            4470,
+            2850
+          ]
+        ]
+      ],
+      "route_checks": [
+        [
+          4460,
+          2760
+        ],
+        [
+          4320,
+          2730
+        ],
+        [
+          4430,
+          2690
+        ],
+        [
+          4520,
+          2740
+        ],
+        [
+          4480,
+          2800
+        ]
+      ],
+      "blocked_probes": [
+        [
+          4600,
+          2742
+        ],
+        [
+          4500,
+          2300
+        ],
+        [
+          4400,
+          2600
+        ]
+      ],
+      "collision": [
+        {
+          "id": "ruined_hall_column",
+          "shape": "circle",
+          "center": [
+            4600,
+            2742
+          ],
+          "radius": 28
+        }
+      ],
+      "portals": [
+        {
+          "id": "aden_return",
+          "name": "아덴 귀환",
+          "position": [
+            4380,
+            2760
+          ],
+          "target_map": "aden_world",
+          "radius": 18
+        },
+        {
+          "id": "previous_floor",
+          "name": "이전 층",
+          "position": [
+            4470,
+            2700
+          ],
+          "target_map": "faith_03",
+          "radius": 18
+        }
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_HALL_AND_CONNECTED_ROUTES_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "LEGACY_ROSTERS_PRESERVED_NO_UNPROVEN_COORDINATE_TRANSFORM",
+      "review_method": "SOURCE_RGBA_NATIVE_PIXEL_CROP_VISUAL_TRACE; conservative 16px floor grid; all off-route pockets closed"
+    },
+    "faith_03": {
+      "name": "신념의 탑 3층",
+      "file": "13417.png",
+      "layout_revision": 2026102001,
+      "spawn": [
+        5360,
+        2780
+      ],
+      "walk_polygons": [
+        [
+          [
+            4870,
+            2690
+          ],
+          [
+            5200,
+            2525
+          ],
+          [
+            5420,
+            2635
+          ],
+          [
+            5740,
+            2795
+          ],
+          [
+            5370,
+            2980
+          ]
+        ]
+      ],
+      "route_checks": [
+        [
+          5360,
+          2780
+        ],
+        [
+          5230,
+          2750
+        ],
+        [
+          5020,
+          2700
+        ],
+        [
+          5300,
+          2840
+        ],
+        [
+          5490,
+          2810
+        ]
+      ],
+      "blocked_probes": [
+        [
+          5130,
+          2670
+        ],
+        [
+          5400,
+          3130
+        ],
+        [
+          5200,
+          2440
+        ]
+      ],
+      "collision": [
+        {
+          "id": "central_statue",
+          "shape": "circle",
+          "center": [
+            5130,
+            2670
+          ],
+          "radius": 32
+        }
+      ],
+      "portals": [
+        {
+          "id": "aden_return",
+          "name": "아덴 귀환",
+          "position": [
+            5290,
+            2800
+          ],
+          "target_map": "aden_world",
+          "radius": 18
+        },
+        {
+          "id": "next_floor",
+          "name": "4층으로",
+          "position": [
+            5490,
+            2770
+          ],
+          "target_map": "faith_04",
+          "radius": 18
+        },
+        {
+          "id": "previous_floor",
+          "name": "2층으로",
+          "position": [
+            5300,
+            2700
+          ],
+          "target_map": "faith_02",
+          "radius": 18
+        }
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_ENTRY_HALL_AND_CONNECTED_ROUTES_ONLY",
+      "full_terrain_collision_verified": false,
+      "monster_coordinate_status": "LEGACY_ROSTERS_PRESERVED_NO_UNPROVEN_COORDINATE_TRANSFORM",
+      "review_method": "SOURCE_RGBA_NATIVE_PIXEL_CROP_VISUAL_TRACE; conservative 16px floor grid; all off-route pockets closed"
+    }
+  },
+  "terrain_review": {
+    "authoritative_collision_supplied": false,
+    "scope": "Source images cover whole maps; playability is restricted to individually inspected entry halls/routes. Full-map obstacle review remains incomplete.",
+    "population": "Historical map JSON/monster/boss data unchanged; no guessed coordinate migration or new encounters."
+  }
+}
