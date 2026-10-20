@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "name": "TWILIGHT-map-remake-private-20261015-v2.zip",
+  "layout_revision": 2026101502,
+  "maps": 10,
+  "source_edition": "A3_PC_CURRENT_M_UNVERIFIED",
+  "images_included": 0,
+  "placement_status": "PROVISIONAL",
+  "technical_complete_maps": 0,
+  "faithful_complete_maps": 0,
+  "verification": "HASH_AND_CONNECTIVITY_AND_EXISTING_GAMEPLAY_FIELDS_VERIFIED",
+  "runtime_status": "SEE_DRAFT_PR_119_CURRENT_TEST_REPORTS",
+  "code_branch": "feature/twilight-map-remake-20261015",
+  "pr": "https://github.com/zoog136-hash/-/pull/119",
+  "source_archive_sha256": "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20",
+  "files": [
+    {
+      "path": "data/map_remake/private/build_report.json",
+      "bytes": 415150,
+      "sha256": "b31d79b8fcf3b2494af6fdf4e6e7d90b9cb73b7ca4aedce40788cdbc0b2b5701"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_01.json",
+      "bytes": 106045,
+      "sha256": "417edb41f9f2977ae3b7d0be5a9cc794cd8dff31c043900acb96602a23572ea3"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_02.json",
+      "bytes": 105577,
+      "sha256": "d47989a0322f3c2e89249b46d5ccaf6c49a8bf4ad25ed3e019ddca48a22867a3"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_03.json",
+      "bytes": 111177,
+      "sha256": "df2b48dfa4592386a3b0c1d0cddad33f9749415fbe8271d7f407af9cbeda5bc5"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_04.json",
+      "bytes": 103081,
+      "sha256": "49d0fd8eaf07157c310227926919b06c11c1a4a717a354c683fb552264d23ad7"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_05.json",
+      "bytes": 125750,
+      "sha256": "5c57f85562f223f5c8e1541d273022d9a4f84dbb38e2acc43218794bf65520b3"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_06.json",
+      "bytes": 116045,
+      "sha256": "a04ad9c90a3ced2ce8e4ef3edb569f5f7d8a4ae5e1d45785104a02d75999ad3c"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_07.json",
+      "bytes": 94410,
+      "sha256": "113f230a7c03dde7d0c80963cceee7593da04c44f6615376452d3cdae830ec99"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_08.json",
+      "bytes": 125255,
+      "sha256": "6745b64e57b19a83dcb2cba6306430ccab8832122f9aaae707aa240143216b64"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_09.json",
+      "bytes": 111948,
+      "sha256": "2f46247a01065a60dfea4f0324d7bfdc073e51bdbe1968300a837b9ece7efc09"
+    },
+    {
+      "path": "data/map_remake/private/definitions/oman_10.json",
+      "bytes": 100551,
+      "sha256": "6dd226b8b5e700f5721557d10a1d8791340c3642c86357cb01587398a94b8de8"
+    },
+    {
+      "path": "data/map_remake/private/index.json",
+      "bytes": 2443,
+      "sha256": "d7f2027c3966b561d27d392037ff98a712cbc1ba68f675b8a1bf74f8099e2c3b"
+    },
+    {
+      "path": "data/map_remake/private/navigation-00.bin",
+      "bytes": 81176,
+      "sha256": "61d6150e2099fcdf7437342b7eaab80da666bb0178d24b3feb701d1cb08dede2"
+    },
+    {
+      "path": "effective_layouts.json",
+      "bytes": 9546404,
+      "sha256": "0b851faa5374e193008fc42721f4af32ec017b74a3774d0118d7321c4c41f7c8"
+    }
+  ],
+  "restore": "Extract data/map_remake/private under the existing TWILIGHT checkout; run tools/map_restore/verify_remake.py --pack data/map_remake/private --layouts effective_layouts.json. No new game project."
+}
