@@ -1,0 +1,30 @@
+{
+  "schema": "fixedC1920-native1254-actualLEFTforward-contact-edit-v1",
+  "status": "REQUEST_READY_NOT_SERVICE_STARTED",
+  "base_source_sha256": "a4f96847b5a786b96087f65e1c8736b657e19e719323b5cddca51cf75c2470a8",
+  "actual_native_canvas": [
+    1254,
+    1254
+  ],
+  "fixed_virtual_C": 1920,
+  "body_unit": 1.875,
+  "body_calibration_proof_sha256": "cd077d25bebcc7e754dc287f8327ffedd95ac7925d2246da9d80a011e618986b",
+  "left_heel_target": [
+    612.9375,
+    797.1601879188124
+  ],
+  "left_ankle_target": [
+    612.9375,
+    762.1418108578307
+  ],
+  "left_toe_target": [
+    612.9375,
+    726.8971373442064
+  ],
+  "mask_file": "bounded-leftleg-edit-mask.png",
+  "composition": "replace exactRGBA only where mask255 in unchangedactual1254 base; no transforms or alpha cleanup",
+  "resampling": "FORBIDDEN",
+  "root_or_C_change": "FORBIDDEN; bodyCfit alreadyclosed",
+  "actual_contact_source_approval": false,
+  "completed_added": 0
+}
