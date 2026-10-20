@@ -148,3 +148,9 @@
 - 기존 Godot 리소스·실제 Player 검사를 통과했으며 전체/수동 CI는 실행하지 않았다. 상세 승인 2/31종·미완료29종, 기존405/498·별도14종·54색상/공유프로필·1490프로필표는 유지한다. 한 이동 클립의 연결을 개체 전체 승인으로 계산하지 않는다.
 - 다음 제작: NW WALK 0~4 원화/단위 pair PASS, 마지막5의 body/장비 및 전체6 순환 검토; NW RUN 실제6 원화 제작 및 footroll/관절/전체 순환 검토; N RUN 전용6 제작; NE WALK 신규 원화 및 최초 단일 밀도·root 등록. 기존 승인267/393·PR100은 재제작하지 않는다.
 - N 최종 원화·renderer·provenance·QC 및 N RUN 실제 재질 handoff는 batch03 `mythic413-N-walk-source-cycle-PASS-v09-20261020`에 보존했다. 실제 runtime 증명과 아직 적용하지 않은 RUN physical-C fit 수정 제안은 `mythic413-N-r011-runtime-and-physical-C-proposal-v01-20261020`에 보존했다. RUN padding을 기존 nominal2048에 억지로 맞추기 위한 축소·root 이동을 하지 않는다.
+
+
+2026-10-20 — NW WALK 실제 연결 및 다음 제작 저장
+- `28f9801d2d79bfc84699fe2d8db5fcefbf980f30` 정상 push: NW WALK6도 r012 실제 Godot 리소스/Player 검사를 통과했다. actor413은 12클립/72자세, 전체108클립/648자세, 이동 미완료4슬롯이다. N/NW WALK12자세는 다시 제작하지 않는다. 상세2/31·미완료29종은 유지한다.
+- RUN의 실제 C2560/padding source를 명목2048로 먼저 검사하던 순서를 고쳐, 명시된 실제 canvas/anchor에서 온전한 원화가 들어가는지 검사한다. 원화 축소·장창 자름·root이동·임계값 완화는 없다. 독립17개 fixture·추가9개 경계 사례와 기존 N 실제 geometry/proof 완전동일 검증을 보존했다. 원래 프로필/54색상·1490표/승인267·393을 변경하지 않았다. 후속 연결은 batch03 `mythic413-actual-physical-C-fit-production-v04-20261020`에 보존한 v04 도구/핀을 사용한다.
+- N RUN 전용 첫6 원화/renderer v01~v03 및 미완료 잔선 상태는 `mythic413-N-run-first-six-actual-v01-through-v03-20261020`에 보존했다. NW RUN 실제6은 마지막 ankle source-over/전체cycle 검토 중, NE WALK0/1은 C2432·공통root 등록 및 flat-contact pair PASS로2~5 제작 중, N ATTACK은 STRIKE3를 포함한 전용6 제작을 시작했다. 이 후보들을 개체 승인으로 계산하지 않는다.

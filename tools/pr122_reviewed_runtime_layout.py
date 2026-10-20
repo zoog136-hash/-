@@ -21,6 +21,38 @@ def _pose_identity(frame):
     return {key: frame.get(key) for key in ("row", "direction", "region", "rgba_sha256")}
 
 
+def _validated_authored_canvas_sizes(review, canvas):
+    if "authored_pose_canvas_sizes" not in review:
+        return None
+    sizes = review["authored_pose_canvas_sizes"]
+    if canvas != 2048:
+        raise ValueError("Per-pose canvases require strict nominal canvas_size 2048")
+    if (not isinstance(sizes, list) or len(sizes) != 6
+            or any(type(value) is not int or not 256 <= value <= 4096 or value % 8
+                   for value in sizes)):
+        raise ValueError("authored_pose_canvas_sizes must contain six integer multiples of 8 from 256 to 4096")
+    return list(sizes)
+
+
+def _apply_actual_pose_layout(geometry, canvas, sizes, anchors):
+    # Validate against each authored physical canvas before playback permutation.
+    # The nominal canvas remains only the reference metadata when sizes exist.
+    for row, frame in enumerate(geometry["frames"]):
+        size = sizes[row] if sizes is not None else canvas
+        x, y, width, height = frame["region"]
+        anchor_x, anchor_y = anchors[row] if anchors is not None else frame["source_anchor"]
+        if not (x <= anchor_x < x + width and y <= anchor_y < y + height):
+            raise ValueError("Reviewed source anchor must remain inside its exact source region")
+        foot_x, foot_y = size // 2, size * 5 // 8
+        margin_x, margin_y = foot_x - (anchor_x - x), foot_y - (anchor_y - y)
+        if min(margin_x, margin_y) < 0 or margin_x + width > size or margin_y + height > size:
+            raise ValueError("Pose cannot fit its reviewed physical foot-anchored canvas")
+        frame.update(source_anchor=[anchor_x, anchor_y],
+                     margin=[margin_x, margin_y, size - width, size - height])
+        if sizes is not None:
+            frame.update(canvas_size=[size, size], foot=[foot_x, foot_y])
+
+
 def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_review=None):
     """Return ``(geometry, proof)`` for a SHA-pinned six-pose layout proposal.
 
@@ -66,6 +98,7 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
             or any(type(value) is not int or value <= 0 for value in base_canvas)
             or base_canvas[0] != base_canvas[1]):
         raise ValueError("Base geometry must identify its square virtual canvas")
+    sizes = _validated_authored_canvas_sizes(review, canvas)
     anchors = review.get("source_anchors")
     if "source_anchors" in review and (
             not isinstance(anchors, list) or len(anchors) != 6
@@ -73,9 +106,14 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
                    or any(type(value) is not int for value in anchor) for anchor in anchors)):
         raise ValueError("Reviewed source_anchors must contain six integer [x, y] pairs")
     if source_region_review is None:
+        # Reviewed physical anchors may not fit the nominal reference canvas.
+        # Revalidate source identity with its original canonical anchors first.
+        seed_anchors = [f.get("source_anchor") for f in frames] if sizes is not None else anchors
         derived = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
                                    directions_axis="phase_grid2", canvas_size=canvas,
-                                   source_anchors=anchors, directions=[direction])
+                                   source_anchors=seed_anchors, directions=[direction])
+        if sizes is not None:
+            _apply_actual_pose_layout(derived, canvas, sizes, anchors)
     else:
         # The original automatic rectangles can legitimately fail the complete-
         # foreground gate. Validate the explicit region review before that gate,
@@ -91,17 +129,7 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
         derived = deepcopy(checked)
         foot_x, foot_y = canvas // 2, canvas * 5 // 8
         derived.update(canvas_size=[canvas, canvas], foot=[foot_x, foot_y])
-        for row, frame in enumerate(derived["frames"]):
-            x, y, width, height = frame["region"]
-            anchor_x, anchor_y = anchors[row] if anchors is not None else frame["source_anchor"]
-            if not (x <= anchor_x < x + width and y <= anchor_y < y + height):
-                raise ValueError("Reviewed source anchor must remain inside its exact source region")
-            margin_x, margin_y = foot_x - (anchor_x - x), foot_y - (anchor_y - y)
-            if (min(margin_x, margin_y) < 0 or margin_x + width > canvas
-                    or margin_y + height > canvas):
-                raise ValueError("Pose cannot fit its reviewed foot-anchored canvas")
-            frame.update(source_anchor=[anchor_x, anchor_y],
-                         margin=[margin_x, margin_y, canvas - width, canvas - height])
+        _apply_actual_pose_layout(derived, canvas, sizes, anchors)
     importer.require_complete_pose_regions(path, derived)
     if ([_pose_identity(f) for f in derived["frames"]] != [_pose_identity(f) for f in frames]
             or derived["distinct_pixel_frames"] != 6
@@ -111,23 +139,6 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
         raise ValueError("Derived layout changed the canonical half-width, five-eighths foot")
     if hashlib.sha256(path.read_bytes()).hexdigest() != source_sha:
         raise ValueError("Source bytes changed during layout analysis")
-    if "authored_pose_canvas_sizes" in review:
-        sizes = review["authored_pose_canvas_sizes"]
-        if canvas != 2048:
-            raise ValueError("Per-pose canvases require strict nominal canvas_size 2048")
-        if (not isinstance(sizes, list) or len(sizes) != 6
-                or any(type(value) is not int or not 256 <= value <= 4096 or value % 8
-                       for value in sizes)):
-            raise ValueError("authored_pose_canvas_sizes must contain six integer multiples of 8 from 256 to 4096")
-        for frame, size in zip(derived["frames"], sizes):
-            x, y, width, height = frame["region"]
-            anchor_x, anchor_y = frame["source_anchor"]
-            foot_x, foot_y = size // 2, size * 5 // 8
-            margin_x, margin_y = foot_x - (anchor_x - x), foot_y - (anchor_y - y)
-            if min(margin_x, margin_y) < 0 or margin_x + width > size or margin_y + height > size:
-                raise ValueError("Pose cannot fit its reviewed per-pose foot-anchored canvas")
-            frame.update(margin=[margin_x, margin_y, size - width, size - height],
-                         canvas_size=[size, size], foot=[foot_x, foot_y])
     if "playback_order" in review:
         order = review["playback_order"]
         if review.get("role") not in ("walk", "run"):
