@@ -2,6 +2,7 @@ extends RefCounted
 ## Existing 25 IDs only. An absent private pack keeps the existing project;
 ## a present, damaged install is rejected before changing maps or saved state.
 const ROOT: String = "res://data/map_remake/private/"
+const BUNDLED_ROOT: String = "res://external_map_packs/oman_v2/data/map_remake/private/"
 const FIELD = preload("res://scripts/maps/remake_field.gd")
 const READ = preload("res://scripts/maps/source_travel.gd")
 const ARCHIVE_SHA: String = "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20"
@@ -9,9 +10,12 @@ const ADEN = preload("res://scripts/maps/aden_remake_registry.gd")
 const AUTHORED = preload("res://scripts/maps/authored_remake_field.gd")
 
 static func pack_root() -> String:
-	# Optional verified topology pack stays outside the public artwork checkout.
+	# A GitHub main ZIP / Termux update is now a complete runtime source:
+	# use the same packed Oman topology directly, with hash verification at load.
 	var local: String = OS.get_environment("TWILIGHT_REMAKE_PACK")
-	return local.trim_suffix("/")+"/" if not local.is_empty() else ROOT
+	if not local.is_empty(): return local.trim_suffix("/")+"/"
+	if FileAccess.file_exists(BUNDLED_ROOT+"index.json"): return BUNDLED_ROOT
+	return ROOT
 
 static func display_names() -> Dictionary:
 	var names: Dictionary={}

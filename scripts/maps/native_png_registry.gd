@@ -5,6 +5,8 @@ extends RefCounted
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
 const REVIEW_PATH := "res://data/maps/native_png_review.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
+const BUNDLED_ROOT := "res://external_map_packs/native_png_v5"
+const LEGACY_ROOT := "user://native_png_maps"
 
 static func enabled() -> bool:
 	return "--native-png-maps" in OS.get_cmdline_user_args() and not "--legacy-map-layouts" in OS.get_cmdline_user_args()
@@ -81,8 +83,24 @@ static func review_hash() -> String:
 	return FileAccess.get_sha256(REVIEW_PATH)
 
 static func root_path() -> String:
-	var configured := OS.get_environment("TWILIGHT_NATIVE_PNG_PACK")
-	return configured.trim_suffix("/") if not configured.is_empty() else "user://native_png_maps"
+	# Explicit test/user pack always wins, including intentionally missing paths.
+	var configured: String = OS.get_environment("TWILIGHT_NATIVE_PNG_PACK")
+	if not configured.is_empty(): return configured.trim_suffix("/")
+	# Repo ZIP + Termux updater both contain this versioned runtime map pack.
+	# Fail closed on corrupted index; never silently substitute guessed art.
+	if FileAccess.file_exists(BUNDLED_ROOT+"/index.json"): return BUNDLED_ROOT
+	return LEGACY_ROOT
+
+static func bundled_enabled() -> bool:
+	# In the ordinary game show verified repo PNGs automatically, keeping the
+	# ordinary save namespace and 25 historical map IDs. Explicit diagnostics
+	# and legacy switches continue to opt out of runtime map replacement.
+	var args: PackedStringArray = OS.get_cmdline_user_args()
+	return installed() and not "--legacy-map-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+
+static func map_for_art(mid: String) -> String:
+	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
+	return mid
 
 static func installed() -> bool:
 	var receipt: Dictionary=read_json("res://data/maps/native_png_pack.json")
@@ -96,9 +114,10 @@ static func canonical(mid: String) -> String:
 	return mid
 
 static func supports(mid: String) -> bool:
-	# Identity support must survive a pack disappearing after the menu was built.
-	# load_field() then rejects the bytes; never route a known temple to tiles.
-	return base_plan().get("maps",{}).has(canonical(mid)) and (enabled() or mid in ["yahee_temple","balrog_temple"])
+	# Keep old map IDs in ordinary saves; Escaros 01–05 share source artwork
+	# but not the saved alias. Review mode keeps its original canonical names.
+	var art_id: String = map_for_art(canonical(mid))
+	return base_plan().get("maps",{}).has(art_id) and (enabled() or bundled_enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
@@ -122,6 +141,7 @@ static func menu_entries(records: Array) -> Array:
 	return menu
 
 static func load_field(mid: String) -> PlayableField:
+	mid = map_for_art(mid)
 	var spec_plan: Dictionary = plan()
 	var specs: Dictionary = spec_plan.get("maps",{})
 	if not specs.has(mid): return null

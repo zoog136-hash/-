@@ -1,6 +1,6 @@
 extends SceneTree
 # TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_NATIVE_PNG_PACK
-## Real Main travel with the ordinary save and no native replacement flag.
+## Main loads bundled native art automatically while retaining the ordinary save.
 const REGISTRY = preload("res://scripts/maps/native_png_registry.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 var checks: int=0
@@ -22,10 +22,12 @@ func run() -> void:
 	check(world.maps.size()==27,"25 persistent legacy IDs plus two independent temples")
 	check(REGISTRY.menu_entries(world.maps).size()==27,"temples available in ordinary region selection")
 	check(world.maps_by_id.yahee_temple.name=="야히의신전" and world.maps_by_id.balrog_temple.name=="발록의 시전","exact user display names")
-	for mid: String in ["albino_01","albino_04","escaros_01","escaros_05"]:
+	for mid: String in ["albino_01","albino_02","albino_03","escaros_01","escaros_05"]:
 		world._set_map(mid,false)
-		check(not world.field_map is NativePngField and world.active_map_id==mid,mid+" legacy geometry and population remain authoritative")
-		check(not world.field_map.data.monster_spawn.is_empty(),mid+" existing population retained")
+		check(world.field_map is NativePngField and world.active_map_id==mid,mid+" normal save ID shows verified native PNG")
+		check(not world.field_map.data.monster_spawn.is_empty(),mid+" registered PNG encounter population retained")
+	world._set_map("albino_04",false)
+	check(not world.field_map is NativePngField and world.active_map_id=="albino_04","Albino fourth historical ID remains legacy")
 	world._set_map("aden_world",false)
 	var bosses: Dictionary=world.field_population.boss_director.export_state().bosses.duplicate(true)
 	var db_hash: String=FileAccess.get_sha256("res://data/game_db_v17.json")
