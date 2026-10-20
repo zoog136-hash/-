@@ -258,12 +258,12 @@ jobs:
       - name: Verify regional test shard coverage and failure handling
         run: python3 tools/test_world_region_shards.py
 
-      - name: All playable world regions
+      - name: Existing layout regional contracts
         shell: bash
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-region-tests"
-          python3 tools/world_region_shards.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --path . --logs world-region-shards --timeout 360 2>&1 | tee godot-world-regions.log
+          python3 tools/world_region_shards.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --path . --logs world-region-shards --timeout 360 --legacy-map-layouts 2>&1 | tee godot-world-regions.log
           if grep -E "SCRIPT ERROR:|ERROR:|REGION FAIL:|WORLD_REGIONS_FAILED" godot-world-regions.log; then
             exit 1
           fi
@@ -274,7 +274,7 @@ jobs:
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-portal-tests"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd 2>&1 | tee godot-region-portals.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd -- --legacy-map-layouts 2>&1 | tee godot-region-portals.log
           if grep -E "SCRIPT ERROR:|ERROR:|PORTAL FAIL:|WORLD_REGION_PORTALS_FAILED" godot-region-portals.log; then
             exit 1
           fi

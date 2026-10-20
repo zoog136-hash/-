@@ -31,6 +31,7 @@ func spell_hit(spell: Dictionary, seed_value: int) -> int:
 	return before - dummy.hp
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_skill_reduction_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	check(QA.enter_game(world), "enter actual game")

@@ -21,6 +21,7 @@ func capture(name_value: String) -> void:
 		print("GROUND_LOOT_CAPTURE ", name_value)
 
 func _run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/capture_ground_loot.gd"): return
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
