@@ -51,7 +51,7 @@
 - 공식 Godot4.7.2(`ed1daf0bf`)를 확보했다. `tests/pr122_native_locomotion_resource_test.gd`의9클립/54프레임 실제 재생과 `tests/pr122_native_motion_smoke.gd`의 실제 ActorMotion 방향·walk/run 선택·전체 자세 순환·발 고정·색상 보존·미러/왜곡 없음 검사가 PASS다. 렌더·캡처/전체 CI/이미지 생성·미리보기 도구는 실행하지 않았다. Main 통합·시각/타이밍 승인과 상세 완성은 아직 HOLD다.
 - `tests/pr122_native_player_connection_test.gd`에서 실제 `scenes/Player.tscn`의 변신 API에 두 전용 프로필을 연결하고 9클립/54프레임을 재생했다. 실제 플레이어 위치·충돌·기존 클래스·공격 시퀀스 보존 PASS, 미확보23개 이동/달리기 블록이 다른 역할/방향으로 대체되지 않음 PASS다. 전용 WIP 메타데이터에서만 정확한 역할/방향을 선택하고 없는 동작은 미제작 상태를 유지한다. 기존 `tests/actor_motion_test.gd`도 같은4.7.2에서 ACTOR_MOTION_OK다. 일반 게임 카탈로그 교체/최종 승인/전체 Main 검사는 하지 않았다.
 - 제작 도구 허용 후 할파스 S run v02의 신규6자세를 제작했다. 정확한 요청·출력 경로·SHA는 `batch02/request-001-halpas-S-run-v02.json`, 원화와 기하 sidecar는 `batch01/halpas-S-run-v02.*`에 보존했다. 기존 리소스를 덮어쓰지 않고 `halpas_393/r002`에 연결했다. 이 단계에서10클립/60자세(남은 이동22블록), Godot4.7.2 리소스 및 실제 Player 연결 검사 PASS다. 상세 완료와 최종 승인은0/31 그대로다.
-- 최신 제작: transform:413 NE death NEdeathSixActualRig01 6자세와 실제 Player 연결 PASS. 현재126클립/756자세, 남은 이동0블록/전용 동작17블록. 다음 제작: transform:413 E attack. 현재 수량은 data/pr122_native_locomotion_staging.json과 선택 소스를 우선한다.
+- 최신 제작: transform:413 SE hit SEhitSixActualRig01 6자세와 실제 Player 연결 PASS. 현재127클립/762자세, 남은 이동0블록/전용 동작16블록. 다음 제작: transform:413 E attack. 현재 수량은 data/pr122_native_locomotion_staging.json과 선택 소스를 우선한다.
 
 - 비공개 시각 검토: 할파스 SW run/N·NE·NW attack 방향 교정, 기르타스48클립 원형 외형 복원 HOLD. 기존 원화·리비전 전부 보존, 기본 게임 적용·승인 추가0.
 
