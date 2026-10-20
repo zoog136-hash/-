@@ -171,15 +171,29 @@
       "classification_is_art_approval": false,
       "equipment": "unique_lance",
       "final_approved": false,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/validation-opengl.json",
       "name": "유니크 랜서",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_231/r041/NativeMotionProfile.tres",
+      "new_run_poses": 0.0,
       "priority": 4.0,
       "production_connected": false,
+      "quality_holds": [
+        "ORIGINAL_CHARACTER_IDENTITY",
+        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "PALETTE_WEAPON_IDENTITY_REVIEW"
+      ],
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/r041/raster-review.json",
       "reference": "res://assets/catalog/d3129a87e012cec4099d9a3d.png",
       "reference_sha256": "b0426616db7c09e1970c738fef9b1caad5d9892b59ff654c8d576010f90c5488",
-      "status": "NOT_STARTED"
+      "rig": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/rig-proof.json",
+      "shared_run_poses": 48.0,
+      "source_donor": "transform:176 via transform:44",
+      "source_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "status": "SHARED_RUN_CANDIDATE_QUALITY_HOLD"
     },
     "transform:260": {
       "attack_family": "slash",
@@ -187,15 +201,29 @@
       "classification_is_art_approval": false,
       "equipment": "kenrauhel",
       "final_approved": false,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
       "name": "각성 켄라우헬",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r011/NativeMotionProfile.tres",
+      "new_run_poses": 48.0,
       "priority": 2.0,
       "production_connected": false,
+      "quality_holds": [
+        "ORIGINAL_CHARACTER_IDENTITY",
+        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "RASTER_LIMB_CONNECTIONS_3_OF_48_FRAMES"
+      ],
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/raster-review.json",
       "reference": "res://assets/catalog/8816dfeaabd5f82d37e06dd9.png",
       "reference_sha256": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8",
-      "status": "NOT_STARTED"
+      "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/rig-proof.json",
+      "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
+      "source_frames_sha256": "5d5d54c9d19293744018b61f42b1b5a2015bf94a2146993f16f765dc7922bd7d",
+      "status": "RIG_CANDIDATE_QUALITY_HOLD"
     },
     "transform:268": {
       "attack_family": "slash",
@@ -411,28 +439,57 @@
       "classification_is_art_approval": false,
       "equipment": "baphomet",
       "final_approved": false,
-      "frames": "res://assets/actors/eight_direction/hero_parallel/baphomet_hero/r002/SpriteFrames.tres",
+      "frames": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "SOURCE_HOLD",
       "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/validation-opengl.json",
       "name": "바포메트",
-      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_7/r002/NativeMotionProfile.tres",
-      "new_run_poses": 48,
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/NativeMotionProfile.tres",
+      "new_run_poses": 48.0,
+      "prior_candidates": [
+        {
+          "frames": "res://assets/actors/eight_direction/hero_parallel/baphomet_hero/r002/SpriteFrames.tres",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_7/r002/NativeMotionProfile.tres",
+          "status": "ROBE_MATERIAL_CONNECTIONS_QUALITY_HOLD"
+        }
+      ],
       "priority": 1.0,
       "production_connected": false,
       "quality_holds": [
         "ORIGINAL_CHARACTER_IDENTITY",
+        "CROSS_SHEET_DESIGN_CONTINUITY",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "PALETTE_WEAPON_IDENTITY_REVIEW",
-        "RASTER_LIMB_CONNECTIONS_37_OF_48_FRAMES"
+        "CAMERA_AND_THREE_RUN_SOURCE_CELL_EDGES",
+        "PALETTE_WEAPON_IDENTITY_REVIEW"
       ],
-      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/baphomet_hero-r002/raster-review.json",
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002/raster-review.json",
       "reference": "res://assets/catalog/626d89e940ee6d7cd7446881.png",
       "reference_sha256": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490",
-      "rig": "res://assets/actors/eight_direction/hero_parallel/baphomet_hero/r002/rig-proof.json",
-      "source_donor": "monster:바포메트",
-      "source_frames_sha256": "83f39b00b3a5a64ee6c502c559bb7eff2ae9a15ed3e40d58f9f6d9eba4de2b2f",
-      "status": "RIG_CANDIDATE_QUALITY_HOLD"
+      "rig": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/rig-proof.json",
+      "source_donor": "new generated Baphomet action art; reference identity not approved",
+      "source_frames_sha256": "81b68df1dc7b9405df7220a3ff382045f02e75aafde109970af85fb2bf9d9dd4",
+      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "unique_art_candidates": [
+        {
+          "final_approved": false,
+          "main_report": "res://docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/Main-run-only.json",
+          "production_connected": false,
+          "quality_holds": [
+            "ORIGINAL_CHARACTER_IDENTITY",
+            "DIRECTION_CAMERA",
+            "ACTUAL_FOOT_CONTACT",
+            "THREE_CELLS_NEAR_EDGE",
+            "MISSING_IDLE_ATTACK_HIT_DEATH"
+          ],
+          "roles": [
+            "run"
+          ],
+          "run_frames": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/RunSpriteFrames.tres",
+          "source": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/source-run.png",
+          "status": "RUN_ONLY_TECHNICAL_PASS_QUALITY_HOLD"
+        }
+      ]
     },
     "transform:9": {
       "attack_family": "ranged",

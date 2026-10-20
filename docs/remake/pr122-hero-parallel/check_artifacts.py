@@ -42,7 +42,22 @@ def main():
     assert atlas.size == (1536, 2048) and len(proof['frames']) == 48
     source_frames = ROOT / proof['source'].removeprefix('res://')
     assert hashlib.sha256(source_frames.read_bytes()).hexdigest() == proof['source_sha256']
-    text = source_frames.read_text()
+    registered_action_frames = 0
+    for relative, expected in proof.get('source_hashes', {}).items():
+        assert hashlib.sha256((ROOT / relative.removeprefix('res://')).read_bytes()).hexdigest() == expected
+    for track, phases in proof.get('track_sources', {}).items():
+        unique = set()
+        for phase in phases:
+            reference = phase['source_reference']
+            source = Image.open(ROOT / reference['atlas'].removeprefix('res://')).convert('RGBA')
+            x, y, w, h = map(int, reference['region'])
+            canvas = Image.new('RGBA', (256, 256))
+            canvas.paste(source.crop((x, y, x + w, y + h)), tuple(map(int, reference['margin_position'])))
+            sha = hashlib.sha256(canvas.tobytes()).hexdigest()
+            assert sha == phase['canvas_rgba_sha256'] and sha not in unique, track
+            unique.add(sha)
+            registered_action_frames += 1
+    text = source_frames.read_text() if source_frames.suffix == '.tres' else ''
     matrices = []
     for direction in range(8):
         reference = proof['frames'][direction * 6].get('source_reference')
@@ -94,6 +109,7 @@ def main():
     result = {
         'schema': 'hero-parallel-raster-review-v1', 'revision': folder.name,
         'integrity': 'PASS', 'unique_run_poses': 48,
+        'exact_registered_action_frames': registered_action_frames,
         'source_body_and_weapon_above_hip_exact': True,
         'alpha_threshold': 16, 'component_pixels_threshold': 12,
         'connectivity_checks': ['4-neighbor', '8-neighbor'],
@@ -111,15 +127,19 @@ def main():
     output.write_text(json.dumps(result, indent=2) + '\n')
     for target in [k for k, v in staging['actors'].items() if v.get('frames') == entry['frames']]:
         actor = staging['actors'][target]
-        actor['quality_holds'] = ['ORIGINAL_CHARACTER_IDENTITY',
+        retained_holds = [hold for hold in actor.get('quality_holds', []) if not hold.startswith('RASTER_LIMB_CONNECTIONS_')]
+        actor['quality_holds'] = list(dict.fromkeys(retained_holds + ['ORIGINAL_CHARACTER_IDENTITY',
              'ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED', 'PALETTE_WEAPON_IDENTITY_REVIEW']
+             ))
         if detached:
             actor['quality_holds'].append(f'RASTER_LIMB_CONNECTIONS_{len(detached)}_OF_48_FRAMES')
-        main = ROOT / 'docs/remake/pr122-hero-parallel/evidence' / (group + '-' + folder.name + '-visible-main') / 'validation-opengl.json'
+        main = (ROOT / actor['main_validation_report'].removeprefix('res://') if actor.get('main_validation_report') else
+                ROOT / 'docs/remake/pr122-hero-parallel/evidence' / (group + '-' + folder.name + '-visible-main') / 'validation-opengl.json')
         valid_main = False
         if main.exists():
             main_data = json.loads(main.read_text())
-            valid_main = (main_data.get('frames_sha256') == hashlib.sha256((folder / 'SpriteFrames.tres').read_bytes()).hexdigest()
+            valid_main = (any(row.get('id') == target for row in main_data.get('actors', []))
+                          and main_data.get('frames_sha256') == hashlib.sha256((folder / 'SpriteFrames.tres').read_bytes()).hexdigest()
                           and main_data.get('run_png_sha256') == hashlib.sha256((folder / 'run.png').read_bytes()).hexdigest())
         actor['independent_validation'] = 'TECHNICAL_MAIN_PASS_QUALITY_HOLD' if valid_main else 'RESOURCE_PASS_MAIN_NOT_RUN'
         actor['raster_review'] = 'res://' + output.relative_to(ROOT).as_posix()

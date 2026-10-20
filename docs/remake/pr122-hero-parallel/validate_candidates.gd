@@ -48,14 +48,21 @@ func _run() -> void:
 	var frames_path: String = staging.actors["transform:" + target_ids[0]].frames
 	var revision: String = frames_path.get_base_dir().get_file()
 	var group: String = frames_path.get_base_dir().get_base_dir().get_file()
-	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + group + "-" + revision + "-visible-main/"
+	var evidence_suffix := OS.get_environment("TWILIGHT_HERO_EVIDENCE_SUFFIX")
+	_check(evidence_suffix.is_empty() or evidence_suffix.is_valid_identifier(), "safe evidence suffix")
+	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + group + "-" + revision + "-visible-main" + ("-" + evidence_suffix if not evidence_suffix.is_empty() else "") + "/"
 	DirAccess.make_dir_recursive_absolute(evidence)
 	var image := Image.load_from_file(frames_path.get_base_dir() + "/run.png")
 	var live := ImageTexture.create_from_image(image)
 	live.take_over_path(frames_path.get_base_dir() + "/run.png")
 	textures.append(live)
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(frames_path.get_base_dir() + "/rig-proof.json"))
-	var source: SpriteFrames = load(str(proof.source))
+	var source: SpriteFrames = load(str(proof.source)) if str(proof.source).ends_with(".tres") else null
+	var new_art: bool = str(proof.get("schema", "")) == "hero-unique-full-atlas-v1"
+	_check(source != null or new_art, "known authoring contract")
+	if new_art:
+		for path: String in proof.source_hashes:
+			_check(FileAccess.get_sha256(path) == str(proof.source_hashes[path]), "immutable new art source SHA")
 	_check(proof.frames.size() == 48, "48 actual articulated poses")
 	for direction: int in range(8):
 		var unique: Dictionary = {}
@@ -70,8 +77,9 @@ func _run() -> void:
 			unique[value] = true
 			var box := region.get_used_rect()
 			_check(box.position.x > 0 and box.position.y > 0 and box.end.x < 256 and box.end.y < 256, "no clipping")
-			_check(row.support == ("AIR" if phase % 3 == 2 else ("A" if phase < 3 else "B")), "alternating support model")
-			for leg: Dictionary in row.legs:
+			if not new_art:
+				_check(row.support == ("AIR" if phase % 3 == 2 else ("A" if phase < 3 else "B")), "alternating support model")
+			for leg: Dictionary in row.get("legs", []):
 				var hip := Vector2(leg.hip[0], leg.hip[1])
 				var knee := Vector2(leg.knee[0], leg.knee[1])
 				var ankle := Vector2(leg.ankle[0], leg.ankle[1])
@@ -119,7 +127,14 @@ func _run() -> void:
 		var sprite: AnimatedSprite2D = player.transform_sprite
 		var frames: SpriteFrames = sprite.sprite_frames
 		_check(sprite.is_visible_in_tree(), "actual player visible in tree")
-		var rendered := Image.create(6 * 160, 8 * 5 * 160, false, Image.FORMAT_RGBA8)
+		var max_phases: int = 6
+		var expected_rendered_phases: int = 0
+		for role: String in ROLES:
+			for heading: int in range(8):
+				var count: int = frames.get_frame_count(role + "_" + str(heading))
+				max_phases = maxi(max_phases, count)
+				expected_rendered_phases += count
+		var rendered := Image.create(max_phases * 160, 8 * 5 * 160, false, Image.FORMAT_RGBA8)
 		var rendered_phases: int = 0
 		_check(frames.get_animation_names().size() == 40, "five roles x eight directions")
 		for direction: int in range(8):
@@ -128,12 +143,22 @@ func _run() -> void:
 			for role: String in ROLES:
 				var track := role + "_" + str(direction)
 				_check(frames.has_animation(track), "missing role " + track)
-				if role != "run":
+				if new_art:
+					_check(frames.get_frame_count(track) == proof.track_sources[track].size(), "complete source action registration")
+					for index: int in range(frames.get_frame_count(track)):
+						var reference: Dictionary = proof.track_sources[track][index].source_reference
+						var texture: AtlasTexture = frames.get_frame_texture(track, index)
+						_check(texture.atlas.resource_path == str(reference.atlas), "exact new source texture")
+						_check(texture.region == Rect2(reference.region[0], reference.region[1], reference.region[2], reference.region[3]), "exact new source region")
+						_check(texture.margin == Rect2(37, 37, 75, 75), "padding only, no width/height scaling")
+				elif role != "run":
 					_check(frames.get_frame_count(track) == source.get_frame_count(track), "legacy action length")
 					for index: int in range(source.get_frame_count(track)):
 						_check(frames.get_frame_texture(track, index).region == source.get_frame_texture(track, index).region, "legacy texture region")
 						_check(frames.get_frame_texture(track, index).margin == source.get_frame_texture(track, index).margin, "legacy anchors")
 						_check(frames.get_frame_texture(track, index).atlas.resource_path == source.get_frame_texture(track, index).atlas.resource_path, "legacy actual texture")
+						_check(is_equal_approx(frames.get_frame_duration(track, index), source.get_frame_duration(track, index)), "legacy phase duration")
+					_check(is_equal_approx(frames.get_animation_speed(track), source.get_animation_speed(track)), "legacy action fps")
 				player.motion.dead = false
 				player.motion.advance(3.0, Vector2.ZERO)
 				player.motion.face(aim)
@@ -191,7 +216,7 @@ func _run() -> void:
 			var path := evidence + "Main-" + sid + ".png"
 			_check(root.get_texture().get_image().save_png(path) == OK, "actual Main rendered to file")
 			_check(rendered.save_webp(evidence + "Main-all-poses-" + sid + ".webp", false) == OK, "all real Main pose captures saved losslessly")
-			_check(rendered_phases == 128, "every candidate phase actually rendered")
+			_check(rendered_phases == expected_rendered_phases, "every candidate phase actually rendered")
 			captures += 1
 		results.append({"id": key, "roles": 5, "directions": 8, "rendered_phases": rendered_phases, "status": "TECHNICAL_MAIN_CANDIDATE_PASS", "visual_identity_approval": false})
 	player.clear_transform_visual()
@@ -205,6 +230,15 @@ func _run() -> void:
 	var suffix := "opengl" if captures > 0 else "headless"
 	var file := FileAccess.open(evidence + "validation-" + suffix + ".json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(result, "  ") + "\n")
+	if suffix == "opengl":
+		# Another sequential producer may have advanced an unrelated actor while
+		# this renderer ran. Never write a stale copy over those newer entries.
+		staging = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+		for sid: String in target_ids:
+			if staging.actors["transform:" + sid].frames == frames_path:
+				staging.actors["transform:" + sid]["main_validation_report"] = evidence + "validation-opengl.json"
+		var ledger := FileAccess.open("res://data/pr122_hero_parallel_staging.json", FileAccess.WRITE)
+		ledger.store_string(JSON.stringify(staging, "  ") + "\n")
 	print("HERO_MAIN_TECHNICAL_PASS actors=%d directions=8 roles=5 checks=%d captures=%d approvals=0 default_game_connections=0" % [target_ids.size(), checks, captures])
 	quit(0)
 

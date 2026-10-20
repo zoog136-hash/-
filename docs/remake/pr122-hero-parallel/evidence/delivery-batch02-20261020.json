@@ -1,0 +1,899 @@
+{
+  "schema": "hero-parallel-delivery-v3",
+  "parent": "f857d2b8bad25d56fa262dff1b03a6fe0d826e17",
+  "scope": "hero-only; no merge",
+  "files_excluding_this_manifest": 123,
+  "selected_validation": {
+    "schema": "hero-selected-validation-summary-v1",
+    "selected_technical_candidates": [
+      "transform:11",
+      "transform:179",
+      "transform:182",
+      "transform:231",
+      "transform:260",
+      "transform:7"
+    ],
+    "unique_main_report_count": 5,
+    "main_checks": 6426,
+    "rendered_native_phases": 848,
+    "new_final_approvals": 0.0,
+    "default_game_connections": 0.0,
+    "pending_total": 25.0,
+    "not_started": 19,
+    "quality": "HOLD",
+    "reports": [
+      "docs/remake/pr122-hero-parallel/evidence/beres_hero-r002-visible-main/validation-opengl.json",
+      "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main/validation-opengl.json",
+      "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/validation-opengl.json",
+      "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
+      "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/validation-opengl.json"
+    ]
+  },
+  "latest_pr_head_read_only": "a4d58e91610d0a951748c90a6c7992a747b85d53",
+  "overlapping_original_pr_paths": [],
+  "new_final_approvals": 0,
+  "default_game_connections": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/RunSpriteFrames.tres",
+      "status": "A",
+      "bytes": 12523,
+      "sha256": "ea0d7f85f40ce1722762b24ccf08653207e330ded2047582dccd249f23dde254",
+      "git_blob": "34ff221cefaf9ec7566e17b6f0ef8e581e46f038"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/registration.json",
+      "status": "A",
+      "bytes": 11596,
+      "sha256": "9130b9c6171afa2ac295fb03ac5ec3ae6407757d0ff56bf3026713e5f673c32f",
+      "git_blob": "98edbc3030b241223b1182c0e0aa93a7e472aefb"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/source-attack.png",
+      "status": "A",
+      "bytes": 1717139,
+      "sha256": "f2ac6f45a12ef70ca7e5614f26cddad2eb7f588aeccb5622fddca4caeef03049",
+      "git_blob": "ee8d0a8580daaa531b7eb181e99eeedc126b4174"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/source-run.png",
+      "status": "A",
+      "bytes": 2365830,
+      "sha256": "81b68df1dc7b9405df7220a3ff382045f02e75aafde109970af85fb2bf9d9dd4",
+      "git_blob": "adad5890ca82341b64e2c781015ca2db48ab1eae"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/source-support.png",
+      "status": "A",
+      "bytes": 1719612,
+      "sha256": "aa2ff2608c04b154effa4dfda34401b4a8cca86634606000b23522b84219c396",
+      "git_blob": "e520c761598a0f6319b5cd108c8215016f946cd5"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 965,
+      "sha256": "7ba93d0c5b62c80700d66aa0e5281ae38802a6199b5bf07f4ab516c136f418f1",
+      "git_blob": "f8a681e259e4b5c51982fb230f61bee7f54f5bb0"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 37998,
+      "sha256": "ce9b8b918582947ae6c75aed2db88f9fc03fc204a9f6d0104682676ef1b60e61",
+      "git_blob": "9b3fbece75671f05f701d9e7956d2a81f2908f98"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/rig-proof.json",
+      "status": "A",
+      "bytes": 93184,
+      "sha256": "15e1a71b57bdd621a0f24825ddd4ccae6e0ff48fd530dc988d5bdfb11f5c36bf",
+      "git_blob": "a354fbcf8b93f9721bde49430d739d9310cd412f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r002/run.png",
+      "status": "A",
+      "bytes": 2219790,
+      "sha256": "7983165cd8c99b1f797f1f59d55249bf5f893e0cd8f0c23baec499ed7ef1dd6c",
+      "git_blob": "0d6175916f4cf57245a29adf5e3b98b61a4e586c"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r001/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "8643e66c47fd4bd55a7cf1928708e3e492727a064a8c8046304e7d31409eceac",
+      "git_blob": "2842f2d1bd25a76573481f45b043b2823fecb97b"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r002/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "b117603158d8fc3c14a02062f6c8645a541f3360918603b811ffc5463f258d36",
+      "git_blob": "e99d76f353e755be60fe238e3c375c03659529ce"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r003/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "ad58a7634727e9c7d9ac656b108ea7385b52bbaf7fb343a8894c8a4033f387c3",
+      "git_blob": "ed10c9ffdd2d44cbcf0cf8fd64f67ccf93465485"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r004/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "c762339d69f9284a78f8416b1a1d66fce27d7508f85556ed7f5322eed0b4931f",
+      "git_blob": "85e4a67de49117118870dfa7bc2b7c5dbe733235"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r005/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "c4ac461fa7c6df8bb8927da43a7d618e5b5ef0efb2d5341c5e33e5a8f6d5e93b",
+      "git_blob": "31fceae9f039a488465e27449b2fc87feb498d8e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r006/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "c2b75a12985e852b2d59f78b37fae4d1c6bfcd6acf7de2d368c4a8bb455fd8a5",
+      "git_blob": "7c1b2f545f6d7d6835cee23eb78a9b139cae55fa"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r007/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "fa301b4c2090497ab3a9eecd7e61071d2e95e4ade2123aa2a10a052d18afc532",
+      "git_blob": "9794701dee64ce82dc76b86e37d813851c3bfbf2"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r008/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "8a2b064e92bac914fbc124a2aa555a04dc849299c025d63b3417da5ae508cf2a",
+      "git_blob": "911669fb68a4cc49c416c26fb38741910f91b50c"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r009/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "8d20325ce8a05470a3cf4eecc96fa59b90e8edfc88011d825ea8432788ffb8f3",
+      "git_blob": "0f493aaebc0b2cdbeeedf978e6b471b9d5b20a43"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r010/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "8e5c6d39efa0057cb784b0ee6e0c6960e8e56bbbba7ea0c5e3d9ca1514245cb8",
+      "git_blob": "a2ef041da20a2834822e9cf14e889d272b808bfc"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r011/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 931,
+      "sha256": "edd5c0211135d0bdd0194cd9b6ad75427122639eef51c2360f6e9852ca5c3390",
+      "git_blob": "62cb42b981704c54021a5b2fc8fb03408864918d"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r001/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "afac022d0f75c0a69a621cfa21f5d8f06c0bd88cdf2577ba58bc2d0b3c61d178",
+      "git_blob": "b2d0f25f867ced28879d985f263d6cdd47caac31"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r001/rig-proof.json",
+      "status": "A",
+      "bytes": 119781,
+      "sha256": "50a2f9dbcd7cc884d152c43197fd937e58847e75d1230759a9c336b9331555d7",
+      "git_blob": "424ba8a8a3e4283b62bcd92225eedb739d1c1571"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r001/run.png",
+      "status": "A",
+      "bytes": 197459,
+      "sha256": "c57b463ac3a7210d045c177e7550328089bca0d28b22df17be8fb2dd94b822bf",
+      "git_blob": "3dc569ba4a5b5d04ca44284c1d4c5a2bc227a852"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r002/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "488451b3341db108dc32177c4f2a8bb28f304e02ff57974c839848358aa3de01",
+      "git_blob": "82fea0d3100d533c1d70449b36b92ab3905ba40a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r002/rig-proof.json",
+      "status": "A",
+      "bytes": 119781,
+      "sha256": "2d6bbb9b05290ce328aa50688ce2ad831b00b609c70c2ad1ddaf48b889320817",
+      "git_blob": "dad092ec7ed87c8b7fec17514cc5dba09fc17137"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r002/run.png",
+      "status": "A",
+      "bytes": 196652,
+      "sha256": "502e2a9ccde6a51ae319c7924554d44ef728cd076b7aeb3cab81d54369cc75f7",
+      "git_blob": "0aa017aa276fd3b13512c08151caa8029f6cc53d"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r003/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "d1d8184200721beddc9bd31f013a9958379a6e8fe7cbdde4f8bd2c90f31fcd01",
+      "git_blob": "ab85eddb0dfcaf0bb08baf74b69a3689d7c0af68"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r003/rig-proof.json",
+      "status": "A",
+      "bytes": 119781,
+      "sha256": "149b0cfa813db0d1ce2d6e304a5eac6c7024f92d68049b399a7195082ce1f237",
+      "git_blob": "60a26eeb4760e3414b95e4bc53deda3c889730ea"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r003/run.png",
+      "status": "A",
+      "bytes": 196713,
+      "sha256": "07c8f0459a39d13742a1e0e9d618621c480b23d65c18e0a8183223a046a82f49",
+      "git_blob": "bfc1f9f23c23e2d47e72106061b89735117b81a3"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r004/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "9004225336038fac61e5e995f689c6f9fd0988beea60173dc5bdafc76438ca92",
+      "git_blob": "e2621e7d960fbc128b76620ba666e7b28228f121"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r004/rig-proof.json",
+      "status": "A",
+      "bytes": 119781,
+      "sha256": "185d55083003764e3ff9bb5fe0938008ed4a73afe42c480b4ab7c8a7f02e2b24",
+      "git_blob": "aaa1342293222d33e89d5c230e13c3338d3b5b1b"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r004/run.png",
+      "status": "A",
+      "bytes": 197619,
+      "sha256": "2d13abc7ec7dfd0a728e54a3db38ab80cfaba112f19b75f0707eeb341da6e470",
+      "git_blob": "6d4c55bb410f512dc5f850e5c322d443c00554a5"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r005/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "44a3496a7c84060d38f316074e25885ad368c7c47a37ed710bf1239b787e391b",
+      "git_blob": "b3bcc61277d38003a9f607bd087dd382d7554b0d"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r005/rig-proof.json",
+      "status": "A",
+      "bytes": 119781,
+      "sha256": "5bd4eba7b8b9ad0413003343ccb67c219aa1378d884fe8bed4622e2a31221d5f",
+      "git_blob": "7c953b3cbf0f6c72dc9e46de679374b12a595bce"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r005/run.png",
+      "status": "A",
+      "bytes": 198585,
+      "sha256": "08c6e65dc23f39ac14c56dc4f95fc8c5c26427aeb2e38e2d790e05130cb45a1d",
+      "git_blob": "830691fbeeea29938fefec92235cbe7fbb79c3df"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r006/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "98b4c014107194d76cdd3c556d42711937ab4ba0a419f021b065ad6f61e3a5b7",
+      "git_blob": "099f35b66e15b7d9aab6006271c60d161b6bdc2e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r006/rig-proof.json",
+      "status": "A",
+      "bytes": 119779,
+      "sha256": "66169bd58a0428e24eb8f4fb9d5bba65613497e995ede1e90e5e44d5e039c12e",
+      "git_blob": "96cc63f65e0f42b74d61b1489ad076b8f57ab1bd"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r006/run.png",
+      "status": "A",
+      "bytes": 197937,
+      "sha256": "2b775877d6fc3c3f02ac4085ab2ea481f65bc66ea1635de058e7ac7681e261dc",
+      "git_blob": "0f5def44c7f4bc799675417f98e83bf722a6130e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r007/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "9281e1a26d846231000fe80cc1c9126f0be81e4a9ac10aa3f83f2f34663a22da",
+      "git_blob": "52a9f5592de65d7415a450e98060dbab7026af56"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r007/rig-proof.json",
+      "status": "A",
+      "bytes": 119906,
+      "sha256": "32b14d4a1656f4758b056940df96c1c6d3b81f088fd0be30703f3d9c4c8a8404",
+      "git_blob": "1dddc578613ecb3c0d251fc8dad64c423026e373"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r007/run.png",
+      "status": "A",
+      "bytes": 199032,
+      "sha256": "d8ab05f6178054b5463fc2c7c9c80bffea93de4621d00981d2854797b2af247f",
+      "git_blob": "e0a40cb9db06714f3961799b309c556b3f24aac3"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r008/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "3ed05c794a5cdca636de45be7a06b00c9921d83f8d07d94389e86403fe0ba3f1",
+      "git_blob": "28cad3645d30bcb858127dcd570f697621908297"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r008/rig-proof.json",
+      "status": "A",
+      "bytes": 119770,
+      "sha256": "92ff34c86d89500963fd21307181c49d96d4cd948f270a6df8c999a0ef73f304",
+      "git_blob": "8863eec140ef3ad2f9c05241053c9b2945edbb92"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r008/run.png",
+      "status": "A",
+      "bytes": 197571,
+      "sha256": "dca443da69164aa5c72305d81fcba08d628f65ce743fc4c1454fac758467d418",
+      "git_blob": "55f2d98f92973a52e42ff070137fbb4867c195c1"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r009/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "823ba95aeff07239392d4c14d205c35b1a6bd06a1fc38cdaaa75e0f1b9b91865",
+      "git_blob": "0c323eef1da6fe5f1b903950b546d842d0703b44"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r009/rig-proof.json",
+      "status": "A",
+      "bytes": 119906,
+      "sha256": "086e0641266ce268eeeba1f17323f1cc01a5d1df2f25e1632b893bfea4b92278",
+      "git_blob": "e35b31f271a85785e207f65cf55cde7ef8e431d2"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r009/run.png",
+      "status": "A",
+      "bytes": 199032,
+      "sha256": "d8ab05f6178054b5463fc2c7c9c80bffea93de4621d00981d2854797b2af247f",
+      "git_blob": "e0a40cb9db06714f3961799b309c556b3f24aac3"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r010/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "78915241d859ab76479af04d5e3e327beffa34e6579e056c869e2a8250f6622b",
+      "git_blob": "3633f620f4a9cd16c5828b6896238e3d2196a20a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r010/rig-proof.json",
+      "status": "A",
+      "bytes": 119779,
+      "sha256": "dfd0861d98f1b1adc3f3a512341a4eb56b167bf06851849c4804bf5a9ae00c34",
+      "git_blob": "327b55394e0352659cff898382c5d1f4f692f31e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r010/run.png",
+      "status": "A",
+      "bytes": 197937,
+      "sha256": "2b775877d6fc3c3f02ac4085ab2ea481f65bc66ea1635de058e7ac7681e261dc",
+      "git_blob": "0f5def44c7f4bc799675417f98e83bf722a6130e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/SpriteFrames.tres",
+      "status": "A",
+      "bytes": 43143,
+      "sha256": "2bb2d09d96945fb8afbb302e58e5256ab85d4e6c7a7db23f8dee2d6e54c285e0",
+      "git_blob": "9252ea7d666b53ad1030849f29c2b21a7724d180"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/rig-proof.json",
+      "status": "A",
+      "bytes": 119770,
+      "sha256": "a5ecfd3fbb6ab7ac2706dab27b943d933a2dc23b7e0fbb4791bc99fb65f1607b",
+      "git_blob": "863abefe5ab0847be6870f3fe67a9d0285a5f9d1"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/run.png",
+      "status": "A",
+      "bytes": 197449,
+      "sha256": "4c6ab2a15c59c15d981d8f6b96339afa9a9e5dc239127e80398fbc4102a20ff5",
+      "git_blob": "f5db6a58d4f3355d363a4b47ab552a0edb3417e4"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/lance_231/r041/NativeMotionProfile.tres",
+      "status": "A",
+      "bytes": 926,
+      "sha256": "0cb676148d9b3f0f10446f21615cdc6558d7b3bd4e03b1baadd71ed978954a8c",
+      "git_blob": "981b65dca5dedc3ac3ab0dc0ea1ba7f6eaab8a3f"
+    },
+    {
+      "path": "data/pr122_hero_parallel_staging.json",
+      "status": "M",
+      "bytes": 24608,
+      "sha256": "f6c5909bc397e0e98ca128a4c3bed3b215d94f1ba32dcba60d1aa0d4328d1cb5",
+      "git_blob": "84874515918041d34f44b2c2870de5734283b0e2"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/README.md",
+      "status": "M",
+      "bytes": 15539,
+      "sha256": "998af0ab6509eb9f3bf49dc99a86f7a67e5633b0d1bbdb9da1cd5bdc76451558",
+      "git_blob": "d3e0c0eebf6a4dc69e3c65097181acc22b185319"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/bake_lance_run.gd",
+      "status": "M",
+      "bytes": 23607,
+      "sha256": "35a83b6d43b4e47a93021bef3bdd2fb63e32c8f9a93c9b2197cc864e87c53d17",
+      "git_blob": "afb7654c009a19b6c7790152ed3c9928cd47162b"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/build_roster.py",
+      "status": "M",
+      "bytes": 5229,
+      "sha256": "e6d50e7a815b2c921d868655e0a60759d0c00b3f6b76e54c76a20837eb5a02a7",
+      "git_blob": "a9407f36cd99d22b2518d63f065e34b1c9d8d71c"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/check_artifacts.py",
+      "status": "M",
+      "bytes": 8751,
+      "sha256": "6bfb7fc32a023102172a6e4975f28b27d3f3d73dd7bacdc48d722922929477b1",
+      "git_blob": "c0d0113216b547198e63aefa66d22981d7255978"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/describe_sources_locally.py",
+      "status": "A",
+      "bytes": 3570,
+      "sha256": "433f5a9e8b99d7dbfaa6cad17abe2f65b6198fbccaeb072e9d746dc6eb077f13",
+      "git_blob": "6be613d4b839e0e5855d9d038484980b7ff1173f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/Main-run-only.json",
+      "status": "A",
+      "bytes": 1245,
+      "sha256": "c23470fc6a0e4e060c6b9db633f03e503b25b316dccbe014d2d70eae79a93f12",
+      "git_blob": "bce5f5657b363001a7609bd919b735912da3a3a7"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/Main-run-only.webp",
+      "status": "A",
+      "bytes": 902492,
+      "sha256": "7c034b05ba5cb7fdf560bc0598bdd169fa5d2ad4b7d7c220b08bc776b40e1112",
+      "git_blob": "7a0a726a66ce0a5ba0d24533e4d78faf34305488"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/attack-receipt.json",
+      "status": "A",
+      "bytes": 450,
+      "sha256": "0cd943820a24fde9170b229e6702a983221807c9a779602a4154aeaba1606569",
+      "git_blob": "26b918be89ffe998bf7abea5068d470973febda3"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/attack-request.txt",
+      "status": "A",
+      "bytes": 2350,
+      "sha256": "71e96324853c22b2e16205168289bf787bcb06e8ecc54cb0548b35d794e36287",
+      "git_blob": "52722952b9bf480dd901229c4e92d6ff846a587a"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/grid-review.json",
+      "status": "A",
+      "bytes": 18190,
+      "sha256": "599dc3bd1511c234b62720704e053daa4480d4385a5ad439f7de810db089f42c",
+      "git_blob": "396500723e844e418fa307461adc671ce838ca77"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/main-opengl.log",
+      "status": "A",
+      "bytes": 455,
+      "sha256": "ac523ee8eac17de97b0705bcc5bed9c5be9c2c87fb841c48f52051096ad4b395",
+      "git_blob": "564426a2cd1bddd9e941be9dc96ff81c840b1870"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/pack.log",
+      "status": "A",
+      "bytes": 220,
+      "sha256": "19cb74027eaf839ba234596d592014069b26fa9d411403f4595cce76552f00b3",
+      "git_blob": "8bb5b018bda07661e2873a2b06fe5de631687659"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/source-receipt.json",
+      "status": "A",
+      "bytes": 556,
+      "sha256": "3b91623182cfa31b7f4d36f3363af9040a8e9f9d6e19354c4f18ddc53a42dfd9",
+      "git_blob": "5272c8d5eb0516d14bc5e566e54f8d7837155c25"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/source-request.txt",
+      "status": "A",
+      "bytes": 2629,
+      "sha256": "f6f8c0bff2a65f90c6f5b5832ca8a99ef90e1d2041057b38ecdd3b530c3bd8b5",
+      "git_blob": "215cdb3e6950629c49123d1138aecbdd5cca338e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/support-receipt.json",
+      "status": "A",
+      "bytes": 459,
+      "sha256": "79fdedf712487343680650047d97ad6e8d6afa5cc8084f5d671007dc35adac53",
+      "git_blob": "cfbb75e41386b930f4e013a3ffd2e811c09ffceb"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r001/support-request.txt",
+      "status": "A",
+      "bytes": 2302,
+      "sha256": "8f70a61bf62398fe98971672f1cd7972291762fe55f485a776529791abeb2c29",
+      "git_blob": "d0c20c263306f881143b6fd10e441d987fe562bb"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/Main-7.png",
+      "status": "A",
+      "bytes": 2267410,
+      "sha256": "816c1999b64ba458c4e416a92de6c8b9ced041e402bd5f746d72c45d2f6bfdf3",
+      "git_blob": "5223480e7f2730fa14b66cf4e0f916d243b2be2c"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/Main-all-poses-7.webp",
+      "status": "A",
+      "bytes": 4384734,
+      "sha256": "91bdc18108300af588695de2872a846a63d516505729fbb58d919b130973448a",
+      "git_blob": "3e4edcdb314adc10f7823b3015327f2340c713a4"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/keyboard-physics.json",
+      "status": "A",
+      "bytes": 506,
+      "sha256": "0509905562be345c050ea3ee92ea224b913211e6506bb8d5d5511ee8455e38a0",
+      "git_blob": "71594c97ed9fffe2ce549fe7114258046ff559f5"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/keyboard.log",
+      "status": "A",
+      "bytes": 448,
+      "sha256": "7ca9dd537b2e599bf7593a9ff033b20757b154651d35ab445567242aa8432b8b",
+      "git_blob": "d00e97d1fea67c70b0f1f6d116f060ba3f3265ad"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/main-headless.log",
+      "status": "A",
+      "bytes": 612,
+      "sha256": "bdfd3bbbd57e6102748bdf79891639b2697b650e0916b9529f41d823c5429c70",
+      "git_blob": "a6989be4a811fc3c66e4a11c3ea9fd10d4925523"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/main-opengl.log",
+      "status": "A",
+      "bytes": 908,
+      "sha256": "a63922ee02aa87f381f708f91e1e0af11ee4ffd56b37c127668d8f630450568c",
+      "git_blob": "360d2da7c4e15fa63c84b4fa8fd73b71e08175ec"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/validation-headless.json",
+      "status": "A",
+      "bytes": 693,
+      "sha256": "f44b0ef79fae5b6d56c39004d50c532ab574780993506e1f78db8c5ddb96bd59",
+      "git_blob": "e54f5157aff36322eb265f6bea6664b58d71db45"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/validation-opengl.json",
+      "status": "A",
+      "bytes": 691,
+      "sha256": "471a92e39e14a9839a8505bd39c111a7494202ced66ae6ea1226838aec75a1f0",
+      "git_blob": "eb4229c896b80d7e17253f1d3809f166538fff80"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002/pack.log",
+      "status": "A",
+      "bytes": 221,
+      "sha256": "6fbda8fedbb2c197adfcae0ddde872f53247d9b0e954f3ec2fe71d49755831b1",
+      "git_blob": "87c3092ed13d02c5f02902f1d3408a8bc4f28767"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002/raster-review.json",
+      "status": "A",
+      "bytes": 17410,
+      "sha256": "c7ab3beb9842242e9dc8b1c08d8b2cf186ed73fdeaddd8fd7265bbc90fc6e0d3",
+      "git_blob": "5db7268f9c42c10d2edfaa7f6e67d0073be4156d"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel-partition-fit.json",
+      "status": "A",
+      "bytes": 1083,
+      "sha256": "1113a0b068b22e75c57df8bb7eff8822670f42de35a61b9d2f75128c1a14b802",
+      "git_blob": "ab1d6288c82b2bd1e3af86edf98158ca1cc7d17f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r001-visible-main-batch02/Main-260.png",
+      "status": "A",
+      "bytes": 2267362,
+      "sha256": "0335725ede3d21aac2420e47742595e2a6410f9bff4a7aa04a5427a9d49a4fae",
+      "git_blob": "795acd391b9e1aae7ebc1794db4f55bbed22c70e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r001-visible-main-batch02/Main-all-poses-260.webp",
+      "status": "A",
+      "bytes": 4255656,
+      "sha256": "d219dfeb254e974e062404e4056fb946964fc4daae809cbdd5e02d61d29beb62",
+      "git_blob": "401bd09fd771d8dc9001ada04d7500c58063bafd"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r001-visible-main-batch02/validation-opengl.json",
+      "status": "A",
+      "bytes": 693,
+      "sha256": "afa3d4e9b01359aa15c57d3fd86dfafcafdf0a8914c02884071872d426d23149",
+      "git_blob": "e7e789e621ea6d2fee8b051e534766820738b3d1"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r001/batch02-stale-import-failed.log",
+      "status": "A",
+      "bytes": 7200,
+      "sha256": "0bfe999feae1c6caac39e326ebe527afcb39cd3be8d9622e314dcbdfe41c5a96",
+      "git_blob": "c08fe337c76298ad657aa413ad45de00662abb52"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r001/raster-review.json",
+      "status": "A",
+      "bytes": 17644,
+      "sha256": "eef2b9e90e76a91cf71e1219178ef4b9f05101bab85fbd65d0e34b155f1724db",
+      "git_blob": "db883a4785c73f5c7d196d2b9ef7f7f20004bfb9"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r002/raster-review.json",
+      "status": "A",
+      "bytes": 17586,
+      "sha256": "6de8bf2b88f94afd9a9b7c9baab762ccadd23709b467258b4667fa04b48c5015",
+      "git_blob": "e3ddd9fe12eae4433df980d2426d7b333a488f84"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r003/raster-review.json",
+      "status": "A",
+      "bytes": 17633,
+      "sha256": "30d2d434c869dfca4947afc958e9987050e9a0dea133f0348f3fb56061b18b2f",
+      "git_blob": "460654faba08d3d6c02465f9d225548b4ebeadb9"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r004/raster-review.json",
+      "status": "A",
+      "bytes": 17669,
+      "sha256": "14afb9810cc4036a5914326fd6c71232c114237061180d4866a0daefc413fb9a",
+      "git_blob": "ef06507fde2bc433d652718b957b816097b88b76"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r005/raster-review.json",
+      "status": "A",
+      "bytes": 17608,
+      "sha256": "4e2b2afaa4faa8c8d8e56e3a1788f6c775de68f0f0ee4572718d3b133fb97423",
+      "git_blob": "7f9ba2140bfb2283186846e105d015716e95a0e7"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r006/raster-review.json",
+      "status": "A",
+      "bytes": 17646,
+      "sha256": "e06c474005deedb7d5e4702e371e4587d570d4a018a40bd3f9cfbba093481dfd",
+      "git_blob": "92ad4f5e537c564e97711f54004c5929a565a7ea"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r007/raster-review.json",
+      "status": "A",
+      "bytes": 17682,
+      "sha256": "172834450f76577e033f8af1539aa4501444397f7ecb7e78bb7fb80a4af94a6a",
+      "git_blob": "e9d3e876de407af628adba6e330529340f669e69"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r008/raster-review.json",
+      "status": "A",
+      "bytes": 17490,
+      "sha256": "f8d96b8ec6f7cde8f7219a52072d33bfe4a1ce9ffbb8b16874c745c0bfc163b6",
+      "git_blob": "f257a2f0eff2dfc3d8d353013f343319f5b5e417"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r009/raster-review.json",
+      "status": "A",
+      "bytes": 17682,
+      "sha256": "f88d8a5c54f5defb70eb55a8fe5433b5656787f1413130b701bc2f2b0b73e8f1",
+      "git_blob": "bb37116df563b4ecc72c72ab3456b0dbc902b0ce"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r010/raster-review.json",
+      "status": "A",
+      "bytes": 17646,
+      "sha256": "9b035bb970e8479e0345f48ad39c047ea59fb3be00c6df5db25512b88d52adcb",
+      "git_blob": "3bd065958a99e02a3335a3a2ca32b61609831b3a"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/Main-260.png",
+      "status": "A",
+      "bytes": 2267362,
+      "sha256": "0335725ede3d21aac2420e47742595e2a6410f9bff4a7aa04a5427a9d49a4fae",
+      "git_blob": "795acd391b9e1aae7ebc1794db4f55bbed22c70e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/Main-all-poses-260.webp",
+      "status": "A",
+      "bytes": 4248074,
+      "sha256": "40e1ac7084db4bb5879b42cafc51c410f394aa0fe570b3f4853b03bdde2e69b7",
+      "git_blob": "15a31847bc3856a64035fb292566c70ee3fb9ada"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/keyboard-physics.json",
+      "status": "A",
+      "bytes": 506,
+      "sha256": "c0588728cf4a79eac5f534701f6c10f7a1e76ecb02b431c74402cf042c8044c3",
+      "git_blob": "efd6a4e11e8ec71b191a978f8f2b7bccc0bb7504"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/keyboard.log",
+      "status": "A",
+      "bytes": 448,
+      "sha256": "7ca9dd537b2e599bf7593a9ff033b20757b154651d35ab445567242aa8432b8b",
+      "git_blob": "d00e97d1fea67c70b0f1f6d116f060ba3f3265ad"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/main-opengl.log",
+      "status": "A",
+      "bytes": 907,
+      "sha256": "55ae1fbf66a7f0abaad201d4e00604dc9849e1298c9e5da2b73395be8049568c",
+      "git_blob": "626a0966262f2579c937efee2302e6c05ed115db"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
+      "status": "A",
+      "bytes": 693,
+      "sha256": "e30ed6832aaa000888e3f96e35f3d2ad9ba33e80bbe5b87242a68253ef007c8b",
+      "git_blob": "e6fa622aee48534d1f52616bed4819c7d09f1340"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/bake.log",
+      "status": "A",
+      "bytes": 153,
+      "sha256": "7198b141e2460fe8608f2a053dcee30b97b3bd9793a44ba3ef9e62d0151eb798",
+      "git_blob": "35f335974d900443419472344b29abd2847067a4"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/final-repro.log",
+      "status": "A",
+      "bytes": 135,
+      "sha256": "9a7a216513fc9c466e58cb2f6463d2f2a0c7f793f9f9d2d7658230b91447c7e0",
+      "git_blob": "9aed9b82a514692876d4909f7dace49030c78e82"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/raster-review.json",
+      "status": "A",
+      "bytes": 17479,
+      "sha256": "b033353307be93ac82934422369d8033f55943e26021a8b20d87aebff9230817",
+      "git_blob": "8037a25d44639253ee385443da54447269cc4e6f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/Main-231.png",
+      "status": "A",
+      "bytes": 2267317,
+      "sha256": "0abbeee7cd1592558d73af004d06aa59a0a077d1463882adbfbc142958186142",
+      "git_blob": "163d8821df8ba6ae6eae6f62f29b5fa8bffbbdc3"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/Main-all-poses-231.webp",
+      "status": "A",
+      "bytes": 4455466,
+      "sha256": "0e9aebaae6849f8b5a85c15589e35778ea375d16ae42058913cb612795c72167",
+      "git_blob": "c8006686b1f90e250502667d9d740c11203e0c0a"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/keyboard-physics.json",
+      "status": "A",
+      "bytes": 506,
+      "sha256": "bfa5c9736997713f6fa9b6d027c259f3df829c0c255d96bab062746240476a1d",
+      "git_blob": "a16646e7182c64506118c43d03cb702318276a10"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/keyboard.log",
+      "status": "A",
+      "bytes": 448,
+      "sha256": "7ca9dd537b2e599bf7593a9ff033b20757b154651d35ab445567242aa8432b8b",
+      "git_blob": "d00e97d1fea67c70b0f1f6d116f060ba3f3265ad"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/main-opengl.log",
+      "status": "A",
+      "bytes": 905,
+      "sha256": "c67f05dcf3b0369dd1876e96018c920420384c1e10d40b91f78ca8ef6f2ed0c3",
+      "git_blob": "25a20c6d2f129d8b5bdcd2ceb38dc74dd22c8356"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/validation-opengl.json",
+      "status": "A",
+      "bytes": 693,
+      "sha256": "562fd54e0607f97eaf1cae50b00bd785d00ab60f016df326f584a1362df05c17",
+      "git_blob": "1478246e7220a5767ed6443fa79b4dbb3bf8f902"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/latest-pr-read-only-audit.json",
+      "status": "A",
+      "bytes": 429,
+      "sha256": "e06130d80ab73f589314427c04a91826de15589182617b06863b580101d541c0",
+      "git_blob": "059bfad479af84d8d68064474ae8db87215dd2a8"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/local-design-triage.json",
+      "status": "A",
+      "bytes": 3162,
+      "sha256": "67636f9cffd672c8d0dfadeb2c0c47fbd027846a4815d0982ae76bf11ae35535",
+      "git_blob": "7a1d4dd1fc47d51aae7f534ad5a9adff794b7626"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/r041/final-repro.log",
+      "status": "A",
+      "bytes": 135,
+      "sha256": "9a7a216513fc9c466e58cb2f6463d2f2a0c7f793f9f9d2d7658230b91447c7e0",
+      "git_blob": "9aed9b82a514692876d4909f7dace49030c78e82"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/resource-integrity-final.log",
+      "status": "A",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+      "git_blob": "2749f46b12ec7a200c11b4bd480c9177c805e724"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/selected-validation-summary.json",
+      "status": "A",
+      "bytes": 1005,
+      "sha256": "fc36053fa2228b0510ec2a769ff441b8c69f3b4c9038fc8ff7b348f4cbe1c03a",
+      "git_blob": "baa6ef50208101e2245663be7ff978c39a86a683"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/link_shared_candidate.gd",
+      "status": "A",
+      "bytes": 3454,
+      "sha256": "85dbbe232515fb30dea50e3313314b8794af232e47ec66b1ad7a3e1bd039423a",
+      "git_blob": "a506032b15f5d93c91cfc44516494537104961d6"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/pack_unique_full.gd",
+      "status": "A",
+      "bytes": 5896,
+      "sha256": "1c5975a03acfef0593f214e14aaafe55995d3bf425deca4ecd156d9f9969deee",
+      "git_blob": "412ead5f0f177bd0c5d0294d88898e8ccad8dee5"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/pack_unique_run.gd",
+      "status": "A",
+      "bytes": 2682,
+      "sha256": "ee15422dffd72a6aefbc3a87812255fa288b9c93e273188828166784d3123c2c",
+      "git_blob": "fed283eea435e0c199bb2d49026f680259a4d41f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/recipes.json",
+      "status": "M",
+      "bytes": 2212,
+      "sha256": "7131458b47d66e59989a52099365602b856a8cd31a1a0fa70a2252701c04a90a",
+      "git_blob": "15996c82b2c3c11859b5d420d1f7562bfba87b69"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/validate_candidates.gd",
+      "status": "M",
+      "bytes": 15785,
+      "sha256": "3f2b7e977e6fdf9b4dbd6b442c40a75e6b2a5d4d6d3bab5bcac1b9e5d53799dd",
+      "git_blob": "999d6e170732fae5a57c35f45d1b3b766e9856c3"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/validate_keyboard.gd",
+      "status": "M",
+      "bytes": 5145,
+      "sha256": "f5bf54834d333471385f4ac5368c320ddd9232f05722bc092434d5a1695bfa13",
+      "git_blob": "bc15253f7e00e3472851cf42a43276a3e95d0cad"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/validate_unique_run.gd",
+      "status": "A",
+      "bytes": 4474,
+      "sha256": "222d45e716d60d74c84512f3d8fd35d88b5b3216a7ae5ed00749c7d2941469e1",
+      "git_blob": "7ba985d37181d166c991cd5f520d02f5353db2e5"
+    }
+  ]
+}

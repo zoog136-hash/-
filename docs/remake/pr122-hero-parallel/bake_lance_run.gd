@@ -228,6 +228,7 @@ func _run() -> void:
 	# These are inherited legacy clips, not newly authored or visually approved.
 	for key: StringName in source.get_animation_names():
 		if str(key).begins_with("walk_"): continue
+		if recipe.has("inherited_roles") and not str(key).get_slice("_", 0) in recipe.inherited_roles: continue
 		frames.add_animation(key)
 		frames.set_animation_loop(key, source.get_animation_loop(key))
 		frames.set_animation_speed(key, source.get_animation_speed(key))

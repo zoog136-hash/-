@@ -4,7 +4,8 @@
     "revision": "r041",
     "targets": [
       "179",
-      "182"
+      "182",
+      "231"
     ],
     "source": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
     "source_donor": "transform:176 via transform:44",
@@ -74,5 +75,38 @@
     ],
     "reference_override": {},
     "continuous_cloth_mesh": true
+  },
+  "kenrauhel": {
+    "group": "kenrauhel_hero",
+    "revision": "r011",
+    "targets": [
+      "260"
+    ],
+    "source": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+    "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      -4,
+      0,
+      0,
+      0,
+      -2
+    ],
+    "reference_override": {
+      "6": {
+        "track": "idle_6",
+        "frame": 3
+      }
+    },
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ]
   }
 }

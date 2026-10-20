@@ -1,0 +1,15 @@
+Tool: image_gen.imagegen
+transparent_background: true
+referenced_image_paths: omitted (new generation)
+num_last_images_to_include: omitted
+
+Exact prompt:
+Create a production pixel-art RUN animation sprite atlas for the HERO transformation BAPHOMET in the Korean MMORPG Lineage. This is a new asset for a dark fantasy Godot 2D RPG. Character must have recognizable Baphomet identity: skeletal goat/skull head, two prominent swept black curved horns, glowing red eyes, a dark burgundy/red robe over a lean demonic humanoid body, cloven hooves and a long dark sorcerer staff with an ominous red tip. Preserve exactly the same character, proportions, armor/robe palette and staff shape in every cell. Natural isometric eight-direction RUN with clear alternating left/right foot support, compressed stance followed by a flight phase, real independently articulated knees and ankles, controlled robe movement. Staff held firmly in one hand without changing size or floating. No walking cycle. Transparent background, no shadows, no text, no labels, no borders. EXACT 6-column by 8-row grid, every cell an equal 256x256 canvas, total 1536x2048 pixels. Row directions in order: E facing right, SE facing down-right, S facing down, SW facing down-left, W facing left, NW facing up-left, N facing up, NE facing up-right. All six frames in each row are the SAME viewing angle, NOT turntable views. In each row columns are 0 left-foot initial contact, 1 left-foot load right-knee forward, 2 both feet airborne, 3 right-foot initial contact, 4 right-foot load left-knee forward, 5 both feet airborne. Six distinct action poses per direction, 48 coherent sprites total. Keep skull/horns and weapon visually rigid, whole torso may lower slightly during loaded stance but no width stretching. Fully contain every horn, staff and foot inside its own cell, with 20px padding and common ground/anchor. Same body apparent size in all cells, no clipping or adjacent-cell bleed. Crisp polished pixel-art rendering suitable for 80-85 percent simplified hero asset production. Deliver the raster as an asset file; do not add explanatory graphics.
+
+Result: 1086x1448 RGBA, exact 6x8 grid with 181x181 cells. Requested
+1536x2048 / padding are not treated as satisfied merely because requested.
+Original file preserved separately; copy SHA is in source-receipt.json.
+All48 raw-cell RGBA hashes distinct; 3 alpha>16 cell bounds are too close
+to an edge. Camera, support feet, character identity and cross-action
+continuity have NOT been visually approved. RUN-only resource is NOT a
+finished transformation. No chat image or Base64 is part of this receipt.

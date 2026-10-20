@@ -72,7 +72,8 @@ def build():
         for field in ['status', 'frames', 'native_profile', 'rig', 'tracks',
                       'independent_validation', 'quality_holds', 'source_donor',
                       'source_frames_sha256', 'new_run_poses', 'production_connected',
-                      'final_approved', 'raster_review']:
+                      'final_approved', 'raster_review', 'main_validation_report', 'shared_run_poses',
+                      'unique_art_candidates', 'prior_candidates']:
             if field in old:
                 actors[key][field] = old[field]
     result = {

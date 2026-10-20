@@ -1,0 +1,64 @@
+{
+  "schema": "hero-local-text-only-design-triage-v1",
+  "model": "HuggingFaceTB/SmolVLM-500M-Instruct",
+  "revision": "a7da5b986cb59b408707209984f360a5f4ad7e47",
+  "prompt": "Describe the visible character only. State head or horns, clothing or armor, weapon, body type, dominant colors. If something is unclear say unknown. Do not invent a name or assume identity. This is character design triage, not an approval decision.",
+  "trust_remote_code": false,
+  "final_approval": false,
+  "results": [
+    {
+      "label": "7-catalog-reference",
+      "source": "assets/catalog/626d89e940ee6d7cd7446881.png",
+      "crop": null,
+      "source_sha256": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490",
+      "description": " Head."
+    },
+    {
+      "label": "11-catalog-reference",
+      "source": "assets/catalog/73d5ffcf7bd47bbbd9ff5338.png",
+      "crop": null,
+      "source_sha256": "b9488518b5f578fe6df165f1e536fa24a8148136b679c22f2cee6dfe9705098c",
+      "description": " The character is a warrior with a helmet and a shield."
+    },
+    {
+      "label": "179-catalog-reference",
+      "source": "assets/catalog/8bf952f2ddac970272de1acb.png",
+      "crop": null,
+      "source_sha256": "eaeb21be40ef08dd95c900db83d272800781069832dd4ca902e4f6d680e78511",
+      "description": " Character design triage:\n- head\n- horns\n- clothing\n- armor\n- weapon\n- body type\n- dominant colors\n\nThe character is a knight. The knight is wearing black and red armor. The knight is wielding a sword."
+    },
+    {
+      "label": "182-catalog-reference",
+      "source": "assets/catalog/f0e737c6db30210b1fa4b220.png",
+      "crop": null,
+      "source_sha256": "50a114a762c36f0620499da421a773713495b4417a419ee88684cc223d186489",
+      "description": " Character design triage:\n- head\n- horns\n- blue and black armor\n- purple and white weapon\n- blue and black body\n- purple and white dominant colors"
+    },
+    {
+      "label": "231-catalog-reference",
+      "source": "assets/catalog/d3129a87e012cec4099d9a3d.png",
+      "crop": null,
+      "source_sha256": "b0426616db7c09e1970c738fef9b1caad5d9892b59ff654c8d576010f90c5488",
+      "description": " Clothing."
+    },
+    {
+      "label": "260-catalog-reference",
+      "source": "assets/catalog/8816dfeaabd5f82d37e06dd9.png",
+      "crop": null,
+      "source_sha256": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8",
+      "description": " Character design triage:\n- head\n- horns\n- clothing\n- armor\n- weapon\n- body type\n- dominant colors\n\nThe character is a person wearing black armor with red and white accents. The person is holding a large scythe in their right hand."
+    },
+    {
+      "label": "baphomet-new-run-E-frame0",
+      "source": "assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/source-run.png",
+      "crop": [
+        0,
+        0,
+        181,
+        181
+      ],
+      "source_sha256": "81b68df1dc7b9405df7220a3ff382045f02e75aafde109970af85fb2bf9d9dd4",
+      "description": " The character is a goat wearing a red and black dress. He has two horns on his head and is holding a staff with a glowing red orb on top."
+    }
+  ]
+}
