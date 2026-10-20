@@ -109,3 +109,9 @@
 - NE 착지0/3의 몸통 상승은 실제 하체 원화를 각1회 생성해 무릎·정강이·발을 보완했다. 최종 source0 216ac0a0…와 source3 63cb6e43…의 독립 SOURCE PASS, 다른4/고정C 보존, 새 atlas3287d0e9…의 SOURCE/물리 후보 PASS(1a23acde…)가 확보됐다. 12.5fps/.08초·실제 sole/AIR·무릎 압축/반복 흐름을 검토했다. 실제 Player·기본 Main 최종 승인은 아직 아니다.
 - 원본/실패 마스크/수정 기록은5c66bc17ba6a, 새 atlas와 source3 검토는3ba97246b04d에 정상 push했다. 본 절과 동일 커밋의 quality-corrections/girtas-NE-run-reviewed-source-physical-checkpoint-v02 index에 물리 후보20파일·검토 증거 핀을 보존했다. 공식 계약은 검토 SOURCE_REGION 내부RGBA 정확 및 alpha>16 전체 보존이며 원본 PNG 자체는 변경 없이 별도 보존한다.
 - 상세 완료1/31(393), 미완료30 유지. 다음은 NE run6 r100 연결·범위 Godot 검사→267 전체48 및 실제 기본 Main 승인, 이후 신화413 NW walk6 제작이다. PR100 재작업·새PR·main 병합·강제push를 하지 않는다.
+
+## 기르타스 상세 제작 승인 — 실제 기본 Main 연결
+
+- transform:267: 8방향 × idle/walk/run/attack/hit/death = 48클립·288자세 최종 독립 품질과 실제 기본 카탈로그 Main 검증 PASS.
+- 증거: `docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-approval-certificate.json`. 기존393 승인·리소스·카탈로그·원화·교정 이력과 1490/54 프로필을 보존했다.
+- 상세 완료 2/31은 실제 증명서 검증 성공 후에만 기록한다. 승인 이력 405/498 및 기존 프레임 보완14종은 별도 유지.

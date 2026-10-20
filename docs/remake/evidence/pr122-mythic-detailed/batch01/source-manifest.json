@@ -12078,7 +12078,7 @@
     }
   ],
   "mythic_detail_total": 31,
-  "mythic_detail_complete": 1,
+  "mythic_detail_complete": 2,
   "broad_CI": "CANCELLED_BY_USER_PRIORITY",
   "approved_history_preserved": 405,
   "selected_locomotion_sheets": {
@@ -13007,7 +13007,7 @@
     },
     {
       "key": "transform:267",
-      "status": "HOLD",
+      "status": "RESOLVED",
       "scope": "all_native_clips",
       "clips": 48,
       "reason": "Original pale face, narrow gold radial spines, long dark goldtrim skirt and sinuous weapon were redesigned; several action headings reverse",
@@ -13938,7 +13938,23 @@
             "actor_approval_added": 0
           }
         }
-      ]
+      ],
+      "resolution": "FULL48_INDEPENDENT_QUALITY_AND_ACTUAL_MAIN_DEFAULT_CATALOG_PASS",
+      "closure": {
+        "quality_evidence": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-independent-quality-FINAL.json",
+          "sha256": "04de53a3b521b9577c4d7d16b9038a37252ec0c08c383dec10d97091e2eba4cc"
+        },
+        "actual_Main_default_catalog": "PASS",
+        "default_main_evidence_path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-default-main-evidence.json",
+        "default_main_log": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-default-main.log",
+          "sha256": "e643dfa7bfe504346db08a3c99cb6cd7822052acda58666ed6a006dcc81172c3"
+        },
+        "full_directional_tracks": 48,
+        "native_poses": 288,
+        "historical_approval_count_preserved": 405
+      }
     }
   ],
   "reviewed_runtime_layouts": {

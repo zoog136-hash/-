@@ -116,6 +116,14 @@ func _prepare_resources(record: Dictionary) -> Resource:
 				return null
 			if not _require(frames.get_animation_loop(animation) == (role in ["idle", "walk", "run"])):
 				return null
+			var expected_order: Array = track.get("runtime_layout_proof", {}).get("playback_order", [0, 1, 2, 3, 4, 5])
+			if not _require(expected_order.size() == 6, "Reviewed playback order must use all six source poses"):
+				return null
+			var unique_rows: Dictionary = {}
+			for source_row: Variant in expected_order:
+				if not _require(typeof(source_row) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(source_row)) and float(source_row) == float(int(source_row)) and int(source_row) >= 0 and int(source_row) < 6 and not unique_rows.has(int(source_row)), "Reviewed playback order must be a six-source permutation"):
+					return null
+				unique_rows[int(source_row)] = true
 			for pose: int in range(6):
 				var texture: AtlasTexture = frames.get_frame_texture(animation, pose) as AtlasTexture
 				if not _require(texture != null and texture.atlas != null):
@@ -123,7 +131,7 @@ func _prepare_resources(record: Dictionary) -> Resource:
 				if not _require(texture.atlas.resource_path == "res://" + str(track.texture).trim_prefix("res://")):
 					return null
 				var pose_record: Dictionary = track.geometry.frames[pose]
-				if not _require(int(pose_record.row) == pose and str(pose_record.direction) == DIRECTIONS[direction], "Exact reviewed pose playback order required"):
+				if not _require(int(pose_record.row) == int(expected_order[pose]) and str(pose_record.direction) == DIRECTIONS[direction], "Exact reviewed pose playback order required"):
 					return null
 				var region: Array = pose_record.region
 				var margin: Array = pose_record.margin
@@ -131,13 +139,14 @@ func _prepare_resources(record: Dictionary) -> Resource:
 					return null
 				if not _require(texture.margin == Rect2(float(margin[0]), float(margin[1]), float(margin[2]), float(margin[3])), "Default atlas margin/ground anchor differs"):
 					return null
-				var canvas: Array = track.geometry.canvas_size
+				var canvas: Array = pose_record.get("canvas_size", track.geometry.canvas_size)
 				var expected_canvas := Vector2(float(canvas[0]), float(canvas[1]))
 				var authored: Array = track.geometry.get("authored_pose_canvas_sizes", [])
 				if not authored.is_empty():
 					if not _require(authored.size() == 6):
 						return null
-					expected_canvas = Vector2.ONE * float(authored[pose])
+					if not _require(expected_canvas == Vector2.ONE * float(authored[pose]), "Reviewed per-pose canvas must also match its authored physical size"):
+						return null
 				if not _require(texture.get_size().is_equal_approx(expected_canvas), "Real default frame must preserve its reviewed per-pose physical canvas"):
 					return null
 
@@ -326,8 +335,11 @@ func _frozen_halpas_snapshot() -> String:
 func _run() -> void:
 	if not _require(OS.get_environment("XDG_DATA_HOME").trim_suffix("/").get_file().begins_with("twilight-test-"), "Use isolated test save data"):
 		return
-	var actual_engine := str(Engine.get_version_info().get("string", ""))
-	if not _require(actual_engine == REQUIRED_ENGINE, "Exact required Godot4.7.2 build required"):
+	var version_info := Engine.get_version_info()
+	var actual_engine := "%s.%s.%s.%s.%s.%s" % [
+		version_info.get("major", -1), version_info.get("minor", -1), version_info.get("patch", -1),
+		version_info.get("status", ""), version_info.get("build", ""), str(version_info.get("hash", "")).left(9)]
+	if not _require(actual_engine == REQUIRED_ENGINE and str(version_info.get("hash", "")) == "ed1daf0bf001b61586d9930840f2f1394092c079", "Exact required Godot4.7.2 build required"):
 		return
 	print("PR122_GIRTAS_DEFAULT_MAIN_ENGINE_PASS version=" + actual_engine)
 	print("PR122_GIRTAS_DEFAULT_MAIN_TEST_PIN sha256=" + FileAccess.get_sha256("res://tests/pr122_girtas_native_default_main_connection_test.gd"))
