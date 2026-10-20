@@ -21,5 +21,15 @@
     }
   ],
   "private_art_in_public_git": false,
-  "storage": "User My Drive private root; exact private IDs kept in delivery receipt outside Git"
+  "storage": "User-approved private My Drive root; three parts uploaded and downloaded again",
+  "delivery_status": "REMOTE_READBACK_AND_INSTALL_VERIFIED",
+  "remote_verification": {
+    "date": "2026-10-20",
+    "files": 3,
+    "all_private": true,
+    "all_part_sha256_verified": true,
+    "combined_archive_sha256_verified": true,
+    "archive_crc_verified": true,
+    "decoded_chunks": 176
+  }
 }

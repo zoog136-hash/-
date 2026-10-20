@@ -65,10 +65,10 @@ jobs:
           set -o pipefail
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_private_icon_binding_test.gd 2>&1 | tee godot-skill-icon-priority.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' godot-skill-icon-priority.log
-          grep -q 'SKILL_ICON_PRIVATE_BINDING_PASS' godot-skill-icon-priority.log
+          grep -q '^SKILL_ICON_PRIVATE_BINDING_OK$' godot-skill-icon-priority.log
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_icon_asset_integrity_test.gd 2>&1 | tee godot-skill-icon-textures.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' godot-skill-icon-textures.log
-          grep -q 'SKILL_ICON_125_TEXTURES_PASS' godot-skill-icon-textures.log
+          grep -q '^SKILL_ICON_125_TEXTURES_OK$' godot-skill-icon-textures.log
 
       - name: Boot main scene
         shell: bash

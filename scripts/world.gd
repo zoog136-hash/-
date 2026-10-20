@@ -3917,12 +3917,28 @@ func _load_game(quiet: bool) -> void:
 		return
 	var data: Dictionary = value as Dictionary
 	var saved_map_id: String = str(data.get("map_id", ""))
-	if data.has("native_png_plan_sha256"):
-		var native_saved_field: PlayableField = NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if NATIVE_PNG.supports(saved_map_id) else null
-		if native_saved_field == null or str(data.native_png_plan_sha256) != NATIVE_PNG.plan_hash(NATIVE_PNG.canonical(saved_map_id)):
-			source_save_blocked = true
+	var has_native_position: bool=data.has("native_png_plan_sha256")
+	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
+	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args()
+	if has_native_position and explicit_legacy and not requested_native and maps_by_id.has(saved_map_id):
+		# Explicitly returning to an existing layout retains progression while
+		# discarding pixel coordinates that belong to the PNG canvas.
+		data=data.duplicate(true)
+		data.erase("native_png_plan_sha256");data.erase("native_png_review_sha256")
+		data["position"]=[];data["map_layout_revision"]=-1
+	elif has_native_position or requested_native:
+		# Validate prospective PNG migrations too, before mutating character
+		# state. A corrupt default pack must not overwrite an old ordinary save.
+		var native_saved_field: PlayableField=NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if requested_native else null
+		if native_saved_field==null or (has_native_position and str(data.native_png_plan_sha256)!=NATIVE_PNG.plan_hash(NATIVE_PNG.canonical(saved_map_id))):
+			source_save_blocked=true
 			hud.show_message("PNG 팩 누락·변경: 저장 파일을 보존합니다")
 			return
+		if not has_native_position and not FileAccess.file_exists(save_path()+".pre-native-png"):
+			if DirAccess.copy_absolute(save_path(),save_path()+".pre-native-png")!=OK:
+				source_save_blocked=true
+				hud.show_message("이전 지도 저장 백업 실패: 저장 파일을 보존합니다")
+				return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
 		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
 		if saved_field == null:

@@ -10,6 +10,8 @@ const REVIEW_PATH := "res://data/maps/native_png_review.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 const BUNDLED_ROOT := "res://external_map_packs/native_png_v5"
 const LEGACY_ROOT := "user://native_png_maps"
+# Accepted default packs keep their identity after on-disk removal.
+static var extra_pack_seen: bool=false
 
 static func enabled() -> bool:
 	return "--native-png-maps" in OS.get_cmdline_user_args() and not "--legacy-map-layouts" in OS.get_cmdline_user_args()
@@ -104,7 +106,9 @@ static func extra_root() -> String:
 static func extra_installed() -> bool:
 	var receipt: Dictionary=read_json(EXTRA_RECEIPT_PATH)
 	var path: String=extra_root()+"/index.json"
-	return FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
+	var verified: bool=FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
+	if verified: extra_pack_seen=true
+	return verified
 
 
 static func root_path() -> String:
@@ -147,7 +151,9 @@ static func supports(mid: String) -> bool:
 		var args: PackedStringArray=OS.get_cmdline_user_args()
 		var ordinary: bool=not "--legacy-map-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
 		# Explicit missing/corrupt paths must fail before releasing live gameplay.
-		return (extra_installed() or configured) and (enabled() or ordinary)
+		var verified: bool=extra_installed()
+		var present: bool=FileAccess.file_exists(extra_root()+"/index.json")
+		return (verified or present or extra_pack_seen or configured) and (enabled() or ordinary)
 	return base_plan().get("maps",{}).has(art_id) and (enabled() or bundled_enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:

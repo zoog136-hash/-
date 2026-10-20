@@ -20,14 +20,28 @@ func run() -> void:
 		world._set_map(id,false)
 		world.hud._close_workspace()
 		var renderer: FieldRenderer=world.field_renderer
-		check(not renderer.reference_profile.is_empty(),id+" explicit visual profile")
-		check(renderer.terrain.resource_path=="res://assets/maps/reference_expansion_v2/terrain.png",id+" production atlas")
+		if renderer is NativePngRenderer:
+			var native_field: NativePngField=world.field_map
+			var registry=preload("res://scripts/maps/native_png_registry.gd")
+			var plan: Dictionary=registry.plan()
+			var spec: Dictionary=plan.maps[str(native_field.data.map_id)]
+			check(native_field.png_manifest.source_sha256==plan.sources[spec.file].sha256,id+" original source identity replaces reference atlas")
+			check(native_field.png_manifest.native_pixel_scale==1 and renderer.visual_mode=="original",id+" native-resolution original display")
+			check(renderer.terrain==null and renderer.get_node_or_null("Terrain")==null,id+" generated atlas cannot cover original PNG")
+		else:
+			check(not renderer.reference_profile.is_empty(),id+" explicit visual profile")
+			check(renderer.terrain.resource_path=="res://assets/maps/reference_expansion_v2/terrain.png",id+" production atlas")
 		check(world.field_map.walkable(world.player.global_position),id+" spawn navigation")
 		check(world.field_minimap.field==world.field_map,id+" minimap identity")
 		for material: ShaderMaterial in renderer.ground_materials.values():
 			check(float(material.get_shader_parameter("atlas_grid"))==4.0,id+" new atlas UV mapping")
 		world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
 		renderer.refresh_visible()
+		if renderer is NativePngRenderer:
+			check(await renderer.settle_visible(),id+" all actual visible PNGs decoded before capture")
+			check(renderer.decoded_pixels<=renderer.texture_pixel_budget,id+" original image textures stay within the platform budget")
+			for sprite: Sprite2D in renderer.chunks.values():
+				check(sprite.texture is ImageTexture and maxi(sprite.texture.get_width(),sprite.texture.get_height())<=1024,id+" bounded real source texture")
 		for i: int in range(5): await physics_frame
 		if DisplayServer.get_name()!="headless":
 			await RenderingServer.frame_post_draw

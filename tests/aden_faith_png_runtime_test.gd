@@ -108,6 +108,26 @@ func run() -> void:
 	world._load_game(true);world._save_game(true)
 	check(world.source_save_blocked and FileAccess.get_sha256(world.save_path())==save_hash,"missing new pack cannot overwrite character save")
 	OS.set_environment("TWILIGHT_ADEN_FAITH_PNG_PACK",installed)
+	world._load_game(true)
+	check(world.active_map_id=="faith_02" and not world.source_save_blocked,"restored explicit pack resumes saved native field")
+	# The normal Android/user installation has no environment override. Once
+	# entered, a corrupt/removed default pack must retain its native identity.
+	if not FileAccess.file_exists(REGISTRY.BUNDLED_EXTRA_ROOT+"/index.json"):
+		var default_root: String=ProjectSettings.globalize_path("user://aden_faith_png_maps")
+		check(not DirAccess.dir_exists_absolute(default_root),"default-root corruption fixture is isolated from installed user data")
+		DirAccess.make_dir_recursive_absolute(default_root)
+		var bad:=FileAccess.open(default_root+"/index.json",FileAccess.WRITE)
+		bad.store_string("corrupt negative-test index");bad.close()
+		OS.set_environment("TWILIGHT_ADEN_FAITH_PNG_PACK","")
+		world._set_map("faith_03",false)
+		check(world.active_map_id=="faith_02" and world.field_map is NativePngField,"corrupt default index cannot substitute legacy geometry")
+		world._load_game(true);world._save_game(true)
+		check(world.source_save_blocked and FileAccess.get_sha256(world.save_path())==save_hash,"corrupt default pack preserves saved character bytes")
+		DirAccess.remove_absolute(default_root+"/index.json");DirAccess.remove_absolute(default_root)
+		world._set_map("faith_04",false)
+		check(world.active_map_id=="faith_02","removed default directory preserves current native world")
+		OS.set_environment("TWILIGHT_ADEN_FAITH_PNG_PACK",installed);world._load_game(true)
+		check(world.active_map_id=="faith_02" and not world.source_save_blocked,"reinstalled pack resumes after default-root removal")
 	var report: Dictionary={"checks":checks,"failures":failures,"maps":records,"actual_main_png":true,"android_device":"NOT_RUN"}
 	var file:=FileAccess.open(output+"/runtime.json",FileAccess.WRITE);file.store_string(JSON.stringify(report,"\t"));file.close()
 	print("ADEN_FAITH_RESULT ",JSON.stringify(report))
