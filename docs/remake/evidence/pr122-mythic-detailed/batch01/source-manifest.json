@@ -16090,6 +16090,138 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "NE",
+      "role": "idle",
+      "version": "NEidleSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-idle-NEidleSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-uubr7r3t/reviewed-source.png",
+      "bytes": 3047762,
+      "sha256": "3689ae09fe4423cab6295ad657ba80ab5c518e155a3b4d6e04da2fd162bb6267",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "3689ae09fe4423cab6295ad657ba80ab5c518e155a3b4d6e04da2fd162bb6267",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "3689ae09fe4423cab6295ad657ba80ab5c518e155a3b4d6e04da2fd162bb6267",
+        "base_geometry_sha256": "fcfff33049945daceaaaeb9d78f8cc7a5eb2902a533777bc4a0f9c90afbbfee7",
+        "direction": "NE",
+        "regions": [
+          [
+            395,
+            196,
+            768,
+            1125
+          ],
+          [
+            1935,
+            196,
+            764,
+            1125
+          ],
+          [
+            401,
+            1732,
+            762,
+            1125
+          ],
+          [
+            1936,
+            1732,
+            763,
+            1125
+          ],
+          [
+            397,
+            3268,
+            766,
+            1125
+          ],
+          [
+            1930,
+            3268,
+            769,
+            1125
+          ]
+        ],
+        "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 0eb2050dbebc7011f83b1dc9b9bb7ba9e7fbf9116561e4e46a76d159088da39b"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "3689ae09fe4423cab6295ad657ba80ab5c518e155a3b4d6e04da2fd162bb6267",
+        "source_RGBA_sha256": "d2e91eaea6fd5b3835b4077af1ef7e640a7f810d6f07ddaeec96da2dbcd03622",
+        "base_geometry_sha256": "fcfff33049945daceaaaeb9d78f8cc7a5eb2902a533777bc4a0f9c90afbbfee7",
+        "derived_geometry_sha256": "4bd644420fa61b1866fa7df10963db79430a0d4f3d8eb3f91671091b90a96035",
+        "review_sha256": "6abf1f03c13d5a14b52fac3817e105019d88e913672609be3050c61b8056212c",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 0eb2050dbebc7011f83b1dc9b9bb7ba9e7fbf9116561e4e46a76d159088da39b",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1672077,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            395,
+            196,
+            768,
+            1125
+          ],
+          [
+            1935,
+            196,
+            764,
+            1125
+          ],
+          [
+            401,
+            1732,
+            762,
+            1125
+          ],
+          [
+            1936,
+            1732,
+            763,
+            1125
+          ],
+          [
+            397,
+            3268,
+            766,
+            1125
+          ],
+          [
+            1930,
+            3268,
+            769,
+            1125
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+        "foreground_owner_sha256": "94cd93e83bc371a657d6d674db216af7769c1c06e9328c40508813d196fa7c2e",
+        "detached_pixels": 0,
+        "detached_fragments": [],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -16220,9 +16352,10 @@
     "transform:413:NW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-attack-NWattackSixActualRig01.png",
     "transform:413:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-idle-NWidleSixActualRig01.png",
     "transform:413:N:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-idle-NidleSixActualRig01.png",
-    "transform:413:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-hit-NEhitSixActualRig01.png"
+    "transform:413:NE:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-hit-NEhitSixActualRig01.png",
+    "transform:413:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-idle-NEidleSixActualRig01.png"
   },
-  "selected_detailed_action_native_poses": 432,
+  "selected_detailed_action_native_poses": 438,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -21365,6 +21498,48 @@
       "source_sha256": "3a02bf934ac593b120ea929a4820e0826ea7597fdc3ca88e679980a8267cbbec",
       "direction": "NE",
       "role": "hit",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          844,
+          1182
+        ],
+        [
+          2380,
+          1182
+        ],
+        [
+          844,
+          2718
+        ],
+        [
+          2380,
+          2718
+        ],
+        [
+          844,
+          4254
+        ],
+        [
+          2380,
+          4254
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2432,
+        2432,
+        2432,
+        2432,
+        2432,
+        2432
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-idle-NEidleSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "3689ae09fe4423cab6295ad657ba80ab5c518e155a3b4d6e04da2fd162bb6267",
+      "direction": "NE",
+      "role": "idle",
       "canvas_size": 2048,
       "source_anchors": [
         [
