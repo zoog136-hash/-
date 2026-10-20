@@ -105,9 +105,12 @@ def stage(root, key, revision=None):
             assert review.get('status') == 'REVIEWED_SOURCE_CANVAS_PROPOSAL'
             assert review.get('source_sha256') == record['sha256'] and review.get('canvas_size') == canvas
             assert isinstance(review.get('review_basis'), str) and review['review_basis'].strip()
+        canonical_kwargs = reviewed_layout.declared_canonical_preflight_kwargs(
+            record.get('source_canvas_review'), manifest.get('reviewed_runtime_layouts', {}).get(source),
+            record['sha256'], direction, canvas)
         geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
                                     directions_axis='phase_grid2', canvas_size=canvas,
-                                    directions=[direction])
+                                    directions=[direction], **canonical_kwargs)
         if record.get('source_region_review') is not None:
             geometry, region_proof = apply_reviewed_regions(path, geometry, record['source_region_review'])
             assert region_proof == record['source_region_proof'], 'Reviewed source region proof changed'

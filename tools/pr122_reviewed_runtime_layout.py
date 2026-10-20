@@ -3,6 +3,7 @@
 from copy import deepcopy
 import hashlib
 import json
+import math
 from pathlib import Path
 
 import import_original_based_motion as importer
@@ -16,6 +17,55 @@ def _digest(value):
         raise ValueError("Geometry must contain finite JSON metadata") from error
     return hashlib.sha256(encoded).hexdigest()
 
+
+
+def declared_canonical_preflight_kwargs(canvas_review, layout_review, source_sha, direction, canvas):
+    """Optional exact declared-root seed; absent descriptors retain legacy kwargs."""
+    a = (canvas_review or {}).get("canonical_preflight")
+    b = (layout_review or {}).get("canonical_preflight")
+    if a != b:
+        raise ValueError("Canonical preflight must be identical in canvas and layout reviews")
+    if a is None:
+        return {}
+    required = {"status", "source_sha256", "packing_proof_sha256", "direction",
+                "canonical_canvas", "physical_canvases", "root_float", "root_integer",
+                "tile_size", "storage_translations", "atlas_origins", "source_anchors"}
+    if not isinstance(a, dict) or set(a) != required:
+        raise ValueError("Exact complete declared canonical preflight required")
+    if a["status"] != "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1" or canvas != 2048 or a["canonical_canvas"] != canvas:
+        raise ValueError("Declared bridge preserves canonical2048")
+    if a["source_sha256"] != source_sha or a["direction"] != direction or direction not in importer.DIRECTIONS:
+        raise ValueError("Declared preflight source/direction mismatch")
+    for field in ("source_sha256", "packing_proof_sha256"):
+        if not isinstance(a[field], str) or len(a[field]) != 64 or any(c not in "0123456789abcdef" for c in a[field]):
+            raise ValueError("Declared preflight exact SHA256 required")
+    pin = _digest(a)
+    if any((r or {}).get("canonical_preflight_sha256") != pin for r in (canvas_review, layout_review)):
+        raise ValueError("Declared canonical preflight pin mismatch")
+    sizes = a["physical_canvases"]
+    if not isinstance(sizes, list) or len(sizes) != 6 or any(type(v) is not int or not 256 <= v <= 4096 or v % 8 for v in sizes) or len(set(sizes)) != 1:
+        raise ValueError("Six identical declared physical body canvases required")
+    if (layout_review or {}).get("authored_pose_canvas_sizes") != sizes:
+        raise ValueError("Canonical bridge physical C differs from final authored C")
+    root = a["root_float"]
+    if not isinstance(root, list) or len(root) != 2 or any(type(v) not in (int,float) or not math.isfinite(v) for v in root):
+        raise ValueError("One finite declared root required")
+    rounded = [math.floor(v + .5) for v in root]
+    if not isinstance(a["root_integer"], list) or len(a["root_integer"]) != 2 or any(type(v) is not int for v in a["root_integer"]) or a["root_integer"] != rounded:
+        raise ValueError("Only one common declared-root rounding allowed")
+    tile = a["tile_size"]
+    if type(tile) is not int or tile not in (1536,2304):
+        raise ValueError("Unchanged explicit storage sizes required")
+    offsets = a["storage_translations"]
+    if not isinstance(offsets, list) or len(offsets) != 6 or any(not isinstance(v,list) or len(v) != 2 or any(type(x) is not int or x < 0 for x in v) for v in offsets):
+        raise ValueError("Explicit six storage-only translations required")
+    origins = [[tile*(i%2), tile*(i//2)] for i in range(6)]
+    if not isinstance(a["atlas_origins"], list) or len(a["atlas_origins"]) != 6 or any(not isinstance(v,list) or len(v) != 2 or any(type(x) is not int for x in v) for v in a["atlas_origins"]) or a["atlas_origins"] != origins:
+        raise ValueError("Fixed phase-grid tile origins required")
+    anchors = [[rounded[j]+offsets[i][j]+origins[i][j] for j in (0,1)] for i in range(6)]
+    if not isinstance(a["source_anchors"], list) or len(a["source_anchors"]) != 6 or any(not isinstance(v,list) or len(v) != 2 or any(type(x) is not int for x in v) for v in a["source_anchors"]) or a["source_anchors"] != anchors or (layout_review or {}).get("source_anchors") != anchors:
+        raise ValueError("Only declared root plus storage plus tile origin may seed canonical geometry")
+    return {"source_anchors": anchors}
 
 def _pose_identity(frame):
     return {key: frame.get(key) for key in ("row", "direction", "region", "rgba_sha256")}
@@ -99,6 +149,9 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
             or base_canvas[0] != base_canvas[1]):
         raise ValueError("Base geometry must identify its square virtual canvas")
     sizes = _validated_authored_canvas_sizes(review, canvas)
+    canonical_kwargs = declared_canonical_preflight_kwargs(review, review, source_sha, direction, base_canvas[0])
+    if canonical_kwargs and canonical_kwargs["source_anchors"] != [f.get("source_anchor") for f in frames]:
+        raise ValueError("Declared canonical roots differ from exact base geometry")
     anchors = review.get("source_anchors")
     if "source_anchors" in review and (
             not isinstance(anchors, list) or len(anchors) != 6
@@ -122,7 +175,7 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
 
         canonical = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
                                      directions_axis="phase_grid2", canvas_size=base_canvas[0],
-                                     directions=[direction])
+                                     directions=[direction], **canonical_kwargs)
         checked, _ = reviewed_regions.apply_reviewed_regions(path, canonical, source_region_review)
         if checked != base_geometry or _digest(checked) != _digest(base_geometry):
             raise ValueError("Reviewed expanded geometry differs from the supplied exact base geometry")

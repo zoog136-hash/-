@@ -15,6 +15,7 @@ import bind_pr122_native_locomotion_profiles as binder
 import stage_pr122_native_locomotion as staging
 import pr122_native_production_approvals as production_approvals
 from pr122_reviewed_source_regions import apply_reviewed_regions
+from pr122_reviewed_runtime_layout import declared_canonical_preflight_kwargs
 
 
 def write_json(path, value):
@@ -41,9 +42,12 @@ def preserve_action(root, source, request):
     staging.preserve_write(dest, source.read_bytes())
     geometry = dict(status='HOLD')
     try:
+        canonical_kwargs = declared_canonical_preflight_kwargs(canvas_review, request.get("reviewed_runtime_layout"), staging.digest(dest), direction, canvas)
+        if canonical_kwargs:
+            assert canvas_review["canonical_preflight"]["packing_proof_sha256"] == request.get("authored_packing_proof_sha256")
         result = staging.importer.analyze(dest, rows_count=6, reference_rows=[0, 3],
                                          directions_axis='phase_grid2', canvas_size=canvas,
-                                         directions=[direction])
+                                         directions=[direction], **canonical_kwargs)
         if request.get('source_region_review') is not None:
             result, region_proof = apply_reviewed_regions(dest, result, request['source_region_review'])
         staging.importer.require_complete_pose_regions(dest, result)
