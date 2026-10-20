@@ -1,0 +1,113 @@
+name: Apply Equipment Collection Integration
+
+on:
+  push:
+    branches: ['feature/equipment-collections-runtime-20261020']
+    paths: ['.github/workflows/equipment-collections-apply.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-validate:
+    if: github.repository == 'zoog136-hash/-' && github.ref == 'refs/heads/feature/equipment-collections-runtime-20261020'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Receive hash-pinned code-only transfer before checkout
+        id: transfer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_PAYLOAD_SHA256: 54f5eddf081a0dac3a2b4d0bbf0721271c94c84c5726321c2e66dce7b6e06af9
+        run: |
+          python3 - <<'PY'
+          import os,json,time,urllib.request,urllib.parse,hashlib,pathlib
+          branch='feature/equipment-collections-runtime-20261020'
+          repo=os.environ['GITHUB_REPOSITORY']
+          api='https://api.github.com/repos/'+repo
+          headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github.raw+json'}
+          descriptor=api+'/contents/docs/collections/TRANSFER_20261020.json?ref='+urllib.parse.quote(branch,safe='')
+          received=False
+          for attempt in range(120):
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(descriptor,headers=headers),timeout=20) as response: meta=json.load(response)
+                  assert meta['sha256']==os.environ['EXPECTED_PAYLOAD_SHA256']
+                  url=meta['download_url']; parsed=urllib.parse.urlparse(url)
+                  assert parsed.scheme=='https' and parsed.hostname.endswith('.oaiusercontent.com')
+                  print('::add-mask::'+url,flush=True)
+                  with urllib.request.urlopen(url,timeout=40) as response: payload=response.read(5_000_001)
+                  assert len(payload)<5_000_001 and hashlib.sha256(payload).hexdigest()==meta['sha256']
+                  pathlib.Path(os.environ['RUNNER_TEMP'],'equipment-payload.zip').write_bytes(payload)
+                  received=True;break
+              except Exception:
+                  if attempt%12==0: print('Transfer descriptor not ready or expired; no source files changed.',flush=True)
+                  time.sleep(10)
+          assert received,'No valid hash-matched transfer; source remains unchanged'
+          with urllib.request.urlopen(urllib.request.Request(api+'/git/ref/heads/'+branch,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}),timeout=20) as response: head=json.load(response)['object']['sha']
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out: out.write('head='+head+'\n')
+          print('CODE_TRANSFER_SHA256_OK '+meta['sha256'])
+          PY
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.transfer.outputs.head }}
+          fetch-depth: 1
+      - name: Mandatory pre-edit resource check
+        run: |
+          set -o pipefail
+          python3 tools/check_resource_integrity.py --root . | tee collection-resource.log
+      - name: Verify original files, apply exact payload and publish feature commit
+        env:
+          EXPECTED_HEAD: ${{ steps.transfer.outputs.head }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,json,hashlib,zipfile,pathlib,subprocess
+          root=pathlib.Path.cwd()
+          allowed={'data/collections/equipment_collections.json','docs/collections/RUNTIME_BINDING_AUDIT_20261020.json','docs/collections/RUNTIME_INTEGRATION_20261020.md','scripts/collections/equipment_collection_runtime.gd','scripts/collections/equipment_collection_service.gd','scripts/collections/equipment_collection_stats.gd','scripts/collections/equipment_collection_view.gd','scripts/ui/renewal_hud.gd','scripts/world.gd','tests/equipment_collection_bindings_test.gd','tests/equipment_collection_runtime_test.gd','tests/equipment_collection_stats_test.gd','tools/check_equipment_collection_data.py','tools/run_equipment_collection_checks.py'}
+          with zipfile.ZipFile(pathlib.Path(os.environ['RUNNER_TEMP'],'equipment-payload.zip')) as archive:
+              assert archive.testzip() is None
+              meta=json.loads(archive.read('payload_manifest.json'))
+              assert meta['schema']==1 and set(meta['files'])==allowed and set(meta['expected_existing'])==allowed
+              assert set(archive.namelist())=={'payload_manifest.json'}|{'payload/'+p for p in allowed}
+              assert sum(i.file_size for i in archive.infolist())<10_000_000
+              ready={}
+              for name,expected in meta['files'].items():
+                  raw=archive.read('payload/'+name);assert hashlib.sha256(raw).hexdigest()==expected
+                  path=root/name;prior=meta['expected_existing'][name]
+                  if prior is None: assert not path.exists(),'New path already exists: '+name
+                  else: assert path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()==prior,'Source changed: '+name
+                  ready[name]=raw
+              for name,raw in ready.items():
+                  path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
+          subprocess.run(['python3','tools/check_equipment_collection_data.py','--report','collection-results/bindings.json'],check=True)
+          subprocess.run(['git','add','--',*sorted(allowed)],check=True)
+          subprocess.run(['git','rm','--','docs/collections/TRANSFER_20261020.json'],check=True)
+          PY
+          test "$(git ls-remote origin refs/heads/feature/equipment-collections-runtime-20261020 | cut -f1)" = "$EXPECTED_HEAD"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat: integrate equipment collections with physical inventory, atomic saves and native UI'
+          git push origin HEAD:refs/heads/feature/equipment-collections-runtime-20261020
+          git rev-parse HEAD | tee collection-tested-sha.txt
+      - name: Install pinned Godot and OpenGL
+        run: |
+          curl -L --fail --retry 3 -o "$RUNNER_TEMP/godot.zip" https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Actual Main save, combat, native UI and existing regressions
+        run: |
+          set -o pipefail
+          python3 tools/run_equipment_collection_checks.py --godot "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --logs collection-results | tee collection-checks.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: equipment-collections-apply-${{ github.sha }}
+          path: |
+            collection-results/**
+            collection-resource.log
+            collection-tested-sha.txt
+            collection-checks.log
+          if-no-files-found: warn
+          retention-days: 7
