@@ -42,10 +42,11 @@ func run() -> void:
 	DirAccess.make_dir_recursive_absolute(default_root)
 	var bad:=FileAccess.open(default_root+"/index.json",FileAccess.WRITE)
 	bad.store_string("corrupt negative-test index");bad.close()
-	OS.set_environment("TWILIGHT_ADEN_FAITH_PNG_PACK","")
+	# Override a valid Git bundle with the isolated corrupt installation.
+	OS.set_environment("TWILIGHT_ADEN_FAITH_PNG_PACK",default_root)
 	world.gold=77;world._load_game(true);world._save_game(true)
 	check(world.source_save_blocked and world.gold==77,"corrupt pack cannot partially mutate a legacy character")
-	check(FileAccess.get_sha256(world.save_path())==legacy_hash,"corrupt default pack cannot overwrite old ordinary save bytes")
+	check(FileAccess.get_sha256(world.save_path())==legacy_hash,"corrupt installation cannot overwrite old ordinary save bytes")
 	DirAccess.remove_absolute(default_root+"/index.json");DirAccess.remove_absolute(default_root)
 	OS.set_environment("TWILIGHT_ADEN_FAITH_PNG_PACK",installed);world._load_game(true)
 	check(not world.source_save_blocked and world.field_map is NativePngField and world.gold==1234567,"verified pack migrates legacy progression")
@@ -53,13 +54,14 @@ func run() -> void:
 	check(FileAccess.get_sha256(world.save_path()+".pre-native-png")== (legacy_hash if prior_backup.is_empty() else prior_backup),"one-time pre-PNG save backup retains original bytes")
 	world._save_game(true)
 	var native_hash: String=FileAccess.get_sha256(world.save_path())
-	var args:=PackedStringArray(["--headless","--path",ProjectSettings.globalize_path("res://"),"--script","res://tests/aden_faith_png_save_migration_test.gd","--","--legacy-map-layouts","--legacy-save-child"])
-	var pid: int=OS.create_process(OS.get_executable_path(),args,false)
-	check(pid>0,"isolated legacy-mode child started with the same test-owned save")
-	if pid>0:
-		var deadline: int=Time.get_ticks_msec()+60000
-		while OS.is_process_running(pid) and Time.get_ticks_msec()<deadline: await process_frame
-		if OS.is_process_running(pid): OS.kill(pid);check(false,"legacy child completed before deadline")
-		else: check(OS.get_process_exit_code(pid)==0,"actual explicit legacy restart restores latest native-save progression")
+	for legacy_switch: String in ["--legacy-map-layouts","--legacy-aden-faith-layouts"]:
+		var args:=PackedStringArray(["--headless","--path",ProjectSettings.globalize_path("res://"),"--script","res://tests/aden_faith_png_save_migration_test.gd","--",legacy_switch,"--legacy-save-child"])
+		var pid: int=OS.create_process(OS.get_executable_path(),args,false)
+		check(pid>0,"isolated legacy-mode child started with the same test-owned save: "+legacy_switch)
+		if pid>0:
+			var deadline: int=Time.get_ticks_msec()+60000
+			while OS.is_process_running(pid) and Time.get_ticks_msec()<deadline: await process_frame
+			if OS.is_process_running(pid): OS.kill(pid);check(false,"legacy child completed before deadline")
+			else: check(OS.get_process_exit_code(pid)==0,"actual explicit legacy restart restores latest native-save progression: "+legacy_switch)
 	check(FileAccess.get_sha256(world.save_path())==native_hash,"loading in legacy mode does not silently overwrite PNG save bytes")
 	await finish(world)

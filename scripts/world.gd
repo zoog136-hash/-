@@ -3940,7 +3940,7 @@ func _load_game(quiet: bool) -> void:
 	var saved_map_id: String = str(data.get("map_id", ""))
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
-	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args()
+	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args() or (NATIVE_PNG.extra_map(saved_map_id) and "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args())
 	if has_native_position and explicit_legacy and not requested_native and maps_by_id.has(saved_map_id):
 		# Explicitly returning to an existing layout retains progression while
 		# discarding pixel coordinates that belong to the PNG canvas.

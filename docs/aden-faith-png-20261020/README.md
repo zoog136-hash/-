@@ -20,7 +20,7 @@
 
 ## 재설치
 
-실제 이미지는 공개 Git에 넣지 않는다. 사용자 Drive 원본 폴더에는 `Aden.png`, `13398.png`, `13401.png`, `13417.png`, `13472.png`가 있다. 변환 팩은 `TWILIGHT-Aden-Faith-PNG-20261020-private-v1.zip.part001`~`003`이며 합본/조각 해시는 `data/maps/aden_faith_png_archive.json`에 있다. 2026-10-20 사용자 지정 비공개 My Drive 최상위 폴더에 3조각을 업로드했다. 세 파일의 비공개 상태·지정 부모 폴더·크기 확인 후 실제 재다운로드 바이트의 조각/합본 SHA와 ZIP CRC 및 176개 청크 디코딩·설치를 검증했다. 개인 폴더와 파일 ID는 공개하지 않는다.
+사용자가 2026-10-20 재배포 권한을 확인하고 Git 업로드를 명시적으로 요청했다. 앞선 비공개 보관 지시를 변경한 범위에서 실제 원본 9개와 새 5맵 청크를 Git에 포함한다. 제3자에게 더 넓은 라이선스를 부여한다고 주장하지 않는다. 사용자 Drive 원본 폴더에는 `Aden.png`, `13398.png`, `13401.png`, `13417.png`, `13472.png`가 있다. 변환 팩은 `TWILIGHT-Aden-Faith-PNG-20261020-private-v1.zip.part001`~`003`이며 합본/조각 해시는 `data/maps/aden_faith_png_archive.json`에 있다. 2026-10-20 사용자 지정 비공개 My Drive 최상위 폴더에 3조각을 업로드했다. 세 파일의 비공개 상태·지정 부모 폴더·크기 확인 후 실제 재다운로드 바이트의 조각/합본 SHA와 ZIP CRC 및 176개 청크 디코딩·설치를 검증했다. 개인 폴더와 파일 ID는 공개하지 않는다.
 
 Drive에서 받은 조각들을 같은 폴더에 저장한 뒤:
 
@@ -34,7 +34,7 @@ python3 tools/map_restore/install_native_png_pack.py \
 TWILIGHT_ADEN_FAITH_PNG_PACK=/private/aden-faith-png-v1 godot --path .
 ```
 
-Android Godot 편집기에서 프로젝트를 실행하는 경우 검증한 설치 폴더의 내용을 프로젝트의 `external_map_packs/aden_faith_png_v1/`로 복사하면 같은 검증 경로로 자동 로드한다. 이 경로는 비공개 로컬 설치용이며 Git에 추가하지 않는다. 설치된 APK는 앱의 `user://aden_faith_png_maps/`를 사용한다. Android 앱 데이터 접근/설치 절차 및 실기 성능은 이 환경에서 검증하지 못했다. 기존 Termux ZIP 업데이터는 추적하지 않는 이 폴더를 삭제하지 않는다.
+현재 Git checkout에는 `external_map_packs/aden_faith_png_v1/`의 실제 이미지가 있으므로 PC/Android Godot 편집기에서 별도 Drive 설치 없이 자동 탐색한다. 이 경로는 현재 사용자 승인으로 Git에 추적되며, 일반 clone에서도 자동 탐색한다. 설치된 APK는 앱의 `user://aden_faith_png_maps/`를 사용한다. Android 앱 데이터 접근/설치 절차 및 실기 성능은 이 환경에서 검증하지 못했다. 기존 Termux ZIP 업데이터는 추적하지 않는 이 폴더를 삭제하지 않는다.
 
 원본 5개로 재생성할 경우 기존 13474 소스는 필요 없다:
 
@@ -77,3 +77,25 @@ python3 tools/map_restore/verify_native_png_pack.py \
 작업 중 main에 병합된 장비 컬렉션 PR #138(`470836b`)을 작업 브랜치에 동기화했다. 저장 충돌 한 곳에서는 지역별 PNG 해시와 컬렉션의 원자적 저장 writer를 함께 유지했다. main 자체와 PR #122/#126은 변경하지 않았다. 원격 재다운로드 팩을 설치한 깨끗한 체크아웃 `1854308`에서 실제 Main 일반/검증 모드 각 225검사와 저장 이전·legacy 복귀 18검사가 통과했다. 동기화 후 최종 커밋의 결과와 CI 링크는 PR 본문에서 확인한다.
 
 main 동기화 후 장비 컬렉션·저장·장비 개체·UI·참조 렌더러 선택 회귀 10/10, 실제 PNG 저장 이전·legacy 재시작 18검사 및 두 팩 동시 설치 상태의 일반 이동·저장 46검사 PASS. 신전 팩 제거 검사는 아덴이 가상 타일이라는 과거 가정 대신 전환 직전 실제 필드/렌더러 개체의 동일성과 전투 상태 보존을 검사한다. 아덴 원본은 넓은 범위의 개요도이므로 캐릭터와 건물의 실제 월드 배율 대응은 아직 확정하지 않았다.
+
+## 사용자 승인에 따른 Git 원본 전달
+
+- 원본 9개: `external_map_packs/source_pngs/manifest.json`에 각 파일의 크기·해상도·원본 SHA와 실제 저장 파일을 기록했다. 원본 총 517,237,588바이트.
+- 8개 원본은 그대로 PNG로 추적한다. `Aden.png`(107,386,586바이트)는 GitHub의 100 MiB 파일 제한 때문에 64 MiB와 나머지의 두 **바이트 조각**으로 보관한다. 이미지 분할이나 재압축을 하지 않았고 아래 도구가 원래 PNG 바이트로 복원한다. Git LFS나 Drive 접속은 필요 없다.
+- 새 런타임 팩은 `external_map_packs/aden_faith_png_v1/`의 187개 파일, 208,202,726바이트다. 실제 PNG 청크 176개와 overview/manifest/index가 들어 있다. 기존 v5 210개 파일은 그대로 보존한다.
+- 상위 `.gdignore`는 거대한 원본을 Godot가 GPU용으로 자동 임포트하지 않게 유지한다. 게임은 기존 `Image.load` 청크 경로로 읽는다. 원본 보관은 APK 포함·전체 충돌 완성·Android 실기 성공과 구분한다.
+
+```sh
+# Git 추적·원본 SHA·9개 전체 PNG 디코딩 확인
+python3 tools/map_restore/verify_map_source_pngs.py --require-tracked --decode
+# 재생성이 필요한 경우 9개 원본 PNG를 새 외부 폴더에 복원
+python3 tools/map_restore/verify_map_source_pngs.py --restore-to /private/restored-map-sources --decode
+# 이미 checkout된 게임용 팩 검증
+python3 tools/map_restore/verify_native_png_pack.py --pack external_map_packs/aden_faith_png_v1 --plan data/maps/aden_faith_png_plan.json
+```
+
+아덴·신념 번들이 Git에 있는 경우 Main 검사는 220개다. 앞선 225개 중 5개는 번들이 없는 환경의 기본 설치 폴더 손상·삭제 검사이며 그 조건은 그대로 유지한다. 별도 저장 이전 검사에서는 실제 번들보다 우선하는 테스트 소유 손상 설치를 지정해 원본 저장 바이트 보호를 계속 검증한다. 최종 Git 원격 사본 및 CI 결과는 PR에서 해당 커밋과 함께 기록한다.
+
+`--legacy-aden-faith-layouts`는 아덴·신념 4층만 기존 지형/인구로 실행하고 기존 v5 PNG 필드는 유지하는 호환 옵션이다. 원래 4개 밀집 구역과 28개 서로 다른 보스 생명 검사는 이 명시적 기존 배치에서 그대로 실행하며 수치를 낮추지 않는다. 실제 새 5맵은 별도의 원본 PNG Main 검사에서 검수 구역 통행과 추측 스폰 없음까지 검사한다. 두 legacy 옵션의 저장 복귀는 실제 자식 Main 프로세스로 확인한다.
+
+기존 A3 격자·서비스·비주얼·아덴 보스 계약 검사는 `legacy_aden_faith_fixture.gd`를 통해 같은 실제 Main을 명시적 기존 배치로 재실행한다. 기존 조건을 삭제하거나 몬스터·보스 수를 낮추지 않는다. 일반 전투·변신 저장 검사는 계속 새 PNG 아덴에서 실제 캐릭터 충돌 반경을 검사한다.

@@ -16,6 +16,15 @@ func pause_actors() -> void:
 func _initialize() -> void: call_deferred("_run")
 
 func _run() -> void:
+	# This audit retains every pre-PNG encounter, dense cap and boss life.
+	# The new PNG halls deliberately have no guessed spawns; their active
+	# geometry/population-empty contract is checked by aden_faith_png_runtime_test.
+	if preload("res://scripts/maps/native_png_registry.gd").extra_installed() and not "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args():
+		var output: Array=[]
+		var result: int=OS.execute(OS.get_executable_path(),PackedStringArray(["--headless","--path",ProjectSettings.globalize_path("res://"),"--script","res://tests/monster_world_test.gd","--","--legacy-aden-faith-layouts"]),output,true)
+		print("MONSTER_WORLD_FIXTURE: original Aden/Faith encounters; other native PNG fields remain enabled")
+		for chunk: String in output: print(chunk)
+		quit(result);return
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	check(CLASS_QA.enter_game(world),"class selection still enters gameplay")

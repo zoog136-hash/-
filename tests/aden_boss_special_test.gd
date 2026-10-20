@@ -126,6 +126,7 @@ func encounter(slot: Dictionary) -> void:
 	check(boss.dead and not boss.species_visual.warning_active and not boss.motion.active, name_value + " death clears special")
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_boss_special_test.gd"): return
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	check(CLASS_QA.enter_game(world), "production class selection enters game")

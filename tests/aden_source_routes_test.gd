@@ -21,6 +21,7 @@ func route(field: RemakePlayableField, id: String, from: Vector2, to: Vector2) -
 	rows.append({"id":id,"points":path.size(),"milliseconds":duration,"all_segments_source_clear":valid,
 		"hierarchy":field.aden_routes.last_metrics if field.aden_routes!=null else {}})
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_source_routes_test.gd"): return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="):output=arg.trim_prefix("--output=")
 	DirAccess.make_dir_recursive_absolute(output)

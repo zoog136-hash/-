@@ -149,11 +149,11 @@ static func supports(mid: String) -> bool:
 	if extra_map(art_id):
 		var configured: bool=not OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK").is_empty()
 		var args: PackedStringArray=OS.get_cmdline_user_args()
-		var ordinary: bool=not "--legacy-map-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+		var ordinary: bool=not "--legacy-map-layouts" in args and not "--legacy-aden-faith-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
 		# Explicit missing/corrupt paths must fail before releasing live gameplay.
 		var verified: bool=extra_installed()
 		var present: bool=FileAccess.file_exists(extra_root()+"/index.json")
-		return (verified or present or extra_pack_seen or configured) and (enabled() or ordinary)
+		return (verified or present or extra_pack_seen or configured) and (enabled() or ordinary) and not "--legacy-aden-faith-layouts" in args
 	return base_plan().get("maps",{}).has(art_id) and (enabled() or bundled_enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
