@@ -1,0 +1,52 @@
+name: Equipment collections preflight (not runtime approval)
+
+on:
+  push:
+    branches: ['feature/equipment-collections-runtime-20261020']
+    paths: ['.github/workflows/equipment-collections-preflight.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify existing tracked resources before integration
+        run: |
+          set -o pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee collections-preflight.log
+      - name: Package exact source context for collection integration
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess, zipfile
+          root = pathlib.Path('.')
+          paths = ['AGENTS.md', 'TWILIGHT_PROJECT_RULES.md', 'TWILIGHT_VERSION_HISTORY.md', 'README.md', 'project.godot', 'Main.tscn', 'docs/RESOURCE_INTEGRITY_POLICY.md', 'data/catalog_v19.json', 'data/game_db_v17.json', 'data/inven_item_options_v1.json']
+          paths += [str(p) for d in ('scripts', 'tests', 'tools', 'scenes') for p in (root/d).rglob('*') if p.is_file() and p.suffix in ('.gd', '.py', '.tscn')]
+          manifest = {'commit': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(), 'files': {}}
+          with zipfile.ZipFile('collections-source-context.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in sorted(set(paths)):
+                  p = root/name
+                  if not p.is_file():
+                      continue
+                  b = p.read_bytes()
+                  z.writestr(name,b)
+                  manifest['files'][name] = hashlib.sha256(b).hexdigest()
+              z.writestr('SOURCE_CONTEXT_MANIFEST.json', json.dumps(manifest,indent=2))
+          print('SOURCE_CONTEXT_READY', manifest['commit'], len(manifest['files']))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: equipment-collections-source-context-${{ github.sha }}
+          path: |
+            collections-source-context.zip
+            collections-preflight.log
+          if-no-files-found: error
+          retention-days: 7
