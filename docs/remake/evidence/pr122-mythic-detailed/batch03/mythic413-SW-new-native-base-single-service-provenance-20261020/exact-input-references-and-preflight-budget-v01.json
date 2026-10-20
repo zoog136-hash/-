@@ -1,0 +1,56 @@
+{
+  "status": "PRE_SERVICE_EXACT_REFERENCE_INPUT_AND_CUMULATIVE_BUDGET",
+  "prior_image_bytes": 3706238,
+  "working_limit_bytes": 6000000,
+  "hard_limit_bytes": 7000000,
+  "references": [
+    {
+      "label": "Canonical413 identity",
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "bytes": 24057,
+      "size": [
+        108,
+        132
+      ],
+      "already_charged_in_inherited_ledger": true
+    },
+    {
+      "label": "Own S front wardrobe",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+      "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+      "bytes": 996497,
+      "size": [
+        1254,
+        1254
+      ],
+      "already_charged_in_inherited_ledger": true
+    },
+    {
+      "label": "Own SE style",
+      "path": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/service-SE-fullbody-base-native-r001.png",
+      "sha256": "1eb7a28211a222fbe764ff0cef2fa299f73caf1c94ef704674721b6b4be78772",
+      "bytes": 1059405,
+      "size": [
+        1254,
+        1254
+      ],
+      "already_charged_in_inherited_ledger": true
+    }
+  ],
+  "input_board": {
+    "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/private-three-reference-SW-board-v01.jpg",
+    "sha256": "533fe76d8fd838b2767dc74218d4caabadb7b3f46855683fb875957105846b57",
+    "bytes": 53054,
+    "size": [
+      1080,
+      650
+    ]
+  },
+  "actual_service_image_inputs_bytes": 53054,
+  "planned_new_raw_bytes": 1400000,
+  "planned_output_preview_max_bytes": 80000,
+  "planned_cumulative_image_bytes": 5239292,
+  "mask_used": false,
+  "expected_service_calls": 1
+}
