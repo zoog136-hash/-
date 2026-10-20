@@ -1,0 +1,1427 @@
+{
+  "schema": "MYTHIC413_NE_RUN_ACTUAL_FIXED_RIG_SIX_SOURCE_V01",
+  "status": "ACTUAL_SOURCE_RENDERED_NOT_YET_INDEPENDENTLY_APPROVED",
+  "source_files": [
+    {
+      "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/contact0-actual-NE-run-v01/original-complete-RIGHT-upperthigh-calf-source-native.png",
+      "sha256": "69bbee677cf10556e0590c7430518f179d1b307302c2c2290d57b2f59747f9c2",
+      "bytes": 43417
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/contact0-actual-NE-run-v01/RIGHT-complete-shoe-native-RGBA.png",
+      "sha256": "40a4aa2c9693c7af863ec710aa3fbaad8f527d5453af390e2c4014f2c62d1cb6",
+      "bytes": 24407
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/contact0-actual-NE-run-v01/original-native-blue-coattails-behind-running-legs.png",
+      "sha256": "97d5b8ec0db926f24237c5f0d2d19149dda1335686d7e49a1a005111348c18a4",
+      "bytes": 178783
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/contact0-actual-NE-run-v01/original-native-body-skirt-RIGHTstaff-foreground-old-free-arm-removed.png",
+      "sha256": "78c808211c0aa13c9b794f456f95a4cd2e656d81074d636df409faeffaf47be0",
+      "bytes": 481117
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-LOAD1-rig-v02/original-native-LEFT-free-forearm-and-hand-material.png",
+      "sha256": "498bf29a040f47e98dc2635c63b5543a5a51853756955258daf66df5c9e0ae3f",
+      "bytes": 37653
+    }
+  ],
+  "source_rasterizer": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/author-NE-run-contact0-actual-parts-v01.py",
+    "sha256": "17751fb47dfc5932323180a5bb9e11108de9d75233e0422e6ffed111dd0c9ed1",
+    "bytes": 8842
+  },
+  "projection": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "source_shoe_plane_lift": [
+    [
+      0.9,
+      0.0
+    ],
+    [
+      -0.5230244457077885,
+      -0.2620807276861854
+    ],
+    [
+      -0.5230244457077885,
+      -1.2620807276861854
+    ]
+  ],
+  "source_HFA_raw": [
+    [
+      799.5,
+      1028.0
+    ],
+    [
+      855.0,
+      1005.0
+    ],
+    [
+      811.0,
+      944.0
+    ]
+  ],
+  "source_HFA_XYZ_relative_heel": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      49.95,
+      -22.999999999999996,
+      3.608224830031759e-15
+    ],
+    [
+      10.35,
+      16.000000000000004,
+      100.0
+    ]
+  ],
+  "source_leg_raw": [
+    [
+      774.0,
+      724.0
+    ],
+    [
+      790.0,
+      815.0
+    ],
+    [
+      811.0,
+      944.0
+    ]
+  ],
+  "source_leg_XYZ": [
+    [
+      -22.95,
+      278.12830094077975,
+      582.1283009407798
+    ],
+    [
+      -8.55,
+      134.65530828541384,
+      347.65530828541387
+    ],
+    [
+      10.35,
+      16.000000000000004,
+      100.0
+    ]
+  ],
+  "source_LEFT_hip": [
+    -107.55,
+    258.1283009407798,
+    582.1283009407798
+  ],
+  "fixed_femur_tibia_native": 275.2625,
+  "source_3D_interpretation": "Declared constructive native authoring rig, not unique hidden anatomy. One original complete actual RIGHT boot is articulated on both symmetrical legs; no whole actor mirror or arbitrary perpose boot size. Original LEFT source remains preserved and is not substituted into this fixed canonical boot.",
+  "source_ankle_control_uncertainty_native": 8,
+  "frames": [
+    {
+      "phase": 0,
+      "role": "RIGHT_CONTACT",
+      "output": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v01/phase0-actual/thunder_female-NE-run-phase0-actual-fixed-rig-v01.png",
+        "sha256": "bb7d819351647e4fcf67d391139ae9cec6c17132383fa8e25da7963fa3622a89",
+        "bytes": 723276
+      },
+      "C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_unpadded": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        128.0,
+        128.0
+      ],
+      "body_node_XYZ": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "body_node_raw": [
+        0.0,
+        0.0
+      ],
+      "LEFT_free_arm_target_controls_unpadded": [
+        [
+          559.0,
+          550.0
+        ],
+        [
+          590.0,
+          615.0
+        ]
+      ],
+      "legs": {
+        "R": {
+          "hip": [
+            -22.95,
+            278.12830094077975,
+            582.1283009407798
+          ],
+          "knee": [
+            1.3326238817931628,
+            125.53881713638582,
+            354.3208218801178
+          ],
+          "ankle": [
+            -8.589051630309683,
+            24.720684434376835,
+            98.37803846991378
+          ],
+          "heel": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "front_structural_sole": [
+            48.858472656653596,
+            -22.497394816877527,
+            11.433257458509605
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              774.0,
+              724.0
+            ],
+            [
+              800.9806932019924,
+              799.2179952562681
+            ],
+            [
+              789.956609299656,
+              954.342645964463
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9819703221805693,
+              0.008301953750688809,
+              -0.18885275724889597
+            ],
+            [
+              0.008301953750688809,
+              0.9961772785532363,
+              0.0869592275620542
+            ],
+            [
+              0.18885275724889597,
+              -0.0869592275620542,
+              0.9781476007338057
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.0868953043158425,
+              0.26241293690447953
+            ],
+            [
+              -0.26288928898582586,
+              0.8408824668119042
+            ]
+          ],
+          "shoe_image_offset": [
+            -211.23329493832102,
+            501.75281066153036
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": -5.129425613406566,
+            "minimum_Z_with_8native_hidden_thickness": -13.129425613406566,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.26249999999993,
+          "tibia": 275.26249999999993
+        },
+        "L": {
+          "hip": [
+            -107.55,
+            258.1283009407798,
+            582.1283009407798
+          ],
+          "knee": [
+            -337.35582528682426,
+            234.0649880722434,
+            432.5298933814662
+          ],
+          "ankle": [
+            -193.05,
+            87.0,
+            250.0
+          ],
+          "heel": [
+            -217.96502950531928,
+            70.13248339538707,
+            152.74851832315264
+          ],
+          "front_structural_sole": [
+            -164.3585210872692,
+            65.70242931976205,
+            141.31526086464305
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              680.0,
+              704.0
+            ],
+            [
+              424.6601941257508,
+              829.5350946907772
+            ],
+            [
+              585.0,
+              865.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9199108301721485,
+              -0.33291141091092435,
+              0.20720534987612324
+            ],
+            [
+              0.3436549150113796,
+              0.9389398730627583,
+              -0.01712349734758979
+            ],
+            [
+              -0.18885275724889597,
+              0.0869592275620542,
+              0.9781476007338057
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              0.9929634333886332,
+              -0.19362245991728727
+            ],
+            [
+              0.5542013145704824,
+              1.0328247641642259
+            ]
+          ],
+          "shoe_image_offset": [
+            90.48625768373756,
+            -431.4438434876903
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 134.76367940618545,
+            "minimum_Z_with_8native_hidden_thickness": 126.76367940618545,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.26249999999993,
+          "tibia": 275.26249999999993
+        }
+      },
+      "status": "ACTUAL_NEW_NE_RUN_SOURCE_PENDING_FINITE_AUTHOR_AND_INDEPENDENT_QC",
+      "actor_approvals_added": 0
+    },
+    {
+      "phase": 1,
+      "role": "RIGHT_LOAD",
+      "output": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v01/phase1-actual/thunder_female-NE-run-phase1-actual-fixed-rig-v01.png",
+        "sha256": "4bef5268c3e27103d4f969adb7eb6ea8c160cc6c0b4de797b0a0bdf41e6a7ff8",
+        "bytes": 763738
+      },
+      "C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_unpadded": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        128.0,
+        128.0
+      ],
+      "body_node_XYZ": [
+        -3.6,
+        0.0,
+        -70.0
+      ],
+      "body_node_raw": [
+        -4.0,
+        70.0
+      ],
+      "LEFT_free_arm_target_controls_unpadded": [
+        [
+          555.0,
+          620.0
+        ],
+        [
+          546.0,
+          715.0
+        ]
+      ],
+      "legs": {
+        "R": {
+          "hip": [
+            -26.55,
+            278.12830094077975,
+            512.1283009407798
+          ],
+          "knee": [
+            82.9420936092688,
+            145.2444926643581,
+            297.3660630094705
+          ],
+          "ankle": [
+            -108.65992821989632,
+            135.00992821989632,
+            100.0
+          ],
+          "heel": [
+            -119.00992821989631,
+            119.00992821989632,
+            0.0
+          ],
+          "front_structural_sole": [
+            -69.0599282198963,
+            96.00992821989632,
+            3.608224830031759e-15
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              770.0,
+              794.0
+            ],
+            [
+              891.6578817880765,
+              875.8784296548876
+            ],
+            [
+              678.7667464223374,
+              1063.0099282198962
+            ]
+          ],
+          "rotation3D": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ],
+          "shoe_image_offset": [
+            -4.233253577662595,
+            247.0099282198962
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": -6.8959636156907305,
+            "minimum_Z_with_8native_hidden_thickness": -14.89596361569073,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.26249999999993,
+          "tibia": 275.26249999999993
+        },
+        "L": {
+          "hip": [
+            -111.14999999999999,
+            258.1283009407798,
+            512.1283009407798
+          ],
+          "knee": [
+            108.80820355915904,
+            120.693455469022,
+            419.93559058127477
+          ],
+          "ankle": [
+            -121.05,
+            142.0,
+            270.0
+          ],
+          "heel": [
+            -125.30349633192345,
+            123.42500958400478,
+            170.0
+          ],
+          "front_structural_sole": [
+            -70.49938662717695,
+            118.89598546504605,
+            170.0
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              676.0,
+              774.0
+            ],
+            [
+              920.3980039546211,
+              728.7578648877472
+            ],
+            [
+              665.0,
+              900.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9396926207859084,
+              -0.3420201433256687,
+              0.0
+            ],
+            [
+              0.3420201433256687,
+              0.9396926207859084,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.13845361621236,
+              0.09959654227347187
+            ],
+            [
+              0.3393603625786415,
+              1.015805401829276
+            ]
+          ],
+          "shoe_image_offset": [
+            -224.30501865438134,
+            -206.14155337811462
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 163.10403638430927,
+            "minimum_Z_with_8native_hidden_thickness": 155.10403638430927,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.26249999999993,
+          "tibia": 275.2625
+        }
+      },
+      "status": "ACTUAL_NEW_NE_RUN_SOURCE_PENDING_FINITE_AUTHOR_AND_INDEPENDENT_QC",
+      "actor_approvals_added": 0
+    },
+    {
+      "phase": 2,
+      "role": "LEFT_DRIVE_RIGHT_TRAIL_AIR",
+      "output": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v01/phase2-actual/thunder_female-NE-run-phase2-actual-fixed-rig-v01.png",
+        "sha256": "e39fa693fb3247f33c8a2eaac4400b7181152011faeb24ca7d30906874875a8f",
+        "bytes": 778760
+      },
+      "C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_unpadded": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        128.0,
+        128.0
+      ],
+      "body_node_XYZ": [
+        1.8,
+        0.0,
+        38.0
+      ],
+      "body_node_raw": [
+        2.0,
+        -38.0
+      ],
+      "LEFT_free_arm_target_controls_unpadded": [
+        [
+          561.0,
+          512.0
+        ],
+        [
+          477.0,
+          612.0
+        ]
+      ],
+      "legs": {
+        "R": {
+          "hip": [
+            -21.15,
+            278.12830094077975,
+            620.1283009407798
+          ],
+          "knee": [
+            -184.05463977662484,
+            361.2361001464679,
+            414.3988281939585
+          ],
+          "ankle": [
+            -107.55,
+            182.0,
+            220.0
+          ],
+          "heel": [
+            -141.3254994455233,
+            176.7865162612019,
+            124.1086149619751
+          ],
+          "front_structural_sole": [
+            -93.07750442238432,
+            154.57022225655334,
+            109.8759146930109
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              776.0,
+              686.0
+            ],
+            [
+              594.994844692639,
+              974.8372719525094
+            ],
+            [
+              680.0,
+              990.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9718865481777185,
+              0.012945132971220715,
+              0.23509351544344376
+            ],
+            [
+              0.012945132971220715,
+              0.9940392781113498,
+              -0.10825126837235646
+            ],
+            [
+              -0.23509351544344376,
+              0.10825126837235646,
+              0.9659258262890683
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              0.8277417963986198,
+              -0.33344407212695215
+            ],
+            [
+              0.3217668802921502,
+              1.1235502431260302
+            ]
+          ],
+          "shoe_image_offset": [
+            451.47260720856224,
+            -203.5843694279065
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 103.40165903965438,
+            "minimum_Z_with_8native_hidden_thickness": 95.40165903965438,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.26249999999993,
+          "tibia": 275.2625
+        },
+        "L": {
+          "hip": [
+            -105.75,
+            258.1283009407798,
+            620.1283009407798
+          ],
+          "knee": [
+            122.14108431697292,
+            165.76484977561609,
+            496.4185984759176
+          ],
+          "ankle": [
+            -35.550000000000004,
+            102.0,
+            280.0
+          ],
+          "heel": [
+            -31.10725721102498,
+            82.70635040068863,
+            180.14440615744152
+          ],
+          "front_structural_sole": [
+            23.488306310481875,
+            78.1945605858523,
+            184.93718159927585
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              682.0,
+              666.0
+            ],
+            [
+              935.2123159077477,
+              697.3462512996985
+            ],
+            [
+              760.0,
+              850.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9362478875712961,
+              -0.3404339798835049,
+              -0.08685964747201859
+            ],
+            [
+              0.34230481686377395,
+              0.9395615398774716,
+              0.007178101067317492
+            ],
+            [
+              0.07916631461767118,
+              -0.036452957681810554,
+              0.9961946980917455
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.1845645682402883,
+              0.22093896918335992
+            ],
+            [
+              0.24362506788728797,
+              0.9924241967137016
+            ]
+          ],
+          "shoe_image_offset": [
+            -281.24825175196565,
+            -156.42837175432487
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 174.48521424017548,
+            "minimum_Z_with_8native_hidden_thickness": 166.48521424017548,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.2625,
+          "tibia": 275.2625
+        }
+      },
+      "status": "ACTUAL_NEW_NE_RUN_SOURCE_PENDING_FINITE_AUTHOR_AND_INDEPENDENT_QC",
+      "actor_approvals_added": 0
+    },
+    {
+      "phase": 3,
+      "role": "LEFT_CONTACT",
+      "output": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v01/phase3-actual/thunder_female-NE-run-phase3-actual-fixed-rig-v01.png",
+        "sha256": "9674c2bd9d5988068ed7fb56ddeadfce740b5661513527d6acf732a2a8facd45",
+        "bytes": 728793
+      },
+      "C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_unpadded": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        128.0,
+        128.0
+      ],
+      "body_node_XYZ": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "body_node_raw": [
+        0.0,
+        0.0
+      ],
+      "LEFT_free_arm_target_controls_unpadded": [
+        [
+          559.0,
+          550.0
+        ],
+        [
+          475.0,
+          650.0
+        ]
+      ],
+      "legs": {
+        "R": {
+          "hip": [
+            -22.95,
+            278.12830094077975,
+            582.1283009407798
+          ],
+          "knee": [
+            -246.53452335953747,
+            237.95873156065747,
+            426.6747370827776
+          ],
+          "ankle": [
+            -94.05,
+            92.0,
+            250.0
+          ],
+          "heel": [
+            -123.2314998194695,
+            84.671161078034,
+            152.74851832315264
+          ],
+          "front_structural_sole": [
+            -74.3730271628159,
+            62.17376626115647,
+            141.31526086464305
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              774.0,
+              724.0
+            ],
+            [
+              525.5727518227361,
+              839.2839944778799
+            ],
+            [
+              695.0,
+              870.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9819703221805693,
+              0.008301953750688809,
+              0.18885275724889597
+            ],
+            [
+              0.008301953750688809,
+              0.9961772785532363,
+              -0.0869592275620542
+            ],
+            [
+              -0.18885275724889597,
+              0.0869592275620542,
+              0.9781476007338057
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              0.8673961739147505,
+              -0.2672480081938075
+            ],
+            [
+              0.2589728812414703,
+              1.1059622724899794
+            ]
+          ],
+          "shoe_image_offset": [
+            371.82382269009156,
+            -256.05539191737296
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 134.76367940618545,
+            "minimum_Z_with_8native_hidden_thickness": 126.76367940618545,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.2625,
+          "tibia": 275.2625
+        },
+        "L": {
+          "hip": [
+            -107.55,
+            258.1283009407798,
+            582.1283009407798
+          ],
+          "knee": [
+            -45.85970011235178,
+            170.36549071071448,
+            328.62989868438774
+          ],
+          "ankle": [
+            -61.07604046990538,
+            20.292216074130895,
+            98.37803846991378
+          ],
+          "heel": [
+            -44.550000000000004,
+            0.0,
+            0.0
+          ],
+          "front_structural_sole": [
+            9.056508418050072,
+            -4.430054075625023,
+            11.433257458509605
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              680.0,
+              704.0
+            ],
+            [
+              748.5447776529425,
+              869.7355920263267
+            ],
+            [
+              731.6377328112162,
+              949.9141776042171
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9199108301721485,
+              -0.33291141091092435,
+              -0.20720534987612324
+            ],
+            [
+              0.3436549150113796,
+              0.9389398730627583,
+              0.01712349734758979
+            ],
+            [
+              0.18885275724889597,
+              -0.0869592275620542,
+              0.9781476007338057
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.2337933517589617,
+              0.38751060397633114
+            ],
+            [
+              0.10539073251522409,
+              0.9440216169012853
+            ]
+          ],
+          "shoe_image_offset": [
+            -506.7786856189582,
+            101.285887179557
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": -5.129425613406566,
+            "minimum_Z_with_8native_hidden_thickness": -13.129425613406566,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.2625,
+          "tibia": 275.26250000000005
+        }
+      },
+      "status": "ACTUAL_NEW_NE_RUN_SOURCE_PENDING_FINITE_AUTHOR_AND_INDEPENDENT_QC",
+      "actor_approvals_added": 0
+    },
+    {
+      "phase": 4,
+      "role": "LEFT_LOAD",
+      "output": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v01/phase4-actual/thunder_female-NE-run-phase4-actual-fixed-rig-v01.png",
+        "sha256": "1a0081a16cab3ed93d0995e9528891915b3db4be919bfc85e86a254a560fe049",
+        "bytes": 781984
+      },
+      "C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_unpadded": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        128.0,
+        128.0
+      ],
+      "body_node_XYZ": [
+        -3.6,
+        0.0,
+        -70.0
+      ],
+      "body_node_raw": [
+        -4.0,
+        70.0
+      ],
+      "LEFT_free_arm_target_controls_unpadded": [
+        [
+          555.0,
+          620.0
+        ],
+        [
+          546.0,
+          715.0
+        ]
+      ],
+      "legs": {
+        "R": {
+          "hip": [
+            -26.55,
+            278.12830094077975,
+            512.1283009407798
+          ],
+          "knee": [
+            185.21070125158394,
+            124.4740798118552,
+            426.58749406504967
+          ],
+          "ankle": [
+            -40.050000000000004,
+            147.0,
+            270.0
+          ],
+          "heel": [
+            -50.400000000000006,
+            131.0,
+            170.0
+          ],
+          "front_structural_sole": [
+            -0.45000000000000284,
+            108.0,
+            170.0
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              770.0,
+              794.0
+            ],
+            [
+              1005.2896680573156,
+              725.8865857468055
+            ],
+            [
+              755.0,
+              905.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ],
+          "shoe_image_offset": [
+            72.0,
+            89.0
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 163.10403638430927,
+            "minimum_Z_with_8native_hidden_thickness": 155.10403638430927,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.2625,
+          "tibia": 275.2625
+        },
+        "L": {
+          "hip": [
+            -111.14999999999999,
+            258.1283009407798,
+            512.1283009407798
+          ],
+          "knee": [
+            -286.5789596501909,
+            276.34064814358914,
+            300.79341401562965
+          ],
+          "ankle": [
+            -159.30643188797285,
+            137.58491863589154,
+            100.0
+          ],
+          "heel": [
+            -163.5599282198963,
+            119.00992821989632,
+            0.0
+          ],
+          "front_structural_sole": [
+            -108.7558185151498,
+            114.4809041009376,
+            3.608224830031759e-15
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              676.0,
+              774.0
+            ],
+            [
+              481.0789337220101,
+              1003.5472341279594
+            ],
+            [
+              622.492853457808,
+              1065.5849186358914
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9396926207859084,
+              -0.3420201433256687,
+              0.0
+            ],
+            [
+              0.3420201433256687,
+              0.9396926207859084,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.13845361621236,
+              0.09959654227347187
+            ],
+            [
+              0.3393603625786415,
+              1.015805401829276
+            ]
+          ],
+          "shoe_image_offset": [
+            -266.81216519657346,
+            -40.556634742223196
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": -6.8959636156907305,
+            "minimum_Z_with_8native_hidden_thickness": -14.89596361569073,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.2625,
+          "tibia": 275.26249999999993
+        }
+      },
+      "status": "ACTUAL_NEW_NE_RUN_SOURCE_PENDING_FINITE_AUTHOR_AND_INDEPENDENT_QC",
+      "actor_approvals_added": 0
+    },
+    {
+      "phase": 5,
+      "role": "RIGHT_DRIVE_LEFT_TRAIL_AIR",
+      "output": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v01/phase5-actual/thunder_female-NE-run-phase5-actual-fixed-rig-v01.png",
+        "sha256": "7fff7d95b81d92bcdd3cd6da7a340a53ccc46e5dad028b6c09018edb6547a2c1",
+        "bytes": 747564
+      },
+      "C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_unpadded": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        128.0,
+        128.0
+      ],
+      "body_node_XYZ": [
+        1.8,
+        0.0,
+        38.0
+      ],
+      "body_node_raw": [
+        2.0,
+        -38.0
+      ],
+      "LEFT_free_arm_target_controls_unpadded": [
+        [
+          561.0,
+          512.0
+        ],
+        [
+          592.0,
+          577.0
+        ]
+      ],
+      "legs": {
+        "R": {
+          "hip": [
+            -21.15,
+            278.12830094077975,
+            620.1283009407798
+          ],
+          "knee": [
+            205.83270308388097,
+            198.48323027327166,
+            486.3188875000492
+          ],
+          "ankle": [
+            45.45,
+            112.0,
+            280.0
+          ],
+          "heel": [
+            43.02599581361794,
+            92.35039231805379,
+            180.14440615744152
+          ],
+          "front_structural_sole": [
+            92.78592098330063,
+            69.43791426194365,
+            184.93718159927585
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              776.0,
+              686.0
+            ],
+            [
+              1028.2030034265345,
+              740.1643427732224
+            ],
+            [
+              850.0,
+              860.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9968603737019563,
+              0.0014456737708709337,
+              -0.07916631461767118
+            ],
+            [
+              0.0014456737708709337,
+              0.9993343243897892,
+              0.036452957681810554
+            ],
+            [
+              0.07916631461767118,
+              -0.036452957681810554,
+              0.9961946980917455
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              1.042026812700792,
+              0.11059488525226363
+            ],
+            [
+              -0.10972225403826091,
+              0.9398116695139558
+            ]
+          ],
+          "shoe_image_offset": [
+            28.51468322152084,
+            189.8025320038554
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 174.48521424017548,
+            "minimum_Z_with_8native_hidden_thickness": 166.48521424017548,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.26250000000005,
+          "tibia": 275.2625
+        },
+        "L": {
+          "hip": [
+            -105.75,
+            258.1283009407798,
+            620.1283009407798
+          ],
+          "knee": [
+            -225.34322819381129,
+            382.0896130429736,
+            405.41803854436927
+          ],
+          "ankle": [
+            -188.55,
+            182.0,
+            220.0
+          ],
+          "heel": [
+            -218.50547113674702,
+            165.54902664081018,
+            124.1086149619751
+          ],
+          "front_structural_sole": [
+            -165.568766186153,
+            161.17432527642185,
+            109.8759146930109
+          ],
+          "actual_joint_controls_unpadded": [
+            [
+              682.0,
+              666.0
+            ],
+            [
+              549.1186353402097,
+              1004.6715744986043
+            ],
+            [
+              590.0,
+              990.0
+            ]
+          ],
+          "rotation3D": [
+            [
+              0.9088471213295036,
+              -0.3278170104428397,
+              0.2579397559807209
+            ],
+            [
+              0.3445692224321812,
+              0.9385188706467735,
+              -0.021316200233316426
+            ],
+            [
+              -0.23509351544344376,
+              0.10825126837235646,
+              0.9659258262890683
+            ]
+          ],
+          "shoe_image_affine": [
+            [
+              0.9494554683102057,
+              -0.26625141586952894
+            ],
+            [
+              0.6037979253206549,
+              1.028381997857412
+            ]
+          ],
+          "shoe_image_offset": [
+            199.33295178125854,
+            -342.4727234124482
+          ],
+          "shoe_surface_bounds": {
+            "full_nonzero_RGBA_texel_quad_count": 21448,
+            "minimum_Z": 103.40165903965438,
+            "minimum_Z_with_8native_hidden_thickness": 95.40165903965438,
+            "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+          },
+          "femur": 275.2625,
+          "tibia": 275.2625
+        }
+      },
+      "status": "ACTUAL_NEW_NE_RUN_SOURCE_PENDING_FINITE_AUTHOR_AND_INDEPENDENT_QC",
+      "actor_approvals_added": 0
+    }
+  ],
+  "native_C": 2432,
+  "bodyunit": 2.375,
+  "common_rig_root_unpadded": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    128.0,
+    128.0
+  ],
+  "source_NE_exact_sameheel_delta_raw": [
+    -132.23325357766257,
+    119.00992821989632
+  ],
+  "source_NE_exact_sameheel_delta_XYZ": [
+    -119.00992821989631,
+    119.00992821989632,
+    0.0
+  ],
+  "world_per_native_ground_unit": 0.09981851179663159,
+  "world_step": 16.8,
+  "clock": {
+    "reference_speed": 210,
+    "reference_phase_hz": 12.5,
+    "actual_speed": 262.5,
+    "effective_phase_hz": 15.625,
+    "actual_phase_dt": 0.064,
+    "world_per_phase": 16.8
+  },
+  "staff": {
+    "actual_native_bottom_tip_observed": [
+      902.0,
+      1108
+    ],
+    "source_tip_XYZ": [
+      92.25,
+      200.0,
+      120
+    ],
+    "source_declared_Y_plane": 200.0,
+    "body_XYZ_nodes": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        -3.6,
+        0.0,
+        -70.0
+      ],
+      [
+        1.8,
+        0.0,
+        38.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        -3.6,
+        0.0,
+        -70.0
+      ],
+      [
+        1.8,
+        0.0,
+        38.0
+      ]
+    ],
+    "guarded_minimum_tip_clearance_native": 45.0,
+    "full_original_RIGHT_staff_pixels_move_with_body_only": true,
+    "unique_hidden_staff_depth_recovery": false
+  },
+  "whole_source_resized": false,
+  "perpose_C_or_root_fit": false,
+  "source_and_cycle_approved": false,
+  "actor_approvals_added": 0,
+  "old_sources_overwritten": false
+}
