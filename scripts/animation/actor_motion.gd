@@ -2,6 +2,7 @@ extends RefCounted
 class_name TwilightActorMotion
 
 const PROFILE = preload("res://scripts/animation/animation_profile.gd")
+const TRANSFORM_MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
 const CLASS_DIRECTIONS = ["walk_down", "walk_up", "walk_left", "walk_right"]
 const SHEET_DIRECTIONS = ["dir_down", "dir_up", "dir_left", "dir_right"]
 signal strike(sequence: int)
@@ -223,7 +224,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		return
 	if move_ratio > 0.01:
 		face(real_velocity)
-		_set_state("run" if move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
+		_set_state("run" if not TRANSFORM_MOVEMENT_SCOPE.requires_walk(profile.profile_id) or move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
 	elif hit_clock > 0.0:
 		_set_state("hit", delta)
 	else:

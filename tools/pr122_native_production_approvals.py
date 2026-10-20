@@ -15,6 +15,8 @@ import json
 from pathlib import Path
 import re
 
+import pr122_transform_motion_scope as motion_scope
+
 
 MANIFEST = Path('docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json')
 REGISTER = Path('data/pr122_native_locomotion_staging.json')
@@ -47,8 +49,8 @@ def json_digest(value):
                                     separators=(',', ':'), allow_nan=False).encode()).hexdigest()
 
 
-def default_main_marker(key):
-    return (f'PR122_NATIVE_DEFAULT_MAIN_PASS key={key} tracks=48 poses=288 '
+def default_main_marker(key, track_count=48):
+    return (f'PR122_NATIVE_DEFAULT_MAIN_PASS key={key} tracks={track_count} poses={track_count * 6} '
             'candidate_injection=0')
 
 
@@ -105,18 +107,20 @@ class _Reader:
 
 def _selection(reader, key, actor, manifest):
     require(ACTOR_KEY.fullmatch(key) is not None, 'Unsupported approved actor key')
+    required_roles = motion_scope.required_roles(reader.root, key)
+    required_tracks = frozenset((d, r) for d in DIRECTIONS for r in required_roles)
     tracks = actor.get('tracks')
-    require(isinstance(tracks, list) and len(tracks) == 48
-            and type(actor.get('native_track_count')) is int and actor['native_track_count'] == 48
-            and type(actor.get('native_pose_count')) is int and actor['native_pose_count'] == 288,
-            'A completed actor requires exactly 48 tracks / 288 poses')
+    require(isinstance(tracks, list) and len(required_tracks) <= len(tracks) <= 48
+            and type(actor.get('native_track_count')) is int and actor['native_track_count'] == len(tracks)
+            and type(actor.get('native_pose_count')) is int and actor['native_pose_count'] == len(tracks) * 6,
+            'A completed actor requires every mandatory track and six poses per actual track')
     selected = {}
     for table in ('selected_locomotion_sheets', 'selected_detailed_action_sheets'):
         for slot, source in manifest.get(table, {}).items():
             if slot.startswith(key + ':'):
                 require(slot not in selected, 'Duplicate selected identity across source tables')
                 selected[slot] = source
-    require(len(selected) == 48, 'Completed actor must select exactly 48 source identities')
+    require(len(selected) == len(tracks), 'Completed actor must select every actual source identity')
     raws = {}
     for raw in manifest.get('raw_images', []):
         if raw.get('key') == key:
@@ -149,13 +153,14 @@ def _selection(reader, key, actor, manifest):
         rgba = [frame.get('rgba_sha256') for frame in frames]
         require(all(isinstance(h, str) and SHA.fullmatch(h) for h in rgba)
                 and len(set(rgba)) == 6 and not rgba_seen.intersection(rgba),
-                'Completed actor requires 288 distinct RGBA frame hashes')
+                f'Completed actor requires {len(tracks) * 6} distinct RGBA frame hashes')
         rgba_seen.update(rgba)
         result.append(dict(direction=direction, role=role, source=source, source_sha256=source_sha,
                            texture=track['texture'], source_geometry_sha256=json_digest(raw['geometry']),
                            geometry_sha256=json_digest(geometry),
                            frame_rgba_sha256=rgba))
-    require(seen == TRACK_KEYS and len(rgba_seen) == 288, 'Incomplete detailed animation coverage')
+    require(required_tracks.issubset(seen) and len(rgba_seen) == len(tracks) * 6,
+            'Incomplete detailed animation coverage')
     return sorted(result, key=lambda t: (t['direction'], t['role']))
 
 
@@ -198,12 +203,17 @@ def _actor_description(reader, key, actor, manifest):
     profile_text = reader.file(actor['native_profile']).read_text()
     frame_paths = re.findall(r'^frames_path\s*=\s*"([^"]+)"\s*$', profile_text, re.MULTILINE)
     require(frame_paths == [actor['frames']], 'Production NativeMotionProfile targets different frames')
+    if not motion_scope.requires_walk(reader.root, key):
+        pins['motion_requirements'] = dict(
+            policy=dict(path=motion_scope.POLICY.as_posix(), sha256=reader.digest(motion_scope.POLICY.as_posix())),
+            required_roles=sorted(motion_scope.required_roles(reader.root, key)),
+            required_track_count=40, authored_track_count=len(selection), authored_pose_count=len(selection) * 6)
     pins.update(source_selection_sha256=json_digest(selection), actor_record_sha256=json_digest(actor))
     return pins, selection
 
 
 def describe_actor(root, key, *, manifest=None, register=None):
-    """Return pins + 48 source descriptors; read-only helper for a real approval author.
+    """Return pins + all actual source descriptors; read-only helper for a real approval author.
 
     Does not grant approval or check completion counters. The default catalog must
     already target the exact candidate frames before this helper can describe it.
@@ -230,7 +240,8 @@ def _quality(reader, pin, key, expected, selection):
                 ('production_frames', 'production_profile', 'effective_profile_sha256')),
             'Quality evidence does not bind the actual production frames/profile/globals')
     tracks = evidence.get('tracks', [])
-    require(isinstance(tracks, list) and len(tracks) == 48, 'Quality evidence must review all 48 tracks')
+    require(isinstance(tracks, list) and len(tracks) == len(selection),
+            f'Quality evidence must review all {len(selection)} tracks')
     reviewed = {}
     for row in tracks:
         identity = (row.get('direction'), row.get('role'))
@@ -241,6 +252,8 @@ def _quality(reader, pin, key, expected, selection):
                 and all(isinstance(f, str) and f.strip() for f in findings),
                 'Quality evidence requires actual text findings, not a bare PASS claim')
         reviewed[identity] = row
+    require(set(reviewed) == {(s['direction'], s['role']) for s in selection},
+            'Quality review must bind every actual track identity')
     for source in selection:
         row = reviewed[(source['direction'], source['role'])]
         require(all(row.get(field) == source[field] for field in
@@ -259,12 +272,15 @@ def _default_main(reader, pin, key, expected):
             and evidence.get('engine_version') == '4.7.2.stable.official.ed1daf0bf',
             'Require actual Main DEFAULT evidence, never injected candidate evidence')
     require(evidence.get('pins') == expected, 'Default Main evidence pins different production data')
-    require(all(evidence.get('checks', {}).get(c) == 'PASS' for c in MAIN_CHECKS),
+    checks = MAIN_CHECKS if 'motion_requirements' not in expected else tuple(
+        'all_required_tracks' if c == 'all_48_tracks' else c for c in MAIN_CHECKS)
+    require(all(evidence.get('checks', {}).get(c) == 'PASS' for c in checks),
             'Actual default Main required checks did not all pass')
     path = reader.pin(evidence.get('log'))
     require(path.stat().st_size <= 2 * 1024 * 1024, 'Default Main evidence log exceeds bounded review size')
     log = path.read_text()
-    require(default_main_marker(key) in log.splitlines() and 'PR122_NATIVE_MAIN_PASS' not in log,
+    track_count = expected.get('motion_requirements', {}).get('authored_track_count', 48)
+    require(default_main_marker(key, track_count) in log.splitlines() and 'PR122_NATIVE_MAIN_PASS' not in log,
             'Pinned log lacks the actual default-catalog PASS marker or is a candidate run')
 
 

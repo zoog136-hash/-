@@ -7,16 +7,18 @@ import subprocess
 
 import stage_pr122_native_locomotion as staging
 import pr122_native_production_approvals as production_approvals
+import pr122_transform_motion_scope as motion_scope
 
 BRANCH = 'feature/twilight-remaining106-20261016'
 
 
-def update_authoring_queue(register, manifest):
+def update_authoring_queue(register, manifest, root=None):
     """Update missing-source pointers, including actors not registered yet.
 
-    A saved raw HOLD never creates a fake actor. A run or core-action request
-    requires the selected same-heading native walk used by its authoring prompt.
+    A saved raw HOLD never creates a fake actor. A same-heading walk remains
+    required only for actors outside the user-authorized transformation omission.
     """
+    root = Path(__file__).resolve().parents[1] if root is None else Path(root)
     selected = manifest.get('selected_locomotion_sheets', {})
     actions = manifest.get('selected_detailed_action_sheets', {})
     holds = {(r.get('key'), r.get('direction'), r.get('role')) for r in manifest.get('raw_images', [])
@@ -28,14 +30,15 @@ def update_authoring_queue(register, manifest):
     next_action = None
     missing_actions = 0
     for key in staging.ACTORS:
+        walk_required = motion_scope.requires_walk(root, key)
         for direction in staging.importer.DIRECTIONS:
             has_walk = f'{key}:{direction}:walk' in selected
-            for role in ('walk', 'run'):
+            for role in (('walk', 'run') if walk_required else ('run',)):
                 if f'{key}:{direction}:{role}' in selected:
                     continue
                 missing_movement += 1
                 if (next_movement is None and (key, direction, role) not in holds
-                        and (role == 'walk' or has_walk)):
+                        and (role == 'walk' or has_walk or not walk_required)):
                     next_movement = dict(key=key, direction=direction, role=role)
         for role in ('attack', 'hit', 'death', 'idle'):
             for direction in staging.importer.DIRECTIONS:
@@ -43,7 +46,7 @@ def update_authoring_queue(register, manifest):
                     continue
                 missing_actions += 1
                 if (next_action is None and (key, direction, role) not in holds
-                        and f'{key}:{direction}:walk' in selected):
+                        and (not walk_required or f'{key}:{direction}:walk' in selected)):
                     next_action = dict(key=key, direction=direction, role=role)
     register['next_locomotion_source'] = next_movement
     register['next_detailed_source'] = next_action

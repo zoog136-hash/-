@@ -1,4 +1,5 @@
 extends SceneTree
+const MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
 const Profile = preload("res://scripts/animation/animation_profile.gd")
 
 func _initialize() -> void:
@@ -16,7 +17,7 @@ func _run() -> void:
 	for key: String in register.actors:
 		var actor: Dictionary = register.actors[key]
 		for track: Dictionary in actor.tracks:
-			if track.role in ["walk", "run"]: expected += 1
+			if track.role in ["walk", "run"] and (track.role != "walk" or MOVEMENT_SCOPE.requires_walk(key)): expected += 1
 		var textures: Array[ImageTexture] = []
 		for track: Dictionary in actor.tracks:
 			var texture: ImageTexture = ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
@@ -32,7 +33,7 @@ func _run() -> void:
 		root.add_child(sprite)
 		sprite.sprite_frames = frames
 		for track: Dictionary in actor.tracks:
-			if track.role not in ["walk", "run"]: continue
+			if track.role not in ["walk", "run"] or (track.role == "walk" and not MOVEMENT_SCOPE.requires_walk(key)): continue
 			var motion: RefCounted = motion_script.new()
 			motion.profile = profile
 			var direction: int = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"].find(track.direction)

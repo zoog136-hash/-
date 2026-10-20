@@ -14,6 +14,7 @@ import subprocess
 import import_original_based_motion as importer
 from pr122_reviewed_source_regions import apply_reviewed_regions
 import pr122_reviewed_runtime_layout as reviewed_layout
+import pr122_transform_motion_scope as motion_scope
 import pr122_native_production_approvals as production_approvals
 
 
@@ -137,7 +138,8 @@ def stage(root, key, revision=None):
         assert digest(root / track['texture']) == track['source_sha256']
     frames_path = folder / 'SpriteFrames.tres'
     preserve_write(root / frames_path, build_frames(tracks))
-    missing = [f'{role}_{index}' for role in ('walk', 'run') for index in range(8)
+    movement_roles = ('walk', 'run') if motion_scope.requires_walk(root, key) else ('run',)
+    missing = [f'{role}_{index}' for role in movement_roles for index in range(8)
                if f'{role}_{index}' not in {track['animation'] for track in tracks}]
     available = {track['animation'] for track in tracks}
     missing_core = {role: [f'{role}_{direction}' for direction in range(8)
@@ -154,6 +156,11 @@ def stage(root, key, revision=None):
         visual_review='NOT_RUN; image tools authorized for production, no chat image attachments',
         timing_review='HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved',
         integration='Godot SpriteFrames contract only; production catalogs and profiles unchanged')
+    if 'walk' not in movement_roles:
+        entry['motion_requirements'] = dict(scope='USER_TRANSFORM_ONLY_WALK_OMISSION',
+            required_roles=sorted(motion_scope.required_roles(root, key)), required_native_track_count=40,
+            retained_walk_tracks=sum(track['role'] == 'walk' for track in tracks),
+            policy_sha256=digest(root / motion_scope.POLICY), omission_grants_approval=False)
     previous = dict(register['actors'].get(key, {}))
     verification = previous.pop('verification', None)
     for field in ('native_profile', 'native_profile_sha256', 'native_profile_basis'):

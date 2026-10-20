@@ -1,4 +1,5 @@
 extends SceneTree
+const MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -15,7 +16,7 @@ func _run() -> void:
 		if not scope.is_empty() and not scope.has(key): continue
 		var entry: Dictionary = register.actors[key]
 		for track: Dictionary in entry.tracks:
-			if track.role in ["walk", "run"]: expected += 1
+			if track.role in ["walk", "run"] and (track.role != "walk" or MOVEMENT_SCOPE.requires_walk(key)): expected += 1
 		for track: Dictionary in entry.tracks:
 			var texture := ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
 			texture.take_over_path("res://" + str(track.texture))
@@ -53,7 +54,7 @@ func _run() -> void:
 		var sprite: AnimatedSprite2D = actor.transform_sprite
 		assert(sprite.sprite_frames.has_animation(sprite.animation))
 		for track: Dictionary in record.tracks:
-			if track.role not in ["walk", "run"]: continue
+			if track.role not in ["walk", "run"] or (track.role == "walk" and not MOVEMENT_SCOPE.requires_walk(key)): continue
 			var direction: int = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"].find(track.direction)
 			var velocity: Vector2 = Vector2.RIGHT.rotated(float(direction) * PI / 4.0) * profile.reference_speed
 			velocity *= 0.6 if track.role == "walk" else 1.25
@@ -84,6 +85,7 @@ func _run() -> void:
 		for missing: String in record.missing_locomotion:
 			assert(not sprite.sprite_frames.has_animation(missing))
 			var role: String = missing.get_slice("_", 0)
+			if role == "walk" and not MOVEMENT_SCOPE.requires_walk(key): continue
 			var heading: int = int(missing.get_slice("_", 1))
 			var unavailable_velocity: Vector2 = Vector2.RIGHT.rotated(float(heading) * PI / 4.0) * profile.reference_speed
 			unavailable_velocity *= 0.6 if role == "walk" else 1.25
