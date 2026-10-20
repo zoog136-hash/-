@@ -1,0 +1,130 @@
+{
+  "agent": "mythic413_se_base_private_generation_fresh",
+  "status": "S_FINAL_ORIGINAL_PRESERVED_PRIOR_SE_LEDGER_CONTINUED",
+  "working_limit_bytes": 6000000,
+  "hard_limit_bytes": 7000000,
+  "inherited_ledger": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/inherited-private-image-ledger-through-SE-v01.json",
+  "inherited_ledger_sha256": "8d50543fb3a205621530730ba6ec82ee080d1c69f6345e7354c0349a84906f8c",
+  "inherited_cumulative_image_bytes": 2580560,
+  "entries": [
+    {
+      "label": "canonical413",
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "bytes": 24057,
+      "size": [
+        108,
+        132
+      ],
+      "used_as_reference_only": true
+    },
+    {
+      "label": "new-ownE",
+      "path": "/workspace/scratch/mythic413-E-private-base-generation-fresh-20261020-v01/service-E-fullbody-base-native-r001.png",
+      "sha256": "dde77166996a5f262932dccbcf0ff5c74f62cf502e6cac1df75446b576121991",
+      "bytes": 1037135,
+      "size": [
+        1254,
+        1254
+      ],
+      "used_as_reference_only": true
+    },
+    {
+      "label": "old-ownSE-phase0-direction-only",
+      "path": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/used-SE-exact-native-phase0-direction-reference-crop-v01.png",
+      "sha256": "bd26925f2ac20ecb74de1a711637ed56d3d415606098fcb1c1fc2395c120d729",
+      "bytes": 344614,
+      "size": [
+        512,
+        512
+      ],
+      "source_atlas": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-walk-v01.png",
+      "source_atlas_sha256": "06be7d158dad62a2f93207ce07eb84e320831e046f21121cbc8efa0c30970bff",
+      "source_geometry": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-walk-v01.geometry.json",
+      "source_geometry_sha256": "87330d5ba2201a5f957d42949a3352caf4ce40d7e14b382846e4c7b792f35419",
+      "exact_original_rectangle": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_pixels_resampled": false,
+      "used_as_reference_only": true
+    },
+    {
+      "label": "private-reference-board",
+      "path": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/private-three-reference-SE-board-v01.jpg",
+      "sha256": "2ea7afda5237daf0518f833f654c7c7c86cc92143d26f289dc8a64148353d24e",
+      "bytes": 48893,
+      "size": [
+        1050,
+        660
+      ],
+      "viewed": true
+    },
+    {
+      "label": "generated-original-SE-native",
+      "path": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/service-SE-fullbody-base-native-r001.png",
+      "sha256": "1eb7a28211a222fbe764ff0cef2fa299f73caf1c94ef704674721b6b4be78772",
+      "bytes": 1059405,
+      "size": [
+        1254,
+        1254
+      ],
+      "viewed": false
+    },
+    {
+      "label": "private-produced-SE-quality-preview",
+      "path": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/private-produced-SE-base-quality-v01.jpg",
+      "sha256": "400692bde3198d8ccbd278c87c03fb4c15053d91423d6405e2cd8b298cc17acc",
+      "bytes": 66456,
+      "size": [
+        760,
+        760
+      ],
+      "viewed": true
+    },
+    {
+      "label": "private-reference-board-S",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/private-three-reference-S-board-v01.jpg",
+      "sha256": "02281f42af0a137a9547e42a2c09c23a20140d95d2b8e47863e947a7127803c7",
+      "bytes": 54750,
+      "size": [
+        1080,
+        640
+      ],
+      "viewed": true,
+      "service_input": true
+    },
+    {
+      "label": "generated-original-S-native",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+      "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+      "bytes": 996497,
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "native_untouched": true,
+      "viewed": false
+    },
+    {
+      "label": "private-produced-S-quality-preview",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/private-produced-S-base-quality-v01.jpg",
+      "sha256": "89e6c949b54a389e4ccd2cecebe050a0e8f7b7d0070a69c5a3d093fdffc0b06e",
+      "bytes": 74431,
+      "size": [
+        760,
+        760
+      ],
+      "viewed": true
+    }
+  ],
+  "cumulative_conservative_image_bytes": 3706238,
+  "S_actual_service_calls": 1,
+  "lifetime_actual_service_calls": 2,
+  "new_context_budget_reset": false,
+  "image_to_parent": false,
+  "base64_to_parent": false
+}

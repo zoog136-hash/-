@@ -1,0 +1,123 @@
+{
+  "status": "REQUESTED_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "E",
+  "role": "hit",
+  "version": "EhitSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+    "base_geometry_sha256": "3409adb085919a36910febe613c1b1d7a72b029abd53d27814f8a724056cfb94",
+    "direction": "E",
+    "regions": [
+      [
+        396,
+        133,
+        759,
+        1218
+      ],
+      [
+        1932,
+        133,
+        750,
+        1218
+      ],
+      [
+        396,
+        1669,
+        720,
+        1218
+      ],
+      [
+        1932,
+        1669,
+        740,
+        1218
+      ],
+      [
+        396,
+        3205,
+        761,
+        1218
+      ],
+      [
+        1932,
+        3205,
+        740,
+        1218
+      ]
+    ],
+    "nearest_owner_sha256": "f619092f89bedef34cf093cc32ad37cb405e2aef1fca69121007074249331bf6",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 33808cce1c0818f42fe740d26118ff0c36ccc265b3f8ba390373113fbbfbdd27"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+    "direction": "E",
+    "role": "hit",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        867,
+        1226
+      ],
+      [
+        2403,
+        1226
+      ],
+      [
+        867,
+        2762
+      ],
+      [
+        2403,
+        2762
+      ],
+      [
+        867,
+        4298
+      ],
+      [
+        2403,
+        4298
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "33808cce1c0818f42fe740d26118ff0c36ccc265b3f8ba390373113fbbfbdd27",
+  "authored_common_root_float": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "common_root_integer": [
+    739,
+    1098
+  ],
+  "common_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0
+}
