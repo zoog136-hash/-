@@ -1,0 +1,390 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "role": "run",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "NE",
+  "metadata_sha256": "da04c08be9cecf5a0135aeddcf8d6ad04c9061a6b414990c63aaed73ea372611",
+  "metadata_path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/spec.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/girtas-NE-run-reviewed-composite-v02.png",
+  "output_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+      "source_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+      "source_pose": 0,
+      "source_region": [
+        59,
+        53,
+        1186,
+        1002
+      ],
+      "rgba_sha256": "bb213638f3d5cfd5e0aa755a46ed765af9fa85219628cca17239d72a483539ae",
+      "visible_pose_sha256": "86f9b99b22332cd29bbec57a1f32001a65beef6b8d1d5c4e869751ad4431de1c",
+      "newly_authored": true,
+      "review_basis": "Individual source proof is pinned; this provisional assembly does not add final physical/runtime/actor approval.",
+      "output_region": [
+        175,
+        267,
+        1186,
+        1002
+      ],
+      "translation": [
+        116,
+        214
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 440522
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "source_sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "source_pose": 0,
+      "source_region": [
+        106,
+        166,
+        1225,
+        1075
+      ],
+      "rgba_sha256": "f44f8cd28b3338c9754a0d49660be029d73211f075f5bcd791170c6ba55ba7d3",
+      "visible_pose_sha256": "30e16764bbbbd240d74e6b2d8419c3f828fb42d480fbe8ee6c1d0918787a5d30",
+      "newly_authored": true,
+      "review_basis": "Individual source proof is pinned; this provisional assembly does not add final physical/runtime/actor approval.",
+      "output_region": [
+        1691,
+        230,
+        1225,
+        1075
+      ],
+      "translation": [
+        1585,
+        64
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 471307
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/girtas-NE-run-RIGHT-flight2-from-run3-v01.png",
+      "source_sha256": "2e4dd041fc58fc0faa25eb91008875e9525d3c93b842a70e00cd6f7793367177",
+      "source_pose": 0,
+      "source_region": [
+        42,
+        51,
+        1210,
+        1107
+      ],
+      "rgba_sha256": "0485d7df805a907406c3991a7d8ef0eb543f8ceeb1d668e910c15b5178733261",
+      "visible_pose_sha256": "99e246705970bab56100903657a9f7c3d5c04ca966e5a33e2c79e1b30d42791b",
+      "newly_authored": true,
+      "review_basis": "Individual source proof is pinned; this provisional assembly does not add final physical/runtime/actor approval.",
+      "output_region": [
+        163,
+        1750,
+        1210,
+        1107
+      ],
+      "translation": [
+        121,
+        1699
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 465394
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+      "source_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+      "source_pose": 0,
+      "source_region": [
+        36,
+        17,
+        1214,
+        1052
+      ],
+      "rgba_sha256": "0f52f65cdbed80692d007cbe8d300a5c4a93368dd297007aab6e641cb21493ec",
+      "visible_pose_sha256": "bcb09a8d756c41b3414a38c43010c18fcd14ec4cf1af6981fa94184963f84dc8",
+      "newly_authored": true,
+      "review_basis": "Final contact3 semantic bounded composition retains exact outside-mask originalRGBA and strict single geometry; final independent SOURCE judgment is capacity-blocked and remains HOLD. No source/physical/actor PASS is claimed for this pose.",
+      "output_region": [
+        1697,
+        1778,
+        1214,
+        1052
+      ],
+      "translation": [
+        1661,
+        1761
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 460472
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02.png",
+      "source_sha256": "c86670e35fbfb1f2a1af607130f119878b3bf089e7be5e610f55f24f5e5b2279",
+      "source_pose": 0,
+      "source_region": [
+        21,
+        49,
+        1232,
+        1154
+      ],
+      "rgba_sha256": "d90b5603e9363e79628c4a3d4578f7df3d4834bff9f3bd37ca04c50ef8b63d28",
+      "visible_pose_sha256": "39dfd2dda22aab199c2fea2516df7bbb907a38c2a3f81b783361fc55aa0f290d",
+      "newly_authored": true,
+      "review_basis": "Individual source proof is pinned; this provisional assembly does not add final physical/runtime/actor approval.",
+      "output_region": [
+        152,
+        3263,
+        1232,
+        1154
+      ],
+      "translation": [
+        131,
+        3214
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 537811
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/girtas-NE-run-LEFT-flight5-from-run0-v01.png",
+      "source_sha256": "7b07b03dd9a17c1efbe56da03d9e2d18330adac5b7aec0f524f9d3e976187c31",
+      "source_pose": 0,
+      "source_region": [
+        34,
+        55,
+        1214,
+        1088
+      ],
+      "rgba_sha256": "ea34df9defba4006f8b23c7a9c1c56472704620e41d326cef308a1b67faa1b5c",
+      "visible_pose_sha256": "37413acbceaa5d92e3872ccc8746bfaeb8aac6286f40041c11f29ebe48552d97",
+      "newly_authored": true,
+      "review_basis": "Individual source proof is pinned; this provisional assembly does not add final physical/runtime/actor approval.",
+      "output_region": [
+        1697,
+        3296,
+        1214,
+        1088
+      ],
+      "translation": [
+        1663,
+        3241
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 449854
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          173,
+          265,
+          1190,
+          1006
+        ],
+        "margin": [
+          429,
+          278,
+          858,
+          1042
+        ],
+        "source_anchor": [
+          768,
+          1267
+        ],
+        "rgba_sha256": "ca8f0b67e16e97a8a956783b0e79019a09e29e4cd052f4d562f691e8538fd75e"
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1688,
+          228,
+          1230,
+          1079
+        ],
+        "margin": [
+          408,
+          205,
+          818,
+          969
+        ],
+        "source_anchor": [
+          2304,
+          1303
+        ],
+        "rgba_sha256": "e7cde39b3df08dae4c7989292a776bfa4d3cb2185881c1c81493a992a37701d2"
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          160,
+          1747,
+          1215,
+          1112
+        ],
+        "margin": [
+          416,
+          172,
+          833,
+          936
+        ],
+        "source_anchor": [
+          768,
+          2855
+        ],
+        "rgba_sha256": "6644512f29f6717ca1754503dc91839973dcdfa8325109975b6a37f7a84a59d0"
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1697,
+          1778,
+          1214,
+          1052
+        ],
+        "margin": [
+          417,
+          232,
+          834,
+          996
+        ],
+        "source_anchor": [
+          2304,
+          2826
+        ],
+        "rgba_sha256": "0f52f65cdbed80692d007cbe8d300a5c4a93368dd297007aab6e641cb21493ec"
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          149,
+          3261,
+          1238,
+          1159
+        ],
+        "margin": [
+          405,
+          125,
+          810,
+          889
+        ],
+        "source_anchor": [
+          768,
+          4416
+        ],
+        "rgba_sha256": "e59f5a93cc2820f1a1013e293717d52718f686b01cd822e6e12dc1067317fbb1"
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          1695,
+          3294,
+          1218,
+          1092
+        ],
+        "margin": [
+          415,
+          192,
+          830,
+          956
+        ],
+        "source_anchor": [
+          2304,
+          4382
+        ],
+        "rgba_sha256": "592c423a1e9bf1b8c9a7d85350564f671d3c2cb2f9d503c10ed9c2d354a15982"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 1023.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    1002,
+    1154
+  ],
+  "possible_region_height_mismatch": true,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+}
