@@ -1,0 +1,85 @@
+{
+  "schema": "pr122-independent-single-NWwalk-contact0-source-quality-v1",
+  "status": "PASS_SINGLE_CONTACT0_SOURCE_QUALITY_ONLY_FULLCYCLE_PHYSICS_PENDING",
+  "actor": "transform:413",
+  "direction": "NW",
+  "role": "walk",
+  "pose": 0,
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+    "sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+    "bytes": 519225
+  },
+  "old_master": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/thunder_female-NW-walk-contact0-v01-service.png",
+    "sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+    "bytes": 587417
+  },
+  "actual_service_raw": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-v02-service.png",
+    "sha256": "1cfe78368dbb3049f97a3495e030a04fde417ec65404a76dc1fec65ca45bf81d",
+    "bytes": 562966
+  },
+  "allowed_mask": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/allowed-actual-LEFT-backarm-mask-v02.png",
+    "sha256": "455d3552cdd4252168ad54df86a3f2ba515e18a50aa8d99bc8e93df003024181",
+    "bytes": 3392
+  },
+  "final_inside_mask_exact_actual_service_RGBA": true,
+  "final_outside_mask_exact_original_RGBA": true,
+  "changed_RGBA_pixels": 35009,
+  "changed_bbox_xyxy": [
+    449,
+    435,
+    748,
+    731
+  ],
+  "outside_mask_changed_pixels": 0,
+  "head_nape_y_below435_RGBA_exact": true,
+  "legs_y750plus_RGBA_exact": true,
+  "RIGHT_grip770399_862480_RGBA_exact": true,
+  "RIGHT_staff750480_835640_RGBA_exact": true,
+  "conservative_RIGHT_upper_rectangle_overlap": {
+    "changed_RGBA_pixels": 498,
+    "bbox_xyxy": [
+      665,
+      508,
+      681,
+      560
+    ],
+    "review_disposition": "Natural nearLEFT arm occlusion at lower-left edge of farRIGHT puff/torso; visible far bluepuff remains coherent. Do not claim every pixel in this conservative rectangle was protected unchanged."
+  },
+  "resampled": false,
+  "actual_private_visual_findings": [
+    "New nearLEFT shoulder\u2192white sleeve/elbow\u2192goldbracer\u2192emptyblackglove is continuous, natural and fully present; no cut hand or oldforward-arm ghost.",
+    "FreeLEFT arm now extends toward screenRIGHT/down as clear backswing while nearLEFT leg leads upper-left, giving readable opposing gait intent.",
+    "Gold/white/blue materials and arm equipment remain consistent with original.",
+    "Original rearhead/bun/ribbon, farRIGHTstaff grip/bothends and bothlegs remain exactRGBA or natural neararm occlusion as explicitlybounded.",
+    "Original nearLEFT forwardheel/toe-up walkingcontact intent remains unchanged; no groundZ derived from decorativegoldtoetips."
+  ],
+  "constant_body_unit_calibration": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NW-walk-dc5da66b-body-unit-C2048-independent-calibration-v01.json",
+    "sha256": "a18d90b02183bd33567f2992b7f1079de306e620a601a85168297281076ab013",
+    "bytes": 3919
+  },
+  "C_fixed_for_all_future_poses": 2048,
+  "unit_factor_fixed": 2.0,
+  "NW_next_planted_contact_relative_root_delta_native": [
+    111.35431880224218,
+    100.21888692201796
+  ],
+  "private_image_ledger_immutable": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NW-backswing-view11-frozen.json",
+    "sha256": "2169badadfcc73204641db96278ee0ef3ccd3e997e13dde8295e04a8edce6961",
+    "bytes": 5609
+  },
+  "source_pose_quality_pass": true,
+  "next_authoring_step": "Proceed immediately to actualLOAD1 using this source atsameC/density, genuine body/hip/knee/foot articulation and exact source-relative plantedfootclock; no root/C-only substitute.",
+  "full_six_source_status": "NOT_AVAILABLE",
+  "whole_cycle_physics_status": "PENDING_ACTUAL_LOAD_TERMINAL_AND_COMPLETE6",
+  "actual_game_binding_status": "PENDING_ROOT_ACTUAL_STAGING",
+  "clip_completed": false,
+  "actor_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}
