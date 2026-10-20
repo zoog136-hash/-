@@ -1,0 +1,229 @@
+{
+  "schema": "TWILIGHT_EXACT_SOURCE_NUMERIC_PACK_IMAGE0_BINDING_PASS_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T16:29:51.053705+00:00",
+  "actor": "Mythic413",
+  "direction": "W",
+  "action": "HIT",
+  "binding_status": "PASS",
+  "source_visual_status": "PASS",
+  "request": {
+    "path": "/workspace/scratch/mythic413-W-hit-actual-packed-r001-20261020/request-WhitSixActualRig01.json",
+    "sha256": "74aa29c9b216f6d9f557f5dffa85cb6a00a14db1cd8132ea69b7661a7e1a05a8"
+  },
+  "original_raw_PACK": {
+    "path": "/workspace/scratch/mythic413-W-hit-actual-packed-r001-20261020/thunder_female-W-hit-six-actual-poses-r001.png",
+    "sha256": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+    "bytes": 3257522,
+    "dimensions": [
+      3072,
+      4608
+    ],
+    "packing_path": "/workspace/scratch/mythic413-W-hit-actual-packed-r001-20261020/thunder_female-W-hit-six-actual-poses-r001.packing.json",
+    "packing_sha256": "a0b12875f1ddc66aeb778ae84ac593a469be7f5d2051be8c941cb8448dd84cc7",
+    "plan_sha256": "45a2022a163194bc751d0f6fae2c4bf58613ff870356e74b63ba5e3f3cc04f22"
+  },
+  "SOURCE_PASS": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/W-IDLE6-HIT6-real-cloth-final-actual-native-SOURCE-PASS-v01.json",
+    "sha256": "d04097bd07b68fca23dbe433a95e710504d48e01c61b4882764400f74518e980",
+    "exact_action_contract": {
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/W-HIT6-actual-own-native-body-head-LEFTguard-source-contract-v01.json",
+      "sha256": "89120e6f69f82962f7e38b4cdb2dbe2dbf0d0efdcfe884209f9dd2661e596eb5",
+      "bytes": 23679
+    }
+  },
+  "independent_numeric_rebind_PASS": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/W-final-real-cloth-v03-independent-twelve-source-floor-and-unchanged-operator-rebind-v01.json",
+    "sha256": "9b8ffe749eef954a5d9b462e097d681ee0fa8db1dc3f3f07573af25fad0b2e5f",
+    "scope": "Exact final12 including restored LEFT material support/new mesh vertices, same controls/operators/IDLE5weights+CFG, fixed soles+Rgear/lowerbody, painted floor partition. No assertion that changed material/armnode/meshcoverage SHAs are identical."
+  },
+  "authored_pose_bindings": [
+    {
+      "phase": 0,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/phase0-actual-W-hit-stable_guard-v01/thunder_female-W-hit-phase0-stable_guard-actual-native-v01.png",
+      "source_sha256": "8823f8919033617f5dade050650255315c29ca47f1718daddb121fb207235efc",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "ec37d6e2c69077ad48505e4a795ff0b0f8da1852dd890427b850d3c3d0e45cf3",
+      "atlas_origin": [
+        0,
+        0
+      ],
+      "runtime_region": [
+        464,
+        145,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        774.0833333333334,
+        1119.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 1,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/phase1-actual-W-hit-impact_response-v01/thunder_female-W-hit-phase1-impact_response-actual-native-v01.png",
+      "source_sha256": "9503ba6d6e2515eeb61ccbe5cbc5d71039f37659e582eee7ef7dad4c45ac111d",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "7b4641f850d53034aaaa7d3cdefcbb61991bcba2904b803fe26851fd25920450",
+      "atlas_origin": [
+        1536,
+        0
+      ],
+      "runtime_region": [
+        2000,
+        145,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        2310.0833333333335,
+        1119.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 2,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/phase2-actual-W-hit-maximum_recoil-v01/thunder_female-W-hit-phase2-maximum_recoil-actual-native-v01.png",
+      "source_sha256": "cb39ee937da92f3885f7ab4d25235a51e816896656882f125fa0d6eea57f0ecb",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "c825a5f8ec19aabd0e77ab1d2e39695b82bcb81aed23b4e4c8ed6218baf2d0e4",
+      "atlas_origin": [
+        0,
+        1536
+      ],
+      "runtime_region": [
+        464,
+        1681,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        774.0833333333334,
+        2655.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 3,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/phase3-actual-W-hit-counterbalance-v01/thunder_female-W-hit-phase3-counterbalance-actual-native-v01.png",
+      "source_sha256": "f24032ac26e29b362fdae8cc8f3153025adc196d519332693f386b9f0b169d1f",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "5dd3dc7e6e5eac859769d34667e493b16910c95ee3d9e25ef1fe2094d327e37f",
+      "atlas_origin": [
+        1536,
+        1536
+      ],
+      "runtime_region": [
+        2000,
+        1681,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        2310.0833333333335,
+        2655.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 4,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/phase4-actual-W-hit-regaining_control-v01/thunder_female-W-hit-phase4-regaining_control-actual-native-v01.png",
+      "source_sha256": "b50e22a426417ecd01cb90c66d8f9c57b47b7a2c6902e69a73738e89d941a556",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "e47bbcb20cd9bd991413e1252868f6fb038cf578f69958848340239fed727f8d",
+      "atlas_origin": [
+        0,
+        3072
+      ],
+      "runtime_region": [
+        464,
+        3217,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        774.0833333333334,
+        4191.92273758384
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 5,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v03/phase5-actual-W-hit-regained_guard_settled-v01/thunder_female-W-hit-phase5-regained_guard_settled-actual-native-v01.png",
+      "source_sha256": "41be78b71007f332d523b0a706fc8f0640bd4965aaa837044c2f89978016ac66",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "6446e1c72848513e501f5a059e6f6a7dbd5b5992629c61afb6272d85093f4a1f",
+      "atlas_origin": [
+        1536,
+        3072
+      ],
+      "runtime_region": [
+        2000,
+        3217,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        2310.0833333333335,
+        4191.92273758384
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    }
+  ],
+  "fixed_registration": {
+    "physical_C": 2560,
+    "bodyunit": 2.5,
+    "logical_canvas": 1024,
+    "common_unpadded_root_exact": [
+      646.0833333333334,
+      991.9227375838406
+    ],
+    "storage_translation": [
+      128,
+      128
+    ],
+    "common_runtime_integer_root": [
+      646,
+      992
+    ],
+    "common_rounding_delta": [
+      -0.08333333333337123,
+      0.07726241615944218
+    ],
+    "runtime_layout_canvas": 2048,
+    "per_pose_C_root_fit_or_resample": false
+  },
+  "role_cycle": "HIT.22s one-shot source-reviewed",
+  "conditions_and_limits": [
+    "No new image input/view/capture. Decoded atlas cells compared exact RGBA against each SOURCE-approved1536 pose, including hidden RGB/alpha.",
+    "Upstream request pending SOURCE label remains immutable; independent final SOURCEd040 resolves that gate for these exact bindings.",
+    "Inherited W once margin18px versusrequested32px stays disclosed; no source cut/storage loss. No original fullbody/source/C audit repeated.",
+    "Game playback/contact-window/role integration remains root validation. This exact PACK does not add whole-actor approval."
+  ],
+  "image_inputs_added": 0,
+  "image_ledger_cumulative_bytes": 1914513,
+  "actor_approvals_added": 0,
+  "detailed_actor_approval_count": "2/31",
+  "whole_actor_approved": false,
+  "game_OR_Godot_approved": false,
+  "sourcePNG_git_request_PACK_mutations": false
+}

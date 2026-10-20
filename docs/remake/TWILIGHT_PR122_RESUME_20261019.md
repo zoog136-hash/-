@@ -246,3 +246,13 @@
 - source archive v40–v45는 각 단계 [skip ci] 커밋·정상 push로 `ddb88b5341056221641143c3bf7846eb245ae4df`까지 보존. v46은 SE DEATH v02–v05 실제 원화·원재질·실패 단계와 실물 skin-HOLD/수치 증거를 별도로 보존하며 승인 수치를 올리지 않음.
 - 다음 게임 연결: SW IDLE/HIT, SE ATTACK은 실제6 SOURCE와 exact 패킷 검토 통과. E DEATH는 원화 SOURCE 통과 후 기존 고정-root 사전검사 연결 문제를 optional canonical bridge로 격리 해결했으나, matching core3/도구/pin 적용과 기존 단위·게임 검증 전까지 런타임 채택 보류. 기존 실패 패킷과 로그 보존, 임계값 완화 없음.
 - S ATTACK의 진짜 cloak 누락703px/장창 장식 소유/팔꿈치 연결, W IDLE/HIT hidden-cloth 새 원화 합성, SE DEATH skin 샘플링 최종 검토를 계속 진행. SW/W ATTACK 전용 제작자와 S→SW→W DEATH 제작자 작업 지속. 새 원화는 채팅에 첨부하지 않음. PR100 재개/완료 개체 재제작/수동 CI 없음.
+
+
+### 2026-10-20 — SW IDLE r035 / W 실제12 최종 / 남은 RUN5 품질 확정
+
+- SW IDLE r035 `3176db8790cbc181c12475a6931c6ff536f6a712`은 실제 게임 범위 검증·정상 push 완료. 소스 보존 v47–v49도 각 [skip ci] 커밋·정상 push로 `c643576987d60ed966eb364d0bfcb9e076da667f`까지 저장.
+- 413번 현재 연결 35동작/210자세, 전체131동작/786자세. 필수40 중28 연결 및12 미연결. 상세 승인2/31·미완료29종·기존405/498·별도부족14·색상/공유54 유지.
+- 필수 연결 수에 포함된 E/SE/S/SW/W RUN5는 상세 품질 보완도 별도로 남아 있다. 미승인 PR122 v01 소스를 직접 확인한 audit `b3bec3966c234d87f37b838e10849d1f345d79f72648c72369e789aa4707cee4`: 0/3 접지에 같은 선행 다리 반복, SW 진행이 우측, E/SE 장비·의상이 최신 고유 원화와 다름. 원본은 보존하며 이5개만 새 고유 원화 기반 번갈아 딛는 실제6으로 제작. 이미 완료된 N/NW/NE RUN·승인267/393·PR100은 재제작하지 않는다. 이5개는 새 완료 수량에 넣지 않는다.
+- W 대기/피격 실제12는 새 고유 hidden-cloth 합성 후 SOURCE `d04097bd` 및 실제12 지원영역 수치 재결합 `9b8ffe74` 통과, 게임용 exact PACK 두종도 검토 통과. 원C2560/root/프로필/boots·RIGHTgear와 원래 동작 연산자 유지. source rim/finger 복원으로 늘어난 mesh 지원영역은 별도로 기록했고 확인했다.
+- v50은 W 최종12·실제사용 재질/연산자·원본·검토·패킷 및 S 사망의 최초90 실제 native 부품을 보존한다. S 사망 wholeactor PNG/완성 계상은 아직0. S cloak703 및 원래 cloak-tip387은 독립 소유 확인과 국소 SOURCE 통과, S 공격 LEFT 어깨 재질 경계는 아직 보완 중.
+- 다음: SW HIT r036 → SE ATTACK r037 → matching optional canonical bridge 적용·기존 단위/실제 게임 검증 후 E/SE DEATH. W 대기/피격도 검증된 패킷으로 연결. S/SW/W 전용 공격·사망과 남은5 RUN 제작 지속. 이미지 채팅 첨부·수동/전체CI·기존승인 가산 없음.
