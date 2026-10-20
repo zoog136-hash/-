@@ -14526,6 +14526,308 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "N",
+      "role": "death",
+      "version": "NdeathSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-death-NdeathSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-fkl74g_u/reviewed-source.png",
+      "bytes": 2117836,
+      "sha256": "342d0ad9b651848313871346130131c3ffe0ebb36ce0eaef3b4da921df623792",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "342d0ad9b651848313871346130131c3ffe0ebb36ce0eaef3b4da921df623792",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "342d0ad9b651848313871346130131c3ffe0ebb36ce0eaef3b4da921df623792",
+        "base_geometry_sha256": "636c7164e7aa60c03d19ddcf34a53cb22fb455d65a30438c9627f4d90b0a2db1",
+        "direction": "N",
+        "regions": [
+          [
+            527,
+            270,
+            483,
+            861
+          ],
+          [
+            2058,
+            342,
+            535,
+            789
+          ],
+          [
+            516,
+            1939,
+            689,
+            728
+          ],
+          [
+            2028,
+            2002,
+            799,
+            601
+          ],
+          [
+            486,
+            3795,
+            828,
+            380
+          ],
+          [
+            2020,
+            3839,
+            830,
+            333
+          ]
+        ],
+        "nearest_owner_sha256": "440e9db3091eeaed1a8a7d7402357c30012950f0dd13be100d75dc0c29a59669",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 5cd6aa917ca1fc07d44a37fb67daee383f6c1a43dbb42391fb4cc16c3ccabadf"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "342d0ad9b651848313871346130131c3ffe0ebb36ce0eaef3b4da921df623792",
+        "source_RGBA_sha256": "24638fb667b567ffd5e5898f271776bfc9aac22791cfb367688db93e76359588",
+        "base_geometry_sha256": "636c7164e7aa60c03d19ddcf34a53cb22fb455d65a30438c9627f4d90b0a2db1",
+        "derived_geometry_sha256": "0dc643765eea2a21c1112b928b9cb2c94564d8739f8d33c4735785a04cc700f8",
+        "review_sha256": "f188e929b44f060ac02a7ea182ec1513bd476bc05f03b9e2d9b5b539c7c3f508",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 5cd6aa917ca1fc07d44a37fb67daee383f6c1a43dbb42391fb4cc16c3ccabadf",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 723282,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            527,
+            270,
+            483,
+            861
+          ],
+          [
+            2058,
+            342,
+            535,
+            789
+          ],
+          [
+            516,
+            1939,
+            689,
+            728
+          ],
+          [
+            2028,
+            2002,
+            799,
+            601
+          ],
+          [
+            486,
+            3795,
+            828,
+            380
+          ],
+          [
+            2020,
+            3839,
+            830,
+            333
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "440e9db3091eeaed1a8a7d7402357c30012950f0dd13be100d75dc0c29a59669",
+        "foreground_owner_sha256": "8de5dc15a62ac8d5f70e7ed17adbc4a95f7dc514ec01270b0df326c6a63dfe26",
+        "detached_pixels": 84,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2283,
+              515,
+              2284,
+              516
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1310.7936527157888,
+            "owner_margin_min": 1307.9652255910426
+          },
+          {
+            "row": 0,
+            "pixels": 3,
+            "bbox": [
+              720,
+              519,
+              722,
+              522
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1402.7918591152431,
+            "owner_margin_min": 1400.2595957733186
+          },
+          {
+            "row": 0,
+            "pixels": 10,
+            "bbox": [
+              881,
+              672,
+              888,
+              676
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 1202.4458407762072,
+            "owner_margin_min": 1198.8402895007432
+          },
+          {
+            "row": 1,
+            "pixels": 14,
+            "bbox": [
+              2416,
+              729,
+              2423,
+              734
+            ],
+            "nearest_max": 10.0,
+            "second_nearest_min": 1291.6799139105633,
+            "owner_margin_min": 1281.6799139105633
+          },
+          {
+            "row": 0,
+            "pixels": 8,
+            "bbox": [
+              767,
+              999,
+              769,
+              1003
+            ],
+            "nearest_max": 10.04987562112089,
+            "second_nearest_min": 968.3491106000976,
+            "owner_margin_min": 958.2992349789766
+          },
+          {
+            "row": 0,
+            "pixels": 8,
+            "bbox": [
+              812,
+              999,
+              814,
+              1003
+            ],
+            "nearest_max": 10.04987562112089,
+            "second_nearest_min": 968.0129131370097,
+            "owner_margin_min": 957.9630375158888
+          },
+          {
+            "row": 1,
+            "pixels": 8,
+            "bbox": [
+              2303,
+              999,
+              2305,
+              1003
+            ],
+            "nearest_max": 10.04987562112089,
+            "second_nearest_min": 1017.0044247691354,
+            "owner_margin_min": 1006.9579906218104
+          },
+          {
+            "row": 1,
+            "pixels": 8,
+            "bbox": [
+              2348,
+              999,
+              2350,
+              1003
+            ],
+            "nearest_max": 10.04987562112089,
+            "second_nearest_min": 1018.1321132348198,
+            "owner_margin_min": 1008.0822376136989
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              720,
+              2137,
+              722,
+              2139
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1010.0712846131207,
+            "owner_margin_min": 1007.8352166356209
+          },
+          {
+            "row": 2,
+            "pixels": 12,
+            "bbox": [
+              873,
+              2306,
+              880,
+              2311
+            ],
+            "nearest_max": 13.341664064126334,
+            "second_nearest_min": 1179.2866487839162,
+            "owner_margin_min": 1167.6247449942257
+          },
+          {
+            "row": 2,
+            "pixels": 8,
+            "bbox": [
+              767,
+              2535,
+              769,
+              2539
+            ],
+            "nearest_max": 10.04987562112089,
+            "second_nearest_min": 1263.001583530282,
+            "owner_margin_min": 1252.9536873192217
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2297,
+              2554,
+              2298,
+              2555
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1096.3576058932597,
+            "owner_margin_min": 1094.3576058932597
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2355,
+              2554,
+              2356,
+              2555
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1154.3396380615195,
+            "owner_margin_min": 1152.3396380615195
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -14650,9 +14952,10 @@
     "transform:267:SE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
     "transform:413:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-hit-NhitSixActualRig01.png",
     "transform:413:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-attack-NattackSixActualRig02.png",
-    "transform:413:NW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-hit-NWhitSixActualRig01.png"
+    "transform:413:NW:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-hit-NWhitSixActualRig01.png",
+    "transform:413:N:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-death-NdeathSixActualRig01.png"
   },
-  "selected_detailed_action_native_poses": 402,
+  "selected_detailed_action_native_poses": 408,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -19577,6 +19880,48 @@
         2048,
         2048,
         2048
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-death-NdeathSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "342d0ad9b651848313871346130131c3ffe0ebb36ce0eaef3b4da921df623792",
+      "direction": "N",
+      "role": "death",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          791,
+          1046
+        ],
+        [
+          2327,
+          1046
+        ],
+        [
+          791,
+          2582
+        ],
+        [
+          2327,
+          2582
+        ],
+        [
+          791,
+          4118
+        ],
+        [
+          2327,
+          4118
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        1920,
+        1920,
+        1920,
+        1920,
+        1920,
+        1920
       ],
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
