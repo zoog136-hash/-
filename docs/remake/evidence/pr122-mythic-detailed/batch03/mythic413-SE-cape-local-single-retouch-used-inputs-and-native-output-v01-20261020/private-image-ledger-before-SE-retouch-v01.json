@@ -1,0 +1,38 @@
+{
+  "schema": "PRIVATE_SE_RETOUCH_CONTINUOUS_IMAGE_LEDGER_V01",
+  "agent": "/root/mythic413_e_base_private_generation_fresh",
+  "prior_cumulative_bytes": 4234988,
+  "prior_immutable_ledger": "/workspace/scratch/mythic413-E-cape-clearplate-private-retouch-fresh-20261020-v01/private-image-ledger-after-retouch-v01.json",
+  "prior_ledger_sha256": "eb942cff7b08170aeb33912fe3a517e54b432e79199e2a82fa6f2cfea5ddb06b",
+  "entries": [
+    {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/original-SE-cape-and-foreground-pole-native-crop-250.png",
+      "sha256": "20805489172c493bee15ee3ee80d4e79b6e5386e4b1d983b8fb13a5b969cd172",
+      "bytes": 92486,
+      "actual_service_input": true,
+      "private_view": true
+    },
+    {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-SE-real-cape-native-mask-250.png",
+      "sha256": "33c5104adbfa41b99d2f150583f07925d1350c9a1604257aa01bbb22795dd39b",
+      "bytes": 1052,
+      "actual_service_input": true,
+      "private_view": true
+    }
+  ],
+  "cumulative_bytes": 4328526,
+  "working_limit": 6000000,
+  "hard_limit": 7000000,
+  "counter_reset": false,
+  "parent_image_forwarded": false,
+  "budget": {
+    "prior_cumulative_bytes": 4234988,
+    "new_input_bytes": 93538,
+    "expected_new_raw_bytes": 1300000,
+    "maximum_new_preview_bytes": 80000,
+    "expected_final_cumulative_bytes": 5708526,
+    "conservative_working_limit": 6000000,
+    "conservative_hard_limit": 7000000,
+    "raw_headroom_before_any_preview": 1671474
+  }
+}
