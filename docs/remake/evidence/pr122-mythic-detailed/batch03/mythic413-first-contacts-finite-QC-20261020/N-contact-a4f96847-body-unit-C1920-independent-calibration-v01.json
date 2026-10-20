@@ -1,0 +1,86 @@
+{
+  "status": "PASS_ONE_CONSTANT_NATIVE_BODY_UNIT_C1920_CALIBRATION_ONLY",
+  "source": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r001/N-contact0-service-raw1024.png",
+    "sha256": "a4f96847b5a786b96087f65e1c8736b657e19e719323b5cddca51cf75c2470a8",
+    "bytes": 489426
+  },
+  "actual_body_landmarks": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r001/actual-N-contact0-body-landmarks-v01.json",
+    "sha256": "963ee2bf861be105328238dec9342d9c26297d6953913182d22eb5a6be4d3e29",
+    "bytes": 8273
+  },
+  "retained_body_reference": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/body-reference-measurements/existing-W-E-body-landmarks-approx-v01.json",
+    "sha256": "ac962ad6116e8222a007d170cb924c3d855d925cfe12de8877717a31fbb325f1",
+    "bytes": 6419
+  },
+  "back_body_reference_source_sha256": "cfd051b8b3589dddca9e74af68162fc2f9fe1f5dbcaf5de5cdf3086f3772e1f8",
+  "native_unit_factor": 1.875,
+  "constant_virtual_canvas": [
+    1920,
+    1920
+  ],
+  "fit_basis": "Actual torso against both retainedW/E plus backbody shoulderwidth and upperarm; no alpha normalization or source resampling. Projected limbs are not invariant3D bone lengths.",
+  "torso_bridges": {
+    "W": {
+      "length": 85.00588214941364,
+      "new_normalized": 85.3599958346349,
+      "relative_error": 0.0041657550779701236
+    },
+    "E": {
+      "length": 83.0,
+      "new_normalized": 85.3599958346349,
+      "relative_error": 0.028433684754637367
+    }
+  },
+  "back_body_comparisons": {
+    "shoulder_width": {
+      "actual": 141.01418368376991,
+      "normalized": 75.20756463134396,
+      "baseline": 73.02739212103907,
+      "relative_error": 0.029854174536198208
+    },
+    "upperarm": {
+      "actual": 89.5377015563835,
+      "normalized": 47.7534408300712,
+      "baseline": 50.92150822589606,
+      "relative_error": -0.0622147203843767
+    },
+    "forearm": {
+      "actual": 101.78899744078434,
+      "normalized": 54.28746530175165,
+      "baseline": 35.510561809129406,
+      "relative_error": 0.5287695416802696,
+      "limitation": "Large2D projected forearm difference remains visible and is NOT normalized away; occluded elbow/camera-depth pose may contribute. No exact3D invariant claim or full limb approval."
+    }
+  },
+  "oldprofile_scalar_and_clock": "Unchanged12.5/ref210/.237068965517",
+  "Player_source_to_world_factors_xy": [
+    0.11379310344816,
+    0.12643678160906666
+  ],
+  "N_required_planted_source_relative_root_delta": [
+    0,
+    132.8727272728626
+  ],
+  "virtual_foot": [
+    960,
+    1200
+  ],
+  "source_contact_status": "HOLD_PENDING_GENUINE_FORWARD_CONTACT_CORRECTION_OR_JUSTIFIED_3D_FOOT_AND_BONE_REGISTRATION",
+  "conditional_contact_evidence": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r001/conditional-C1920-registered-contact0-guide.json",
+    "sha256": "7d28915bff820155eeffcf067da044da6256153bf9cb94d9f47d5d6b35cb2c2e",
+    "bytes": 2948
+  },
+  "conditional_contact_finding": "Under nape-registered v05 body/ground model expected Lheel612.94,797.16 versus actual628.5,857; forwardplacement short about59.84rawY, not an inference from lowestfootY. This conditional model must not be silently treated as actual runtime ground proof.",
+  "immutable_private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-body-reference-view07-frozen.json",
+    "sha256": "355487047d555ec4f1810c3e6515892438ace6ee0c64ded96dc4bd1fe0b1af98",
+    "bytes": 3757
+  },
+  "source_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

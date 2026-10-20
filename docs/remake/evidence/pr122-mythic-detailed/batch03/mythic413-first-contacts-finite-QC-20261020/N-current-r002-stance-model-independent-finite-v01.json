@@ -1,0 +1,66 @@
+{
+  "status": "PASS_FINITE_CURRENT_SOURCE_CONTACT_LOAD_TERMINAL_MODEL_ONLY",
+  "author_proof": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/stance-current0-load1-terminal2-model-r001/feasibility-proof.json",
+    "sha256": "848f8f9816cd3ee281f080a1001c11386783e574500ebf78d4b75404ca752af2"
+  },
+  "independent_checks": [
+    "Same61+61bones and24rigidsole allposes",
+    "SameC1920/native1.875 andsameprojection/origin/root acrossposes",
+    "H20highheel calibrates currentvisibleankle; H6barefoot scaffold excluded",
+    "Heel0\u21921 andtoe1\u21922 exact132.8727273sourceY means existingPlayer16.8world/phase leavesactualcontactfixed",
+    "No soles penetrate modeledground"
+  ],
+  "phase_reach_and_bob": [
+    {
+      "phase": "actual_contact0",
+      "reach_margin": 36.61773276626455,
+      "hip_Z": 98.0,
+      "knee_flexion_degrees": 91.16931266108416
+    },
+    {
+      "phase": "load1",
+      "reach_margin": 35.698291105496764,
+      "hip_Z": 102.0,
+      "knee_flexion_degrees": 89.95392194607368
+    },
+    {
+      "phase": "terminal2",
+      "reach_margin": 7.511637337233054,
+      "hip_Z": 100.0,
+      "knee_flexion_degrees": 40.421174355347176
+    }
+  ],
+  "pivot_checks": [
+    {
+      "phases": [
+        0,
+        1
+      ],
+      "same_contact": "heel",
+      "native_delta": [
+        0.0,
+        132.87272727286256
+      ]
+    },
+    {
+      "phases": [
+        1,
+        2
+      ],
+      "same_contact": "toe",
+      "native_delta": [
+        0.0,
+        132.87272727286256
+      ]
+    }
+  ],
+  "scope_caveats": [
+    "3Dsource joints are underdetermined/occluded; this proves finite candidate feasibility, not actualpixel rigidentity or finalphysicalPASS.",
+    "Modeledcontact/load knees~90degrees are deep; actualLOAD1 mustlook like naturalWALK and retainbody/legshape; no crouch acceptance from math.",
+    "Actualnextsource mustgenuinelyarticulate while onlyinversepacking translations maycompensatecanvas; no C/rootfaking."
+  ],
+  "next_action": "AuthoroneactualLOAD1againstcurrent332ef97 atfixedbody/C; actualsource andpairedcontact reviewbeforeterminal production",
+  "source_approved": false,
+  "actor_approval_added": 0
+}
