@@ -7,6 +7,10 @@ var decoded_pixels: int = 0
 var peak_decoded_pixels: int = 0
 var clock: float = 0.0
 const MAX_VISIBLE_PIXELS: int = 24*1024*1024
+# At most two synchronous 1024px PNG decode/foreground-mask uploads per
+# refresh. Loading every new tile in one frame can stall Android rendering.
+# Keep the current visibility and texture-eviction rules unchanged.
+const MAX_NEW_CHUNKS_PER_REFRESH: int = 2
 const LAYERS=preload("res://scripts/maps/native_png_layers.gd")
 var budget_limited: bool=false
 
@@ -92,8 +96,10 @@ func refresh_visible() -> void:
 		if wanted.has(str(sprite.get_meta("source_file",filename))): continue
 		decoded_pixels-=int(sprite.get_meta("pixels"))
 		remove_child(sprite);sprite.free();chunks.erase(filename)
+	var loaded_this_refresh: int = 0
 	for filename: String in wanted:
 		if chunks.has(filename): continue
+		if loaded_this_refresh >= MAX_NEW_CHUNKS_PER_REFRESH: break
 		var row: Dictionary=wanted[filename]
 		var image:=Image.new()
 		if image.load(native_field.png_root+"/"+filename)!=OK:
@@ -103,4 +109,5 @@ func refresh_visible() -> void:
 			pieces=LAYERS.split(image,Vector2(row.position[0],row.position[1]),field.data.get("runtime_foreground",[]))
 		add_image(filename,filename,row,image)
 		for piece: Dictionary in pieces: add_image(filename+"#"+str(piece.id),filename,piece,piece.image)
+		loaded_this_refresh += 1
 

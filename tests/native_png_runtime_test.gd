@@ -52,7 +52,9 @@ func inspect_foreground(renderer: NativePngRenderer, field: NativePngField) -> v
 		var foot:=Vector2(row.foot_image[0],row.foot_image[1])
 		world.player.global_position=foot+Vector2(200,0)
 		world.player.clear_click_path();world.player.velocity=Vector2.ZERO
-		world.player.camera.reset_smoothing();world.player.camera.force_update_scroll();renderer.refresh_visible()
+		world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
+		# Staged decoding is a frame-budget policy, not missing source pixels.
+		for _load_pass: int in range(32): renderer.refresh_visible()
 		var probe:=DepthProbe.new();probe.position=foot-Vector2(0,10);world.add_child(probe)
 		await ticks(3);await RenderingServer.frame_post_draw
 		var target:=foot-Vector2(0,40)

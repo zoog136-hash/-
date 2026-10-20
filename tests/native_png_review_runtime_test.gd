@@ -62,7 +62,9 @@ func run() -> void:
 			var foot:=Vector2(cut.foot_image[0],cut.foot_image[1])
 			world.player.global_position=foot+Vector2(200,0);world.player.velocity=Vector2.ZERO
 			world.player.clear_click_path();world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
-			renderer.refresh_visible();await ticks(3)
+			# The runtime now stages two decoded source chunks per refresh.
+			for _load_pass: int in range(32): renderer.refresh_visible()
+			await ticks(3)
 			var matching: Array=[]
 			for key: String in renderer.chunks:
 				var sprite: Sprite2D=renderer.chunks[key]
@@ -115,7 +117,7 @@ func run() -> void:
 			check(not field.walkable(Vector2(raw[0],raw[1])),mid+" corrected real object foundation blocks navigation")
 		world.player.camera.zoom=Vector2.ONE*.12;world.player.camera.force_update_scroll()
 		var requested: int=renderer.forecast_pixels(renderer.visible_rows(world.player.camera))
-		renderer.refresh_visible()
+		for _load_pass: int in range(32): renderer.refresh_visible()
 		check(requested<=renderer.MAX_VISIBLE_PIXELS or (renderer.budget_limited and world.player.camera.zoom.x>.12),mid+" over-budget view is constrained before allocation; small maps may fit entirely")
 		check(renderer.decoded_pixels<=renderer.MAX_VISIBLE_PIXELS,mid+" actual textures stay below budget")
 		for filename: String in renderer.visible_rows(world.player.camera):

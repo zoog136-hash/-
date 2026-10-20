@@ -299,7 +299,13 @@ func _process(delta: float) -> void:
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
 		if not is_instance_valid(monster):
 			slot.remaining = maxf(0.,float(slot.remaining)-delta)
-			if float(slot.remaining)<=0. and (refresh or str(slot.region.get("mode",""))=="boss") and _zone_active(slot.region): _spawn_slot(slot)
+			if float(slot.remaining)<=0. and (refresh or str(slot.region.get("mode",""))=="boss") and _zone_active(slot.region):
+				_spawn_slot(slot)
+				# Full/blocked regions can fail all 64–160 candidate probes. Do not
+				# repeat that costly search at every 0.4s wake until a later retry.
+				# Successful spawns and boss cooldown semantics remain unchanged.
+				if not is_instance_valid(slot.monster) and str(slot.region.get("mode","normal"))!="boss":
+					slot.remaining = 2.0
 		elif refresh:
 			var distance: float = monster.global_position.distance_to(world.player.global_position)
 			monster.set_physics_process(distance<float(field.data.streaming.monster_sleep_distance))
