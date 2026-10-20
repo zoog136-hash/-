@@ -17530,6 +17530,581 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "E",
+      "role": "hit",
+      "version": "EhitSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-hit-EhitSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-_7rowd6b/reviewed-source.png",
+      "bytes": 4114675,
+      "sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+        "base_geometry_sha256": "3409adb085919a36910febe613c1b1d7a72b029abd53d27814f8a724056cfb94",
+        "direction": "E",
+        "regions": [
+          [
+            396,
+            133,
+            759,
+            1218
+          ],
+          [
+            1932,
+            133,
+            750,
+            1218
+          ],
+          [
+            396,
+            1669,
+            720,
+            1218
+          ],
+          [
+            1932,
+            1669,
+            740,
+            1218
+          ],
+          [
+            396,
+            3205,
+            761,
+            1218
+          ],
+          [
+            1932,
+            3205,
+            740,
+            1218
+          ]
+        ],
+        "nearest_owner_sha256": "f619092f89bedef34cf093cc32ad37cb405e2aef1fca69121007074249331bf6",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 33808cce1c0818f42fe740d26118ff0c36ccc265b3f8ba390373113fbbfbdd27"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+        "source_RGBA_sha256": "369ecbd223bfe983251ea87991f4d3c54634c345f236cf81f02717dccb0dc1c3",
+        "base_geometry_sha256": "3409adb085919a36910febe613c1b1d7a72b029abd53d27814f8a724056cfb94",
+        "derived_geometry_sha256": "3409adb085919a36910febe613c1b1d7a72b029abd53d27814f8a724056cfb94",
+        "review_sha256": "120d8403cd0f4b7b413b7263f1b01e23c5751681369c7bbefd60091879acdd37",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 33808cce1c0818f42fe740d26118ff0c36ccc265b3f8ba390373113fbbfbdd27",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 2199885,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            396,
+            133,
+            759,
+            1218
+          ],
+          [
+            1932,
+            133,
+            750,
+            1218
+          ],
+          [
+            396,
+            1669,
+            720,
+            1218
+          ],
+          [
+            1932,
+            1669,
+            740,
+            1218
+          ],
+          [
+            396,
+            3205,
+            761,
+            1218
+          ],
+          [
+            1932,
+            3205,
+            740,
+            1218
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "f619092f89bedef34cf093cc32ad37cb405e2aef1fca69121007074249331bf6",
+        "foreground_owner_sha256": "ecd508ea9746f8f39a5ee0846d17e7256a7cdad1d3bb6557bd37a1fc15c43c20",
+        "detached_pixels": 98,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              691,
+              470,
+              692,
+              471
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1215.4028138851745,
+            "owner_margin_min": 1212.5743867604283
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              629,
+              569,
+              630,
+              570
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1109.2939195722656,
+            "owner_margin_min": 1106.2939195722656
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              569,
+              2166,
+              570
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1027.8229419506065,
+            "owner_margin_min": 1024.8229419506065
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              629,
+              573,
+              630,
+              574
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1105.316696698281,
+            "owner_margin_min": 1102.316696698281
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              573,
+              2166,
+              574
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1027.1767131316792,
+            "owner_margin_min": 1024.1767131316792
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              629,
+              575,
+              630,
+              576
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1103.328147017015,
+            "owner_margin_min": 1100.328147017015
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              575,
+              2166,
+              576
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1026.8592892894333,
+            "owner_margin_min": 1023.8592892894333
+          },
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              2549,
+              676,
+              2551,
+              678
+            ],
+            "nearest_max": 20.518284528683193,
+            "second_nearest_min": 1114.9143464858635,
+            "owner_margin_min": 1094.3960619571803
+          },
+          {
+            "row": 0,
+            "pixels": 11,
+            "bbox": [
+              985,
+              712,
+              991,
+              716
+            ],
+            "nearest_max": 9.055385138137417,
+            "second_nearest_min": 996.1174629530395,
+            "owner_margin_min": 987.1174629530395
+          },
+          {
+            "row": 1,
+            "pixels": 11,
+            "bbox": [
+              2517,
+              716,
+              2523,
+              720
+            ],
+            "nearest_max": 41.43669871020132,
+            "second_nearest_min": 1063.9257492889249,
+            "owner_margin_min": 1022.7310894408329
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              810,
+              914,
+              811,
+              915
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 814.8404751851739,
+            "owner_margin_min": 812.6044072076741
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2346,
+              914,
+              2347,
+              915
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 814.8404751851739,
+            "owner_margin_min": 812.6044072076741
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              629,
+              2105,
+              630,
+              2106
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 761.2253280074173,
+            "owner_margin_min": 758.2253280074173
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              2105,
+              2166,
+              2106
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 761.2253280074173,
+            "owner_margin_min": 758.2253280074173
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              629,
+              2109,
+              630,
+              2110
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 765.2084683274226,
+            "owner_margin_min": 762.2084683274226
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              2109,
+              2166,
+              2110
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 765.2084683274226,
+            "owner_margin_min": 762.2084683274226
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              629,
+              2111,
+              630,
+              2112
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 767.2001042752796,
+            "owner_margin_min": 764.2001042752796
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              2111,
+              2166,
+              2112
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 767.2001042752796,
+            "owner_margin_min": 764.2001042752796
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              2547,
+              2211,
+              2549,
+              2213
+            ],
+            "nearest_max": 25.0,
+            "second_nearest_min": 882.35423725395,
+            "owner_margin_min": 858.3261005993201
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              1006,
+              2220,
+              1008,
+              2222
+            ],
+            "nearest_max": 36.235341863986875,
+            "second_nearest_min": 891.5049074458311,
+            "owner_margin_min": 856.2359461895841
+          },
+          {
+            "row": 3,
+            "pixels": 12,
+            "bbox": [
+              2516,
+              2251,
+              2522,
+              2256
+            ],
+            "nearest_max": 48.25971404805462,
+            "second_nearest_min": 923.6990852003698,
+            "owner_margin_min": 878.3008252058287
+          },
+          {
+            "row": 2,
+            "pixels": 10,
+            "bbox": [
+              976,
+              2257,
+              983,
+              2260
+            ],
+            "nearest_max": 46.61544808322666,
+            "second_nearest_min": 929.8736473306467,
+            "owner_margin_min": 884.3017312951835
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              810,
+              2450,
+              811,
+              2451
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 814.8404751851739,
+            "owner_margin_min": 812.6044072076741
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2346,
+              2450,
+              2347,
+              2451
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 814.8404751851739,
+            "owner_margin_min": 812.6044072076741
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              629,
+              3641,
+              630,
+              3642
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 761.2253280074173,
+            "owner_margin_min": 758.2253280074173
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              3641,
+              2166,
+              3642
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 761.2253280074173,
+            "owner_margin_min": 758.2253280074173
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              629,
+              3645,
+              630,
+              3646
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 765.2084683274226,
+            "owner_margin_min": 762.2084683274226
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              3645,
+              2166,
+              3646
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 765.2084683274226,
+            "owner_margin_min": 762.2084683274226
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              629,
+              3647,
+              630,
+              3648
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 767.2001042752796,
+            "owner_margin_min": 764.2001042752796
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2165,
+              3647,
+              2166,
+              3648
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 767.2001042752796,
+            "owner_margin_min": 764.2001042752796
+          },
+          {
+            "row": 5,
+            "pixels": 14,
+            "bbox": [
+              2521,
+              3783,
+              2527,
+              3787
+            ],
+            "nearest_max": 5.385164807134504,
+            "second_nearest_min": 919.3606474066638,
+            "owner_margin_min": 915.2924696176996
+          },
+          {
+            "row": 4,
+            "pixels": 9,
+            "bbox": [
+              983,
+              3785,
+              990,
+              3789
+            ],
+            "nearest_max": 14.0,
+            "second_nearest_min": 921.4683933809124,
+            "owner_margin_min": 909.5253659015578
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              810,
+              3986,
+              811,
+              3987
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1106.1939251324789,
+            "owner_margin_min": 1103.9578571549791
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2346,
+              3986,
+              2347,
+              3987
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1106.1939251324789,
+            "owner_margin_min": 1103.9578571549791
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -17664,9 +18239,10 @@
     "transform:413:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-idle-NEidleSixActualRig01.png",
     "transform:413:NE:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-attack-NEattackSixActualRig02.png",
     "transform:413:NW:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-death-NWdeathSixActualRig01.png",
-    "transform:413:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-idle-EidleSixActualRig01.png"
+    "transform:413:E:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-idle-EidleSixActualRig01.png",
+    "transform:413:E:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-hit-EhitSixActualRig01.png"
   },
-  "selected_detailed_action_native_poses": 456,
+  "selected_detailed_action_native_poses": 462,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -22977,6 +23553,48 @@
       "source_sha256": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
       "direction": "E",
       "role": "idle",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          867,
+          1226
+        ],
+        [
+          2403,
+          1226
+        ],
+        [
+          867,
+          2762
+        ],
+        [
+          2403,
+          2762
+        ],
+        [
+          867,
+          4298
+        ],
+        [
+          2403,
+          4298
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2816,
+        2816,
+        2816,
+        2816,
+        2816,
+        2816
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-hit-EhitSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "8604399877a160b964503d6884d8ee1ab65de507aac1a59af29204e2f3c45f4d",
+      "direction": "E",
+      "role": "hit",
       "canvas_size": 2048,
       "source_anchors": [
         [
