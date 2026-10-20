@@ -1,0 +1,106 @@
+{
+  "schema": "pr122-native-independent-quality-v1",
+  "key": "transform:267",
+  "status": "PASS_SCOPED_NE_RUN_ACTUAL6_ONLY_ACTOR_HOLD",
+  "independent": true,
+  "reviewer": "Codex independent fresh actualquality reviewer /root/girtas_ne_final_source_and_cycle_qc_fresh; not source/layout author; no repo/Git/Godot mutation",
+  "source_selection_sha256": "dc6f022e42bb1a941879796eab15dc78042513c905fe8c5aaca917c1ba6a8a2c",
+  "reviewed_staging_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/SpriteFrames.tres",
+    "sha256": "b95e8534a4cc710b1a8e05c5faa0487f978d58159c2e8ca7bec5dceb50493352"
+  },
+  "reviewed_staging_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/NativeMotionProfile.tres",
+    "sha256": "f8b2a0a47c78b516a0acb83e09c8bcabd1c7dd9c7d833f0820e873db7f8e8da4"
+  },
+  "effective_profile_sha256": "2184e9c5ce74555a6687440c3ff34c13cef2bc52fe39d2e18c3f90910d7be2c1",
+  "checks": {
+    "identity_equipment": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "compass8": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "anatomy_continuity": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "motion_specificity": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "loops_transitions": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "runtime_scale_footing": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "attack_contact": "NOT_APPLICABLE_TO_LOCOMOTION_TRACK",
+    "hit_recovery": "NOT_APPLICABLE_TO_LOCOMOTION_TRACK",
+    "death_irreversibility": "NOT_APPLICABLE_TO_LOCOMOTION_TRACK"
+  },
+  "tracks": [
+    {
+      "direction": "NE",
+      "role": "run",
+      "animation": "run_7",
+      "status": "PASS_SCOPED_CURRENT_ACTUAL_TRES_AND_PROFILE",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "242d21e5e844133f310c767e8a1ffe25bedb3e09e3eaf642d1b3544d6f258025",
+      "source_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-v03composite02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_SOURCE_AND_DIRECTLY_REVIEWED_CANDIDATE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "The actualr100 NErun track uses the identical3287 atlas and exact sixRGBA crops, margins, per-poseCs andsource anchors that were directly inspected in the new independent source/physical review.",
+        "The parsed actualprofile preserves the previously approved actualr099 pixel_scale.219105011732, proportional normalization, compensated spriteoffset and all motion literal fields; actual loop timing remains12.5fps with six.08-second poses.",
+        "Actualgeometry reads as the reviewed strong bounding run: genuine alternate FAR_LEFT and NEAR_RIGHT heel-contact/load/air phases, finite boot heel-to-forefoot rolling, positive conservativeAIRclearance and visible landing compression.",
+        "The old idle-entry contact core-pop is resolved by genuine local lowerbody source edits0/3. A23.41-world AIR5-to-contact0 registration descent remains exposed and reads as weight absorption with changed knees rather than a root-only jump.",
+        "Allthree fresh resource/Player/action marker logs PASS under exactGodot4.7.2 are bound separately; the selected actor remains unapproved pending all48 aggregation and actual production/defaultMain validation."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "2770cc348ecf32630eb4a92414fb6949cd22d664e17131207882257b22c2570f",
+          "bytes": 114507,
+          "viewed": true,
+          "functionally_exact_actual_transfer": true
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "fresh_actual_reviewed_tracks": 1,
+    "fresh_actual_reviewed_poses": 6,
+    "prior_review_exact_transfer": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/r099-reviewed47-to-r100-exact-transfer.json",
+      "sha256": "50904fe0474053d5e4ccfc643d678af3a15a8c93fee72f80e1f3811d9b5c9a96"
+    },
+    "aggregate_pass_tracks": 48,
+    "aggregate_pass_poses": 288,
+    "full48certified": false
+  },
+  "current_scoped_quality_evidence": {
+    "actual_numeric_pins": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/actual-r100-all48-numeric-pins.json",
+      "sha256": "b0af5129a37e356485f1267969faa27434de78259586ef40ea8630b059b5fd7d"
+    },
+    "actual_candidate_functional_binding": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-r100-actual-candidate-functional-binding-proof.json",
+      "sha256": "c6ea5848642e5808a7e0de0bb0b219be9be5eedd43024773d912226c5391e54b"
+    },
+    "private_encoded_image_ledger": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/private-image-ledger-through-physical-v02-final.json",
+      "sha256": "0289d05af8fa973321993ea7855848cc258c58e3ee2ea6ac0dc085fbb5089a6e",
+      "viewed_encoded_bytes": 272581
+    }
+  },
+  "quality_scope": "Independent actualcompiledTRES/profile reading and strict functional transfer from directly viewed identical source/physical candidate; three new rootGodot checks separately pinned. Prior43 imagery not reopened; all47 unchanged sourceRGBA/C/root/timing/profile/script/filterclip transferred exactly. Fullactor production/defaultMain approval not issued.",
+  "actual_default_Main_status": "PENDING_REAL_PRODUCTION_CATALOG_DEFAULT_MAIN",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}
