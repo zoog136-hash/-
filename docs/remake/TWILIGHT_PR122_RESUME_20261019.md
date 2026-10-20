@@ -100,3 +100,12 @@
 - SE/SW/W의 idle 손뒤 비노출 hilt를 새 장비로 단정한 잠정 HOLD는 현재 같은 방향 walk/attack의 원래 금색 prong 구조와 대조 후 철회했다. 기존6 원화는 그대로 유지하고, 미선택 SW hilt5 서비스 결과·요청도 보존한다. 확정된 실제 장비 오류를 면제한 것이 아니다.
 - SW run6은 원화/엄격 atlas 조립 PASS 뒤 실제 C·접지·AIR 후보 검토 중이다. NE run은 실제 반대 farLEFT 착지 e1e4f041…가 독립 PASS했고, 나머지4도 새로 제작했다. load1의 blade-tip 경계 strict HOLD는 보존하며 padding만으로 통과시키지 않고 실제 끝점 국소 복원 중이다. 나머지 성공5자세는 재제작하지 않는다.
 - 상세 완료1/31(하르파스393), 미완료30. 기르타스 개체 승인/production 기본 카탈로그 적용은 아직0; 전체48 최종 품질+실제 기본 Main 연결 검증 전에는2/31로 올리지 않는다. 기존 승인405/498·프레임 보완14·색상/공유54·combat1490 및 하르파스 승인 자료는 유지한다.
+
+
+## 2026-10-20 유일 기르타스 NE 달리기 새 원화·물리 후보 저장
+
+- 원격 추가 색상·이름 변형 작업 a2308c64242a를 fast-forward로 보존했다. 기존 색상/공유54·combat1490과 native 승인393은 변경하지 않았다. 전체/수동 CI는 실행하지 않았다.
+- SW run6 r099(87f90b3714e0) 실제 검사를 포함해 기르타스 47/48트랙·282자세의 독립 actual 범위 검토가 PASS다. 현재 실제 선택 리소스는 r099이며 NE run 새6의 게임 연결은 다음 r100 단계다. native 전체106클립/636자세·기존 승인405/498·프레임 보완14를 유지한다.
+- NE 착지0/3의 몸통 상승은 실제 하체 원화를 각1회 생성해 무릎·정강이·발을 보완했다. 최종 source0 216ac0a0…와 source3 63cb6e43…의 독립 SOURCE PASS, 다른4/고정C 보존, 새 atlas3287d0e9…의 SOURCE/물리 후보 PASS(1a23acde…)가 확보됐다. 12.5fps/.08초·실제 sole/AIR·무릎 압축/반복 흐름을 검토했다. 실제 Player·기본 Main 최종 승인은 아직 아니다.
+- 원본/실패 마스크/수정 기록은5c66bc17ba6a, 새 atlas와 source3 검토는3ba97246b04d에 정상 push했다. 본 절과 동일 커밋의 quality-corrections/girtas-NE-run-reviewed-source-physical-checkpoint-v02 index에 물리 후보20파일·검토 증거 핀을 보존했다. 공식 계약은 검토 SOURCE_REGION 내부RGBA 정확 및 alpha>16 전체 보존이며 원본 PNG 자체는 변경 없이 별도 보존한다.
+- 상세 완료1/31(393), 미완료30 유지. 다음은 NE run6 r100 연결·범위 Godot 검사→267 전체48 및 실제 기본 Main 승인, 이후 신화413 NW walk6 제작이다. PR100 재작업·새PR·main 병합·강제push를 하지 않는다.
