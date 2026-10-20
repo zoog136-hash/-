@@ -1,6 +1,82 @@
 extends RefCounted
 ## The hunting suite's real geometry/body obligations on reviewed PNG floors.
 ## Exact grid physics and source rendering have additional exhaustive suites.
+const BODY_OFFSETS := [Vector2(4,0),Vector2(-4,0),Vector2(0,4),Vector2(0,-4),
+	Vector2(2.83,2.83),Vector2(-2.83,2.83),Vector2(2.83,-2.83),Vector2(-2.83,-2.83)]
+
+static func _exact_foot(field: NativePngField, point: Vector2) -> bool:
+	if not point.is_finite() or not field.walkable(point) or not field.point_clear(point,4.0): return false
+	for offset: Vector2 in BODY_OFFSETS:
+		if not field.walkable(point+offset): return false
+	return true
+
+static func _foot_segment(field: NativePngField, from: Vector2, to: Vector2) -> bool:
+	if not field.line_clear(from,to): return false
+	var samples: int=maxi(1,ceili(from.distance_to(to)/4.0))
+	for step: int in range(samples+1):
+		if not _exact_foot(field,from.lerp(to,float(step)/samples)): return false
+	return true
+
+static func _physical_route(field: NativePngField, from: Vector2, to: Vector2) -> bool:
+	if not _exact_foot(field,from) or not _exact_foot(field,to): return false
+	# Query the solid grid independently of NativePngField.reachable. Exact
+	# endpoints must join through real, body-clear walking segments; no nearest
+	# projection or previously calculated portal reachability can prove a route.
+	var cells: Array[Vector2i]=field.astar.get_id_path(field.world_to_cell(from),field.world_to_cell(to))
+	if cells.is_empty(): return false
+	var previous: Vector2=from
+	for cell: Vector2i in cells:
+		var point: Vector2=field.cell_to_world(cell)
+		if not _foot_segment(field,previous,point): return false
+		previous=point
+	return _foot_segment(field,previous,to)
+
+static func portal_service_routes(field: NativePngField, spawn: Vector2, verify: Callable) -> Dictionary:
+	var origins: Array[Vector2]=[]
+	verify.call(_exact_foot(field,spawn),"portal graph starts at the exact body-clear entry")
+	if _exact_foot(field,spawn): origins.append(spawn)
+	var gates: Array[Dictionary]=[]
+	for portal: Dictionary in field.data.portal:
+		if str(portal.get("target_map",""))!=str(field.data.map_id): continue
+		var raw_source: Variant=portal.get("position",[])
+		var raw_target: Variant=portal.get("target_position",[])
+		var typed: bool=raw_source is Array and raw_source.size()==2 and raw_target is Array and raw_target.size()==2
+		if typed:
+			for value: Variant in raw_source+raw_target:
+				typed=typed and (value is float or value is int)
+		var source:=Vector2.INF
+		var target:=Vector2.INF
+		if typed:
+			source=Vector2(float(raw_source[0]),float(raw_source[1]))
+			target=Vector2(float(raw_target[0]),float(raw_target[1]))
+		var valid: bool=typed and int(portal.get("target_layout_revision",-1))==int(field.data.layout_revision) and _exact_foot(field,source) and _exact_foot(field,target)
+		verify.call(valid,"same-map gate has matching revision and exact body-clear endpoints "+str(portal.id))
+		if valid: gates.append({"id":str(portal.id),"from":source,"to":target})
+	var reachable_gates: Dictionary={}
+	# A new landing becomes an origin only after a proven walking route from
+	# an already accessible origin to that gate's source. A return edge cannot
+	# bootstrap an otherwise unlinked pocket into the entry component.
+	for _iteration: int in range(gates.size()+1):
+		var advanced: bool=false
+		for gate: Dictionary in gates:
+			if reachable_gates.has(gate.id): continue
+			for origin: Vector2 in origins:
+				if not _physical_route(field,origin,gate.from): continue
+				reachable_gates[gate.id]=true
+				if gate.to not in origins: origins.append(gate.to)
+				advanced=true
+				break
+		if not advanced: break
+	for gate: Dictionary in gates:
+		verify.call(reachable_gates.has(gate.id),"same-map gate is accessible through physical segments and validated gates "+str(gate.id))
+	for service: Dictionary in field.data.portal+field.data.npc_spawn:
+		var point:=Vector2(service.position[0],service.position[1])
+		var connected: bool=false
+		for origin: Vector2 in origins:
+			if _physical_route(field,origin,point): connected=true;break
+		verify.call(connected,"connected native entrance/NPC through reviewed travel graph "+str(service.id))
+	return {"validated_gates":reachable_gates.size(),"reachable_landings":origins.size()}
+
 static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 	var field: NativePngField=world.field_map
 	var result: Dictionary={"checks":0,"failures":[],"metric":{}}
@@ -18,9 +94,13 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 		var path: PackedVector2Array=field.path(spawn,target)
 		verify.call(field.walkable(target) and not path.is_empty(),"reviewed route remains connected "+str(raw))
 		for i: int in range(1,path.size()): verify.call(field.line_clear(path[i-1],path[i]),"route respects native obstacle corners")
-	for service: Dictionary in field.data.portal+field.data.npc_spawn:
-		var p:=Vector2(service.position[0],service.position[1])
-		verify.call(field.point_clear(p,4) and not field.path(spawn,p).is_empty(),"connected native entrance/NPC "+str(service.id))
+	var portal_routes: Dictionary={}
+	if str(field.data.map_id)=="aden_world" and bool(field.data.get("portal_connected_regions",false)):
+		portal_routes=portal_service_routes(field,spawn,verify)
+	else:
+		for service: Dictionary in field.data.portal+field.data.npc_spawn:
+			var p:=Vector2(service.position[0],service.position[1])
+			verify.call(field.point_clear(p,4) and not field.path(spawn,p).is_empty(),"connected native entrance/NPC "+str(service.id))
 	var rng:=RandomNumberGenerator.new();rng.seed=121084
 	for region: Dictionary in field.data.monster_spawn:
 		verify.call(field.spawn_cells.get(str(region.id),[]).size()>=int(region.max_count),"native encounter capacity "+str(region.id))
@@ -94,5 +174,5 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 		verify.call(world.player.global_position.distance_to(b)<12,"actual click completes native obstacle detour")
 		verify.call(walked>a.distance_to(b)*1.1,"actual body takes the longer native route")
 		world.player.set_physics_process(false);world.player.clear_click_path()
-	result.metric={"map_id":world.active_map_id,"art_map_id":field.data.map_id,"geometry":"MANUALLY_REVIEWED_NATIVE_PNG_FLOORS","original_M_coordinates_recovered":false,"physical_detour_walk":walked,"checks":result.checks}
+	result.metric={"map_id":world.active_map_id,"art_map_id":field.data.map_id,"geometry":"MANUALLY_REVIEWED_NATIVE_PNG_FLOORS","original_M_coordinates_recovered":false,"physical_detour_walk":walked,"portal_routes":portal_routes,"checks":result.checks}
 	return result

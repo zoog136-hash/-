@@ -5,6 +5,7 @@ const QA = preload("res://tests/qa_class_selection.gd")
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 const CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const DIRECTOR = preload("res://scripts/monsters/boss_director.gd")
+const ROUTES = preload("res://tests/native_png_route_checks.gd")
 const EXPECTED := {"aden_world":[72,5],"faith_01":[6,1],"faith_02":[6,1],"faith_03":[6,1],"faith_04":[9,1]}
 var checks: int = 0
 var failures: Array[String] = []
@@ -395,6 +396,17 @@ func graph_field(spec: Dictionary, alpha: bool=false) -> NativePngField:
 	field.configure_png("helper_portal",{"maps":{"helper_portal":spec},"revision":41},manifest,"")
 	return field
 
+func independent_service_proof(spec: Dictionary) -> Dictionary:
+	var field: NativePngField=graph_field(spec)
+	# This intentionally false cache must not authorize the hunting audit's
+	# independent proof of physical segments and exact same-map gate endpoints.
+	field.reachable.fill(1)
+	var violations: Array[String]=[]
+	var report: Dictionary=ROUTES.portal_service_routes(field,Vector2(56,56),func(ok: bool,label: String) -> void:
+		if not ok: violations.append(label))
+	report["failures"]=violations
+	return report
+
 func portal_graph_negative_fixture() -> void:
 	# This small synthetic fixture is only an invalid-travel/solid-grid test.
 	# Population, drops, combat, and save assertions below all use actual Main assets.
@@ -420,6 +432,19 @@ func portal_graph_negative_fixture() -> void:
 	check(graph_visited(alpha_field,Vector2(200,56)) and not alpha_field.walkable(Vector2(248,56)) and not graph_visited(alpha_field,Vector2(360,56)),"alpha guard remains authoritative over downstream portal access")
 	var random:=RandomNumberGenerator.new();random.seed=137
 	check(alpha_field.random_landing(random,Vector2(56,56),290).is_equal_approx(Vector2.INF),"random landing excludes downstream and unlinked islands")
+	var proof: Dictionary=independent_service_proof(spec)
+	check(proof.failures.is_empty() and int(proof.validated_gates)==2,"independent walking proof accepts the valid reversed gate chain")
+	proof=independent_service_proof(stale)
+	check(not proof.failures.is_empty() and int(proof.validated_gates)==0,"forged reachable cache cannot bypass a stale gate revision")
+	proof=independent_service_proof(blocked)
+	check(not proof.failures.is_empty() and int(proof.validated_gates)==0,"independent walking proof refuses a solid target without projection")
+	var clipped: Dictionary=spec.duplicate(true);clipped.portals[1].target_position=[176,56]
+	proof=independent_service_proof(clipped)
+	check(not proof.failures.is_empty() and int(proof.validated_gates)==0,"independent walking proof requires the whole four-pixel foot on floor")
+	var orphan: Dictionary=spec.duplicate(true)
+	orphan.portals.append({"id":"orphan_return","position":[552,56],"radius":18,"target_map":"helper_portal","target_position":[56,56],"target_layout_revision":41})
+	proof=independent_service_proof(orphan)
+	check(not proof.failures.is_empty() and int(proof.validated_gates)==2,"a return gate cannot bootstrap an otherwise unreachable pocket")
 
 func finish() -> void:
 	print("ADEN_FAITH_PNG_MONSTER_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"maps":records,

@@ -15,7 +15,9 @@ func verify(ok: bool, msg: String) -> void:
 func _initialize() -> void:
 	# A normal main game keeps the ordinary save namespace.
 	verify(not PNG.enabled(), "ordinary launch does not use isolated review save")
-	verify(PNG.root_path() == PNG.BUNDLED_ROOT, "PNG source from the updated GitHub checkout")
+	# CI can select this same checkout directory with an absolute pack override.
+	# Require its exact normalized bundled path, retaining every hash/decode check.
+	verify(ProjectSettings.globalize_path(PNG.root_path()).simplify_path() == ProjectSettings.globalize_path(PNG.BUNDLED_ROOT).simplify_path(), "PNG source from the updated GitHub checkout")
 	verify(PNG.installed(), "PNG index matches the source SHA-256 receipt")
 	verify(PNG.bundled_enabled(), "ordinary launch auto-enables updated PNG")
 	verify(OMAN.pack_root() == OMAN.BUNDLED_ROOT, "Oman source from the updated GitHub checkout")

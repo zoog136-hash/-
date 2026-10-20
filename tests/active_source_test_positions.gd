@@ -2,11 +2,24 @@ extends RefCounted
 ## Test-only positions selected from active source/PNG spawn cells. No map edits.
 static func _fits(f: PlayableField, p: Vector2, offsets: Array) -> bool:
 	if not p.is_finite() or not f.walkable(p) or not f.point_clear(p) or f.is_safe(p): return false
+	if f is NativePngField and not _native_portal_clear(f,p,p): return false
 	for value: Variant in offsets:
 		if not value is Vector2: return false
 		var q: Vector2 = p + value
 		if not q.is_finite() or not f.walkable(q) or not f.point_clear(q) or f.is_safe(q): return false
 		if not f.line_clear(p,q): return false
+		if f is NativePngField and not _native_portal_clear(f,p,q): return false
+	return true
+
+static func _native_portal_clear(f: NativePngField, from: Vector2, to: Vector2) -> bool:
+	# Gameplay fixtures keep portals live. Avoid their actual trigger area,
+	# including the actor foot, instead of suppressing a legitimate transition.
+	for portal: Dictionary in f.data.get("portal",[]):
+		var position: Array = portal.get("position",[])
+		if position.size()!=2: continue
+		var point := Vector2(float(position[0]),float(position[1]))
+		var nearest: Vector2 = Geometry2D.get_closest_point_to_segment(point,from,to)
+		if nearest.distance_to(point)<=float(portal.get("radius",18.0))+4.0: return false
 	return true
 
 static func combat(world: Node, offsets: Array = [Vector2(30,0)], motion_distance: float = 0.0) -> Vector2:
