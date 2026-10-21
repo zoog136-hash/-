@@ -36,6 +36,7 @@ const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
+const MYTHIC_GENDER_FILTER = preload("res://scripts/mythic_gender_filter.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -453,6 +454,9 @@ func _load_data() -> void:
 	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
+	# Filter gameplay roster before indexing, HUD, draws and derived collections.
+	MYTHIC_GENDER_FILTER.filter_catalog(catalog_db)
+	MYTHIC_GENDER_FILTER.filter_catalog(game_db)
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
