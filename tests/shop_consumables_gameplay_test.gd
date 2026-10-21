@@ -52,10 +52,13 @@ func _run() -> void:
 	check(listing.item_count == SHOP.GOODS.size(), "NPC shop lists the same authority stock")
 	var search: LineEdit = panel.get("search_field") as LineEdit
 	search.text = "최상급"
+	panel.call("_refresh")
 	check(listing.item_count == 6, "all six draw products searchable")
 	search.text = "마나 회복 물약"
+	panel.call("_refresh")
 	check(listing.item_count >= 1, "new potion searchable")
 	search.text = ""
+	panel.call("_refresh")
 	var filter: OptionButton = panel.get("category_filter") as OptionButton
 	filter.select(1)
 	panel.call("_refresh")
