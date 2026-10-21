@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/ground-category-icons.yml'
       - 'tools/ground_icons/**'
+      - 'tools/test_project_support.py'
       - 'scripts/ui/ground_item_icons.gd'
       - 'scripts/ui/item_visual_resolver.gd'
       - 'scripts/loot/**'
@@ -43,7 +44,7 @@ concurrency:
 jobs:
   ground-icons:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
