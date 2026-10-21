@@ -1,0 +1,54 @@
+name: Main full CI launcher (NOT validation success)
+
+on:
+  push:
+    branches: [validation/main-ci-audit-20261021]
+    paths:
+      - .github/workflows/main-ci-audit-launch.yml
+      - tools/ci/main_ci_audit.py
+      - tools/ci/main_ci_audit_test.py
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: main-ci-audit-launch-ecac4fa-20261021
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.repository == 'zoog136-hash/-' && github.ref == 'refs/heads/validation/main-ci-audit-20261021'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout audit harness only
+        uses: actions/checkout@v4
+        with:
+          path: harness
+          persist-credentials: false
+      - name: Checkout exact main baseline, without any PR patch
+        uses: actions/checkout@v4
+        with:
+          ref: ecac4faafdf34a6dcbf60b101accc5911d1dd39a
+          path: baseline
+          persist-credentials: false
+      - name: Install YAML parser
+        run: python3 -m pip install PyYAML==6.0.2
+      - name: Test inventory and fail-closed verdict rules
+        run: python3 harness/tools/ci/main_ci_audit_test.py
+      - name: Dispatch every main CI and record exact-SHA run IDs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 harness/tools/ci/main_ci_audit.py dispatch
+          --root baseline
+          --sha ecac4faafdf34a6dcbf60b101accc5911d1dd39a
+          --report audit-results/main-ci-audit.json
+      - name: Preserve coverage, exclusions and pending/failure states
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-ci-audit-ecac4fa-${{ github.run_id }}
+          path: audit-results/
+          if-no-files-found: error
