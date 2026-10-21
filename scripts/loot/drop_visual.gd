@@ -51,23 +51,23 @@ func _draw() -> void:
 	if rank >= 2:
 		var pulse: float = 0.8 + 0.2 * sin(clock * 3.0)
 		for radius: int in range(32, 5, -4):
-			draw_circle(Vector2.ZERO, radius, Color(color, 0.025 * pulse))
+			draw_circle(Vector2.ZERO, radius, Color(color, 0.030 * pulse))
 	if selected:
 		draw_arc(Vector2.ZERO, 27, 0, TAU, 48, Color("ffe6a1"), 2.5, true)
 	draw_set_transform(Vector2.ZERO)
 	if rank >= 2:
 		var height: float = 104.0 + float(rank) * 13.0
-		var width: float = 12.0 + float(rank)
+		var width: float = 15.0 + float(rank) * 1.15
 		for layer: int in range(5):
 			var w: float = width - float(layer) * 1.8
-			var c: Color = Color(color, (0.04 + float(layer) * 0.025) * (0.85 + 0.15 * sin(clock * 3.0)))
+			var c: Color = Color(color, (0.05 + float(layer) * 0.031) * (0.85 + 0.15 * sin(clock * 3.0)))
 			draw_polygon(PackedVector2Array([Vector2(-w, 0), Vector2(-w * 0.55, -height), Vector2(w * 0.55, -height), Vector2(w, 0)]), PackedColorArray([c, Color(c, 0), Color(c, 0), c]))
-		draw_line(Vector2.ZERO, Vector2(0, -height), Color(color.lightened(0.5), 0.48), 2.0, true)
+		draw_line(Vector2.ZERO, Vector2(0, -height), Color(color.lightened(0.56), 0.60), 2.5, true)
 		if rank >= 4:
 			for side: int in [-1, 1]:
-				draw_line(Vector2(side * 7, 0), Vector2(side * 3, -height * 0.9), Color(color, 0.38), 2.0, true)
+				draw_line(Vector2(side * 7, 0), Vector2(side * 3, -height * 0.9), Color(color, 0.48), 2.5, true)
 		if rank == 6:
-			draw_line(Vector2.ZERO, Vector2(0, -height), Color(0.86, 1, 0.96, 0.9), 2.0, true)
+			draw_line(Vector2.ZERO, Vector2(0, -height), Color(0.86, 1, 0.96, 0.96), 2.5, true)
 			draw_arc(Vector2(0, -10), 25 + sin(clock * 2) * 3, 0, TAU, 48, Color(0.1, 0.9, 0.78, 0.22), 2, true)
 		for particle: int in range(4 + rank):
 			var phase: float = fposmod(clock * (0.16 + float(particle % 3) * 0.025) + float(particle) * 0.173, 1.0)
