@@ -3,12 +3,12 @@ class_name TwilightMythicGenderFilter
 
 # PR122: gameplay-only exclusions. Original catalog files, sprites and
 # animation source assets remain intact for provenance and rollback.
-const EXCLUDED_SOURCE_IDS := {
+const EXCLUDED_SOURCE_IDS = {
     "131": true, "410": true, "132": true, "134": true,
     "136": true, "138": true, "140": true, "142": true,
     "161": true, "345": true, "258": true, "283": true,
 }
-const EXCLUDED_NAMES := {
+const EXCLUDED_NAMES = {
     "신화-기사(여)": true, "신화-광전사(여)": true,
     "신화-군주(남)": true, "신화-요정(남)": true,
     "신화-마법사(남)": true, "신화-다크엘프(남)": true,
