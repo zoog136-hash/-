@@ -1,0 +1,53 @@
+name: PR144 full candidate CI coverage (NOT validation success)
+on:
+  push:
+    branches: [validation/pr144-full-ci-20261022]
+    paths:
+      - '.github/workflows/pr144-full-ci-launch.yml'
+      - 'tools/ci/exact_ref_ci.py'
+      - 'tools/ci/exact_ref_ci_test.py'
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: pr144-full-coverage-456bb3f
+  cancel-in-progress: false
+jobs:
+  coverage:
+    if: github.repository == 'zoog136-hash/-' && github.ref == 'refs/heads/validation/pr144-full-ci-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout audit harness
+        uses: actions/checkout@v4
+        with:
+          path: harness
+          persist-credentials: false
+      - name: Checkout exact candidate; do not modify or merge main
+        uses: actions/checkout@v4
+        with:
+          ref: 456bb3f927b0bc0d06e021eb37b38a21848fac20
+          path: candidate
+          persist-credentials: false
+      - name: Install YAML parser
+        run: python3 -m pip install PyYAML==6.0.2
+      - name: Verify coverage, identities, deduplication and fail-closed verdicts
+        run: python3 harness/tools/ci/exact_ref_ci_test.py
+      - name: Reuse exact-SHA PR checks and dispatch missing validators only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 harness/tools/ci/exact_ref_ci.py launch
+          --root candidate
+          --sha 456bb3f927b0bc0d06e021eb37b38a21848fac20
+          --ref fix/pr137-monster-capture-landing-20261021
+          --base-sha 88b1773f90e9d5cc092d9423ef9e80407b102bf5
+          --pr 144
+          --report audit-results/pr144-full-coverage.json
+      - name: Preserve complete scope and exact run IDs, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr144-full-ci-456bb3f-${{ github.run_id }}
+          path: audit-results/
+          if-no-files-found: error
