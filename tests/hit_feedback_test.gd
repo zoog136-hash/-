@@ -33,6 +33,12 @@ func _run() -> void:
 	check(is_equal_approx(VISUALS.core_envelope(0.0), 1.0), "immediate contact core")
 	check(VISUALS.core_envelope(.02) > VISUALS.core_envelope(.04), "fast core decay")
 	check(is_zero_approx(VISUALS.core_envelope(.065)), "no sustained white flash")
+	for opacity: float in [0.0, .1, .4, .8, .85, 1.0]:
+		check(is_equal_approx(VISUALS.glow_alpha(opacity, false), opacity), "normal glow unchanged")
+		check(is_equal_approx(VISUALS.glow_alpha(opacity, true), minf(1.0, opacity * 1.25)), "critical glow gain is bounded")
+	check(is_equal_approx(VISUALS.glow_alpha(.4, true), .5), "critical glow boosted by 25 percent")
+	check(is_equal_approx(VISUALS.glow_alpha(.85, true), 1.0), "critical glow cannot exceed opaque alpha")
+	check(is_zero_approx(VISUALS.glow_alpha(VISUALS.core_envelope(.065), true)), "boost does not extend core flash")
 	check(VISUALS.number_scale(.035, true) > 1.2, "critical number punch")
 	check(is_equal_approx(VISUALS.number_scale(.2, true), 1.0), "critical number settles")
 	check(is_equal_approx(VISUALS.number_scale(.035, false), 1.0), "normal text does not pulse")
