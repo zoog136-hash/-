@@ -1,9 +1,10 @@
 extends RefCounted
 # Server-authoritative price and quantity policy. Values are TWILIGHT's
-# existing local shop prices, not claims about official Lineage prices.
+# local shop prices, not claims about official Lineage prices.
 const MAX_QUANTITY: int = 99
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
-const GOODS = [
+const STOCK = preload("res://scripts/shop/consumable_stock.gd")
+const LEGACY_GOODS = [
 	["HP 물약", 50, "물약"],
 	["강력 HP 물약", 180, "물약"],
 	["축복받은 HP 물약", 450, "물약"],
@@ -25,6 +26,8 @@ const GOODS = [
 	["오림의 장신구 마법 주문서 (각인)", 150000, "강화 주문서"],
 	["축복받은 오림의 장신구 마법 주문서 (각인)", 450000, "강화 주문서"]
 ]
+# Build once; UI and transaction validation share the exact same registry.
+static var GOODS: Array = STOCK.build(LEGACY_GOODS)
 
 static func price_for(item_name: String) -> int:
 	for entry: Array in GOODS:
