@@ -15,6 +15,8 @@ func _initialize() -> void:
 
 func _run() -> void:
 	assert_ok(int(ENCHANT.stats("weapon", 10).get("damage", 0)) == 11, "official +10 weapon damage")
+	assert_ok(int(ITEM_OPTIONS.weapon_size_damage({"slot":"weapon","stat":"54 / 35","atk":138,"desc":"추가 대미지 +84"}, false)) == 54, "Inven source stat small damage independent of legacy atk")
+	assert_ok(int(ITEM_OPTIONS.weapon_size_damage({"slot":"weapon","stat":"54 / 35","atk":138,"desc":"추가 대미지 +84"}, true)) == 35, "Inven source stat large damage independent of legacy atk")
 	assert_ok(int(ITEM_OPTIONS.weapon_size_adjustment({"slot":"weapon","stat":"54 / 35","desc":"추가 대미지 +84"}, true)) == -19, "Inven 54/35 source stat large minus small damage")
 	assert_ok(int(ITEM_OPTIONS.weapon_size_adjustment({"slot":"weapon","desc":"작은 대상 대미지 54 · 큰 대상 대미지 35"}, true)) == -19, "Inven named size damage parses")
 	assert_ok(int(ITEM_OPTIONS.weapon_size_adjustment({"slot":"weapon","stat":"54 / 35"}, false)) == 0, "small target gets unmodified small weapon base")

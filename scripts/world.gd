@@ -930,10 +930,18 @@ func _equipment_additional_damage(kind: String) -> int:
 	return result + int(equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
+	# Kept for older source audit callers; not used in the live damage path.
 	if target == null:
 		return 0
 	var label: String = str(target.get_meta("size_class", "small")).to_lower()
 	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
+
+func _roll_weapon_damage(target: TwilightMonster) -> int:
+	if target == null:
+		return 0
+	var is_large: bool = str(target.get_meta("size_class", "small")).to_lower() == "large"
+	var maximum: int = ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), is_large)
+	return rng.randi_range(1, maximum) if maximum > 0 else 0
 
 func _load_monster_sizes() -> void:
 	monster_size_index.clear()
@@ -2082,7 +2090,8 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		_update_target_hud()
 		return
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
-	var damage: int = maxi(1, damage_stat + _weapon_size_adjustment(target) + rng.randi_range(-6, 9))
+	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
+	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -5323,6 +5332,9 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			var chain_factor: float = pow(clampf(float(skill.get("chain_falloff", 1.0)), 0.2, 1.0), chain_index) if chain_limit > 1 else 1.0
 			var execute_factor: float = maxf(1.0, float(skill.get("execute_multiplier", 1.0))) if float(victim.hp) / maxf(1.0, float(victim.max_hp)) <= float(skill.get("execute_threshold", 0.0)) else 1.0
 			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor * execute_factor)))
+			if style != "magic":
+				# A fresh size roll per successful physical skill hit; never on spells.
+				damage += _roll_weapon_damage(victim)
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
 				damage = _player_critical_damage(damage, style)
@@ -6547,6 +6559,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"melee_accuracy": _melee_accuracy_stat(),
 		"ranged_damage": _ranged_damage_stat(),
 		"ranged_accuracy": _ranged_accuracy_stat(),
+		"weapon_small_damage": ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), false),
+		"weapon_large_damage": ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), true),
 		"magic_damage": _magic_damage_stat(),
 		"magic_accuracy": _magic_accuracy_stat(),
 		"melee_critical": _player_critical_rate("melee"),
@@ -6589,6 +6603,11 @@ func _effective_attack() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("atk", 0.0))
+	# Weapon 'atk' is a legacy aggregate (often size base + extra damage).
+	# Remove it from both displayed melee/ranged stats and their common base;
+	# the weapon's explicit flat options are counted once by additional_damage(),
+	# and its size base is separately rolled on each successful physical hit.
+	bonus -= float(_equipped_weapon_record().get("atk", 0.0))
 	return attack_power + int(round(bonus)) + _enhancement_weapon_stat("damage") + _active_skill_buff_total("atk") + _passive_skill_total("atk")
 
 func _effective_defense() -> int:
