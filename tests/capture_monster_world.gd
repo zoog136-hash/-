@@ -11,6 +11,15 @@ func _initialize() -> void: call_deferred("_run")
 func check(value: bool, message: String) -> void:
 	if not value: failed = true; push_error(message)
 
+# Missing fixture data must exit nonzero, not abort the coroutine and leave
+# SceneTree alive until the whole Actions job times out.
+func require(value: bool, message: String) -> bool:
+	check(value, message)
+	if not value:
+		print("MONSTER_WORLD_RENDER_FAILED: " + message)
+		quit(1)
+	return value
+
 func pause_actors() -> void:
 	world.field_population.set_process(false)
 	for mob: TwilightMonster in world.monsters_root.get_children(): mob.set_physics_process(false)
@@ -46,21 +55,25 @@ func capture(name_value: String, boss: TwilightMonster = null) -> void:
 	if image!=null: check(image.save_png(OUTPUT+"/"+name_value+".png")==OK,"save capture "+name_value)
 
 func _run() -> void:
-	check(DisplayServer.get_name()!="headless","actual OpenGL display required")
+	if not require(DisplayServer.get_name()!="headless","actual OpenGL display required"): return
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
-	check(CLASS_QA.enter_game(world),"class confirmation")
+	if not require(CLASS_QA.enter_game(world),"class confirmation"): return
 	world.save_timer = -10000
 	world.hp = 999999
 	world.mp = 999999
 	report.renderer = RenderingServer.get_current_rendering_method()
 	report.adapter = RenderingServer.get_video_adapter_name()
-	check(report.renderer=="gl_compatibility","Compatibility renderer")
+	if not require(report.renderer=="gl_compatibility","Compatibility renderer"): return
+	# This is the original four-dense-zone regression fixture, not evidence of
+	# the new PNG Aden/Faith layout. The native PNG regression remains separate.
+	report["aden_faith_fixture"] = "legacy" if "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args() else "runtime"
 	for legacy: Dictionary in world.maps:
 		var id: String = str(legacy.id)
 		world._set_map(id,false)
 		pause_actors()
+		if not require(world.monsters_root.get_child_count()>0,"map population " + id): return
 		var mob: TwilightMonster = world.monsters_root.get_child(0)
 		land_near(mob)
 		mob.motion.face(world.player.global_position-mob.global_position)
@@ -76,7 +89,13 @@ func _run() -> void:
 		var region: Dictionary = {}
 		for value: Dictionary in world.field_map.data.monster_spawn:
 			if str(value.get("mode",""))=="dense": region = value; break
-		var a: Array = region.rect
+		if not require(not region.is_empty(),"missing dense fixture " + id + "; use --legacy-aden-faith-layouts for the original 24-monster zones"): return
+		var rect_value: Variant = region.get("rect")
+		if not require(rect_value is Array,"dense rectangle type " + id): return
+		var a: Array = rect_value
+		if not require(a.size()==4,"dense rectangle shape " + id): return
+		if not require(int(region.get("max_count",0))==24,"original dense cap " + id): return
+		if not require(float(region.get("respawn_time",0.0))>0.0,"dense respawn time " + id): return
 		var center := Vector2(float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5)
 		world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(center))
 		world.field_population._process(.5)
@@ -125,7 +144,7 @@ func _run() -> void:
 		var boss: TwilightMonster
 		for slot: Dictionary in world.field_population.slots:
 			if str(slot.region.get("mode",""))=="boss": boss = slot.monster; break
-		check(is_instance_valid(boss),"boss spawned "+id)
+		if not require(is_instance_valid(boss),"boss spawned "+id): return
 		land_near(boss)
 		boss._begin_special()
 		boss.motion.advance(.42,Vector2.ZERO)
@@ -180,6 +199,7 @@ func _run() -> void:
 		world._clear_monsters()
 		await process_frame
 	var file: FileAccess = FileAccess.open(OUTPUT+"/render-summary.json",FileAccess.WRITE)
+	if not require(file!=null,"open render summary"): return
 	file.store_string(JSON.stringify(report,"\t")); file.close()
 	world.queue_free()
 	await process_frame

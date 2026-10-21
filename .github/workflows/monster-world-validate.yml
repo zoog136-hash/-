@@ -35,13 +35,15 @@ jobs:
           python3 tools/build_monster_world.py
           git diff --exit-code -- data/monsters/monster_world_catalog.json data/monsters/world_spawn_profiles.json
           python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+      # Only the two historical render fixtures use legacy Aden/Faith.
+      # Do not apply this flag to the full suite or native PNG validation.
       - name: Actual OpenGL regions, AUTO dense hunts, bosses, all species poses
         shell: bash
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/monster-world-render"
           export LIBGL_ALWAYS_SOFTWARE=1
-          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_monster_world.gd 2>&1 | tee test-results/monster-world-render.log
+          timeout --signal=TERM --kill-after=15s 15m xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_monster_world.gd -- --legacy-aden-faith-layouts 2>&1 | tee test-results/monster-world-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-world-render.log; then exit 1; fi
           grep -q MONSTER_WORLD_RENDER_OK test-results/monster-world-render.log
       - name: Actual 32, 96, 192 creature combat and movement
@@ -50,7 +52,7 @@ jobs:
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/monster-crowd-render"
           export LIBGL_ALWAYS_SOFTWARE=1
-          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/monster-crowd-render.log
+          timeout --signal=TERM --kill-after=15s 15m xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_combat_crowd.gd -- --legacy-aden-faith-layouts 2>&1 | tee test-results/monster-crowd-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-crowd-render.log; then exit 1; fi
           grep -q COMBAT_CROWD_RENDER_OK test-results/monster-crowd-render.log
       - name: Checkout PR43 before HUD optimization with PR46 and PR48 integrated
