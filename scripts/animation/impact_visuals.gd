@@ -43,6 +43,10 @@ static func core_envelope(age: float) -> float:
 	# A local tuning value, not a claimed measurement of Lineage M video frames.
 	return pow(maxf(0.0, 1.0 - age / 0.065), 2.0)
 
+static func glow_alpha(opacity: float, critical: bool) -> float:
+	# Brighten only existing critical light; preserve shape, timing and draw count.
+	return minf(1.0, opacity * 1.25) if critical else opacity
+
 static func number_scale(age: float, critical: bool) -> float:
 	if not critical: return 1.0
 	if age < 0.035: return lerpf(0.88, 1.22, clampf(age / 0.035, 0.0, 1.0))
@@ -107,7 +111,7 @@ func draw_impact(canvas: Node2D, point: Vector2, entry: Dictionary, detailed: bo
 	if not detailed:
 		canvas.draw_line(point - aim * 5.0, point + aim * 5.0, Color(color, tail), 1.8, true)
 		return
-	halo(canvas, point, Vector2.ONE * radius * 3.6, Color(color, tail * 0.45))
+	halo(canvas, point, Vector2.ONE * radius * 3.6, Color(color, glow_alpha(tail * 0.45, critical)))
 	match kind:
 		"slash":
 			crescent(canvas, point, aim, radius * 1.25, p, Color(color, tail * 0.48))
@@ -134,7 +138,7 @@ func draw_impact(canvas: Node2D, point: Vector2, entry: Dictionary, detailed: bo
 		canvas.draw_circle(tip, 1.2, Color(1.0, 0.96, 0.82, tail * 0.85))
 	if critical:
 		# Compact horizontal gold flare, not a full-screen flash or camera shake.
-		beam(canvas, point, Vector2.RIGHT, 54.0 * (0.65 + p), 3.0, Color(1.0, 0.76, 0.30, pulse * 0.85))
-		beam(canvas, point, Vector2.UP, 22.0, 1.7, Color(1.0, 0.95, 0.77, pulse))
-	halo(canvas, point, Vector2.ONE * (31.0 if critical else 19.0), Color(1.0, 0.99, 0.90, pulse))
-	canvas.draw_circle(point, (3.7 if critical else 2.2) * pulse, Color(1.0, 1.0, 0.95, pulse))
+		beam(canvas, point, Vector2.RIGHT, 54.0 * (0.65 + p), 3.0, Color(1.0, 0.76, 0.30, glow_alpha(pulse * 0.85, true)))
+		beam(canvas, point, Vector2.UP, 22.0, 1.7, Color(1.0, 0.95, 0.77, glow_alpha(pulse, true)))
+	halo(canvas, point, Vector2.ONE * (31.0 if critical else 19.0), Color(1.0, 0.99, 0.90, glow_alpha(pulse, critical)))
+	canvas.draw_circle(point, (3.7 if critical else 2.2) * pulse, Color(1.0, 1.0, 0.95, glow_alpha(pulse, critical)))
