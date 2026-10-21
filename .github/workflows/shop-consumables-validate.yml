@@ -1,5 +1,6 @@
 name: General Shop Consumables Validate
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     paths:

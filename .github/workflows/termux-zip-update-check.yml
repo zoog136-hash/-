@@ -1,5 +1,6 @@
 name: Termux ZIP updater check
 on:
+  workflow_dispatch:
   push:
     branches: [fix/termux-zip-update-20261020]
     paths:

@@ -1,6 +1,7 @@
 name: Equipment Collections Runtime
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     paths:
