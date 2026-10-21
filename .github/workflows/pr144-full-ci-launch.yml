@@ -10,7 +10,7 @@ permissions:
   contents: read
   actions: write
 concurrency:
-  group: pr144-full-coverage-456bb3f
+  group: pr144-full-coverage-62db5de
   cancel-in-progress: false
 jobs:
   coverage:
@@ -26,7 +26,7 @@ jobs:
       - name: Checkout exact candidate; do not modify or merge main
         uses: actions/checkout@v4
         with:
-          ref: 456bb3f927b0bc0d06e021eb37b38a21848fac20
+          ref: 62db5de4c9b0f11ec1759932239dda1923556088
           path: candidate
           persist-credentials: false
       - name: Install YAML parser
@@ -39,7 +39,7 @@ jobs:
         run: >-
           python3 harness/tools/ci/exact_ref_ci.py launch
           --root candidate
-          --sha 456bb3f927b0bc0d06e021eb37b38a21848fac20
+          --sha 62db5de4c9b0f11ec1759932239dda1923556088
           --ref fix/pr137-monster-capture-landing-20261021
           --base-sha 88b1773f90e9d5cc092d9423ef9e80407b102bf5
           --pr 144
@@ -48,6 +48,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pr144-full-ci-456bb3f-${{ github.run_id }}
+          name: pr144-full-ci-62db5de-${{ github.run_id }}
           path: audit-results/
           if-no-files-found: error
