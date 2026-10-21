@@ -30,7 +30,7 @@ jobs:
           XDG_DATA_HOME: '${{ github.workspace }}/render-save'
         run: |
           set -o pipefail
-          xvfb-run -a ./Godot_v4.7.2-stable_linux.x86_64 --path . --audio-driver Dummy --script res://tests/capture_original_skills.gd 2>&1 | tee test-results/original-render.log
+          xvfb-run -a ./Godot_v4.7.2-stable_linux.x86_64 --path . --audio-driver Dummy --script res://tests/capture_original_skills.gd -- --legacy-aden-faith-layouts 2>&1 | tee test-results/original-render.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' test-results/original-render.log
           grep -q 'ORIGINAL_RENDER_OK' test-results/original-render.log
           grep -q 'ORIGINAL_GUARDIAN_RENDER_OK' test-results/original-render.log
