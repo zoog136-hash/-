@@ -48,7 +48,7 @@ jobs:
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           "$ENGINE" --headless --path . --editor --quit > test-results/import.txt 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
-          for name in item_visual_test item_icon_art_smoke_test l1j_runtime_game_test catalog_full_browser_smoke_test ui_stage4_item_instance_test ui_fidelity_regression_test ui_renewal_integration_test original_skill_warehouse_migration_test; do
+          for name in blessed_scroll_item_visual_test item_visual_test item_icon_art_smoke_test l1j_runtime_game_test catalog_full_browser_smoke_test ui_stage4_item_instance_test ui_fidelity_regression_test ui_renewal_integration_test original_skill_warehouse_migration_test; do
             export XDG_DATA_HOME="$RUNNER_TEMP/item-$name"
             "$ENGINE" --headless --path . --script "res://tests/$name.gd" > "test-results/$name.txt" 2>&1
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' "test-results/$name.txt"; then exit 1; fi
