@@ -1,5 +1,6 @@
 name: Hit Feedback Focused Validate
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     paths:

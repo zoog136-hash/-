@@ -1,5 +1,6 @@
 name: Ground full-matte audit
 on:
+  workflow_dispatch:
   push:
     branches: [fix/ground-full-matte-20261015]
     paths:
@@ -29,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          persist-credentials: true
+          persist-credentials: ${{ github.event_name == 'push' && github.ref == 'refs/heads/fix/ground-full-matte-20261015' }}
       - name: Prepare pinned tools and renderer
         run: |
           python3 -m pip install Pillow==12.3.0
@@ -43,9 +44,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/ground-matte
-          python3 tools/ground_icons/build.py --write
-          python3 tools/ground_icons/build.py
-          python3 tools/ground_alpha/bake.py
+          # Manual audits inspect committed main assets, never regenerate them.
+          if [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ]; then
+            python3 tools/ground_icons/build.py --write
+            python3 tools/ground_icons/build.py
+            python3 tools/ground_alpha/bake.py
+          fi
           python3 tools/ground_matte/audit.py
           git diff --exit-code -- scripts data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json assets/catalog assets/inven_inventory assets/l1j assets/original_items
       - name: Run real Main ground, inventory, drop and alpha regressions
@@ -71,8 +75,11 @@ jobs:
           tail -n 10 /tmp/ground-matte/capture.log
           if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script|GROUND_CAPTURE_RESULT.*failures":\[[^]]' /tmp/ground-matte/capture.log; then status=1; fi
           exit "$status"
+      - name: Manual audit must not change tracked runtime files
+        if: github.event_name == 'workflow_dispatch'
+        run: git diff --exit-code -- assets data scripts Main.tscn project.godot
       - name: Commit generated PNGs only when verification has passed
-        if: github.ref == 'refs/heads/fix/ground-full-matte-20261015'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/fix/ground-full-matte-20261015'
         run: |
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           git diff --exit-code -- scripts data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json assets/catalog assets/inven_inventory assets/l1j assets/original_items
