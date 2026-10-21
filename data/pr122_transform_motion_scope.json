@@ -1,11 +1,88 @@
 {
   "schema": "pr122-transform-motion-scope-v1",
-  "user_instruction_date": "2026-10-20",
+  "user_instruction_date": "2026-10-21",
   "actor_kind": "transform",
-  "walk_excluded_grades": ["신화", "전설", "영웅", "희귀", "고급", "일반"],
+  "walk_excluded_grades": [
+    "신화",
+    "전설",
+    "영웅",
+    "희귀",
+    "고급",
+    "일반"
+  ],
   "unique_transform_walk_required": true,
   "boss_walk_required": true,
-  "required_roles_without_walk": ["idle", "run", "attack", "hit", "death"],
+  "required_roles_without_walk": [
+    "idle",
+    "run",
+    "attack",
+    "hit",
+    "death"
+  ],
   "existing_assets_preserved": true,
-  "omission_grants_approval": false
+  "omission_grants_approval": false,
+  "death_direction_policy": {
+    "유일": {
+      "unique_authored_directions": 8,
+      "direction_names": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "preserve_previous_approval": true
+    },
+    "신화": {
+      "unique_authored_directions": 4,
+      "direction_names": [
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "other_view_directions_use_nearest_cardinal_death": true
+    },
+    "전설": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true
+    },
+    "영웅": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true
+    },
+    "희귀": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true
+    },
+    "고급": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true
+    },
+    "일반": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true
+    }
+  },
+  "death_runtime_contract": "Render death for all 8 view inputs by selecting approved death source (mythic nearest cardinal; legendary and below same S source). Keep one-shot death behavior, hold on terminal frame, no resurrection, no altered collision/combat timing.",
+  "death_existing_native_sources_preserved": true,
+  "death_actor_completion_requires_game_validation": true
 }
