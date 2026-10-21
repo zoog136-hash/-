@@ -25,6 +25,21 @@ static func set_reduced_motion(enabled: bool) -> void:
 		active_scheduler.motion_enabled = not enabled
 		active_scheduler.refresh_all()
 
+static func is_blessed_scroll(record: Dictionary, item_name: String = "") -> bool:
+	# Presentation identity only: never infer a scroll from an equipment's
+	# blessing flag, and never change the authoritative item grade.
+	if str(record.get("slot", "")) not in ["", "consumable"]: return false
+	var title: String = str(record.get("name", "")).strip_edges()
+	if title.is_empty(): title = item_name.get_slice("@@@", 0)
+	for space: String in [" ", "\t", "\r", "\n", "　"]:
+		title = title.replace(space, "")
+	title = title.replace("(각인)", "")
+	return title == "축복부여주문서" or (title.begins_with("축복받은") and title.ends_with("주문서"))
+
+static func animation_rank(record: Dictionary, item_name: String = "") -> int:
+	if is_blessed_scroll(record, item_name): return GRADES.find("영웅")
+	return maxi(0, GRADES.find(str(record.get("grade", "일반"))))
+
 static func apply(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, usage: String = "slot") -> void:
 	var effect: Node = view.get_node_or_null("ItemVisual")
 	if effect == null:
@@ -56,7 +71,7 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 	target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	target.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	target.texture = RESOLVER.texture(record,item_name,images)
-	rank = maxi(0,GRADES.find(str(record.get("grade","일반"))))
+	rank = animation_rank(record, item_name)
 	phase_group = posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
 	var info: Dictionary = RESOLVER.describe(record,item_name,images)
