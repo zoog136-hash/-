@@ -33,6 +33,7 @@ func remove_actor(actor: TwilightMonster) -> void:
 	hits[0] = 0
 
 func _run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/monster_attack_profiles_test.gd"): return
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	check(CLASS_QA.enter_game(world),"gameplay entry")

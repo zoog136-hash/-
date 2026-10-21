@@ -43,6 +43,16 @@ static func exercise(qa: SceneTree, expected_kind: String) -> void:
 	# Keep the original AI settings and the same-facing idle assertion intact.
 	if boss.attack_type == "magic":
 		distance = maxf(distance, float(boss.ai.get("retreat_distance", 0.)) + 30.)
+	if world.field_map is NativePngField:
+		# A clear outer 150px spoke does not imply its 80px interior avoids every
+		# obstacle. Position this separate special-stage fixture for its exact
+		# radius, preserving the real geometry and all warning/contact checks.
+		var offsets: Array = []
+		for direction: int in range(8): offsets.append(qa.screen_direction(direction)*distance)
+		center = preload("res://tests/active_source_test_positions.gd").combat(world,offsets)
+		qa.check(center.is_finite(), "active native floor contains the full special fixture")
+		if not center.is_finite(): return
+		qa.center = center
 	qa.check(qa.route_clear(center, distance), "existing terrain permits all eight special directions")
 	var old_zoom: Vector2 = world.player.camera.zoom
 	var old_camera_position: Vector2 = world.player.camera.position

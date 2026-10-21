@@ -19,7 +19,14 @@ func _run() -> void:
 	# The old (3550,4300) layout coordinate may have no A3 source-grid
 	# landing. Preserve the real map spawn selected by _set_map and assert
 	# its physical validity before testing exact transform/save restoration.
-	check(world.field_map != null and world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position), "active map has a valid save/load spawn")
+	var spawn_clear: bool=world.field_map != null and world.field_map.walkable(world.player.global_position)
+	if world.field_map is NativePngField:
+		var foot: CircleShape2D=world.player.get_node("CollisionShape2D").shape as CircleShape2D
+		check(foot!=null and is_equal_approx(foot.radius,4.0),"native player retains its real four-pixel collision foot")
+		spawn_clear=spawn_clear and foot!=null and world.field_map.point_clear(world.player.global_position,foot.radius)
+	else:
+		spawn_clear=spawn_clear and world.field_map.point_clear(world.player.global_position)
+	check(spawn_clear, "active map has a valid save/load spawn")
 	var saved_position: Vector2 = world.player.position
 	var chosen: Dictionary = {}
 	for category: String in ["변신", "마법인형", "성물"]:

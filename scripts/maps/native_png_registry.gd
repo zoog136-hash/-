@@ -3,10 +3,15 @@ extends RefCounted
 ## private pack. Replacing existing Albino/Escaros geometry remains explicit
 ## until their legacy gameplay coordinates have a supported correspondence.
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
+const EXTRA_PLAN_PATH := "res://data/maps/aden_faith_png_plan.json"
+const BUNDLED_EXTRA_ROOT := "res://external_map_packs/aden_faith_png_v1"
+const EXTRA_RECEIPT_PATH := "res://data/maps/aden_faith_png_pack.json"
 const REVIEW_PATH := "res://data/maps/native_png_review.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 const BUNDLED_ROOT := "res://external_map_packs/native_png_v5"
 const LEGACY_ROOT := "user://native_png_maps"
+# Accepted default packs keep their identity after on-disk removal.
+static var extra_pack_seen: bool=false
 
 static func enabled() -> bool:
 	return "--native-png-maps" in OS.get_cmdline_user_args() and not "--legacy-map-layouts" in OS.get_cmdline_user_args()
@@ -25,7 +30,12 @@ static func plan() -> Dictionary:
 	# archive stays immutable. Reject mismatched reviews before changing a field.
 	var value: Dictionary=base_plan()
 	var review: Dictionary=read_json(REVIEW_PATH)
-	return merge_review(value,review,FileAccess.get_sha256(PLAN_PATH))
+	value=merge_review(value,review,FileAccess.get_sha256(PLAN_PATH))
+	if value.is_empty(): return {}
+	var extra: Dictionary=read_json(EXTRA_PLAN_PATH)
+	value.sources.merge(extra.get("sources",{}))
+	value.maps.merge(extra.get("maps",{}))
+	return value
 
 static func valid_point(value: Variant, size: Array) -> bool:
 	return value is Array and value.size()==2 and (value[0] is float or value[0] is int) and (value[1] is float or value[1] is int) and is_finite(float(value[0])) and is_finite(float(value[1])) and value[0]>=0 and value[1]>=0 and value[0]<size[0] and value[1]<size[1]
@@ -79,8 +89,27 @@ static func merge_review(base: Dictionary, review: Dictionary, base_hash: String
 	value.revision=int(review.revision)
 	return value
 
-static func review_hash() -> String:
-	return FileAccess.get_sha256(REVIEW_PATH)
+static func extra_map(mid: String) -> bool:
+	return read_json(EXTRA_PLAN_PATH).get("maps",{}).has(mid)
+
+static func plan_hash(mid: String) -> String:
+	return FileAccess.get_sha256(EXTRA_PLAN_PATH if extra_map(mid) else PLAN_PATH)
+
+static func review_hash(mid: String="") -> String:
+	return plan_hash(mid) if extra_map(mid) else FileAccess.get_sha256(REVIEW_PATH)
+
+static func extra_root() -> String:
+	var configured: String=OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK")
+	if not configured.is_empty(): return configured.trim_suffix("/")
+	return BUNDLED_EXTRA_ROOT if FileAccess.file_exists(BUNDLED_EXTRA_ROOT+"/index.json") else "user://aden_faith_png_maps"
+
+static func extra_installed() -> bool:
+	var receipt: Dictionary=read_json(EXTRA_RECEIPT_PATH)
+	var path: String=extra_root()+"/index.json"
+	var verified: bool=FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
+	if verified: extra_pack_seen=true
+	return verified
+
 
 static func root_path() -> String:
 	# Explicit test/user pack always wins, including intentionally missing paths.
@@ -117,6 +146,14 @@ static func supports(mid: String) -> bool:
 	# Keep old map IDs in ordinary saves; Escaros 01–05 share source artwork
 	# but not the saved alias. Review mode keeps its original canonical names.
 	var art_id: String = map_for_art(canonical(mid))
+	if extra_map(art_id):
+		var configured: bool=not OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK").is_empty()
+		var args: PackedStringArray=OS.get_cmdline_user_args()
+		var ordinary: bool=not "--legacy-map-layouts" in args and not "--legacy-aden-faith-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+		# Explicit missing/corrupt paths must fail before releasing live gameplay.
+		var verified: bool=extra_installed()
+		var present: bool=FileAccess.file_exists(extra_root()+"/index.json")
+		return (verified or present or extra_pack_seen or configured) and (enabled() or ordinary) and not "--legacy-aden-faith-layouts" in args
 	return base_plan().get("maps",{}).has(art_id) and (enabled() or bundled_enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
@@ -132,7 +169,7 @@ static func menu_entries(records: Array) -> Array:
 	if not enabled(): return records
 	var visible: Array=records.filter(func(record: Dictionary) -> bool:
 		return str(record.id) not in ["albino_04","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"])
-	var specs: Dictionary=base_plan().maps
+	var specs: Dictionary=plan().maps
 	var menu: Array=[]
 	for record: Dictionary in visible:
 		var row: Dictionary=record.duplicate()
@@ -145,11 +182,11 @@ static func load_field(mid: String) -> PlayableField:
 	var spec_plan: Dictionary = plan()
 	var specs: Dictionary = spec_plan.get("maps",{})
 	if not specs.has(mid): return null
-	var local_root: String = root_path()
-	var receipt: Dictionary = read_json("res://data/maps/native_png_pack.json")
+	var local_root: String = extra_root() if extra_map(mid) else root_path()
+	var receipt: Dictionary = read_json(EXTRA_RECEIPT_PATH if extra_map(mid) else "res://data/maps/native_png_pack.json")
 	if FileAccess.get_sha256(local_root+"/index.json") != receipt.get("index_sha256",""): return null
 	var index: Dictionary = read_json(local_root+"/index.json")
-	if index.get("schema") != 1 or index.get("plan_sha256") != FileAccess.get_sha256(PLAN_PATH): return null
+	if index.get("schema") != 1 or index.get("plan_sha256") != plan_hash(mid): return null
 	var entry: Dictionary = index.get("maps",{}).get(mid,{})
 	if entry.get("manifest","") != mid+"/manifest.json": return null
 	var manifest_path: String = local_root+"/"+mid+"/manifest.json"

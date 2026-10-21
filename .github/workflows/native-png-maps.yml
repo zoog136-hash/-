@@ -4,13 +4,31 @@ on:
   pull_request:
     paths:
       - 'data/maps/native_png*'
+      - 'data/maps/aden_faith_png*'
       - 'data/monsters/native_png_spawn_layout.json'
+      - 'data/monsters/aden_faith_png_spawn_layout.json'
+      - 'scripts/monster.gd'
       - 'scripts/monsters/native_png_spawns.gd'
+      - 'scripts/maps/field_population.gd'
       - 'scripts/maps/native_png*'
       - 'scripts/maps/field_minimap.gd'
       - 'scripts/world.gd'
+      - 'scripts/consumable_service.gd'
+      - 'scripts/skills/skill_service.gd'
       - 'tests/native_png*'
+      - 'tests/map_catalog_assertions.gd'
+      - 'tests/hunting_paths_test.gd'
+      - 'tests/hunting_world_capture_test.gd'
+      - 'tests/monster_world_test.gd'
+      - 'tests/reference_expansion_test.gd'
+      - 'tests/world_regions_test.gd'
+      - 'tests/aden_faith_png*'
+      - 'tests/legacy_aden_faith_fixture.gd'
       - 'tools/map_restore/*native_png*'
+      - 'tools/map_restore/update_aden_faith_population.py'
+      - 'tools/map_restore/*map_source_pngs.py'
+      - 'external_map_packs/source_pngs/**'
+      - 'external_map_packs/aden_faith_png_v1/**'
       - '.github/workflows/native-png-maps.yml'
   workflow_dispatch:
 
@@ -39,16 +57,30 @@ jobs:
         run: |
           python3 tools/check_resource_integrity.py --root .
           python3 tools/map_restore/test_native_png_maps.py
+          python3 tools/map_restore/test_map_source_pngs.py
+          python3 tools/map_restore/verify_map_source_pngs.py --require-tracked --decode
+          python3 tools/map_restore/verify_native_png_pack.py --pack external_map_packs/aden_faith_png_v1 --plan data/maps/aden_faith_png_plan.json
           python3 -m py_compile tools/map_restore/build_native_png_maps.py tools/map_restore/verify_native_png_pack.py tools/map_restore/install_native_png_pack.py tools/map_restore/review_native_png_geometry.py
       - name: Parse project and preserve ordinary game/save contracts
+        env:
+          TWILIGHT_ADEN_FAITH_PNG_PACK: ${{ github.workspace }}/external_map_packs/aden_faith_png_v1
+          TWILIGHT_NATIVE_PNG_PACK: ${{ github.workspace }}/external_map_packs/native_png_v5
+          TWILIGHT_ADEN_FAITH_TEST_OUTPUT: ${{ github.workspace }}/native-png-ci/aden-faith-main
         run: |
           mkdir -p native-png-ci
-          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_monster_spawns_test,native_png_runtime_test,native_png_normal_travel_test,native_png_review_runtime_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test
-      - name: State private integration scope
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_polygon_index_test,native_png_monster_spawns_test,native_png_runtime_test,native_png_normal_travel_test,native_png_teleport_test,native_png_review_runtime_test,native_png_streaming_test,aden_faith_png_runtime_test,aden_faith_png_save_migration_test,aden_faith_png_monster_spawns_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test,field_world_test,world_regions_test,hunting_paths_test,monster_world_test,reference_expansion_test
+          python3 - <<'PY'
+          import json
+          result = json.load(open('native-png-ci/summary.json'))
+          required = {'aden_faith_png_runtime_test', 'aden_faith_png_save_migration_test', 'aden_faith_png_monster_spawns_test', 'native_png_normal_travel_test', 'native_png_teleport_test'}
+          assert required <= set(result['checks'])
+          assert not required.intersection(result['skipped']), 'Tracked PNG Main/save tests must actually run'
+          PY
+      - name: State tracked image integration scope
         if: always()
         run: |
           mkdir -p native-png-ci
-          echo 'PUBLIC CODE REGRESSION ONLY. No private original PNGs are available here. native_png_runtime_test must SKIP without the actual private pack and --native-png-maps. Actual local OpenGL/PNG evidence is reported separately. The new static spawn contract is verified; full private-pack collision/spawn gameplay and Android remain unverified.' > native-png-ci/SCOPE.txt
+          echo 'The user authorized Git delivery of all nine original PNG sources and the new five-map bundle. This job verifies source byte hashes/full decoding and runs ordinary Aden/Faith OpenGL Main and save tests with real tracked chunks. Older explicit --native-png-maps suites still require their flag and are not counted when skipped. Full-map collision/foreground/spawn alignment and Android device performance remain unverified.' > native-png-ci/SCOPE.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -56,6 +56,7 @@ func release_and_land(success: bool) -> void:
 	check(world.combat_flights.flights.is_empty(), "projectile actually reaches the NPC")
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_turn_undead_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	check(QA.enter_game(world), "enter actual gameplay")

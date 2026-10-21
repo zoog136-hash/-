@@ -7,6 +7,14 @@ extends "res://tests/original_based_pose_review_helper.gd"
 func subject_name() -> String: return "서큐버스"
 func subject_folder() -> String: return "succubus"
 
+func run() -> void:
+	# These authored ranged-art fixtures require a 390px (or longer) approach
+	# in every direction plus torso-height spell LOS. The reviewed native
+	# pockets cannot contain that canonical arena; preserve range and physics
+	# on the original A3 fixture instead of shortening or skipping the checks.
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,str(get_script().resource_path)): return
+	await super.run()
+
 func monster_start_distance() -> float:
 	if normal.attack_type != "magic": return super.monster_start_distance()
 	# Retain the real magic attack range. Start outside it to exercise pursuit

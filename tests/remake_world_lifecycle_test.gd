@@ -24,7 +24,14 @@ func _run() -> void:
 	# Keep the real source map\u2019s validated entry position. The pre-remake
 	# coordinate (3300,4370) may not contain any A3 walkable cell, in which
 	# case nearest_cell returns (-1,-1) and every legitimate impact is dropped.
-	check(world.field_map != null and world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position), "combat fixture begins at a real walkable position")
+	var spawn_clear: bool=world.field_map != null and world.field_map.walkable(world.player.global_position)
+	if world.field_map is NativePngField:
+		var foot: CircleShape2D=world.player.get_node("CollisionShape2D").shape as CircleShape2D
+		check(foot!=null and is_equal_approx(foot.radius,4.0),"actual native body collision foot retained")
+		spawn_clear=spawn_clear and foot!=null and world.field_map.point_clear(world.player.global_position,foot.radius)
+	else:
+		spawn_clear=spawn_clear and world.field_map.point_clear(world.player.global_position)
+	check(spawn_clear, "combat fixture begins at a real walkable position")
 	var target: TwilightMonster = load("res://scenes/Monster.tscn").instantiate()
 	world.monsters_root.add_child(target)
 	var record: Dictionary = world.monster_db[0].duplicate(true)

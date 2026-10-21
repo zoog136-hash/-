@@ -48,7 +48,7 @@ func run() -> void:
 	var world: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(world)
 	check(QA.enter_game(world),"actual Main character entry")
 	world.set_process(false);world.save_timer=-100000
-	for mid: String in REGISTRY.plan().maps:
+	for mid: String in REGISTRY.base_plan().maps:
 		world._set_map(mid,false);world.portal_cooldown=10000
 		check(world.field_map is NativePngField,mid+" actual pinned PNG field")
 		if not world.field_map is NativePngField: continue
@@ -63,7 +63,7 @@ func run() -> void:
 			world.player.global_position=foot+Vector2(200,0);world.player.velocity=Vector2.ZERO
 			world.player.clear_click_path();world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
 			# The runtime now stages two decoded source chunks per refresh.
-			for _load_pass: int in range(32): renderer.refresh_visible()
+			check(await renderer.settle_visible(),"asynchronous real visible PNGs fully ready")
 			await ticks(3)
 			var matching: Array=[]
 			for key: String in renderer.chunks:
@@ -117,7 +117,7 @@ func run() -> void:
 			check(not field.walkable(Vector2(raw[0],raw[1])),mid+" corrected real object foundation blocks navigation")
 		world.player.camera.zoom=Vector2.ONE*.12;world.player.camera.force_update_scroll()
 		var requested: int=renderer.forecast_pixels(renderer.visible_rows(world.player.camera))
-		for _load_pass: int in range(32): renderer.refresh_visible()
+		check(await renderer.settle_visible(),"asynchronous real visible PNGs fully ready")
 		check(requested<=renderer.MAX_VISIBLE_PIXELS or (renderer.budget_limited and world.player.camera.zoom.x>.12),mid+" over-budget view is constrained before allocation; small maps may fit entirely")
 		check(renderer.decoded_pixels<=renderer.MAX_VISIBLE_PIXELS,mid+" actual textures stay below budget")
 		for filename: String in renderer.visible_rows(world.player.camera):

@@ -15,7 +15,7 @@ from build_native_png_maps import ROOT, digest
 from verify_native_png_pack import verify
 
 
-def install(parts, destination, receipt_path, plan_path):
+def install(parts, destination, receipt_path, plan_path, pack_receipt=None):
     destination = destination.resolve()
     if destination.is_relative_to(ROOT) or destination.exists():
         raise ValueError('Choose a NEW private destination outside the public checkout')
@@ -50,7 +50,7 @@ def install(parts, destination, receipt_path, plan_path):
             if bundle.testzip() is not None:
                 raise ValueError('ZIP CRC mismatch')
             bundle.extractall(unpacked)
-        pinned = json.loads((ROOT/'data/maps/native_png_pack.json').read_text())
+        pinned = json.loads((pack_receipt or ROOT/'data/maps/native_png_pack.json').read_text())
         if digest(unpacked/'index.json') != pinned['index_sha256']:
             raise ValueError('Archive does not match the checked-in private pack receipt')
         report = verify(unpacked, plan_path)
@@ -64,5 +64,6 @@ if __name__ == '__main__':
     parser.add_argument('--destination', type=Path, required=True)
     parser.add_argument('--receipt', type=Path, default=ROOT/'data/maps/native_png_archive.json')
     parser.add_argument('--plan', type=Path, default=ROOT/'data/maps/native_png_plan.json')
+    parser.add_argument("--pack-receipt", type=Path, default=ROOT/"data/maps/native_png_pack.json")
     args = parser.parse_args()
-    print(json.dumps(install(args.parts_dir, args.destination, args.receipt, args.plan)))
+    print(json.dumps(install(args.parts_dir, args.destination, args.receipt, args.plan, args.pack_receipt)))

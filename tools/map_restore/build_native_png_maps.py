@@ -170,8 +170,11 @@ def build(sources, plan_path, output):
             if list(image.size) != expected['size'] or image.mode != 'RGBA':
                 raise ValueError('Original canvas/mode mismatch: '+filename)
         originals[filename] = dict(expected, acquired=True, decoded=True)
-    with Image.open(sources/'13474.png') as albino:
-        splits, proof = partition(albino, plan['albino_partition']['cuts'])
+    proof = None
+    splits = []
+    if 'albino_partition' in plan:
+        with Image.open(sources/'13474.png') as albino:
+            splits, proof = partition(albino, plan['albino_partition']['cuts'])
     built = {}
     for mid, spec in plan['maps'].items():
         if mid.startswith('albino_'):

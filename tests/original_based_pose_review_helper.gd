@@ -4,6 +4,13 @@ extends "res://tests/original_based_ogre_gameplay_test.gd"
 # pose inspection moves to nearby walkable ground without foreground cover.
 var pose_review_positioned: bool = false
 
+func run() -> void:
+	# Only rendered canonical pose review needs the A3 prop/faded interface.
+	# Ordinary headless AI/combat/lifecycle checks keep the active map.
+	if not OS.get_environment("TWILIGHT_PR100_CAPTURE_DIR").is_empty():
+		if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,str(get_script().resource_path)): return
+	await super.run()
+
 func capture(name_value: String) -> void:
 	if not captures.is_empty() and name_value.begins_with("authored-") and not pose_review_positioned:
 		pose_review_positioned = true

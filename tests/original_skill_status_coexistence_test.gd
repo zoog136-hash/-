@@ -55,6 +55,11 @@ func run() -> void:
 	world.level = 90
 	world._on_job_class_selected("암흑기사")
 	world.equipped_items.clear()
+	var combat_point: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0)])
+	check(combat_point.is_finite(), "active map has clear, non-safe status cast positions")
+	if not combat_point.is_finite():
+		world.queue_free(); await process_frame; quit(1); return
+	world.player.global_position = combat_point
 	dummy = (load("res://scenes/Monster.tscn") as PackedScene).instantiate()
 	world.monsters_root.add_child(dummy)
 	respawn()

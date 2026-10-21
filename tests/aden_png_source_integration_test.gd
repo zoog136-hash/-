@@ -170,6 +170,9 @@ func probe(record: Dictionary, heading: int, push_frames: int) -> void:
 		"player":[world.player.global_position.x,world.player.global_position.y],"monster":[monster.global_position.x,monster.global_position.y],"physics_ticks":push_frames,"stayed_open":stayed_open,"feet_clear":feet_clear})
 
 func run() -> void:
+	# This suite asserts the immutable A3 source grid and its reviewed props.
+	# Native PNG actors and physics have their own active-map acceptance suite.
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_png_source_integration_test.gd"): return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		if arg == "--capture": capture = true

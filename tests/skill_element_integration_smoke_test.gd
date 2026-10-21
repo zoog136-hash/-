@@ -25,6 +25,7 @@ func _dummy(scene: PackedScene, root_node: Node, player: TwilightPlayer, world: 
 	return mob
 
 func _run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/skill_element_integration_smoke_test.gd"): return
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
 	if scene == null:
 		_check(false, "Main scene unavailable")

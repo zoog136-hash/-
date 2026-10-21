@@ -65,10 +65,10 @@ jobs:
           set -o pipefail
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_private_icon_binding_test.gd 2>&1 | tee godot-skill-icon-priority.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' godot-skill-icon-priority.log
-          grep -q 'SKILL_ICON_PRIVATE_BINDING_PASS' godot-skill-icon-priority.log
+          grep -q '^SKILL_ICON_PRIVATE_BINDING_OK$' godot-skill-icon-priority.log
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_icon_asset_integrity_test.gd 2>&1 | tee godot-skill-icon-textures.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' godot-skill-icon-textures.log
-          grep -q 'SKILL_ICON_125_TEXTURES_PASS' godot-skill-icon-textures.log
+          grep -q '^SKILL_ICON_125_TEXTURES_OK$' godot-skill-icon-textures.log
 
       - name: Boot main scene
         shell: bash
@@ -258,12 +258,12 @@ jobs:
       - name: Verify regional test shard coverage and failure handling
         run: python3 tools/test_world_region_shards.py
 
-      - name: All playable world regions
+      - name: Existing layout regional contracts
         shell: bash
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-region-tests"
-          python3 tools/world_region_shards.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --path . --logs world-region-shards --timeout 360 2>&1 | tee godot-world-regions.log
+          python3 tools/world_region_shards.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --path . --logs world-region-shards --timeout 360 --legacy-map-layouts 2>&1 | tee godot-world-regions.log
           if grep -E "SCRIPT ERROR:|ERROR:|REGION FAIL:|WORLD_REGIONS_FAILED" godot-world-regions.log; then
             exit 1
           fi
@@ -274,7 +274,7 @@ jobs:
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-portal-tests"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd 2>&1 | tee godot-region-portals.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd -- --legacy-map-layouts 2>&1 | tee godot-region-portals.log
           if grep -E "SCRIPT ERROR:|ERROR:|PORTAL FAIL:|WORLD_REGION_PORTALS_FAILED" godot-region-portals.log; then
             exit 1
           fi
@@ -293,7 +293,7 @@ jobs:
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-render"
           export LIBGL_ALWAYS_SOFTWARE=1
-          xvfb-run -a -s "-screen 0 1280x720x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee godot-region-render.log
+          xvfb-run -a -s "-screen 0 1280x720x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd -- --legacy-map-layouts 2>&1 | tee godot-region-render.log
           if grep -E "SCRIPT ERROR:|ERROR:" godot-region-render.log; then
             exit 1
           fi

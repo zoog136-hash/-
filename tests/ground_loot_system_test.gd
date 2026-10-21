@@ -67,6 +67,7 @@ func pointer(view: Button, use_touch: bool) -> void:
 			root.push_input(mouse, true)
 
 func _run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/ground_loot_system_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	await process_frame

@@ -20,6 +20,11 @@ func run() -> void:
 	world._clear_monsters()
 	world.player.set_physics_process(false)
 	world.player.set_auto_enabled(false)
+	var combat_point: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(10,0)])
+	check(combat_point.is_finite(), "active map has clear, non-safe audio cast positions")
+	if not combat_point.is_finite():
+		world.queue_free(); await process_frame; quit(1); return
+	world.player.global_position = combat_point
 	var service := world.original_skills
 	var audio := service.vfx.audio_pool
 	check(audio.players.size() == 6, "bounded six-voice pool")

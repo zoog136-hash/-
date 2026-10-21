@@ -46,6 +46,7 @@ func cast_and_land(success: bool) -> void:
 	for _step: int in range(20): world.combat_flights._physics_process(.02)
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_turn_undead_rewards_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	check(QA.enter_game(world), "enter actual game")
