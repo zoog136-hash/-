@@ -7,13 +7,15 @@ on:
       - .github/workflows/main-ci-audit-launch.yml
       - tools/ci/main_ci_audit.py
       - tools/ci/main_ci_audit_test.py
+      - tools/ci/main_ci_safe_audit.py
+      - tools/ci/main_ci_safe_audit_test.py
 
 permissions:
   contents: read
   actions: write
 
 concurrency:
-  group: main-ci-audit-launch-ecac4fa-20261021
+  group: main-ci-audit-launch-88b1773-20261021
   cancel-in-progress: false
 
 jobs:
@@ -27,28 +29,30 @@ jobs:
         with:
           path: harness
           persist-credentials: false
-      - name: Checkout exact main baseline, without any PR patch
+      - name: Checkout exact main after CI-only settings repair
         uses: actions/checkout@v4
         with:
-          ref: ecac4faafdf34a6dcbf60b101accc5911d1dd39a
+          ref: 88b1773f90e9d5cc092d9423ef9e80407b102bf5
           path: baseline
           persist-credentials: false
       - name: Install YAML parser
         run: python3 -m pip install PyYAML==6.0.2
-      - name: Test inventory and fail-closed verdict rules
-        run: python3 harness/tools/ci/main_ci_audit_test.py
-      - name: Dispatch every main CI and record exact-SHA run IDs
+      - name: Test inventory, fail-closed verdicts and publisher exclusion
+        run: |
+          python3 harness/tools/ci/main_ci_audit_test.py
+          python3 harness/tools/ci/main_ci_safe_audit_test.py
+      - name: Dispatch every main validation without resource-publishing jobs
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          python3 harness/tools/ci/main_ci_audit.py dispatch
+          python3 harness/tools/ci/main_ci_safe_audit.py dispatch
           --root baseline
-          --sha ecac4faafdf34a6dcbf60b101accc5911d1dd39a
+          --sha 88b1773f90e9d5cc092d9423ef9e80407b102bf5
           --report audit-results/main-ci-audit.json
       - name: Preserve coverage, exclusions and pending/failure states
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: main-ci-audit-ecac4fa-${{ github.run_id }}
+          name: main-ci-audit-88b1773-${{ github.run_id }}
           path: audit-results/
           if-no-files-found: error
