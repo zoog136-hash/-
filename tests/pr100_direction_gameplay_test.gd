@@ -6,6 +6,7 @@ extends SceneTree
 ## pauses unrelated spawn slots, and equips existing DB records; combat stats,
 ## actor scenes, AI, map, damage, flight, death, and pickup code are unchanged.
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const LOOT_ROLL = preload("res://scripts/loot_drop.gd")
 const ACTIONS = [["move_right"],["move_right","move_down"],["move_down"],["move_left","move_down"],
 	["move_left"],["move_left","move_up"],["move_up"],["move_right","move_up"]]
 # Independent screen-coordinate expectations, not derived from motion.face().
@@ -534,7 +535,29 @@ func lifecycle_case() -> void:
 		check(death_track.begins_with("death_"),"real field corpse plays directional death")
 		check(upright(normal.sprite),"authored death has no second rotation")
 	var drops: Array = world.ground_loot.snapshot()
-	check(not drops.is_empty(),"real DB death produces ground drop")
+	# Production equipment (0.315%) and potion (45%) rolls are not guaranteed
+	# on any one normal kill. The previous test incorrectly required a drop
+	# from every death. Preserve the actual death outcome in evidence.
+	report.setup.real_death_drops = drops.size()
+	if drops.is_empty():
+		# Exercise the exact production loot table deterministically for the
+		# subsequent real ground/view/manual-pickup checks. This extra fixture
+		# is NOT counted as a drop from the killed monster, and does not grant
+		# inventory or modify production drop rates.
+		var sample_rng := RandomNumberGenerator.new()
+		var sampled: Array[Dictionary] = []
+		for seed_value: int in range(1, 257):
+			sample_rng.seed = seed_value
+			sampled = LOOT_ROLL.roll_detailed(normal.drop_items, normal.is_boss, world.loot_catalog, sample_rng, normal.monster_name)
+			if not sampled.is_empty():
+				break
+		check(not sampled.is_empty(),"real DB loot table produces an obtainable item")
+		if not sampled.is_empty():
+			var entry: Dictionary = sampled[0]
+			var generated: Button = world._spawn_ground_drop(str(entry.get("item_name", "")),normal.global_position,int(entry.get("quantity", 1)))
+			check(generated != null,"real ground loot manager places deterministic production-roll sample")
+			drops = world.ground_loot.snapshot()
+	check(not drops.is_empty(),"actual production ground loot can be spawned for manual UI pickup")
 	var picked := false
 	if not drops.is_empty():
 		var drop: Dictionary = drops[0]
