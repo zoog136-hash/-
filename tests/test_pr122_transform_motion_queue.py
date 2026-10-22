@@ -26,7 +26,7 @@ class TransformMotionQueueTest(unittest.TestCase):
                 with patch.dict(checkpoint.staging.ACTORS, {fixture.key: 'fixture'}, clear=True):
                     missing, core, _ = checkpoint.update_authoring_queue(register, manifest, root=root)
                 self.assertEqual(missing, 8 if grade == '신화' else 16)
-                self.assertEqual(core, 32)
+                self.assertEqual(core, 25)  # Three 8-view actions plus one new S death.
                 self.assertEqual(register['next_locomotion_source']['role'], 'run' if grade == '신화' else 'walk')
                 if grade == '신화':
                     self.assertEqual(register['next_detailed_source']['role'], 'attack')

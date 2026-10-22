@@ -65,7 +65,7 @@ func _set_state(value: String, delta: float = 0.0) -> void:
 	state = value
 
 func face(vector: Vector2) -> void:
-	if vector.length_squared() < 0.01: return
+	if dead or vector.length_squared() < 0.01: return
 	var next: int = posmod(int(round(vector.angle() / (PI / 4.0))), 8)
 	if next != facing8: turn_clock = 0.09
 	facing8 = next
@@ -255,7 +255,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	var offset: Vector2 = Vector2.ZERO
 	if dead:
 		var fall: float = clampf(death_clock / 0.35, 0.0, 1.0)
-		# Authored death art already contains its fall; retain the shared fade only.
+		# Authored death art supplies the fall and holds its terminal pose.
 		if source == null or _resolved_role not in ["death", "corpse"]:
 			lean = fall * profile.death_tilt * (-1.0 if direction.x < 0.0 else 1.0)
 			offset.y = 9.0 * fall
@@ -322,7 +322,8 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	sprite.rotation = lean
 	sprite.position = (anchor * stretch).rotated(lean) + offset + Vector2(0, bob)
 	var tint: Color = Color(1.45, 0.8, 0.7) if hit_clock > 0.0 else Color.WHITE
-	if dead: tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
+	if dead and (source == null or _resolved_role not in ["death", "corpse"]):
+		tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
 	sprite.modulate = tint
 	if sprite is AnimatedSprite2D:
 		apply_frames(sprite)
@@ -340,6 +341,18 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 			sprite.scale *= reference_canvas / pose.get_size()
 	impact_pose_pending = false
 
+func _available_death_key(frames: SpriteFrames, requested: int) -> String:
+	# Keep existing directional art; only missing views share the S source.
+	var directions: Array[int] = [requested, 2]
+	for distance: int in range(1, 5):
+		directions.append(posmod(requested + distance, 8))
+		directions.append(posmod(requested - distance, 8))
+	for index: int in directions:
+		var key := "death_" + str(index)
+		if frames.has_animation(key) and frames.get_frame_count(key) > 0:
+			return key
+	return ""
+
 func _resolve_frames(frames: SpriteFrames) -> void:
 	if _track_source != frames or _resolved_profile != profile:
 		_clear_native_hit_presentation()
@@ -355,12 +368,14 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	_resolved_role = "legacy"
 	_resolved_directional = false
 	if bool(frames.get_meta("twilight_native_locomotion_staging", false)):
-		# Native WIP tracks represent exact authored actions/views. Missing run,
-		# idle, combat or headings stay unavailable; never alias a different pose.
+		# Movement/combat retain exact views. Death alone may reuse a real
+		# existing source under the user's new-source-only S policy.
 		# Recovery/corpse continue attack/death; a stationary turn presents the
 		# actual idle at its new facing. None creates a new authored track.
 		var native_role: String = "attack" if state == "recovery" else ("death" if state == "corpse" else ("idle" if state == "turn" else state))
 		var native_key: String = native_role + "_" + str(facing8)
+		if native_role == "death":
+			native_key = _available_death_key(frames, facing8)
 		_resolved_role = "unavailable"
 		if frames.has_animation(native_key) and frames.get_frame_count(native_key) > 0:
 			_resolved_key = native_key
@@ -388,6 +403,13 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 				_resolved_key = key
 				_resolved_role = role
 				_resolved_directional = index in [0, 2, 3]
+				return
+		if role == "death":
+			var shared_death := _available_death_key(frames, facing8)
+			if not shared_death.is_empty():
+				_resolved_key = shared_death
+				_resolved_role = "death"
+				_resolved_directional = true
 				return
 	# Keep existing class/directional/single-image art as the final fallback.
 	match profile.layout:

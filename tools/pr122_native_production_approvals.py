@@ -107,8 +107,7 @@ class _Reader:
 
 def _selection(reader, key, actor, manifest):
     require(ACTOR_KEY.fullmatch(key) is not None, 'Unsupported approved actor key')
-    required_roles = motion_scope.required_roles(reader.root, key)
-    required_tracks = frozenset((d, r) for d in DIRECTIONS for r in required_roles)
+    required_tracks = motion_scope.required_tracks(reader.root, key)
     tracks = actor.get('tracks')
     require(isinstance(tracks, list) and len(required_tracks) <= len(tracks) <= 48
             and type(actor.get('native_track_count')) is int and actor['native_track_count'] == len(tracks)
@@ -203,11 +202,13 @@ def _actor_description(reader, key, actor, manifest):
     profile_text = reader.file(actor['native_profile']).read_text()
     frame_paths = re.findall(r'^frames_path\s*=\s*"([^"]+)"\s*$', profile_text, re.MULTILINE)
     require(frame_paths == [actor['frames']], 'Production NativeMotionProfile targets different frames')
-    if not motion_scope.requires_walk(reader.root, key):
+    if len(motion_scope.required_tracks(reader.root, key)) < 48:
         pins['motion_requirements'] = dict(
             policy=dict(path=motion_scope.POLICY.as_posix(), sha256=reader.digest(motion_scope.POLICY.as_posix())),
             required_roles=sorted(motion_scope.required_roles(reader.root, key)),
-            required_track_count=40, authored_track_count=len(selection), authored_pose_count=len(selection) * 6)
+            required_track_count=len(motion_scope.required_tracks(reader.root, key)),
+            required_death_directions=list(motion_scope.required_directions(reader.root, key, 'death')),
+            authored_track_count=len(selection), authored_pose_count=len(selection) * 6)
     pins.update(source_selection_sha256=json_digest(selection), actor_record_sha256=json_digest(actor))
     return pins, selection
 

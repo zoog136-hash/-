@@ -145,8 +145,10 @@ def stage(root, key, revision=None):
     missing = [f'{role}_{index}' for role in movement_roles for index in range(8)
                if f'{role}_{index}' not in {track['animation'] for track in tracks}]
     available = {track['animation'] for track in tracks}
-    missing_core = {role: [f'{role}_{direction}' for direction in range(8)
-                          if f'{role}_{direction}' not in available] for role in CORE_ROLES}
+    missing_core = {role: [f'{role}_{importer.DIRECTIONS.index(direction)}'
+                           for direction in motion_scope.required_directions(root, key, role)
+                           if f'{role}_{importer.DIRECTIONS.index(direction)}' not in available]
+                    for role in CORE_ROLES}
     entry = dict(
         grade=next(row['grade'] for row in json.loads((root / 'docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json').read_text()) if row['id'] == key),
         frames='res://' + frames_path.as_posix(), frames_sha256=digest(root / frames_path),
@@ -159,9 +161,12 @@ def stage(root, key, revision=None):
         visual_review='NOT_RUN; image tools authorized for production, no chat image attachments',
         timing_review='HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved',
         integration='Godot SpriteFrames contract only; production catalogs and profiles unchanged')
-    if 'walk' not in movement_roles:
-        entry['motion_requirements'] = dict(scope='USER_TRANSFORM_ONLY_WALK_OMISSION',
-            required_roles=sorted(motion_scope.required_roles(root, key)), required_native_track_count=40,
+    if len(motion_scope.required_tracks(root, key)) < 48:
+        entry['motion_requirements'] = dict(scope='USER_TRANSFORM_NEW_DEATH_S_AND_WALK_SCOPE',
+            required_roles=sorted(motion_scope.required_roles(root, key)),
+            required_native_track_count=len(motion_scope.required_tracks(root, key)),
+            required_death_directions=list(motion_scope.required_directions(root, key, 'death')),
+            retained_death_tracks=sum(track['role'] == 'death' for track in tracks),
             retained_walk_tracks=sum(track['role'] == 'walk' for track in tracks),
             policy_sha256=digest(root / motion_scope.POLICY), omission_grants_approval=False)
     previous = dict(register['actors'].get(key, {}))

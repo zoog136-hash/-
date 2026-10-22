@@ -30904,9 +30904,7 @@
           "hit_4"
         ],
         "death": [
-          "death_2",
-          "death_3",
-          "death_4"
+          "death_2"
         ]
       },
       "production_connected": false,
@@ -30917,7 +30915,7 @@
       "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
       "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
       "motion_requirements": {
-        "scope": "USER_TRANSFORM_ONLY_WALK_OMISSION",
+        "scope": "USER_TRANSFORM_NEW_DEATH_S_AND_WALK_SCOPE",
         "required_roles": [
           "attack",
           "death",
@@ -30925,10 +30923,19 @@
           "idle",
           "run"
         ],
-        "required_native_track_count": 40,
+        "required_native_track_count": 38,
         "retained_walk_tracks": 7,
-        "policy_sha256": "770ae33ff628f37b71cef0f071914578d132e00439c1820f931c8e5eb12b2758",
-        "omission_grants_approval": false
+        "policy_sha256": "bc896e56c0dd2d91dd8097fb5b33e8d77344b55ca4a5c844337151d1846febab",
+        "omission_grants_approval": false,
+        "required_death_directions": [
+          "E",
+          "SE",
+          "S",
+          "NW",
+          "N",
+          "NE"
+        ],
+        "retained_death_tracks": 5
       },
       "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r039/NativeMotionProfile.tres",
       "native_profile_sha256": "a3bfa96c8801846cddec81f74c3a4fb12083d1c2f8c24f5b17c0d59f6a78e1ae",
@@ -30962,7 +30969,8 @@
         "visual_approval": "NOT_RUN",
         "completed_added": 0,
         "actual_Player_dedicated_actions_and_markers": "PASS"
-      }
+      },
+      "death_source_completion": "HOLD: preserve all five connected deaths; complete existing S source; no new SW/W source"
     }
   },
   "history": {
@@ -56494,6 +56502,6 @@
     "direction": "S",
     "role": "attack"
   },
-  "missing_detailed_action_blocks": 8,
+  "missing_detailed_action_blocks": 6,
   "missing_locomotion_blocks": 0
 }

@@ -41,7 +41,7 @@ def update_authoring_queue(register, manifest, root=None):
                         and (role == 'walk' or has_walk or not walk_required)):
                     next_movement = dict(key=key, direction=direction, role=role)
         for role in ('attack', 'hit', 'death', 'idle'):
-            for direction in staging.importer.DIRECTIONS:
+            for direction in motion_scope.authoring_directions(root, key, role):
                 if f'{key}:{direction}:{role}' in actions:
                     continue
                 missing_actions += 1
