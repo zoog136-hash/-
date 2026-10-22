@@ -15,7 +15,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: main-ci-audit-launch-88b1773-20261021
+  group: main-ci-audit-launch-4820face-20261022
   cancel-in-progress: false
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
       - name: Checkout exact main after CI-only settings repair
         uses: actions/checkout@v4
         with:
-          ref: 88b1773f90e9d5cc092d9423ef9e80407b102bf5
+          ref: 4820face7a51f58a17004642f24dabe4424627a0
           path: baseline
           persist-credentials: false
       - name: Install YAML parser
@@ -47,12 +47,12 @@ jobs:
         run: >-
           python3 harness/tools/ci/main_ci_safe_audit.py dispatch
           --root baseline
-          --sha 88b1773f90e9d5cc092d9423ef9e80407b102bf5
+          --sha 4820face7a51f58a17004642f24dabe4424627a0
           --report audit-results/main-ci-audit.json
       - name: Preserve coverage, exclusions and pending/failure states
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: main-ci-audit-88b1773-${{ github.run_id }}
+          name: main-ci-audit-4820face-${{ github.run_id }}
           path: audit-results/
           if-no-files-found: error
