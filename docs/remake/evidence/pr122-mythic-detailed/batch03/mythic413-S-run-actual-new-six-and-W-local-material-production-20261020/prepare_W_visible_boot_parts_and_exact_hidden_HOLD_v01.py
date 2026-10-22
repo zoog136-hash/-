@@ -1,0 +1,18 @@
+from pathlib import Path
+import json,numpy as np
+from PIL import Image,ImageDraw
+from native_run_surface import pin
+B=Path(__file__).parent;D=B/'W-original-native-boot-semantic-prep-v01';H=Path('/workspace/scratch/mythic413-W-hit-author-20261020-v01/W-final-once-body-real-cloth-complete-LEFT-original-boots-readonly-future-action-handoff-v01.json');j=json.loads(H.read_text());SP=Path(j['original_once_neutral_floor_model']['path']);s=json.loads(SP.read_text());im=Image.open(j['source']['path']).convert('RGBA');a=np.asarray(im);parts={}
+# Actual separately measured full native heel/counter/stiletto/foreball source
+# captures already carry exact source RGBA. They do not assert missing thighs.
+for side,m in zip(['R-far','L-near'],s['source_material_capture_models']):
+ p=Path(m['exact_original_native_material']['path']);assert pin(p)['sha256']==m['exact_original_native_material']['sha256'];q=D/(side+'-exact-original-full-lowerboot-counter-heel-and-toe-native-v01.png');Image.open(p).convert('RGBA').save(q);parts[side+'-complete-original-lowerboot']=pin(q)
+# The near visible leg shares no invented far-thigh donor. The exact knee
+# crossing needs independent semantic QA before any movable full-leg claim.
+regions={'R-far-visible-shin':[(567,832),(594,828),(608,850),(614,888),(615,934),(614,975),(612,1003),(625,1026),(632,1044),(619,1080),(575,1085),(554,1044),(560,1004),(562,963),(562,919),(559,879),(560,847)],'L-near-visible-thigh-and-shin':[(545,637),(647,637),(657,660),(661,687),(654,721),(648,758),(641,784),(647,809),(662,835),(676,873),(685,918),(690,965),(693,999),(710,1036),(724,1060),(717,1083),(674,1103),(647,1089),(643,1051),(633,1017),(618,981),(606,943),(592,899),(581,866),(571,839),(563,813),(553,786),(544,751),(538,713),(535,674)]}
+for key,poly in regions.items():
+ mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon(poly,fill=255);ar=np.array(im);ar[:,:,3]=np.minimum(ar[:,:,3],np.array(mask));ar[ar[:,:,3]==0,:3]=0;p=D/(key+'-provisional-exact-original-RGBA-v01.png');Image.fromarray(ar).save(p);mp=D/(key+'-semantic-matte-PENDING-LOCAL-QA-v01.png');mask.save(mp);parts[key]=dict(**pin(p),semantic_mask=pin(mp),status='PROVISIONAL_VISIBLE_NATIVE_SEMANTIC_MASK_REQUIRES_LOCAL_QA')
+# Tight working crop and a mask for genuinely occluded far upper-leg material.
+# This is a HOLD specification, not synthetic completion or source painting.
+box=[523,626,632,856];crop=im.crop(box);cp=D/'W-RIGHTfar-genuine-hidden-proximal-knee-exact-working-crop-v01.png';crop.save(cp);mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon([(548,644),(580,637),(610,651),(618,704),(615,750),(613,796),(609,830),(591,849),(568,841),(559,801),(552,756),(543,703)],fill=255);mcp=D/'W-RIGHTfar-genuine-hidden-proximal-knee-exact-local-mask-v01.png';mask.crop(box).save(mcp)
+p=D/'W-original-visible-fullboots-and-provisional-shin-exact-hidden-upperleg-HOLD-v01.json';p.write_text(json.dumps(dict(status='ACTUAL_FULL_ORIGINAL_LOWERBOOTS_PRESERVED_VISIBLE_SHIN_MATTES_PENDING_LOCAL_QA_FAR_UPPERLEG_HIDDEN_MATERIAL_HOLD',source=j['source'],source_shared_contract=pin(H),once_registration=j['once_registration'],C=j['C'],bodyunit=j['bodyunit'],root_unpadded=j['root_unpadded'],canonical_sole_capture=pin(SP),parts=parts,hidden_far_upperleg=dict(status='GENUINELY_OCCLUDED_PART_HOLD_NO_LARGE_DONOR_OR_COMPLETION_CLAIM',native_bbox=box,exact_working_crop=pin(cp),exact_local_missing_material_mask=pin(mcp)),source_original_RGBA_changed=False,new_hidden_material_generated=False,full_actor_source_produced=0,actor_approvals_added=0),indent=2)+'\n');print(json.dumps(dict(contract=pin(p),full_original_lowerboot_parts=2,provisional_visible_shin_parts=2,hidden_part_HOLD=1)))
