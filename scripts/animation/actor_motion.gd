@@ -322,7 +322,8 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	sprite.rotation = lean
 	sprite.position = (anchor * stretch).rotated(lean) + offset + Vector2(0, bob)
 	var tint: Color = Color(1.45, 0.8, 0.7) if hit_clock > 0.0 else Color.WHITE
-	if dead: tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
+	var keep_hero_corpse: bool = source != null and profile.profile_id.begins_with("transform:") and bool(source.get_meta("pr122_hero_hold_final_death_frame", false))
+	if dead and not keep_hero_corpse: tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
 	sprite.modulate = tint
 	if sprite is AnimatedSprite2D:
 		apply_frames(sprite)
