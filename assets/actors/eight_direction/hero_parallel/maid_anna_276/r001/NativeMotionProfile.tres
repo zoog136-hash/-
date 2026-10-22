@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_1avlr"]
+
+[resource]
+script = ExtResource("1_1avlr")
+profile_id = "transform:276"
+resource_path_hint = "res://assets/catalog/f111979ea61b2aea33dae32f.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 2
+action_hit_frames = {
+"attack": 2.0,
+"cast": 2.0
+}
+color_tint = Color(0.9137255, 0.81960785, 0.8980392, 1)
+sprite_offset = Vector2(0, -33.6)
+pixel_scale = 1.05
+embedded_shadow = true
+death_duration = 0.8
+idle_amplitude = 0.5
+stride_bob = 1.0
+stride_lean = 0.012
+attack_recoil = 0.75
+hit_recoil = 0.0
+death_tilt = 1.1
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

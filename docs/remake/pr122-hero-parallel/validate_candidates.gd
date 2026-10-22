@@ -46,17 +46,18 @@ func _run() -> void:
 	var target_ids := OS.get_environment("TWILIGHT_HERO_TEST_IDS").split(",", false)
 	if target_ids.is_empty(): target_ids = PackedStringArray(["179", "182"])
 	var frames_path: String = staging.actors["transform:" + target_ids[0]].frames
+	var motion_directory: String = str(staging.actors["transform:" + target_ids[0]].rig).get_base_dir()
 	var revision: String = frames_path.get_base_dir().get_file()
 	var group: String = frames_path.get_base_dir().get_base_dir().get_file()
 	var evidence_suffix := OS.get_environment("TWILIGHT_HERO_EVIDENCE_SUFFIX")
 	_check(evidence_suffix.is_empty() or evidence_suffix.is_valid_identifier(), "safe evidence suffix")
 	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + group + "-" + revision + "-visible-main" + ("-" + evidence_suffix if not evidence_suffix.is_empty() else "") + "/"
 	DirAccess.make_dir_recursive_absolute(evidence)
-	var image := Image.load_from_file(frames_path.get_base_dir() + "/run.png")
+	var image := Image.load_from_file(motion_directory + "/run.png")
 	var live := ImageTexture.create_from_image(image)
-	live.take_over_path(frames_path.get_base_dir() + "/run.png")
+	live.take_over_path(motion_directory + "/run.png")
 	textures.append(live)
-	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(frames_path.get_base_dir() + "/rig-proof.json"))
+	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(motion_directory + "/rig-proof.json"))
 	var source: SpriteFrames = load(str(proof.source)) if str(proof.source).ends_with(".tres") else null
 	var new_art: bool = str(proof.get("schema", "")) == "hero-unique-full-atlas-v1"
 	_check(source != null or new_art, "known authoring contract")
@@ -123,7 +124,11 @@ func _run() -> void:
 		_check(player.transform_active and player.motion.profile.profile_id == key, "real Main transformation API")
 		_check(not SCOPE.requires_walk(key), "hero walk excluded")
 		for field: String in ["attack_hit_ratio", "attack_hit_frame", "attack_animation_speed", "death_duration", "pixel_scale", "native_width_ratio", "reference_speed", "sprite_offset", "color_tint"]:
-			_check(profile.get(field) == baseline.get(field), "preserve prior field " + field)
+			if field == "sprite_offset" and new_art and proof.has("ground_registration"):
+				var expected_y: float = -(float(proof.ground_registration.canvas_ground) - 128.0) * profile.pixel_scale
+				_check(is_equal_approx(profile.sprite_offset.y, expected_y) and is_equal_approx(profile.sprite_offset.x, baseline.sprite_offset.x), "new art ground registration changes visual offset only")
+			else:
+				_check(profile.get(field) == baseline.get(field), "preserve prior field " + field)
 		var sprite: AnimatedSprite2D = player.transform_sprite
 		var frames: SpriteFrames = sprite.sprite_frames
 		_check(sprite.is_visible_in_tree(), "actual player visible in tree")
@@ -150,7 +155,8 @@ func _run() -> void:
 						var texture: AtlasTexture = frames.get_frame_texture(track, index)
 						_check(texture.atlas.resource_path == str(reference.atlas), "exact new source texture")
 						_check(texture.region == Rect2(reference.region[0], reference.region[1], reference.region[2], reference.region[3]), "exact new source region")
-						_check(texture.margin == Rect2(37, 37, 75, 75), "padding only, no width/height scaling")
+						var padding: Array = reference.margin_position
+						_check(texture.margin == Rect2(padding[0], padding[1], 256 - reference.region[2], 256 - reference.region[3]), "exact normalized-source padding, no per-view width stretching")
 				elif role != "run":
 					_check(frames.get_frame_count(track) == source.get_frame_count(track), "legacy action length")
 					for index: int in range(source.get_frame_count(track)):
@@ -226,7 +232,7 @@ func _run() -> void:
 		print("HERO_MAIN_TECHNICAL_FAIL checks=%d" % checks)
 		quit(1)
 		return
-	var result := {"schema": "hero-parallel-validation-v1", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "checks": checks, "captures": captures, "actors": results, "frames_sha256": FileAccess.get_sha256(frames_path), "run_png_sha256": FileAccess.get_sha256(frames_path.get_base_dir() + "/run.png"), "default_game_connections": 0, "new_final_approvals": 0, "visual_identity_and_contact_quality": "HOLD", "existing_player_width_ratio_preserved": 0.9}
+	var result := {"schema": "hero-parallel-validation-v1", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "checks": checks, "captures": captures, "actors": results, "frames_sha256": FileAccess.get_sha256(frames_path), "run_png_sha256": FileAccess.get_sha256(motion_directory + "/run.png"), "default_game_connections": 0, "new_final_approvals": 0, "visual_identity_and_contact_quality": "HOLD", "existing_player_width_ratio_preserved": 0.9, "runtime_review_overlay": OS.get_environment("TWILIGHT_HERO_RUNTIME_REVIEW") == "1"}
 	var suffix := "opengl" if captures > 0 else "headless"
 	var file := FileAccess.open(evidence + "validation-" + suffix + ".json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(result, "  ") + "\n")

@@ -1,0 +1,87 @@
+{
+  "schema": "hero-source-generation-receipt-v1",
+  "policy": "NEW_DEATH_S_ONLY_20261022",
+  "requests": [
+    {
+      "name": "run",
+      "prompt": "Hero transformation MAID ANNA, adult female human fantasy combat maid. Canonical candidate design in EVERY sprite: long auburn-brown hair tied with a small white ribbon, white frilled maid bonnet, modest black long-sleeved dress with a white fitted frilled apron and white cuffs, dark stockings, practical black shoes, a sturdy brown wooden broom with a pale straw brush and small brass band, held with anatomically consistent hands. Same face, hair, dress, apron, broom shape and proportions in all cells. Polished readable isometric pixel art, simplified secondary cloth, transparent background with no text, labels, shadows, floor, borders or VFX. Keep the WHOLE character and broom fully INSIDE its own equal square tile, with generous empty gutters. Do not change costume or swap weapons.EXACT six columns by eight rows, preferred total1536x2048,256px square cells. Row camera headings E right,SE down-right,S down,SW down-left,W left,NW up-left,N up,NE up-right. EVERY frame within one row has the SAME fixed camera heading; back rows show the back of the head/dress, not the front. Uniform character apparent size and common projected ground anchor across cells. RUN ONLY. Six genuinely articulated running phases per row: col0 left-foot contact right leg back; col1 left-foot loading right knee forward; col2 both feet airborne switching support; col3 right-foot contact left leg back; col4 right-foot loading left knee forward; col5 both feet airborne. Clear alternating legs and independently bending knees/ankles; apron restrained and broom firmly attached to hands. No walking, no simple whole-sprite bobbing, no duplicate poses. Keep head rigid and body width constant.48 unique coherent RUN sprites.",
+      "transparent_background": true,
+      "original_generated_path": "/workspace/generated_images/exec-1128fb8a-f373-4bb6-ac51-194dfa979b84.png",
+      "destination": "assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/raw/source-run.png",
+      "grid": [
+        6,
+        8
+      ],
+      "authored_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "final_approved": false
+    },
+    {
+      "name": "attack",
+      "prompt": "Hero transformation MAID ANNA, adult female human fantasy combat maid. Canonical candidate design in EVERY sprite: long auburn-brown hair tied with a small white ribbon, white frilled maid bonnet, modest black long-sleeved dress with a white fitted frilled apron and white cuffs, dark stockings, practical black shoes, a sturdy brown wooden broom with a pale straw brush and small brass band, held with anatomically consistent hands. Same face, hair, dress, apron, broom shape and proportions in all cells. Polished readable isometric pixel art, simplified secondary cloth, transparent background with no text, labels, shadows, floor, borders or VFX. Keep the WHOLE character and broom fully INSIDE its own equal square tile, with generous empty gutters. Do not change costume or swap weapons.EXACT six columns by eight rows, preferred total1536x2048,256px square cells. Row camera headings E right,SE down-right,S down,SW down-left,W left,NW up-left,N up,NE up-right. EVERY frame within one row has the SAME fixed camera heading; back rows show the back of the head/dress, not the front. Uniform character apparent size and common projected ground anchor across cells. ATTACK ONLY, a broom sweep/slash with an existing authoritative impact EXACTLY at COLUMN2. col0 ready anticipation, col1 wind-up, col2 full sweep IMPACT directed at the facing heading, col3 follow-through, col4 weapon returning, col5 settled recovery. Six distinct arm/shoulder/torso poses, both hands remain attached to the same broom, no weapon stretching or hand swapping. Feet brace naturally; outfit and face consistent.48 unique coherent attack sprites. No walking, run, hit or death.",
+      "transparent_background": true,
+      "original_generated_path": "/workspace/generated_images/exec-2ed93a1e-78bb-4c8a-8a1b-adf14cc41247.png",
+      "destination": "assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/raw/source-attack.png",
+      "grid": [
+        6,
+        8
+      ],
+      "authored_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "final_approved": false
+    },
+    {
+      "name": "support",
+      "prompt": "Hero transformation MAID ANNA, adult female human fantasy combat maid. Canonical candidate design in EVERY sprite: long auburn-brown hair tied with a small white ribbon, white frilled maid bonnet, modest black long-sleeved dress with a white fitted frilled apron and white cuffs, dark stockings, practical black shoes, a sturdy brown wooden broom with a pale straw brush and small brass band, held with anatomically consistent hands. Same face, hair, dress, apron, broom shape and proportions in all cells. Polished readable isometric pixel art, simplified secondary cloth, transparent background with no text, labels, shadows, floor, borders or VFX. Keep the WHOLE character and broom fully INSIDE its own equal square tile, with generous empty gutters. Do not change costume or swap weapons.EXACT six columns by eight rows, preferred total1536x2048,256px square cells. Row camera headings E right,SE down-right,S down,SW down-left,W left,NW up-left,N up,NE up-right. EVERY frame within one row has the SAME fixed camera heading; back rows show the back of the head/dress, not the front. Uniform character apparent size and common projected ground anchor across cells. NO DEATH OR RUN ON THIS SHEET. Six columns contain TWO ACTIONS: columns0,1,2 are three subtle IDLE breathing/settling poses, both feet and broom grounded and anchored. columns3,4,5 are three HIT reaction phases: impact recoil, braced backwards load, upright recovery. Different action poses with retained broom, no falling or corpse. All eight headings keep their own fixed camera angle.48 cells total. IDLE and HIT remain eight-direction actions.",
+      "transparent_background": true,
+      "original_generated_path": "/workspace/generated_images/exec-32d8affb-703a-4d7b-bdfa-ab8698e05ad8.png",
+      "destination": "assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/raw/source-support.png",
+      "grid": [
+        6,
+        8
+      ],
+      "authored_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "final_approved": false
+    },
+    {
+      "name": "death",
+      "prompt": "Hero transformation MAID ANNA, adult female human fantasy combat maid. Canonical candidate design in EVERY sprite: long auburn-brown hair tied with a small white ribbon, white frilled maid bonnet, modest black long-sleeved dress with a white fitted frilled apron and white cuffs, dark stockings, practical black shoes, a sturdy brown wooden broom with a pale straw brush and small brass band, held with anatomically consistent hands. Same face, hair, dress, apron, broom shape and proportions in all cells. Polished readable isometric pixel art, simplified secondary cloth, transparent background with no text, labels, shadows, floor, borders or VFX. Keep the WHOLE character and broom fully INSIDE its own equal square tile, with generous empty gutters. Do not change costume or swap weapons.DEATH ONLY, SOUTH/front-facing fixed camera ONLY, no other headings. EXACT TWO columns by THREE rows, preferred total1024x1536, six equal square tiles. Read frames left-to-right then top-to-bottom: frame0 standing stagger after fatal hit, frame1 knees buckle and torso dips, frame2 knees touch the ground, frame3 body collapsing sideways while camera remains the SAME SOUTH view, frame4 fully collapsed prone/side-lying corpse, frame5 settled final corpse with matching hair/apron/broom, no rising. Broom falls with the hand and rests beside the corpse, never disappears. All six frames are ONE SOUTH-DIRECTION death animation. No turntable, no eight-direction death views, no idle/walk/run/attack on this sheet. Single natural progressive collapse, no resurrection and no looping return to standing. Keep every limb, apron and broom wholly inside its own tile with ample padding. Same character design and pixel-art style as the companion eight-direction run/attack/idle-hit sheets.",
+      "transparent_background": true,
+      "original_generated_path": "/workspace/generated_images/exec-2522f467-a541-44b2-80fa-36451f4536a2.png",
+      "destination": "assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/raw/source-death.png",
+      "grid": [
+        2,
+        3
+      ],
+      "authored_directions": [
+        "S"
+      ],
+      "final_approved": false
+    }
+  ]
+}

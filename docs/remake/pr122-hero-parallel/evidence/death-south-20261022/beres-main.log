@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/actors/eight_direction/hero_parallel/beres_hero/r002/run.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2780)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://docs/remake/pr122-hero-parallel/validate_candidates.gd:56)
+HERO_MAIN_TECHNICAL_PASS actors=1 directions=8 roles=5 checks=1154 captures=1 approvals=0 default_game_connections=0

@@ -22,26 +22,38 @@ MODEL = 'HuggingFaceTB/SmolVLM-500M-Instruct'
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', required=True)
+    parser.add_argument('--model', default=MODEL)
+    parser.add_argument('--ids', default='7,11,179,182,231,260')
+    parser.add_argument('--question', default='')
+    parser.add_argument('--max-tokens', type=int, default=96)
     args = parser.parse_args()
     torch.set_num_threads(4)
-    revision = model_info(MODEL).sha
-    processor = AutoProcessor.from_pretrained(MODEL, revision=revision, trust_remote_code=False)
+    model_name = args.model
+    revision = model_info(model_name).sha
+    processor = AutoProcessor.from_pretrained(model_name, revision=revision, trust_remote_code=False)
+    # A 108px icon does not gain information from upscaling to 1536px and
+    # encoding sixteen patches. One 384px crop keeps triage lightweight.
+    processor.image_processor.size = {'longest_edge': 384}
+    processor.image_processor.do_image_splitting = False
+    flags = Path('/proc/cpuinfo').read_text()
+    dtype = torch.bfloat16 if ('avx512_bf16' in flags or 'amx_bf16' in flags) else torch.float32
     model = AutoModelForVision2Seq.from_pretrained(
-        MODEL, revision=revision, torch_dtype=torch.float32,
+        model_name, revision=revision, torch_dtype=dtype,
         _attn_implementation='eager', trust_remote_code=False, use_safetensors=True)
     model.eval()
     staging = json.loads((ROOT / 'data/pr122_hero_parallel_staging.json').read_text())
     cases = []
-    for sid in ['7', '11', '179', '182', '231', '260']:
+    for sid in args.ids.split(','):
         path = staging['actors']['transform:' + sid]['reference'].removeprefix('res://')
         cases.append((sid + '-catalog-reference', path, None))
     path = 'assets/actors/eight_direction/hero_parallel/baphomet_unique/r001/source-run.png'
-    cases.append(('baphomet-new-run-E-frame0', path, (0, 0, 181, 181)))
+    if args.ids == '7,11,179,182,231,260':
+        cases.append(('baphomet-new-run-E-frame0', path, (0, 0, 181, 181)))
     results = []
-    prompt = ('Describe the visible character only. State head or horns, clothing or armor, '
-              'weapon, body type, dominant colors. If something is unclear say unknown. '
-              'Do not invent a name or assume identity. This is character design triage, '
-              'not an approval decision.')
+    prompt = ('Describe this character image in detail. Focus on the visible head, '
+              'clothes, armor, weapons, body shape and colors. Do not guess its name.')
+    if args.question:
+        prompt = args.question
     output = ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     for label, relative, crop in cases:
@@ -58,14 +70,14 @@ def main():
         text = processor.apply_chat_template(messages, add_generation_prompt=True)
         inputs = processor(text=text, images=[image], return_tensors='pt')
         with torch.inference_mode():
-            generated = model.generate(**inputs, max_new_tokens=128, do_sample=False)
+            generated = model.generate(**inputs, max_new_tokens=args.max_tokens, do_sample=False)
         description = processor.batch_decode(
             generated[:, inputs['input_ids'].shape[-1]:], skip_special_tokens=True)[0]
         results.append(dict(label=label, source=relative, crop=crop,
                             source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
                             description=description))
         output.write_text(json.dumps(dict(schema='hero-local-text-only-design-triage-v1',
-            model=MODEL, revision=revision, prompt=prompt, trust_remote_code=False,
+            model=model_name, revision=revision, prompt=prompt, trust_remote_code=False,
             final_approval=False, results=results), ensure_ascii=False, indent=2) + '\n')
         print('HERO_LOCAL_DESCRIPTION_SAVED ' + label, flush=True)
 

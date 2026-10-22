@@ -1,26 +1,34 @@
 {
-  "schema": "hero-selected-validation-summary-v1",
+  "schema": "hero-selected-validation-summary-v2",
   "selected_technical_candidates": [
     "transform:11",
     "transform:179",
     "transform:182",
+    "transform:197",
     "transform:231",
     "transform:260",
+    "transform:276",
     "transform:7"
   ],
-  "unique_main_report_count": 5,
-  "main_checks": 6426,
-  "rendered_native_phases": 848,
+  "unique_main_report_count": 6,
+  "main_checks": 9117,
+  "rendered_native_phase_references": 1232,
+  "physics_compared_ticks": 384,
   "new_final_approvals": 0.0,
   "default_game_connections": 0.0,
   "pending_total": 25.0,
-  "not_started": 19,
+  "not_started": 17,
+  "new_death_source_directions": 1,
+  "new_death_source_poses": 6,
+  "new_maid_unique_poses": 150,
+  "new_maid_runtime_phase_references": 192,
   "quality": "HOLD",
   "reports": [
-    "docs/remake/pr122-hero-parallel/evidence/beres_hero-r002-visible-main/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r002-visible-main-unique_full/validation-opengl.json"
+    "docs/remake/pr122-hero-parallel/evidence/transform_11-r001-visible-main-hold_beres/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/transform_179-r001-visible-main-hold_lance/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/transform_197-r001-visible-main-hold_harper/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/transform_260-r001-visible-main-hold_ken/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/transform_276-r001-visible-main-hold_anna/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/transform_7-r001-visible-main-hold_baphomet/validation-opengl.json"
   ]
 }

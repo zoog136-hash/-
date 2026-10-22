@@ -1,0 +1,65 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/normalized-source-death.png" id="1_i86aq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kuhy"]
+atlas = ExtResource("1_i86aq")
+region = Rect2(0, 0, 80, 80)
+margin = Rect2(88, 80, 176, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvj8u"]
+atlas = ExtResource("1_i86aq")
+region = Rect2(80, 0, 80, 80)
+margin = Rect2(88, 80, 176, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_55ooc"]
+atlas = ExtResource("1_i86aq")
+region = Rect2(0, 80, 80, 80)
+margin = Rect2(88, 80, 176, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ewpje"]
+atlas = ExtResource("1_i86aq")
+region = Rect2(80, 80, 80, 80)
+margin = Rect2(88, 80, 176, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n72bc"]
+atlas = ExtResource("1_i86aq")
+region = Rect2(0, 160, 80, 80)
+margin = Rect2(88, 80, 176, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a80hm"]
+atlas = ExtResource("1_i86aq")
+region = Rect2(80, 160, 80, 80)
+margin = Rect2(88, 80, 176, 176)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kuhy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wvj8u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_55ooc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ewpje")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n72bc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a80hm")
+}],
+"loop": 0,
+"name": &"death_2",
+"speed": 10.0
+}]

@@ -82,7 +82,7 @@ func _run() -> void:
 	assert(evidence_suffix.is_empty() or evidence_suffix.is_valid_identifier())
 	var evidence := "res://docs/remake/pr122-hero-parallel/evidence/" + group + "-" + folder + "-visible-main" + ("-" + evidence_suffix if not evidence_suffix.is_empty() else "") + "/"
 	DirAccess.make_dir_recursive_absolute(evidence)
-	var result := {"schema": "hero-parallel-real-keyboard-physics-v1", "engine": Engine.get_version_info().string, "status": "PASS" if success else "FAIL", "cases": target_ids.size() * 8, "compared_physics_ticks": checked, "cases_with_actual_displacement": moved, "fields": ["position_x", "position_y", "velocity_x", "velocity_y"], "failures": failures, "new_approvals": 0, "frames_sha256": FileAccess.get_sha256(actor.frames), "run_png_sha256": FileAccess.get_sha256(actor.frames.get_base_dir() + "/run.png")}
+	var result := {"schema": "hero-parallel-real-keyboard-physics-v1", "engine": Engine.get_version_info().string, "status": "PASS" if success else "FAIL", "cases": target_ids.size() * 8, "compared_physics_ticks": checked, "cases_with_actual_displacement": moved, "fields": ["position_x", "position_y", "velocity_x", "velocity_y"], "failures": failures, "new_approvals": 0, "frames_sha256": FileAccess.get_sha256(actor.frames), "run_png_sha256": FileAccess.get_sha256(str(actor.rig).get_base_dir() + "/run.png")}
 	var file := FileAccess.open(evidence + "keyboard-physics.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(result, "  ") + "\n")
 	print("HERO_KEYBOARD_PHYSICS_%s cases=%d compared_ticks=%d moving_cases=%d approvals=0" % ["PASS" if success else "FAIL", target_ids.size() * 8, checked, moved])

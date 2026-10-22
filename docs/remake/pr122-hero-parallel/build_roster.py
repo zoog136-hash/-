@@ -73,13 +73,16 @@ def build():
                       'independent_validation', 'quality_holds', 'source_donor',
                       'source_frames_sha256', 'new_run_poses', 'production_connected',
                       'final_approved', 'raster_review', 'main_validation_report', 'shared_run_poses',
-                      'unique_art_candidates', 'prior_candidates']:
+                      'unique_art_candidates', 'prior_candidates', 'death_policy_scope',
+                      'death_reuse_assessment', 'new_unique_authored_poses',
+                      'new_death_authored_directions', 'new_death_unique_poses', 'death_hold_review_source',
+                      'death_validation_report']:
             if field in old:
                 actors[key][field] = old[field]
     result = {
         'schema': 'pr122-hero-parallel-v1', 'branch': 'feature/pr122-hero-parallel',
         'basis_pr_head': '5bf5d3195f97fda565f195f19344a4929597267e',
-        'latest_main_read_only': '470836b5e79985522541206f9e3d51edfb9cc277',
+        'latest_main_read_only': previous.get('latest_main_read_only', '470836b5e79985522541206f9e3d51edfb9cc277'),
         'source_498_ledger': LEDGER,
         'source_498_ledger_sha256': digest(LEDGER),
         'required_roles': ['idle', 'run', 'attack', 'hit', 'death'],
@@ -92,6 +95,8 @@ def build():
         'default_game_connections': 0, 'actors': actors,
         'historical_approved_ids_read_only': ['transform:' + str(r['sourceId']) for r in approved],
     }
+    if previous.get('animation_policy'):
+        result['animation_policy'] = previous['animation_policy']
     assert len(heroes) == 109 and len(approved) == 84 and len(pending) == 25
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     print('HERO_ROSTER_OK total=109 excluded_approved=84 pending=25 walk=excluded new_approvals=0')

@@ -1,0 +1,6 @@
+{
+  "failed_control_preserved": "upstream-control-manifest-substitution-failure.json",
+  "reason": "Control accidentally retained transform:276 profile_id, so catalog manifest supplied authored death instead of portrait fallback.",
+  "correction": "Use empty profile_id and frames_path only for the non-authored control; production runtime unchanged.",
+  "rerun": "feature-main-death-policy-opengl.json"
+}
