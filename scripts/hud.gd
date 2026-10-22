@@ -1246,6 +1246,12 @@ func _refresh_character_panel() -> void:
 		int(character_state.get("poison_accuracy", 0)), int(character_state.get("poison_resistance", 0)),
 		int(character_state.get("bleed_accuracy", 0)), int(character_state.get("bleed_resistance", 0))
 	]
+	var weapon_small: int = int(character_state.get("weapon_small_damage", 0))
+	var weapon_large: int = int(character_state.get("weapon_large_damage", 0))
+	combat_stats += "\n무기 소형 %s   대형 %s" % [
+		"1~%d" % weapon_small if weapon_small > 0 else "없음",
+		"1~%d" % weapon_large if weapon_large > 0 else "없음"
+	]
 	var ammo_text: String = "없음"
 	var ammo_name: String = str(character_state.get("weapon_ammo", ""))
 	if ammo_name != "":
