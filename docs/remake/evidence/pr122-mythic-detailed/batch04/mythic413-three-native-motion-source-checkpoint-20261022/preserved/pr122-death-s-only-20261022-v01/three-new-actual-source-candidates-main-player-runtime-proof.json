@@ -1,0 +1,99 @@
+{
+	"S_run": {
+		"foot_world_contact_validation": "HOLD_NOT_PERFORMED_VISUAL_REPLAY_ONLY",
+		"poses_reached": 6,
+		"resource_fps": 12.5,
+		"returned_to_existing_S_idle": true,
+		"used_actual_new_candidate_atlas": true,
+		"wraps": 3
+	},
+	"S_run_source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+	"W_attack": {
+		"authored_source_seconds": 0.42,
+		"combat_event_validation": "NOT_PERFORMED_VISUAL_ONLY",
+		"poses_reached": 6,
+		"resource_seconds": 0.4199999999916,
+		"returned_to_existing_W_idle": true,
+		"used_actual_new_candidate_atlas": true
+	},
+	"W_attack_source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+	"actor": "transform:413",
+	"actor_approvals_added": 0,
+	"directions": [
+		{
+			"held_frame": 5,
+			"input_direction": 0,
+			"played": "death_0",
+			"poses_reached": 6,
+			"used_new_S_candidate": false,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 1,
+			"played": "death_1",
+			"poses_reached": 6,
+			"used_new_S_candidate": false,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 2,
+			"played": "death_2",
+			"poses_reached": 6,
+			"used_new_S_candidate": true,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 3,
+			"played": "death_2",
+			"poses_reached": 6,
+			"used_new_S_candidate": true,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 4,
+			"played": "death_2",
+			"poses_reached": 6,
+			"used_new_S_candidate": true,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 5,
+			"played": "death_5",
+			"poses_reached": 6,
+			"used_new_S_candidate": false,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 6,
+			"played": "death_6",
+			"poses_reached": 6,
+			"used_new_S_candidate": false,
+			"visible_terminal": true
+		},
+		{
+			"held_frame": 5,
+			"input_direction": 7,
+			"played": "death_7",
+			"poses_reached": 6,
+			"used_new_S_candidate": false,
+			"visible_terminal": true
+		}
+	],
+	"existing_death_views_preserved": 5,
+	"existing_deaths_reconstructed_from_current_selected_textures_and_geometry": true,
+	"failures": 0,
+	"fixture_override": true,
+	"fixture_subset": "five_existing_deaths_and_two_existing_idles_plus_three_new_actual_candidates",
+	"gameplay_and_save_unchanged": true,
+	"new_S_source_atlas_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+	"production_connected": false,
+	"runtime_status": "PASS",
+	"scope": "ACTUAL_MAIN_PLAYER_CANDIDATE_VISUAL_REPLAY_ONLY_SOURCE_QUALITY_HOLD",
+	"source_visual_status": "HOLD_NOT_REVIEWED"
+}

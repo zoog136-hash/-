@@ -158,7 +158,30 @@
       "remaining_source_completion_directions": [
         "S"
       ],
-      "source_completion_note": "Existing S art is preserved and needs pose/frame/physical-fit completion; this is not a completed animation."
+      "source_completion_note": "Existing S art is preserved and needs pose/frame/physical-fit completion; this is not a completed animation.",
+      "latest_unapproved_S_candidate": {
+        "direction": "S",
+        "poses": 6,
+        "source_contract": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-six-native-v09-original-cape-root-20261022/own-S-DEATH-six-actual-native-source-contract-v09.json",
+          "sha256": "36eb9df30c4e598ca1a1b44850dbed224ad5a9779ee6de6c6687406d8cf21a71"
+        },
+        "raw_png": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/pr122-death-s-only-20261022-v01/S-death-original-cape-v09-exact-packed-candidate-v01/thunder_female-S-death-original-cape-real-six-v09.png",
+          "sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc"
+        },
+        "runtime_fixture_proof": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/pr122-death-s-only-20261022-v01/three-new-actual-source-candidates-main-player-runtime-proof.json",
+          "sha256": "cfc9259ebea957aaa0184fffef79da82d8ccf43df69e13b5f3c1e67b37ad80c8",
+          "status": "PASS",
+          "fixture_override": true,
+          "production_connected": false
+        },
+        "source_visual_status": "HOLD_NOT_REVIEWED",
+        "full_animation_approved": false,
+        "actor_approvals_added": 0,
+        "preserved_source_index": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json"
+      }
     },
     "transform:412": {
       "name": "신화-사신(여)",
