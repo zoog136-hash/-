@@ -3,3 +3,6 @@ runtime-review/*.patch whitespace=-space-before-tab
 
 # Preserve the original editor failure log, including its empty path suffix.
 evidence/exact-reuse-20261022/initial-editor-config-path-failure.log whitespace=-trailing-space
+
+# Engine output is immutable evidence; retain its original terminal whitespace.
+evidence/**/*.log whitespace=-blank-at-eol,-blank-at-eof
