@@ -4,6 +4,30 @@ const SHOPS = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 const SHOP = preload("res://scripts/shop/shop_catalog.gd")
 const SHOP_UI = preload("res://scripts/ui/renewal_shop.gd")
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+# Freeze the legacy contract independently of the live shop constants.
+# PR141 expands GOODS; it must not reprice or remove these original rows.
+const EXPECTED_LEGACY_GOODS = [
+	["HP 물약", 50, "물약"],
+	["강력 HP 물약", 180, "물약"],
+	["축복받은 HP 물약", 450, "물약"],
+	["초록 잎", 100, "소모품"],
+	["드래곤의 루비", 15000, "소모품"],
+	["드래곤의 사파이어", 25000, "소모품"],
+	["드래곤의 다이아몬드", 50000, "소모품"],
+	["드래곤의 고급 다이아몬드", 250000, "소모품"],
+	["드래곤의 성수", 600000, "소모품"],
+	["드래곤의 용옥", 1000000, "소모품"],
+	["무기 마법 주문서 (각인)", 25000, "강화 주문서"],
+	["갑옷 마법 주문서 (각인)", 18000, "강화 주문서"],
+	["장신구 마법 주문서 (각인)", 35000, "강화 주문서"],
+	["축복 부여 주문서 (각인)", 250000, "강화 주문서"],
+	["축복받은 무기 마법 주문서 (각인)", 120000, "강화 주문서"],
+	["축복받은 갑옷 마법 주문서 (각인)", 90000, "강화 주문서"],
+	["장인의 무기 마법 주문서 (각인)", 350000, "강화 주문서"],
+	["장인의 갑옷 마법 주문서 (각인)", 300000, "강화 주문서"],
+	["오림의 장신구 마법 주문서 (각인)", 150000, "강화 주문서"],
+	["축복받은 오림의 장신구 마법 주문서 (각인)", 450000, "강화 주문서"]
+]
 var failures: Array[String] = []
 var checks: int = 0
 var world: TwilightWorld
@@ -18,7 +42,13 @@ func check(ok: bool, message: String) -> void:
 func _snapshot() -> Dictionary:
 	return {"gold":world.gold, "inventory":world.inventory.duplicate(true), "instances":world.item_instances.duplicate(true), "equipped":world.equipped_items.duplicate(true)}
 
+func _check_general_stock(expected: Array, context: String) -> void:
+	check(SHOP.GOODS == expected, context + ": complete general stock unchanged")
+	check(SHOP.LEGACY_GOODS == EXPECTED_LEGACY_GOODS, context + ": legacy rows unchanged")
+
 func _run() -> void:
+	# Snapshot before vendor setup, not after a UI operation could mutate it.
+	var original_stock: Array = SHOP.GOODS.duplicate(true)
 	SHOPS.set_enabled(true)
 	SHOP_UI.selected_vendor_id = ""
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
@@ -34,7 +64,12 @@ func _run() -> void:
 	var original_catalog: Array = catalog.duplicate(true)
 	var profiles: Array = SHOPS.profiles(catalog)
 	check(profiles.size() == 4, "four audited source merchant profiles")
-	check(SHOP.GOODS.size() == 20 and SHOP.price_for("HP 물약") == 50, "legacy prices preserved")
+	check(SHOP.LEGACY_GOODS == EXPECTED_LEGACY_GOODS, "legacy names, prices and categories preserved")
+	check(SHOP.GOODS.size() > EXPECTED_LEGACY_GOODS.size(), "expanded consumables remain available")
+	check(SHOP.GOODS.slice(0, EXPECTED_LEGACY_GOODS.size()) == EXPECTED_LEGACY_GOODS, "legacy stock prefix preserved")
+	for entry: Array in EXPECTED_LEGACY_GOODS:
+		check(SHOP.price_for(str(entry[0])) == int(entry[1]), "authoritative legacy price preserved: " + str(entry[0]))
+	_check_general_stock(original_stock, "vendor setup")
 	var payload: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SHOPS.PATH))
 	var visuals: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SHOPS.VISUAL_PATH))
 	for field: String in ["price", "quantity", "enchant", "game_source_id"]:
@@ -67,7 +102,16 @@ func _run() -> void:
 	default_shop.call("_refresh")
 	default_shop.call("_select",1)
 	default_shop.call("_refresh")
-	check(default_shop.filtered.size() == 20, "refresh does not mutate constant legacy stock")
+	check(default_shop.filtered == original_stock, "refresh retains every expanded offer, price and category")
+	_check_general_stock(original_stock, "general shop refresh")
+	# The UI must receive a deep copy, including its nested price rows.
+	var detached_goods: Array = default_shop.call("_goods")
+	check(detached_goods == original_stock, "UI receives complete authoritative stock")
+	if not detached_goods.is_empty():
+		detached_goods[0][1] = -777
+		detached_goods.clear()
+	_check_general_stock(original_stock, "mutating detached UI copy")
+	check(default_shop.filtered == original_stock, "detached copy cannot mutate displayed stock")
 	var potion_before: int = int(world.inventory.get("HP 물약",0))
 	world._buy_shop_item("HP 물약", -100000)
 	check(world.gold == 499950 and int(world.inventory.get("HP 물약",0)) == potion_before+1, "forged UI price ignored")
@@ -109,6 +153,7 @@ func _run() -> void:
 			check(int(entry.level) == 0 and str(entry.get("sourceId","")) == "6391" and str(entry.record.get("sourceId","")) == "6391", "new source weapon remains +0 with existing game ID")
 		check(world.item_instances[old_id] == old_weapon and str(world.equipped_items.weapon.get("instance_id","")) == old_id, "prior +6 instance and equipment selection unchanged")
 		check(SHOP_UI.selected_vendor_id == str(profile.source_npc_id), "vendor survives post-purchase refresh")
+		_check_general_stock(original_stock, "reviewed purchase " + str(profile.name))
 		purchases += 1
 
 	var guard: Dictionary = _snapshot()
@@ -136,6 +181,9 @@ func _run() -> void:
 	world.hud.open_npc_shop()
 	var rolled_back: OptionButton = world.hud.workspace.find_child("ShopVendor",true,false)
 	check(_snapshot() == guard and rolled_back.item_count == 1 and SHOP_UI.selected_vendor_id == "", "rollback hides vendors and preserves owned weapons")
+	var rolled_back_shop: Node = rolled_back.get_parent()
+	check(rolled_back_shop.filtered == original_stock, "vendor rollback restores full expanded stock")
+	_check_general_stock(original_stock, "vendor rollback")
 	world._buy_shop_bulk("HP 물약",3)
 	check(world.gold == 199850, "legacy bulk price survives rollback")
 	SHOPS.set_enabled(true)
@@ -154,7 +202,8 @@ func _run() -> void:
 		if world.item_instances.has(key):
 			check(int(world.item_instances[key].level) == int(saved.instances[key].level), "enhancement survives save/load " + str(key))
 	check(str(world.equipped_items.weapon.get("instance_id","")) == old_id, "equipped physical ID survives save/load")
-	print("L1J_REVIEWED_SHOP_OK " if failures.is_empty() else "L1J_REVIEWED_SHOP_FAIL ", JSON.stringify({"checks":checks,"profiles":profiles.size(),"real_hud_purchases":purchases,"distinct_game_items":1,"failures":failures,"engine":Engine.get_version_info().string}))
+	_check_general_stock(original_stock, "save/load")
+	print("L1J_REVIEWED_SHOP_OK " if failures.is_empty() else "L1J_REVIEWED_SHOP_FAIL ", JSON.stringify({"checks":checks,"profiles":profiles.size(),"real_hud_purchases":purchases,"distinct_game_items":1,"legacy_goods":EXPECTED_LEGACY_GOODS.size(),"general_goods":original_stock.size(),"failures":failures,"engine":Engine.get_version_info().string}))
 	world.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)

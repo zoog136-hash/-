@@ -6,6 +6,7 @@ on:
       - '.github/workflows/ground-alpha.yml'
       - 'tools/ground_alpha/**'
       - 'tools/ground_icons/**'
+      - 'tools/test_project_support.py'
       - 'scripts/ui/ground_alpha.gd'
       - 'scripts/loot/**'
       - 'assets/ground_alpha/**'
@@ -16,12 +17,14 @@ on:
       - 'data/ground_item_icons.json'
       - 'tests/ground_alpha_test.gd'
       - 'tests/capture_ground_alpha.gd'
+      - 'tests/ground_capture*'
   push:
     branches: [main]
     paths:
       - '.github/workflows/ground-alpha.yml'
       - 'tools/ground_alpha/**'
       - 'tools/ground_icons/**'
+      - 'tools/test_project_support.py'
       - 'scripts/ui/ground_alpha.gd'
       - 'scripts/loot/**'
       - 'assets/ground_alpha/**'
@@ -30,6 +33,7 @@ on:
       - 'data/ground_item_icons.json'
       - 'tests/ground_alpha_test.gd'
       - 'tests/capture_ground_alpha.gd'
+      - 'tests/ground_capture*'
   workflow_dispatch:
 permissions:
   contents: read
@@ -39,7 +43,7 @@ concurrency:
 jobs:
   alpha:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,6 +53,7 @@ jobs:
         run: |
           python3 -m pip install Pillow==12.3.0
           python3 tools/ground_alpha/test_alpha.py
+          python3 tools/ground_alpha/test_verify_runner.py
           python3 tools/ground_icons/build.py
           python3 tools/ground_alpha/bake.py
       - name: Install repository-pinned renderer

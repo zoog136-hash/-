@@ -1,0 +1,73 @@
+name: Reviewed Shop Regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tests/l1j_reviewed_shop_test.gd
+      - tests/shop_*test.gd
+      - scripts/shop/**
+      - scripts/ui/renewal_shop.gd
+      - scripts/world.gd
+      - addons/twilight_l1j/twilight_reviewed_shops.gd
+      - tools/test_project*.py
+      - .github/workflows/reviewed-shop-regression.yml
+  push:
+    branches: [main]
+    paths:
+      - tests/l1j_reviewed_shop_test.gd
+      - tests/shop_*test.gd
+      - scripts/shop/**
+      - scripts/ui/renewal_shop.gd
+      - scripts/world.gd
+      - addons/twilight_l1j/twilight_reviewed_shops.gd
+      - tools/test_project*.py
+      - .github/workflows/reviewed-shop-regression.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reviewed-shop-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the same Godot as the full regression suite
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Real Main, reviewed vendors and consumable shop regressions
+        run: |
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --only import,bake_navigation,boot,l1j_reviewed_shop_test,shop_authority_test,shop_consumables_test,shop_consumables_gameplay_test,shop_buyback_test --logs test-results/reviewed-shop
+      - name: Require all eight selected checks, without skips or missing results
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('test-results/reviewed-shop')
+          result = json.loads((root / 'summary.json').read_text())
+          expected = {'import', 'bake_navigation', 'boot', 'l1j_reviewed_shop_test',
+                      'shop_authority_test', 'shop_consumables_test',
+                      'shop_consumables_gameplay_test', 'shop_buyback_test'}
+          assert set(result['checks']) == expected and result['total'] == len(expected), result
+          assert result['passed'] == len(expected), result
+          assert not result['failed'] and not result['skipped'] and not result['not_run'], result
+          log = (root / 'l1j_reviewed_shop_test.log').read_text()
+          assert any(line.startswith('L1J_REVIEWED_SHOP_OK ') for line in log.splitlines()), log
+          assert 'L1J_REVIEWED_SHOP_FAIL' not in log, log
+          print('REVIEWED_SHOP_REGRESSION_OK checks=8')
+          PY
+      - name: Preserve exact-checkout runtime logs, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-shop-regression-${{ github.sha }}
+          path: test-results/reviewed-shop/
+          if-no-files-found: error

@@ -7,12 +7,16 @@ on:
       - '.github/workflows/ground-full-matte.yml'
       - 'tools/ground_icons/**'
       - 'tools/ground_matte/**'
+      - 'tests/ground_capture*'
+      - 'tests/capture_ground*'
   pull_request:
     branches: [main]
     paths:
       - '.github/workflows/ground-full-matte.yml'
       - 'tools/ground_icons/**'
       - 'tools/ground_matte/**'
+      - 'tests/ground_capture*'
+      - 'tests/capture_ground*'
       - 'assets/ground_categories/**'
       - 'data/ground_item_icons.json'
 permissions:
@@ -23,7 +27,7 @@ concurrency:
 jobs:
   ground-matte:
     runs-on: ubuntu-latest
-    timeout-minutes: 28
+    timeout-minutes: 45
     permissions:
       contents: write
     steps:
@@ -63,9 +67,9 @@ jobs:
         run: |
           set -euo pipefail
           engine=/tmp/godot/Godot_v4.7.2-stable_linux.x86_64
-          timeout 240 "$engine" --audio-driver Dummy --headless --path . --editor --import > /tmp/ground-matte/import.log 2>&1
+          timeout --signal=TERM --kill-after=15s 900s "$engine" --audio-driver Dummy --headless --path . --editor --import > /tmp/ground-matte/import.log 2>&1
           status=0
-          for test in ground_category_probe ground_alpha_test inven_inventory_icons_test ground_loot_system_test; do
+          for test in ground_category_probe ground_alpha_test inven_inventory_icons_test ground_loot_system_test ground_capture_layout_test; do
             timeout 180 "$engine" --audio-driver Dummy --headless --path . --script "res://tests/$test.gd" > "/tmp/ground-matte/$test.log" 2>&1 || status=1
             if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script|_FAIL:|_FAILED' "/tmp/ground-matte/$test.log"; then status=1; fi
             tail -n 8 "/tmp/ground-matte/$test.log"

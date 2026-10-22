@@ -22,7 +22,7 @@ def run(label,command,timeout=180):
     print(label,'PASS' if ok else 'FAIL',flush=True)
     print('\n'.join(text.splitlines()[-8:]),flush=True)
     return ok
-if not run('import',[engine,'--headless','--path','.','--editor','--import'],240):
+if not run('import',[engine,'--headless','--path','.','--editor','--import'],900):
     (out/'test-summary.json').write_text(json.dumps(results,indent=2));raise SystemExit(1)
 for test in ['inven_inventory_icons_test','item_visual_test','item_icon_art_smoke_test','ui_stage4_item_instance_test','original_skill_warehouse_migration_test']:
     run(test,[engine,'--headless','--path','.','--script','res://tests/'+test+'.gd'])

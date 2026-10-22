@@ -1,6 +1,7 @@
 extends SceneTree
 
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const LANDING = preload("res://tests/monster_capture_landing.gd")
 const OUTPUT = "user://monster-world-review"
 var world: TwilightWorld
 var failed: bool = false
@@ -24,17 +25,23 @@ func pause_actors() -> void:
 	world.field_population.set_process(false)
 	for mob: TwilightMonster in world.monsters_root.get_children(): mob.set_physics_process(false)
 
-func land_near(mob: TwilightMonster) -> void:
-	for i: int in range(8):
-		var p: Vector2 = mob.global_position+Vector2.from_angle(float(i)*PI/4.)*170.
-		if world.field_map.walkable(p) and world.field_map.point_clear(p) and not world.field_map.is_safe(p) and world.field_map.line_clear(p,mob.global_position):
-			world.player.global_position = p
-			break
+func land_near(mob: TwilightMonster) -> bool:
+	if not is_instance_valid(mob): return false
+	var point: Vector2 = LANDING.find_position(world.field_map, mob.global_position)
+	if not point.is_finite():
+		print("MONSTER_CAPTURE_NO_LANDING map=%s monster=%s target=%s" % [str(world.field_map.data.get("map_id", "")), mob.monster_name, str(mob.global_position)])
+		return false
+	world.player.set_auto_enabled(false)
+	world.player.clear_click_path()
+	world.player.velocity = Vector2.ZERO
+	world.player.global_position = point
 	world.player.camera.reset_smoothing()
 	world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
+	return true
 
-func capture(name_value: String, boss: TwilightMonster = null) -> void:
+func capture(name_value: String, boss: TwilightMonster = null) -> Dictionary:
+	var expects_boss: bool = is_instance_valid(boss)
 	# AUTO can level up and defer the existing character workspace. Close it
 	# before and after the frame so the capture actually shows the battlefield.
 	world.hud._hide_aux_panels()
@@ -44,15 +51,27 @@ func capture(name_value: String, boss: TwilightMonster = null) -> void:
 	# after those callbacks and the actual draw have completed.
 	await RenderingServer.frame_post_draw
 	var workspace: Control = world.hud.get("workspace") as Control
-	check(not is_instance_valid(workspace) or not workspace.visible,"unobstructed capture "+name_value)
+	var evidence: Dictionary = {"on_screen": false, "hp_panel_visible": false, "hud_name_matches": false, "hud_name": "", "overlay_closed": not is_instance_valid(workspace) or not workspace.visible}
+	check(bool(evidence.overlay_closed),"unobstructed capture "+name_value)
+	if expects_boss: check(is_instance_valid(boss),"boss still alive for capture "+name_value)
 	if is_instance_valid(boss):
 		var screen_point: Vector2 = boss.get_global_transform_with_canvas()*Vector2(0,-boss.visual_height*.5)
-		check(root.get_visible_rect().has_point(screen_point),"boss body on screen "+name_value)
-		check(world.field_population.boss_hud.panel.visible,"boss HP panel visible "+name_value)
-		check(world.field_population.boss_hud.title.text.contains(boss.monster_name),"boss HP name matches "+name_value)
+		evidence.on_screen = root.get_visible_rect().has_point(screen_point)
+		evidence.hp_panel_visible = world.field_population.boss_hud.panel.visible
+		evidence.hud_name = world.field_population.boss_hud.title.text
+		evidence.hud_name_matches = str(evidence.hud_name).contains(boss.monster_name)
+		evidence.player_position = [world.player.global_position.x, world.player.global_position.y]
+		evidence.boss_position = [boss.global_position.x, boss.global_position.y]
+		evidence.landing_valid = LANDING.fits(world.field_map, world.player.global_position, boss.global_position)
+		check(bool(evidence.landing_valid),"boss landing remains valid "+name_value)
+		check(bool(evidence.on_screen),"boss body on screen "+name_value)
+		check(bool(evidence.hp_panel_visible),"boss HP panel visible "+name_value)
+		check(bool(evidence.hud_name_matches),"boss HP name matches "+name_value)
 	var image: Image = root.get_texture().get_image()
 	check(image!=null and not image.is_empty(),"render buffer "+name_value)
 	if image!=null: check(image.save_png(OUTPUT+"/"+name_value+".png")==OK,"save capture "+name_value)
+
+	return evidence
 
 func _run() -> void:
 	if not require(DisplayServer.get_name()!="headless","actual OpenGL display required"): return
@@ -75,7 +94,7 @@ func _run() -> void:
 		pause_actors()
 		if not require(world.monsters_root.get_child_count()>0,"map population " + id): return
 		var mob: TwilightMonster = world.monsters_root.get_child(0)
-		land_near(mob)
+		if not require(land_near(mob),"valid map capture landing "+id): return
 		mob.motion.face(world.player.global_position-mob.global_position)
 		mob.motion.advance(.1,Vector2.RIGHT*mob.move_speed)
 		mob.motion.apply(mob.sprite,mob.animation_base_scale)
@@ -145,18 +164,19 @@ func _run() -> void:
 		for slot: Dictionary in world.field_population.slots:
 			if str(slot.region.get("mode",""))=="boss": boss = slot.monster; break
 		if not require(is_instance_valid(boss),"boss spawned "+id): return
-		land_near(boss)
+		if not require(land_near(boss),"valid boss capture landing "+id): return
 		boss._begin_special()
 		boss.motion.advance(.42,Vector2.ZERO)
 		boss.motion.apply(boss.sprite,boss.animation_base_scale)
 		boss.species_visual.warning_progress = .45
 		boss.species_visual.update_pose()
-		await capture("boss-"+id,boss)
+		var evidence: Dictionary = await capture("boss-"+id,boss)
 		var hits: Array[int] = [0]
 		boss.player_hit.connect(func(_b: TwilightMonster,_d: int,_k: String) -> void: hits[0]+=1)
 		boss.motion.advance(.7,Vector2.ZERO)
 		for frame: int in range(40): await physics_frame
-		report.bosses.append({"map":id,"name":boss.monster_name,"pattern":boss.ai.special.kind,"skill_hits":hits[0],"on_screen":true,"overlay_closed":true,"hud_name":world.field_population.boss_hud.title.text})
+		evidence.merge({"map":id,"name":boss.monster_name,"pattern":boss.ai.special.kind,"skill_hits":hits[0]})
+		report.bosses.append(evidence)
 	# Render every catalog entry, including DB-only species, inside a clearly
 	# labelled inspection gallery. This is art QA, separate from map screenshots.
 	world._set_map("aden_world",false); pause_actors()
