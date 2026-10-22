@@ -60,8 +60,9 @@ func _run() -> void:
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(motion_directory + "/rig-proof.json"))
 	var source: SpriteFrames = load(str(proof.source)) if str(proof.source).ends_with(".tres") else null
 	var new_art: bool = str(proof.get("schema", "")) == "hero-unique-full-atlas-v1"
+	var new_run_only: bool = str(proof.get("schema", "")) == "hero-unique-run-with-preserved-actions-v1"
 	_check(source != null or new_art, "known authoring contract")
-	if new_art:
+	if new_art or new_run_only:
 		for path: String in proof.source_hashes:
 			_check(FileAccess.get_sha256(path) == str(proof.source_hashes[path]), "immutable new art source SHA")
 	_check(proof.frames.size() == 48, "48 actual articulated poses")
@@ -78,7 +79,7 @@ func _run() -> void:
 			unique[value] = true
 			var box := region.get_used_rect()
 			_check(box.position.x > 0 and box.position.y > 0 and box.end.x < 256 and box.end.y < 256, "no clipping")
-			if not new_art:
+			if not new_art and not new_run_only:
 				_check(row.support == ("AIR" if phase % 3 == 2 else ("A" if phase < 3 else "B")), "alternating support model")
 			for leg: Dictionary in row.get("legs", []):
 				var hip := Vector2(leg.hip[0], leg.hip[1])
@@ -124,7 +125,9 @@ func _run() -> void:
 		_check(player.transform_active and player.motion.profile.profile_id == key, "real Main transformation API")
 		_check(not SCOPE.requires_walk(key), "hero walk excluded")
 		for field: String in ["attack_hit_ratio", "attack_hit_frame", "attack_animation_speed", "death_duration", "pixel_scale", "native_width_ratio", "reference_speed", "sprite_offset", "color_tint"]:
-			if field == "sprite_offset" and new_art and proof.has("ground_registration"):
+			if field == "color_tint" and new_run_only:
+				_check(profile.color_tint == Color.WHITE, "exact target artwork does not inherit old proxy tint")
+			elif field == "sprite_offset" and (new_art or new_run_only) and proof.has("ground_registration"):
 				var expected_y: float = -(float(proof.ground_registration.canvas_ground) - 128.0) * profile.pixel_scale
 				_check(is_equal_approx(profile.sprite_offset.y, expected_y) and is_equal_approx(profile.sprite_offset.x, baseline.sprite_offset.x), "new art ground registration changes visual offset only")
 			else:
@@ -157,6 +160,13 @@ func _run() -> void:
 						_check(texture.region == Rect2(reference.region[0], reference.region[1], reference.region[2], reference.region[3]), "exact new source region")
 						var padding: Array = reference.margin_position
 						_check(texture.margin == Rect2(padding[0], padding[1], 256 - reference.region[2], 256 - reference.region[3]), "exact normalized-source padding, no per-view width stretching")
+				elif role == "run" and new_run_only:
+					for phase: int in range(6):
+						var reference: Dictionary = proof.frames[direction * 6 + phase].source_reference
+						var texture: AtlasTexture = frames.get_frame_texture(track, phase)
+						_check(texture.atlas.resource_path == str(reference.atlas), "exact newly authored RUN source")
+						_check(texture.region == Rect2(reference.region[0], reference.region[1], reference.region[2], reference.region[3]), "new RUN source region")
+						_check(texture.margin == Rect2(reference.margin_position[0], reference.margin_position[1], 256 - reference.region[2], 256 - reference.region[3]), "fixed proportional RUN registration")
 				elif role != "run":
 					_check(frames.get_frame_count(track) == source.get_frame_count(track), "legacy action length")
 					for index: int in range(source.get_frame_count(track)):
@@ -206,7 +216,14 @@ func _run() -> void:
 					_check(rendered_unique.size() == 6, "six visible distinct Main run poses; no hidden character/overlay")
 				_check((strikes.size() == strike_start + 1 and released) if role == "attack" else strikes.size() == strike_start, "no extra strikes")
 				var base: Vector2 = sprite.get_meta("base_scale", Vector2.ONE)
-				_check(not sprite.flip_h and sprite.scale.is_equal_approx(base), "preserve existing Main scale without extra width distortion")
+				var expected_scale := base
+				if frames.has_meta("twilight_canvas_size"):
+					var authored_canvas: Vector2 = frames.get_meta("twilight_canvas_size")
+					var pose: Texture2D = frames.get_frame_texture(sprite.animation, sprite.frame)
+					var compensation := authored_canvas / pose.get_size()
+					_check(is_equal_approx(compensation.x, compensation.y), "virtual authored canvas preserves aspect ratio")
+					expected_scale *= compensation
+				_check(not sprite.flip_h and sprite.scale.is_equal_approx(expected_scale), "preserve Main scale including declared uniform virtual-canvas compensation")
 				_check(is_equal_approx(base.x / base.y, player.TRANSFORM_WIDTH_SCALE), "existing player width policy preserved")
 				_check(_fingerprint(world) == before and JSON.stringify(row) == before_catalog, "Main game invariants")
 			# Omitted WALK must select dedicated RUN even at low real speed.

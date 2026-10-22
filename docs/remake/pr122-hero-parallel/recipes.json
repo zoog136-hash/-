@@ -35,7 +35,7 @@
       "11"
     ],
     "source": "res://assets/actors/eight_direction/original_based/beres_project_source/SpriteFrames.tres",
-    "source_donor": "monster:베레스",
+    "source_donor": "monster:\ubca0\ub808\uc2a4",
     "profile_prefix": "hero_",
     "smooth_skin": true,
     "knee_lateral_limit": 6.0,
@@ -59,7 +59,7 @@
       "7"
     ],
     "source": "res://assets/actors/eight_direction/original_based/baphomet_project_source/SpriteFrames.tres",
-    "source_donor": "monster:바포메트",
+    "source_donor": "monster:\ubc14\ud3ec\uba54\ud2b8",
     "profile_prefix": "hero_",
     "smooth_skin": true,
     "knee_lateral_limit": 6.0,
@@ -136,5 +136,68 @@
       "hit",
       "death"
     ]
+  },
+  "harper_continuous": {
+    "group": "harper_hero",
+    "revision": "r002",
+    "targets": [
+      "197"
+    ],
+    "source": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/SpriteFrames.tres",
+    "source_donor": "existing transform:197 greatsword body; original identity HOLD",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {},
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "continuous_cloth_mesh": true
+  },
+  "kenrauhel_continuous": {
+    "group": "kenrauhel_hero",
+    "revision": "r012",
+    "targets": [
+      "260"
+    ],
+    "source": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+    "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      -4,
+      0,
+      0,
+      0,
+      -2
+    ],
+    "reference_override": {
+      "6": {
+        "track": "idle_6",
+        "frame": 3
+      }
+    },
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "continuous_cloth_mesh": true
   }
 }

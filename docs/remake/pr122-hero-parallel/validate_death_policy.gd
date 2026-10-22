@@ -2,10 +2,11 @@ extends SceneTree
 ## Real Main/Player death lifecycle, including the new single-S source aliases.
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 const POLICY = preload("res://docs/remake/pr122-hero-parallel/shared_death_policy.gd")
-const EVIDENCE := "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/"
+const EVIDENCE_ROOT := "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/"
 const ACTIONS := ["move_left", "move_right", "move_up", "move_down"]
 var checks := 0
 var failed := false
+var evidence := EVIDENCE_ROOT
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -38,6 +39,13 @@ func _input(aim: Vector2) -> void:
 func _run() -> void:
 	_check(Engine.get_version_info().string.begins_with("4.7.2"), "engine")
 	_check(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"), "isolated saves")
+	var suffix := OS.get_environment("TWILIGHT_HERO_EVIDENCE_SUFFIX")
+	_check(suffix.is_empty() or suffix.is_valid_identifier(), "safe evidence suffix")
+	if not suffix.is_empty():
+		evidence = "res://docs/remake/pr122-hero-parallel/evidence/" + suffix + "/"
+	DirAccess.make_dir_recursive_absolute(evidence)
+	var ids := OS.get_environment("TWILIGHT_HERO_DEATH_TEST_IDS").split(",", false)
+	if ids.is_empty(): ids = PackedStringArray(["179", "182", "231", "260", "11", "7", "197", "276"])
 	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
 	_check(staging.animation_policy.new_death_authored_directions == ["S"], "new S-only authoring policy")
 	var south: SpriteFrames = load("res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/DeathSouth.tres")
@@ -66,12 +74,15 @@ func _run() -> void:
 	var results: Array = []
 	var snapshots := Image.create(960, 1280, false, Image.FORMAT_RGBA8)
 	var captured := 0
-	for sid: String in ["179", "182", "231", "260", "11", "7", "197", "276"]:
+	for sid: String in ids:
 		var key := "transform:" + sid
 		var entry: Dictionary = staging.actors[key]
 		var profile: Resource = load(entry.native_profile)
 		var frames: SpriteFrames = load(entry.frames)
-		_check(bool(frames.get_meta("pr122_hero_hold_final_death_frame", false)), "review resource provenance retained")
+		if entry.has("death_hold_review_source"):
+			_check(bool(frames.get_meta("pr122_hero_hold_final_death_frame", false)), "historical review wrapper provenance retained")
+		else:
+			_check(bool(frames.get_meta("hero_parallel_candidate", false)), "new exact-target candidate provenance retained")
 		var shared := int(frames.get_meta("hero_shared_death_source_direction", -1)) == 2
 		_check(shared == (sid == "276"), "only newly authored maid source uses S aliases")
 		if shared:
@@ -146,7 +157,11 @@ func _run() -> void:
 			cases.append({"input_direction": direction, "runtime_track": track, "unique_phases_played": seen.size(), "source_passes": 1, "frame_resets": resets, "held_final_frame": last, "hold_seconds": 30, "shared_s_source": shared})
 		# Upstream now holds every real authored death, including original art.
 		var control: Resource = profile.duplicate(true)
-		control.frames_path = str(entry.death_hold_review_source.frames)
+		var original: Dictionary = entry.get("death_hold_review_source", {})
+		if original.is_empty():
+			var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(entry.rig))
+			original = {"frames": proof.source}
+		control.frames_path = str(original.frames)
 		player.motion.dead = false
 		player.set_transform_visual(reference, 1.0, control)
 		player.motion.die()
@@ -194,19 +209,19 @@ func _run() -> void:
 	player.motion.apply(player.transform_sprite, player.transform_sprite.get_meta("base_scale", Vector2.ONE))
 	_check(is_zero_approx(player.transform_sprite.modulate.a), "non-authored portrait fallback retains fade")
 	if DisplayServer.get_name() != "headless":
-		_check(captured == 48, "all six S frames rendered for eight real input headings")
+		_check(captured == (48 if ids.has("276") else 0), "all six S frames rendered for eight real input headings")
 		var prefix := "overlay-" if OS.get_environment("TWILIGHT_HERO_RUNTIME_REVIEW") == "1" else "feature-"
-		_check(snapshots.save_webp(EVIDENCE + prefix + "Main-shared-S-death-eight-inputs.webp", false) == OK, "lossless Main file proof")
+		_check(snapshots.save_webp(evidence + prefix + "Main-shared-S-death-eight-inputs.webp", false) == OK, "lossless Main file proof")
 	var review := OS.get_environment("TWILIGHT_HERO_RUNTIME_REVIEW") == "1"
-	var report := {"schema": "hero-death-policy-main-v2", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "status": "FAIL" if failed else "TECHNICAL_PASS_QUALITY_HOLD", "checks": checks, "actors": results, "input_cases": 64, "single_track_south_input_cases": direct_cases, "non_authored_fade_control": "PASS", "main_rendered_phase_references": captured, "new_death_unique_source_poses": 6, "new_death_source_directions": 1, "new_final_approvals": 0, "default_game_connections": 0, "runtime_scope": "ISOLATED_REVIEW_OVERLAY" if review else "FEATURE_BRANCH_UPSTREAM_ALIGNED_RUNTIME", "runtime_source_sha256": FileAccess.get_sha256("res://scripts/animation/actor_motion.gd"), "authoritative_upstream_runtime": true, "local_opt_in_patch_superseded": true}
+	var report := {"schema": "hero-death-policy-main-v2", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "status": "FAIL" if failed else "TECHNICAL_PASS_QUALITY_HOLD", "checks": checks, "actors": results, "input_cases": ids.size() * 8, "single_track_south_input_cases": direct_cases, "non_authored_fade_control": "PASS", "main_rendered_phase_references": captured, "new_death_unique_source_poses": 6, "new_death_source_directions": 1, "new_final_approvals": 0, "default_game_connections": 0, "runtime_scope": "ISOLATED_REVIEW_OVERLAY" if review else "FEATURE_BRANCH_UPSTREAM_ALIGNED_RUNTIME", "runtime_source_sha256": FileAccess.get_sha256("res://scripts/animation/actor_motion.gd"), "authoritative_upstream_runtime": true, "local_opt_in_patch_superseded": true}
 	_json_report(report)
 	world.queue_free()
 	await process_frame
-	print("HERO_DEATH_POLICY_%s actors=8 input_cases=64 checks=%d new_death_directions=1 final_approvals=0" % ["FAIL" if failed else "PASS", checks])
+	print("HERO_DEATH_POLICY_%s actors=%d input_cases=%d checks=%d new_death_directions=1 final_approvals=0" % ["FAIL" if failed else "PASS", ids.size(), ids.size() * 8, checks])
 	quit(1 if failed else 0)
 
 func _json_report(report: Dictionary) -> void:
 	var suffix := "headless" if DisplayServer.get_name() == "headless" else "opengl"
 	var prefix := "overlay-" if OS.get_environment("TWILIGHT_HERO_RUNTIME_REVIEW") == "1" else "feature-"
-	var file := FileAccess.open(EVIDENCE + prefix + "main-death-policy-" + suffix + ".json", FileAccess.WRITE)
+	var file := FileAccess.open(evidence + prefix + "main-death-policy-" + suffix + ".json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "  ") + "\n")

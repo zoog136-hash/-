@@ -1,0 +1,7 @@
+{
+  "original_failures_preserved": true,
+  "runtime_modified": false,
+  "scale_check": "Previously assumed every source texture has a 256px virtual canvas. Exact-target existing art has explicit twilight_canvas_size metadata and larger virtual textures. Now verify the declared UNIFORM compensation and the unchanged player width policy for every actual rendered pose.",
+  "death_provenance_check": "Historical wrappers retain their original opt-in flag. New exact-target candidates use their own candidate flag because authoritative upstream holds all authored death art without the superseded opt-in flag.",
+  "quality_holds_retained": true
+}

@@ -1,5 +1,5 @@
 {
-  "schema": "hero-selected-validation-summary-v2",
+  "schema": "hero-selected-validation-summary-v3",
   "selected_technical_candidates": [
     "transform:11",
     "transform:179",
@@ -8,27 +8,35 @@
     "transform:231",
     "transform:260",
     "transform:276",
+    "transform:352",
+    "transform:407",
     "transform:7"
   ],
-  "unique_main_report_count": 6,
-  "main_checks": 9117,
-  "rendered_native_phase_references": 1232,
-  "physics_compared_ticks": 384,
-  "new_final_approvals": 0.0,
-  "default_game_connections": 0.0,
-  "pending_total": 25.0,
-  "not_started": 17,
+  "unique_main_report_count": 8,
+  "main_checks": 11319,
+  "rendered_native_phase_references": 1488,
+  "physics_compared_ticks": 480,
+  "unique_actor_death_input_cases": 80,
+  "new_final_approvals": 0,
+  "default_game_connections": 0,
+  "pending_total": 25,
+  "not_started": 15,
   "new_death_source_directions": 1,
   "new_death_source_poses": 6,
   "new_maid_unique_poses": 150,
   "new_maid_runtime_phase_references": 192,
   "quality": "HOLD",
   "reports": [
+    "docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/harper_hero-r002-visible-main-harper_continuous_20261022/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_11-r001-visible-main-hold_beres/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_179-r001-visible-main-hold_lance/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/transform_197-r001-visible-main-hold_harper/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_260-r001-visible-main-hold_ken/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_276-r001-visible-main-hold_anna/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_7-r001-visible-main-hold_baphomet/validation-opengl.json"
-  ]
+  ],
+  "latest_policy_group": "exact-reuse-20261022",
+  "new_exact_target_run_poses": 96,
+  "note": "Technical PASS does not approve source identity, anatomical contact or natural motion. Failed experiments remain unselected."
 }

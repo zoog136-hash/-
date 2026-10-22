@@ -95,11 +95,11 @@
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r003/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r003/NativeMotionProfile.tres",
         "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r003-visible-main-policy_20261022/validation-opengl.json",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -135,11 +135,11 @@
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/beres_hero/r002/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_11/r002/NativeMotionProfile.tres",
         "prior_main_validation_report": "",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -174,11 +174,11 @@
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_179/r041/NativeMotionProfile.tres",
         "prior_main_validation_report": "",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -213,11 +213,11 @@
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_182/r041/NativeMotionProfile.tres",
         "prior_main_validation_report": "",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -250,14 +250,24 @@
       "new_run_poses": 48.0,
       "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/raster-review.json",
       "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/transform_260-r001-visible-main-hold_ken/validation-opengl.json",
+      "prior_candidates": [
+        {
+          "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r012/SpriteFrames.tres",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r012/NativeMotionProfile.tres",
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r012/raster-review.json",
+          "reason": "Continuous lower-body mesh increased disconnected frames from3 to7; previous selected candidate preserved.",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r012/rig-proof.json",
+          "status": "HOLD_NOT_SELECTED"
+        }
+      ],
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r011/NativeMotionProfile.tres",
         "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -356,33 +366,70 @@
       "production_connected": false,
       "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
       "final_approved": false,
-      "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_197/r001/SpriteFrames.tres",
-      "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/197/r001/NativeMotionProfile.tres",
-      "rig": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r001/rig-proof.json",
+      "frames": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r002/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_197/r002/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r002/rig-proof.json",
       "quality_holds": [
         "ORIGINAL_CHARACTER_IDENTITY",
         "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS",
         "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "RASTER_LIMB_CONNECTIONS_7_OF_48_FRAMES"
+        "RASTER_LIMB_CONNECTIONS_6_OF_48_FRAMES"
       ],
       "source_donor": "existing transform:197 greatsword body; original identity HOLD",
       "source_frames_sha256": "57a1b85f3c3b6f6c33941c71b01028adae84d7d6b8cfc41ae647bf49fb040cbd",
       "new_run_poses": 48.0,
-      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/harper_hero-r001/raster-review.json",
-      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/transform_197-r001-visible-main-hold_harper/validation-opengl.json",
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/harper_hero-r002/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/harper_hero-r002-visible-main-harper_continuous_20261022/validation-opengl.json",
+      "prior_candidates": [
+        {
+          "attack_family": "slash",
+          "body": "armored_humanoid",
+          "classification_is_art_approval": false,
+          "death_hold_review_source": {
+            "frames": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r001/SpriteFrames.tres",
+            "local_opt_in_patch_superseded_by_upstream": true,
+            "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_197/r001/NativeMotionProfile.tres",
+            "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/harper_hero-r001-visible-main-policy_20261022/validation-opengl.json",
+            "runtime_patch_applied_to_branch": true,
+            "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
+          },
+          "death_policy_scope": "EXISTING_DONOR_EIGHT_DIRECTION_REUSED_UNCHANGED",
+          "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+          "equipment": "harper",
+          "final_approved": false,
+          "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_197/r001/SpriteFrames.tres",
+          "grade": "영웅",
+          "historical_status": "NOT_AUTHORED",
+          "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+          "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/transform_197-r001-visible-main-hold_harper/validation-opengl.json",
+          "name": "사단장 하퍼",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/197/r001/NativeMotionProfile.tres",
+          "new_death_unique_poses": 0.0,
+          "new_run_poses": 48.0,
+          "priority": 4.0,
+          "production_connected": false,
+          "quality_holds": [
+            "ORIGINAL_CHARACTER_IDENTITY",
+            "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS",
+            "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
+            "PALETTE_WEAPON_IDENTITY_REVIEW",
+            "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+            "RASTER_LIMB_CONNECTIONS_7_OF_48_FRAMES"
+          ],
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/harper_hero-r001/raster-review.json",
+          "reference": "res://assets/catalog/8285c5c41fcd1e6145c397e3.png",
+          "reference_sha256": "71038b5762f948ce73dc7c1e97e13a108c47b4757a880454064ed0581b87b33f",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r001/rig-proof.json",
+          "source_donor": "existing transform:197 greatsword body; original identity HOLD",
+          "source_frames_sha256": "57a1b85f3c3b6f6c33941c71b01028adae84d7d6b8cfc41ae647bf49fb040cbd",
+          "status": "RIG_CANDIDATE_QUALITY_HOLD"
+        }
+      ],
       "death_policy_scope": "EXISTING_DONOR_EIGHT_DIRECTION_REUSED_UNCHANGED",
       "new_death_unique_poses": 0.0,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r001/SpriteFrames.tres",
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_197/r001/NativeMotionProfile.tres",
-        "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/harper_hero-r001-visible-main-policy_20261022/validation-opengl.json",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
-      },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/harper_continuous_20261022/feature-main-death-policy-opengl.json"
     },
     "transform:198": {
       "name": "토끼 소녀",
@@ -432,11 +479,11 @@
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_231/r041/NativeMotionProfile.tres",
         "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/validation-opengl.json",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -497,11 +544,11 @@
       "new_death_unique_poses": 6.0,
       "death_hold_review_source": {
         "frames": "res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/SpriteFrames.tres",
+        "local_opt_in_patch_superseded_by_upstream": true,
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/NativeMotionProfile.tres",
         "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/maid_anna_276-r001-visible-main-policy_20261022/validation-opengl.json",
         "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-        "local_opt_in_patch_superseded_by_upstream": true
+        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
       "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
     },
@@ -516,10 +563,33 @@
       "attack_family": "melee",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "NOT_STARTED",
+      "status": "EXACT_REUSE_NEW_RUN_QUALITY_HOLD",
       "production_connected": false,
-      "independent_validation": "NOT_RUN",
-      "final_approved": false
+      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+      "final_approved": false,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/rig-proof.json",
+      "quality_holds": [
+        "NEW_RUN_ORIGINAL_IDENTITY_AND_CROSS_ACTION_CONTINUITY",
+        "ACTUAL_ANATOMICAL_SUPPORT_AND_CADENCE",
+        "NEW_EIGHT_DIRECTION_CAMERAS",
+        "ORIGINAL_CHARACTER_IDENTITY",
+        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "RASTER_LIMB_CONNECTIONS_20_OF_48_FRAMES"
+      ],
+      "source_donor": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/SpriteFrames.tres",
+      "source_frames_sha256": "62c9337cc2899429b68e41f3e8823f443f2e2ece148681c2b9599ca3ed7ff645",
+      "new_run_poses": 48.0,
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+      "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+      "death_reuse_assessment": "Exact same target catalog reference verified by provenance; existing eight-direction death copied unchanged.",
+      "new_unique_authored_poses": 48.0,
+      "new_death_authored_directions": [],
+      "new_death_unique_poses": 0.0,
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/exact_reuse_20261022/feature-main-death-policy-opengl.json"
     },
     "transform:357": {
       "name": "서커스단 단장",
@@ -660,10 +730,33 @@
       "attack_family": "melee",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "NOT_STARTED",
+      "status": "EXACT_REUSE_NEW_RUN_QUALITY_HOLD",
       "production_connected": false,
-      "independent_validation": "NOT_RUN",
-      "final_approved": false
+      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+      "final_approved": false,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/rig-proof.json",
+      "quality_holds": [
+        "NEW_RUN_ORIGINAL_IDENTITY_AND_CROSS_ACTION_CONTINUITY",
+        "ACTUAL_ANATOMICAL_SUPPORT_AND_CADENCE",
+        "NEW_EIGHT_DIRECTION_CAMERAS",
+        "ORIGINAL_CHARACTER_IDENTITY",
+        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "RASTER_LIMB_CONNECTIONS_2_OF_48_FRAMES"
+      ],
+      "source_donor": "res://assets/actors/eight_direction/original_based/fire_ent_transform/SpriteFrames.tres",
+      "source_frames_sha256": "c2912eed1e4940220005e3c742affb66de29d48f6c307f60cdb8f85ce436cc22",
+      "new_run_poses": 48.0,
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+      "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+      "death_reuse_assessment": "Exact same target catalog reference verified by provenance; existing eight-direction death copied unchanged.",
+      "new_unique_authored_poses": 48.0,
+      "new_death_authored_directions": [],
+      "new_death_unique_poses": 0.0,
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/exact_reuse_20261022/feature-main-death-policy-opengl.json"
     }
   },
   "historical_approved_ids_read_only": [
@@ -754,6 +847,22 @@
   ],
   "animation_policy": {
     "attack_directions": 8.0,
+    "corpse_hold_runtime_review": {
+      "alignment_commit": "fb5b5c16fa11a3f685826bdec99089f552216951",
+      "authoritative_runtime_pr_head": "4fda626b995fe3021b9be1370597838f6fd8af82",
+      "authoritative_runtime_sha256": "a1b215e2ac05b38d00b4cc9adcc7631dbc2ebb1d92aab5d6b2704099ccb1f1bb",
+      "feature_branch_applied_after_isolated_review": true,
+      "final_runtime_matches_pr_exactly": true,
+      "historical_local_opt_in_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
+      "local_opt_in_patch_superseded": true,
+      "original_pr_branch_modified": false,
+      "review_patch": "docs/remake/pr122-hero-parallel/runtime-review/hero-corpse-hold.patch",
+      "review_patch_status": "HISTORICAL_SUPERSEDED_DO_NOT_APPLY_TO_UPDATED_PR",
+      "reviewed_source_sha256": "ad0ed33595d727f4d7efed5e2ef2521afc9b67e71fcd1f0de435e48afc079511",
+      "scope": "Authoritative PR122 authored-death hold and missing-direction fallback; exact upstream code, no hero-specific runtime divergence.",
+      "separate_feature_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
+      "source_file": "scripts/animation/actor_motion.gd"
+    },
     "existing_approved_84": "EXCLUDED_NO_REAUTHORING",
     "existing_death_assets": "PRESERVE_ALL_EXISTING_DIRECTIONS_AND_CLIPS",
     "final_completion_requires_approval": true,
@@ -768,22 +877,6 @@
     "run_directions": 8.0,
     "scope": "ONLY_DEATH_ART_AUTHORED_AFTER_THIS_POLICY",
     "south_direction_index": 2.0,
-    "walk": "NO_NEW_AUTHORING",
-    "corpse_hold_runtime_review": {
-      "source_file": "scripts/animation/actor_motion.gd",
-      "review_patch": "docs/remake/pr122-hero-parallel/runtime-review/hero-corpse-hold.patch",
-      "feature_branch_applied_after_isolated_review": true,
-      "reviewed_source_sha256": "ad0ed33595d727f4d7efed5e2ef2521afc9b67e71fcd1f0de435e48afc079511",
-      "original_pr_branch_modified": false,
-      "scope": "Authoritative PR122 authored-death hold and missing-direction fallback; exact upstream code, no hero-specific runtime divergence.",
-      "separate_feature_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae",
-      "local_opt_in_patch_superseded": true,
-      "authoritative_runtime_pr_head": "4fda626b995fe3021b9be1370597838f6fd8af82",
-      "authoritative_runtime_sha256": "a1b215e2ac05b38d00b4cc9adcc7631dbc2ebb1d92aab5d6b2704099ccb1f1bb",
-      "final_runtime_matches_pr_exactly": true,
-      "alignment_commit": "fb5b5c16fa11a3f685826bdec99089f552216951",
-      "review_patch_status": "HISTORICAL_SUPERSEDED_DO_NOT_APPLY_TO_UPDATED_PR",
-      "historical_local_opt_in_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-    }
+    "walk": "NO_NEW_AUTHORING"
   }
 }
