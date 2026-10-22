@@ -4,7 +4,7 @@ extends RefCounted
 # These are TWILIGHT prices, not official Lineage M shop prices.
 const RULES = preload("res://scripts/consumable_rules.gd")
 const PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
-const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
+const BUYBACK = preload("res://scripts/shop/buyback_rates.gd")
 const SOURCE_PATHS: Array[String] = ["res://data/catalog_v19.json", "res://data/game_db_v17.json"]
 const KIND_PRICES: Dictionary = {
 	"regen":1500, "instant_mp":8000, "food":2500, "buff":3000,

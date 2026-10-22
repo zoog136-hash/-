@@ -2,7 +2,10 @@ extends RefCounted
 # Local TWILIGHT buyback valuations, NOT source L1J prices.
 # Exact physical instance IDs are checked before destroying equipment.
 const MAX_STACK_SALE: int = 99
-const GRADE_BUYBACK = {"일반":40,"고급":200,"희귀":800,"영웅":4500,"전설":10000,"신화":30000,"유일":80000}
+const RATES = preload("res://scripts/shop/buyback_rates.gd")
+const SHOP = preload("res://scripts/shop/shop_catalog.gd")
+const GRADE_BUYBACK = RATES.GRADE_BUYBACK
+const MAX_WALLET: int = 9000000000000000000
 
 static func _is_equipped(instance_id: String, equipped: Dictionary) -> bool:
 	for raw: Variant in equipped.values():
@@ -37,10 +40,16 @@ static func quote(item_name: String, quantity: int, instance_id: String, invento
 	var unit_price: int = int(GRADE_BUYBACK.get(str(record.get("grade","일반")),0))
 	if unit_price <= 0:
 		return {"ok":false,"reason":"아이템 매입가가 정의되지 않았습니다"}
+	# Never pay more for a stocked consumable than its authoritative purchase
+	# price. Keep legacy purchase prices and equipment valuations unchanged.
+	if not is_equipment:
+		var purchase_price: int = SHOP.price_for(item_name)
+		if purchase_price > 0:
+			unit_price = mini(unit_price, purchase_price)
 	# The priced instance is the exact instance removed, not a different
 	# item with the same name and a higher or lower enchantment.
 	var payment: int = unit_price * quantity + enhancement * unit_price / 10
-	if payment <= 0 or wallet > 9000000000000000000 - payment:
+	if payment <= 0 or wallet > MAX_WALLET - payment:
 		return {"ok":false,"reason":"판매 금액이 허용 범위를 초과합니다"}
 	return {"ok":true,"item_name":item_name,"quantity":quantity,"instance_id":instance_id,"payment":payment,"enhancement":enhancement}
 
@@ -53,6 +62,10 @@ static func apply(valid_quote: Dictionary, inventory: Dictionary, physical: Dict
 	var payment: int = int(valid_quote.get("payment",0))
 	if quantity < 1 or quantity > MAX_STACK_SALE or payment < 1 or wallet < 0 or int(inventory.get(item_name,0)) < quantity:
 		return {"ok":false,"reason":"아이템 수량이나 금액이 변경되었습니다"}
+	# The wallet may have changed since quoting. Check before erasing an
+	# equipment instance or removing a stack; subtraction avoids overflow.
+	if wallet > MAX_WALLET - payment:
+		return {"ok":false,"reason":"판매 금액이 허용 범위를 초과합니다"}
 	if not instance_id.is_empty():
 		if quantity != 1 or not physical.has(instance_id) or str((physical[instance_id] as Dictionary).get("name","")) != item_name:
 			return {"ok":false,"reason":"판매할 장비 개체를 찾지 못했습니다"}
