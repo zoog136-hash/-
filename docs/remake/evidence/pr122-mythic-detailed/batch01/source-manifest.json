@@ -25357,6 +25357,320 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "SW",
+      "role": "attack",
+      "version": "SWattackSixActualRig01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png",
+      "original_generated_file": "/tmp/twilight-413-frozen-input-68qzul9q/reviewed-source.png",
+      "bytes": 4274538,
+      "sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+        "canonical_preflight": {
+          "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+          "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+          "packing_proof_sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+          "direction": "SW",
+          "canonical_canvas": 2048,
+          "physical_canvases": [
+            2496,
+            2496,
+            2496,
+            2496,
+            2496,
+            2496
+          ],
+          "root_float": [
+            667.65625,
+            1003.5996691442447
+          ],
+          "root_integer": [
+            668,
+            1004
+          ],
+          "tile_size": 2304,
+          "storage_translations": [
+            [
+              384,
+              128
+            ],
+            [
+              384,
+              128
+            ],
+            [
+              384,
+              128
+            ],
+            [
+              384,
+              128
+            ],
+            [
+              384,
+              128
+            ],
+            [
+              384,
+              128
+            ]
+          ],
+          "atlas_origins": [
+            [
+              0,
+              0
+            ],
+            [
+              2304,
+              0
+            ],
+            [
+              0,
+              2304
+            ],
+            [
+              2304,
+              2304
+            ],
+            [
+              0,
+              4608
+            ],
+            [
+              2304,
+              4608
+            ]
+          ],
+          "source_anchors": [
+            [
+              1052,
+              1132
+            ],
+            [
+              3356,
+              1132
+            ],
+            [
+              1052,
+              3436
+            ],
+            [
+              3356,
+              3436
+            ],
+            [
+              1052,
+              5740
+            ],
+            [
+              3356,
+              5740
+            ]
+          ]
+        },
+        "canonical_preflight_sha256": "c0f3050c6b8a98ab942e286d7a2fe25bba630a0194302180688a6fbe5efa88f8",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+        "base_geometry_sha256": "9458bdf367b1fa8a262032e698b083731d3906469705501333623e2cdc4535d6",
+        "direction": "SW",
+        "regions": [
+          [
+            688,
+            164,
+            688,
+            1136
+          ],
+          [
+            2793,
+            149,
+            890,
+            1151
+          ],
+          [
+            371,
+            2501,
+            1013,
+            1103
+          ],
+          [
+            2730,
+            2552,
+            1027,
+            1052
+          ],
+          [
+            452,
+            4859,
+            1037,
+            1049
+          ],
+          [
+            2964,
+            4799,
+            712,
+            1109
+          ]
+        ],
+        "nearest_owner_sha256": "822cfb4ab3404439314c85b2a3ef4ca1f85c74a94ae3492a2fc7797376d77000",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+        "source_RGBA_sha256": "1fd36698c64c7e00b381c3ad8ab7f6b3c09ec8a55f8f71cd143e0c32f5dbaa28",
+        "base_geometry_sha256": "9458bdf367b1fa8a262032e698b083731d3906469705501333623e2cdc4535d6",
+        "derived_geometry_sha256": "570755e364d90fe4ec92c65efa54b69d8fe64cb41f490479c53dd8fefee93abf",
+        "review_sha256": "c445c2fafb71106dfb76d5e8eb4f7cc114ad549e67122903a46adc566c5a2ec4",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1844291,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            688,
+            164,
+            688,
+            1136
+          ],
+          [
+            2793,
+            149,
+            890,
+            1151
+          ],
+          [
+            371,
+            2501,
+            1013,
+            1103
+          ],
+          [
+            2730,
+            2552,
+            1027,
+            1052
+          ],
+          [
+            452,
+            4859,
+            1037,
+            1049
+          ],
+          [
+            2964,
+            4799,
+            712,
+            1109
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "822cfb4ab3404439314c85b2a3ef4ca1f85c74a94ae3492a2fc7797376d77000",
+        "foreground_owner_sha256": "dace5be25d7472c927ee64199b643c270741d3cc6b47b7a914a04a666cb3b37c",
+        "detached_pixels": 10,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              1082,
+              436,
+              1083,
+              437
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1814.2802980796546,
+            "owner_margin_min": 1812.0442301021549
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              966,
+              457,
+              967,
+              458
+            ],
+            "nearest_max": 4.123105625617661,
+            "second_nearest_min": 1920.5103488395994,
+            "owner_margin_min": 1916.3872432139817
+          },
+          {
+            "row": 1,
+            "pixels": 3,
+            "bbox": [
+              3465,
+              584,
+              3467,
+              587
+            ],
+            "nearest_max": 7.211102550927978,
+            "second_nearest_min": 1974.554380107066,
+            "owner_margin_min": 1967.8461761745666
+          },
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              3466,
+              588,
+              3468,
+              589
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1972.560011761366,
+            "owner_margin_min": 1964.9442386555022
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              1164,
+              2899,
+              1165,
+              2901
+            ],
+            "nearest_max": 11.40175425099138,
+            "second_nearest_min": 1570.3260807870447,
+            "owner_margin_min": 1558.9243265360533
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3464,
+              5189,
+              3465,
+              5190
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1593.4318309861894,
+            "owner_margin_min": 1590.6034038614432
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -25506,9 +25820,10 @@
     "transform:413:SE:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-death-SEdeathSixActualRig01.png",
     "transform:413:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-idle-WidleSixActualRig01.png",
     "transform:413:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-hit-WhitSixActualRig01.png",
-    "transform:413:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-attack-SattackSixActualRig01.png"
+    "transform:413:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-attack-SattackSixActualRig01.png",
+    "transform:413:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png"
   },
-  "selected_detailed_action_native_poses": 546,
+  "selected_detailed_action_native_poses": 552,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -31793,6 +32108,151 @@
         ]
       },
       "canonical_preflight_sha256": "33c8e69670fac2522b25acf332c22df02e6318464b3d5c11170224e5365d6032",
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+      "direction": "SW",
+      "role": "attack",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          1052,
+          1132
+        ],
+        [
+          3356,
+          1132
+        ],
+        [
+          1052,
+          3436
+        ],
+        [
+          3356,
+          3436
+        ],
+        [
+          1052,
+          5740
+        ],
+        [
+          3356,
+          5740
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        2496
+      ],
+      "canonical_preflight": {
+        "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+        "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+        "packing_proof_sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+        "direction": "SW",
+        "canonical_canvas": 2048,
+        "physical_canvases": [
+          2496,
+          2496,
+          2496,
+          2496,
+          2496,
+          2496
+        ],
+        "root_float": [
+          667.65625,
+          1003.5996691442447
+        ],
+        "root_integer": [
+          668,
+          1004
+        ],
+        "tile_size": 2304,
+        "storage_translations": [
+          [
+            384,
+            128
+          ],
+          [
+            384,
+            128
+          ],
+          [
+            384,
+            128
+          ],
+          [
+            384,
+            128
+          ],
+          [
+            384,
+            128
+          ],
+          [
+            384,
+            128
+          ]
+        ],
+        "atlas_origins": [
+          [
+            0,
+            0
+          ],
+          [
+            2304,
+            0
+          ],
+          [
+            0,
+            2304
+          ],
+          [
+            2304,
+            2304
+          ],
+          [
+            0,
+            4608
+          ],
+          [
+            2304,
+            4608
+          ]
+        ],
+        "source_anchors": [
+          [
+            1052,
+            1132
+          ],
+          [
+            3356,
+            1132
+          ],
+          [
+            1052,
+            3436
+          ],
+          [
+            3356,
+            3436
+          ],
+          [
+            1052,
+            5740
+          ],
+          [
+            3356,
+            5740
+          ]
+        ]
+      },
+      "canonical_preflight_sha256": "c0f3050c6b8a98ab942e286d7a2fe25bba630a0194302180688a6fbe5efa88f8",
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
   },
