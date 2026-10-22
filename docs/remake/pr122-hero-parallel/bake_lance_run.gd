@@ -4,6 +4,7 @@ extends SceneTree
 var revision: String
 var OUT: String
 var SOURCE: String
+var protected_core := Rect2()
 var recipe: Dictionary
 var target_ids: Array[String] = []
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
@@ -13,12 +14,14 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _canvas(texture: AtlasTexture) -> Image:
-	var image := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	var image := Image.create(texture.get_width(), texture.get_height(), false, Image.FORMAT_RGBA8)
 	# Import-time alpha-border repair can change transparent / edge RGB. Read
 	# the preserved PNG bytes for the source-material contract instead.
 	var source := Image.new()
 	assert(source.load_png_from_buffer(FileAccess.get_file_as_bytes(texture.atlas.resource_path)) == OK)
 	image.blit_rect(source, Rect2i(texture.region), Vector2i(texture.margin.position))
+	assert(image.get_width() == image.get_height(), "Source virtual canvas must be square")
+	if image.get_width() != 256: image.resize(256, 256, Image.INTERPOLATE_NEAREST)
 	return image
 
 func _leg(skeleton: Skeleton2D, point: Vector2, knee: Vector2, ankle: Vector2) -> Array[Bone2D]:
@@ -150,6 +153,11 @@ func _blend_weight(value: float) -> float:
 	if not OS.get_environment("TWILIGHT_HERO_SMOOTH_SKIN").is_empty(): smooth = OS.get_environment("TWILIGHT_HERO_SMOOTH_SKIN") == "1"
 	return smoothstep(0.0, 1.0, weight) if smooth else weight
 
+func _core_contains(point: Vector2) -> bool:
+	if protected_core.size.x <= 0.0: return false
+	var normalized := (point - protected_core.get_center()) / (protected_core.size * .5)
+	return normalized.length_squared() <= 1.0
+
 func _triangle(source: Image, result: Image, uv: Array[Vector2], positions: Array[Vector2]) -> void:
 	var raster_scale := float(result.get_width()) / 256.0
 	var a: Vector2 = positions[0] * raster_scale
@@ -167,6 +175,7 @@ func _triangle(source: Image, result: Image, uv: Array[Vector2], positions: Arra
 			if u < -.001 or v < -.001 or u + v > 1.001: continue
 			var sample := Vector2i((uv[0] * (1.0 - u - v) + uv[1] * u + uv[2] * v).floor())
 			if sample.x < 0 or sample.y < 0 or sample.x >= 256 or sample.y >= 256: continue
+			if _core_contains(Vector2(sample) + Vector2(.5, .5)): continue
 			var color := source.get_pixelv(sample)
 			if color.a > 0: result.set_pixel(x, y, color)
 
@@ -219,11 +228,16 @@ func _run() -> void:
 		target_ids.append(sid)
 	assert(revision.begins_with("r") and revision.substr(1).is_valid_int())
 	var verify_only: bool = OS.get_environment("TWILIGHT_HERO_VERIFY_BAKE") == "1"
+	if not verify_only:
+		var registered: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+		for sid: String in target_ids:
+			assert(registered.actors.has("transform:" + sid) and not registered.actors["transform:" + sid].final_approved, "Approved hero assets must not be reauthored")
 	assert(verify_only or not FileAccess.file_exists(OUT + "run.png"), "Preserve prior output; select a new revision before baking")
 	DirAccess.make_dir_recursive_absolute(OUT)
 	var source: SpriteFrames = load(SOURCE)
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
+	if source.has_meta("twilight_canvas_size"): frames.set_meta("twilight_canvas_size", source.get_meta("twilight_canvas_size"))
 	# Preserve exact approved donor attack/hit/death textures and durations.
 	# These are inherited legacy clips, not newly authored or visually approved.
 	for key: StringName in source.get_animation_names():
@@ -260,6 +274,11 @@ func _run() -> void:
 		var box := _opaque_bounds(neutral)
 		var ground: float = float(box.end.y)
 		var hip_y: float = ground - 28.0
+		protected_core = Rect2()
+		if recipe.get("protect_body_core", false):
+			var radius := Vector2(box.size.x * float(recipe.get("core_width_fraction", .38)), float(recipe.get("core_height", 27.0)))
+			var center := Vector2(box.get_center().x, ground - 40.0)
+			protected_core = Rect2(center - radius, radius * 2.0)
 		var split: int = box.get_center().x
 		var skin_split: int = split + int(OS.get_environment("TWILIGHT_HERO_SPLIT_SHIFT"))
 		var per_direction := OS.get_environment("TWILIGHT_HERO_SPLITS").split(",", false)
@@ -308,14 +327,16 @@ func _run() -> void:
 			var raster_size: int = 2048 if OS.get_environment("TWILIGHT_HERO_RASTER_8X") == "1" else 1024
 			var result := Image.create(raster_size, raster_size, false, Image.FORMAT_RGBA8)
 			var stage: int = phase % 3
-			var root_down: float = [9.0, 11.0, 3.0][stage]
+			var root_down: float = roundf([9.0, 11.0, 3.0][stage] * float(recipe.get("root_down_scale", 1.0)))
 			var pose: Dictionary = {"direction": DIRECTIONS[direction], "phase": phase, "support": "AIR" if stage == 2 else ("A" if phase < 3 else "B"), "root_down": root_down, "legs": []}
 			for leg_index: int in range(2):
 				var supporting: bool = (phase < 3) == (leg_index == 0)
-				var step: float = ([12.0, -3.0, -11.0] if supporting else [-11.0, 7.0, 12.0])[stage]
-				var lift: float = ([0.0, 0.0, 5.0] if supporting else [9.0, 13.0, 5.0])[stage]
+				var step: float = ([12.0, -3.0, -11.0] if supporting else [-11.0, 7.0, 12.0])[stage] * float(recipe.get("step_scale", 1.0))
+				var lift: float = ([0.0, 0.0, 5.0] if supporting else [9.0, 13.0, 5.0])[stage] * float(recipe.get("lift_scale", 1.0))
 				var hip: Vector2 = centers[leg_index] + Vector2(0, root_down)
-				var ankle := Vector2(centers[leg_index].x, source_soles[leg_index] - 4.0) + forward * step - Vector2(0, lift)
+				var bind_joints: Array = legs[leg_index][0].get_meta("bind_joints")
+				var rest_ankle: Vector2 = bind_joints[2] if recipe.get("source_rest_limb_targets", false) else Vector2(centers[leg_index].x, source_soles[leg_index] - 4.0)
+				var ankle := rest_ankle + forward * step - Vector2(0, lift)
 				var requested_ankle := ankle
 				# A folded airborne leg may have an unreachable projected target.
 				# Fit that free-leg trajectory to its actual source link lengths;
@@ -326,7 +347,11 @@ func _run() -> void:
 					var reach := clampf(delta.length(), absf(lengths.x - lengths.y) + .25, lengths.x + lengths.y - .25)
 					ankle = hip + delta.normalized() * reach
 				var bones: Array[Bone2D] = legs[leg_index]
-				_pose(bones, hip, ankle, leg_lengths[leg_index], -1.0 if forward.x >= 0 else 1.0)
+				var bend_sign: float = -1.0 if forward.x >= 0 else 1.0
+				if recipe.get("source_rest_limb_targets", false):
+					var source_cross: float = ((bind_joints[2] as Vector2) - (bind_joints[0] as Vector2)).cross((bind_joints[1] as Vector2) - (bind_joints[0] as Vector2))
+					if absf(source_cross) > .01: bend_sign = signf(source_cross)
+				_pose(bones, hip, ankle, leg_lengths[leg_index], bend_sign)
 				var left: int = lower.position.x if leg_index == 0 else skin_split
 				var width: int = skin_split - lower.position.x if leg_index == 0 else lower.end.x - skin_split
 				if not recipe.get("continuous_cloth_mesh", false):
@@ -336,7 +361,7 @@ func _run() -> void:
 					push_error("HERO_IK_REACH_FAIL direction=%d phase=%d leg=%d lengths=%s target=%s actual=%s" % [direction, phase, leg_index, leg_lengths[leg_index], ankle, actual_ankle])
 					quit(1)
 					return
-				pose.legs.append({"leg": leg_index, "hip": [hip.x, hip.y], "knee": [bones[1].global_position.x, bones[1].global_position.y], "ankle": [actual_ankle.x, actual_ankle.y], "requested_ankle": [requested_ankle.x, requested_ankle.y], "lift": lift, "bone_lengths": [leg_lengths[leg_index].x, leg_lengths[leg_index].y], "source_joints": source_joints[leg_index], "source_sole_y": source_soles[leg_index]})
+				pose.legs.append({"leg": leg_index, "hip": [hip.x, hip.y], "knee": [bones[1].global_position.x, bones[1].global_position.y], "ankle": [actual_ankle.x, actual_ankle.y], "requested_ankle": [requested_ankle.x, requested_ankle.y], "lift": lift, "bone_lengths": [leg_lengths[leg_index].x, leg_lengths[leg_index].y], "source_joints": source_joints[leg_index], "source_sole_y": source_soles[leg_index], "source_rest_target": recipe.get("source_rest_limb_targets", false), "bend_sign": bend_sign})
 			if recipe.get("continuous_cloth_mesh", false):
 				_raster_combined_skin(neutral, result, lower, centers, legs, root_down, skin_split)
 			# Foreground upper armour / weapon remains the exact donor material.
@@ -345,6 +370,11 @@ func _run() -> void:
 			result.resize(256, 256, Image.INTERPOLATE_TRILINEAR)
 			result.clear_mipmaps()
 			result.blit_rect(neutral, Rect2i(0, 0, 256, int(hip_y)), Vector2i(0, int(root_down)))
+			if protected_core.size.x > 0.0:
+				for y: int in range(int(hip_y), mini(256, int(protected_core.end.y) + 1)):
+					for x: int in range(maxi(0, int(protected_core.position.x)), mini(256, int(protected_core.end.x) + 1)):
+						if _core_contains(Vector2(x + .5, y + .5)) and neutral.get_pixel(x, y).a > 0.0:
+							result.set_pixel(x, y + int(root_down), neutral.get_pixel(x, y))
 			var hasher := HashingContext.new()
 			hasher.start(HashingContext.HASH_SHA256)
 			hasher.update(result.get_data())
@@ -352,8 +382,8 @@ func _run() -> void:
 			assert(not hashes.has(hash_value), "Repeated run pose is forbidden")
 			hashes[hash_value] = true
 			pose["rgba_sha256"] = hash_value
-			pose["source_reference"] = {"mirrored_x": mirror_reference, "track": reference_track, "frame": reference_frame, "atlas": neutral_texture.atlas.resource_path, "region": [neutral_texture.region.position.x, neutral_texture.region.position.y, neutral_texture.region.size.x, neutral_texture.region.size.y], "margin_position": [neutral_texture.margin.position.x, neutral_texture.margin.position.y]}
-			pose["source_partition"] = {"split_x": skin_split, "bind_split_x": split, "hip_y": hip_y, "ground_y": ground, "review": "SOURCE_BIND_FIXED_MATERIAL_PARTITION_FIT"}
+			pose["source_reference"] = {"virtual_canvas_size": [neutral_texture.get_width(), neutral_texture.get_height()], "normalized_canvas_size": [256, 256], "mirrored_x": mirror_reference, "track": reference_track, "frame": reference_frame, "atlas": neutral_texture.atlas.resource_path, "region": [neutral_texture.region.position.x, neutral_texture.region.position.y, neutral_texture.region.size.x, neutral_texture.region.size.y], "margin_position": [neutral_texture.margin.position.x, neutral_texture.margin.position.y]}
+			pose["source_partition"] = {"split_x": skin_split, "bind_split_x": split, "hip_y": hip_y, "ground_y": ground, "protected_core_ellipse": [protected_core.position.x, protected_core.position.y, protected_core.size.x, protected_core.size.y], "review": "SOURCE_BIND_FIXED_MATERIAL_PARTITION_FIT"}
 			proofs.append(pose)
 			atlas.blit_rect(result, Rect2i(0, 0, 256, 256), Vector2i(phase * 256, direction * 256))
 		skeleton.queue_free()
@@ -392,6 +422,8 @@ func _run() -> void:
 		var profile: Resource = CATALOG.for_record("transform", row, row.image_path)
 		profile.frames_path = OUT + "SpriteFrames.tres"
 		profile.movement_fps = 18.0
+		if recipe.get("visual_overrides", {}).has("color_tint"): profile.color_tint = Color.from_string(recipe.visual_overrides.color_tint, Color.WHITE)
+		if recipe.get("visual_overrides", {}).has("floating"): profile.floating = bool(recipe.visual_overrides.floating)
 		profile.set_meta("hero_parallel_candidate", true)
 		profile.set_meta("final_approved", false)
 		var folder := "res://assets/actors/eight_direction/hero_parallel/" + str(recipe.profile_prefix) + sid + "/" + revision + "/"
@@ -399,7 +431,7 @@ func _run() -> void:
 		assert(ResourceSaver.save(profile, folder + "NativeMotionProfile.tres") == OK)
 		var entry: Dictionary = staging.actors["transform:" + sid]
 		entry.merge({"status": "RIG_CANDIDATE_QUALITY_HOLD", "frames": OUT + "SpriteFrames.tres", "native_profile": folder + "NativeMotionProfile.tres", "rig": OUT + "rig-proof.json", "source_donor": str(recipe.source_donor), "source_frames_sha256": FileAccess.get_sha256(SOURCE), "new_run_poses": 48, "independent_validation": "NOT_RUN", "quality_holds": ["ORIGINAL_CHARACTER_IDENTITY", "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS", "FOOT_CONTACT_CADENCE_VISUAL_REVIEW", "PALETTE_WEAPON_IDENTITY_REVIEW"], "production_connected": false, "final_approved": false}, true)
-	_write_json(OUT + "rig-proof.json", {"schema": "hero-parallel-bone-run-v1", "engine": Engine.get_version_info().string, "source": SOURCE, "source_sha256": FileAccess.get_sha256(SOURCE), "new_unique_run_poses": 48, "method": "Skeleton2D/Bone2D fixed-length IK, continuous linear blend skin triangles, nearest source material, shared 8 directions", "scope": "CANDIDATE_NOT_VISUAL_ORIGINAL_IDENTITY_APPROVAL", "frames": proofs})
+	_write_json(OUT + "rig-proof.json", {"schema": "hero-parallel-bone-run-v1", "engine": Engine.get_version_info().string, "source": SOURCE, "source_sha256": FileAccess.get_sha256(SOURCE), "new_unique_run_poses": 48, "visual_overrides": recipe.get("visual_overrides", {}), "limb_model": recipe.get("limb_model", "two articulated legs"), "method": "Skeleton2D/Bone2D fixed-length IK, continuous linear blend skin triangles, nearest source material, shared 8 directions", "scope": "CANDIDATE_NOT_VISUAL_ORIGINAL_IDENTITY_APPROVAL", "frames": proofs})
 	_write_json("res://data/pr122_hero_parallel_staging.json", staging)
 	print("HERO_RUN_BAKE_OK unique_run_poses=48 shared_targets=%d walk_tracks=0 approvals=0" % target_ids.size())
 	quit(0)

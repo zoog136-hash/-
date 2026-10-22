@@ -1,0 +1,10 @@
+{
+  "status": "BLOCKED_NO_SOURCE_PRODUCED",
+  "request": {
+    "prompt": "Use the attached catalog portrait as the exact character identity. Create SIX real RUN animation poses of this same DEATH155 ragged hooded reaper, SINGLE SOUTH/front-down camera. Exact same olive-dark-brown ragged full-length hooded cloak, shadowed face inside hood, gaunt withered hands, long black scythe, and frayed uneven lower robes. NO metal helmet, crest, plate armor, gold trims or replacement costume. Small readable painted isometric RPG sprite style matching the portrait. EXACT THREE columns by TWO rows, six equal square tiles, row-major phases: left foot contact/right behind; left loading/right knee forward; brief flight exchanging legs; right foot contact/left behind; right loading/left knee forward; second flight. Articulated legs and knees under the frayed hem, subtle directional cloth lag, scythe stays firmly in hands. Same front/down camera, same world root and constant body proportions in all six poses. Whole character and whole scythe must fit each tile with generous EMPTY transparent gutters; no adjacent-cell contamination. Transparent RGBA, no floor, shadow, labels, grids, other characters or particles. Preferred1536x1024,512px square tiles. Do not duplicate poses or just translate a still.",
+    "reference": "/workspace/twilight-hero-parallel/assets/catalog/394db77a53ca94ad44ed0042.png"
+  },
+  "failure": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Unknown parameter: 'reasoning'.\\\",\\n    \\\"type\\\": \\\"invalid_request_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"unknown_parameter\\\"\\n  }\\n}\")",
+  "new_source_files": 0,
+  "internal_review_allowed": true
+}

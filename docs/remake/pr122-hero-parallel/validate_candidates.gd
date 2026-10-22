@@ -42,7 +42,7 @@ func _run() -> void:
 	_check(Engine.get_version_info().string.begins_with("4.7.2"), "wrong engine")
 	_check(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"), "isolated save path required")
 	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
-	_check(staging.hero_total_in_498 == 109 and staging.pending_total == 25, "exact roster")
+	_check(staging.hero_total_in_498 == 109 and int(staging.get("target_scope_total", staging.pending_total)) == 25, "exact roster")
 	var target_ids := OS.get_environment("TWILIGHT_HERO_TEST_IDS").split(",", false)
 	if target_ids.is_empty(): target_ids = PackedStringArray(["179", "182"])
 	var frames_path: String = staging.actors["transform:" + target_ids[0]].frames

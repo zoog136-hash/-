@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_3gjhx"]
+
+[resource]
+script = ExtResource("1_3gjhx")
+profile_id = "transform:405"
+resource_path_hint = "res://assets/catalog/64d25f3ba900292ba831c0b3.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 1
+action_hit_frames = {
+"attack": 1.0
+}
+sprite_offset = Vector2(0, -23.111103)
+floating = true
+pixel_scale = 0.722222
+death_duration = 0.65
+body_kind = "flying"
+idle_amplitude = 1.3
+stride_bob = 0.45
+stride_lean = 0.009
+attack_recoil = 0.8
+hit_recoil = 0.0
+death_tilt = 0.3
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

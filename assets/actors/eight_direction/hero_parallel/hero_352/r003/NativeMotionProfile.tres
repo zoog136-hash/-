@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_la83b"]
+
+[resource]
+script = ExtResource("1_la83b")
+profile_id = "transform:352"
+resource_path_hint = "res://assets/catalog/0ffb2e6843a5f87f54a2fd76.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/frog_native_352/r003/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 1
+action_hit_frames = {
+"attack": 1.0
+}
+sprite_offset = Vector2(0, -23.636353)
+pixel_scale = 0.738636
+death_duration = 0.65
+body_kind = "beast"
+idle_amplitude = 0.3
+stride_bob = 1.25
+stride_lean = 0.01
+attack_recoil = 1.15
+hit_recoil = 0.0
+death_tilt = 0.3
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

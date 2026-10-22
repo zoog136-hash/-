@@ -2,7 +2,7 @@
   "schema": "pr122-hero-parallel-v1",
   "branch": "feature/pr122-hero-parallel",
   "basis_pr_head": "5bf5d3195f97fda565f195f19344a4929597267e",
-  "latest_main_read_only": "082518ec2ae07535b4e9004f703e05e3a2ba6ed1",
+  "latest_main_read_only": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
   "source_498_ledger": "docs/remake/evidence/pr122-remaining106/batch17/all498-production-status.json",
   "source_498_ledger_sha256": "6c8eb6246a86c1f873bc15aadbf2366bf007eaafd5c120af4d1ec4eb8b361e19",
   "required_roles": [
@@ -26,8 +26,9 @@
   "hero_total_in_498": 109,
   "historical_approved_excluded": 84,
   "historical_short_frame_excluded": 11,
-  "pending_total": 25,
-  "new_final_approvals": 0,
+  "target_scope_total": 25,
+  "pending_total": 22,
+  "new_final_approvals": 3,
   "default_game_connections": 0,
   "actors": {
     "transform:7": {
@@ -53,7 +54,8 @@
         "CROSS_SHEET_DESIGN_CONTINUITY",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
         "CAMERA_AND_THREE_RUN_SOURCE_CELL_EDGES",
-        "PALETTE_WEAPON_IDENTITY_REVIEW"
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "new generated Baphomet action art; reference identity not approved",
       "source_frames_sha256": "81b68df1dc7b9405df7220a3ff382045f02e75aafde109970af85fb2bf9d9dd4",
@@ -101,7 +103,9 @@
         "runtime_patch_applied_to_branch": true,
         "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:11": {
       "name": "베레스",
@@ -125,7 +129,8 @@
         "ORIGINAL_CHARACTER_IDENTITY",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
-        "RASTER_LIMB_CONNECTIONS_37_OF_48_FRAMES"
+        "RASTER_LIMB_CONNECTIONS_37_OF_48_FRAMES",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "monster:베레스",
       "source_frames_sha256": "83f39b00b3a5a64ee6c502c559bb7eff2ae9a15ed3e40d58f9f6d9eba4de2b2f",
@@ -141,7 +146,9 @@
         "runtime_patch_applied_to_branch": true,
         "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:179": {
       "name": "랜스 마스터(레드)",
@@ -164,7 +171,8 @@
       "quality_holds": [
         "ORIGINAL_CHARACTER_IDENTITY",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "PALETTE_WEAPON_IDENTITY_REVIEW"
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "transform:176 via transform:44",
       "source_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
@@ -180,7 +188,9 @@
         "runtime_patch_applied_to_branch": true,
         "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:182": {
       "name": "랜스 마스터(블루)",
@@ -203,7 +213,8 @@
       "quality_holds": [
         "ORIGINAL_CHARACTER_IDENTITY",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "PALETTE_WEAPON_IDENTITY_REVIEW"
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "transform:176 via transform:44",
       "source_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
@@ -219,7 +230,9 @@
         "runtime_patch_applied_to_branch": true,
         "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:260": {
       "name": "각성 켄라우헬",
@@ -245,7 +258,8 @@
         "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "NE_HORIZONTAL_MIRROR_IDENTITY_AND_HANDING_REVIEW"
+        "NE_HORIZONTAL_MIRROR_IDENTITY_AND_HANDING_REVIEW",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
       "source_frames_sha256": "5d5d54c9d19293744018b61f42b1b5a2015bf94a2146993f16f765dc7922bd7d",
@@ -313,7 +327,9 @@
         }
       ],
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:4": {
       "name": "천상의 기사",
@@ -355,7 +371,8 @@
         "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "NE_HORIZONTAL_MIRROR_IDENTITY_AND_HANDING_REVIEW"
+        "NE_HORIZONTAL_MIRROR_IDENTITY_AND_HANDING_REVIEW",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "Existing transform:9 shared longbow profile. Archer body/motion prototype only; Helvine original identity is NOT approved.",
       "source_frames_sha256": "50b6a520b61ad24eb33d5bdd64bf354cd14cb54e1d6003fd35cdca05473e5cf8",
@@ -404,7 +421,9 @@
       "death_reuse_assessment": "Original transform9 shared longbow donor death library retained byte-for-byte. This is a motion candidate, not original Helvine identity approval.",
       "new_death_authored_directions": [],
       "new_death_unique_poses": 0.0,
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:16": {
       "name": "각성:발록",
@@ -499,7 +518,8 @@
         "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "RASTER_LIMB_CONNECTIONS_6_OF_48_FRAMES"
+        "RASTER_LIMB_CONNECTIONS_6_OF_48_FRAMES",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "existing transform:197 greatsword body; original identity HOLD",
       "source_frames_sha256": "57a1b85f3c3b6f6c33941c71b01028adae84d7d6b8cfc41ae647bf49fb040cbd",
@@ -553,7 +573,9 @@
       ],
       "death_policy_scope": "EXISTING_DONOR_EIGHT_DIRECTION_REUSED_UNCHANGED",
       "new_death_unique_poses": 0.0,
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/harper_continuous_20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/harper_continuous_20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:198": {
       "name": "토끼 소녀",
@@ -592,7 +614,8 @@
       "quality_holds": [
         "ORIGINAL_CHARACTER_IDENTITY",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "PALETTE_WEAPON_IDENTITY_REVIEW"
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "transform:176 via transform:44",
       "source_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
@@ -609,7 +632,9 @@
         "runtime_patch_applied_to_branch": true,
         "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:268": {
       "name": "천상의 수호 기사",
@@ -652,7 +677,8 @@
         "DIRECTION_CAMERA_REVIEW",
         "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
-        "RASTER_LIMB_CONNECTIONS_20_OF_48_FRAMES"
+        "RASTER_LIMB_CONNECTIONS_20_OF_48_FRAMES",
+        "DIRECT_VISUAL_IDENTITY_REJECTED_20261023"
       ],
       "source_donor": "new generated maid art; old chain-armour clips preserved read-only",
       "source_frames_sha256": "e13e87aa97b9a846e52073469f0e461137c562eacf94dccc646b4e59ed7942ce",
@@ -674,7 +700,9 @@
         "runtime_patch_applied_to_branch": true,
         "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
       },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+      "visual_review_state": "REJECTED_ORIGINAL_IDENTITY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json"
     },
     "transform:352": {
       "name": "알비노 뿔 개구리",
@@ -687,33 +715,86 @@
       "attack_family": "melee",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "EXACT_REUSE_NEW_RUN_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "production_connected": false,
-      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
-      "final_approved": false,
-      "frames": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/SpriteFrames.tres",
-      "native_profile": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/NativeMotionProfile.tres",
-      "rig": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/rig-proof.json",
-      "quality_holds": [
-        "NEW_RUN_ORIGINAL_IDENTITY_AND_CROSS_ACTION_CONTINUITY",
-        "ACTUAL_ANATOMICAL_SUPPORT_AND_CADENCE",
-        "NEW_EIGHT_DIRECTION_CAMERAS",
-        "ORIGINAL_CHARACTER_IDENTITY",
-        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "PALETTE_WEAPON_IDENTITY_REVIEW",
-        "RASTER_LIMB_CONNECTIONS_20_OF_48_FRAMES"
-      ],
-      "source_donor": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/SpriteFrames.tres",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
+      "final_approved": true,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/frog_native_352/r004/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_352/r004/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/frog_native_352/r004/rig-proof.json",
+      "quality_holds": [],
+      "source_donor": "Exact catalog target transform:352 existing source; original resource immutable",
       "source_frames_sha256": "62c9337cc2899429b68e41f3e8823f443f2e2ece148681c2b9599ca3ed7ff645",
       "new_run_poses": 48.0,
-      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001/raster-review.json",
-      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/frog_native_352-r004/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/frog_native_352-r004-visible-main-native_visual_20261023/validation-opengl.json",
+      "unique_art_candidates": [
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/frog_native_352/r001",
+          "selected": false,
+          "status": "SUPERSEDED_VISUAL_HOLD_PRESERVED"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/frog_native_352/r002",
+          "selected": false,
+          "status": "SUPERSEDED_VISUAL_HOLD_PRESERVED"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/frog_native_352/r003",
+          "selected": false,
+          "status": "SUPERSEDED_VISUAL_HOLD_PRESERVED"
+        }
+      ],
+      "prior_candidates": [
+        {
+          "attack_family": "melee",
+          "body": "frog",
+          "classification_is_art_approval": false,
+          "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+          "death_reuse_assessment": "Exact same target catalog reference verified by provenance; existing eight-direction death copied unchanged.",
+          "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/exact_reuse_20261022/feature-main-death-policy-opengl.json",
+          "equipment": "horns",
+          "final_approved": false,
+          "frames": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/SpriteFrames.tres",
+          "grade": "영웅",
+          "historical_status": "SOURCE_HOLD",
+          "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+          "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+          "name": "알비노 뿔 개구리",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/NativeMotionProfile.tres",
+          "new_death_authored_directions": [],
+          "new_death_unique_poses": 0.0,
+          "new_run_poses": 48.0,
+          "new_unique_authored_poses": 48.0,
+          "priority": 4.0,
+          "production_connected": false,
+          "quality_holds": [
+            "NEW_RUN_ORIGINAL_IDENTITY_AND_CROSS_ACTION_CONTINUITY",
+            "ACTUAL_ANATOMICAL_SUPPORT_AND_CADENCE",
+            "NEW_EIGHT_DIRECTION_CAMERAS",
+            "ORIGINAL_CHARACTER_IDENTITY",
+            "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+            "PALETTE_WEAPON_IDENTITY_REVIEW",
+            "RASTER_LIMB_CONNECTIONS_20_OF_48_FRAMES"
+          ],
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001/raster-review.json",
+          "reference": "res://assets/catalog/0ffb2e6843a5f87f54a2fd76.png",
+          "reference_sha256": "b81b4eca8b25fe5d72ecb074cc6f449ff8a377138721f1a20b682c34c205052f",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/albino_horn_frog_352/r001/rig-proof.json",
+          "source_donor": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/SpriteFrames.tres",
+          "source_frames_sha256": "62c9337cc2899429b68e41f3e8823f443f2e2ece148681c2b9599ca3ed7ff645",
+          "status": "EXACT_REUSE_NEW_RUN_QUALITY_HOLD"
+        }
+      ],
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_reuse_assessment": "Exact same target catalog reference verified by provenance; existing eight-direction death copied unchanged.",
       "new_unique_authored_poses": 48.0,
       "new_death_authored_directions": [],
       "new_death_unique_poses": 0.0,
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/exact_reuse_20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/native_visual_20261023/feature-main-death-policy-opengl.json",
+      "visual_review_state": "APPROVED_AFTER_DIRECT_INTERNAL_AND_MAIN_REVIEW",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-352.json"
     },
     "transform:357": {
       "name": "서커스단 단장",
@@ -817,15 +898,51 @@
       "historical_status": "NOT_AUTHORED",
       "reference": "res://assets/catalog/64d25f3ba900292ba831c0b3.png",
       "reference_sha256": "5dd0e42a4ceab3527edc3f7e46b9adf9ac471645af0e5823388217d9eb740ddb",
-      "body": "winged_fairy",
+      "body": "winged_insect_fairy",
       "equipment": "fairy",
       "attack_family": "magic",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "NOT_STARTED",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "production_connected": false,
-      "independent_validation": "NOT_RUN",
-      "final_approved": false
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
+      "final_approved": true,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r003/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r003/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r003/rig-proof.json",
+      "quality_holds": [],
+      "source_donor": "res://assets/catalog/64d25f3ba900292ba831c0b3.png",
+      "source_frames_sha256": "5dd0e42a4ceab3527edc3f7e46b9adf9ac471645af0e5823388217d9eb740ddb",
+      "new_run_poses": 48.0,
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/fire_fairy_405-r003/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_fairy_405-r003-visible-main-fairy_visual_20261023/validation-opengl.json",
+      "prior_candidates": [
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r001/",
+          "status": "SUPERSEDED_SOURCE_LEG_EXTRACTION_REVIEW",
+          "selected": false,
+          "final_approved": false
+        },
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r002/",
+          "status": "SUPERSEDED_SOURCE_LEG_EXTRACTION_REVIEW",
+          "selected": false,
+          "final_approved": false
+        }
+      ],
+      "death_policy_scope": "NEW_S_ONLY_SHARED_AT_RESOURCE_LEVEL",
+      "death_reuse_assessment": "Existing harpy body is a different creature. Its eight-direction death art is preserved read-only; new actual fire-fairy appearance uses one authored S death.",
+      "new_unique_authored_poses": 150.0,
+      "new_death_authored_directions": [
+        "S"
+      ],
+      "new_death_unique_poses": 6.0,
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fairy_visual_20261023/feature-main-death-policy-opengl.json",
+      "visual_review_state": "APPROVED_AFTER_DIRECT_INTERNAL_AND_MAIN_REVIEW",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-405.json",
+      "source_paintings_reused": 1,
+      "baked_rig_pose_count": 150
     },
     "transform:406": {
       "name": "화염의 네루파",
@@ -833,9 +950,9 @@
       "historical_status": "NOT_AUTHORED",
       "reference": "res://assets/catalog/09aec526b6598da31fe8706e.png",
       "reference_sha256": "827ff749efd4af6105d43b9a69acb6474ed4f2634197980258630c4931da5db5",
-      "body": "female_caster",
-      "equipment": "staff",
-      "attack_family": "magic",
+      "body": "insectoid_multilimbed",
+      "equipment": "claws_and_antennae",
+      "attack_family": "melee",
       "priority": 4,
       "classification_is_art_approval": false,
       "status": "NOT_STARTED",
@@ -854,33 +971,86 @@
       "attack_family": "melee",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "EXACT_REUSE_NEW_RUN_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "production_connected": false,
-      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
-      "final_approved": false,
-      "frames": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/SpriteFrames.tres",
-      "native_profile": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/NativeMotionProfile.tres",
-      "rig": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/rig-proof.json",
-      "quality_holds": [
-        "NEW_RUN_ORIGINAL_IDENTITY_AND_CROSS_ACTION_CONTINUITY",
-        "ACTUAL_ANATOMICAL_SUPPORT_AND_CADENCE",
-        "NEW_EIGHT_DIRECTION_CAMERAS",
-        "ORIGINAL_CHARACTER_IDENTITY",
-        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
-        "PALETTE_WEAPON_IDENTITY_REVIEW",
-        "RASTER_LIMB_CONNECTIONS_2_OF_48_FRAMES"
-      ],
-      "source_donor": "res://assets/actors/eight_direction/original_based/fire_ent_transform/SpriteFrames.tres",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
+      "final_approved": true,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/ent_native_407/r005/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_407/r005/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/ent_native_407/r005/rig-proof.json",
+      "quality_holds": [],
+      "source_donor": "Exact catalog target transform:407 existing source; original resource immutable",
       "source_frames_sha256": "c2912eed1e4940220005e3c742affb66de29d48f6c307f60cdb8f85ce436cc22",
       "new_run_poses": 48.0,
-      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001/raster-review.json",
-      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/ent_native_407-r005/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/ent_native_407-r005-visible-main-native_visual_20261023/validation-opengl.json",
+      "unique_art_candidates": [
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/ent_native_407/r001",
+          "selected": false,
+          "status": "SUPERSEDED_VISUAL_HOLD_PRESERVED"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/ent_native_407/r003",
+          "selected": false,
+          "status": "SUPERSEDED_VISUAL_HOLD_PRESERVED"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/hero_parallel/ent_native_407/r004",
+          "selected": false,
+          "status": "SUPERSEDED_VISUAL_HOLD_PRESERVED"
+        }
+      ],
+      "prior_candidates": [
+        {
+          "attack_family": "melee",
+          "body": "tree",
+          "classification_is_art_approval": false,
+          "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+          "death_reuse_assessment": "Exact same target catalog reference verified by provenance; existing eight-direction death copied unchanged.",
+          "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/exact_reuse_20261022/feature-main-death-policy-opengl.json",
+          "equipment": "branches",
+          "final_approved": false,
+          "frames": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/SpriteFrames.tres",
+          "grade": "영웅",
+          "historical_status": "SOURCE_HOLD",
+          "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+          "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+          "name": "화염의 엔트",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/NativeMotionProfile.tres",
+          "new_death_authored_directions": [],
+          "new_death_unique_poses": 0.0,
+          "new_run_poses": 48.0,
+          "new_unique_authored_poses": 48.0,
+          "priority": 4.0,
+          "production_connected": false,
+          "quality_holds": [
+            "NEW_RUN_ORIGINAL_IDENTITY_AND_CROSS_ACTION_CONTINUITY",
+            "ACTUAL_ANATOMICAL_SUPPORT_AND_CADENCE",
+            "NEW_EIGHT_DIRECTION_CAMERAS",
+            "ORIGINAL_CHARACTER_IDENTITY",
+            "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+            "PALETTE_WEAPON_IDENTITY_REVIEW",
+            "RASTER_LIMB_CONNECTIONS_2_OF_48_FRAMES"
+          ],
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001/raster-review.json",
+          "reference": "res://assets/catalog/e452df267006c1029bae8dde.png",
+          "reference_sha256": "e81a288db6310eb0ef312f2e0b8accd52816301828269d8c404bd69344e292db",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/fire_ent_407/r001/rig-proof.json",
+          "source_donor": "res://assets/actors/eight_direction/original_based/fire_ent_transform/SpriteFrames.tres",
+          "source_frames_sha256": "c2912eed1e4940220005e3c742affb66de29d48f6c307f60cdb8f85ce436cc22",
+          "status": "EXACT_REUSE_NEW_RUN_QUALITY_HOLD"
+        }
+      ],
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_reuse_assessment": "Exact same target catalog reference verified by provenance; existing eight-direction death copied unchanged.",
       "new_unique_authored_poses": 48.0,
       "new_death_authored_directions": [],
       "new_death_unique_poses": 0.0,
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/exact_reuse_20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/native_visual_20261023/feature-main-death-policy-opengl.json",
+      "visual_review_state": "APPROVED_AFTER_DIRECT_INTERNAL_AND_MAIN_REVIEW",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-407.json"
     }
   },
   "historical_approved_ids_read_only": [
@@ -992,6 +1162,12 @@
     "final_completion_requires_approval": true,
     "hit_directions": 8.0,
     "idle_directions": 8.0,
+    "internal_image_review": {
+      "allowed": true,
+      "chat_image_attachments_allowed": false,
+      "date_client": "2026-10-23 Asia/Seoul",
+      "user_instruction": "내부 이미지 허용해 제작해"
+    },
     "new_death_authored_directions": [
       "S"
     ],

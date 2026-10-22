@@ -9,8 +9,8 @@ OUT = ROOT / 'data/pr122_hero_parallel_staging.json'
 LEDGER = 'docs/remake/evidence/pr122-remaining106/batch17/all498-production-status.json'
 GROUPS = {
     '407': ('tree', 'branches', 'melee', 4),
-    '406': ('female_caster', 'staff', 'magic', 4),
-    '405': ('winged_fairy', 'fairy', 'magic', 4),
+    '406': ('insectoid_multilimbed', 'claws_and_antennae', 'melee', 4),
+    '405': ('winged_insect_fairy', 'fairy', 'magic', 4),
     '386': ('female_humanoid', 'cherry_costume', 'melee', 4),
     '376': ('male_humanoid', 'fishing_rod', 'rod', 4),
     '360': ('male_humanoid', 'cards', 'ranged', 4),
@@ -76,9 +76,18 @@ def build():
                       'unique_art_candidates', 'prior_candidates', 'death_policy_scope',
                       'death_reuse_assessment', 'new_unique_authored_poses',
                       'new_death_authored_directions', 'new_death_unique_poses', 'death_hold_review_source',
-                      'death_validation_report']:
+                      'death_validation_report', 'visual_review_state', 'visual_review_report',
+                      'approval_receipt', 'source_paintings_reused', 'baked_rig_pose_count']:
             if field in old:
                 actors[key][field] = old[field]
+    for key, actor in actors.items():
+        if actor['final_approved']:
+            receipt_path = ROOT / actor['approval_receipt'].removeprefix('res://')
+            receipt = json.loads(receipt_path.read_text())
+            assert receipt['status'] == 'APPROVED_HERO_ASSET_READY_FOR_INTEGRATION' and receipt['id'] == key
+            assert receipt['frames_sha256'] == digest(actor['frames'].removeprefix('res://'))
+            assert receipt['native_profile_sha256'] == digest(actor['native_profile'].removeprefix('res://'))
+            assert receipt['rig_sha256'] == digest(actor['rig'].removeprefix('res://'))
     result = {
         'schema': 'pr122-hero-parallel-v1', 'branch': 'feature/pr122-hero-parallel',
         'basis_pr_head': '5bf5d3195f97fda565f195f19344a4929597267e',
@@ -91,7 +100,9 @@ def build():
         'hero_total_in_498': len(heroes), 'historical_approved_excluded': len(approved),
         'historical_short_frame_excluded': sum(by_id['transform:' + str(r['sourceId'])]
              ['production_status'] == 'FRAME_INSUFFICIENT' for r in approved),
-        'pending_total': len(pending), 'new_final_approvals': 0,
+        'target_scope_total': len(pending),
+        'pending_total': sum(not a['final_approved'] for a in actors.values()),
+        'new_final_approvals': sum(a['final_approved'] for a in actors.values()),
         'default_game_connections': 0, 'actors': actors,
         'historical_approved_ids_read_only': ['transform:' + str(r['sourceId']) for r in approved],
     }
@@ -99,7 +110,7 @@ def build():
         result['animation_policy'] = previous['animation_policy']
     assert len(heroes) == 109 and len(approved) == 84 and len(pending) == 25
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
-    print('HERO_ROSTER_OK total=109 excluded_approved=84 pending=25 walk=excluded new_approvals=0')
+    print(f"HERO_ROSTER_OK total=109 excluded_approved=84 scope=25 pending={result['pending_total']} new_approvals={result['new_final_approvals']} walk=excluded")
 
 
 if __name__ == '__main__':

@@ -337,5 +337,114 @@
     "mirror_source_directions": [
       7
     ]
+  },
+  "frog_native": {
+    "group": "frog_native_352",
+    "revision": "r004",
+    "targets": [
+      "352"
+    ],
+    "source": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/SpriteFrames.tres",
+    "source_donor": "Exact catalog target transform:352 existing source; original resource immutable",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {
+      "3": {
+        "track": "idle_1",
+        "frame": 0
+      }
+    },
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "visual_overrides": {
+      "color_tint": "ffffff",
+      "floating": false
+    },
+    "limb_model": "visible paired forelimbs/rooted hind support; source-fitted controls are not anatomical measurement",
+    "source_rest_limb_targets": true,
+    "protect_body_core": true,
+    "step_scale": 0.65,
+    "lift_scale": 0.65,
+    "root_down_scale": 0.55,
+    "mirror_source_directions": [
+      3
+    ]
+  },
+  "ent_native": {
+    "group": "ent_native_407",
+    "revision": "r005",
+    "targets": [
+      "407"
+    ],
+    "source": "res://assets/actors/eight_direction/original_based/fire_ent_transform/SpriteFrames.tres",
+    "source_donor": "Exact catalog target transform:407 existing source; original resource immutable",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {
+      "1": {
+        "track": "walk_1",
+        "frame": 1
+      },
+      "3": {
+        "track": "walk_3",
+        "frame": 1
+      },
+      "6": {
+        "track": "walk_6",
+        "frame": 0
+      },
+      "7": {
+        "track": "walk_7",
+        "frame": 1
+      },
+      "4": {
+        "track": "idle_0",
+        "frame": 0
+      }
+    },
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "visual_overrides": {
+      "color_tint": "ffffff",
+      "floating": false
+    },
+    "limb_model": "paired articulated trunk-root legs; connected original branches remain rigid above root split",
+    "source_rest_limb_targets": true,
+    "protect_body_core": true,
+    "core_width_fraction": 0.25,
+    "core_height": 24,
+    "step_scale": 0.4,
+    "lift_scale": 0.6,
+    "mirror_source_directions": [
+      4
+    ]
   }
 }

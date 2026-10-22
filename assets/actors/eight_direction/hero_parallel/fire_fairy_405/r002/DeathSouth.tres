@@ -1,0 +1,59 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r002/death.png" id="1_5utyx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g0oxi"]
+atlas = ExtResource("1_5utyx")
+region = Rect2(0, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lsao8"]
+atlas = ExtResource("1_5utyx")
+region = Rect2(256, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3jnxn"]
+atlas = ExtResource("1_5utyx")
+region = Rect2(512, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_em1mg"]
+atlas = ExtResource("1_5utyx")
+region = Rect2(768, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fe7bi"]
+atlas = ExtResource("1_5utyx")
+region = Rect2(1024, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p8yuo"]
+atlas = ExtResource("1_5utyx")
+region = Rect2(1280, 0, 256, 256)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g0oxi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lsao8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3jnxn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_em1mg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fe7bi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p8yuo")
+}],
+"loop": 0,
+"name": &"death_2",
+"speed": 9.23076923076923
+}]

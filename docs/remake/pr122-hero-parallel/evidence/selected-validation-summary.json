@@ -1,6 +1,15 @@
 {
-  "schema": "hero-selected-validation-summary-v3",
-  "selected_technical_candidates": [
+  "schema": "hero-selected-validation-summary-v4",
+  "target_scope_total": 25,
+  "new_final_approvals": 3,
+  "approved_for_integration": [
+    "transform:352",
+    "transform:405",
+    "transform:407"
+  ],
+  "pending_total": 22,
+  "default_game_connections": 0,
+  "selected_resource_sets": [
     "transform:11",
     "transform:179",
     "transform:182",
@@ -9,27 +18,35 @@
     "transform:260",
     "transform:276",
     "transform:352",
+    "transform:405",
     "transform:407",
     "transform:7",
     "transform:9"
   ],
-  "unique_main_report_count": 9,
-  "main_checks": 12793,
-  "rendered_native_phase_references": 1680,
-  "physics_compared_ticks": 528,
-  "unique_actor_death_input_cases": 88,
-  "new_final_approvals": 0,
-  "default_game_connections": 0,
-  "pending_total": 25,
-  "not_started": 13,
-  "new_death_source_directions": 1,
-  "new_death_source_poses": 6,
-  "new_maid_unique_poses": 150,
-  "new_maid_runtime_phase_references": 192,
-  "quality": "HOLD",
+  "visually_rejected_resource_sets": [
+    "transform:7",
+    "transform:11",
+    "transform:179",
+    "transform:182",
+    "transform:260",
+    "transform:9",
+    "transform:197",
+    "transform:231",
+    "transform:276"
+  ],
+  "main_checks": 14194,
+  "rendered_native_phase_references": 1872,
+  "unique_main_report_count": 10,
+  "physics_compared_ticks": 576,
+  "source_reuse_approvals": 2,
+  "original_part_rig_approvals": 1,
+  "new_fairy_source_death_directions": 1,
+  "new_fairy_source_death_poses": 6,
+  "full_ci_rerun": false,
   "reports": [
-    "docs/remake/pr122-hero-parallel/evidence/albino_horn_frog_352-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/fire_ent_407-r001-visible-main-exact_reuse_20261022/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/ent_native_407-r005-visible-main-native_visual_20261023/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/fire_fairy_405-r003-visible-main-fairy_visual_20261023/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/frog_native_352-r004-visible-main-native_visual_20261023/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/harper_hero-r002-visible-main-harper_continuous_20261022/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002-visible-main-rear_repair_20261022/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013-visible-main-rear_repair_20261022/validation-opengl.json",
@@ -37,12 +54,5 @@
     "docs/remake/pr122-hero-parallel/evidence/transform_179-r001-visible-main-hold_lance/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_276-r001-visible-main-hold_anna/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_7-r001-visible-main-hold_baphomet/validation-opengl.json"
-  ],
-  "latest_policy_group": "next-unique-20261022",
-  "new_exact_target_run_poses": 96,
-  "note": "Technical PASS does not approve source identity, anatomical contact or natural motion. Failed experiments remain unselected.",
-  "attempted_rejected_unselected": [
-    "transform:155"
-  ],
-  "image_generation_blocked": "HTTP400 Unknown parameter: reasoning"
+  ]
 }

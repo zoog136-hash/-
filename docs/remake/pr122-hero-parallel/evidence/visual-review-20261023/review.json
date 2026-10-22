@@ -1,0 +1,51 @@
+{
+  "date_client": "2026-10-23 Asia/Seoul",
+  "authorization": "authorization.json",
+  "reviewer": "Codex direct internal image inspection",
+  "chat_image_attachments_allowed": false,
+  "prior_technical_passes_not_visual_approvals": true,
+  "rejected_identity_candidates": {
+    "7": "Reference is slender brown/gold goat-headed figure with curved staff; candidate uses bulky crimson skull-goat armor/cape and a different staff silhouette.",
+    "11": "Reference is a black armored antlered figure; candidate is the unrelated goat-skull/Salah-like robe and axe body.",
+    "179": "Reference red/orange full lancer armor and long narrow spear are replaced by a purple hooded halberd body.",
+    "182": "Reference blue/silver lancer armor and long narrow spear are replaced by the same purple hooded halberd body.",
+    "231": "Reference silver/blue full plated lancer and ornate polearm are replaced by the purple hooded halberd body.",
+    "260": "Reference white-haired black/red spiked heavy armor and large weapon are replaced by a plain hooded chain-armored swordsman.",
+    "9": "Reference white-haired bare-chested muscular gold/black archer is replaced by a plain hooded brown archer.",
+    "197": "Reference massive gold/black spiked plate and ornate greatsword are replaced by plain gray armor and a narrow red blade.",
+    "276": "Reference black-haired short-skirt maid with slim rod differs in hair, skirt, proportions and broom; several RUN cells also contain stray adjacent-row pixels."
+  },
+  "352": {
+    "old_generated_run_rejected": "Cell contamination, incorrect N/NE headings and cross-action body/style changes. Source retained.",
+    "replacement": "frog_native_352/r004",
+    "source_identity": "PASS",
+    "eight_view_camera": "PASS",
+    "rendered_pose_connectivity": "PASS0/48",
+    "main_review": "PASS_APPROVED_ASSET_FOR_INTEGRATION"
+  },
+  "407": {
+    "old_generated_run_rejected": "Front-facing rear rows and different bulky trunk anatomy. Source retained.",
+    "replacement": "ent_native_407/r005",
+    "source_identity": "PASS",
+    "eight_view_camera": "PASS",
+    "rendered_pose_connectivity": "PASS0/48",
+    "main_review": "PASS_APPROVED_ASSET_FOR_INTEGRATION"
+  },
+  "405": {
+    "reference_review": "Small orange/gold winged insect-like fairy with two long trailing legs; old harpy body is a different creature.",
+    "new_method": "Original painted part reuse with real wing flaps, alternating tendrils and projected 3D heading rotation.",
+    "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
+    "source_paintings_reused": 1,
+    "new_hand_painted_sources": 0,
+    "baked_rig_poses": 150,
+    "new_south_death_poses": 6,
+    "main_validation": "PASS",
+    "death_validation": "PASS"
+  },
+  "image_generation": {
+    "status": "STILL_BLOCKED_HTTP400_UNKNOWN_REASONING",
+    "confirmed_request": "Death155 S-run from actual reference; no image produced"
+  },
+  "final_approvals_added": 3,
+  "default_catalog_connections": 0
+}

@@ -65,8 +65,10 @@ def main():
         if reference:
             source = Image.open(ROOT / reference['atlas'].removeprefix('res://')).convert('RGBA')
             x, y, w, h = map(int, reference['region'])
-            neutral = Image.new('RGBA', (256, 256))
+            neutral = Image.new('RGBA', tuple(reference.get('virtual_canvas_size', [256, 256])))
             neutral.paste(source.crop((x, y, x + w, y + h)), tuple(map(int, reference['margin_position'])))
+            if neutral.size != (256, 256):
+                neutral = neutral.resize((256, 256), Image.Resampling.NEAREST)
             if reference.get("mirrored_x", False):
                 neutral = neutral.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             matrices.append(neutral)
@@ -101,8 +103,10 @@ def main():
                 reference = row['source_reference']
                 src = Image.open(ROOT / reference['atlas'].removeprefix('res://')).convert('RGBA')
                 x, y, w, h = map(int, reference['region'])
-                neutral = Image.new('RGBA', (256, 256))
+                neutral = Image.new('RGBA', tuple(reference.get('virtual_canvas_size', [256, 256])))
                 neutral.paste(src.crop((x, y, x + w, y + h)), tuple(map(int, reference['margin_position'])))
+                if neutral.size != (256, 256):
+                    neutral = neutral.resize((256, 256), Image.Resampling.NEAREST)
                 if reference.get("mirrored_x", False):
                     neutral = neutral.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             assert image.crop((0, drop, 256, hip + drop)).tobytes() == neutral.crop((0, 0, 256, hip)).tobytes()
@@ -130,6 +134,13 @@ def main():
     group = folder.parent.name
     evidence_key = folder.name if group == 'lance_shared' else group + '-' + folder.name
     output = ROOT / 'docs/remake/pr122-hero-parallel/evidence' / evidence_key / 'raster-review.json'
+    if entry.get('final_approved'):
+        receipt = json.loads((ROOT / entry['approval_receipt'].removeprefix('res://')).read_text())
+        assert receipt['frames_sha256'] == hashlib.sha256((ROOT / entry['frames'].removeprefix('res://')).read_bytes()).hexdigest()
+        assert receipt['rig_sha256'] == hashlib.sha256((folder / 'rig-proof.json').read_bytes()).hexdigest()
+        assert not detached
+        print('HERO_APPROVED_RESOURCE_RECHECK_PASS source_and_approval_unchanged=true writes=0')
+        return 0
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + '\n')
     for target in [k for k, v in staging['actors'].items() if v.get('frames') == entry['frames']]:
