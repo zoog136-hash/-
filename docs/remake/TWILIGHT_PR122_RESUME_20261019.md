@@ -266,3 +266,12 @@
 - runtime은 기존 요청 방향 death가 있으면 우선, 없으면 S, S도없으면 실제 기존 death만 선택. 이동/공격/피격은 다른방향으로 대체하지 않는다. authored death는1회 후 마지막프레임 고정, 자동기립/반복/사망후이동공격복귀 없음. 전투판정/죽음처리/드랍/경험치/저장 코드는 변경하지 않았다.
 - Godot4.7.2 실제Main/Player8방향 S-only 재생 선택·전6자세·corpse유지·게임/저장스냅샷불변 PASS. 이 검사는 실제기존S를 메모리 fixture에 연결한 runtime계약 검사이며413S원화완성/production승인이 아니다. Python28개·기존ActorMotion검사 PASS. 전체/수동CI 없음.
 - 다음 실제제작: 기존S의 넘어짐/다리접지 경로를 고정C/root/bones 아래 마감하고 원화/게임 연결 검증. 준비된 S/SW/W공격과 E/SE/S/SW/W RUN 보완을 이어간다. 신규 non-S 사망 제작은 하지 않는다.
+
+
+## 2026-10-22 실제 S 사망 후반 자세 보완 및 W 대기 연결
+
+- W IDLE 실제6 게임 연결·기존 프로필 보존·단위 검증 후 `6a54e599d352b83fefd9a1ca2eb4da847f46acba` push 확인. 413 연결40클립/240자세. 상세승인2/31·미완료29 유지.
+- S 사망은 신규1방향만 제작. 새 v08 실제6은 고정C2560/root/289.75 뼈 길이와 첫3프레임을 유지하며 후반3의 실제 hip/다리 착지를 보완. 전체108재질의 floor, 2304 무손실 저장 및 nominal2048 경계 통과. 변경 후반3 SOURCE 품질검토·게임 연결은 HOLD이며 개체승인 추가0. 이전 v05/v06/v07·다방향 사망·승인267/393 모두 보존.
+- 원화/실제 연산자/프레임/패킷은 `docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-S-death-actual-six-stationary-landing-source-20261022/preserved-source-index.json`에서 SHA별 원경로와 저장경로 연결.
+- E RUN 기존 최종 SOURCE LOOP PASS는 유지. 무손실2304 패킷을 만들었으나 phase5 공중자세의 고정root가 tight pose 밖이라 request 검사는 HOLD. 검사기준·root·원화는 변경하지 않았다.
+- 다음 게임 연결: W HIT r041 → S ATTACK r042 → SW ATTACK r043. S 사망·W 공격·미완성 RUN은 품질/연결 HOLD를 마감하기 전 완료로 올리지 않는다. 전체/수동 CI 실행 없음.
