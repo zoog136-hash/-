@@ -1,0 +1,412 @@
+{
+  "schema": "hero-delivery-stable-batch-v1",
+  "branch": "feature/pr122-hero-parallel",
+  "parent_commit": "abcb60462adc1e0e8a91d4cdae6609315be15054",
+  "latest_pr_read_only": "c449ad541c22053c592ffe6e57364d0039ffdca9",
+  "new_technical_candidate": "transform:9",
+  "selected_repaired_runs": {
+    "transform:9": "r002 disconnected0/48",
+    "transform:260": "r013 disconnected0/48"
+  },
+  "failed_unselected_attempt": "transform:155 disconnected40/48",
+  "image_tool_status": "HTTP400 Unknown parameter: reasoning; no new Death155 art produced",
+  "full_art_builder_status": "PARSER_VALIDATED_NOT_EXECUTED_MISSING_NEW_RAW_SOURCES",
+  "new_death_source_directions_in_this_batch": 0,
+  "existing_death_directions_preserved": 8,
+  "technical_candidates_total": 11,
+  "attempted_rejected_unselected": 1,
+  "not_started": 13,
+  "final_approvals_added": 0,
+  "pending_total": 25,
+  "common_runtime_changes": false,
+  "full_ci_rerun": false,
+  "merged_to_pr": false,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/death_common_155/r001/SpriteFrames.tres",
+      "bytes": 31240,
+      "sha256": "ddd0ed1f870dceeb1698a28410833eaeb3a9611a4b302fd133e31665fdc3aa63"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/death_common_155/r001/rig-proof.json",
+      "bytes": 120268,
+      "sha256": "3744aac8ee01083eb34413020f25b8bf480649abf439021987f8441035344b8f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/death_common_155/r001/run.png",
+      "bytes": 791108,
+      "sha256": "c5f68d4e2a4002d6e2e20b18303c9b6580d4d456febac1e80e13b7905c3af70f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/helvine_common_9/r001/SpriteFrames.tres",
+      "bytes": 43142,
+      "sha256": "3cc547e59317a22b18e0d898e567a69712209848e6004351adc2154f4a250494"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/helvine_common_9/r001/rig-proof.json",
+      "bytes": 119931,
+      "sha256": "b2419162afa27d0527ceb333335e246a07c3f5bd48e362466f0cfad13d53334f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/helvine_common_9/r001/run.png",
+      "bytes": 167661,
+      "sha256": "1d470248452edb3e2ed75687988eec8c325f1edad55fcf46420ba193c2afba37"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/SpriteFrames.tres",
+      "bytes": 43142,
+      "sha256": "47d6f08434abed74c313274695dabbae87218ea5b00f6806f2a436ff789a2f4a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/rig-proof.json",
+      "bytes": 121264,
+      "sha256": "e0ebffe20837f89b3121e418af33e2cbb7d8e3284626b82631c3afb2684609ef"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/run.png",
+      "bytes": 173521,
+      "sha256": "d1e7413b72a07596ed02d79ec436e34bdaa44efbc9cf5d4f0d3fbb8750a27b49"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_155/r001/NativeMotionProfile.tres",
+      "bytes": 931,
+      "sha256": "bba4512a23abfebc320f229b633b59ad440284b60f00e141dc9c25f821ae66f8"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_260/r013/NativeMotionProfile.tres",
+      "bytes": 931,
+      "sha256": "f77a8938ad5d1f3c40f8b05949572efb05c93fcf6c8955df7230b78cdb6922cf"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_9/r001/NativeMotionProfile.tres",
+      "bytes": 954,
+      "sha256": "9ea654af38bb917423843b90fc8f1f87b23a5f6392ca996892a74b988cd2f970"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_9/r002/NativeMotionProfile.tres",
+      "bytes": 954,
+      "sha256": "d9fcbbcd9b02e99d6add3ce18a26919bf9997823e0b4a6ae955ef73ff0a5dd3a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r013/SpriteFrames.tres",
+      "bytes": 43143,
+      "sha256": "9154c38ca660ca3fbfbcfd6d10e5fc43b9bc48d184f562ed10753c0cb7fe8f70"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r013/rig-proof.json",
+      "bytes": 121098,
+      "sha256": "099e0e80902c5bdeb56578149075fa51e535380c0526cebc0f4ca060c17b680a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r013/run.png",
+      "bytes": 198896,
+      "sha256": "93c1f11dcdb93a7b9c17f138b3f4d0bda0e7736edca310c144f5dfa072cf6d75"
+    },
+    {
+      "path": "data/pr122_hero_parallel_staging.json",
+      "bytes": 50937,
+      "sha256": "a073394e11a13d223fe2bbed21248bbba5caaa164b28964eb7f3e99f10bf964f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/README.md",
+      "bytes": 24195,
+      "sha256": "4915cbaa4f34e7aff192a2969b1a587640640b8970a15f56b3f63e0de018184a"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/bake_lance_run.gd",
+      "bytes": 23766,
+      "sha256": "3a074069119dd5a519e015b9136d366accd7eb670846eacf75347ae5566d91f9"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/build_full_art_candidate.gd",
+      "bytes": 12130,
+      "sha256": "d6dc8b271e3f90b8a64f8f6673df82727c7f4fdda8c545c875b21ef99a35db30"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/build_roster.py",
+      "bytes": 5646,
+      "sha256": "0c05e2a42fa33cb99b0c606a59ad83aae23995f7f3638fb1fb1f643546f1e260"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/check_artifacts.py",
+      "bytes": 9271,
+      "sha256": "c8e9201248dfd608b38b741e7cbe984a7fa3de3b28c69b6afb4f51f813865cc0"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/death_common_155-r001/raster-review.json",
+      "bytes": 19639,
+      "sha256": "395aa32e5fd8724ee38598cb3854afe485c8733bdfa70bf8c821a52564d06b2e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_20261022/feature-Main-shared-S-death-eight-inputs.webp",
+      "bytes": 92,
+      "sha256": "3dd52fec9cca5f97edd751b8f3c42461f7cdaede6ed4dbbc2ab2eaf413e01c5d"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_20261022/feature-main-death-policy-opengl.json",
+      "bytes": 4358,
+      "sha256": "b733662da098ee14df6eb4d799b53694563c2bb3f7e318ad1706741f8c48420d"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001-visible-main-helvine_common_20261022/Main-9.png",
+      "bytes": 2267655,
+      "sha256": "ed294c38752b78851928e2fc6c736338332efd49575a0a53a831392990a9d9ab"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001-visible-main-helvine_common_20261022/Main-all-poses-9.webp",
+      "bytes": 3527336,
+      "sha256": "7aaf267e92a741f6eb9dd0811327469ece280f120ec94c0d19de3b1ca73c98b9"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001-visible-main-helvine_common_20261022/keyboard-physics.json",
+      "bytes": 506,
+      "sha256": "a88209aa92c2f263f6fca917ebc05c978913d70c3b43793a7e2edc9081d17413"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001-visible-main-helvine_common_20261022/validation-opengl.json",
+      "bytes": 726,
+      "sha256": "4e3998b3c2c0a113a2f20a5b45c2a4155012560e2e430f4b4f0429135b929445"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001/raster-review.json",
+      "bytes": 17550,
+      "sha256": "76ae0a6f12e243d474f929ad9f0258e83a3c5ec6e5acdcde0e549177bd5638a0"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002-visible-main-rear_repair_20261022/Main-9.png",
+      "bytes": 2267655,
+      "sha256": "ed294c38752b78851928e2fc6c736338332efd49575a0a53a831392990a9d9ab"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002-visible-main-rear_repair_20261022/Main-all-poses-9.webp",
+      "bytes": 3524390,
+      "sha256": "a2f18783cc10ef2e3f2aab538b4f724a2b3e8e0c73ee786efd72134f85ada4b4"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002-visible-main-rear_repair_20261022/validation-opengl.json",
+      "bytes": 726,
+      "sha256": "1adf28ead7cc3fe39aae556aa619211655093a534e03a94d69b490db41382db5"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002/raster-review.json",
+      "bytes": 17461,
+      "sha256": "7b42e2d16c1ddeeede04e1cb7cc4f8dec27022fdf0227ba141440696fed74b9f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013-visible-main-rear_repair_20261022/Main-260.png",
+      "bytes": 2267362,
+      "sha256": "0335725ede3d21aac2420e47742595e2a6410f9bff4a7aa04a5427a9d49a4fae"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013-visible-main-rear_repair_20261022/Main-all-poses-260.webp",
+      "bytes": 4254484,
+      "sha256": "7a7478e3c7c15f488241083abdffe87a878c850195ea3e75c5348c8d1e753f26"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013-visible-main-rear_repair_20261022/keyboard-physics.json",
+      "bytes": 508,
+      "sha256": "6375b1da56e1e9b08cac26c9e1106db9d137214df4857a600e19ccbd314d8fc1"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013-visible-main-rear_repair_20261022/validation-opengl.json",
+      "bytes": 728,
+      "sha256": "a998cdebf3b662450374a9b94e8c9fe199dbd4aaae1300c214ee2bf4c4ddd052"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013/raster-review.json",
+      "bytes": 17467,
+      "sha256": "9f9b55c81b3339bfc33f7eb76f92b4d4f59240a6238a0a064daf732d9cd548e4"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/final-resource-integrity.log",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-death-common-build.log",
+      "bytes": 153,
+      "sha256": "7198b141e2460fe8608f2a053dcee30b97b3bd9793a44ba3ef9e62d0151eb798"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-death-common-import.log",
+      "bytes": 1669,
+      "sha256": "1eb50a48ffb7e3327aae53172120f1d509da3e42e154d6046e7c9c75c4c87345"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-death-common-raster.log",
+      "bytes": 107,
+      "sha256": "2133d1369d0a51053b3e95c5e079ca653262715c11956ee6ad3b31b39738d97a"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-full-art-builder-parse.log",
+      "bytes": 73,
+      "sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-full-art-death-validator-parse.log",
+      "bytes": 73,
+      "sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-full-art-validator-parse.log",
+      "bytes": 73,
+      "sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-helvine-common-build.log",
+      "bytes": 153,
+      "sha256": "7198b141e2460fe8608f2a053dcee30b97b3bd9793a44ba3ef9e62d0151eb798"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-helvine-common-import.log",
+      "bytes": 1669,
+      "sha256": "1eb50a48ffb7e3327aae53172120f1d509da3e42e154d6046e7c9c75c4c87345"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-helvine-common-raster.log",
+      "bytes": 106,
+      "sha256": "fe8a864f9edb0daedc3fe8ce00749bfbc74d0b6324e6e328007f558c06d15c69"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-helvine-death.log",
+      "bytes": 468,
+      "sha256": "778abec2155cc4386090e396ecad1799eb0e7f8e107efc5e5d05d9ffc52cd43c"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-helvine-keys.log",
+      "bytes": 448,
+      "sha256": "7ca9dd537b2e599bf7593a9ff033b20757b154651d35ab445567242aa8432b8b"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-helvine-main.log",
+      "bytes": 909,
+      "sha256": "090417bb0ef0f2354ed2f5ffc0b88b4bc2b6a5492b78a6ade4b4479b1fdce718"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-death-260_9.log",
+      "bytes": 469,
+      "sha256": "de44e48b24669e617e9ed76acadb93094ef6daa050df541d074641ac7f0b66fe"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-final-roster.log",
+      "bytes": 87,
+      "sha256": "f863e8aa383dbc9863794fcdfedf9fa7e580452a805e778e107f41b2bf3ff106"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-helvine-build.log",
+      "bytes": 153,
+      "sha256": "7198b141e2460fe8608f2a053dcee30b97b3bd9793a44ba3ef9e62d0151eb798"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-helvine-raster.log",
+      "bytes": 106,
+      "sha256": "a48be7ee99456615d182d66aa62f508dc6cb5760ba708623288ed1157db8dd81"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-helvine-repro.log",
+      "bytes": 135,
+      "sha256": "9a7a216513fc9c466e58cb2f6463d2f2a0c7f793f9f9d2d7658230b91447c7e0"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-import.log",
+      "bytes": 2067,
+      "sha256": "883fbf401937c72b35cb3718dcc9caf75bd43fee787d9beb050e29c48e8ff1b4"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-ken-build.log",
+      "bytes": 153,
+      "sha256": "7198b141e2460fe8608f2a053dcee30b97b3bd9793a44ba3ef9e62d0151eb798"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-ken-raster.log",
+      "bytes": 106,
+      "sha256": "a48be7ee99456615d182d66aa62f508dc6cb5760ba708623288ed1157db8dd81"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-ken-repro.log",
+      "bytes": 135,
+      "sha256": "9a7a216513fc9c466e58cb2f6463d2f2a0c7f793f9f9d2d7658230b91447c7e0"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-keys-260_9.log",
+      "bytes": 450,
+      "sha256": "e3d31482df2adbe286310b8b582f98d085145d3a2d8c61a0da9257a2022d8116"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-main-260.log",
+      "bytes": 907,
+      "sha256": "328ee11554614dca4d7011019323282a5b7b7b889df3337fef9a445a0d673590"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/hero-rear-main-9.log",
+      "bytes": 909,
+      "sha256": "d298f1e584343ec11df206435d2f273e5b1d816a4b19765e28372ba158b0ffbe"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/image-tool-failure.json",
+      "bytes": 6863,
+      "sha256": "466039636963392f4cc8d9237bd19240b18bb4b94d937f8af331694e64f10d30"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/native-vs-normalized-connectivity.json",
+      "bytes": 15549,
+      "sha256": "548e79edffec3398ce1d8885d2c01df764d6f7bc4272c2743acaec5528bb6049"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/preservation-result.json",
+      "bytes": 203,
+      "sha256": "b5e7b8634a6f49431be37f34c91b120457623ec18dcda3320d10ea4d357fac41"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/production-blockers.json",
+      "bytes": 1213,
+      "sha256": "1e07aaa6ee2657cb3e19182a49fd9b8705c0fd3fc4403558e8fd4779157ba62b"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/target-text-description.json",
+      "bytes": 3599,
+      "sha256": "0197760da999fe1b31aa81d79f51685a2b72a715fc3e1621c3f1c358b92def22"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/target-text-description.log",
+      "bytes": 469,
+      "sha256": "dc5cd1a2caba64f6e5ad6fac713bb3e2cf6e27e8f718e307322ce66081561976"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-Main-shared-S-death-eight-inputs.webp",
+      "bytes": 92,
+      "sha256": "3dd52fec9cca5f97edd751b8f3c42461f7cdaede6ed4dbbc2ab2eaf413e01c5d"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json",
+      "bytes": 6987,
+      "sha256": "d41c676ced6357d1b1fb802bf614579e48bdacb018ec0548ae77c18d8409a3bf"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/evidence/selected-validation-summary.json",
+      "bytes": 2227,
+      "sha256": "7c3c8af003737f90ec108952286eb1ee2970b2cbc0f39402f66d9e075c4e5d8e"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/full_art_recipes.json",
+      "bytes": 369,
+      "sha256": "87017fa41aaa2f337b6cb4a9bfc7e53d8c64f98753e882b27d83e601271dad69"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/recipes.json",
+      "bytes": 7119,
+      "sha256": "a8e6f084ba1a75c10c1d38912e20877233c1dcdc8f11fd09498abc2039b1f2b8"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/validate_candidates.gd",
+      "bytes": 18104,
+      "sha256": "71fe71417bad000f6b30b590a33034d61c0be035917e8bda04e929e17d25a49f"
+    },
+    {
+      "path": "docs/remake/pr122-hero-parallel/validate_death_policy.gd",
+      "bytes": 14923,
+      "sha256": "57d60cdf73cb4ccbd637722076acad4900fd652bbb8bdbf8bd161711ffdd645b"
+    }
+  ],
+  "self_hash_excluded": true
+}

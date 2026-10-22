@@ -67,6 +67,8 @@ def main():
             x, y, w, h = map(int, reference['region'])
             neutral = Image.new('RGBA', (256, 256))
             neutral.paste(source.crop((x, y, x + w, y + h)), tuple(map(int, reference['margin_position'])))
+            if reference.get("mirrored_x", False):
+                neutral = neutral.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             matrices.append(neutral)
             continue
         block = re.search(r'\[sub_resource type="AtlasTexture" id="pose_' + str(direction) + r'"\](.*?)(?=\[)', text, re.S)[1]
@@ -101,6 +103,8 @@ def main():
                 x, y, w, h = map(int, reference['region'])
                 neutral = Image.new('RGBA', (256, 256))
                 neutral.paste(src.crop((x, y, x + w, y + h)), tuple(map(int, reference['margin_position'])))
+                if reference.get("mirrored_x", False):
+                    neutral = neutral.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             assert image.crop((0, drop, 256, hip + drop)).tobytes() == neutral.crop((0, 0, 256, hip)).tobytes()
             c4, c8 = components(image, four), components(image, eight)
             records.append({'direction': direction, 'phase': phase, 'rgba_sha256': sha,

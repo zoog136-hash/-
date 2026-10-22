@@ -72,7 +72,11 @@ func _run() -> void:
 	var strikes: Array[int] = []
 	player.attack_strike.connect(func(sequence: int) -> void: strikes.append(sequence))
 	var results: Array = []
-	var snapshots := Image.create(960, 1280, false, Image.FORMAT_RGBA8)
+	var shared_ids: Array[String] = []
+	for sid: String in ids:
+		if int(staging.actors["transform:" + sid].get("new_death_unique_poses", 0)) > 0: shared_ids.append(sid)
+	var shared_index := 0
+	var snapshots := Image.create(960 * maxi(1, shared_ids.size()), 1280, false, Image.FORMAT_RGBA8)
 	var captured := 0
 	for sid: String in ids:
 		var key := "transform:" + sid
@@ -84,9 +88,11 @@ func _run() -> void:
 		else:
 			_check(bool(frames.get_meta("hero_parallel_candidate", false)), "new exact-target candidate provenance retained")
 		var shared := int(frames.get_meta("hero_shared_death_source_direction", -1)) == 2
-		_check(shared == (sid == "276"), "only newly authored maid source uses S aliases")
+		_check(shared == shared_ids.has(sid), "newly authored S-only candidates use shared source aliases")
 		if shared:
-			_check(_signature(frames, "death_2") == _signature(south, "death_2"), "canonical S source preserved")
+			var canonical: SpriteFrames = load(str(frames.get_meta("hero_shared_death_source_path")))
+			_check(canonical.get_animation_names().size() == 1 and canonical.has_animation("death_2"), "one canonical S clip")
+			_check(_signature(frames, "death_2") == _signature(canonical, "death_2"), "canonical S source preserved")
 		else:
 			var copy: SpriteFrames = frames.duplicate(true)
 			var before := _signature(copy, "death_0")
@@ -143,7 +149,7 @@ func _run() -> void:
 					var image := root.get_texture().get_image()
 					var center: Vector2 = sprite.get_global_transform_with_canvas().origin
 					_check(root.get_visible_rect().has_point(center), "shared death visible in real Main")
-					snapshots.blit_rect(image, Rect2i(Vector2i(center) - Vector2i(80, 80), Vector2i(160, 160)), Vector2i(sprite.frame * 160, direction * 160))
+					snapshots.blit_rect(image, Rect2i(Vector2i(center) - Vector2i(80, 80), Vector2i(160, 160)), Vector2i(shared_index * 960 + sprite.frame * 160, direction * 160))
 					captured += 1
 			_check(seen.size() == count and resets == 0 and last == count - 1, "one forward playback, no looping")
 			for tick: int in range(1800):
@@ -160,7 +166,7 @@ func _run() -> void:
 		var original: Dictionary = entry.get("death_hold_review_source", {})
 		if original.is_empty():
 			var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(entry.rig))
-			original = {"frames": proof.source}
+			original = {"frames": proof.get("preserved_donor_frames", proof.source)}
 		control.frames_path = str(original.frames)
 		player.motion.dead = false
 		player.set_transform_visual(reference, 1.0, control)
@@ -168,15 +174,19 @@ func _run() -> void:
 		player.motion.advance(33.0, Vector2.ZERO)
 		player.motion.apply(player.transform_sprite, player.transform_sprite.get_meta("base_scale", Vector2.ONE))
 		_check(player.transform_sprite.modulate.a > 0.0, "upstream also holds original authored death art")
+		if shared: shared_index += 1
 		results.append({"id": key, "frames_sha256": FileAccess.get_sha256(entry.frames), "native_profile_sha256": FileAccess.get_sha256(entry.native_profile), "shared_s_only_new_art": shared, "original_authored_death_hold_control": "PASS", "cases": cases})
 	# Exercise the upstream fallback with the ONE-TRACK S resource itself,
 	# independently of the full candidate's eight retained resource aliases.
 	var direct_cases: Array = []
+	var direct_sid: String = shared_ids[0] if not shared_ids.is_empty() else "276"
+	var direct_entry: Dictionary = staging.actors["transform:" + direct_sid]
+	var direct_frames: SpriteFrames = load(direct_entry.frames)
 	for direction: int in range(8):
-		var direct: Resource = load(staging.actors["transform:276"].native_profile).duplicate(true)
-		direct.frames_path = "res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/DeathSouth.tres"
+		var direct: Resource = load(direct_entry.native_profile).duplicate(true)
+		direct.frames_path = str(direct_frames.get_meta("hero_shared_death_source_path"))
 		player.motion.dead = false
-		player.set_transform_visual(staging.actors["transform:276"].reference, 1.0, direct)
+		player.set_transform_visual(direct_entry.reference, 1.0, direct)
 		player.motion.advance(.1, Vector2.ZERO)
 		player.motion.face(Vector2.RIGHT.rotated(direction * PI / 4.0))
 		player.motion.die()
@@ -196,24 +206,24 @@ func _run() -> void:
 		player.motion.apply(player.transform_sprite, player.transform_sprite.get_meta("base_scale", Vector2.ONE))
 		_check(player.transform_sprite.frame == 5 and player.transform_sprite.modulate.a > 0.0, "single S terminal pose remains visible")
 		direct_cases.append({"input_direction": direction, "runtime_track": "death_2", "unique_phases": seen.size(), "last_frame": last})
-	var legacy: Resource = load(staging.actors["transform:276"].native_profile).duplicate(true)
+	var legacy: Resource = load(direct_entry.native_profile).duplicate(true)
 	legacy.profile_id = "" # Avoid the transform manifest substituting authored death art.
 	legacy.frames_path = ""
 	legacy.layout = "still"
 	legacy.animation_names.clear()
 	player.motion.dead = false
-	player.set_transform_visual(staging.actors["transform:276"].reference, 1.0, legacy)
+	player.set_transform_visual(direct_entry.reference, 1.0, legacy)
 	player.motion.advance(.1, Vector2.ZERO)
 	player.motion.die()
 	player.motion.advance(33.0, Vector2.ZERO)
 	player.motion.apply(player.transform_sprite, player.transform_sprite.get_meta("base_scale", Vector2.ONE))
 	_check(is_zero_approx(player.transform_sprite.modulate.a), "non-authored portrait fallback retains fade")
 	if DisplayServer.get_name() != "headless":
-		_check(captured == (48 if ids.has("276") else 0), "all six S frames rendered for eight real input headings")
+		_check(captured == shared_ids.size() * 48, "all six S frames rendered for eight real input headings")
 		var prefix := "overlay-" if OS.get_environment("TWILIGHT_HERO_RUNTIME_REVIEW") == "1" else "feature-"
 		_check(snapshots.save_webp(evidence + prefix + "Main-shared-S-death-eight-inputs.webp", false) == OK, "lossless Main file proof")
 	var review := OS.get_environment("TWILIGHT_HERO_RUNTIME_REVIEW") == "1"
-	var report := {"schema": "hero-death-policy-main-v2", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "status": "FAIL" if failed else "TECHNICAL_PASS_QUALITY_HOLD", "checks": checks, "actors": results, "input_cases": ids.size() * 8, "single_track_south_input_cases": direct_cases, "non_authored_fade_control": "PASS", "main_rendered_phase_references": captured, "new_death_unique_source_poses": 6, "new_death_source_directions": 1, "new_final_approvals": 0, "default_game_connections": 0, "runtime_scope": "ISOLATED_REVIEW_OVERLAY" if review else "FEATURE_BRANCH_UPSTREAM_ALIGNED_RUNTIME", "runtime_source_sha256": FileAccess.get_sha256("res://scripts/animation/actor_motion.gd"), "authoritative_upstream_runtime": true, "local_opt_in_patch_superseded": true}
+	var report := {"schema": "hero-death-policy-main-v2", "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "status": "FAIL" if failed else "TECHNICAL_PASS_QUALITY_HOLD", "checks": checks, "actors": results, "input_cases": ids.size() * 8, "single_track_south_input_cases": direct_cases, "non_authored_fade_control": "PASS", "main_rendered_phase_references": captured, "new_death_unique_source_poses": shared_ids.size() * 6, "new_death_source_directions_per_new_actor": 1, "new_death_source_directions": shared_ids.size(), "new_final_approvals": 0, "default_game_connections": 0, "runtime_scope": "ISOLATED_REVIEW_OVERLAY" if review else "FEATURE_BRANCH_UPSTREAM_ALIGNED_RUNTIME", "runtime_source_sha256": FileAccess.get_sha256("res://scripts/animation/actor_motion.gd"), "authoritative_upstream_runtime": true, "local_opt_in_patch_superseded": true}
 	_json_report(report)
 	world.queue_free()
 	await process_frame

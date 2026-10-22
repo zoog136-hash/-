@@ -19,7 +19,7 @@ GROUPS = {
     '357': ('male_humanoid', 'ringmaster', 'whip', 4),
     '352': ('frog', 'horns', 'melee', 4),
     '276': ('female_humanoid', 'maid', 'melee', 4),
-    '268': ('armored_humanoid', 'celestial_sword', 'slash', 4),
+    '268': ('winged_armored_humanoid', 'celestial_sword', 'slash', 4),
     '260': ('armored_humanoid', 'kenrauhel', 'slash', 2),
     '231': ('armored_humanoid', 'unique_lance', 'thrust', 4),
     '198': ('female_humanoid', 'rabbit_costume', 'melee', 4),
@@ -32,7 +32,7 @@ GROUPS = {
     '11': ('demon', 'beres', 'magic', 1),
     '9': ('dark_elf', 'bow', 'ranged', 4),
     '7': ('demon', 'baphomet', 'melee', 1),
-    '4': ('armored_humanoid', 'celestial_sword', 'slash', 4),
+    '4': ('winged_armored_humanoid', 'celestial_sword', 'slash', 4),
 }
 
 

@@ -236,20 +236,22 @@
       "production_connected": false,
       "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
       "final_approved": false,
-      "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_260/r001/SpriteFrames.tres",
-      "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/260/r001/NativeMotionProfile.tres",
-      "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/rig-proof.json",
+      "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r013/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r013/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r013/rig-proof.json",
       "quality_holds": [
         "ORIGINAL_CHARACTER_IDENTITY",
-        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS",
+        "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
         "PALETTE_WEAPON_IDENTITY_REVIEW",
-        "RASTER_LIMB_CONNECTIONS_3_OF_48_FRAMES"
+        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "NE_HORIZONTAL_MIRROR_IDENTITY_AND_HANDING_REVIEW"
       ],
       "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
       "source_frames_sha256": "5d5d54c9d19293744018b61f42b1b5a2015bf94a2146993f16f765dc7922bd7d",
       "new_run_poses": 48.0,
-      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/raster-review.json",
-      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/transform_260-r001-visible-main-hold_ken/validation-opengl.json",
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r013-visible-main-rear_repair_20261022/validation-opengl.json",
       "prior_candidates": [
         {
           "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r012/SpriteFrames.tres",
@@ -258,18 +260,60 @@
           "reason": "Continuous lower-body mesh increased disconnected frames from3 to7; previous selected candidate preserved.",
           "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r012/rig-proof.json",
           "status": "HOLD_NOT_SELECTED"
+        },
+        {
+          "attack_family": "slash",
+          "body": "armored_humanoid",
+          "classification_is_art_approval": false,
+          "death_hold_review_source": {
+            "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/SpriteFrames.tres",
+            "local_opt_in_patch_superseded_by_upstream": true,
+            "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r011/NativeMotionProfile.tres",
+            "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
+            "runtime_patch_applied_to_branch": true,
+            "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
+          },
+          "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+          "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json",
+          "equipment": "kenrauhel",
+          "final_approved": false,
+          "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_260/r001/SpriteFrames.tres",
+          "grade": "영웅",
+          "historical_status": "NOT_AUTHORED",
+          "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+          "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/transform_260-r001-visible-main-hold_ken/validation-opengl.json",
+          "name": "각성 켄라우헬",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/260/r001/NativeMotionProfile.tres",
+          "new_run_poses": 48.0,
+          "prior_candidates": [
+            {
+              "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r012/SpriteFrames.tres",
+              "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r012/NativeMotionProfile.tres",
+              "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r012/raster-review.json",
+              "reason": "Continuous lower-body mesh increased disconnected frames from3 to7; previous selected candidate preserved.",
+              "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r012/rig-proof.json",
+              "status": "HOLD_NOT_SELECTED"
+            }
+          ],
+          "priority": 2.0,
+          "production_connected": false,
+          "quality_holds": [
+            "ORIGINAL_CHARACTER_IDENTITY",
+            "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+            "PALETTE_WEAPON_IDENTITY_REVIEW",
+            "RASTER_LIMB_CONNECTIONS_3_OF_48_FRAMES"
+          ],
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011/raster-review.json",
+          "reference": "res://assets/catalog/8816dfeaabd5f82d37e06dd9.png",
+          "reference_sha256": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/rig-proof.json",
+          "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
+          "source_frames_sha256": "5d5d54c9d19293744018b61f42b1b5a2015bf94a2146993f16f765dc7922bd7d",
+          "status": "RIG_CANDIDATE_QUALITY_HOLD"
         }
       ],
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r011/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r011/NativeMotionProfile.tres",
-        "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/kenrauhel_hero-r011-visible-main-batch02_final/validation-opengl.json",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
-      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death-south-20261022/feature-main-death-policy-opengl.json"
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json"
     },
     "transform:4": {
       "name": "천상의 기사",
@@ -277,7 +321,7 @@
       "historical_status": "NOT_AUTHORED",
       "reference": "res://assets/catalog/8dad718d9d43087a10fc03d4.png",
       "reference_sha256": "298f88d539d2bd09d60bf4da92f484a486d25071804618f89d3cfcb53b0f1edc",
-      "body": "armored_humanoid",
+      "body": "winged_armored_humanoid",
       "equipment": "celestial_sword",
       "attack_family": "slash",
       "priority": 4,
@@ -298,10 +342,69 @@
       "attack_family": "ranged",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "NOT_STARTED",
+      "status": "RIG_CANDIDATE_QUALITY_HOLD",
       "production_connected": false,
-      "independent_validation": "NOT_RUN",
-      "final_approved": false
+      "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
+      "final_approved": false,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_9/r002/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/rig-proof.json",
+      "quality_holds": [
+        "ORIGINAL_CHARACTER_IDENTITY",
+        "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS",
+        "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
+        "PALETTE_WEAPON_IDENTITY_REVIEW",
+        "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+        "NE_HORIZONTAL_MIRROR_IDENTITY_AND_HANDING_REVIEW"
+      ],
+      "source_donor": "Existing transform:9 shared longbow profile. Archer body/motion prototype only; Helvine original identity is NOT approved.",
+      "source_frames_sha256": "50b6a520b61ad24eb33d5bdd64bf354cd14cb54e1d6003fd35cdca05473e5cf8",
+      "new_run_poses": 48.0,
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r002-visible-main-rear_repair_20261022/validation-opengl.json",
+      "prior_candidates": [
+        {
+          "attack_family": "ranged",
+          "body": "dark_elf",
+          "classification_is_art_approval": false,
+          "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+          "death_reuse_assessment": "Original transform9 shared longbow donor death library retained byte-for-byte. This is a motion candidate, not original Helvine identity approval.",
+          "equipment": "bow",
+          "final_approved": false,
+          "frames": "res://assets/actors/eight_direction/hero_parallel/helvine_common_9/r001/SpriteFrames.tres",
+          "grade": "영웅",
+          "historical_status": "NOT_AUTHORED",
+          "independent_validation": "RESOURCE_PASS_MAIN_NOT_RUN",
+          "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001-visible-main-helvine_common_20261022/validation-opengl.json",
+          "name": "헬바인",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_9/r001/NativeMotionProfile.tres",
+          "new_death_authored_directions": [],
+          "new_death_unique_poses": 0.0,
+          "new_run_poses": 48.0,
+          "priority": 4.0,
+          "production_connected": false,
+          "quality_holds": [
+            "ORIGINAL_CHARACTER_IDENTITY",
+            "HEURISTIC_LIMB_PARTITIONS_AND_SEAMS",
+            "FOOT_CONTACT_CADENCE_VISUAL_REVIEW",
+            "PALETTE_WEAPON_IDENTITY_REVIEW",
+            "ACTUAL_SHOE_CONTACT_AND_CADENCE_NOT_APPROVED",
+            "RASTER_LIMB_CONNECTIONS_3_OF_48_FRAMES"
+          ],
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/helvine_common_9-r001/raster-review.json",
+          "reference": "res://assets/catalog/a237a9af26fd206d8bcb43b7.png",
+          "reference_sha256": "dc967926567d7ef6864c8c4810070c3cfc739cfb815f9c99ecb17b07c16c9d3e",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/helvine_common_9/r001/rig-proof.json",
+          "source_donor": "Existing transform:9 shared longbow profile. Archer body/motion prototype only; Helvine original identity is NOT approved.",
+          "source_frames_sha256": "50b6a520b61ad24eb33d5bdd64bf354cd14cb54e1d6003fd35cdca05473e5cf8",
+          "status": "RIG_CANDIDATE_QUALITY_HOLD"
+        }
+      ],
+      "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
+      "death_reuse_assessment": "Original transform9 shared longbow donor death library retained byte-for-byte. This is a motion candidate, not original Helvine identity approval.",
+      "new_death_authored_directions": [],
+      "new_death_unique_poses": 0.0,
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/rear_repair_20261022/feature-main-death-policy-opengl.json"
     },
     "transform:16": {
       "name": "각성:발록",
@@ -346,10 +449,31 @@
       "attack_family": "slash",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "NOT_STARTED",
+      "status": "ATTEMPTED_QUALITY_REJECTED",
       "production_connected": false,
-      "independent_validation": "NOT_RUN",
-      "final_approved": false
+      "independent_validation": "RESOURCE_PASS_MOTION_QUALITY_REJECTED_NOT_GAME_SELECTED",
+      "final_approved": false,
+      "quality_holds": [
+        "REJECTED_LOWER_BODY_MATERIAL_CONNECTIONS_40_OF_48",
+        "ORIGINAL_IDENTITY_NOT_APPROVED",
+        "NEW_UNIQUE_ART_TOOL_HTTP400_UNKNOWN_REASONING_PARAMETER"
+      ],
+      "unique_art_candidates": [
+        {
+          "detached_frames": 40.0,
+          "final_approved": false,
+          "frames": "res://assets/actors/eight_direction/hero_parallel/death_common_155/r001/SpriteFrames.tres",
+          "kind": "COMMON_REAPER_RUN_PROTOTYPE_REJECTED",
+          "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_155/r001/NativeMotionProfile.tres",
+          "new_run_poses": 48.0,
+          "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/death_common_155-r001/raster-review.json",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/death_common_155/r001/rig-proof.json",
+          "selected": false
+        }
+      ],
+      "death_policy_scope": "PRESERVE_EXISTING_DONOR_EIGHT_DEATH_DIRECTIONS_NO_NEW_ART",
+      "new_death_authored_directions": [],
+      "new_death_unique_poses": 0.0
     },
     "transform:197": {
       "name": "사단장 하퍼",
@@ -493,7 +617,7 @@
       "historical_status": "NOT_AUTHORED",
       "reference": "res://assets/catalog/03d946f9367717a52aca2ebf.png",
       "reference_sha256": "ac6c744d3024b070a7a3356cdd5cf3a8f6512bec02d30fffc5231fcc68098826",
-      "body": "armored_humanoid",
+      "body": "winged_armored_humanoid",
       "equipment": "celestial_sword",
       "attack_family": "slash",
       "priority": 4,

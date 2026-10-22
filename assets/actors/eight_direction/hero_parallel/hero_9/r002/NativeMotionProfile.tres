@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_bxkbh"]
+
+[resource]
+script = ExtResource("1_bxkbh")
+profile_id = "transform:9"
+resource_path_hint = "res://assets/catalog/a237a9af26fd206d8bcb43b7.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 2
+action_hit_frames = {
+"attack": 2.0,
+"cast": 2.0,
+"ranged_attack": 2.0
+}
+color_tint = Color(0.72156864, 0.6901961, 0.8745098, 1)
+sprite_offset = Vector2(0, -27.2)
+pixel_scale = 0.85
+embedded_shadow = true
+death_duration = 0.8
+idle_amplitude = 0.45
+stride_bob = 1.1
+stride_lean = 0.01
+attack_recoil = 1.15
+hit_recoil = 0.0
+death_tilt = 0.95
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

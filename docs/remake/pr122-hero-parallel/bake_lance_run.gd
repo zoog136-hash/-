@@ -255,6 +255,8 @@ func _run() -> void:
 				assert(source.has_animation(reference_track) and reference_frame >= 0 and reference_frame < source.get_frame_count(reference_track))
 		var neutral_texture: AtlasTexture = source.get_frame_texture(reference_track, reference_frame)
 		var neutral := _canvas(neutral_texture)
+		var mirror_reference: bool = direction in recipe.get("mirror_source_directions", [])
+		if mirror_reference: neutral.flip_x()
 		var box := _opaque_bounds(neutral)
 		var ground: float = float(box.end.y)
 		var hip_y: float = ground - 28.0
@@ -350,7 +352,7 @@ func _run() -> void:
 			assert(not hashes.has(hash_value), "Repeated run pose is forbidden")
 			hashes[hash_value] = true
 			pose["rgba_sha256"] = hash_value
-			pose["source_reference"] = {"track": reference_track, "frame": reference_frame, "atlas": neutral_texture.atlas.resource_path, "region": [neutral_texture.region.position.x, neutral_texture.region.position.y, neutral_texture.region.size.x, neutral_texture.region.size.y], "margin_position": [neutral_texture.margin.position.x, neutral_texture.margin.position.y]}
+			pose["source_reference"] = {"mirrored_x": mirror_reference, "track": reference_track, "frame": reference_frame, "atlas": neutral_texture.atlas.resource_path, "region": [neutral_texture.region.position.x, neutral_texture.region.position.y, neutral_texture.region.size.x, neutral_texture.region.size.y], "margin_position": [neutral_texture.margin.position.x, neutral_texture.margin.position.y]}
 			pose["source_partition"] = {"split_x": skin_split, "bind_split_x": split, "hip_y": hip_y, "ground_y": ground, "review": "SOURCE_BIND_FIXED_MATERIAL_PARTITION_FIT"}
 			proofs.append(pose)
 			atlas.blit_rect(result, Rect2i(0, 0, 256, 256), Vector2i(phase * 256, direction * 256))

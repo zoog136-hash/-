@@ -35,7 +35,7 @@
       "11"
     ],
     "source": "res://assets/actors/eight_direction/original_based/beres_project_source/SpriteFrames.tres",
-    "source_donor": "monster:\ubca0\ub808\uc2a4",
+    "source_donor": "monster:베레스",
     "profile_prefix": "hero_",
     "smooth_skin": true,
     "knee_lateral_limit": 6.0,
@@ -59,7 +59,7 @@
       "7"
     ],
     "source": "res://assets/actors/eight_direction/original_based/baphomet_project_source/SpriteFrames.tres",
-    "source_donor": "monster:\ubc14\ud3ec\uba54\ud2b8",
+    "source_donor": "monster:바포메트",
     "profile_prefix": "hero_",
     "smooth_skin": true,
     "knee_lateral_limit": 6.0,
@@ -199,5 +199,143 @@
       "death"
     ],
     "continuous_cloth_mesh": true
+  },
+  "death_common": {
+    "group": "death_common_155",
+    "revision": "r001",
+    "targets": [
+      "155"
+    ],
+    "source": "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+    "source_donor": "Existing transform:155 shared-profile source, originally authored for transform:258. Motion prototype only; target155 identity is NOT approved.",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "continuous_cloth_mesh": true,
+    "knee_lateral_limit": 6.0,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {},
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ]
+  },
+  "helvine_common": {
+    "group": "helvine_common_9",
+    "revision": "r001",
+    "targets": [
+      "9"
+    ],
+    "source": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/SpriteFrames.tres",
+    "source_donor": "Existing transform:9 shared longbow profile. Archer body/motion prototype only; Helvine original identity is NOT approved.",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {},
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ]
+  },
+  "kenrauhel_rear_repair": {
+    "group": "kenrauhel_hero",
+    "revision": "r013",
+    "targets": [
+      "260"
+    ],
+    "source": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+    "source_donor": "transform:10; same existing base profile, awakening identity NOT approved",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      -4,
+      0,
+      0,
+      0,
+      -2
+    ],
+    "reference_override": {
+      "6": {
+        "track": "walk_6",
+        "frame": 1
+      },
+      "7": {
+        "track": "idle_5",
+        "frame": 0
+      }
+    },
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "mirror_source_directions": [
+      7
+    ]
+  },
+  "helvine_common_rear_repair": {
+    "group": "helvine_common_9",
+    "revision": "r002",
+    "targets": [
+      "9"
+    ],
+    "source": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/SpriteFrames.tres",
+    "source_donor": "Existing transform:9 shared longbow profile. Archer body/motion prototype only; Helvine original identity is NOT approved.",
+    "profile_prefix": "hero_",
+    "smooth_skin": true,
+    "splits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reference_override": {
+      "6": {
+        "track": "walk_6",
+        "frame": 1
+      },
+      "7": {
+        "track": "idle_5",
+        "frame": 0
+      }
+    },
+    "inherited_roles": [
+      "idle",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "mirror_source_directions": [
+      7
+    ]
   }
 }

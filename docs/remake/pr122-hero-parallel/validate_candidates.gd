@@ -125,8 +125,9 @@ func _run() -> void:
 		_check(player.transform_active and player.motion.profile.profile_id == key, "real Main transformation API")
 		_check(not SCOPE.requires_walk(key), "hero walk excluded")
 		for field: String in ["attack_hit_ratio", "attack_hit_frame", "attack_animation_speed", "death_duration", "pixel_scale", "native_width_ratio", "reference_speed", "sprite_offset", "color_tint"]:
-			if field == "color_tint" and new_run_only:
-				_check(profile.color_tint == Color.WHITE, "exact target artwork does not inherit old proxy tint")
+			if field == "color_tint" and (new_run_only or proof.get("visual_overrides", {}).has("color_tint")):
+				var expected_tint := Color.from_string(str(proof.get("visual_overrides", {}).get("color_tint", "ffffff")), Color.WHITE)
+				_check(profile.color_tint == expected_tint, "explicit candidate art color, no inherited proxy double tint")
 			elif field == "sprite_offset" and (new_art or new_run_only) and proof.has("ground_registration"):
 				var expected_y: float = -(float(proof.ground_registration.canvas_ground) - 128.0) * profile.pixel_scale
 				_check(is_equal_approx(profile.sprite_offset.y, expected_y) and is_equal_approx(profile.sprite_offset.x, baseline.sprite_offset.x), "new art ground registration changes visual offset only")
