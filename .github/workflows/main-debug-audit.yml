@@ -1,6 +1,14 @@
 name: Main Debug Audit
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/main-debug-audit.yml'
+      - 'tools/test_project*.py'
+      - 'tests/ground_capture*'
+      - 'tests/capture_ground*'
+      - 'tests/l1j_reviewed_shop_test.gd'
 permissions:
   contents: read
 concurrency:
@@ -9,7 +17,7 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -27,73 +35,43 @@ jobs:
           python3 tools/check_resource_integrity.py --root . 2>&1 | tee debug-results/resource-integrity.log
           python3 -m compileall -q tools
           python3 tools/test_project_runner_test.py 2>&1 | tee debug-results/runner-unit.log
+          python3 tools/test_project_plan_test.py 2>&1 | tee debug-results/plan-unit.log
       - name: Install repository-pinned engine and real software renderer
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y xvfb libgl1-mesa-dri libglx-mesa0
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libglx-mesa0
           curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
           unzip -q /tmp/godot.zip -d /tmp
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
           /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | tee debug-results/engine.txt
-      - name: Import, navigation, boot and all discovered runtime tests
+      - name: Canonical runtime checks on installed resources, without synthetic installation
         shell: bash
         env:
-          AUDIT_SHARD: '${{ matrix.shard }}'
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
-          python3 -u - <<'PY'
-          import json, os, pathlib, subprocess, sys, tempfile, time
-          root=pathlib.Path.cwd()
-          sys.path.insert(0,str(root/'tools'))
-          from test_project_support import classify_result, run_isolated, timeout_budget
-          engine='/tmp/Godot_v4.7.2-stable_linux.x86_64'
-          shard=int(os.environ['AUDIT_SHARD'])
-          logs=root/'debug-results'
-          all_tests=sorted((root/'tests').glob('*test.gd'))
-          selected=[p for i,p in enumerate(all_tests) if i%4==shard]
-          checks=[('import',['--import'],False),('bake_navigation',['--script','res://tools/bake_hunting_navigation.gd'],False),('boot',['--quit-after','60'],False)]
-          checks += [(p.stem,['--script','res://tests/'+p.name],'RenderingServer.frame_post_draw' in p.read_text(encoding='utf-8')) for p in selected]
-          results=[]
-          print('AUDIT_SOURCE',subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip())
-          print('AUDIT_MODE actual tracked main resources; no synthetic fixture installation')
-          print('AUDIT_DISCOVERED',len(all_tests),'SHARD',shard,'SELECTED',len(selected),flush=True)
-          for name,extra,visual in checks:
-              started=time.monotonic()
-              # Preserve the existing test_project.py save-isolation contract.
-              with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
-                  env=os.environ.copy()
-                  for key in ('XDG_DATA_HOME','APPDATA','LOCALAPPDATA'):
-                      env[key]=user_data
-                  command=[engine,*(['--rendering-driver','opengl3','--audio-driver','Dummy'] if visual else ['--headless']),'--path',str(root),*extra]
-                  if visual:
-                      command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
-                  try:
-                      p=run_isolated(command,env=env,timeout=timeout_budget(name,150,900),cwd=str(root))
-                      output=p.stdout+p.stderr
-                      ok,skipped=classify_result(name,p.returncode,output)
-                  except subprocess.TimeoutExpired as exc:
-                      def text(value):
-                          return value.decode(errors='replace') if isinstance(value,bytes) else (value or '')
-                      output='TIMEOUT '+str(exc)+'\n'+text(exc.stdout)+'\n'+text(exc.stderr)
-                      ok=skipped=False
-                  except OSError as exc:
-                      output='PROCESS_START_FAILED '+str(exc)
-                      ok=skipped=False
-              status='SKIP' if skipped else ('PASS' if ok else 'FAIL')
-              (logs/(name+'.log')).write_text(output,encoding='utf-8')
-              results.append({'name':name,'status':status,'seconds':round(time.monotonic()-started,2)})
-              print(status,name,results[-1]['seconds'],flush=True)
-              if not ok:
-                  print(output[-7000:],flush=True)
-              summary={'shard':shard,'discovered_tests':len(all_tests),'selected_tests':[p.stem for p in selected],'results':results,'not_run':[n for n,_,_ in checks[len(results):]],'synthetic_fixtures_installed':False}
-              (logs/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
-              if not ok and name in ('import','bake_navigation'):
-                  break
-          raise SystemExit(any(r['status']=='FAIL' for r in results) or bool(summary['not_run']))
-          PY
+          python3 tools/test_project.py \
+            --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 \
+            --logs debug-results \
+            --no-ci-synthetic-fixtures \
+            --shard-index ${{ matrix.shard }} --shard-count 4
+      - name: Require complete shard coverage, preserving optional SKIP counts
+        run: |
+          python3 - <<'PYCODE'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('debug-results/summary.json').read_text())
+          plan=report['plan']
+          assigned=plan['discovered_tests'][plan['shard_index']::plan['shard_count']]
+          assert assigned and plan['selected_tests']==assigned, report
+          assert report['checks']==['import','bake_navigation','boot']+assigned, report
+          assert not report['failed'] and not report['not_run'], report
+          assert report['total']==report['passed']+len(report['skipped']), report
+          assert report['synthetic_fixture_policy']=='DISABLED', report
+          print('MAIN_AUDIT_SHARD_OK',plan['shard_index'],'passed',report['passed'],'optional_skips',len(report['skipped']))
+          PYCODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:

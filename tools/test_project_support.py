@@ -168,3 +168,39 @@ def run_isolated(command: Sequence[str], *, env: Mapping[str, str], timeout: flo
             _stop_tree(process)
             raise
     return subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
+
+
+# Audits reuse this runner contract, rather than copying its execution loop.
+PREPARATION = ("import", "bake_navigation", "boot")
+
+
+def select_checks(checks: list[tuple[str, list[str]]], only: str = "",
+                  shard_index: int = 0, shard_count: int = 1) -> tuple[list, dict]:
+    if shard_count < 1 or not 0 <= shard_index < shard_count:
+        raise ValueError("Require shard-count >= 1 and 0 <= shard-index < shard-count")
+    names = [name for name, _ in checks]
+    if len(names) != len(set(names)):
+        raise ValueError("Duplicate check names cannot be attributed safely")
+    if names[:3] != list(PREPARATION):
+        raise ValueError("Import, navigation and boot must precede runtime tests")
+    runtime = checks[3:]
+    if only:
+        if shard_count != 1 or shard_index != 0:
+            raise ValueError("--only and sharding cannot be combined")
+        selected = set(only.split(","))
+        unknown = selected - set(names)
+        if unknown:
+            raise ValueError("Unknown tests: " + ", ".join(sorted(unknown)))
+        result = [check for check in checks if check[0] in selected]
+    elif shard_count > 1:
+        assigned = [check for i, check in enumerate(runtime) if i % shard_count == shard_index]
+        if not assigned:
+            raise ValueError("An empty runtime shard must not pass preparation alone")
+        result = checks[:3] + assigned
+    else:
+        result = list(checks)
+    plan = {"shard_index": shard_index, "shard_count": shard_count,
+            "discovered_tests": [name for name, _ in runtime],
+            "selected_tests": [name for name, _ in result if name not in PREPARATION],
+            "preparation": list(PREPARATION)}
+    return result, plan

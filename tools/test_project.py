@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS
+from test_project_support import classify_result, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -22,12 +22,19 @@ parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; reg
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
 parser.add_argument('--region-shard-timeout',type=int,default=360,help='Seconds per world family; all five families mandatory')
 parser.add_argument('--only',default='',help='Comma-separated exact test names for targeted rechecks; omitted runs the full suite')
+parser.add_argument('--shard-index',type=int,default=0)
+parser.add_argument('--shard-count',type=int,default=1)
+parser.add_argument('--no-ci-synthetic-fixtures',action='store_true',help='Audit committed resources without installing synthetic L1J fixtures')
 args=parser.parse_args()
+if args.shard_count < 1 or not 0 <= args.shard_index < args.shard_count:
+    parser.error('Invalid shard index/count')
+if args.only and (args.shard_count != 1 or args.shard_index != 0):
+    parser.error('--only and sharding cannot be combined')
 root=Path(__file__).resolve().parents[1]
 # CI checkouts intentionally omit third-party visuals; install tiny, original
 # synthetic fixtures only when none of the fixture paths is present.
 # Real or partially installed resources must never be replaced.
-if os.environ.get('GITHUB_ACTIONS','').lower() == 'true':
+if os.environ.get('GITHUB_ACTIONS','').lower() == 'true' and not args.no_ci_synthetic_fixtures:
     targets = [
         root/'data/l1j/maps/raw/4.bin',
         root/'data/l1j/registry/a2_visuals_normalized.json',
@@ -48,16 +55,24 @@ tests=[('import',['--import']),
        ('bake_navigation',['--script','res://tools/bake_hunting_navigation.gd']),
        ('boot',['--quit-after','60'])]
 tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'tests').glob('*test.gd')))
-if args.only:
-    selected=set(args.only.split(','))
-    unknown=selected-{name for name,_ in tests}
-    if unknown: parser.error('Unknown tests: '+', '.join(sorted(unknown)))
-    tests=[test for test in tests if test[0] in selected]
+try:
+    tests,plan=select_checks(tests,args.only,args.shard_index,args.shard_count)
+except ValueError as exc:
+    parser.error(str(exc))
 failed=[]
 skipped=[]
 executed=[]
 not_run=[]
 scopes={}
+def write_summary() -> None:
+    # Save after each completed check so cancellation cannot conceal omissions.
+    report={'total':len(tests),'passed':len(executed)-len(failed)-len(skipped),
+        'failed':failed,'skipped':skipped,'not_run':[n for n,_ in tests[len(executed):]],
+        'checks':[name for name,_ in tests], 'validation_scopes':scopes,
+        'selection':args.only or ('SHARDED_FULL_SUITE' if args.shard_count>1 else 'FULL_SUITE'),
+        'plan':plan, 'synthetic_fixture_policy':'DISABLED' if args.no_ci_synthetic_fixtures else 'EXISTING_CI_AUTO'}
+    (logs/'summary.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+write_summary()
 for name,extra in tests:
     executed.append(name)
     source=root/'tests'/(name+'.gd')
@@ -128,10 +143,10 @@ for name,extra in tests:
                 # Do not manufacture unrelated failures after broken preparation.
                 not_run=[remaining for remaining,_ in tests[len(executed):]]
                 print('BLOCKED_BY_'+name.upper()+' '+str(len(not_run))+' checks',flush=True)
+                write_summary()
                 break
+        write_summary()
 passed=len(executed)-len(failed)-len(skipped)
 print(f'{passed}/{len(tests)} checks passed; {len(skipped)} skipped; {len(not_run)} not run',flush=True)
-(logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':passed,
-    'failed':failed,'skipped':skipped,'not_run':not_run,'checks':[name for name,_ in tests],
-    'validation_scopes':scopes,'selection':args.only or 'FULL_SUITE'},indent=2)+'\n',encoding='utf-8')
+write_summary()
 raise SystemExit(bool(failed or not_run))

@@ -1,0 +1,80 @@
+name: Monster Capture Regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tests/capture_monster_world.gd
+      - tests/monster_capture_landing.gd
+      - tests/monster_capture_landing_test.gd
+      - .github/workflows/monster-capture-regression.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-capture-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the same Godot and software OpenGL as Monster World
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Landing regressions in a minimal isolated Godot project
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-results "${RUNNER_TEMP}/landing-unit/tests"
+          printf 'config_version=5\n' > "${RUNNER_TEMP}/landing-unit/project.godot"
+          cp tests/monster_capture_landing.gd tests/monster_capture_landing_test.gd "${RUNNER_TEMP}/landing-unit/tests/"
+          export XDG_DATA_HOME="${RUNNER_TEMP}/landing-unit-user"
+          timeout --signal=TERM --kill-after=10s 60s /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path "${RUNNER_TEMP}/landing-unit" --script res://tests/monster_capture_landing_test.gd 2>&1 | tee test-results/landing-unit.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/landing-unit.log; then exit 1; fi
+          grep -q 'MONSTER_CAPTURE_LANDING_OK' test-results/landing-unit.log
+      - name: Actual project import, navigation, boot and landing test
+        run: |
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --only import,bake_navigation,boot,monster_capture_landing_test --logs test-results/focused
+      - name: All actual map, dense AUTO, boss and gallery captures
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/monster-world-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          timeout --signal=TERM --kill-after=15s 15m xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_monster_world.gd -- --legacy-aden-faith-layouts 2>&1 | tee test-results/monster-world-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-world-render.log; then exit 1; fi
+          grep -q MONSTER_WORLD_RENDER_OK test-results/monster-world-render.log
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP']) / 'monster-world-render'
+          paths = list(root.rglob('render-summary.json'))
+          assert len(paths) == 1, f'expected one isolated report, got {len(paths)}'
+          report = json.loads(paths[0].read_text())
+          bosses = report['bosses']
+          assert len(bosses) == 10
+          assert {b['map'] for b in bosses} == {f'oman_{i:02d}' for i in range(1, 11)}
+          for boss in bosses:
+              for key in ('landing_valid', 'on_screen', 'hp_panel_visible', 'hud_name_matches', 'overlay_closed'):
+                  assert boss[key] is True, (boss['map'], key, boss)
+              assert boss['name'] in boss['hud_name'], boss
+          print('MONSTER_CAPTURE_REPORT_OK bosses=10')
+          PY
+      - name: Preserve exact-checkout logs and unedited captures, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-capture-regression-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/monster-world-render/**/monster-world-review/
+          if-no-files-found: error
