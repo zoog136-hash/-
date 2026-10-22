@@ -1,2 +1,5 @@
 # Patch context lines contain the required diff prefix before GDScript tabs.
 runtime-review/*.patch whitespace=-space-before-tab
+
+# Preserve the original editor failure log, including its empty path suffix.
+evidence/exact-reuse-20261022/initial-editor-config-path-failure.log whitespace=-trailing-space
