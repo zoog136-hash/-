@@ -1,0 +1,35 @@
+{
+  "schema": "legendary-staging-import-exclusion-validation-v01",
+  "base_commit": "992d9b12b648cdd6168361c79a7f4b95335ed023",
+  "candidate_change": {
+    "path": "assets/actors/eight_direction/legendary_parallel/.gdignore",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status_at_validation": "ONE_NEW_UNCOMMITTED_FILE"
+  },
+  "minimal_editor_import_exit": 0,
+  "scope": "Explicit PNG-buffer source loading, SHA, six SpriteFrames entries and actual draw under ignored staging directory",
+  "explicit_loader_cases_passed": 4,
+  "source_or_resource_load_errors": 0,
+  "static_GPU_texture_warmup_draws_per_case": 6,
+  "normal_speed_render_capture": {
+    "PASS": 3,
+    "HOLD_capture_timing": 1,
+    "slots": [
+      [
+        "transform:402",
+        "E",
+        "attack"
+      ]
+    ]
+  },
+  "raw_render_report": {
+    "path": "docs/remake/pr122-legendary-parallel/staging-import-exclusion-affected-render-v01.json",
+    "sha256": "cb3b7208c668fd4ff6f630a759557b4ca58c516da5d05f3bfceb4d5ec52e67f4"
+  },
+  "recurrent_capture_timing_will_not_be_retried": true,
+  "new_art_or_regenerated_healthy_clips": 0,
+  "original_PNG_mutations": 0,
+  "staging_PNG_import_sidecars": 0,
+  "production_native_import_export_approval": false,
+  "integration_requirement": "After mythic completion, remove the staging .gdignore, budget complete native import, and verify export includes all needed raw PNGs before game activation."
+}

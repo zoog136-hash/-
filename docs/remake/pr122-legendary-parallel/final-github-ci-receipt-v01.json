@@ -1,0 +1,76 @@
+{
+  "schema": "legendary-final-github-ci-v01",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/pr122-legendary-parallel-20261023",
+  "workflow": "twilight-integration-validate.yml",
+  "commit": "992d9b12b648cdd6168361c79a7f4b95335ed023",
+  "started_UTC": "2026-10-23T19:14:51.081420+00:00",
+  "dispatch_attempts": 1,
+  "status": "completed",
+  "final_approvals_added": 0,
+  "updated_UTC": "2026-10-23T19:40:36.081375+00:00",
+  "run_id": 40009886980,
+  "url": "https://github.com/zoog136-hash/-/actions/runs/40009886980",
+  "createdAt": "2026-10-23T19:14:54Z",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "name": "godot-integration",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out integration candidate",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Godot 4.7.2 and software GL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Full project regression, import, boot and all smoke tests",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Floor-loot visual, manual pickup and live AUTO regression",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Combat animation and world rendering regression",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Monster-crowd and authored-state animation regression",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Preserve Godot test evidence",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out integration candidate",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "completed_UTC": "2026-10-23T19:40:36.081366+00:00"
+}
