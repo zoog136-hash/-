@@ -1,0 +1,117 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 103.0,
+			"capture_count": 12,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/resume210-min007/SpriteFrames.tres",
+			"key": "monster:공포의 뱀파이어",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/resume210-min007/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/resume210-min007/dread_vampire_hit/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 103.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"hit_0:1",
+						"hit_0:2",
+						"hit_0:3",
+						"hit_0:4",
+						"hit_0:5",
+						"hit_0:0"
+					],
+					"simulated_seconds": 0.55,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.035835
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 103.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"hit_5:1",
+						"hit_5:2",
+						"hit_5:3",
+						"hit_5:4",
+						"hit_5:5",
+						"hit_0:0"
+					],
+					"simulated_seconds": 0.55,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.625947
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 103.0,
+			"capture_count": 6,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/resume210-min007/SpriteFrames.tres",
+			"key": "monster:공포의 뱀파이어",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/resume210-min007/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/resume210-min007/dread_vampire_run/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 103.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"run_7:0",
+						"run_7:1",
+						"run_7:2",
+						"run_7:3",
+						"run_7:4",
+						"run_7:5"
+					],
+					"simulated_seconds": 1.05,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.050317
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}
