@@ -173,20 +173,23 @@ func run() -> void:
 	check(QA.enter_game(world),"actual class selection")
 	world.set_process(false);world.save_timer=-100000
 	var baseline: Array=JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v18.json"))
-	for row: Dictionary in baseline: check(world.maps_by_id.has(str(row.id)),"legacy persistent ID preserved: "+str(row.id))
-	check(world.maps.size()==baseline.size()+3,"25 existing IDs plus continuous Escaros and two independent temples")
-	check(REGISTRY.menu_entries(world.maps).size()==22,"native menu has three Albino zones, one Escaros and two temples")
+	for row: Dictionary in baseline:
+		if str(row.id) in ["albino_03","albino_04"]: check(not world.maps_by_id.has(str(row.id)),"retired Albino area absent: "+str(row.id))
+		else: check(world.maps_by_id.has(str(row.id)),"live persistent ID preserved: "+str(row.id))
+	check(world.maps.size()==baseline.size()+1,"23 active IDs plus continuous Escaros and two independent temples")
+	check(REGISTRY.menu_entries(world.maps).size()==21,"native menu has two Albino zones, one Escaros and two temples")
 	var normal_path: String="user://twilight_v20_save.json"
 	var sentinel:=FileAccess.open(normal_path,FileAccess.WRITE);sentinel.store_string("normal-save-preservation-sentinel");sentinel.close()
 	var normal_hash: String=FileAccess.get_sha256(normal_path)
 	var db_hash: String=FileAccess.get_sha256("res://data/game_db_v17.json")
-	for mid: String in REGISTRY.base_plan().maps: await inspect(mid)
+	for mid: String in REGISTRY.base_plan().maps:
+		if mid not in ["albino_03","albino_04"]: await inspect(mid)
 	for alias: String in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]:
 		world._set_map(alias,false);check(world.active_map_id=="escaros_world",alias+" shares one continuous field")
-	world._set_map("albino_04",false);check(world.active_map_id=="albino_03","legacy fourth zone has safe native-session route")
+	world._set_map("albino_04",false);check(world.active_map_id=="albino_02","retired fourth zone redirects to area 2")
 	world._set_map("albino_01",false)
 	check(world.use_field_portal("next") and world.active_map_id=="albino_02","Albino first-to-second portal")
-	check(world.use_field_portal("next") and world.active_map_id=="albino_03","Albino second-to-third portal")
+	check(world.use_field_portal("next") and world.active_map_id=="faith_01","Albino second advances directly to Faith tower")
 	world._save_game(true)
 	var saved_hash: String=FileAccess.get_sha256(world.save_path())
 	var installed: String=OS.get_environment("TWILIGHT_NATIVE_PNG_PACK")

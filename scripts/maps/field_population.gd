@@ -46,6 +46,13 @@ func configure(controller: Node, value: PlayableField) -> void:
 			if _zone_active(region): _spawn_slot(slot)
 
 func _zone_active(region: Dictionary) -> bool:
+	# One Escaros PNG includes five former fields (165 slots). Creating every
+	# distant normal monster on entry freezes the map; activate nearby habitats
+	# while keeping every slot, boss identity and respawn timer intact.
+	if field is NativePngField and str(field.data.map_id)=="escaros_world" and str(region.get("mode","normal"))!="boss":
+		var extents: Array=region.rect
+		var area:=Rect2(float(extents[0]),float(extents[1]),float(extents[2]),float(extents[3]))
+		return area.grow(1650.0).has_point(world.player.global_position)
 	if str(region.get("mode","normal")) != "dense": return true
 	var a: Array = region.rect
 	var center := Vector2(float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5)
@@ -309,4 +316,7 @@ func _process(delta: float) -> void:
 		elif refresh:
 			var distance: float = monster.global_position.distance_to(world.player.global_position)
 			monster.set_physics_process(distance<float(field.data.streaming.monster_sleep_distance))
+			if field is NativePngField and str(field.data.map_id)=="escaros_world":
+				# Sleeping old habitats must also stop submitting draw calls.
+				monster.visible=distance<float(field.data.streaming.monster_sleep_distance)+240.0
 			if not monster.is_physics_processing(): monster.velocity = Vector2.ZERO

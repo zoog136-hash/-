@@ -155,7 +155,7 @@ func check_historical_native_upgrade(world: TwilightWorld) -> void:
 			check((not is_instance_valid(actor)) if expected.phase=="cooldown" else (is_instance_valid(actor) and actor.hp==int(expected.hp) and world.field_map.spawn_contains(slot.region,actor.global_position)),identity+" restored boss remains in cooldown or alive in its reviewed encounter")
 		check(world._save_game(true)==OK,mid+" upgraded save commits through existing atomic writer")
 		var upgraded: Dictionary=REGISTRY.read_json(world.save_path())
-		check(upgraded.native_png_plan_sha256==REGISTRY.plan_hash(mid) and int(upgraded.map_layout_revision)==2026102002,mid+" next save records current verified plan/revision")
+		check(upgraded.native_png_plan_sha256==REGISTRY.plan_hash(mid) and int(upgraded.map_layout_revision)==(2026102003 if mid=="aden_world" else 2026102002),mid+" next save records current verified plan/revision")
 		check(FileAccess.get_sha256(backup_path)==original_hash,mid+" original backup remains unchanged after current save")
 	world._load_game(true)
 	check(not world.source_save_blocked and world.active_map_id=="faith_04" and world.gold==int(fixture.gold),"current native save reloads after historical migration")

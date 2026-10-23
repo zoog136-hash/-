@@ -3,6 +3,8 @@ extends SceneTree
 const FIELD = preload("res://scripts/maps/playable_field.gd")
 const CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
+# Retired areas are archived for old saves but must not count as live portal destinations.
+const RETIRED_MAPS: Array[String] = ["albino_03", "albino_04"]
 var failures: Array[String] = []
 var checks: int = 0
 
@@ -16,9 +18,16 @@ func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var registered: Dictionary = {}
 	for record: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v18.json")):
-		registered[str(record.id)] = true
+		var map_id: String = str(record.id)
+		if map_id not in RETIRED_MAPS:
+			registered[map_id] = true
 	var entries: Array = [{"map_id":"aden_world","path":"res://data/maps/aden_field.json"}]
-	entries.append_array(JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")))
+	# The disk index also retains source files for retired areas: only test live maps.
+	for entry: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")):
+		if str(entry.map_id) in RETIRED_MAPS:
+			check(FileAccess.file_exists(str(entry.path)), str(entry.map_id)+" archived map data retained for migration")
+			continue
+		entries.append(entry)
 	var source_entries: Array = SOURCE_TRAVEL.catalog_entries()
 	for record: Dictionary in source_entries: registered[str(record.id)] = true
 	var entered: Array[String] = []

@@ -17,6 +17,7 @@ func _run() -> void:
 	root.add_child(world)
 	world.save_timer = -10000
 	var index: Array = JSON.parse_string(FileAccess.get_file_as_string(world.FIELD_INDEX_PATH))
+	index=index.filter(func(record: Dictionary) -> bool: return str(record.map_id) not in ["albino_03","albino_04"])
 	world._set_map("aden_world",false)
 	check(world.use_field_portal("oman_gate"),"Aden enters expanded tower")
 	for i: int in range(index.size()):
@@ -67,7 +68,7 @@ func _run() -> void:
 	check(world.active_map_id=="aden_world","full progression returns to Aden")
 	# Exercise the reverse link and actual proximity-triggered asynchronous travel.
 	world._set_map("faith_01",false)
-	check(world.use_field_portal("previous") and world.active_map_id=="albino_04","reverse family boundary")
+	check(world.use_field_portal("previous") and world.active_map_id=="albino_02","retired Albino areas skipped on reverse travel")
 	world._set_map("oman_02",false)
 	# AUTO deliberately suppresses proximity portal travel while hunting.
 	# Exercise a manual portal entry after switching AUTO off.

@@ -431,6 +431,9 @@ func _load_data() -> void:
 	var maps_value: Variant = JSON.parse_string(maps_text)
 	if maps_value is Array:
 		maps = maps_value as Array
+	# Keep old Albino 3/4 JSON only as save-era archives, never live entries.
+	maps=maps.filter(func(record: Dictionary) -> bool:
+		return str(record.get("id","")) not in ["albino_03","albino_04"])
 	# Replace only the Aden entry; preserve every existing map ID and data path.
 	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_PATH))
 	if field_value is Dictionary:
@@ -3956,6 +3959,33 @@ func _load_game(quiet: bool) -> void:
 		hud.show_message(collection_error)
 		return
 	var saved_map_id: String = str(data.get("map_id", ""))
+	if saved_map_id in ["albino_03","albino_04"]:
+		# One-time save-safe retirement: no character, equipment or boss data
+		# is rewritten until an identical-byte backup exists on disk.
+		var retirement_sha: String=FileAccess.get_sha256(save_path())
+		var retirement_backup: String=save_path()+".pre-albino-retirement-"+retirement_sha
+		if (not FileAccess.file_exists(retirement_backup) and DirAccess.copy_absolute(save_path(),retirement_backup)!=OK) or FileAccess.get_sha256(retirement_backup)!=retirement_sha:
+			source_save_blocked=true
+			hud.show_message("알비노 구역 이전 백업 실패: 기존 저장을 보존합니다")
+			return
+		data=data.duplicate(true)
+		data["map_id"]="albino_02"
+		data["position"]=[]
+		data["map_layout_revision"]=-1
+		data.erase("native_png_plan_sha256")
+		data.erase("native_png_review_sha256")
+		data.erase("original_position")
+		saved_map_id="albino_02"
+	# Retain a byte-identical backup of earlier Aden coordinates. The new
+	# 2x artwork/world calibration uses layout 2026102003 and respawns at its
+	# reviewed entry, while all gameplay/character state remains unchanged.
+	if saved_map_id=="aden_world" and data.has("native_png_plan_sha256") and int(data.get("map_layout_revision",-1))==2026102002:
+		var scale_sha: String=FileAccess.get_sha256(save_path())
+		var scale_backup: String=save_path()+".pre-aden-artwork-scale-"+scale_sha
+		if (not FileAccess.file_exists(scale_backup) and DirAccess.copy_absolute(save_path(),scale_backup)!=OK) or FileAccess.get_sha256(scale_backup)!=scale_sha:
+			source_save_blocked=true
+			hud.show_message("아덴 배율 이전 백업 실패: 기존 저장을 보존합니다")
+			return
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
 	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args() or (NATIVE_PNG.extra_map(saved_map_id) and "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args())
@@ -3975,7 +4005,7 @@ func _load_game(quiet: bool) -> void:
 		var known_native_upgrade: bool=(native_saved_field!=null and plan_changed and not migration.is_empty()
 			and saved_map_id in migration.map_ids
 			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
-			and int(native_saved_field.data.layout_revision)==int(migration.to_revision)
+			and int(native_saved_field.data.layout_revision)==(2026102003 if saved_map_id=="aden_world" else int(migration.to_revision))
 			and str(data.get("native_png_review_sha256",""))==saved_plan)
 		if native_saved_field==null or (plan_changed and not known_native_upgrade):
 			source_save_blocked=true

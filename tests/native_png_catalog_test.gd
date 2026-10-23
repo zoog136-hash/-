@@ -33,7 +33,8 @@ func _initialize() -> void:
 		check(str(source.sha256).length()==64 and source.decoded,"original byte provenance recorded")
 	var baseline: Array=JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v18.json"))
 	var ids: Array=baseline.map(func(row: Dictionary) -> String: return str(row.id))
-	check(ids.size()==25 and ids.has("albino_04"),"all 25 original persistent IDs retained")
+	check(ids.size()==25 and ids.has("albino_04"),"historical map data retained for save migration")
+	check(REGISTRY.canonical("albino_03")=="albino_02" and REGISTRY.canonical("albino_04")=="albino_02" and not REGISTRY.supports("albino_03") and not REGISTRY.supports("albino_04"),"retired Albino zones are not playable")
 	for prefix: String in ["albino_","escaros_"]:
 		for floor: int in range(1,5 if prefix=="albino_" else 6):
 			check(ids.has(prefix+"%02d"%floor),"legacy ID remains loadable: "+prefix+str(floor))
