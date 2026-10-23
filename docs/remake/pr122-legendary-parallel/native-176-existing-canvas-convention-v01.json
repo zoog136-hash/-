@@ -1,0 +1,24 @@
+{
+  "schema": "legendary-native-176-existing-canvas-convention-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "readonly_code_fetches": 2,
+  "broad_git_fetches": 0,
+  "original_game_files_modified": 0,
+  "references": [
+    {
+      "path": "scripts/animation/actor_motion.gd",
+      "blob_sha": "59070c73cba459353ee10b7c42480bfc88ba1933",
+      "line": 337,
+      "excerpt": "\tif source != null and source.has_meta(\"twilight_canvas_size\") and (sprite is Sprite2D or sprite is AnimatedSprite2D):\n\t\tvar reference_canvas: Vector2 = source.get_meta(\"twilight_canvas_size\")\n\t\tvar pose: Texture2D = (sprite as Sprite2D).texture if sprite is Sprite2D else source.get_frame_texture((sprite as AnimatedSprite2D).animation, (sprite as AnimatedSprite2D).frame)\n\t\tif pose != null and reference_canvas.x > 0. and reference_canvas.y > 0. and pose.get_width() > 0 and pose.get_height() > 0:\n\t\t\tsprite.scale *= reference_canvas / pose.get_size()\n\timpact_pose_pending = false"
+    },
+    {
+      "path": "scripts/player.gd",
+      "blob_sha": "6794fca21f9dbfc7c968e77ddd676b61946a9a53",
+      "line": 291,
+      "excerpt": "\tvar scale_value: float = transform_profile.pixel_scale if transform_profile.pixel_scale > 0.0 else 120.0 / maxf(1.0, texture.get_height())\n\ttransform_sprite.set_meta(\"base_scale\", Vector2(scale_value * TRANSFORM_WIDTH_SCALE, scale_value))\n\ttransform_active = true"
+    }
+  ],
+  "conclusion": "The existing Player applies base_scale, then actor_motion multiplies by reference_canvas / current_pose_size. A 384px native canvas therefore uses 256/384 relative to a 256px reference. Standalone reviewed source-constant scale must be applied once; root transforms must not duplicate existing per-pose normalization.",
+  "native_RGBA_region_margin_source_anchor_mutations": 0,
+  "source_constant_semantic_scale_review": "REQUIRED"
+}

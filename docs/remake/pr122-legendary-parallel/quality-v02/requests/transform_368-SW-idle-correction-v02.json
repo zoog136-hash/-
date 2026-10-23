@@ -1,0 +1,71 @@
+{
+  "key": "transform:368",
+  "name": "대장로 폴카",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "idle",
+  "reference": "res://assets/catalog/cee4fc6adff94966c15e5f52.png",
+  "reference_sha256": "68427ad7f521fb7e47e849ccd8da73b6d7ad6f0d596271dab6e88925acdb1ce5",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc008",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-idle-source-v01.png",
+  "previous_source_sha256": "71f3019ecd14a792e9a288d34429210f89f0e03e35ba62d674b15ccc4de0099b",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-idle-record-v01.json",
+  "previous_record_sha256": "d563159ce6bf48623c3973b11b5d35bfbf4ecfddd0b66a5054f94f8a4804fe49",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "368",
+    "direction": "SW",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-run-source-v01.png",
+    "sha256": "4e6a7daf1e68eca47d203d62c91395598569bd8b29b6e792189e225442f1038c",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "368",
+      "direction": "SW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Front/right face-and-torso presentation conflicts with the lower-left camera; preserved source was already excluded from guard reuse.",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-idle-source-v01.png",
+      "fix_kind": "hold_art_direction_fix",
+      "status": "ERROR_VISUAL",
+      "review_origin": "front20",
+      "issue_id": "visual-front20-0086",
+      "slot": [
+        "transform:368",
+        "SW",
+        "idle"
+      ],
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-idle-record-v01.json",
+      "source_sha256": "71f3019ecd14a792e9a288d34429210f89f0e03e35ba62d674b15ccc4de0099b"
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:368 대장로 폴카, SW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Front/right face-and-torso presentation conflicts with the lower-left camera; preserved source was already excluded from guard reuse.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-LEFT, screen DOWN-LEFT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/cee4fc6adff94966c15e5f52.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/cee4fc6adff94966c15e5f52.png": "68427ad7f521fb7e47e849ccd8da73b6d7ad6f0d596271dab6e88925acdb1ce5",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-run-source-v01.png": "4e6a7daf1e68eca47d203d62c91395598569bd8b29b6e792189e225442f1038c"
+  }
+}
