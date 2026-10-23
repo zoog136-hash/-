@@ -29475,6 +29475,25 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:191",
+                "NW",
+                "hit"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-record.json",
+              "record_sha256": "006fcba7fb4f2c691b4bda6f5a7ba062dc21a240fd98cee94a00067c36a083eb",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-SpriteFrames.tres",
+              "SpriteFrames_sha256": "5450bd97a8cedea9947329efde7c6e8ccae2ef6c9f5640d4d8bad729597b9932",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-registration.json",
+              "registration_sha256": "26984c9de10c27be4b5bdf2bb8f931affa0ae5a4290d92d93979e31f5439b1d2",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "kind": "ownership_execution_delta",
+              "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-library-v01.json",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -29499,6 +29518,25 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:191",
+                "NW",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-record.json",
+              "record_sha256": "a47f4eefb45725bfacd6a4eb52869c6a605e57d2548dc6cf0f6acc26b1eab2ab",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "7c280416e11c0b7a60bf9b01d8f2710366f42755e8f0875e3fc46edc789b4b45",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-registration.json",
+              "registration_sha256": "85164ac98c07d0866be295024ac997f6a875dabbcf3f4895ed27dd5c5c037de5",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "kind": "ownership_execution_delta",
+              "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-library-v01.json",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -30683,6 +30721,25 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:190",
+                "NW",
+                "hit"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-record.json",
+              "record_sha256": "7be5f9735ab4aba5f0b2afd66deb96d3143dba8a8f2094a2c7eb763437ccdd99",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-SpriteFrames.tres",
+              "SpriteFrames_sha256": "1808045c1de58d49235da8f632715b268d0ee9001de6a88a9457d49062a7b608",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-registration.json",
+              "registration_sha256": "d390f8f9bce35e87ef10d08b642bd8ef8991604eab7540c2eabaab8932a8d808",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "kind": "ownership_execution_delta",
+              "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-library-v01.json",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -47088,8 +47145,8 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/revision-library-ownership-delta-through-batch005-v01.json",
-    "active_revision_library_sha256": "5e985c13837a52d28e651b0ae11775093c2ba7dc7ad9887660d5ecfe3a0f8d92",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/revision-library-ownership-delta-through-batch006-v01.json",
+    "active_revision_library_sha256": "1742e2e7e460c7653990f49f7e47df02ce88d2d32f5b96054c1ae53f708f8c6f",
     "final_approved": 0,
     "ownership_isolation": {
       "batches": [
@@ -47578,10 +47635,25 @@
           "validation_sha256": "ac1e9d772d8773628703de0e8553c0e9526a4958a13dbe6bcf6ad7e6b32b2f53",
           "source_holds": [],
           "held_dependencies": []
+        },
+        {
+          "batch": 6,
+          "actors": [
+            "transform:190",
+            "transform:191"
+          ],
+          "isolated_sources": 3,
+          "revised_configurations": 3,
+          "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-library-v01.json",
+          "manifest_sha256": "d50806698ad8bb08cf18604cc9195604b10dbaae3e45f997b02740166ea31b8d",
+          "validation": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-affected-validation-v01.json",
+          "validation_sha256": "7db7e7f3332f487193d4fa4899ef864f44c064abcf625550170ac9032fb8daa2",
+          "source_holds": [],
+          "held_dependencies": []
         }
       ],
-      "isolated_sources": 29,
-      "revised_configuration_events": 38,
+      "isolated_sources": 32,
+      "revised_configuration_events": 41,
       "original_source_mutations": 0,
       "newly_authored_poses_added": 0,
       "camera_identity_action_approvals_added": 0,

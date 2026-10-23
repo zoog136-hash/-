@@ -1,0 +1,107 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "batch": 6,
+  "actors": [
+    "transform:190",
+    "transform:191"
+  ],
+  "revisions": [
+    {
+      "slot": [
+        "transform:190",
+        "NW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-record.json",
+      "record_sha256": "7be5f9735ab4aba5f0b2afd66deb96d3143dba8a8f2094a2c7eb763437ccdd99",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "1808045c1de58d49235da8f632715b268d0ee9001de6a88a9457d49062a7b608",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-registration.json",
+      "registration_sha256": "d390f8f9bce35e87ef10d08b642bd8ef8991604eab7540c2eabaab8932a8d808",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    },
+    {
+      "slot": [
+        "transform:191",
+        "NW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-record.json",
+      "record_sha256": "006fcba7fb4f2c691b4bda6f5a7ba062dc21a240fd98cee94a00067c36a083eb",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "5450bd97a8cedea9947329efde7c6e8ccae2ef6c9f5640d4d8bad729597b9932",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-registration.json",
+      "registration_sha256": "26984c9de10c27be4b5bdf2bb8f931affa0ae5a4290d92d93979e31f5439b1d2",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    },
+    {
+      "slot": [
+        "transform:191",
+        "NW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-record.json",
+      "record_sha256": "a47f4eefb45725bfacd6a4eb52869c6a605e57d2548dc6cf0f6acc26b1eab2ab",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "7c280416e11c0b7a60bf9b01d8f2710366f42755e8f0875e3fc46edc789b4b45",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-registration.json",
+      "registration_sha256": "85164ac98c07d0866be295024ac997f6a875dabbcf3f4895ed27dd5c5c037de5",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    }
+  ],
+  "dependency_required_slots": [
+    [
+      "transform:190",
+      "NW",
+      "hit"
+    ],
+    [
+      "transform:191",
+      "NW",
+      "hit"
+    ],
+    [
+      "transform:191",
+      "NW",
+      "idle"
+    ]
+  ],
+  "excluded_slots": [],
+  "source_outcomes": [
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/NW-hit-source-v01.png",
+      "source_sha256": "ae0b8180b30074ee7843cd7d23b526da66fef2680ba5831db1d7064479c75703",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/ownership-delta-v06/NW-hit-source-v01-isolated.proof.json",
+      "proof_sha256": "87cb06696b3915bf1284f9da9702dc788d757b8a89ba983d5c7d5952b2516cd0",
+      "atlas_sha256": "2528af8cd25b8b4f4b14a49511b19ff2cc23e4b1419e54e0ca78a4b77db0b113",
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/NW-hit-source-v01.png",
+      "source_sha256": "7e802c0892f3b238c2d3f54355ec15fc6a8dcf5252c1cef7784f9183f6f87987",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-hit-source-v01-isolated.proof.json",
+      "proof_sha256": "7ed1d5764cd255ea92e2eae38374e6df4d1cf0d28815f91b6baaafdb6e2439ad",
+      "atlas_sha256": "3a32a73a5c7067b5116e1ba73d0c920ae3af0e2ae0e033fb658567d07d003e20",
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/NW-idle-source-v01.png",
+      "source_sha256": "6dcf60ef58f7ccb2649954bc29c3cf5e99f0984e013b2b5ab509c529864828e6",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_191/corrections/ownership-delta-v06/NW-idle-source-v01-isolated.proof.json",
+      "proof_sha256": "26983e427539f2e8425f398843874330afb57015aabc4b384f3d4d36f98b8a55",
+      "atlas_sha256": "92816728fa9b0a955a1500a1b58050f88a704abbb5482ec8d7c3871400a22fd2",
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA"
+    }
+  ],
+  "held_dependencies": [],
+  "execution_delta": "res://docs/remake/pr122-legendary-parallel/ownership-quota-execution-delta-v01.json",
+  "execution_delta_sha256": "63b715a6ae95bb567451b31cd732e50205db77940ec928c3daa13300b109c69d",
+  "newly_authored_poses_added": 0,
+  "camera_identity_action_approvals_added": 0,
+  "quality_status": "HOLD",
+  "final_approved": 0
+}
