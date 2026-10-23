@@ -1225,11 +1225,9 @@
       },
       "quality_screen": "REVIEW_SHARED_BOSS",
       "new_staging": {
-        "native_track_count": 22,
-        "native_pose_count": 78,
+        "native_track_count": 24,
+        "native_pose_count": 86,
         "missing_required_tracks": [
-          "attack_7",
-          "attack_5",
           "hit_5",
           "idle_5",
           "run_5",
@@ -1242,7 +1240,7 @@
         ],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r008/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r010/NativeMotionProfile.tres"
         ],
         "source_coverage_only": false
       },
@@ -30219,7 +30217,7 @@
     },
     {
       "path": "data/pr122_monster_boss_repair_staging.json",
-      "sha256": "90e09fc5bafa8da25e75f9a3ec51228856bec54498fb7e67c2bf9502baabbf54"
+      "sha256": "6db6a801d0092bf8e9c9a0dbbb6dde1500f58f75273e08c6e651b73b91dd2521"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.",
