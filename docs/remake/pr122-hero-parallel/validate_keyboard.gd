@@ -30,6 +30,7 @@ func _trace(player: Node, start: Vector2, aim: Vector2, profile: Resource, refer
 func _run() -> void:
 	assert(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"))
 	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	if OS.get_environment("TWILIGHT_HERO_REMEDIATION_18") == "1":staging.actors.merge(staging.remediation_18.actors)
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	assert(CLASS_QA.enter_game(world), "confirm the real Main starting class")

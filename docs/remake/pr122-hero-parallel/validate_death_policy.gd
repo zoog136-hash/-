@@ -47,6 +47,7 @@ func _run() -> void:
 	var ids := OS.get_environment("TWILIGHT_HERO_DEATH_TEST_IDS").split(",", false)
 	if ids.is_empty(): ids = PackedStringArray(["179", "182", "231", "260", "11", "7", "197", "276"])
 	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	if OS.get_environment("TWILIGHT_HERO_REMEDIATION_18") == "1":staging.actors.merge(staging.remediation_18.actors)
 	_check(staging.animation_policy.new_death_authored_directions == ["S"], "new S-only authoring policy")
 	var south: SpriteFrames = load("res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/DeathSouth.tres")
 	_check(south.get_animation_names().size() == 1 and south.has_animation("death_2"), "one real S source clip")

@@ -1,0 +1,1018 @@
+{
+  "schema": "hero-run-repair-layout-v1",
+  "id": "110",
+  "baseline": {
+    "attack_hit_frame": 1,
+    "color_tint": "ffffffff",
+    "floating": false,
+    "frames": "res://assets/actors/eight_direction/original_based/spear_guard_red/SpriteFrames.tres",
+    "ground": 160.000001337848,
+    "height": 75.3333333333333,
+    "pixel_scale": 1.401869,
+    "reference": "res://assets/catalog/9ad7673e0bc7551d5fef799b.png",
+    "sprite_offset": [
+      0.0,
+      -44.8598098754883
+    ],
+    "tracks": {
+      "attack_0": 3,
+      "attack_1": 3,
+      "attack_2": 3,
+      "attack_3": 3,
+      "attack_4": 3,
+      "attack_5": 3,
+      "attack_6": 3,
+      "attack_7": 3,
+      "death_0": 3,
+      "death_1": 3,
+      "death_2": 3,
+      "death_3": 3,
+      "death_4": 3,
+      "death_5": 3,
+      "death_6": 3,
+      "death_7": 3,
+      "hit_0": 2,
+      "hit_1": 2,
+      "hit_2": 2,
+      "hit_3": 2,
+      "hit_4": 2,
+      "hit_5": 2,
+      "hit_6": 2,
+      "hit_7": 2,
+      "idle_0": 2,
+      "idle_1": 2,
+      "idle_2": 2,
+      "idle_3": 2,
+      "idle_4": 2,
+      "idle_5": 2,
+      "idle_6": 2,
+      "idle_7": 2,
+      "walk_0": 3,
+      "walk_1": 3,
+      "walk_2": 3,
+      "walk_3": 3,
+      "walk_4": 3,
+      "walk_5": 3,
+      "walk_6": 3,
+      "walk_7": 3
+    }
+  },
+  "folder": "res://assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/",
+  "sources": {
+    "run": {
+      "raw": "res://assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/raw/source-run.png",
+      "raw_sha256": "0b9d18f3aed6b35a5b3902d2acdd9c83a8636ed162fddf2ea5fca0272edb659b",
+      "ownership": "res://docs/remake/pr122-hero-parallel/evidence/remediation18-20261023/layout-2/d83bc973c0fe/run-ownership.png",
+      "ownership_sha256": "9eff67173c37aa9fbbdca81776b8341c5ba79e86a177a73b5ba0e6b78403a161",
+      "nominal": 181.0,
+      "counts": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "usable_dirs": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "poses": [
+        {
+          "direction": 0,
+          "phase": 0,
+          "source_row": 4,
+          "owner": 25,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            8,
+            737,
+            174,
+            165
+          ],
+          "root_x": 106,
+          "measured_ground": 902,
+          "rgba_sha256": "3250f6a0c41b3e6f745a765687e7dddeb762b7e875657a02766c75ee6a1ac339",
+          "root_y": 912.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 0,
+          "phase": 1,
+          "source_row": 4,
+          "owner": 26,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            188,
+            737,
+            168,
+            175
+          ],
+          "root_x": 287,
+          "measured_ground": 912,
+          "rgba_sha256": "5948a5aa037df0cea892e2f7b6a6acbfdbe1e5db35d265d4891ed7daf23831a2",
+          "root_y": 912.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 0,
+          "phase": 2,
+          "source_row": 4,
+          "owner": 27,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            370,
+            737,
+            172,
+            161
+          ],
+          "root_x": 467,
+          "measured_ground": 898,
+          "rgba_sha256": "a2568ff36c8d8ccc62a91fe6a6627ab3ed7c65fef3d51f0822ccf00944fc7647",
+          "root_y": 912.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 0,
+          "phase": 3,
+          "source_row": 4,
+          "owner": 28,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            544,
+            737,
+            171,
+            176
+          ],
+          "root_x": 643,
+          "measured_ground": 913,
+          "rgba_sha256": "2c89bc4760dfe9fa24eb0a92fb37ca0bdeaa3b1eff6f953b06757e6a267f3473",
+          "root_y": 912.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 0,
+          "phase": 4,
+          "source_row": 4,
+          "owner": 29,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            727,
+            737,
+            166,
+            175
+          ],
+          "root_x": 817,
+          "measured_ground": 912,
+          "rgba_sha256": "6e1e94f7e81f65e50f970e665edadfb9b449bb984487ab907b93392013f7d829",
+          "root_y": 912.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 0,
+          "phase": 5,
+          "source_row": 4,
+          "owner": 30,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            908,
+            737,
+            155,
+            158
+          ],
+          "root_x": 995,
+          "measured_ground": 895,
+          "rgba_sha256": "040ce16c455c44829e4afbf69787efb80479c774f5995d3410ae268cd9bbe3d5",
+          "root_y": 912.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 1,
+          "phase": 0,
+          "source_row": 3,
+          "owner": 19,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            12,
+            558,
+            152,
+            164
+          ],
+          "root_x": 110,
+          "measured_ground": 722,
+          "rgba_sha256": "5097471cc52a0fcbb7a7e3620841e1036f29cccc2f6a0297cf8d0a18a126aff6",
+          "root_y": 722.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 1,
+          "phase": 1,
+          "source_row": 3,
+          "owner": 20,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            188,
+            558,
+            169,
+            150
+          ],
+          "root_x": 284,
+          "measured_ground": 708,
+          "rgba_sha256": "2e0c9f0b1036bc641ce68d8ba453abd22bd5a862555414fe327479385fb283fc",
+          "root_y": 722.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 1,
+          "phase": 2,
+          "source_row": 3,
+          "owner": 21,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            366,
+            558,
+            157,
+            162
+          ],
+          "root_x": 457,
+          "measured_ground": 720,
+          "rgba_sha256": "c32ea4d7b850a25e88bebb600a83904771ad68117f5e382c1590c44d5b0e9ff1",
+          "root_y": 722.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 1,
+          "phase": 3,
+          "source_row": 3,
+          "owner": 22,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            545,
+            558,
+            142,
+            164
+          ],
+          "root_x": 630,
+          "measured_ground": 722,
+          "rgba_sha256": "3624299db307540d06ce6c27ab43c521635d144fd647bfa402cf23685368acc8",
+          "root_y": 722.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 1,
+          "phase": 4,
+          "source_row": 3,
+          "owner": 23,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            727,
+            558,
+            143,
+            165
+          ],
+          "root_x": 808,
+          "measured_ground": 723,
+          "rgba_sha256": "c70e9c52b54a3580c845fb608e0875a98c5ae0c910e3899505914fa8cd95abe7",
+          "root_y": 722.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 1,
+          "phase": 5,
+          "source_row": 3,
+          "owner": 24,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            904,
+            558,
+            150,
+            161
+          ],
+          "root_x": 987,
+          "measured_ground": 719,
+          "rgba_sha256": "e139e3b4c68cac5d3c5efce12722d158d00ad9bd3fde7b5505b47a1774132919",
+          "root_y": 722.0,
+          "mirrored_x": true
+        },
+        {
+          "direction": 2,
+          "phase": 0,
+          "source_row": 2,
+          "owner": 13,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            61,
+            369,
+            85,
+            181
+          ],
+          "root_x": 107,
+          "measured_ground": 550,
+          "rgba_sha256": "aea6861b8becf2fc18b0a64febbb2947354b38aa93630c7e09a6363bfec92a4b",
+          "root_y": 550.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 2,
+          "phase": 1,
+          "source_row": 2,
+          "owner": 14,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            238,
+            369,
+            87,
+            179
+          ],
+          "root_x": 287,
+          "measured_ground": 548,
+          "rgba_sha256": "13b20b0d9f6f7124ef665b1902733eb43fe24e7e350618cc114046a2ff61bf8e",
+          "root_y": 550.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 2,
+          "phase": 2,
+          "source_row": 2,
+          "owner": 15,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            418,
+            371,
+            86,
+            179
+          ],
+          "root_x": 467,
+          "measured_ground": 550,
+          "rgba_sha256": "c0f3774e2cd459792bc188cf37635238eed44fa7f0bbb5d4cb1f53ed9393a731",
+          "root_y": 550.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 2,
+          "phase": 3,
+          "source_row": 2,
+          "owner": 16,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            589,
+            369,
+            82,
+            181
+          ],
+          "root_x": 634,
+          "measured_ground": 550,
+          "rgba_sha256": "291bd3ac9e91fb6a535bd29ce63b1484e754d1cb0b50cdca4942468c1a6db24b",
+          "root_y": 550.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 2,
+          "phase": 4,
+          "source_row": 2,
+          "owner": 17,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            775,
+            369,
+            84,
+            181
+          ],
+          "root_x": 819,
+          "measured_ground": 550,
+          "rgba_sha256": "238ee4121cc28dafa8fbb8497620fadc342ebeaf224999ea84abea156101623e",
+          "root_y": 550.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 2,
+          "phase": 5,
+          "source_row": 2,
+          "owner": 18,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            955,
+            370,
+            77,
+            180
+          ],
+          "root_x": 997,
+          "measured_ground": 550,
+          "rgba_sha256": "f0759665ba5de9daebdc946c9a217e40f2e16d50ac2ca8498f892354790c0481",
+          "root_y": 550.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 3,
+          "phase": 0,
+          "source_row": 3,
+          "owner": 19,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            12,
+            558,
+            152,
+            164
+          ],
+          "root_x": 110,
+          "measured_ground": 722,
+          "rgba_sha256": "5097471cc52a0fcbb7a7e3620841e1036f29cccc2f6a0297cf8d0a18a126aff6",
+          "root_y": 722.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 3,
+          "phase": 1,
+          "source_row": 3,
+          "owner": 20,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            188,
+            558,
+            169,
+            150
+          ],
+          "root_x": 284,
+          "measured_ground": 708,
+          "rgba_sha256": "2e0c9f0b1036bc641ce68d8ba453abd22bd5a862555414fe327479385fb283fc",
+          "root_y": 722.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 3,
+          "phase": 2,
+          "source_row": 3,
+          "owner": 21,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            366,
+            558,
+            157,
+            162
+          ],
+          "root_x": 457,
+          "measured_ground": 720,
+          "rgba_sha256": "c32ea4d7b850a25e88bebb600a83904771ad68117f5e382c1590c44d5b0e9ff1",
+          "root_y": 722.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 3,
+          "phase": 3,
+          "source_row": 3,
+          "owner": 22,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            545,
+            558,
+            142,
+            164
+          ],
+          "root_x": 630,
+          "measured_ground": 722,
+          "rgba_sha256": "3624299db307540d06ce6c27ab43c521635d144fd647bfa402cf23685368acc8",
+          "root_y": 722.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 3,
+          "phase": 4,
+          "source_row": 3,
+          "owner": 23,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            727,
+            558,
+            143,
+            165
+          ],
+          "root_x": 808,
+          "measured_ground": 723,
+          "rgba_sha256": "c70e9c52b54a3580c845fb608e0875a98c5ae0c910e3899505914fa8cd95abe7",
+          "root_y": 722.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 3,
+          "phase": 5,
+          "source_row": 3,
+          "owner": 24,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            904,
+            558,
+            150,
+            161
+          ],
+          "root_x": 987,
+          "measured_ground": 719,
+          "rgba_sha256": "e139e3b4c68cac5d3c5efce12722d158d00ad9bd3fde7b5505b47a1774132919",
+          "root_y": 722.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 4,
+          "phase": 0,
+          "source_row": 4,
+          "owner": 25,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            8,
+            737,
+            174,
+            165
+          ],
+          "root_x": 106,
+          "measured_ground": 902,
+          "rgba_sha256": "3250f6a0c41b3e6f745a765687e7dddeb762b7e875657a02766c75ee6a1ac339",
+          "root_y": 912.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 4,
+          "phase": 1,
+          "source_row": 4,
+          "owner": 26,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            188,
+            737,
+            168,
+            175
+          ],
+          "root_x": 287,
+          "measured_ground": 912,
+          "rgba_sha256": "5948a5aa037df0cea892e2f7b6a6acbfdbe1e5db35d265d4891ed7daf23831a2",
+          "root_y": 912.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 4,
+          "phase": 2,
+          "source_row": 4,
+          "owner": 27,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            370,
+            737,
+            172,
+            161
+          ],
+          "root_x": 467,
+          "measured_ground": 898,
+          "rgba_sha256": "a2568ff36c8d8ccc62a91fe6a6627ab3ed7c65fef3d51f0822ccf00944fc7647",
+          "root_y": 912.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 4,
+          "phase": 3,
+          "source_row": 4,
+          "owner": 28,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            544,
+            737,
+            171,
+            176
+          ],
+          "root_x": 643,
+          "measured_ground": 913,
+          "rgba_sha256": "2c89bc4760dfe9fa24eb0a92fb37ca0bdeaa3b1eff6f953b06757e6a267f3473",
+          "root_y": 912.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 4,
+          "phase": 4,
+          "source_row": 4,
+          "owner": 29,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            727,
+            737,
+            166,
+            175
+          ],
+          "root_x": 817,
+          "measured_ground": 912,
+          "rgba_sha256": "6e1e94f7e81f65e50f970e665edadfb9b449bb984487ab907b93392013f7d829",
+          "root_y": 912.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 4,
+          "phase": 5,
+          "source_row": 4,
+          "owner": 30,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            908,
+            737,
+            155,
+            158
+          ],
+          "root_x": 995,
+          "measured_ground": 895,
+          "rgba_sha256": "040ce16c455c44829e4afbf69787efb80479c774f5995d3410ae268cd9bbe3d5",
+          "root_y": 912.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 5,
+          "phase": 0,
+          "source_row": 5,
+          "owner": 31,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            30,
+            908,
+            124,
+            189
+          ],
+          "root_x": 108,
+          "measured_ground": 1097,
+          "rgba_sha256": "57e78cdcb86452c3f793e06783a984d72523275226a0e96de4d88fb916524515",
+          "root_y": 1097.5,
+          "mirrored_x": false
+        },
+        {
+          "direction": 5,
+          "phase": 1,
+          "source_row": 5,
+          "owner": 32,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            210,
+            908,
+            124,
+            185
+          ],
+          "root_x": 288,
+          "measured_ground": 1093,
+          "rgba_sha256": "4bbe5754dbb68b36f569f9c6c75628a338909ea8372dd7aea783b6df72064d42",
+          "root_y": 1097.5,
+          "mirrored_x": false
+        },
+        {
+          "direction": 5,
+          "phase": 2,
+          "source_row": 5,
+          "owner": 33,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            400,
+            907,
+            111,
+            201
+          ],
+          "root_x": 466,
+          "measured_ground": 1108,
+          "rgba_sha256": "ecdf4302645042406cc27bc4038dd971caf91b6b1388ec5342af1731a53c1516",
+          "root_y": 1097.5,
+          "mirrored_x": false
+        },
+        {
+          "direction": 5,
+          "phase": 3,
+          "source_row": 5,
+          "owner": 34,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            568,
+            907,
+            118,
+            191
+          ],
+          "root_x": 642,
+          "measured_ground": 1098,
+          "rgba_sha256": "72560f4f9b520412a73fa8dd6da16af7de18987d4d8e49d94c8084d373c976f1",
+          "root_y": 1097.5,
+          "mirrored_x": false
+        },
+        {
+          "direction": 5,
+          "phase": 4,
+          "source_row": 5,
+          "owner": 35,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            747,
+            908,
+            116,
+            191
+          ],
+          "root_x": 818,
+          "measured_ground": 1099,
+          "rgba_sha256": "faf9fb6706286b8b183e171a4803dc1273b5e42fee66f27704394784c47dda82",
+          "root_y": 1097.5,
+          "mirrored_x": false
+        },
+        {
+          "direction": 5,
+          "phase": 5,
+          "source_row": 5,
+          "owner": 36,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            932,
+            906,
+            117,
+            192
+          ],
+          "root_x": 1005,
+          "measured_ground": 1098,
+          "rgba_sha256": "36e92df7c914de2094551521b5c8335af2ad596755550aa4c0a5d8115dcf74a4",
+          "root_y": 1097.5,
+          "mirrored_x": false
+        },
+        {
+          "direction": 6,
+          "phase": 0,
+          "source_row": 6,
+          "owner": 37,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            65,
+            1092,
+            86,
+            188
+          ],
+          "root_x": 101,
+          "measured_ground": 1280,
+          "rgba_sha256": "465ea5436f216cc2e140817b773ce14f484e4094ef83c65c27640a88734f24dd",
+          "root_y": 1275.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 6,
+          "phase": 1,
+          "source_row": 6,
+          "owner": 38,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            242,
+            1091,
+            89,
+            186
+          ],
+          "root_x": 283,
+          "measured_ground": 1277,
+          "rgba_sha256": "9b70916c3246759cdc55012a7f7501bea2a7f486aee95c59ee7df042a210057a",
+          "root_y": 1275.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 6,
+          "phase": 2,
+          "source_row": 6,
+          "owner": 39,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            426,
+            1095,
+            86,
+            179
+          ],
+          "root_x": 463,
+          "measured_ground": 1274,
+          "rgba_sha256": "71353dbcd6dfdc353f70667dddfb27b394abe7d3f3476f8101fa359cc03c9efb",
+          "root_y": 1275.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 6,
+          "phase": 3,
+          "source_row": 6,
+          "owner": 40,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            599,
+            1093,
+            89,
+            180
+          ],
+          "root_x": 637,
+          "measured_ground": 1273,
+          "rgba_sha256": "5e7f42d04a993a85c717d5da95b47e140370b3216374f20f1b01ee738eb7be94",
+          "root_y": 1275.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 6,
+          "phase": 4,
+          "source_row": 6,
+          "owner": 41,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            780,
+            1093,
+            87,
+            177
+          ],
+          "root_x": 818,
+          "measured_ground": 1270,
+          "rgba_sha256": "552579d5ffb4d51b5c67895c30662c4d77a6bf3814ab8aeecf787e0625581b8a",
+          "root_y": 1275.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 6,
+          "phase": 5,
+          "source_row": 6,
+          "owner": 42,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            964,
+            1094,
+            89,
+            177
+          ],
+          "root_x": 1002,
+          "measured_ground": 1271,
+          "rgba_sha256": "0da73532d89b22e7c95b4e0166ec9592f3513a7740d88e4d8ab695f7b84d5400",
+          "root_y": 1275.0,
+          "mirrored_x": false
+        },
+        {
+          "direction": 7,
+          "phase": 0,
+          "source_row": 5,
+          "owner": 31,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            30,
+            908,
+            124,
+            189
+          ],
+          "root_x": 108,
+          "measured_ground": 1097,
+          "rgba_sha256": "57e78cdcb86452c3f793e06783a984d72523275226a0e96de4d88fb916524515",
+          "root_y": 1097.5,
+          "mirrored_x": true
+        },
+        {
+          "direction": 7,
+          "phase": 1,
+          "source_row": 5,
+          "owner": 32,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            210,
+            908,
+            124,
+            185
+          ],
+          "root_x": 288,
+          "measured_ground": 1093,
+          "rgba_sha256": "4bbe5754dbb68b36f569f9c6c75628a338909ea8372dd7aea783b6df72064d42",
+          "root_y": 1097.5,
+          "mirrored_x": true
+        },
+        {
+          "direction": 7,
+          "phase": 2,
+          "source_row": 5,
+          "owner": 33,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            400,
+            907,
+            111,
+            201
+          ],
+          "root_x": 466,
+          "measured_ground": 1108,
+          "rgba_sha256": "ecdf4302645042406cc27bc4038dd971caf91b6b1388ec5342af1731a53c1516",
+          "root_y": 1097.5,
+          "mirrored_x": true
+        },
+        {
+          "direction": 7,
+          "phase": 3,
+          "source_row": 5,
+          "owner": 34,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            568,
+            907,
+            118,
+            191
+          ],
+          "root_x": 642,
+          "measured_ground": 1098,
+          "rgba_sha256": "72560f4f9b520412a73fa8dd6da16af7de18987d4d8e49d94c8084d373c976f1",
+          "root_y": 1097.5,
+          "mirrored_x": true
+        },
+        {
+          "direction": 7,
+          "phase": 4,
+          "source_row": 5,
+          "owner": 35,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            747,
+            908,
+            116,
+            191
+          ],
+          "root_x": 818,
+          "measured_ground": 1099,
+          "rgba_sha256": "faf9fb6706286b8b183e171a4803dc1273b5e42fee66f27704394784c47dda82",
+          "root_y": 1097.5,
+          "mirrored_x": true
+        },
+        {
+          "direction": 7,
+          "phase": 5,
+          "source_row": 5,
+          "owner": 36,
+          "outer_canvas_ink_clip": false,
+          "rect": [
+            932,
+            906,
+            117,
+            192
+          ],
+          "root_x": 1005,
+          "measured_ground": 1098,
+          "rgba_sha256": "36e92df7c914de2094551521b5c8335af2ad596755550aa4c0a5d8115dcf74a4",
+          "root_y": 1097.5,
+          "mirrored_x": true
+        }
+      ],
+      "guides_removed_pixels": 0,
+      "fragments": [],
+      "heading_reuse": {
+        "0": {
+          "source_direction": 4,
+          "mirrored_x": true
+        },
+        "1": {
+          "source_direction": 3,
+          "mirrored_x": true
+        },
+        "2": {
+          "source_direction": 2,
+          "mirrored_x": false
+        },
+        "3": {
+          "source_direction": 3,
+          "mirrored_x": false
+        },
+        "4": {
+          "source_direction": 4,
+          "mirrored_x": false
+        },
+        "5": {
+          "source_direction": 5,
+          "mirrored_x": false
+        },
+        "6": {
+          "source_direction": 6,
+          "mirrored_x": false
+        },
+        "7": {
+          "source_direction": 5,
+          "mirrored_x": true
+        }
+      },
+      "source_counts": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "unit_scale": 1.0
+    }
+  },
+  "uniform_scale": 0.41620626151012874,
+  "cell": 224,
+  "pad": 16,
+  "ground": 144.000001337848,
+  "fingerprint": "fcb4a219187093ec40dcd4a42355a729607bf0641afff0b3ec0d27cf9254412c",
+  "existing_non_run_actions": "PRESERVED_EXACT_TEXTURE_REGION_DURATION_AND_TIMING",
+  "new_death_source_directions": 0,
+  "final_approved": false,
+  "palette_variant": {
+    "source_actor": "2",
+    "hue_shift": 0.28,
+    "hue_low": 0.58,
+    "hue_high": 0.88,
+    "minimum_saturation": 0.25
+  }
+}

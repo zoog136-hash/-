@@ -42,6 +42,9 @@ func _run() -> void:
 	_check(Engine.get_version_info().string.begins_with("4.7.2"), "wrong engine")
 	_check(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"), "isolated save path required")
 	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	if OS.get_environment("TWILIGHT_HERO_REMEDIATION_18") == "1":
+		_check(OS.get_environment("TWILIGHT_HERO_VALIDATION_NO_STAGE_WRITE") == "1", "repair validation must not rewrite original approval scope")
+		staging.actors.merge(staging.remediation_18.actors)
 	_check(staging.hero_total_in_498 == 109 and int(staging.get("target_scope_total", staging.pending_total)) == 25, "exact roster")
 	var target_ids := OS.get_environment("TWILIGHT_HERO_TEST_IDS").split(",", false)
 	if target_ids.is_empty(): target_ids = PackedStringArray(["179", "182"])
@@ -66,7 +69,7 @@ func _run() -> void:
 		for path: String in proof.source_hashes:
 			_check(FileAccess.get_sha256(path) == str(proof.source_hashes[path]), "immutable new art source SHA")
 	var run_counts: Array = [6,6,6,6,6,6,6,6]
-	if new_art and proof.has("source_layout"):
+	if (new_art or new_run_only) and proof.has("source_layout"):
 		var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(proof.source_layout)))
 		run_counts = layout.sources.run.counts
 	var total_run_poses := 0
@@ -156,7 +159,14 @@ func _run() -> void:
 				expected_rendered_phases += count
 		var rendered := Image.create(max_phases * 160, 8 * 5 * 160, false, Image.FORMAT_RGBA8)
 		var rendered_phases: int = 0
-		_check(frames.get_animation_names().size() == 40, "five roles x eight directions")
+		_check(frames.get_animation_names().size() == 40 + proof.get("preserved_extra_tracks", []).size(), "five roles x eight directions plus preserved original extra actions")
+		for name: String in proof.get("preserved_extra_tracks", []):
+			_check(frames.has_animation(name) and frames.get_frame_count(name) == source.get_frame_count(name), "original extra action retained")
+			_check(frames.get_animation_loop(name) == source.get_animation_loop(name) and is_equal_approx(frames.get_animation_speed(name),source.get_animation_speed(name)), "original extra action playback preserved")
+			for phase: int in range(source.get_frame_count(name)):
+				var actual: AtlasTexture = frames.get_frame_texture(name,phase)
+				var original: AtlasTexture = source.get_frame_texture(name,phase)
+				_check(actual.atlas.resource_path == original.atlas.resource_path and actual.region == original.region and actual.margin == original.margin and is_equal_approx(frames.get_frame_duration(name,phase),source.get_frame_duration(name,phase)), "exact original extra-action pixels and timing")
 		for direction: int in range(8):
 			var aim := Vector2.RIGHT.rotated(float(direction) * PI / 4.0)
 			_check(not frames.has_animation("walk_" + str(direction)), "no copied walk")

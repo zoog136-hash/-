@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_6cmye"]
+
+[resource]
+script = ExtResource("1_6cmye")
+profile_id = "transform:328"
+resource_path_hint = "res://assets/catalog/96c155500a24fa3048b0f5d0.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 1
+action_hit_frames = {
+"attack": 1.0
+}
+sprite_offset = Vector2(0, -19.965857)
+pixel_scale = 0.623933
+death_duration = 0.65
+idle_amplitude = 0.35
+stride_bob = 1.7
+stride_lean = 0.018
+hit_recoil = 0.0
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false
