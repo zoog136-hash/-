@@ -1,0 +1,312 @@
+{
+  "key": "transform:143",
+  "name": "나이트 슬레이셔",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "hit",
+  "reference": "res://assets/catalog/5198381d3a74e4724b7e2050.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:143 나이트 슬레이셔. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body SW HIT poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter front SOUTH-WEST, screen DOWN-LEFT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Nonfatal HIT reaction, clearly distinct from attack: frame0 living guard;1 first external impact and flinch;2 maximum stagger/weight displacement;3 counterbalance with proper support;4 recovery;5 same living guard. No weapon strike, firing, spellcasting, death, wound, blood or new costume damage. Keep original equipment firmly connected and anatomical joints plausible. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: SOUTH-WEST means the character looks and travels diagonally toward the BOTTOM-LEFT of the screen, showing its FRONT and anatomical LEFT side, never a right-facing front view. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/5198381d3a74e4724b7e2050.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 136,
+  "reference_sha256": "b1254d0ed0b44169e4f5818aed4c591209270e026e414cc0a95d9afcd91369de",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+  "source_sha256": "08aa79034883aafe82821939e07eb93585470e5f97973e636ec3e28cb7f438d5",
+  "source_bytes": 1414716,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-SpriteFrames.tres",
+  "output_spriteframes_sha256": "3b05a92afb22228a5b0dccf6307bdefe7b2c763d2ae084841d063ab3914b0ba0",
+  "generated_original_path": "/workspace/generated_images/exec-4249c955-dba8-4846-8bd0-e43155f4de6b.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_143-SW-hit-v01.json",
+  "request_file_sha256": "b28cca3e6f0cdd3cdc2e0971969f464ed60a5335a380855ea9cd05770a5ea67b",
+  "generation_request_sha256": "03029d66110bfd57101736f231601e323c99f93db1fbd2ae04e427aa35ec7fe4",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "hit_3",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        609,
+        631
+      ],
+      "rgba_sha256": "5c1f55e3e4a7cf6fcda27720623361fd5af94ece8b369a8204039a1df47287e8"
+    },
+    {
+      "index": 1,
+      "region": [
+        609,
+        0,
+        609,
+        631
+      ],
+      "rgba_sha256": "7ff759331d05401dd5b3fd177b055c13d573a55abaf139704f412b4bbf9821bf"
+    },
+    {
+      "index": 2,
+      "region": [
+        1218,
+        0,
+        609,
+        631
+      ],
+      "rgba_sha256": "39a1431b56920922cb53f1ca15d5f23e8ce54837b50a7cbeeb165e14d9d4c8d5"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        631,
+        609,
+        631
+      ],
+      "rgba_sha256": "78966854c561fa4a21ada8edfead8ce45686b9acc523b67ae2f068334639266e"
+    },
+    {
+      "index": 4,
+      "region": [
+        609,
+        631,
+        609,
+        631
+      ],
+      "rgba_sha256": "2ffcb34afad4ac048a60662f2ccad6fc01953cfa9018e09f4fd5763c2340f310"
+    },
+    {
+      "index": 5,
+      "region": [
+        1218,
+        631,
+        609,
+        631
+      ],
+      "rgba_sha256": "61674a63759ca35f3f2f3a03e979fd8f1bfbd2c38f73b56b2bda316b655f14eb"
+    }
+  ],
+  "clipped_cell_count": 2,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-hit-record-v01.json",
+  "revision_parent_sha256": "e5ee50c08c97ddf26cf23195e0329213bbca0c0e2f24cbaccb7c6dc5704c2f50",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-hit-source-v01.png",
+  "raw_authored_source_sha256": "50c76602551e1e39c9599ac16b69e63be8b105bc5d6c952bae9ebcd98be374b2",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        609,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "region": [
+        609,
+        0,
+        609,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "region": [
+        1218,
+        0,
+        609,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "region": [
+        0,
+        631,
+        609,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "region": [
+        609,
+        631,
+        609,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "region": [
+        1218,
+        631,
+        609,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    609,
+    631
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      609,
+      1218,
+      1827
+    ],
+    "y": [
+      0,
+      631,
+      1262
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/SW-hit-source-v01-isolated.png",
+      "sha256": "08aa79034883aafe82821939e07eb93585470e5f97973e636ec3e28cb7f438d5",
+      "bytes": 1414716,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}

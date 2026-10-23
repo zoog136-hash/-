@@ -129,6 +129,17 @@ def deliver(batch):
         receipt = read(receipt_path)
         assert receipt['status'] == 'REMOTE_SAVED'
         return receipt
+    pending_path = LOGS / f'isolation-batch{batch:03d}-pending-remote.json'
+    if pending_path.exists():
+        pending = read(pending_path)
+        assert git('rev-parse', 'HEAD') == pending['remote_sha'] and not git('status', '--porcelain')
+        env = dict(os.environ, GIT_ASKPASS='/workspace/legendary_runtime/git-askpass.py', GIT_TERMINAL_PROMPT='0')
+        remote = subprocess.check_output(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], cwd=REPO, env=env, text=True).split()[0]
+        assert remote == pending['remote_sha'], 'Preserved local commit needs normal push; never regenerate or recommit it'
+        pending['status'] = 'REMOTE_SAVED'
+        write_json(receipt_path, pending, immutable=True)
+        print(json.dumps(pending, ensure_ascii=False), flush=True)
+        return pending
     assert git('branch', '--show-current') == BRANCH and not git('status', '--porcelain')
     selection_relative = DOCS / f'isolation-selection-batch{batch:03d}-v01.json'
     selection = read(WORK / selection_relative)
@@ -157,6 +168,10 @@ def deliver(batch):
         artifact_paths.update(path.relative_to(WORK) for path in (WORK / folder).glob('*'))
     for relative in sorted(artifact_paths):
         copy_new(relative)
+    for path in (WORK / DOCS).glob('isolation-*-evidence-*.json'):
+        relative = path.relative_to(WORK)
+        copy_new(relative)
+        artifact_paths.add(relative)
     for name in ['prepare_legendary_isolation_v01.py', 'legendary_registered_clip_player_v01.gd',
                  'legendary_revision_library_v01.gd', 'validate_legendary_corrected_dependencies_v01.gd',
                  'deliver_legendary_isolation_batches_v01.py']:
@@ -174,16 +189,18 @@ def deliver(batch):
     subprocess.run(['git', 'diff', '--cached', '--check'], cwd=REPO, check=True)
     subprocess.run(['git', 'commit', '-m', f'[skip ci] Isolate legendary ownership batch {batch:03d} without redrawing poses'], cwd=REPO, check=True, stdout=subprocess.DEVNULL)
     local_sha = git('rev-parse', 'HEAD')
-    env = dict(os.environ, GIT_ASKPASS='/workspace/legendary_runtime/git-askpass.py', GIT_TERMINAL_PROMPT='0')
-    run(['git', 'push', 'origin', 'HEAD:refs/heads/' + BRANCH], f'isolation-batch{batch:03d}-push.log', env=env)
-    remote_sha = subprocess.check_output(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], cwd=REPO, env=env, text=True).split()[0]
-    assert remote_sha == local_sha and not git('status', '--porcelain')
-    receipt = {'status': 'REMOTE_SAVED', 'kind': 'ownership_isolation', 'batch': batch,
-               'actors': selection['actors'], 'remote_sha': remote_sha,
+    receipt = {'status': 'LOCAL_COMMIT_WAITING_REMOTE', 'kind': 'ownership_isolation', 'batch': batch,
+               'actors': selection['actors'], 'remote_sha': local_sha,
                'batch_sources': sum(x['status'] == 'INTEGER_TRANSLATION_PROOF_PASS' for x in manifest['source_outcomes']),
                'batch_clips': len(manifest['revisions']), 'cumulative_sources': counts['isolated_sources'],
                'cumulative_clips': counts['revised_configurations'], 'newly_authored_poses_added': 0,
                'final_approved': 0, 'quality_status': 'HOLD', 'semantic_scale_registration': 'PENDING_REVIEWED_INPUT'}
+    write_json(pending_path, receipt, immutable=True)
+    env = dict(os.environ, GIT_ASKPASS='/workspace/legendary_runtime/git-askpass.py', GIT_TERMINAL_PROMPT='0')
+    run(['git', 'push', 'origin', 'HEAD:refs/heads/' + BRANCH], f'isolation-batch{batch:03d}-push.log', env=env)
+    remote_sha = subprocess.check_output(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], cwd=REPO, env=env, text=True).split()[0]
+    assert remote_sha == local_sha and not git('status', '--porcelain')
+    receipt['status'] = 'REMOTE_SAVED'
     write_json(receipt_path, receipt, immutable=True)
     print(json.dumps(receipt, ensure_ascii=False), flush=True)
     return receipt
