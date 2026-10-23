@@ -66,6 +66,24 @@ class RuntimeProfileSizingTest(unittest.TestCase):
             actor['tracks'].append(other)
             self.assertEqual(runtime_walk_reference_height(root, actor)[0], 384)
 
+    def test_run_only_scope_uses_authored_neutral_phases(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            actor = self.fixture(root)
+            expected = runtime_walk_reference_height(root, actor)[0]
+            actor['tracks'][0]['role'] = 'run'
+            self.assertEqual(runtime_walk_reference_height(root, actor)[0], expected)
+
+    def test_existing_walk_keeps_precedence_over_run(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            actor = self.fixture(root)
+            runner = self.fixture(root, factor=2)['tracks'][0]
+            runner['role'] = 'run'
+            runner['geometry']['frames'][0]['canvas_size'] = [512, 512]
+            actor['tracks'].append(runner)
+            self.assertEqual(runtime_walk_reference_height(root, actor)[0], 384)
+
     def test_invalid_or_invisible_reference_cannot_produce_a_profile(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

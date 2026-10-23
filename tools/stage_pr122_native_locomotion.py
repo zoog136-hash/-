@@ -25,7 +25,8 @@ import pr122_native_production_approvals as production_approvals
 SOURCE_MANIFEST = Path('docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json')
 REGISTER = Path('data/pr122_native_locomotion_staging.json')
 ACTORS = {'transform:393': 'halpas_393', 'transform:267': 'girtas_267',
-          'transform:413': 'thunder_female_413', 'transform:412': 'transform_412'}
+          'transform:413': 'thunder_female_413', 'transform:412': 'transform_412',
+          'transform:130': 'transform_130', 'transform:133': 'transform_133', 'transform:135': 'transform_135', 'transform:137': 'transform_137', 'transform:139': 'transform_139', 'transform:141': 'transform_141', 'transform:174': 'transform_174', 'transform:189': 'transform_189', 'transform:212': 'transform_212', 'transform:224': 'transform_224', 'transform:242': 'transform_242', 'transform:346': 'transform_346', 'transform:367': 'transform_367', 'transform:399': 'transform_399', 'transform:411': 'transform_411'}
 CORE_ROLES = ('idle', 'attack', 'hit', 'death')
 NATIVE_ROLES = ('walk', 'run', *CORE_ROLES)
 ROLE_SECONDS = dict(idle=1.2, walk=.48, run=.48, attack=.42, hit=.22, death=.65)

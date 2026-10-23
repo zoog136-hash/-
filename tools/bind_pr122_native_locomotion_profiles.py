@@ -20,9 +20,12 @@ def runtime_walk_reference_height(root, actor):
     reference = actor['canvas_size'][1]
     if type(reference) is not int or reference <= 0:
         raise ValueError('Require a positive runtime reference canvas')
+    # Existing walking references retain their exact sizing. New mythic scope
+    # omits walk; use authored run neutral phases only when walk is absent.
+    reference_role = "walk" if any(t["role"] == "walk" for t in actor["tracks"]) else "run"
     samples = []
     for track in actor['tracks']:
-        if track['role'] != 'walk':
+        if track['role'] != reference_role:
             continue
         geometry = track['geometry']
         frames = [frame for frame in geometry['frames'] if frame['row'] in (0, 3)]
@@ -48,7 +51,7 @@ def runtime_walk_reference_height(root, actor):
                             neutral_runtime_heights=heights,
                             reference_height=statistics.median(heights)))
     if not samples:
-        raise ValueError('Require an authored walking reference')
+        raise ValueError('Require an authored walking or running reference')
     return statistics.median(sample['reference_height'] for sample in samples), samples
 
 
