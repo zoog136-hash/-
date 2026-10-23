@@ -1,0 +1,90 @@
+{
+  "name": "신화-투사(여)",
+  "grade": "신화",
+  "reference": "res://assets/catalog/23ddcb3e1e4a9f3c6f48124e.png",
+  "key": "transform:411",
+  "direction": "N",
+  "role": "attack",
+  "reference_sha256": "c83eb1dd8aab0fc7b726a6c44f9a7fed43b4bb82d273ca5f5f1405fdb0fe8e77",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-S-attack-draft-v01.png": "c16164e351af5ee0ed8658f2991e4f364007868d76480a38ea970a558d263f8e",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-N-idle-draft-v01.png": "62d28af4dcb88b244ae76a650f5cdbb5f66527b5747cb0bae5be5f97db3960ab"
+  },
+  "policy": "First drafts across active19 before polishing; retain approved267/393 and all413 work. New death S only; no new mythic WALK; no chat images; no final approval inferred.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new N ATTACK six-pose animation for transform:411, 신화-투사(여). First original catalog reference is authoritative for exact identity, original costume, face, hair, skin, colors, armor, ornaments, footwear and original equipment. Other saved drafts are style/identity and facing guides only, never copy their poses, clipping or errors. Create ONE transparent PNG, exactly SIX new full-body poses in THREE equal columns and TWO equal rows, reading order. ALL six must face NORTH / screen up. A true back-facing view, moving/facing screen UP; show back-of-head, back equipment and garment surfaces, no front-facing face. Keep the same original top-down game camera and painted sprite detail, and the same facing throughout. Newly draw the correct body perspective and occlusion; no whole-image mirroring, flipped equipment, recoloring, rotating a static body or generic substitute. Retain original equipment in the correct anatomical hand, with proper grip and connected joints; never invent a weapon, wings or tail absent from the original. Required progression 0: poised guard; 1: visible backswing / anticipation; 2: loaded compression; 3: active forward strike / CONTACT; 4: follow-through; 5: recovery toward guard. A real articulated attack using exactly the original weapon system, with active contact in frame3, coherent follow-through and recovery. If unarmed use the natural unarmed attack; never invent equipment. Consistent body scale and common floor. Every full figure, complete weapon tip, original hair ornament and full toes/heels must stay entirely inside its cell with generous transparent gutters, no overlap between cells or clipping. No ground, opaque background, scenery, labels, grids, text, logos or extra figures. This is an unapproved first animation draft for local game production, output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/23ddcb3e1e4a9f3c6f48124e.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-S-attack-draft-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-N-idle-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-N-attack-draft-v01.png",
+  "source_sha256": "9bd1adffa14cd18b0b17b5682f0d1ddfa6990f5fbc4c2d9a7f7a775ea44678db",
+  "source_bytes": 2314151,
+  "generated_original_path": "/workspace/generated_images/exec-81de3d30-0fee-4153-ae93-0ec123e27e0d.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/draft001/N-attack-SpriteFrames.tres",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "b37b5667295d79873a0a615830008520fe69a9ad3de98c4575e67c81b2ed1009",
+      "visible_pixels": 55672,
+      "border_alpha_pixels": 42
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "9d716e39e5b7c416ca3422a0b8f51018ee018787fc506ada1145bcfe664b8c57",
+      "visible_pixels": 70344,
+      "border_alpha_pixels": 32
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "0f5d55fc201ecbf38e7524ff82a4fe0ef7a57fa24d9f50da6b4e60b88a1666ed",
+      "visible_pixels": 74939,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "20fb580167763c1b1457e7be69e0c1d59c651712dc5362329bf3e978c3fd10a5",
+      "visible_pixels": 110041,
+      "border_alpha_pixels": 344
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "252c93c5d2cfd4bb9fba13a850f02c204b6da77ddecb828c012ab38631b4a386",
+      "visible_pixels": 89746,
+      "border_alpha_pixels": 471
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "1047e9754cc90c9b4f09b34582c9abb67c0357a6717a86fe904ec55780cdb5e7",
+      "visible_pixels": 60602,
+      "border_alpha_pixels": 132
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "fd7dbc263ba04d270d2a8c180c03d9ee88e6ee23a208e8ffc1bd6eada63f1a16",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_playback": "PASS_ONCE"
+}
