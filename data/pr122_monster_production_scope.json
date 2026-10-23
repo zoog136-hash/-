@@ -26444,38 +26444,16 @@
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
       "new_staging": {
-        "native_track_count": 8,
-        "native_pose_count": 48,
+        "native_track_count": 30,
+        "native_pose_count": 180,
         "missing_required_tracks": [
           "attack_0",
-          "hit_0",
-          "attack_6",
-          "hit_6",
-          "attack_7",
-          "hit_7",
-          "run_7",
-          "attack_5",
-          "hit_5",
-          "run_5",
-          "attack_2",
-          "death_2",
-          "hit_2",
-          "idle_2",
-          "run_2",
-          "attack_1",
-          "hit_1",
-          "idle_1",
-          "run_1",
-          "attack_3",
-          "hit_3",
-          "idle_3",
-          "attack_4",
-          "hit_4",
-          "run_4"
+          "idle_0",
+          "run_2"
         ],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/boss_draft_first/iris/draft001/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed002/NativeMotionProfile.tres"
         ],
         "source_coverage_only": false
       },
@@ -30433,7 +30411,7 @@
     },
     {
       "path": "data/pr122_monster_boss_repair_staging.json",
-      "sha256": "62e778f72d4033beb6e0b3bfe767544c324acb95cea1d9bcadc09788addcfa49"
+      "sha256": "84d1ea6a6185b0876e70fb5da74c78fd011b4cf50987d161346acf83b4f3a254"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.",
