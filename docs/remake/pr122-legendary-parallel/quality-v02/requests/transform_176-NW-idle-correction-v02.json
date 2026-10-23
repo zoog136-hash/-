@@ -1,0 +1,182 @@
+{
+  "key": "transform:176",
+  "name": "경비병(창) 대장",
+  "grade": "전설",
+  "direction": "NW",
+  "role": "idle",
+  "reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+  "reference_sha256": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+  "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+  "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+  "legacy_provenance_sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523",
+  "legacy_source_files": [
+    {
+      "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+      "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+      "bytes": 1195751
+    }
+  ],
+  "existing_pose_metadata": [
+    {
+      "ordinal": 0,
+      "original_pose_id": 5,
+      "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+      "duration": 1.0,
+      "start_seconds": 0.0,
+      "rgba_sha256": "b8e4967e75a353a0211929edb26b4224d9d184dbc6e7d1c03850fced7fa4f244",
+      "source_anchor": [
+        867,
+        157
+      ],
+      "region": [
+        839,
+        60,
+        53,
+        101
+      ],
+      "margin": [
+        100,
+        63,
+        203,
+        155
+      ]
+    },
+    {
+      "ordinal": 1,
+      "original_pose_id": 13,
+      "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+      "duration": 1.0,
+      "start_seconds": 0.59999999988,
+      "rgba_sha256": "aeec3a0c892067a4362d3d71c4ac1ec98520e49781bb73750c889009771ca0d3",
+      "source_anchor": [
+        867,
+        308
+      ],
+      "region": [
+        839,
+        202,
+        58,
+        110
+      ],
+      "margin": [
+        100,
+        54,
+        198,
+        146
+      ]
+    }
+  ],
+  "six_pose_config": {
+    "sequence": [
+      {
+        "kind": "reused",
+        "ordinal": 0
+      },
+      {
+        "kind": "new",
+        "ordinal": 0
+      },
+      {
+        "kind": "new",
+        "ordinal": 1
+      },
+      {
+        "kind": "reused",
+        "ordinal": 1
+      },
+      {
+        "kind": "new",
+        "ordinal": 2
+      },
+      {
+        "kind": "new",
+        "ordinal": 3
+      }
+    ],
+    "duration_weights": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "speed": 5.000000001,
+    "total_duration_seconds": 1.19999999976,
+    "reused_pose_start_times": [
+      {
+        "legacy_pose_id": 5,
+        "final_phase": 0,
+        "legacy_start_seconds": 0.0,
+        "new_start_seconds": 0.0
+      },
+      {
+        "legacy_pose_id": 13,
+        "final_phase": 3,
+        "legacy_start_seconds": 0.59999999988,
+        "new_start_seconds": 0.59999999988
+      }
+    ],
+    "legacy_pose_start_times_preserved": true,
+    "legacy_total_duration_preserved": true,
+    "new_source_grid": [
+      2,
+      2
+    ]
+  },
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc081",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-idle-source-v01.png",
+  "previous_source_sha256": "ddae331d7246b1a6b8428624e3823294448e87a0cdf071f90d49ddf561c6e20f",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-idle-record-v01.json",
+  "previous_record_sha256": "7fd54074f4420862f1be364a09dfd151cac8232d4973778c58a1d73bb7bf9acd",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "correction_representation": "mixed_legacy_supplement_v1",
+  "correction_source_grid": [
+    2,
+    2
+  ],
+  "camera_reference": null,
+  "frozen_error_findings": [
+    {
+      "actor": "176",
+      "direction": "NW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Supplementary poses show the front-left rather than rear-left camera.",
+      "fix_kind": "source_camera_supplement_only",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-idle-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-idle-record-v01.json",
+      "source_sha256": "ddae331d7246b1a6b8428624e3823294448e87a0cdf071f90d49ddf561c6e20f",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0148",
+      "slot": [
+        "transform:176",
+        "NW",
+        "idle"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:176 경비병(창) 대장, NW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Supplementary poses show the front-left rather than rear-left camera.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter BACK-LEFT, screen UP-LEFT, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. Output ONE transparent RGBA PNG, exactly 1024x1024, 2 equal columns by 2 equal rows, 4 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Preserve every native legacy pose and its existing pixels/timing. Output ONLY missing poses for the sequence [{\"kind\": \"reused\", \"ordinal\": 0}, {\"kind\": \"new\", \"ordinal\": 0}, {\"kind\": \"new\", \"ordinal\": 1}, {\"kind\": \"reused\", \"ordinal\": 1}, {\"kind\": \"new\", \"ordinal\": 2}, {\"kind\": \"new\", \"ordinal\": 3}]. Native legacy atlas rectangles [{\"ordinal\": 0, \"original_pose_id\": 5, \"source_path\": \"res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png\", \"duration\": 1.0, \"start_seconds\": 0.0, \"rgba_sha256\": \"b8e4967e75a353a0211929edb26b4224d9d184dbc6e7d1c03850fced7fa4f244\", \"source_anchor\": [867, 157], \"region\": [839, 60, 53, 101], \"margin\": [100, 63, 203, 155]}, {\"ordinal\": 1, \"original_pose_id\": 13, \"source_path\": \"res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png\", \"duration\": 1.0, \"start_seconds\": 0.59999999988, \"rgba_sha256\": \"aeec3a0c892067a4362d3d71c4ac1ec98520e49781bb73750c889009771ca0d3\", \"source_anchor\": [867, 308], \"region\": [839, 202, 58, 110], \"margin\": [100, 54, 198, 146]}] establish correct tiny native body scale and exact facing. Do not redraw or enlarge the preserved two/three native poses. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/4954db6f65010804b3185b7a.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-0.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/4954db6f65010804b3185b7a.png": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+    "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-0.png": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4"
+  }
+}
