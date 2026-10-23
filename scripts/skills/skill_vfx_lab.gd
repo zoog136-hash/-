@@ -16,6 +16,7 @@ var selected: int = 0
 var direction_index: int = 0
 var elapsed: float = 0
 var autoplay: bool = true
+var show_actor_fx: bool = true
 var ids: Dictionary = {}
 var records: Dictionary = {}
 var skill_names: Array[String] = []
@@ -43,7 +44,9 @@ func _ready() -> void:
 		actor.camera.enabled = false
 		actor.set_physics_process(false)
 		actor.set_process_input(false)
-		actor.get_node("PlayerActionFX").hide()
+		var auxiliary := actor.get_node("PlayerActionFX") as Node2D
+		auxiliary.set_process(show_actor_fx)
+		auxiliary.visible = show_actor_fx
 	target.set_class_index(0)
 	caster.position = Vector2(570, 400)
 	caster.motion.strike.connect(_release)

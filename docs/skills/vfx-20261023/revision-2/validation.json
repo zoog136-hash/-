@@ -1,0 +1,185 @@
+{
+  "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "local_selected_cases": [
+    {
+      "case": "authored_skill_vfx_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 8.548
+    },
+    {
+      "case": "source_spx_skill_effect_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 1.003
+    },
+    {
+      "case": "original_skill_audio_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 45.262
+    },
+    {
+      "case": "flight_lifecycle_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 5.17
+    },
+    {
+      "case": "combat_timing_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 23.283
+    },
+    {
+      "case": "original_skill_target_state_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 22.966
+    },
+    {
+      "case": "original_skill_system_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 19.228
+    },
+    {
+      "case": "original_skill_restore_guard_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 25.195
+    },
+    {
+      "case": "original_skill_warehouse_migration_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 43.603
+    },
+    {
+      "case": "original_skill_catalog_runtime_test",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 33.961
+    },
+    {
+      "case": "validate_private_skill_vfx_pack",
+      "exit": 0,
+      "status": "PASS",
+      "seconds": 0.384
+    }
+  ],
+  "authored_checks": 1565,
+  "actual_private_pack_checks": 126,
+  "natural_effect_capture_count": 70,
+  "representative_capture_count": 12,
+  "directions_captured": 8,
+  "main": {
+    "android_device": "NOT_RUN",
+    "controlled_auto_contacts": 2,
+    "controlled_flight_observations": [
+      {
+        "allowed": true,
+        "from": "(3435.0, 4782.0)",
+        "to": "(3417.62, 4784.044)"
+      },
+      {
+        "allowed": true,
+        "from": "(3417.62, 4784.044)",
+        "to": "(3400.24, 4786.088)"
+      },
+      {
+        "allowed": true,
+        "from": "(3400.24, 4786.088)",
+        "to": "(3385.0, 4787.88)"
+      },
+      {
+        "allowed": true,
+        "from": "(3435.0, 4782.0)",
+        "to": "(3431.524, 4782.409)"
+      },
+      {
+        "allowed": true,
+        "from": "(3431.524, 4782.409)",
+        "to": "(3414.144, 4784.453)"
+      },
+      {
+        "allowed": true,
+        "from": "(3414.144, 4784.453)",
+        "to": "(3396.764, 4786.497)"
+      },
+      {
+        "allowed": true,
+        "from": "(3396.764, 4786.497)",
+        "to": "(3385.0, 4787.88)"
+      },
+      {
+        "allowed": true,
+        "from": "(3435.0, 4782.0)",
+        "to": "(3428.048, 4782.817)"
+      },
+      {
+        "allowed": true,
+        "from": "(3428.048, 4782.817)",
+        "to": "(3410.668, 4784.861)"
+      },
+      {
+        "allowed": true,
+        "from": "(3410.668, 4784.861)",
+        "to": "(3393.288, 4786.905)"
+      },
+      {
+        "allowed": true,
+        "from": "(3393.288, 4786.905)",
+        "to": "(3385.0, 4787.88)"
+      }
+    ],
+    "controlled_marker_observations": [
+      {
+        "distance": 64.0,
+        "flights": 3,
+        "generation": 3,
+        "los": true,
+        "moved": 0.0,
+        "queued": 1,
+        "queued_generation": 3,
+        "queued_life": 1,
+        "range": 430.0,
+        "sequence": 1,
+        "target_life": 1
+      }
+    ],
+    "existing_monsters": 161,
+    "failures": [],
+    "frames": 900,
+    "live_autohunt_contacts": 19,
+    "long_duration_autohunt": "NOT_RUN",
+    "median_frame_wall_ms": 61.446,
+    "p95_frame_wall_ms": 237.81,
+    "peak_atlas_rgba_bytes": 6291456,
+    "peak_vfx": 5,
+    "platform": "Linux",
+    "rejected_projectile_path_candidates": 3,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "simulated_seconds_at_60_hz": 15,
+    "skill_phase_counts": {
+      "aftermath": 20,
+      "cast": 10,
+      "end": 20,
+      "impact": 21,
+      "prepare": 10,
+      "release": 30,
+      "resist": 9,
+      "travel": 30
+    },
+    "status": "PASS",
+    "wall_seconds": 79.309365
+  },
+  "original_visual_approval_count": 0,
+  "android_device": "NOT_RUN",
+  "long_duration_autohunt": "NOT_RUN",
+  "full_ci": "DEFERRED_UNTIL_PRODUCTION_COMPLETE",
+  "discarded_capture": "First current-worktree attempt ran before resource import completed; excluded. Complete import followed by successful full capture.",
+  "controlled_scene_correction": "Guard trace recorded real terrain blockage of all three projectile paths; no damage or impact was fabricated. The controlled fixture now selects existing targets with clear foot and chest-to-hit paths and pauses population/AI only during that window, then restores original processing flags for live autohunt.",
+  "video_scope": "Silent actual Godot render. Representative 2.4s per skill includes tails/end with actor auxiliary FX isolated. Whole 70-skill index uses 1.2s per skill, includes existing actor FX and can cut off late tails; it is not full timing approval."
+}

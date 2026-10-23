@@ -11,8 +11,11 @@ func run() -> void:
 	if output.is_empty(): output = "/tmp/twilight-vfx-frames"
 	DirAccess.make_dir_recursive_absolute(output)
 	var lab: Node2D = load("res://scenes/SkillVFXLab.tscn").instantiate()
+	lab.show_actor_fx = OS.get_environment("TWILIGHT_VFX_ISOLATE_ACTOR_FX") != "1"
 	root.add_child(lab)
 	lab.autoplay = false
+	var frame_setting := OS.get_environment("TWILIGHT_VFX_FRAMES_PER_SKILL")
+	var frames_per_sample := 36 if frame_setting.is_empty() else clampi(frame_setting.to_int(), 36, 120)
 	var serial := 0
 	var all_skills := OS.get_cmdline_user_args().has("--all")
 	var samples: Array[int] = []
@@ -24,7 +27,7 @@ func run() -> void:
 	for sample: int in samples:
 		lab.selected = sample
 		lab.play_selected()
-		for frame: int in range(36):
+		for frame: int in range(frames_per_sample):
 			await process_frame
 			await RenderingServer.frame_post_draw
 			var picture := root.get_texture().get_image()
@@ -37,7 +40,7 @@ func run() -> void:
 				picture.save_png(output.path_join("sample_%02d.png" % sample))
 		report.append({"id":lab.current_id, "name":lab.skill_names[sample], "class":lab.current.get("class"), "preview_contacts":lab.hits})
 	var metadata := FileAccess.open(output.path_join("capture.json"), FileAccess.WRITE)
-	metadata.store_string(JSON.stringify({"frames":serial, "fps":30, "all_natural_effects":all_skills, "samples":report, "visual_fidelity_approval":"PENDING"}, "  "))
+	metadata.store_string(JSON.stringify({"frames":serial, "frames_per_sample":frames_per_sample, "fps":30, "all_natural_effects":all_skills, "actor_auxiliary_effects":lab.show_actor_fx, "samples":report, "visual_fidelity_approval":"PENDING"}, "  "))
 	metadata.close()
 	# Eight actual sprite orientations, captured separately from the movie.
 	lab.selected = 2
