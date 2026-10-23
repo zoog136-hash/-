@@ -83,6 +83,7 @@ func _run() -> void:
 	var catalog_before: Dictionary = {}
 	for record: Dictionary in database_before: catalog_before[str(record.name)] = record
 	var index: Array = JSON.parse_string(FileAccess.get_file_as_string(world.FIELD_INDEX_PATH))
+	index=index.filter(func(record: Dictionary) -> bool: return str(record.map_id) not in ["albino_03","albino_04"])
 	var prefix: String = ""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--prefix="):
