@@ -1,0 +1,174 @@
+{
+  "schema": "legendary-seven-recovery-camera-authority-metadata-check-v08",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "plan_sha256": "c815ca8753d349faec57cc9ba22d2fe145d74d1ea152248d8c88005fe9a628a4",
+  "checks": [
+    {
+      "candidate": "qc021",
+      "slot": [
+        "transform:274",
+        "SW",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_274-SW-idle-quota-recovery-v08.json",
+      "request_sha256": "98088f3c38ae9a9fde87277bb583f4256aa0b538c0fb52f6077ffc66cc23d8b3",
+      "camera_reference": {
+        "actor": "274",
+        "direction": "SW",
+        "role": "hit",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_274/draft001/SW-hit-source-v01.png",
+        "sha256": "d28a2aaf0b58c70a85767e66bf43969d4e39b8c8df16c5ab5846597a5c581d16",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "d28a2aaf0b58c70a85767e66bf43969d4e39b8c8df16c5ab5846597a5c581d16",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    },
+    {
+      "candidate": "qc023",
+      "slot": [
+        "transform:273",
+        "E",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-E-idle-quota-recovery-v08.json",
+      "request_sha256": "2dd8f2833b381e1b513e14d28c40a1529978bea6b82bed9e74d9c8fc9ac7cf5a",
+      "camera_reference": {
+        "actor": "273",
+        "direction": "E",
+        "role": "run",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_273/draft001/E-run-source-v01.png",
+        "sha256": "82e0631a9012654155245414b7bbbba70e3fa8403eaa48df1b790d7a3d709228",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "82e0631a9012654155245414b7bbbba70e3fa8403eaa48df1b790d7a3d709228",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    },
+    {
+      "candidate": "qc024",
+      "slot": [
+        "transform:273",
+        "SE",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-SE-idle-quota-recovery-v08.json",
+      "request_sha256": "bfea4450ced6c2a87829ccccf502cb0e01ee5f358ba5919f532ab9317c96992d",
+      "camera_reference": {
+        "actor": "273",
+        "direction": "SE",
+        "role": "run",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_273/draft001/SE-run-source-v01.png",
+        "sha256": "fdc4116d193c0eb3f9b57b832fec43ba2bd9f739e3c77db24e2b49b271d6da6e",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "fdc4116d193c0eb3f9b57b832fec43ba2bd9f739e3c77db24e2b49b271d6da6e",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    },
+    {
+      "candidate": "qc025",
+      "slot": [
+        "transform:245",
+        "NW",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NW-idle-quota-recovery-v08.json",
+      "request_sha256": "ccebc2b7396851e0e7348fcc595d33c1e1eb76fc26b6a1ea9797e4187a999027",
+      "camera_reference": {
+        "actor": "245",
+        "direction": "NW",
+        "role": "run",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NW-run-source-v01.png",
+        "sha256": "7eae543f9406910edbeb4fb645591f075004ab16f9c0082e49669b4b33cc9bb1",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "7eae543f9406910edbeb4fb645591f075004ab16f9c0082e49669b4b33cc9bb1",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    },
+    {
+      "candidate": "qc026",
+      "slot": [
+        "transform:245",
+        "NE",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NE-idle-quota-recovery-v08.json",
+      "request_sha256": "349fb70cce958391ad7f2b960ed627cf55674321ae338c7edf02134548fb1c29",
+      "camera_reference": {
+        "actor": "245",
+        "direction": "NE",
+        "role": "run",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NE-run-source-v01.png",
+        "sha256": "7e1fc01890e0b2e1bb2d30b4f6748fa67ec4933fec1782703d212bc621a6cb42",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "7e1fc01890e0b2e1bb2d30b4f6748fa67ec4933fec1782703d212bc621a6cb42",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    },
+    {
+      "candidate": "qc031",
+      "slot": [
+        "transform:227",
+        "SW",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_227-SW-idle-quota-recovery-v08.json",
+      "request_sha256": "59eaeedcccc5b80413471acfeb6f02219d8808ded65d62f451af0d0d003d1310",
+      "camera_reference": {
+        "actor": "227",
+        "direction": "SW",
+        "role": "run",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_227/draft001/SW-run-source-v01.png",
+        "sha256": "22c859ed0099f8cb1df129c5f18b4671a3840965b60c914cb9ea5f3f757e26a3",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "22c859ed0099f8cb1df129c5f18b4671a3840965b60c914cb9ea5f3f757e26a3",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    },
+    {
+      "candidate": "qc032",
+      "slot": [
+        "transform:226",
+        "SW",
+        "idle"
+      ],
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_226-SW-idle-quota-recovery-v08.json",
+      "request_sha256": "7aa533d4524e56cb41a7f5f15d0a6412c2eef0efdd9af37205b10f62805df8bf",
+      "camera_reference": {
+        "actor": "226",
+        "direction": "SW",
+        "role": "run",
+        "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_226/draft001/SW-run-source-v01.png",
+        "sha256": "80f0f6561dc3cdaa468fe82e003b170ed6bc1c5205a766ae48ff9295a4fa6197",
+        "selection": "No frozen camera finding; direction reference only, no motion copied"
+      },
+      "generation_reference_sha256": "80f0f6561dc3cdaa468fe82e003b170ed6bc1c5205a766ae48ff9295a4fa6197",
+      "frozen_camera_findings": [],
+      "decision": "PRESERVE_EXISTING_SEPARATE_CAMERA_REFERENCE_NO_FROZEN_CAMERA_FINDING",
+      "new_reference_PNGs": 0
+    }
+  ],
+  "qc021_reference_role_correction": "Actual request uses SW HIT, not the erroneous old SW RUN",
+  "qc022_possible_alternative": {
+    "reference": "quality-v03/source-visual/qc022-review-v01.json",
+    "reference_sha256": "9f3f4ea227e8cd657800d22b107cbcacce84152fc7d864f4c915b48b396e0a42",
+    "known_safe_camera_phase": 0,
+    "known_bad_camera_phase": 2,
+    "technical_findings": [],
+    "materialized": false
+  },
+  "original_plan_requests_changed": 0,
+  "PNG_reads": 0,
+  "new_image_calls": 0,
+  "final_approved": 0
+}

@@ -1,0 +1,2216 @@
+{
+  "schema": "legendary-dependent-correction-resume-plan-v07",
+  "original_plan_sha256": "36e60c9ff6e78da08e593d837188d92f7678e006a385635571965aafca68cea0",
+  "checkpoint_sha256": "ebac8b962830b51860ac1441c5f0378e9dc74035323d47560b900bb6c8c853ca",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "allowed_candidate_ids": [
+    "qc003",
+    "qc004",
+    "qc007",
+    "qc011",
+    "qc012",
+    "qc015",
+    "qc017",
+    "qc022",
+    "qc027",
+    "qc028",
+    "qc029",
+    "qc030",
+    "qc033",
+    "qc034",
+    "qc035",
+    "qc036",
+    "qc037",
+    "qc038",
+    "qc039",
+    "qc040",
+    "qc041",
+    "qc042",
+    "qc043",
+    "qc044",
+    "qc045",
+    "qc046",
+    "qc047",
+    "qc048",
+    "qc049",
+    "qc050",
+    "qc051",
+    "qc052",
+    "qc053",
+    "qc054",
+    "qc055",
+    "qc056",
+    "qc057",
+    "qc058",
+    "qc059",
+    "qc060",
+    "qc061",
+    "qc062",
+    "qc063",
+    "qc064",
+    "qc065",
+    "qc066",
+    "qc067",
+    "qc068",
+    "qc069",
+    "qc070",
+    "qc071",
+    "qc072",
+    "qc073",
+    "qc074",
+    "qc075",
+    "qc076",
+    "qc077",
+    "qc078",
+    "qc079",
+    "qc080",
+    "qc081",
+    "qc082",
+    "qc083",
+    "qc084",
+    "qc085",
+    "qc086",
+    "qc087",
+    "qc088",
+    "qc089",
+    "qc090",
+    "qc091",
+    "qc092",
+    "qc093",
+    "qc094",
+    "qc095",
+    "qc096",
+    "qc097",
+    "qc098",
+    "qc099",
+    "qc100",
+    "qc101",
+    "qc102",
+    "qc103",
+    "qc104",
+    "qc105",
+    "qc106",
+    "qc107",
+    "qc108",
+    "qc109",
+    "qc110",
+    "qc111",
+    "qc112",
+    "qc113",
+    "qc114",
+    "qc115",
+    "qc116",
+    "qc117",
+    "qc118",
+    "qc119",
+    "qc120",
+    "qc121",
+    "qc122",
+    "qc123",
+    "qc124",
+    "qc125",
+    "qc126"
+  ],
+  "excluded_prior_attempts": 20,
+  "moderation_blocked_source_excluded": [
+    "transform:274",
+    "NE",
+    "attack"
+  ],
+  "quota_not_before_utc": "2026-10-23T20:55:39+00:00",
+  "generation_calls_authorized": false,
+  "generation_calls_started": 0,
+  "active_staging_sha256": "951352f2c86a54519863d6b158f52afe23e4d5f067b6a9da4a94d592bb98d968",
+  "active_manifest": "docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch303-v02.json",
+  "active_manifest_sha256": "d0471bc45d456ce968e2b18c1134666cb97a7f208f194cbd0fc196efc80cfbb4",
+  "dependency_evidence": {
+    "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v03/dependency-evidence-v07.json",
+    "sha256": "62212a12eff9ff5a3324e98fbab51635c723c8c8ecf53f235f4e03e1550a0f9e"
+  },
+  "first_resume_batch": 309,
+  "next_unused_batch": 311,
+  "counts": {
+    "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED": 71,
+    "WAIT": 23,
+    "READY": 10,
+    "GUARD_REBIND_ONLY_NO_NEW_IMAGE": 2
+  },
+  "wait_reasons": {
+    "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED": 71,
+    "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY": 3,
+    "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE": 20,
+    "FROZEN_EXPLICIT_HEALTHY_MIDDLE_FOUR_PRESERVE_EXACT_PIXELS": 2
+  },
+  "jobs": [
+    {
+      "id": "225",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc033",
+      "previous_source_sha256": "e9dd4f32fee309af1d5ff644cced2e7ec77c9df8a9da8db5236b43fe49e902ae",
+      "representation": "six_new",
+      "original_plan_index": 20,
+      "original_batch": 271,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "225",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc034",
+      "previous_source_sha256": "124ccabc81306d5e0fd481d45601da1defb1972809ffc1fa99cba1a7a9e5b14c",
+      "representation": "six_new",
+      "original_plan_index": 21,
+      "original_batch": 271,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "225",
+      "direction": "NE",
+      "role": "idle",
+      "correction_candidate_id": "qc038",
+      "previous_source_sha256": "711b439b95e4c05a6fff486080c027a6168d6128c70adb90b6492888def8e1fd",
+      "representation": "six_new",
+      "original_plan_index": 22,
+      "original_batch": 271,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NE-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-NE-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-NE-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-NE-idle-correction-once.lock"
+    },
+    {
+      "id": "213",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc040",
+      "previous_source_sha256": "304705a179b54da62e6bb7544d98453bc1053b44f62f4750000e85a342b609c9",
+      "representation": "six_new",
+      "original_plan_index": 23,
+      "original_batch": 271,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_213-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_213-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_213-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "213",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc041",
+      "previous_source_sha256": "c8ba87e751c2dfb37e3000a09a1c5be8761b1badd1759f6f0ecf081658e875b2",
+      "representation": "six_new",
+      "original_plan_index": 24,
+      "original_batch": 271,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_213-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_213-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_213-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "193",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc045",
+      "previous_source_sha256": "ce063509eef16b57a7c340ad8043aebe2213e82f648b0f9ed79d0d991917dc09",
+      "representation": "six_new",
+      "original_plan_index": 25,
+      "original_batch": 272,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_193-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_193-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_193-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "193",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc046",
+      "previous_source_sha256": "5fd7a19d426a16cc4d92b930dfb1700a5ebe542eb78774b76a0d65a02334273a",
+      "representation": "six_new",
+      "original_plan_index": 26,
+      "original_batch": 272,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_193-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_193-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_193-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "192",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc051",
+      "previous_source_sha256": "87157c2c672808ba01684799ad4851557ee5fa1c13277dcc83b8db2f9a1a2567",
+      "representation": "six_new",
+      "original_plan_index": 27,
+      "original_batch": 272,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_192-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_192-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_192-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_192-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "192",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc052",
+      "previous_source_sha256": "ad9710acf9c3c57001f838a42f8412e5b0b97ed1a7399abeb81fc9cb0ee9b26a",
+      "representation": "six_new",
+      "original_plan_index": 28,
+      "original_batch": 272,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_192-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_192-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_192-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_192-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "191",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc054",
+      "previous_source_sha256": "18f96ff6e0da6eba75a1236993b35e06e8abd60f8476d39a62c2b4ecfc738d7c",
+      "representation": "six_new",
+      "original_plan_index": 29,
+      "original_batch": 272,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_191-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_191-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_191-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "191",
+      "direction": "W",
+      "role": "idle",
+      "correction_candidate_id": "qc055",
+      "previous_source_sha256": "724c63b8af07957ad0cd9deecc62f7c67c16d89cd30155db2e3543bca8b673cb",
+      "representation": "six_new",
+      "original_plan_index": 30,
+      "original_batch": 273,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-W-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_191-W-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_191-W-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_191-W-idle-correction-once.lock"
+    },
+    {
+      "id": "191",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc056",
+      "previous_source_sha256": "6dcf60ef58f7ccb2649954bc29c3cf5e99f0984e013b2b5ab509c529864828e6",
+      "representation": "six_new",
+      "original_plan_index": 31,
+      "original_batch": 273,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_191-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_191-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_191-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "190",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc058",
+      "previous_source_sha256": "b3e7e06aa77ee778949185e689695d29155a9f042158e251c64831fb54d04afe",
+      "representation": "six_new",
+      "original_plan_index": 32,
+      "original_batch": 273,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_190-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_190-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_190-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_190-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "190",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc059",
+      "previous_source_sha256": "bf003772bdc9e4df89cd1da7b8467336ca543215741891e16da28efdf5dddada",
+      "representation": "six_new",
+      "original_plan_index": 33,
+      "original_batch": 273,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_190-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_190-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_190-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_190-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "178",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc061",
+      "previous_source_sha256": "1677578d19f76237bc5105a36f6b2080ece12350a01540e8db45d45891d729df",
+      "representation": "six_new",
+      "original_plan_index": 34,
+      "original_batch": 273,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "178",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc062",
+      "previous_source_sha256": "0f73e651bf8245d4318db13750cf9350c00a0dde9902ae4a3a4d15bf924726a1",
+      "representation": "six_new",
+      "original_plan_index": 35,
+      "original_batch": 274,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "178",
+      "direction": "N",
+      "role": "idle",
+      "correction_candidate_id": "qc064",
+      "previous_source_sha256": "499e94a0ee958914052a1ed40d7794a4b93c9d40d3c94bd0af422650aecb85a8",
+      "representation": "six_new",
+      "original_plan_index": 36,
+      "original_batch": 274,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-N-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-N-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-N-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-N-idle-correction-once.lock"
+    },
+    {
+      "id": "178",
+      "direction": "NE",
+      "role": "idle",
+      "correction_candidate_id": "qc067",
+      "previous_source_sha256": "f9212b53485a9c437e36bc3c7448179e02bdb5e1054460e8b03647000d69eaaa",
+      "representation": "six_new",
+      "original_plan_index": 37,
+      "original_batch": 274,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NE-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-NE-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NE-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-NE-idle-correction-once.lock"
+    },
+    {
+      "id": "177",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc071",
+      "previous_source_sha256": "b0bc0fe1730d3e4c434c4c9a6a020e9f698b2e86acb432594ff16e55f4981a70",
+      "representation": "six_new",
+      "original_plan_index": 38,
+      "original_batch": 274,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "177",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc073",
+      "previous_source_sha256": "2444ddd7b394e38a5bbea1c20fb434007a37bd2c76aae55c637d5eb0434951cb",
+      "representation": "six_new",
+      "original_plan_index": 39,
+      "original_batch": 274,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "177",
+      "direction": "N",
+      "role": "idle",
+      "correction_candidate_id": "qc077",
+      "previous_source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+      "representation": "six_new",
+      "original_plan_index": 40,
+      "original_batch": 275,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-N-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-N-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-N-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-N-idle-correction-once.lock"
+    },
+    {
+      "id": "176",
+      "direction": "W",
+      "role": "idle",
+      "correction_candidate_id": "qc080",
+      "previous_source_sha256": "99686e56829099c6fd19c9dc53735dcf15a18eb4ab63c60e902c5e8f6d0ad594",
+      "representation": "mixed_legacy_supplement_v1",
+      "original_plan_index": 41,
+      "original_batch": 275,
+      "original_representation": "mixed_legacy_supplement_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_176-W-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_176-W-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_176-W-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_176-W-idle-correction-once.lock"
+    },
+    {
+      "id": "176",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc081",
+      "previous_source_sha256": "ddae331d7246b1a6b8428624e3823294448e87a0cdf071f90d49ddf561c6e20f",
+      "representation": "mixed_legacy_supplement_v1",
+      "original_plan_index": 42,
+      "original_batch": 275,
+      "original_representation": "mixed_legacy_supplement_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_176-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_176-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_176-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_176-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "175",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc083",
+      "previous_source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+      "representation": "six_new",
+      "original_plan_index": 43,
+      "original_batch": 275,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_175-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_175-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "175",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc084",
+      "previous_source_sha256": "7431094dbfda71bbe7400abde631a5d607c5cfe566bfb90141fe0d3bbff15385",
+      "representation": "six_new",
+      "original_plan_index": 44,
+      "original_batch": 275,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_175-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_175-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "166",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc088",
+      "previous_source_sha256": "75bcfa0dc1bab89c98676b2ffa127c875cc36aa7d7e6679d7ff8617da0e45e6d",
+      "representation": "six_new",
+      "original_plan_index": 45,
+      "original_batch": 276,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_166-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_166-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_166-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_166-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "166",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc089",
+      "previous_source_sha256": "cdf6f014c964527f5e92a19fd64d0a68fab84ad5af7e3824430e4c76857cb504",
+      "representation": "six_new",
+      "original_plan_index": 46,
+      "original_batch": 276,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_166-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_166-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_166-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_166-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "165",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc091",
+      "previous_source_sha256": "28d0a4dcfa88551de5fd61c3b799708fb93a574a16601c01dd93270c43d4a48f",
+      "representation": "six_new",
+      "original_plan_index": 47,
+      "original_batch": 276,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_165-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_165-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_165-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_165-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "160",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc092",
+      "previous_source_sha256": "2e20e6b7688dd8f6866e539e79885b2655b1a623fd3745a134cc0870784a925a",
+      "representation": "six_new",
+      "original_plan_index": 48,
+      "original_batch": 276,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_160-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_160-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_160-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_160-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "160",
+      "direction": "N",
+      "role": "idle",
+      "correction_candidate_id": "qc093",
+      "previous_source_sha256": "cd9fb468ebe985e4f4a2d4b3666fbb1504010e47fa70985a1d3d743666d2d877",
+      "representation": "six_new",
+      "original_plan_index": 49,
+      "original_batch": 276,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_160-N-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_160-N-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_160-N-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_160-N-idle-correction-once.lock"
+    },
+    {
+      "id": "143",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc094",
+      "previous_source_sha256": "9b06da5e3a6d43c692002f2731e08d163c4a19615861ded134faa7414eb98773",
+      "representation": "six_new",
+      "original_plan_index": 50,
+      "original_batch": 277,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_143-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_143-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_143-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_143-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "143",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc095",
+      "previous_source_sha256": "e807a29561c7c62428790d651d30a2bd24e581321f33ea91f4f485135a7e05dc",
+      "representation": "six_new",
+      "original_plan_index": 51,
+      "original_batch": 277,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_143-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_143-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_143-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_143-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "122",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc096",
+      "previous_source_sha256": "ad99784d23b647c587f0582072c5617e7cfda7140456b25335c03ea3491558a7",
+      "representation": "six_new",
+      "original_plan_index": 52,
+      "original_batch": 277,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_122-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_122-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_122-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_122-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "122",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc097",
+      "previous_source_sha256": "e79fc0c8d601dbda268d6ce0c151e02042e7cbbe057983f4a86148763d2a9c2e",
+      "representation": "six_new",
+      "original_plan_index": 53,
+      "original_batch": 277,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_122-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_122-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_122-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_122-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "114",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc099",
+      "previous_source_sha256": "f20b3276269728906f9b934eb08cbd0008952b81cef7b9227f3725d7f3f78bbd",
+      "representation": "six_new",
+      "original_plan_index": 54,
+      "original_batch": 277,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_114-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_114-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_114-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "114",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc100",
+      "previous_source_sha256": "eadea8ec65aa11e663671597712ddac020a58a99138cb70d940fcba4090a1e0a",
+      "representation": "six_new",
+      "original_plan_index": 55,
+      "original_batch": 278,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_114-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_114-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_114-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "114",
+      "direction": "NE",
+      "role": "idle",
+      "correction_candidate_id": "qc101",
+      "previous_source_sha256": "da0832208f0ac35fd50da3c4aba430c52f87837062ee3308010451863442e3d4",
+      "representation": "six_new",
+      "original_plan_index": 56,
+      "original_batch": 278,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NE-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_114-NE-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_114-NE-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_114-NE-idle-correction-once.lock"
+    },
+    {
+      "id": "113",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc104",
+      "previous_source_sha256": "6758e90e43a9d51376192c707d63cccb4749b9dbdb5dd31a1f1d6d2b9f77bd50",
+      "representation": "six_new",
+      "original_plan_index": 57,
+      "original_batch": 278,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "113",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc105",
+      "previous_source_sha256": "2578b81a2c29496a16de64628121421ee80ba064af1d4316f669dbc7064f13f3",
+      "representation": "six_new",
+      "original_plan_index": 58,
+      "original_batch": 278,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "113",
+      "direction": "N",
+      "role": "idle",
+      "correction_candidate_id": "qc106",
+      "previous_source_sha256": "ab0478aa8e0f056a330defb3ada5642f5da3fef499f23d14f46f643753eeff0e",
+      "representation": "six_new",
+      "original_plan_index": 59,
+      "original_batch": 278,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-N-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-N-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-N-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-N-idle-correction-once.lock"
+    },
+    {
+      "id": "112",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc117",
+      "previous_source_sha256": "4cfcedb83d29e8b3049506bab976aeb550e06dec39ee325b3b3527aa5059f27b",
+      "representation": "six_new",
+      "original_plan_index": 60,
+      "original_batch": 279,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_112-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_112-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "112",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc118",
+      "previous_source_sha256": "fddd715fad1fd7a7af7705371a57458b53bffa301dbf6061e0d1f1d089c549fc",
+      "representation": "six_new",
+      "original_plan_index": 61,
+      "original_batch": 279,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_112-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_112-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "112",
+      "direction": "N",
+      "role": "idle",
+      "correction_candidate_id": "qc120",
+      "previous_source_sha256": "631a673324190c80a1020d37eb40b9f55714b20e9f2c8f77a6443974f63424c6",
+      "representation": "six_new",
+      "original_plan_index": 62,
+      "original_batch": 280,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-N-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_112-N-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-N-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_112-N-idle-correction-once.lock"
+    },
+    {
+      "id": "1",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc123",
+      "previous_source_sha256": "b3e72d4f0cc4dd688a2804e512749b92a9c1370c2d2f343f87f69cf17a437d17",
+      "representation": "six_new",
+      "original_plan_index": 63,
+      "original_batch": 279,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-SW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_1-SW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-SW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_1-SW-idle-correction-once.lock"
+    },
+    {
+      "id": "1",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc124",
+      "previous_source_sha256": "2e6c4ee767cea4b1422b87ec6d64a728216ab14edd063e807060af71462c0c13",
+      "representation": "six_new",
+      "original_plan_index": 64,
+      "original_batch": 280,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-NW-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_1-NW-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-NW-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_1-NW-idle-correction-once.lock"
+    },
+    {
+      "id": "1",
+      "direction": "N",
+      "role": "idle",
+      "correction_candidate_id": "qc125",
+      "previous_source_sha256": "8da52c7b45f0ba94fc9b44b77f391fbdf4ad570d86a0ce8cd1548b4ef873dce0",
+      "representation": "six_new",
+      "original_plan_index": 65,
+      "original_batch": 280,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-N-idle-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_1-N-idle-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-N-idle-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_1-N-idle-correction-once.lock"
+    },
+    {
+      "id": "338",
+      "direction": "N",
+      "role": "run",
+      "correction_candidate_id": "qc011",
+      "previous_source_sha256": "6ed0e819f90e2d656d5f79242a2678d3a3c48059c9d693fc66e2afe6a9f97c53",
+      "representation": "six_new",
+      "original_plan_index": 66,
+      "original_batch": 281,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_338-N-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_338-N-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_338-N-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_338-N-run-correction-once.lock"
+    },
+    {
+      "id": "337",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc015",
+      "previous_source_sha256": "092fb30d1b951b5edb4f810c8067f3c36b987a58dec0e7a64b3ab9e98b255168",
+      "representation": "six_new",
+      "original_plan_index": 67,
+      "original_batch": 281,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_337-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_337-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_337-NW-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_337-NW-run-correction-once.lock"
+    },
+    {
+      "id": "330",
+      "direction": "SW",
+      "role": "run",
+      "correction_candidate_id": "qc017",
+      "previous_source_sha256": "f399b03f6a61eec70985f06bf6a5064be24314ff410760caa993784df6a79603",
+      "representation": "six_new",
+      "original_plan_index": 68,
+      "original_batch": 281,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_330-SW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_330-SW-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_330-SW-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_330-SW-run-correction-once.lock"
+    },
+    {
+      "id": "274",
+      "direction": "SW",
+      "role": "run",
+      "correction_candidate_id": "qc022",
+      "previous_source_sha256": "c01c750dd79ef6bf2066e7a7ff43b943a49d897e8a205b8663698f323feee74c",
+      "representation": "six_new",
+      "original_plan_index": 69,
+      "original_batch": 281,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_274-SW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_274-SW-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_274-SW-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_274-SW-run-correction-once.lock"
+    },
+    {
+      "id": "245",
+      "direction": "N",
+      "role": "run",
+      "correction_candidate_id": "qc029",
+      "previous_source_sha256": "6bfca60cc988d72abd1866597b5164164459edd6ae10cea8b5d09a08dc739635",
+      "representation": "six_new",
+      "original_plan_index": 70,
+      "original_batch": 281,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-N-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_245-N-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_245-N-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_245-N-run-correction-once.lock"
+    },
+    {
+      "id": "225",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc035",
+      "previous_source_sha256": "b9d5f7f5a47cbc0db15c38435351157f940821c999057d32b111af2483a55d6a",
+      "representation": "six_new",
+      "original_plan_index": 71,
+      "original_batch": 282,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-NW-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_225-NW-run-correction-once.lock"
+    },
+    {
+      "id": "213",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc042",
+      "previous_source_sha256": "a04b5f078df93a68b62e5a869419d656e40a6e9707c4a40c99ff6c5d9d28516f",
+      "representation": "six_new",
+      "original_plan_index": 72,
+      "original_batch": 282,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_213-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_213-NW-run-correction-once.lock"
+    },
+    {
+      "id": "193",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc047",
+      "previous_source_sha256": "36388a1815913b9d28e922eb8897c38de2b88748e1de2c23001798e3d74a923d",
+      "representation": "six_new",
+      "original_plan_index": 73,
+      "original_batch": 282,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_193-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_193-NW-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_193-NW-run-correction-once.lock"
+    },
+    {
+      "id": "178",
+      "direction": "N",
+      "role": "run",
+      "correction_candidate_id": "qc065",
+      "previous_source_sha256": "0563361cf1afba709114b200d20f91a9eb9b630a479d31ee79a6f34f53b5b677",
+      "representation": "six_new",
+      "original_plan_index": 74,
+      "original_batch": 282,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-N-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-N-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-N-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-N-run-correction-once.lock"
+    },
+    {
+      "id": "178",
+      "direction": "NE",
+      "role": "run",
+      "correction_candidate_id": "qc068",
+      "previous_source_sha256": "016cf207a7fff9098220ff9acc27666356587a4828bc08be6c206512ef34e39b",
+      "representation": "six_new",
+      "original_plan_index": 75,
+      "original_batch": 282,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NE-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-NE-run-correction-v02.json"
+      ],
+      "existing_receipts": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NE-run-correction-v02.json"
+      ],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_178-NE-run-correction-once.lock"
+    },
+    {
+      "id": "177",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc074",
+      "previous_source_sha256": "a77fc27464667e207b7b0da57d71e605ff02abc539178dafac6b9d5e04df7b54",
+      "representation": "six_new",
+      "original_plan_index": 76,
+      "original_batch": 283,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_177-NW-run-correction-once.lock"
+    },
+    {
+      "id": "175",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc085",
+      "previous_source_sha256": "d5db124db66c5ed5c9402614d802a0e0e4dc6ffd544aed77552614d165a8e16d",
+      "representation": "six_new",
+      "original_plan_index": 77,
+      "original_batch": 283,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_175-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_175-NW-run-correction-once.lock"
+    },
+    {
+      "id": "113",
+      "direction": "NW",
+      "role": "run",
+      "correction_candidate_id": "qc107",
+      "previous_source_sha256": "cc6af21e73abf3c6b0169326946374cb234951dfc0ede199e2abf011e7f4e23b",
+      "representation": "six_new",
+      "original_plan_index": 78,
+      "original_batch": 283,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NW-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-NW-run-correction-v02.json"
+      ],
+      "existing_receipts": [],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-NW-run-correction-once.lock"
+    },
+    {
+      "id": "113",
+      "direction": "N",
+      "role": "run",
+      "correction_candidate_id": "qc109",
+      "previous_source_sha256": "8aac5cc78fee23144c828ef1ca9606cd1c0f61bdb1e7cb4448f2532b75a35c22",
+      "representation": "six_new",
+      "original_plan_index": 79,
+      "original_batch": 283,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-N-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-N-run-correction-v02.json"
+      ],
+      "existing_receipts": [],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_113-N-run-correction-once.lock"
+    },
+    {
+      "id": "112",
+      "direction": "N",
+      "role": "run",
+      "correction_candidate_id": "qc121",
+      "previous_source_sha256": "217ec93ba1ec919955c1a9c25325f5285fb4b486b2dc74373c818dfae8aab504",
+      "representation": "six_new",
+      "original_plan_index": 80,
+      "original_batch": 283,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-N-run-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 0,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "402",
+      "direction": "N",
+      "role": "attack",
+      "correction_candidate_id": "qc003",
+      "previous_source_sha256": "208702b9826b6855aa719994102e3b3d8f4589a92000c3b724482c406997cd13",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 81,
+      "original_batch": 284,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_402-N-attack-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED",
+      "existing_claims": [
+        "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_402-N-attack-correction-v02.json"
+      ],
+      "existing_receipts": [],
+      "existing_once_lock": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/generation-claims/transform_402-N-attack-correction-once.lock"
+    },
+    {
+      "id": "387",
+      "direction": "N",
+      "role": "attack",
+      "correction_candidate_id": "qc004",
+      "previous_source_sha256": "bb2a15bac5b2b17f2bdc7b559021c11ccbc8f88b9cc5587b7221c758a48d130b",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 82,
+      "original_batch": 284,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_387-N-attack-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 2,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "375",
+      "direction": "N",
+      "role": "attack",
+      "correction_candidate_id": "qc007",
+      "previous_source_sha256": "f73a0c7e7b4e6217e546b5429f6d85fc35c3d612df5caafbc00e5e0d5b882c18",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 83,
+      "original_batch": 284,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_375-N-attack-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 2,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "245",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc027",
+      "previous_source_sha256": "3c52f6a43ed218e95436607c532846fe251db37dab8adfe18dd4db2ed72b43fb",
+      "representation": "six_new",
+      "original_plan_index": 84,
+      "original_batch": 284,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NW-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY"
+    },
+    {
+      "id": "245",
+      "direction": "NE",
+      "role": "attack",
+      "correction_candidate_id": "qc028",
+      "previous_source_sha256": "8cca9cc0cc458be5a59146b839ac923a869998f55e8b94c7ab800a6700bdb2d1",
+      "representation": "six_new",
+      "original_plan_index": 85,
+      "original_batch": 284,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NE-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY"
+    },
+    {
+      "id": "225",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc036",
+      "previous_source_sha256": "69cf7ff60e56530d5357d98a2cc2d75af4a42caf3d12b5679a5caccaf451fdd2",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 86,
+      "original_batch": 285,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NW-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "225",
+      "direction": "NE",
+      "role": "attack",
+      "correction_candidate_id": "qc039",
+      "previous_source_sha256": "b3ef04e4aea84b29ef77f71c49e447150bf90ee844ad202f3cf2e4aca7313692",
+      "representation": "six_new",
+      "original_plan_index": 87,
+      "original_batch": 285,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NE-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "213",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc043",
+      "previous_source_sha256": "310d7341972ad974658ffc643627e6f11ebc1b616409a1433fd8a38bc70922b4",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 88,
+      "original_batch": 285,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-NW-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "193",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc048",
+      "previous_source_sha256": "8ef2a4a2c6cbf27907c6fc67cd0d5d3b3eeba4bfcbd057b24065034b8085e696",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 89,
+      "original_batch": 285,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-NW-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "193",
+      "direction": "SW",
+      "role": "attack",
+      "correction_candidate_id": "qc050",
+      "previous_source_sha256": "d822fe20829e38513d63b112b451d1e11e7b85a36c90d377a32a52faa7d7e2cc",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 90,
+      "original_batch": 285,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-SW-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "178",
+      "direction": "NE",
+      "role": "attack",
+      "correction_candidate_id": "qc069",
+      "previous_source_sha256": "32f188ff339a1a0a52493a7b0e4b94b9f77240a66a8e3d8254545a10ad0ad6b2",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 91,
+      "original_batch": 286,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NE-attack-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "27b96129cbe977d860e4923bdbacee69625bb6a6cba38ddaf83cfbda7519e9a6",
+      "request_stem": "transform_178-NE-attack-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 309
+    },
+    {
+      "id": "177",
+      "direction": "SW",
+      "role": "attack",
+      "correction_candidate_id": "qc072",
+      "previous_source_sha256": "165ff63c466292b9eec2cd75666d8a92ba3e2c2259f704ff2cb856498c880a5e",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 92,
+      "original_batch": 286,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-SW-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "177",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc075",
+      "previous_source_sha256": "caff13098165bc155a1aa565036bbad5bbf8adbe7791a9fd6e591d79a9649ffb",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 93,
+      "original_batch": 286,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-NW-attack-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "c0e32f9d54fdfa286654f4338364243d410841d20a8257181e79e83aec377329",
+      "request_stem": "transform_177-NW-attack-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 309
+    },
+    {
+      "id": "177",
+      "direction": "N",
+      "role": "attack",
+      "correction_candidate_id": "qc078",
+      "previous_source_sha256": "200a54ad2d1e986a02724a84b5cd99d2cc3aa00ba90ada1739638f67ec26a5d7",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 94,
+      "original_batch": 286,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-N-attack-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "99bf7fbcc4b1580c3bdfab2e4e967cf6bf56131d5ee200d5bf7e1da06494a211",
+      "request_stem": "transform_177-N-attack-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 309
+    },
+    {
+      "id": "175",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc086",
+      "previous_source_sha256": "3a0481d85801e6dd62c8bb57e2bdd342f58fd9c39d530359a278fc75dc18a2f8",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 95,
+      "original_batch": 286,
+      "original_representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-NW-attack-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "1d1fcf49d71a5db809a745d2b860bfd1a40b091f7f2db1d4fe8ab6899af34811",
+      "request_stem": "transform_175-NW-attack-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 309
+    },
+    {
+      "id": "114",
+      "direction": "NE",
+      "role": "attack",
+      "correction_candidate_id": "qc102",
+      "previous_source_sha256": "589b859f92fc7cfb51efa301796b0f199ef5723ce9ab69565378994d6b506ad3",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 96,
+      "original_batch": 287,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NE-attack-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "113",
+      "direction": "SE",
+      "role": "attack",
+      "correction_candidate_id": "qc112",
+      "previous_source_sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+      "representation": "six_new",
+      "original_plan_index": 97,
+      "original_batch": 287,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-SE-attack-correction-v03.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 0,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "113",
+      "direction": "W",
+      "role": "attack",
+      "correction_candidate_id": "qc113",
+      "previous_source_sha256": "5c04406169b03cb8fa86cac343ff1797341cd3c2227d9d8b3f8de6f1b0104edd",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 98,
+      "original_batch": 287,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-W-attack-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 2,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "113",
+      "direction": "NW",
+      "role": "attack",
+      "correction_candidate_id": "qc114",
+      "previous_source_sha256": "d4e7c55acc533b762f2db77e1569f992217e460ea439c464f1016d5cc834d46d",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 99,
+      "original_batch": 287,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NW-attack-correction-v03.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "113",
+      "direction": "N",
+      "role": "attack",
+      "correction_candidate_id": "qc115",
+      "previous_source_sha256": "a0e519a89edcd062c784943049768bf5507beef20378e259194b356a46c7c802",
+      "representation": "six_new",
+      "original_plan_index": 100,
+      "original_batch": 287,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-N-attack-correction-v03.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "113",
+      "direction": "NE",
+      "role": "attack",
+      "correction_candidate_id": "qc116",
+      "previous_source_sha256": "635fa1dafa0ae8124d94160e244b52d68f865f5132e6592c5e4b5e6609e89f1e",
+      "representation": "six_new",
+      "original_plan_index": 101,
+      "original_batch": 288,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NE-attack-correction-v03.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 0,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "1",
+      "direction": "S",
+      "role": "attack",
+      "correction_candidate_id": "qc126",
+      "previous_source_sha256": "f9d0898d323a7f3c2253c13742e3f1f53496c882596ee2d7dfd4bdc25764ab79",
+      "representation": "six_new",
+      "original_plan_index": 102,
+      "original_batch": 288,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-S-attack-correction-v03.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 0,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "338",
+      "direction": "N",
+      "role": "hit",
+      "correction_candidate_id": "qc012",
+      "previous_source_sha256": "482cbd9a45d66ab96c163295bf35d2e16e377eb4b1186d5c662b434ed9f84456",
+      "representation": "six_new",
+      "original_plan_index": 103,
+      "original_batch": 289,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_338-N-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY"
+    },
+    {
+      "id": "244",
+      "direction": "N",
+      "role": "hit",
+      "correction_candidate_id": "qc030",
+      "previous_source_sha256": "430ac16630e227b2c0de0ae6e5df9f0124800595fbe9dd18374aba7d9fe66d73",
+      "representation": "six_new",
+      "original_plan_index": 104,
+      "original_batch": 289,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_244-N-hit-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 0,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "225",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc037",
+      "previous_source_sha256": "0a9eceb08a176b72e61e461c4748f5d8deb755b4b7de41d94f9756e17d3e66a5",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 105,
+      "original_batch": 289,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "213",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc044",
+      "previous_source_sha256": "355404c8ed6ee90cd5906692e79795ac0517cf582e128cddd359219e46987f58",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 106,
+      "original_batch": 289,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "193",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc049",
+      "previous_source_sha256": "8e8acaa7a4db3816909103d4d0a85438030099400c4ce66ea7835513b048add1",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 107,
+      "original_batch": 289,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "192",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc053",
+      "previous_source_sha256": "2216cdfd3b5699de64df630a76e2a9f7d7e5d63152ac0ee7ba0a0bd28d5235b9",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 108,
+      "original_batch": 290,
+      "original_representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_192-NW-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "27eaf6ae5528dae173c52134446298c847bd918dcea76ca0c19677e7739d7e7d",
+      "request_stem": "transform_192-NW-hit-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 309
+    },
+    {
+      "id": "191",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc057",
+      "previous_source_sha256": "7e802c0892f3b238c2d3f54355ec15fc6a8dcf5252c1cef7784f9183f6f87987",
+      "representation": "six_new",
+      "original_plan_index": 109,
+      "original_batch": 290,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "190",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc060",
+      "previous_source_sha256": "ae0b8180b30074ee7843cd7d23b526da66fef2680ba5831db1d7064479c75703",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 110,
+      "original_batch": 290,
+      "original_representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_190-NW-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "795b430901c975ef953edafa4e95a73ac11841312fcbbbdc3935f87f2b291b2f",
+      "request_stem": "transform_190-NW-hit-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 310
+    },
+    {
+      "id": "178",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc063",
+      "previous_source_sha256": "5750a184e2b083f0e8b13823bb2fb3764461df85b43f78a4a3a717c57b1c822c",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 111,
+      "original_batch": 290,
+      "original_representation": "six_new",
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NW-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 2,
+      "wait_reason": "FROZEN_EXPLICIT_HEALTHY_MIDDLE_FOUR_PRESERVE_EXACT_PIXELS",
+      "maximum_new_image_calls": 0
+    },
+    {
+      "id": "178",
+      "direction": "N",
+      "role": "hit",
+      "correction_candidate_id": "qc066",
+      "previous_source_sha256": "a1395cb627325901c28ad8e30c27e80ba1c51cf0d5b8c216f4c29df39cd465f9",
+      "representation": "six_new",
+      "original_plan_index": 112,
+      "original_batch": 290,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-N-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "178",
+      "direction": "NE",
+      "role": "hit",
+      "correction_candidate_id": "qc070",
+      "previous_source_sha256": "77879c676c1fbcebcbcf568a44925e66de9334545ad2d9e0708227bf05d19a9f",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 113,
+      "original_batch": 291,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NE-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "17102de529f74f3bdff447649ee3e6a59710b2a068c216dcb0be1b9106e81d6a",
+      "request_stem": "transform_178-NE-hit-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 310
+    },
+    {
+      "id": "177",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc076",
+      "previous_source_sha256": "7ce74f14fa80db13de964bb5c72acff23a7be0aa130c9bd5d2178f736d0c7017",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 114,
+      "original_batch": 291,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-NW-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "0ffb57af07223ff183896f449a0232f94c7abf0def64fe1715357b69a5d0c6b2",
+      "request_stem": "transform_177-NW-hit-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 310
+    },
+    {
+      "id": "177",
+      "direction": "N",
+      "role": "hit",
+      "correction_candidate_id": "qc079",
+      "previous_source_sha256": "b91378a28ee8dbeb277dc8d53e37499996d490b308dc90795d71ed2ee95416ec",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 115,
+      "original_batch": 291,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-N-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "edb94e11424bb6920cc4ba09c8f0582ecbeca5eb81b751c2b9e748ba524fc9e7",
+      "request_stem": "transform_177-N-hit-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 310
+    },
+    {
+      "id": "176",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc082",
+      "previous_source_sha256": "c7756c9ab98792f2436c80df12b6f38872dd400ac7c9abb1d96a28e1a6a5b868",
+      "representation": "mixed_legacy_supplement_v1",
+      "original_plan_index": 116,
+      "original_batch": 291,
+      "original_representation": "mixed_legacy_supplement_v1",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_176-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 2,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "175",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc087",
+      "previous_source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 117,
+      "original_batch": 291,
+      "original_representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-NW-hit-correction-v05.json",
+      "corrected_idle_dependency": false,
+      "request_sha256": "869dfab6f3eeb9db291de8652b1c454ba6dd3414e21fc09900ac855b8875fe45",
+      "request_stem": "transform_175-NW-hit-correction-v05",
+      "newly_authored_poses_requested": 4,
+      "reused_poses": 2,
+      "batch": 310
+    },
+    {
+      "id": "166",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc090",
+      "previous_source_sha256": "cbc747994708dc71557cb01de71faa0d83794f4b55564bab850241b1bd05c010",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 118,
+      "original_batch": 292,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_166-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "122",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc098",
+      "previous_source_sha256": "61eabf4a0241459444fca7ec21ba83ff86688fadee0bb207a3bc0df90d0b94b5",
+      "representation": "six_new",
+      "original_plan_index": 119,
+      "original_batch": 292,
+      "original_representation": "six_new",
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_122-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "FROZEN_EXPLICIT_HEALTHY_MIDDLE_FOUR_PRESERVE_EXACT_PIXELS",
+      "maximum_new_image_calls": 0
+    },
+    {
+      "id": "114",
+      "direction": "NE",
+      "role": "hit",
+      "correction_candidate_id": "qc103",
+      "previous_source_sha256": "fd5909c6376cc532c1351cb71aa96deb2be5a41973af92c7e4cbb5cd561e768d",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 120,
+      "original_batch": 292,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NE-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "113",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc108",
+      "previous_source_sha256": "e513b4a1fa512ef902009b8bad02aaa050cda2ffc1c55c0aa2a517a818f20985",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 121,
+      "original_batch": 292,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "113",
+      "direction": "N",
+      "role": "hit",
+      "correction_candidate_id": "qc110",
+      "previous_source_sha256": "07bd7337e4c06122294b1234c108fe9cad8049b60bd3f739db9756ab2ce630b1",
+      "representation": "six_new",
+      "original_plan_index": 122,
+      "original_batch": 292,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-N-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "113",
+      "direction": "NE",
+      "role": "hit",
+      "correction_candidate_id": "qc111",
+      "previous_source_sha256": "35965ae4913ea50edb8286fa935f951111b055c96d2b9e5a670beffd09184e13",
+      "representation": "six_new",
+      "original_plan_index": 123,
+      "original_batch": 293,
+      "original_representation": "six_new",
+      "state": "PRIMARY71_SEPARATE_IN_PROGRESS_OR_ATTEMPTED",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NE-hit-correction-v02.json",
+      "corrected_idle_dependency": false,
+      "reused_poses": 0,
+      "wait_reason": "NO_DEPENDENT_QUEUE_CALL_PRIMARY71_ALREADY_OWNED"
+    },
+    {
+      "id": "112",
+      "direction": "NW",
+      "role": "hit",
+      "correction_candidate_id": "qc119",
+      "previous_source_sha256": "226b7a0cfbe5d500fbaa78312f5dc4423808abc5683ddeabc7794476c5176c95",
+      "representation": "mixed_draft_guard_reuse_v1",
+      "original_plan_index": 124,
+      "original_batch": 293,
+      "original_representation": "mixed_draft_guard_reuse_v1",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-NW-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    },
+    {
+      "id": "112",
+      "direction": "N",
+      "role": "hit",
+      "correction_candidate_id": "qc122",
+      "previous_source_sha256": "d4fc72de359a0a578802328377f0ccda82b312b0e4e43ac544b43cfed52c6251",
+      "representation": "six_new",
+      "original_plan_index": 125,
+      "original_batch": 293,
+      "original_representation": "six_new",
+      "state": "WAIT",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-N-hit-correction-v02.json",
+      "corrected_idle_dependency": true,
+      "wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE"
+    }
+  ],
+  "rules": {
+    "request_actual_stem_is_claim_receipt_delivery_stem": true,
+    "all_prior_versions_checked_before_claim": true,
+    "healthy_guards_only_no_middle_pose_inference": true,
+    "maximum_total_image_calls_per_candidate": 1
+  },
+  "guard_only_candidate_ids": [
+    "qc063",
+    "qc098"
+  ],
+  "historical_allowed106_unchanged": true,
+  "guard_only_middle_four_new_image_calls": 0
+}

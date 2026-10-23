@@ -1,0 +1,207 @@
+{
+  "schema": "legendary-seven-original-quota-noPNG-recovery-plan-v08",
+  "allowed_candidate_ids": [
+    "qc021",
+    "qc023",
+    "qc024",
+    "qc025",
+    "qc026",
+    "qc031",
+    "qc032"
+  ],
+  "checkpoint_sha256": "ebac8b962830b51860ac1441c5f0378e9dc74035323d47560b900bb6c8c853ca",
+  "original_plan_sha256": "36e60c9ff6e78da08e593d837188d92f7678e006a385635571965aafca68cea0",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "quota_not_before_utc": "2026-10-23T20:55:39+00:00",
+  "successful_reset_probe": {
+    "candidate": "qc033",
+    "receipt": {
+      "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-SW-idle-correction-v02.json",
+      "sha256": "43c97739445fa73ff7fccfcad224af164a78c44b7037f87a322da7bd8816fe8a"
+    },
+    "request": {
+      "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-SW-idle-correction-v02.json",
+      "sha256": "a8df3bcec2422d92fcab916b38d67a0499fb4fcccf6fd9d4be8cddd57f7e3583"
+    },
+    "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/SW-idle-source-v02.png",
+    "source_sha256": "6af3c040e1c0c279d1681f2f39fb744fcd0e28359e9fdea72ad90e67293f4686",
+    "availability_only_not_art_approval": true
+  },
+  "jobs": [
+    {
+      "id": "274",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc021",
+      "previous_source_sha256": "d8607448cf8ce0add83b37540643f7516eee10ca767fad110801daaf3a195c90",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_274-SW-idle-quota-recovery-v08.json",
+      "request_sha256": "98088f3c38ae9a9fde87277bb583f4256aa0b538c0fb52f6077ffc66cc23d8b3",
+      "request_stem": "transform_274-SW-idle-quota-recovery-v08",
+      "batch": 311,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_274-SW-idle-correction-v02.json",
+        "sha256": "9a9a65dde187e4c02ddd00c35863dc2ef5bf939eb5476fef7050fab6f5ed1f0b"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_274-SW-idle-correction-v02.json",
+        "sha256": "d245eb9d20afadd49d5bfa412a313f7fbda4dacd80efd3d8aca9944048fae752"
+      }
+    },
+    {
+      "id": "273",
+      "direction": "E",
+      "role": "idle",
+      "correction_candidate_id": "qc023",
+      "previous_source_sha256": "8c0f68a685986a05c1d0ec6f1382630d6c05e8533ca0614d9fc36eb60f58e4db",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-E-idle-quota-recovery-v08.json",
+      "request_sha256": "2dd8f2833b381e1b513e14d28c40a1529978bea6b82bed9e74d9c8fc9ac7cf5a",
+      "request_stem": "transform_273-E-idle-quota-recovery-v08",
+      "batch": 311,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-E-idle-correction-v02.json",
+        "sha256": "28d417c356a916993e6907ca98ffd616c82dd2c8a285b165f42a1eca4d361af4"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_273-E-idle-correction-v02.json",
+        "sha256": "5df923ccc7c85af46a030d98a09d8f4c81dd0007e75dfd62ad9586c71ddc9320"
+      }
+    },
+    {
+      "id": "273",
+      "direction": "SE",
+      "role": "idle",
+      "correction_candidate_id": "qc024",
+      "previous_source_sha256": "36e88324174b81c00653e99eecaccc061dd8888febb38c065be5a970cb8da199",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-SE-idle-quota-recovery-v08.json",
+      "request_sha256": "bfea4450ced6c2a87829ccccf502cb0e01ee5f358ba5919f532ab9317c96992d",
+      "request_stem": "transform_273-SE-idle-quota-recovery-v08",
+      "batch": 311,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-SE-idle-correction-v02.json",
+        "sha256": "5d99711ffcc1565fd80cf57c9d9cf1aac17622a448a8d163e17eb09311ade35a"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_273-SE-idle-correction-v02.json",
+        "sha256": "1fa3cd782aa250fa6d41f79f1aeb4a26091b34897ecaa09ded79fa340061685a"
+      }
+    },
+    {
+      "id": "245",
+      "direction": "NW",
+      "role": "idle",
+      "correction_candidate_id": "qc025",
+      "previous_source_sha256": "9d1fad5ceab2178b80fb03f9fb51697ea00f642d185614c059c74a143b8d4bb7",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NW-idle-quota-recovery-v08.json",
+      "request_sha256": "ccebc2b7396851e0e7348fcc595d33c1e1eb76fc26b6a1ea9797e4187a999027",
+      "request_stem": "transform_245-NW-idle-quota-recovery-v08",
+      "batch": 311,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NW-idle-correction-v02.json",
+        "sha256": "9775d7eaa0cf4b9f8d8a6a0d07d6bf73e680e7667be6f6ba0b1da391a6ea68c0"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_245-NW-idle-correction-v02.json",
+        "sha256": "6eae33cfd71070c82eb643154d3c667a6582546d87c1cba6de04f57157cc2e99"
+      }
+    },
+    {
+      "id": "245",
+      "direction": "NE",
+      "role": "idle",
+      "correction_candidate_id": "qc026",
+      "previous_source_sha256": "d973c7549fdeab7ba70717a10bd876bd90771c7bca0a7b285b92f74677bba78f",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NE-idle-quota-recovery-v08.json",
+      "request_sha256": "349fb70cce958391ad7f2b960ed627cf55674321ae338c7edf02134548fb1c29",
+      "request_stem": "transform_245-NE-idle-quota-recovery-v08",
+      "batch": 312,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-NE-idle-correction-v02.json",
+        "sha256": "885c65b7fe0a5fc38808c95612ecd53fb37210bcfd0ab32a23e8f0ca6bb5574f"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_245-NE-idle-correction-v02.json",
+        "sha256": "a63863710aa414db25d72e2ebe87e8b5b123a3309543cbb47842de7771b39d36"
+      }
+    },
+    {
+      "id": "227",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc031",
+      "previous_source_sha256": "3679f31e8d5958ab418c311994d562e2b4928e7dceb0c9a32be6796732bfc202",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_227-SW-idle-quota-recovery-v08.json",
+      "request_sha256": "59eaeedcccc5b80413471acfeb6f02219d8808ded65d62f451af0d0d003d1310",
+      "request_stem": "transform_227-SW-idle-quota-recovery-v08",
+      "batch": 312,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_227-SW-idle-correction-v02.json",
+        "sha256": "603b5a1392b12a1c477d58181141657b9d52a2f4949d437b2e38345ed4c17e92"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_227-SW-idle-correction-v02.json",
+        "sha256": "d42999e47391d3caa3b40f29e23a2d00c501b8c0abdd61fd2f35010bf0accc0f"
+      }
+    },
+    {
+      "id": "226",
+      "direction": "SW",
+      "role": "idle",
+      "correction_candidate_id": "qc032",
+      "previous_source_sha256": "24b437928241826249c62a720a76a34c3fbfc6dbccb338167a671a1313ae0cc1",
+      "representation": "six_new",
+      "state": "READY",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_226-SW-idle-quota-recovery-v08.json",
+      "request_sha256": "7aa533d4524e56cb41a7f5f15d0a6412c2eef0efdd9af37205b10f62805df8bf",
+      "request_stem": "transform_226-SW-idle-quota-recovery-v08",
+      "batch": 312,
+      "newly_authored_poses_requested": 6,
+      "reused_poses": 0,
+      "original_request": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_226-SW-idle-correction-v02.json",
+        "sha256": "0ef5ec20227636576d084e0587bf659dde9b3deca09d4f1242f39a3d4cd584e1"
+      },
+      "original_receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_226-SW-idle-correction-v02.json",
+        "sha256": "d342f89311852df47dc0a8c0bcedb5491f7f2d544c3e74c7b2b969927a0e35d1"
+      }
+    }
+  ],
+  "counts": {
+    "READY": 7
+  },
+  "first_resume_batch": 311,
+  "next_unused_batch": 313,
+  "generation_calls_authorized": false,
+  "generation_calls_started": 0,
+  "maximum_calls_per_recovery_request": 1,
+  "maximum_total_client_attempts_per_source": 2,
+  "maximum_successful_generated_PNGs_per_source": 1,
+  "old20_checkpoint_unchanged": true,
+  "camera_role_HOLD_retries": 0,
+  "moderation_source_retries": 0,
+  "paid_api_calls": 0
+}
