@@ -10243,17 +10243,17 @@
     "monster:알비노 데몬": {
       "kind": "boss",
       "quality_tier": "mythic_transform",
-      "frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/SpriteFrames.tres",
-      "frames_sha256": "b30bb0b5e953159862ed83f29c8869020fa17aea138979d74ee222bffd3c700a",
-      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
-      "native_profile_sha256": "1869be110775546c8fe79c622b3bcdf49873fe4083c2c5a3da43ea0156987845",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r004/SpriteFrames.tres",
+      "frames_sha256": "b44c230079ac9343ed0ed52a148c75ef151b8965cf6b7575de5b464ed3f4822f",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r004/NativeMotionProfile.tres",
+      "native_profile_sha256": "322f66d65f1fdc4639ebffdedc3cdb7d1cf55b96fed0ecef350a7871fc686249",
       "production_connected": false,
       "detailed_completed": false,
       "newly_approved": false,
       "native_track_count": 33,
       "native_pose_count": 107,
       "missing_required_tracks": [],
-      "quality_review": "TARGETED E RUN batch QA PASS: side camera and opposite support repaired. Confirmed unchanged SE RUN phase0/3 same-support repetition and NW overhead contact pose remain specific motion followups. Unreviewed details are not additional batch approval gates; see review.json.",
+      "quality_review": "NW contact reach and RIGHT weapon ownership repaired with one new dedicated pose; other106 poses and all33 timings retained. SE RUN opposite support is being re-authored separately.",
       "original_presentation": {
         "visual": {
           "atlas": 1,
@@ -12023,22 +12023,38 @@
                 "row": 1,
                 "direction": "NW",
                 "region": [
-                  959,
-                  7,
-                  448,
-                  535
+                  32,
+                  135,
+                  969,
+                  1159
                 ],
                 "margin": [
-                  383,
-                  189,
-                  704,
-                  617
+                  547,
+                  435,
+                  1431,
+                  1241
                 ],
                 "source_anchor": [
-                  1152,
-                  538
+                  685,
+                  1200
                 ],
-                "rgba_sha256": "b521b13a444a4ddd966de5c75b18d34807c1e0efb2401c36da94cf56a2bc1736"
+                "rgba_sha256": "f9a7892599f34631f227e0787ff0babedde466b5cb6660d99a85cb6decf8f330",
+                "canvas_size": [
+                  2400,
+                  2400
+                ],
+                "foot": [
+                  1200,
+                  1500
+                ],
+                "physical_source_row": 0,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r004/NW-contact-v02.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/demon-targeted/raw/NW-contact-v02.png",
+                "source_sha256": "cc29d1d900272745c3586fca35450ca2e2bdcd5ace4fec1fd448d2cbbaa8254a",
+                "source_canvas_size": [
+                  2400,
+                  2400
+                ]
               },
               {
                 "row": 2,
@@ -12072,7 +12088,9 @@
               576,
               720
             ]
-          }
+          },
+          "multi_source": true,
+          "source_visual_first_pass": "PASS targeted NW contact: far RIGHT shoulder/arm owns extended axe; near LEFT claw hangs empty. Original contact hand swap corrected."
         },
         {
           "direction": "SE",
@@ -13502,11 +13520,11 @@
       ],
       "new_source_poses": 6,
       "reused_source_poses": 101,
+      "distinct_source_pose_count": 107,
       "replaces_previous_staging_selection": true,
       "source_candidate": {
-        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/candidate.json",
-        "bytes": 98920,
-        "sha256": "52c90583a5d40ae87040a3d82b25fd7fe27431286fe1bf6ca3272b94f96d8e0b"
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/demon-targeted/r004/candidate.json",
+        "sha256": "979fcbc341436db7c0ff4cc5d1905444606d426d76768159082cd9849f33c365"
       }
     },
     "monster:커츠": {
@@ -18409,9 +18427,8 @@
       "sha256": "77c9d41d0b2e881e68f404f1356b3cb287c4a8f8bc15c78b6d26ee3e55ad0f88"
     },
     {
-      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/candidate.json",
-      "bytes": 98920,
-      "sha256": "52c90583a5d40ae87040a3d82b25fd7fe27431286fe1bf6ca3272b94f96d8e0b"
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/demon-targeted/r004/candidate.json",
+      "sha256": "979fcbc341436db7c0ff4cc5d1905444606d426d76768159082cd9849f33c365"
     },
     {
       "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-motion/r013/candidate.json",
