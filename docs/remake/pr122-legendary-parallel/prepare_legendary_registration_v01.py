@@ -102,6 +102,10 @@ def main():
                 source_sha = I.sha(I.safe_path(args.root, frame['source']).read_bytes())
             assert source_sha in scales, 'One constant reviewed scale is required per exact raw source SHA'
             factor = scales[source_sha]
+            if 'review_scale' in evidence:
+                assert math.isclose(factor, evidence['review_scale'], rel_tol=0, abs_tol=1e-12)
+            if 'scale' in evidence:
+                assert all(math.isclose(factor, value, rel_tol=0, abs_tol=1e-12) for value in evidence['scale'])
             if original_sha in NATIVE_SHAS:
                 assert frame['region'] == base_frame['region'] and frame['margin'] == base_frame['margin']
                 assert I.sha(I.safe_path(args.root, frame['source']).read_bytes()) == original_sha
@@ -115,7 +119,7 @@ def main():
             registration.append({'index': index, 'scale': [factor, factor], 'anchor_in_texture': anchor,
                                  'target_anchor': target, 'scale_basis': 'CONSTANT_PER_REVIEWED_SOURCE_SHA',
                                  'raw_source_sha256': source_sha, 'evidence_type': evidence['evidence_type'],
-                                 'anchor_kind': evidence.get('anchor_kind', 'support-foot'),
+                                 'anchor_kind': evidence.get('anchor_kind', evidence.get('semantic_anchor_kind', 'support-foot')),
                                  'baseline_anchor': baseline_anchor,
                                  'original_virtual_canvas': [base_frame['region'][2]+base_frame['margin'][2], base_frame['region'][3]+base_frame['margin'][3]] if baseline_anchor is not None else [frame['region'][2]+frame['margin'][2], frame['region'][3]+frame['margin'][3]]})
         relative = I.ASSETS / ('transform_' + slot[0].split(':')[1]) / 'corrections' / args.version
