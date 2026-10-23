@@ -1,0 +1,118 @@
+{
+  "PNG_mutations": 0,
+  "comparison_policy": "Exact GPU image bytes and AtlasTexture regions/margins; resource_path may be cleared by take_over_path cache replacement",
+  "engine": "4.7.2-stable (official)",
+  "failures": 0,
+  "final_approved": 0,
+  "guard_parent_checks": [
+    {
+      "compared_parent_guards": 2,
+      "errors": [],
+      "slot": [
+        "transform:175",
+        "NW",
+        "attack"
+      ],
+      "status": "PASS"
+    },
+    {
+      "compared_parent_guards": 2,
+      "errors": [],
+      "slot": [
+        "transform:177",
+        "N",
+        "attack"
+      ],
+      "status": "PASS"
+    },
+    {
+      "compared_parent_guards": 2,
+      "errors": [],
+      "slot": [
+        "transform:177",
+        "NW",
+        "attack"
+      ],
+      "status": "PASS"
+    },
+    {
+      "compared_parent_guards": 2,
+      "errors": [],
+      "slot": [
+        "transform:1",
+        "NW",
+        "hit"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "guards_only": false,
+  "healthy_action_replays": 0,
+  "records": [
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/quality-isolation-v10-001/NW-attack-record.json",
+      "registration": "RASTER_COORDINATE_PRESERVATION",
+      "semantic_scale_registration": "HOLD",
+      "slot": [
+        "transform:175",
+        "NW",
+        "attack"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    },
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/corrections/quality-isolation-v10-001/N-attack-record.json",
+      "registration": "RASTER_COORDINATE_PRESERVATION",
+      "semantic_scale_registration": "HOLD",
+      "slot": [
+        "transform:177",
+        "N",
+        "attack"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    },
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/corrections/quality-isolation-v10-001/NW-attack-record.json",
+      "registration": "RASTER_COORDINATE_PRESERVATION",
+      "semantic_scale_registration": "HOLD",
+      "slot": [
+        "transform:177",
+        "NW",
+        "attack"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    },
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/guard-only-v09/NW-hit-record.json",
+      "registration": "RASTER_COORDINATE_PRESERVATION",
+      "semantic_scale_registration": "HOLD",
+      "slot": [
+        "transform:1",
+        "NW",
+        "hit"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    }
+  ],
+  "scope": "Only revised guard-action playback and exact two-parent-frame transforms"
+}

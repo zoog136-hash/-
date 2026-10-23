@@ -1,0 +1,50 @@
+{
+  "qc069": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Four new middle poses retain back-right/up-right NE camera and matching blue-white crest, gold/black armor, shield and blade. Windup, overhead motion, forward extension and return form a distinct attack; exact inherited guards are unchanged.",
+    "remaining_issues": []
+  },
+  "qc075": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Four new middle poses retain back-left/up-left NW camera and matching purple/white archer armor and bow. Full left/up-left draw, arrow release and recovery preserve the original weapon action; inherited guards stay unchanged.",
+    "remaining_issues": []
+  },
+  "qc078": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Four new middle poses retain archer identity, but the draw/release aims predominantly screen-right/up-right and the head/upper body turns that way, rather than the straight rear/up N parent guard camera. The N attack trajectory/camera agreement remains HOLD.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "detail": "Four new middle poses retain archer identity, but the draw/release aims predominantly screen-right/up-right and the head/upper body turns that way, rather than the straight rear/up N parent guard camera. The N attack trajectory/camera agreement remains HOLD.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc086": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Four new middle poses retain back-left/up-left NW camera and matching black/gold armor, purple mane and blade. Windup, overhead swing, extension and recovery are distinct attack articulations; existing guards are preserved.",
+    "remaining_issues": []
+  },
+  "qc053": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_HIT_STATIC_SEQUENCE",
+    "detail": "Four new middle poses retain back-left/up-left NW camera, matching black/red armor, white mane and red blade. Defensive recoil, torso lean, low recovery and return are distinct from weapon attack.",
+    "remaining_issues": []
+  }
+}

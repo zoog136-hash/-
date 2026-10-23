@@ -1,0 +1,49 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v04",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc078",
+  "actor": "177",
+  "direction": "N",
+  "role": "attack",
+  "slot": [
+    "transform:177",
+    "N",
+    "attack"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/N-attack-source-v02.png",
+  "source_sha256": "7ba4b47e680378938f581d74dd95ece60b38a4c0e373be1c223ebbb0f846a6df",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/N-attack-record-v02.json",
+  "record_sha256": "5b2d044fe3d662ad867cd6b405ec4d3c33ea12bede1a9afb4b9c6199973e28df",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/N-attack-SpriteFrames.tres",
+  "SpriteFrames_sha256": "e775fd9cad5b4193d17247a6983cd6cf5d000f8668dda58b42e6db56c81fa50e",
+  "remote_commit": "f937349d18d817106d0e492594eb2d9815466a6b",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v04/source-technical/qc078-review-v01.json",
+    "sha256": "5180b6b68c1da311f9166ecbf673cc3de79a3a65f60253674cf7694dcdd894d8"
+  },
+  "visual_board": "quality-v04/visual-boards/qc078-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+  "detail": "Four new middle poses retain archer identity, but the draw/release aims predominantly screen-right/up-right and the head/upper body turns that way, rather than the straight rear/up N parent guard camera. The N attack trajectory/camera agreement remains HOLD.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "detail": "Four new middle poses retain archer identity, but the draw/release aims predominantly screen-right/up-right and the head/upper body turns that way, rather than the straight rear/up N parent guard camera. The N attack trajectory/camera agreement remains HOLD.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ]
+}

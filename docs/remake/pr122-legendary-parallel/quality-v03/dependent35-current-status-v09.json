@@ -1,0 +1,1166 @@
+{
+  "schema": "legendary-original-wait35-exact-current-status-v09",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "original_wait35_plan": {
+    "path": "docs/remake/pr122-legendary-parallel/quality-v02/correction-plan-v06.json",
+    "sha256": "044f43ada55205df75cc594f68a4c4901c4703121bef81c291cff538ad41692a"
+  },
+  "current_plan": {
+    "path": "docs/remake/pr122-legendary-parallel/quality-v02/correction-plan-v09.json",
+    "sha256": "32e7779799e977d56047e4a7fc27901ae5fa5444983418194e3129358e1f74c9"
+  },
+  "active_manifest": "res://docs/remake/pr122-legendary-parallel/quality-v03/revision-library-ownership-through-batch008-v07.json",
+  "active_manifest_sha256": "eae2b5c2ff0e16cf315f4bebec83e243a6e2c1a97b63ad54587b3a17cb343755",
+  "counts": {
+    "OTHER19_WAIT": 19,
+    "NEW10_COMPLETED_ONCE": 10,
+    "NEW4_PREPARED_NOT_CALLED": 4,
+    "GUARD_ONLY_NO_NEW_IMAGE": 2
+  },
+  "other19_wait_causes": {
+    "WAIT_QUOTA_RECOVERY_PARENT_SUCCESS_TARGETED_REVIEW_AND_REMOTE": 2,
+    "PARENT_CAMERA_HOLD_NO_RETRY": 7,
+    "PARENT_IDENTITY_HOLD_NO_RETRY": 1,
+    "WAIT_EXACT_REMOTE_LOSSLESS_PARENT_REVIEW_PROOF": 4,
+    "PARENT_IDLE_ROLE_HOLD_NO_RETRY": 5
+  },
+  "jobs": [
+    {
+      "correction_candidate_id": "qc027",
+      "id": "245",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:245",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc025",
+      "parent_slot": [
+        "transform:245",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY",
+      "wait_cause": "WAIT_QUOTA_RECOVERY_PARENT_SUCCESS_TARGETED_REVIEW_AND_REMOTE",
+      "recovery_plan": "quality-v02/quota-recovery-plan-v08.json",
+      "original429_history_preserved": true
+    },
+    {
+      "correction_candidate_id": "qc028",
+      "id": "245",
+      "direction": "NE",
+      "role": "attack",
+      "slot": [
+        "transform:245",
+        "NE",
+        "attack"
+      ],
+      "parent_candidate": "qc026",
+      "parent_slot": [
+        "transform:245",
+        "NE",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY",
+      "wait_cause": "WAIT_QUOTA_RECOVERY_PARENT_SUCCESS_TARGETED_REVIEW_AND_REMOTE",
+      "recovery_plan": "quality-v02/quota-recovery-plan-v08.json",
+      "original429_history_preserved": true
+    },
+    {
+      "correction_candidate_id": "qc036",
+      "id": "225",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:225",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc034",
+      "parent_slot": [
+        "transform:225",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc034-review-v01.json",
+        "sha256": "46f4c5f52ee3f49ee6e1b50f3bd7b9db0791f1b7ce55f40672cfbcb89b4f6bac"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Rear-left camera is not established consistently: the bowed head exposes hair while frontal armor/shield surfaces persist. The prominent original horned gold helmet/crest is absent and the head appears bare blond.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        },
+        {
+          "cause": "identity_weapon_action",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Rear-left camera is not established consistently: the bowed head exposes hair while frontal armor/shield surfaces persist. The prominent original horned gold helmet/crest is absent and the head appears bare blond.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "HOLD",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc039",
+      "id": "225",
+      "direction": "NE",
+      "role": "attack",
+      "slot": [
+        "transform:225",
+        "NE",
+        "attack"
+      ],
+      "parent_candidate": "qc038",
+      "parent_slot": [
+        "transform:225",
+        "NE",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc038-review-v01.json",
+        "sha256": "1cd959534cc1e58be5176a0f6db181e3f58eeb052b04eeccbe9930e2c74cd3b1"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "identity_weapon_action",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Back-right NE camera is established, but the original prominent gold horned helmet/crest is omitted in favor of exposed brown hair. Preserve this identity/helmet continuity HOLD.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "HOLD",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_IDENTITY_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc043",
+      "id": "213",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:213",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc041",
+      "parent_slot": [
+        "transform:213",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc041-review-v01.json",
+        "sha256": "b45c893b01c8fcc52fe13eed6d913226ce563687dc462e0ee248c5e9f9c76bed"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Readable frontal mask, breastplate and front waist ornament remain exposed in the requested rear-left NW slot; the head/torso do not establish a back-left camera.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc048",
+      "id": "193",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:193",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc046",
+      "parent_slot": [
+        "transform:193",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc046-review-v01.json",
+        "sha256": "bf5014a3658e8b526f7e2b145d323c8d514ad9ba59f0d7a248ab273714c61ad6"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "The back is visible, but head, torso profile and toes point up-right/right; this is NE rather than the requested up-left NW.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc050",
+      "id": "193",
+      "direction": "SW",
+      "role": "attack",
+      "slot": [
+        "transform:193",
+        "SW",
+        "attack"
+      ],
+      "parent_candidate": "qc045",
+      "parent_slot": [
+        "transform:193",
+        "SW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc045-review-v01.json",
+        "sha256": "c10f4e74e1beadf2666a18041a8db6c4a407a2dde19b57445f14ea6dd11b841b"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Helmet/front face and torso still orient toward screen-right/front in all six poses, rather than down-left SW.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc069",
+      "id": "178",
+      "direction": "NE",
+      "role": "attack",
+      "slot": [
+        "transform:178",
+        "NE",
+        "attack"
+      ],
+      "parent_candidate": "qc067",
+      "parent_slot": [
+        "transform:178",
+        "NE",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NE-attack-correction-v05.json",
+        "sha256": "4f9713d2f3e060b5e3750cd3b5149de6e2e0dcc7c26c47fbe1c5048a78a9958f"
+      },
+      "batch": 309,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc072",
+      "id": "177",
+      "direction": "SW",
+      "role": "attack",
+      "slot": [
+        "transform:177",
+        "SW",
+        "attack"
+      ],
+      "parent_candidate": "qc071",
+      "parent_slot": [
+        "transform:177",
+        "SW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc071-review-v01.json",
+        "sha256": "19287995429d8829caff916c41c174d2bc6a2b0aebfb99753dc0b210751a9689"
+      },
+      "parent_remaining_issues": [],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "WAIT_EXACT_REMOTE_LOSSLESS_PARENT_REVIEW_PROOF"
+    },
+    {
+      "correction_candidate_id": "qc075",
+      "id": "177",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:177",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc073",
+      "parent_slot": [
+        "transform:177",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-NW-attack-correction-v05.json",
+        "sha256": "9360de4e672f3e1e793f9872f9ed57774bb6e1eb5afe2845a327c435cb037f71"
+      },
+      "batch": 309,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc078",
+      "id": "177",
+      "direction": "N",
+      "role": "attack",
+      "slot": [
+        "transform:177",
+        "N",
+        "attack"
+      ],
+      "parent_candidate": "qc077",
+      "parent_slot": [
+        "transform:177",
+        "N",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-N-attack-correction-v05.json",
+        "sha256": "b2b93b3b58ca4b330fd62a2cf89fb92422fc105a910a45e46eb7d7897ab833cd"
+      },
+      "batch": 309,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc086",
+      "id": "175",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:175",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc084",
+      "parent_slot": [
+        "transform:175",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-NW-attack-correction-v05.json",
+        "sha256": "626edf80942ea87597e50270de117d4ae643afcd34bd5faa48b77f08d4172bbf"
+      },
+      "batch": 309,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc102",
+      "id": "114",
+      "direction": "NE",
+      "role": "attack",
+      "slot": [
+        "transform:114",
+        "NE",
+        "attack"
+      ],
+      "parent_candidate": "qc101",
+      "parent_slot": [
+        "transform:114",
+        "NE",
+        "idle"
+      ],
+      "category": "NEW4_PREPARED_NOT_CALLED",
+      "state": "READY_EXACT_PARENT_EVIDENCE",
+      "batch": 313,
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NE-attack-correction-v06.json",
+      "request_sha256": "6288d6621eb96c5b432c72e919aac5f58359dd2d619e2120f8a7950a64d013bb"
+    },
+    {
+      "correction_candidate_id": "qc114",
+      "id": "113",
+      "direction": "NW",
+      "role": "attack",
+      "slot": [
+        "transform:113",
+        "NW",
+        "attack"
+      ],
+      "parent_candidate": "qc105",
+      "parent_slot": [
+        "transform:113",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc105-review-v01.json",
+        "sha256": "afb51cfe35164a0819fe2f26f81068d429a17f5a6c95e97c35b2c63122b8719b"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "idle_role",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Rear-left camera and costume match, but the character keeps the sword arm raised above/behind the head in a deep attack-like wind-up rather than a restrained living guard. Do not treat endpoints as a verified idle guard.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "HOLD",
+      "wait_cause": "PARENT_IDLE_ROLE_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc115",
+      "id": "113",
+      "direction": "N",
+      "role": "attack",
+      "slot": [
+        "transform:113",
+        "N",
+        "attack"
+      ],
+      "parent_candidate": "qc106",
+      "parent_slot": [
+        "transform:113",
+        "N",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc106-review-v01.json",
+        "sha256": "fdadf574c989f64d9866d54c82b785230a296278d9bfb77b9263435e2c500f59"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "idle_role",
+          "status": "HOLD",
+          "frames": [
+            3
+          ],
+          "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "HOLD",
+      "wait_cause": "PARENT_IDLE_ROLE_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc012",
+      "id": "338",
+      "direction": "N",
+      "role": "hit",
+      "slot": [
+        "transform:338",
+        "N",
+        "hit"
+      ],
+      "parent_candidate": "qc010",
+      "parent_slot": [
+        "transform:338",
+        "N",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_PREVIOUSLY_ATTEMPTED_OR_HOLD_PARENT_NO_RETRY",
+      "wait_cause": "PARENT_IDLE_ROLE_HOLD_NO_RETRY",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/changed-source-visual-review-v01.json",
+        "sha256": "5295b853fe163bee4fd8d3f1d3e35b66ae37e4a49c993a9c940ca9af74bfc9ca"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "articulation",
+          "status": "HOLD",
+          "frames": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "detail": "The new N IDLE raises both orbs from guard to above the head and adds a central charged flash, resembling a cast windup rather than restrained idle breathing. Camera is rear-facing, but idle action separation remains unresolved.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ]
+    },
+    {
+      "correction_candidate_id": "qc037",
+      "id": "225",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:225",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc034",
+      "parent_slot": [
+        "transform:225",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc034-review-v01.json",
+        "sha256": "46f4c5f52ee3f49ee6e1b50f3bd7b9db0791f1b7ce55f40672cfbcb89b4f6bac"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Rear-left camera is not established consistently: the bowed head exposes hair while frontal armor/shield surfaces persist. The prominent original horned gold helmet/crest is absent and the head appears bare blond.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        },
+        {
+          "cause": "identity_weapon_action",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Rear-left camera is not established consistently: the bowed head exposes hair while frontal armor/shield surfaces persist. The prominent original horned gold helmet/crest is absent and the head appears bare blond.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "HOLD",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc044",
+      "id": "213",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:213",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc041",
+      "parent_slot": [
+        "transform:213",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc041-review-v01.json",
+        "sha256": "b45c893b01c8fcc52fe13eed6d913226ce563687dc462e0ee248c5e9f9c76bed"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Readable frontal mask, breastplate and front waist ornament remain exposed in the requested rear-left NW slot; the head/torso do not establish a back-left camera.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc049",
+      "id": "193",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:193",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc046",
+      "parent_slot": [
+        "transform:193",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc046-review-v01.json",
+        "sha256": "bf5014a3658e8b526f7e2b145d323c8d514ad9ba59f0d7a248ab273714c61ad6"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "The back is visible, but head, torso profile and toes point up-right/right; this is NE rather than the requested up-left NW.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "HOLD",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "PARENT_CAMERA_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc053",
+      "id": "192",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:192",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc052",
+      "parent_slot": [
+        "transform:192",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_192-NW-hit-correction-v05.json",
+        "sha256": "c26619f5660ea881059ca0a14254e6babee4168003a849483756e4fa5097fbf9"
+      },
+      "batch": 309,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc057",
+      "id": "191",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:191",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc056",
+      "parent_slot": [
+        "transform:191",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc056-review-v01.json",
+        "sha256": "9fdd67a62b1a5334392139be6e9f4c0b00d44d5b7c280212ba73554ccf198221"
+      },
+      "parent_remaining_issues": [],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "WAIT_EXACT_REMOTE_LOSSLESS_PARENT_REVIEW_PROOF"
+    },
+    {
+      "correction_candidate_id": "qc060",
+      "id": "190",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:190",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc059",
+      "parent_slot": [
+        "transform:190",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_190-NW-hit-correction-v05.json",
+        "sha256": "5a0780d385c6d6891b94442e1264c46bcee27d872a2628c2d4e8a58bc7311f98"
+      },
+      "batch": 310,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc063",
+      "id": "178",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:178",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc062",
+      "parent_slot": [
+        "transform:178",
+        "NW",
+        "idle"
+      ],
+      "category": "GUARD_ONLY_NO_NEW_IMAGE",
+      "state": "GUARD_ONLY_REBOUND_REMOTE_MINCHECK_PASS",
+      "generation_calls_allowed": 0,
+      "active_record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/guard-only-v07/NW-hit-record.json",
+      "active_record_sha256": "dabda134cd0d93599ea2db25ac9180c01d86fee165838bdfdd25f62b05f9f50d",
+      "proof_selection": "quality-v03/guard-only-ready-qc063-v07.json",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-ownership-v07-batch005-delivery.json",
+        "sha256": "3d86d8eeb45fc7a4eabc8c345ce1da0fbe850c0cb919215e1967fa51d5042698"
+      },
+      "remote_sha": "3b93bb1f2ce9927302f65570196ba70659daeb7c"
+    },
+    {
+      "correction_candidate_id": "qc066",
+      "id": "178",
+      "direction": "N",
+      "role": "hit",
+      "slot": [
+        "transform:178",
+        "N",
+        "hit"
+      ],
+      "parent_candidate": "qc064",
+      "parent_slot": [
+        "transform:178",
+        "N",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc064-review-v01.json",
+        "sha256": "aea8e9c74dc70c0a9636ec4a77bf4228304c9136712e6c32dd9f98918b2673a6"
+      },
+      "parent_remaining_issues": [],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "WAIT_EXACT_REMOTE_LOSSLESS_PARENT_REVIEW_PROOF"
+    },
+    {
+      "correction_candidate_id": "qc070",
+      "id": "178",
+      "direction": "NE",
+      "role": "hit",
+      "slot": [
+        "transform:178",
+        "NE",
+        "hit"
+      ],
+      "parent_candidate": "qc067",
+      "parent_slot": [
+        "transform:178",
+        "NE",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NE-hit-correction-v05.json",
+        "sha256": "f59d23a694ad4df2f4870080717056075c074569325284866056137ce3016cd1"
+      },
+      "batch": 310,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc076",
+      "id": "177",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:177",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc073",
+      "parent_slot": [
+        "transform:177",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-NW-hit-correction-v05.json",
+        "sha256": "7cc22530f50c498303064781585cd1913e949231e5d8fa4430c0e10369e3f3db"
+      },
+      "batch": 310,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc079",
+      "id": "177",
+      "direction": "N",
+      "role": "hit",
+      "slot": [
+        "transform:177",
+        "N",
+        "hit"
+      ],
+      "parent_candidate": "qc077",
+      "parent_slot": [
+        "transform:177",
+        "N",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-N-hit-correction-v05.json",
+        "sha256": "bfab9eb42f0cbcd61f5534c7a45dd7fe814942215a577c5e123466b029423574"
+      },
+      "batch": 310,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc087",
+      "id": "175",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:175",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc084",
+      "parent_slot": [
+        "transform:175",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW10_COMPLETED_ONCE",
+      "state": "PNG_READY_REMOTE_SAVED",
+      "receipt": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-NW-hit-correction-v05.json",
+        "sha256": "f6157eff8bd6e1d31f9db34577a70686c0ca4e45c3c82a4357ae24ea0f24ca0c"
+      },
+      "batch": 310,
+      "generation_attempts": 1
+    },
+    {
+      "correction_candidate_id": "qc090",
+      "id": "166",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:166",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc089",
+      "parent_slot": [
+        "transform:166",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc089-review-v01.json",
+        "sha256": "979f35a0edd7f286d90339fbffb52633a7aa4eb28f75d07727051b16d1676504"
+      },
+      "parent_remaining_issues": [],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "LIVING_IDLE_STATIC",
+      "wait_cause": "WAIT_EXACT_REMOTE_LOSSLESS_PARENT_REVIEW_PROOF"
+    },
+    {
+      "correction_candidate_id": "qc098",
+      "id": "122",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:122",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc097",
+      "parent_slot": [
+        "transform:122",
+        "NW",
+        "idle"
+      ],
+      "category": "GUARD_ONLY_NO_NEW_IMAGE",
+      "state": "WAIT_PARENT_CAMERA_HOLD",
+      "generation_calls_allowed": 0
+    },
+    {
+      "correction_candidate_id": "qc103",
+      "id": "114",
+      "direction": "NE",
+      "role": "hit",
+      "slot": [
+        "transform:114",
+        "NE",
+        "hit"
+      ],
+      "parent_candidate": "qc101",
+      "parent_slot": [
+        "transform:114",
+        "NE",
+        "idle"
+      ],
+      "category": "NEW4_PREPARED_NOT_CALLED",
+      "state": "READY_EXACT_PARENT_EVIDENCE",
+      "batch": 313,
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NE-hit-correction-v06.json",
+      "request_sha256": "626ca81d3c09c41be18293211fb41cf2f38d08569ce6d983b0b87bf0a670550e"
+    },
+    {
+      "correction_candidate_id": "qc108",
+      "id": "113",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:113",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc105",
+      "parent_slot": [
+        "transform:113",
+        "NW",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc105-review-v01.json",
+        "sha256": "afb51cfe35164a0819fe2f26f81068d429a17f5a6c95e97c35b2c63122b8719b"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "idle_role",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Rear-left camera and costume match, but the character keeps the sword arm raised above/behind the head in a deep attack-like wind-up rather than a restrained living guard. Do not treat endpoints as a verified idle guard.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "HOLD",
+      "wait_cause": "PARENT_IDLE_ROLE_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc110",
+      "id": "113",
+      "direction": "N",
+      "role": "hit",
+      "slot": [
+        "transform:113",
+        "N",
+        "hit"
+      ],
+      "parent_candidate": "qc106",
+      "parent_slot": [
+        "transform:113",
+        "N",
+        "idle"
+      ],
+      "category": "OTHER19_WAIT",
+      "state": "WAIT",
+      "helper_wait_reason": "WAIT_NEW_PARENT_CAMERA_AND_HEALTHY_GUARD_EVIDENCE",
+      "parent_visual_review": {
+        "path": "docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc106-review-v01.json",
+        "sha256": "fdadf574c989f64d9866d54c82b785230a296278d9bfb77b9263435e2c500f59"
+      },
+      "parent_remaining_issues": [
+        {
+          "cause": "idle_role",
+          "status": "HOLD",
+          "frames": [
+            3
+          ],
+          "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "parent_camera_result": "RESOLVED_STATIC",
+      "parent_identity_result": "PRESERVED_STATIC",
+      "parent_idle_role_result": "HOLD",
+      "wait_cause": "PARENT_IDLE_ROLE_HOLD_NO_RETRY"
+    },
+    {
+      "correction_candidate_id": "qc119",
+      "id": "112",
+      "direction": "NW",
+      "role": "hit",
+      "slot": [
+        "transform:112",
+        "NW",
+        "hit"
+      ],
+      "parent_candidate": "qc118",
+      "parent_slot": [
+        "transform:112",
+        "NW",
+        "idle"
+      ],
+      "category": "NEW4_PREPARED_NOT_CALLED",
+      "state": "READY_EXACT_PARENT_EVIDENCE",
+      "batch": 313,
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-NW-hit-correction-v06.json",
+      "request_sha256": "20fe6c2d0c537357732fb9d2d668f069f2ed2a6f9a2ff085651c6053f015a9ed"
+    },
+    {
+      "correction_candidate_id": "qc122",
+      "id": "112",
+      "direction": "N",
+      "role": "hit",
+      "slot": [
+        "transform:112",
+        "N",
+        "hit"
+      ],
+      "parent_candidate": "qc120",
+      "parent_slot": [
+        "transform:112",
+        "N",
+        "idle"
+      ],
+      "category": "NEW4_PREPARED_NOT_CALLED",
+      "state": "READY_EXACT_PARENT_EVIDENCE",
+      "batch": 313,
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-N-hit-correction-v06.json",
+      "request_sha256": "57170db2712eef3cb2135ccae53b05cb2e0737537cb9f74befa2016d9508b382"
+    }
+  ],
+  "new_source_PNG_reads": 0,
+  "new_image_calls": 0,
+  "corpus_audit_runs": 0,
+  "quality_approvals_added": 0
+}

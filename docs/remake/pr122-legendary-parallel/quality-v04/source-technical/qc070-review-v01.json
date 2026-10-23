@@ -1,0 +1,109 @@
+{
+  "sha256": "60c24e779f25c4fce379b2c46dce0fc33cbf92fcec9a8f137419964099c3fe17",
+  "grid": [
+    2,
+    2
+  ],
+  "findings": [
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 2,
+      "pixels_alpha_gt16": 15,
+      "strong_pixels": 7,
+      "bbox_in_frame": [
+        0,
+        477,
+        4,
+        483
+      ],
+      "physical_owner_rows": {
+        "0": 15
+      },
+      "source_grid": [
+        2,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    }
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NE-hit-source-v02.png",
+  "authored_slot": [
+    "transform:178",
+    "NE",
+    "hit"
+  ],
+  "dependents": [
+    {
+      "slot": [
+        "transform:178",
+        "NE",
+        "hit"
+      ],
+      "phase": 1,
+      "region": [
+        0,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:178",
+        "NE",
+        "hit"
+      ],
+      "phase": 2,
+      "region": [
+        627,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:178",
+        "NE",
+        "hit"
+      ],
+      "phase": 3,
+      "region": [
+        0,
+        627,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:178",
+        "NE",
+        "hit"
+      ],
+      "phase": 4,
+      "region": [
+        627,
+        627,
+        627,
+        627
+      ]
+    }
+  ],
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NE-hit-record-v02.json",
+  "record_sha256": "01918e003bea7a325515225cb31ef1f74fafb225ecf9927f2c40b6976932ed31",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NE-hit-SpriteFrames.tres",
+  "SpriteFrames_sha256": "08ec7e175d19d9ace684e3f04027ee69c803217accbb1e0a999d47419d7135bd",
+  "correction_candidate_id": "qc070",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/NE-hit-source-v01.png",
+  "previous_source_sha256": "77879c676c1fbcebcbcf568a44925e66de9334545ad2d9e0708227bf05d19a9f",
+  "batch": 310,
+  "remote_commit": "8300a1711edffb6d711c28809e9628946ab0e20a",
+  "remote_receipt_sha256": "f0ecb16b75eee677c2ea1dc30a633746a662b237c7c8ff1f71bed18ca32e1f97",
+  "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "review_scope": "ONLY_NEW_DEPENDENCY10_OR_QUOTA_RECOVERY7_CHANGED_SOURCE_ONCE",
+  "final_approved": 0
+}
