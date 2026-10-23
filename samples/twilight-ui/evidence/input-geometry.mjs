@@ -1,0 +1,22 @@
+import {chromium, browserOptions} from './browser.mjs';
+import {writeFile} from 'node:fs/promises';
+const browser=await chromium.launch(browserOptions);const page=await browser.newPage({viewport:{width:1280,height:720}});const result={menus:[],geometry:[],edgeCases:[],errors:[]};page.on('pageerror',e=>result.errors.push(e.message));
+const nav=async s=>page.goto('http://127.0.0.1:4173/?screen='+s);
+const ids=['transform','doll','relic','collection','character','stats','inventory','skills','forge','craft','storage','shop','settings'];
+for(const id of ids){for(const [name,xr,yr] of [['center',.5,.5],['top',.5,.025],['bottom',.5,.975],['left',.025,.5],['right',.975,.5],['top-left',.025,.025],['top-right',.975,.025],['bottom-left',.025,.975],['bottom-right',.975,.975],['icon',.5,.35],['text',.5,.75]]){await nav('menu');const b=await page.locator(`.menu-cell[data-id="${id}"]`).boundingBox();await page.mouse.click(b.x+b.width*xr,b.y+b.height*yr);result.menus.push({id,point:name,pass:await page.locator('.window-'+id).count()===1});}}
+for(const [w,h] of [[1280,720],[1920,1080],[2400,1080],[844,390],[915,412]]){
+ await page.setViewportSize({width:w,height:h});await nav('menu');await page.screenshot({path:`evidence/menu-${w}x${h}.png`});
+ const menuData=await page.evaluate(()=>[...document.querySelectorAll('.menu-cell')].map(el=>{const r=el.getBoundingClientRect(),points=[[.5,.5],[.03,.03],[.97,.97],[.5,.03],[.03,.5],[.97,.5],[.5,.97]],pass=points.every(([x,y])=>document.elementFromPoint(r.x+x*r.width,r.y+y*r.height)?.closest('button')===el);return {id:el.dataset.id,w:+r.width.toFixed(2),h:+r.height.toFixed(2),pass};}));
+ await nav('inventory');await page.screenshot({path:`evidence/inventory-${w}x${h}.png`});
+ const all=await page.evaluate(()=>[...document.querySelectorAll('button')].filter(el=>!el.disabled).map(el=>{const r=el.getBoundingClientRect();if(!r.width||!r.height)return null;const visible=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.closest('button')===el;return {action:el.dataset.action,id:el.dataset.id,w:+r.width.toFixed(2),h:+r.height.toFixed(2),visible,atLeast48:r.width>=47.9&&r.height>=47.9};}).filter(Boolean));
+ result.geometry.push({viewport:[w,h],menuData,inventoryButtons:all});
+ const box=await page.locator('.bag-actions [data-action="item-detail"]').boundingBox();await page.mouse.click(box.x+box.width-2,box.y+2);result.edgeCases.push({viewport:[w,h],action:'detail top-right',pass:await page.locator('.item-modal').count()===1});
+ await nav('stats');const b=await page.locator('[data-action="stat-plus"][data-id="STR"]').boundingBox();await page.mouse.click(b.x+2,b.y+b.height-2);result.edgeCases.push({viewport:[w,h],action:'stat plus bottom-left',pass:(await page.locator('.stat-points').innerText()).includes('2')});
+ await nav('transform');const t=await page.locator('.tab-button[data-action="card-tab"][data-id="fusion"]').boundingBox();await page.mouse.click(t.x+t.width-2,t.y+t.height-2);result.edgeCases.push({viewport:[w,h],action:'fusion tab bottom-right',pass:await page.locator('.fusion-stage').count()===1});
+ await nav('character');const p=await page.locator('[data-action="equipment-page"][data-id="2"]').boundingBox();await page.mouse.click(p.x+2,p.y+2);result.edgeCases.push({viewport:[w,h],action:'equipment page top-left',pass:await page.locator('[data-slot="pants"]').count()===1});
+ const close=await page.locator('.window-heading [data-id="world"]').boundingBox();await page.mouse.click(close.x+close.width-2,close.y+close.height-2);result.edgeCases.push({viewport:[w,h],action:'close bottom-right',pass:await page.locator('.game-window').count()===0});
+}
+await page.setViewportSize({width:390,height:844});await nav('inventory');await page.screenshot({path:'evidence/portrait-390x844.png'});result.portraitGuide=await page.locator('.portrait-guide').isVisible();
+await writeFile('evidence/input-geometry.json',JSON.stringify(result,null,2));console.log({menuChecks:result.menus.length,menuFailures:result.menus.filter(x=>!x.pass),edgeFailures:result.edgeCases.filter(x=>!x.pass),geometryFailures:result.geometry.flatMap(g=>g.menuData.filter(x=>!x.pass)),portraitGuide:result.portraitGuide,errors:result.errors});await browser.close();
+
+if(result.menus.some(x=>!x.pass)||result.edgeCases.some(x=>!x.pass)||result.geometry.some(g=>g.menuData.some(x=>!x.pass))||!result.portraitGuide||result.errors.length)process.exitCode=1;

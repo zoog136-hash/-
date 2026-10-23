@@ -1,0 +1,8 @@
+import {chromium, browserOptions} from './browser.mjs';import fs from 'node:fs/promises';
+const b=await chromium.launch(browserOptions);const p=await b.newPage({viewport:{width:1280,height:720}});let report={};
+await p.goto('http://127.0.0.1:4173/?screen=inventory');await p.locator('[data-action="clear-item"]').first().click();await p.screenshot({path:'evidence/inventory-unselected.png'});report.clear=await p.locator('[data-action="item-detail"]').isDisabled();
+await p.locator('[data-action="select-item"][data-id="demo-dagger-equipped"]').click();await p.locator('[data-action="lock-item"]').click();report.equippedAndLocked=await p.locator('[data-id="demo-dagger-equipped"] .item-mark').count()===1&&await p.locator('[data-id="demo-dagger-equipped"] .item-lock').count()===1;
+await p.goto('http://127.0.0.1:4173/?screen=forge');await p.locator('[data-action="confirm-forge"]').click();const confirm=await p.locator('.modal').boundingBox();await p.screenshot({path:'evidence/forge-confirm.png'});await p.locator('[data-action="modal-choice"][data-id="1"]').click();const progress=await p.locator('.modal').boundingBox();await p.screenshot({path:'evidence/forge-progress.png'});await p.waitForTimeout(1050);const result=await p.locator('.modal').boundingBox();await p.screenshot({path:'evidence/forge-result.png'});report.forgeGeometry={confirm,progress,result};report.stableGeometry=JSON.stringify(confirm)===JSON.stringify(progress)&&JSON.stringify(progress)===JSON.stringify(result);
+await fs.writeFile('evidence/final-states.json',JSON.stringify(report,null,2));console.log(report);await b.close();
+
+if(!report.clear || !report.equippedAndLocked || !report.stableGeometry)process.exitCode=1;
