@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 1189,
-    "minimally_validated_configurations": 1189,
-    "newly_authored_poses": 6304,
+    "new_draft_configurations": 1193,
+    "minimally_validated_configurations": 1193,
+    "newly_authored_poses": 6328,
     "reused_existing_poses": 830,
     "reused_legacy_poses": 54,
     "reused_prior_draft_poses": 776,
-    "quality_held_configurations": 1189,
+    "quality_held_configurations": 1193,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 131
+    "remaining_draft_configurations": 127
   },
   "actors": [
     {
@@ -8464,6 +8464,29 @@
         },
         {
           "key": "transform:275",
+          "direction": "NE",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-idle-source-v01.png",
+          "source_sha256": "3d77e6ab5327c40c79a4e602afcf72fa072281db2a362c016982c1598fabb78e",
+          "source_bytes": 2223379,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "732fda52e820f46b5f0db78b49a142d9faa3349b8e3170ca3e3f092b7ccb19fe",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch236-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:275",
           "direction": "NW",
           "role": "attack",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NW-attack-source-v01.png",
@@ -8967,7 +8990,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 4,
+      "remaining_draft_configurations": 3,
       "precision_final_approved": false
     },
     {
@@ -9167,6 +9190,29 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 0,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch212-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:274",
+          "direction": "NE",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-idle-source-v01.png",
+          "source_sha256": "e72f11ddd7e0cefe59c8be95600843bcf20377b311253fde194772dd0f906189",
+          "source_bytes": 2297043,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "6da7d259b5380293e70c640698585e97557739316b2b35acc96ad66dd39ebcf2",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch236-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -9675,7 +9721,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 4,
+      "remaining_draft_configurations": 3,
       "precision_final_approved": false
     },
     {
@@ -9875,6 +9921,30 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 0,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch212-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:273",
+          "direction": "NE",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-idle-source-v01.png",
+          "source_sha256": "d4c9a5563be6789ee58ef5f57a4b39167320008027c1e4cfaba3e90bd2c19c6f",
+          "source_bytes": 2276410,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "6523eb2e7a5868c1815b52d67b70c5e722b5f356ba80a2d9ae42d315b9dddc5d",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch236-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -10387,7 +10457,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 4,
+      "remaining_draft_configurations": 3,
       "precision_final_approved": false
     },
     {
@@ -10588,6 +10658,30 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 0,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch212-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:259",
+          "direction": "NE",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-idle-source-v01.png",
+          "source_sha256": "52131a5885ad4dfd3451ece035b643c4f812c04c9a4f80f2f0e1763d6c4e97ec",
+          "source_bytes": 2462543,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "10dbed29c107040a9fcb55fd54700b86dfa8b18471e1042d2bbe59c32466348d",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch236-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -11107,7 +11201,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 4,
+      "remaining_draft_configurations": 3,
       "precision_final_approved": false
     },
     {
