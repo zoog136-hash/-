@@ -1,0 +1,76 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "batch": 7,
+  "actors": [
+    "transform:193",
+    "transform:213"
+  ],
+  "revisions": [
+    {
+      "slot": [
+        "transform:193",
+        "SW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/corrections/quality-isolation-v07-007/SW-idle-record.json",
+      "record_sha256": "0ba24ac4ab51096ad945f67d3446b9f76ec77e438f50a4bded858defd75bc79a",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/corrections/quality-isolation-v07-007/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e4496ddedff8562766ca623f9a16d8f2f9b8346dd6093d6e6cae2a56cb7f4a14",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_193/corrections/quality-isolation-v07-007/SW-idle-registration.json",
+      "registration_sha256": "31897f196647c58659598856ddf576dcd4f4a53e37f882c466e27732326c4070",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    },
+    {
+      "slot": [
+        "transform:213",
+        "SW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_213/corrections/quality-isolation-v07-007/SW-idle-record.json",
+      "record_sha256": "393928b950ba513f1f57a454acc8ff8a92aea2881c903e5a611768947f5da2b4",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_213/corrections/quality-isolation-v07-007/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "31461af1696e944e914cf82f00287a48b57713b19f023046064b2ec824923222",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_213/corrections/quality-isolation-v07-007/SW-idle-registration.json",
+      "registration_sha256": "13c1a6fbd77c681983b0addbede4fe2819a1a0d2df6d2655d49a4176afb4ce28",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    }
+  ],
+  "dependency_required_slots": [
+    [
+      "transform:193",
+      "SW",
+      "idle"
+    ],
+    [
+      "transform:213",
+      "SW",
+      "idle"
+    ]
+  ],
+  "excluded_slots": [],
+  "source_outcomes": [
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "2deb5bba041e41c6ef218a12067d20a2539e506963f1df6f162bec207fc08501",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_213/corrections/quality-isolation-v07-007/SW-idle-source-v02-isolated.proof.json",
+      "proof_sha256": "17afd3a7d3c29a8f754a14af8276cbf4fa583288e372c868e9ad7a3c32ed7711",
+      "atlas_sha256": "15a4db0fb1038846bea77e3d4934e3010401eb0d85be5900311c9ec18534be4c"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "538ccc96c12237e96288547392f6bff170a7ddfc3d83c0a0dd8593f19415d94a",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_193/corrections/quality-isolation-v07-007/SW-idle-source-v02-isolated.proof.json",
+      "proof_sha256": "8c37382458034a1b67e5d57ba7f93df5bd1e2239001ea9b52ff33fb39c6a19f7",
+      "atlas_sha256": "17e05cc6479f91f6d6c4d9b988ba7174bb63736e39a6b06ede27582971d756a4"
+    }
+  ],
+  "held_dependencies": [],
+  "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch007-v07.json",
+  "selection_sha256": "1bd147ef452af23148e9f308f98b47ee07d943511e61fb8dea417fc9cd9a6339",
+  "newly_authored_poses_added": 0,
+  "final_approved": 0,
+  "quality_status": "HOLD"
+}
