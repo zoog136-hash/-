@@ -1,0 +1,2377 @@
+{
+  "schema": "hero-detected-source-layout-v1",
+  "id": "155",
+  "fingerprint": "35345549ebf343acce15cf7afa7aed04914752c264441a6e4577260c679bfcc0",
+  "baseline": {
+    "attack_hit_frame": 1,
+    "frames": "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+    "ground": 159.999999059556,
+    "height": 129.0,
+    "pixel_scale": 0.806452,
+    "reference": "res://assets/catalog/394db77a53ca94ad44ed0042.png",
+    "sprite_offset": [
+      0.0,
+      -25.8064632415771
+    ]
+  },
+  "folder": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/",
+  "sources": {
+    "run": {
+      "raw": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/raw/source-run.png",
+      "raw_sha256": "9bb3295e66284e516df857f3b26c3bc5fbe9207216084fbd33ecaf97200bbb38",
+      "ownership": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/source-layout-155/run-ownership.png",
+      "ownership_sha256": "9fcbaab28c2937799e91ef6f105ace220b7b85e84c72ddaf3667d836c7717e53",
+      "nominal": 181.0,
+      "counts": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "poses": [
+        {
+          "direction": 0,
+          "phase": 0,
+          "source_row": 0,
+          "owner": 1,
+          "rect": [
+            16,
+            5,
+            175,
+            164
+          ],
+          "root_x": 91,
+          "measured_ground": 169,
+          "rgba_sha256": "612113703be6ddf7ab85b1685a97fba211928fde96cc8427bfaa208e07102928",
+          "root_y": 167.5
+        },
+        {
+          "direction": 0,
+          "phase": 1,
+          "source_row": 0,
+          "owner": 2,
+          "rect": [
+            211,
+            5,
+            185,
+            161
+          ],
+          "root_x": 292,
+          "measured_ground": 166,
+          "rgba_sha256": "62e051e9aad1be4fdddf9992b057ad7a978bb4574aad4cb47704f2a7574a0f0c",
+          "root_y": 167.5
+        },
+        {
+          "direction": 0,
+          "phase": 2,
+          "source_row": 0,
+          "owner": 3,
+          "rect": [
+            396,
+            5,
+            174,
+            159
+          ],
+          "root_x": 476,
+          "measured_ground": 164,
+          "rgba_sha256": "e146e7a2c80cc3acfcf4d990b5a64dd35dfb8e11de90449995abf456557f673f",
+          "root_y": 167.5
+        },
+        {
+          "direction": 0,
+          "phase": 3,
+          "source_row": 0,
+          "owner": 4,
+          "rect": [
+            575,
+            5,
+            173,
+            169
+          ],
+          "root_x": 648,
+          "measured_ground": 174,
+          "rgba_sha256": "bd9b82e7d753a53db9f3ee62911c3d55122c70f7de5ee2b786deb2bd2cfd75fa",
+          "root_y": 167.5
+        },
+        {
+          "direction": 0,
+          "phase": 4,
+          "source_row": 0,
+          "owner": 5,
+          "rect": [
+            751,
+            6,
+            182,
+            157
+          ],
+          "root_x": 831,
+          "measured_ground": 160,
+          "rgba_sha256": "031d895afc17a31f5d6e7e28499a331d4e70efd948d5db907cbea793928d31e8",
+          "root_y": 167.5
+        },
+        {
+          "direction": 0,
+          "phase": 5,
+          "source_row": 0,
+          "owner": 6,
+          "rect": [
+            936,
+            5,
+            139,
+            159
+          ],
+          "root_x": 1008,
+          "measured_ground": 164,
+          "rgba_sha256": "d3633360852c6100959914c6a58f2f09d4c78f338138dece242dc92adab8e770",
+          "root_y": 167.5
+        },
+        {
+          "direction": 1,
+          "phase": 0,
+          "source_row": 1,
+          "owner": 7,
+          "rect": [
+            17,
+            179,
+            184,
+            164
+          ],
+          "root_x": 91,
+          "measured_ground": 343,
+          "rgba_sha256": "2e2cf667c56edd38219db25e7ce87defb49e2d3fba6c41d5befd433162219442",
+          "root_y": 338.0
+        },
+        {
+          "direction": 1,
+          "phase": 1,
+          "source_row": 1,
+          "owner": 8,
+          "rect": [
+            208,
+            179,
+            186,
+            160
+          ],
+          "root_x": 284,
+          "measured_ground": 332,
+          "rgba_sha256": "3eaae78e9be992bedfb75eb9e7a699e836c7cb59c4cd1146b9fac29e50c517f5",
+          "root_y": 338.0
+        },
+        {
+          "direction": 1,
+          "phase": 2,
+          "source_row": 1,
+          "owner": 9,
+          "rect": [
+            407,
+            178,
+            161,
+            162
+          ],
+          "root_x": 472,
+          "measured_ground": 333,
+          "rgba_sha256": "10e8b0c655157a6df853c8595aa91861255558dfa24a7e49caa459a0cc17add8",
+          "root_y": 338.0
+        },
+        {
+          "direction": 1,
+          "phase": 3,
+          "source_row": 1,
+          "owner": 10,
+          "rect": [
+            575,
+            181,
+            176,
+            161
+          ],
+          "root_x": 643,
+          "measured_ground": 342,
+          "rgba_sha256": "80b8994ffcab19a0bc9928dc173679ad6bdec396df299951f5ddbdb9d6e8e6f2",
+          "root_y": 338.0
+        },
+        {
+          "direction": 1,
+          "phase": 4,
+          "source_row": 1,
+          "owner": 11,
+          "rect": [
+            755,
+            179,
+            177,
+            158
+          ],
+          "root_x": 823,
+          "measured_ground": 334,
+          "rgba_sha256": "f7e67c805d66584a9952bd9eaf6b803f3944f36637fd56989beff8b760445167",
+          "root_y": 338.0
+        },
+        {
+          "direction": 1,
+          "phase": 5,
+          "source_row": 1,
+          "owner": 12,
+          "rect": [
+            937,
+            180,
+            132,
+            161
+          ],
+          "root_x": 998,
+          "measured_ground": 341,
+          "rgba_sha256": "b2dd385abf7701681616849078ee47fa2c293eb62359a836629a61b705a32805",
+          "root_y": 338.0
+        },
+        {
+          "direction": 2,
+          "phase": 0,
+          "source_row": 2,
+          "owner": 13,
+          "rect": [
+            35,
+            352,
+            164,
+            167
+          ],
+          "root_x": 92,
+          "measured_ground": 519,
+          "rgba_sha256": "e550a1c409268517a3c6019567cd069dc0f669baf802417fcdf8b14183dd0e7c",
+          "root_y": 520.5
+        },
+        {
+          "direction": 2,
+          "phase": 1,
+          "source_row": 2,
+          "owner": 14,
+          "rect": [
+            221,
+            350,
+            164,
+            171
+          ],
+          "root_x": 279,
+          "measured_ground": 521,
+          "rgba_sha256": "dd244b300414b3cec498e6177acc1193c3d8aad3f6e45a36308169fbc3128fb2",
+          "root_y": 520.5
+        },
+        {
+          "direction": 2,
+          "phase": 2,
+          "source_row": 2,
+          "owner": 15,
+          "rect": [
+            398,
+            348,
+            154,
+            171
+          ],
+          "root_x": 456,
+          "measured_ground": 519,
+          "rgba_sha256": "212a0f31d00c53b4f274f4754785420a1a8056dc7c688538aa0d19947cc8a01a",
+          "root_y": 520.5
+        },
+        {
+          "direction": 2,
+          "phase": 3,
+          "source_row": 2,
+          "owner": 16,
+          "rect": [
+            576,
+            353,
+            156,
+            167
+          ],
+          "root_x": 630,
+          "measured_ground": 520,
+          "rgba_sha256": "3b0977be014a35f451531239cd42a60d4d5106b839d1f18c941ba332b2fdc514",
+          "root_y": 520.5
+        },
+        {
+          "direction": 2,
+          "phase": 4,
+          "source_row": 2,
+          "owner": 17,
+          "rect": [
+            753,
+            350,
+            162,
+            174
+          ],
+          "root_x": 805,
+          "measured_ground": 524,
+          "rgba_sha256": "e8052fdb18ee4804f5fd90754f55cb296131aefb5e30c04ee7e85304668daea5",
+          "root_y": 520.5
+        },
+        {
+          "direction": 2,
+          "phase": 5,
+          "source_row": 2,
+          "owner": 18,
+          "rect": [
+            930,
+            353,
+            143,
+            166
+          ],
+          "root_x": 982,
+          "measured_ground": 519,
+          "rgba_sha256": "1ef4b6e1300c079d76ffdb969cae83f0a5d4689ec8d6bf48b8e26cc1463d6cf7",
+          "root_y": 520.5
+        },
+        {
+          "direction": 3,
+          "phase": 0,
+          "source_row": 3,
+          "owner": 19,
+          "rect": [
+            13,
+            529,
+            162,
+            173
+          ],
+          "root_x": 94,
+          "measured_ground": 702,
+          "rgba_sha256": "35cf0ed24d35689b874f79da0cb525d5e91a433cd795d450fe373438ccb3d518",
+          "root_y": 702.5
+        },
+        {
+          "direction": 3,
+          "phase": 1,
+          "source_row": 3,
+          "owner": 20,
+          "rect": [
+            180,
+            531,
+            171,
+            172
+          ],
+          "root_x": 278,
+          "measured_ground": 703,
+          "rgba_sha256": "1097d1ffc7b2652fcd7dc3e39751b7c36d08931f9a8e8d9f585883785a2b8024",
+          "root_y": 702.5
+        },
+        {
+          "direction": 3,
+          "phase": 2,
+          "source_row": 3,
+          "owner": 21,
+          "rect": [
+            357,
+            531,
+            176,
+            168
+          ],
+          "root_x": 455,
+          "measured_ground": 691,
+          "rgba_sha256": "46b6cae2fe1f88e58491c2d02611836ee248e3bc9ec1e177cfe6edafb25e7a50",
+          "root_y": 702.5
+        },
+        {
+          "direction": 3,
+          "phase": 3,
+          "source_row": 3,
+          "owner": 22,
+          "rect": [
+            541,
+            530,
+            178,
+            173
+          ],
+          "root_x": 634,
+          "measured_ground": 703,
+          "rgba_sha256": "482013d57d0ca83d480ad47870c5f7b983779c9030e77fb830c288f73e9f8cc7",
+          "root_y": 702.5
+        },
+        {
+          "direction": 3,
+          "phase": 4,
+          "source_row": 3,
+          "owner": 23,
+          "rect": [
+            721,
+            535,
+            178,
+            163
+          ],
+          "root_x": 819,
+          "measured_ground": 697,
+          "rgba_sha256": "c605aab51d919c208ea420506cd601a1d2f74e625ca65dcdf221d51a0c6e7425",
+          "root_y": 702.5
+        },
+        {
+          "direction": 3,
+          "phase": 5,
+          "source_row": 3,
+          "owner": 24,
+          "rect": [
+            909,
+            531,
+            166,
+            165
+          ],
+          "root_x": 1003,
+          "measured_ground": 696,
+          "rgba_sha256": "9de9ed9dbe57efa874bde51f36bb4cc1c23df4fcbe9245a761706536763b3e4a",
+          "root_y": 702.5
+        },
+        {
+          "direction": 4,
+          "phase": 0,
+          "source_row": 4,
+          "owner": 25,
+          "rect": [
+            8,
+            721,
+            170,
+            180
+          ],
+          "root_x": 104,
+          "measured_ground": 901,
+          "rgba_sha256": "7d57fe3a4537f823cecfddd9bdc0d258fa6b8a3855e0af4fcf39b15285c428b1",
+          "root_y": 902.5
+        },
+        {
+          "direction": 4,
+          "phase": 1,
+          "source_row": 4,
+          "owner": 26,
+          "rect": [
+            185,
+            721,
+            170,
+            182
+          ],
+          "root_x": 281,
+          "measured_ground": 903,
+          "rgba_sha256": "4a366ef6156b0556082b6f35aa43bed6c8f1da779cf1927b3e90bbc01ef01287",
+          "root_y": 902.5
+        },
+        {
+          "direction": 4,
+          "phase": 2,
+          "source_row": 4,
+          "owner": 27,
+          "rect": [
+            374,
+            721,
+            161,
+            177
+          ],
+          "root_x": 462,
+          "measured_ground": 898,
+          "rgba_sha256": "d1a0c7609ccb85ff3c7d11038841985ef05f7e372931614c78041d326f64f9c6",
+          "root_y": 902.5
+        },
+        {
+          "direction": 4,
+          "phase": 3,
+          "source_row": 4,
+          "owner": 28,
+          "rect": [
+            550,
+            724,
+            167,
+            178
+          ],
+          "root_x": 643,
+          "measured_ground": 902,
+          "rgba_sha256": "e7237644fcab1674a7798025c8e9d6e4bb256b1fd260419c74ecc1bc36cc6e1a",
+          "root_y": 902.5
+        },
+        {
+          "direction": 4,
+          "phase": 4,
+          "source_row": 4,
+          "owner": 29,
+          "rect": [
+            728,
+            722,
+            178,
+            190
+          ],
+          "root_x": 825,
+          "measured_ground": 912,
+          "rgba_sha256": "17174cff42178df3b1305149ad208672454597cb57ba1c5c865420c86de7313b",
+          "root_y": 902.5
+        },
+        {
+          "direction": 4,
+          "phase": 5,
+          "source_row": 4,
+          "owner": 30,
+          "rect": [
+            915,
+            721,
+            159,
+            185
+          ],
+          "root_x": 1006,
+          "measured_ground": 906,
+          "rgba_sha256": "b2d3bd0b7e48d9ab4d35bef0ddbd53fb3e17f4bfd29bea2fe6f706d59d62ebfe",
+          "root_y": 902.5
+        },
+        {
+          "direction": 5,
+          "phase": 0,
+          "source_row": 5,
+          "owner": 31,
+          "rect": [
+            10,
+            909,
+            163,
+            183
+          ],
+          "root_x": 103,
+          "measured_ground": 1092,
+          "rgba_sha256": "8ca05085f84202f5b9c847b4918c11ac1ced0ce8daed48e7b093bdfc92e66178",
+          "root_y": 1093.5
+        },
+        {
+          "direction": 5,
+          "phase": 1,
+          "source_row": 5,
+          "owner": 32,
+          "rect": [
+            188,
+            907,
+            161,
+            187
+          ],
+          "root_x": 285,
+          "measured_ground": 1094,
+          "rgba_sha256": "e2c9769961394ed452d6a21ef8d144902f0cc6323bac1264800e733974367e5a",
+          "root_y": 1093.5
+        },
+        {
+          "direction": 5,
+          "phase": 2,
+          "source_row": 5,
+          "owner": 33,
+          "rect": [
+            369,
+            908,
+            159,
+            185
+          ],
+          "root_x": 464,
+          "measured_ground": 1093,
+          "rgba_sha256": "1b4f05b4ae4c646acf55fb81b4670a1669747da66a8975fbbb1627870832e26e",
+          "root_y": 1093.5
+        },
+        {
+          "direction": 5,
+          "phase": 3,
+          "source_row": 5,
+          "owner": 34,
+          "rect": [
+            547,
+            910,
+            164,
+            188
+          ],
+          "root_x": 642,
+          "measured_ground": 1098,
+          "rgba_sha256": "e8c3af947f5d2af0950e33861ca188f153dc8669625b65568296479aa9051b19",
+          "root_y": 1093.5
+        },
+        {
+          "direction": 5,
+          "phase": 4,
+          "source_row": 5,
+          "owner": 35,
+          "rect": [
+            719,
+            910,
+            178,
+            183
+          ],
+          "root_x": 823,
+          "measured_ground": 1093,
+          "rgba_sha256": "c2d1ec11b22597795abedaca6a721dcf8c4dce0a0d7c087fd7e17b72ffd27a74",
+          "root_y": 1093.5
+        },
+        {
+          "direction": 5,
+          "phase": 5,
+          "source_row": 5,
+          "owner": 36,
+          "rect": [
+            909,
+            907,
+            163,
+            185
+          ],
+          "root_x": 1002,
+          "measured_ground": 1092,
+          "rgba_sha256": "dfac49fe6740905da86179539adccc0790d851991bf3e3700beef1969c630fa6",
+          "root_y": 1093.5
+        },
+        {
+          "direction": 6,
+          "phase": 0,
+          "source_row": 6,
+          "owner": 37,
+          "rect": [
+            9,
+            1098,
+            146,
+            175
+          ],
+          "root_x": 101,
+          "measured_ground": 1273,
+          "rgba_sha256": "7476201e3ab4d5d0304b5e22d17487bd384b07fb11efb2a43a919d8305155977",
+          "root_y": 1268.5
+        },
+        {
+          "direction": 6,
+          "phase": 1,
+          "source_row": 6,
+          "owner": 38,
+          "rect": [
+            182,
+            1099,
+            154,
+            170
+          ],
+          "root_x": 282,
+          "measured_ground": 1269,
+          "rgba_sha256": "b50fd1512e90d0533f542f69f3ad60437aa0f55ef3488aedf2aad72c80b0f44d",
+          "root_y": 1268.5
+        },
+        {
+          "direction": 6,
+          "phase": 2,
+          "source_row": 6,
+          "owner": 39,
+          "rect": [
+            356,
+            1097,
+            156,
+            165
+          ],
+          "root_x": 458,
+          "measured_ground": 1262,
+          "rgba_sha256": "cb55bea68974400df170737722ace468bf5be1c750649df08ff99125631b97b3",
+          "root_y": 1268.5
+        },
+        {
+          "direction": 6,
+          "phase": 3,
+          "source_row": 6,
+          "owner": 40,
+          "rect": [
+            534,
+            1100,
+            157,
+            167
+          ],
+          "root_x": 641,
+          "measured_ground": 1267,
+          "rgba_sha256": "e0a97c0c9fb4f174bdd4c8afdc3870394ac396f64d35de773f9db8c5b66de037",
+          "root_y": 1268.5
+        },
+        {
+          "direction": 6,
+          "phase": 4,
+          "source_row": 6,
+          "owner": 41,
+          "rect": [
+            711,
+            1095,
+            159,
+            173
+          ],
+          "root_x": 817,
+          "measured_ground": 1268,
+          "rgba_sha256": "e87fea719051f6db2e9c3ee80490eb9987043523919961288bc40b3038495112",
+          "root_y": 1268.5
+        },
+        {
+          "direction": 6,
+          "phase": 5,
+          "source_row": 6,
+          "owner": 42,
+          "rect": [
+            896,
+            1096,
+            155,
+            173
+          ],
+          "root_x": 998,
+          "measured_ground": 1269,
+          "rgba_sha256": "f88da0e3b4a32eb345d7dd90369ef1be2418ea33c1e1460ed4c9a9dc9ddecc3e",
+          "root_y": 1268.5
+        },
+        {
+          "direction": 7,
+          "phase": 0,
+          "source_row": 7,
+          "owner": 43,
+          "rect": [
+            24,
+            1272,
+            177,
+            166
+          ],
+          "root_x": 103,
+          "measured_ground": 1438,
+          "rgba_sha256": "c3c484b3f8bde6c99b190ad255ef18904ed1fd186a313d3e85b25b2897e354e6",
+          "root_y": 1439.0
+        },
+        {
+          "direction": 7,
+          "phase": 1,
+          "source_row": 7,
+          "owner": 44,
+          "rect": [
+            212,
+            1269,
+            178,
+            171
+          ],
+          "root_x": 284,
+          "measured_ground": 1440,
+          "rgba_sha256": "97376efc342a7da10a97e91e67ee1f419b50d2942655a87c16f65a1960bd41de",
+          "root_y": 1439.0
+        },
+        {
+          "direction": 7,
+          "phase": 2,
+          "source_row": 7,
+          "owner": 45,
+          "rect": [
+            392,
+            1267,
+            177,
+            162
+          ],
+          "root_x": 466,
+          "measured_ground": 1429,
+          "rgba_sha256": "09a7ddd00ed557c20f5ee6312024c62c00926e67bd963495670d1f2272eafe14",
+          "root_y": 1439.0
+        },
+        {
+          "direction": 7,
+          "phase": 3,
+          "source_row": 7,
+          "owner": 46,
+          "rect": [
+            575,
+            1271,
+            172,
+            161
+          ],
+          "root_x": 641,
+          "measured_ground": 1431,
+          "rgba_sha256": "b787709d23fbd71df2ea452ed571ff8ab61cee7509a4a151750027032ee62bfa",
+          "root_y": 1439.0
+        },
+        {
+          "direction": 7,
+          "phase": 4,
+          "source_row": 7,
+          "owner": 47,
+          "rect": [
+            751,
+            1272,
+            177,
+            170
+          ],
+          "root_x": 825,
+          "measured_ground": 1442,
+          "rgba_sha256": "600847435aa3b23489ba13898f51a565dd9f3f6393005e84534d6048567240d8",
+          "root_y": 1439.0
+        },
+        {
+          "direction": 7,
+          "phase": 5,
+          "source_row": 7,
+          "owner": 48,
+          "rect": [
+            927,
+            1270,
+            144,
+            168
+          ],
+          "root_x": 1003,
+          "measured_ground": 1438,
+          "rgba_sha256": "64454b571a76e4bf80c08da9043c3b539bc2f989942a7d201c46dce7aa793701",
+          "root_y": 1439.0
+        }
+      ],
+      "fragments": [],
+      "unit_scale": 1.0
+    },
+    "attack": {
+      "raw": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/raw/source-attack.png",
+      "raw_sha256": "6699507097f60bf82ed561c9aab0dcd039852f036afe2d519b20d25efbfd11cd",
+      "ownership": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/source-layout-155/attack-ownership.png",
+      "ownership_sha256": "f64f725ca29286e7a39097dd21b05b35206785337b69e7fc84cb8319e5e7bdc4",
+      "nominal": 181.0,
+      "counts": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "poses": [
+        {
+          "direction": 0,
+          "phase": 0,
+          "source_row": 0,
+          "owner": 1,
+          "rect": [
+            32,
+            0,
+            113,
+            171
+          ],
+          "root_x": 83,
+          "measured_ground": 171,
+          "rgba_sha256": "147f8193145e66c83f210f9e65d0878158e4a1c0fa30f26d3a023ef4c9b2675d",
+          "root_y": 170.5
+        },
+        {
+          "direction": 0,
+          "phase": 1,
+          "source_row": 0,
+          "owner": 2,
+          "rect": [
+            220,
+            40,
+            312,
+            126
+          ],
+          "root_x": 302,
+          "measured_ground": 166,
+          "rgba_sha256": "7ad53203fd65a8cf968fa7877c5d855691e68db109d43e753e63ad296bcb495b",
+          "root_y": 170.5
+        },
+        {
+          "direction": 0,
+          "phase": 2,
+          "source_row": 0,
+          "owner": 3,
+          "rect": [
+            559,
+            36,
+            164,
+            134
+          ],
+          "root_x": 622,
+          "measured_ground": 170,
+          "rgba_sha256": "f9915e69fb86aff14ebbe9065227c2e3c9a50a1e4a660f4fea0b2a32fb6cd4c1",
+          "root_y": 170.5
+        },
+        {
+          "direction": 0,
+          "phase": 3,
+          "source_row": 0,
+          "owner": 4,
+          "rect": [
+            758,
+            37,
+            178,
+            134
+          ],
+          "root_x": 808,
+          "measured_ground": 171,
+          "rgba_sha256": "68c94ff996dfb512b094b533ed1bd2f562dd5c3daf2d24fab6cb417459ee8c35",
+          "root_y": 170.5
+        },
+        {
+          "direction": 0,
+          "phase": 4,
+          "source_row": 0,
+          "owner": 5,
+          "rect": [
+            951,
+            6,
+            116,
+            164
+          ],
+          "root_x": 998,
+          "measured_ground": 170,
+          "rgba_sha256": "54e75058237e26b08b3dda91098979fccfe12823a9b28a8ef5fd1afa500b883c",
+          "root_y": 170.5
+        },
+        {
+          "direction": 1,
+          "phase": 0,
+          "source_row": 1,
+          "owner": 6,
+          "rect": [
+            31,
+            180,
+            120,
+            171
+          ],
+          "root_x": 85,
+          "measured_ground": 351,
+          "rgba_sha256": "a18a58dfa191fe3e2320f4b7702240a6398dd3ee5698945b70ecf0d934320a3f",
+          "root_y": 351.0
+        },
+        {
+          "direction": 1,
+          "phase": 1,
+          "source_row": 1,
+          "owner": 7,
+          "rect": [
+            214,
+            220,
+            300,
+            130
+          ],
+          "root_x": 286,
+          "measured_ground": 350,
+          "rgba_sha256": "ce8c48255d29dff9d04fca634b917cbd7c91b7882f2882da5f79234a8ede77fc",
+          "root_y": 351.0
+        },
+        {
+          "direction": 1,
+          "phase": 2,
+          "source_row": 1,
+          "owner": 8,
+          "rect": [
+            559,
+            222,
+            163,
+            148
+          ],
+          "root_x": 617,
+          "measured_ground": 370,
+          "rgba_sha256": "90f594a13e811d60e805f3bfe7e7c6619a5707616823de41e7e343f8ee5e8061",
+          "root_y": 351.0
+        },
+        {
+          "direction": 1,
+          "phase": 3,
+          "source_row": 1,
+          "owner": 9,
+          "rect": [
+            753,
+            221,
+            171,
+            130
+          ],
+          "root_x": 800,
+          "measured_ground": 351,
+          "rgba_sha256": "a24a4c219427da5976b7b3022566b33379ab8aaa6b50bf3522ea7a175d90ab18",
+          "root_y": 351.0
+        },
+        {
+          "direction": 1,
+          "phase": 4,
+          "source_row": 1,
+          "owner": 10,
+          "rect": [
+            948,
+            206,
+            116,
+            145
+          ],
+          "root_x": 997,
+          "measured_ground": 351,
+          "rgba_sha256": "59c7e92284a74caf99f3f63e788518aec68fa9478abc481b1e5c92a8dfff2ea6",
+          "root_y": 351.0
+        },
+        {
+          "direction": 2,
+          "phase": 0,
+          "source_row": 2,
+          "owner": 11,
+          "rect": [
+            31,
+            356,
+            117,
+            177
+          ],
+          "root_x": 89,
+          "measured_ground": 533,
+          "rgba_sha256": "2fb0b3da0e8950f198279fba675256818211f641734cf875bf97bd6d49d27eed",
+          "root_y": 534.0
+        },
+        {
+          "direction": 2,
+          "phase": 1,
+          "source_row": 2,
+          "owner": 12,
+          "rect": [
+            225,
+            393,
+            239,
+            143
+          ],
+          "root_x": 290,
+          "measured_ground": 534,
+          "rgba_sha256": "65448164abf6925191f75dcbcac8197d05b697e944f4f242cad76c8a70e3c622",
+          "root_y": 534.0
+        },
+        {
+          "direction": 2,
+          "phase": 2,
+          "source_row": 2,
+          "owner": 13,
+          "rect": [
+            545,
+            396,
+            153,
+            145
+          ],
+          "root_x": 609,
+          "measured_ground": 541,
+          "rgba_sha256": "08ca3823e6245a2a9717f616f2e26f410bcf9e9cff218759e120bf4be5f3d170",
+          "root_y": 534.0
+        },
+        {
+          "direction": 2,
+          "phase": 3,
+          "source_row": 2,
+          "owner": 14,
+          "rect": [
+            757,
+            395,
+            148,
+            140
+          ],
+          "root_x": 802,
+          "measured_ground": 535,
+          "rgba_sha256": "9720acee3fa085ce9cdb64dfa728f1e28dd6bba046ea279674be7936fc977024",
+          "root_y": 534.0
+        },
+        {
+          "direction": 2,
+          "phase": 4,
+          "source_row": 2,
+          "owner": 15,
+          "rect": [
+            950,
+            393,
+            105,
+            142
+          ],
+          "root_x": 995,
+          "measured_ground": 535,
+          "rgba_sha256": "78f10defad3cdc194351ddbf322e97e1902f83bd49bc3e9a9e90a2e44c3d6eea",
+          "root_y": 534.0
+        },
+        {
+          "direction": 3,
+          "phase": 0,
+          "source_row": 3,
+          "owner": 16,
+          "rect": [
+            33,
+            539,
+            116,
+            175
+          ],
+          "root_x": 89,
+          "measured_ground": 714,
+          "rgba_sha256": "42c541aae941efe225338997a6214b18fbc30cfb0d9065b80f376d941c117e9d",
+          "root_y": 714.5
+        },
+        {
+          "direction": 3,
+          "phase": 1,
+          "source_row": 3,
+          "owner": 17,
+          "rect": [
+            185,
+            578,
+            205,
+            131
+          ],
+          "root_x": 316,
+          "measured_ground": 709,
+          "rgba_sha256": "4d1ccd523f2b00ebab9f5e2acd963c41372d1e755597087ae7616879103cf254",
+          "root_y": 714.5
+        },
+        {
+          "direction": 3,
+          "phase": 2,
+          "source_row": 3,
+          "owner": 18,
+          "rect": [
+            454,
+            579,
+            237,
+            133
+          ],
+          "root_x": 621,
+          "measured_ground": 712,
+          "rgba_sha256": "9f5fbdc8d4ea4efcb6556afdf3919611613addee837d304d7b2f5bb99546fbf1",
+          "root_y": 714.5
+        },
+        {
+          "direction": 3,
+          "phase": 3,
+          "source_row": 3,
+          "owner": 19,
+          "rect": [
+            711,
+            580,
+            165,
+            132
+          ],
+          "root_x": 818,
+          "measured_ground": 712,
+          "rgba_sha256": "20025162e677b9f0b6da34f30b1ccbb1b03c44af6abdb9b90710191fae178bf5",
+          "root_y": 714.5
+        },
+        {
+          "direction": 3,
+          "phase": 4,
+          "source_row": 3,
+          "owner": 20,
+          "rect": [
+            934,
+            568,
+            131,
+            147
+          ],
+          "root_x": 1016,
+          "measured_ground": 715,
+          "rgba_sha256": "2c940f5b7563e48b37957cd58a5d9447e4ac384317cd521cc68374acf55cf47b",
+          "root_y": 714.5
+        },
+        {
+          "direction": 4,
+          "phase": 0,
+          "source_row": 4,
+          "owner": 21,
+          "rect": [
+            22,
+            722,
+            126,
+            174
+          ],
+          "root_x": 91,
+          "measured_ground": 896,
+          "rgba_sha256": "089db0892b02f4a5e1f0d28ebf25989f1f998e62cd48e5eb06c5713849d6ffb3",
+          "root_y": 897.0
+        },
+        {
+          "direction": 4,
+          "phase": 1,
+          "source_row": 4,
+          "owner": 22,
+          "rect": [
+            182,
+            757,
+            201,
+            139
+          ],
+          "root_x": 314,
+          "measured_ground": 896,
+          "rgba_sha256": "476d4c6ce7a2367d0c9326bb40d83c886c496434ef402185806253f6e1a612db",
+          "root_y": 897.0
+        },
+        {
+          "direction": 4,
+          "phase": 2,
+          "source_row": 4,
+          "owner": 23,
+          "rect": [
+            435,
+            765,
+            257,
+            132
+          ],
+          "root_x": 621,
+          "measured_ground": 897,
+          "rgba_sha256": "155c368943f6d557a36dc688c72a35b70605b2ddcc38582e79aa60af7e4cd0da",
+          "root_y": 897.0
+        },
+        {
+          "direction": 4,
+          "phase": 3,
+          "source_row": 4,
+          "owner": 24,
+          "rect": [
+            709,
+            766,
+            177,
+            132
+          ],
+          "root_x": 820,
+          "measured_ground": 898,
+          "rgba_sha256": "5b22a44d8960b3fb743a62fdfa1092b18fad0f04c3244f6a0133be7c0a7063bc",
+          "root_y": 897.0
+        },
+        {
+          "direction": 4,
+          "phase": 4,
+          "source_row": 4,
+          "owner": 25,
+          "rect": [
+            955,
+            745,
+            115,
+            153
+          ],
+          "root_x": 1019,
+          "measured_ground": 898,
+          "rgba_sha256": "b654e923e4a60a14adbb3a7ef0ef81747e0c00ab26efe6b6d34caca724efa2f5",
+          "root_y": 897.0
+        },
+        {
+          "direction": 5,
+          "phase": 0,
+          "source_row": 5,
+          "owner": 26,
+          "rect": [
+            24,
+            903,
+            119,
+            177
+          ],
+          "root_x": 89,
+          "measured_ground": 1080,
+          "rgba_sha256": "359a757e63062cc2ff64303f73a7b3179a98614cbb90d7b73867eab56b099b6f",
+          "root_y": 1082.5
+        },
+        {
+          "direction": 5,
+          "phase": 1,
+          "source_row": 5,
+          "owner": 27,
+          "rect": [
+            196,
+            944,
+            187,
+            145
+          ],
+          "root_x": 306,
+          "measured_ground": 1089,
+          "rgba_sha256": "4efa7de666c884c04d1b18e35608c1ab55146585326e0c725a7f032ea92390ca",
+          "root_y": 1082.5
+        },
+        {
+          "direction": 5,
+          "phase": 2,
+          "source_row": 5,
+          "owner": 28,
+          "rect": [
+            441,
+            950,
+            242,
+            140
+          ],
+          "root_x": 612,
+          "measured_ground": 1090,
+          "rgba_sha256": "e28ec8b76ff7cc6ecd0b8c7854514a71967ef16c6b85811af96cf6071d8ced59",
+          "root_y": 1082.5
+        },
+        {
+          "direction": 5,
+          "phase": 3,
+          "source_row": 5,
+          "owner": 29,
+          "rect": [
+            710,
+            950,
+            181,
+            132
+          ],
+          "root_x": 813,
+          "measured_ground": 1082,
+          "rgba_sha256": "db75a48b269d1a2d96b4abac833acdac4236b5a7bf029b59caec812536b01d54",
+          "root_y": 1082.5
+        },
+        {
+          "direction": 5,
+          "phase": 4,
+          "source_row": 5,
+          "owner": 30,
+          "rect": [
+            946,
+            934,
+            128,
+            151
+          ],
+          "root_x": 1020,
+          "measured_ground": 1085,
+          "rgba_sha256": "4329d31559667fff925955691bf8d4205b91bc6d39a0f3449b6e9230ce4909fa",
+          "root_y": 1082.5
+        },
+        {
+          "direction": 6,
+          "phase": 0,
+          "source_row": 6,
+          "owner": 31,
+          "rect": [
+            39,
+            1085,
+            131,
+            172
+          ],
+          "root_x": 83,
+          "measured_ground": 1257,
+          "rgba_sha256": "c79cd427ae067f2efbe2f72afe39fb9e41f06d02f53f31dc29606db9af024350",
+          "root_y": 1260.0
+        },
+        {
+          "direction": 6,
+          "phase": 1,
+          "source_row": 6,
+          "owner": 32,
+          "rect": [
+            229,
+            1119,
+            140,
+            150
+          ],
+          "root_x": 307,
+          "measured_ground": 1269,
+          "rgba_sha256": "cdbfc077f94a15807d8204db84eb73d820030ebd8fee5757c1a6e53a251219c0",
+          "root_y": 1260.0
+        },
+        {
+          "direction": 6,
+          "phase": 2,
+          "source_row": 6,
+          "owner": 33,
+          "rect": [
+            445,
+            1126,
+            225,
+            145
+          ],
+          "root_x": 614,
+          "measured_ground": 1271,
+          "rgba_sha256": "036567bb352e5846d17cf6bde96c206408e333a9172e76f8d7d81a85d0e4e002",
+          "root_y": 1260.0
+        },
+        {
+          "direction": 6,
+          "phase": 3,
+          "source_row": 6,
+          "owner": 34,
+          "rect": [
+            721,
+            1128,
+            166,
+            144
+          ],
+          "root_x": 815,
+          "measured_ground": 1272,
+          "rgba_sha256": "4c4a0afc8d41a462af3dad4c6a17629cc827865f4ddb7c20c6688fd1137df4e5",
+          "root_y": 1260.0
+        },
+        {
+          "direction": 6,
+          "phase": 4,
+          "source_row": 6,
+          "owner": 35,
+          "rect": [
+            945,
+            1108,
+            123,
+            155
+          ],
+          "root_x": 1020,
+          "measured_ground": 1263,
+          "rgba_sha256": "e6a4f9dc812f4b4fb72a5d8ddbb68b3a8e8810ab11300fc653154e364e7efe42",
+          "root_y": 1260.0
+        },
+        {
+          "direction": 7,
+          "phase": 0,
+          "source_row": 7,
+          "owner": 36,
+          "rect": [
+            26,
+            1256,
+            144,
+            175
+          ],
+          "root_x": 77,
+          "measured_ground": 1431,
+          "rgba_sha256": "e0f81b6d2c0c461a60f9e10dd6ff09b4a1e8cd9341f678331eead61dbe8a51bc",
+          "root_y": 1435.5
+        },
+        {
+          "direction": 7,
+          "phase": 1,
+          "source_row": 7,
+          "owner": 37,
+          "rect": [
+            234,
+            1294,
+            171,
+            147
+          ],
+          "root_x": 293,
+          "measured_ground": 1441,
+          "rgba_sha256": "32007b9e62728c64fed9e9ec6a698521b112f4e18cafcd1333b21dcd5babb11e",
+          "root_y": 1435.5
+        },
+        {
+          "direction": 7,
+          "phase": 2,
+          "source_row": 7,
+          "owner": 38,
+          "rect": [
+            474,
+            1297,
+            183,
+            147
+          ],
+          "root_x": 606,
+          "measured_ground": 1444,
+          "rgba_sha256": "fa66862cd077c41c5ba717435533dc0413408051de30caf5eaf922a196ac5e0f",
+          "root_y": 1435.5
+        },
+        {
+          "direction": 7,
+          "phase": 3,
+          "source_row": 7,
+          "owner": 39,
+          "rect": [
+            732,
+            1298,
+            140,
+            146
+          ],
+          "root_x": 805,
+          "measured_ground": 1444,
+          "rgba_sha256": "ee054edfb56aef97e9fe638a0d14133a2fc973c240296302d782200c49e8786f",
+          "root_y": 1435.5
+        },
+        {
+          "direction": 7,
+          "phase": 4,
+          "source_row": 7,
+          "owner": 40,
+          "rect": [
+            963,
+            1287,
+            102,
+            153
+          ],
+          "root_x": 1014,
+          "measured_ground": 1440,
+          "rgba_sha256": "5dae8bed5895d3253d428d7174f0fa7cf50749a26ce1f92ef54c61a5a569b0e9",
+          "root_y": 1435.5
+        }
+      ],
+      "fragments": [],
+      "unit_scale": 1.0
+    },
+    "support": {
+      "raw": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/raw/source-support.png",
+      "raw_sha256": "516b3a74edd726e58b233793ac74d5391a64af32e11b796b4175903bef98c0c1",
+      "ownership": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/source-layout-155/support-ownership.png",
+      "ownership_sha256": "a9dbaf0321d61c15b53eb88bd5920e9d45616616c6fd442dfb3c2f99640ce152",
+      "nominal": 181.0,
+      "counts": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "poses": [
+        {
+          "direction": 0,
+          "phase": 0,
+          "source_row": 0,
+          "owner": 1,
+          "rect": [
+            34,
+            10,
+            146,
+            167
+          ],
+          "root_x": 89,
+          "measured_ground": 177,
+          "rgba_sha256": "bbeb641e0fd001b41c6e5b4a9216a0724106982f6de84b93f52c9bf67a435394",
+          "root_y": 177.0
+        },
+        {
+          "direction": 0,
+          "phase": 1,
+          "source_row": 0,
+          "owner": 2,
+          "rect": [
+            215,
+            8,
+            140,
+            169
+          ],
+          "root_x": 268,
+          "measured_ground": 177,
+          "rgba_sha256": "edff0180704e2a719f328a16d293641b537b5c73999d3e22fc695c62f695f379",
+          "root_y": 177.0
+        },
+        {
+          "direction": 0,
+          "phase": 2,
+          "source_row": 0,
+          "owner": 3,
+          "rect": [
+            394,
+            8,
+            140,
+            170
+          ],
+          "root_x": 447,
+          "measured_ground": 178,
+          "rgba_sha256": "4841b686393eb2bab1e48443b0fa9fda0bbba5ae2b05d6e8ea1cece0991af0f0",
+          "root_y": 177.0
+        },
+        {
+          "direction": 0,
+          "phase": 3,
+          "source_row": 0,
+          "owner": 4,
+          "rect": [
+            571,
+            18,
+            148,
+            159
+          ],
+          "root_x": 630,
+          "measured_ground": 177,
+          "rgba_sha256": "6a243a4e8e26f28588cc3ef3335d17a91002f20c4a2a2f69c95c2609d084217b",
+          "root_y": 177.0
+        },
+        {
+          "direction": 0,
+          "phase": 4,
+          "source_row": 0,
+          "owner": 5,
+          "rect": [
+            753,
+            32,
+            155,
+            144
+          ],
+          "root_x": 818,
+          "measured_ground": 176,
+          "rgba_sha256": "e5c062847a2289a60c9db13331dbc2c98efc643d7be4f7a5ebe0afebc3a6bb50",
+          "root_y": 177.0
+        },
+        {
+          "direction": 0,
+          "phase": 5,
+          "source_row": 0,
+          "owner": 6,
+          "rect": [
+            944,
+            10,
+            136,
+            167
+          ],
+          "root_x": 998,
+          "measured_ground": 177,
+          "rgba_sha256": "98fd2a19168e5df577a4238837a97f9229923991a985ef6529f2bf61d93f6e02",
+          "root_y": 177.0
+        },
+        {
+          "direction": 1,
+          "phase": 0,
+          "source_row": 1,
+          "owner": 7,
+          "rect": [
+            34,
+            190,
+            143,
+            168
+          ],
+          "root_x": 85,
+          "measured_ground": 358,
+          "rgba_sha256": "bda4134a678ae0b094fe77fcee338ba39dd6f4238e47b1c033832b74730fd9df",
+          "root_y": 358.0
+        },
+        {
+          "direction": 1,
+          "phase": 1,
+          "source_row": 1,
+          "owner": 8,
+          "rect": [
+            214,
+            190,
+            140,
+            168
+          ],
+          "root_x": 266,
+          "measured_ground": 358,
+          "rgba_sha256": "092dbc9ee442b6c729c29bc3411bc1e6eec138b111e4fe7e9d22e0f6cb97bd0e",
+          "root_y": 358.0
+        },
+        {
+          "direction": 1,
+          "phase": 2,
+          "source_row": 1,
+          "owner": 9,
+          "rect": [
+            394,
+            190,
+            138,
+            169
+          ],
+          "root_x": 448,
+          "measured_ground": 359,
+          "rgba_sha256": "5f186b9a38141f647320b60a70dcc55ba850ba0bd4d0ff85e2c055fc0beba4bc",
+          "root_y": 358.0
+        },
+        {
+          "direction": 1,
+          "phase": 3,
+          "source_row": 1,
+          "owner": 10,
+          "rect": [
+            570,
+            199,
+            145,
+            159
+          ],
+          "root_x": 629,
+          "measured_ground": 358,
+          "rgba_sha256": "3449d0d38cadb0053955c81d15c1424be9ade604d428f55003efd5ac8c3ec42c",
+          "root_y": 358.0
+        },
+        {
+          "direction": 1,
+          "phase": 4,
+          "source_row": 1,
+          "owner": 11,
+          "rect": [
+            752,
+            214,
+            150,
+            144
+          ],
+          "root_x": 815,
+          "measured_ground": 358,
+          "rgba_sha256": "6579170fcb6d562f66662bbf8b0cf0527a4cd9e8de7b8ccb1e6db744233a7813",
+          "root_y": 358.0
+        },
+        {
+          "direction": 1,
+          "phase": 5,
+          "source_row": 1,
+          "owner": 12,
+          "rect": [
+            943,
+            190,
+            135,
+            168
+          ],
+          "root_x": 995,
+          "measured_ground": 358,
+          "rgba_sha256": "9ad933a23fb66cf38d82dd0f676c4845288a1ee57fc7891c2dfb3605a4583b5c",
+          "root_y": 358.0
+        },
+        {
+          "direction": 2,
+          "phase": 0,
+          "source_row": 2,
+          "owner": 13,
+          "rect": [
+            32,
+            370,
+            143,
+            167
+          ],
+          "root_x": 89,
+          "measured_ground": 537,
+          "rgba_sha256": "e50380958b0cbfd6ce3c07404b696ef5752c8100639d4161de153e9cb00ba7b9",
+          "root_y": 537.0
+        },
+        {
+          "direction": 2,
+          "phase": 1,
+          "source_row": 2,
+          "owner": 14,
+          "rect": [
+            213,
+            370,
+            140,
+            167
+          ],
+          "root_x": 270,
+          "measured_ground": 537,
+          "rgba_sha256": "ccd31909eb8072e69747b7069e33ea02ba8355723c8d54335cf4855e8a7e46eb",
+          "root_y": 537.0
+        },
+        {
+          "direction": 2,
+          "phase": 2,
+          "source_row": 2,
+          "owner": 15,
+          "rect": [
+            393,
+            370,
+            141,
+            167
+          ],
+          "root_x": 451,
+          "measured_ground": 537,
+          "rgba_sha256": "8a7ebc7538af8d58aaba71309aa0d4debd4c2ca13cc95a65eac360a5cdbb767d",
+          "root_y": 537.0
+        },
+        {
+          "direction": 2,
+          "phase": 3,
+          "source_row": 2,
+          "owner": 16,
+          "rect": [
+            572,
+            379,
+            149,
+            158
+          ],
+          "root_x": 633,
+          "measured_ground": 537,
+          "rgba_sha256": "e676cccd35a08eac62b04d5b9a0f95caedaa85236623c4ee206ec04093219c80",
+          "root_y": 537.0
+        },
+        {
+          "direction": 2,
+          "phase": 4,
+          "source_row": 2,
+          "owner": 17,
+          "rect": [
+            755,
+            395,
+            148,
+            142
+          ],
+          "root_x": 816,
+          "measured_ground": 537,
+          "rgba_sha256": "5e96c871837e77ba8697c0aa1ea3f217d3374b55877d3bdcb60fdf11379df2f9",
+          "root_y": 537.0
+        },
+        {
+          "direction": 2,
+          "phase": 5,
+          "source_row": 2,
+          "owner": 18,
+          "rect": [
+            941,
+            370,
+            132,
+            167
+          ],
+          "root_x": 997,
+          "measured_ground": 537,
+          "rgba_sha256": "f21e3070c16499cd3f478e19adfaf5828c67b3f869cac93b2aa1550563fa6130",
+          "root_y": 537.0
+        },
+        {
+          "direction": 3,
+          "phase": 0,
+          "source_row": 3,
+          "owner": 19,
+          "rect": [
+            17,
+            550,
+            140,
+            170
+          ],
+          "root_x": 102,
+          "measured_ground": 720,
+          "rgba_sha256": "32f66ff8e02fc5c4496ab088ff42745c71abb5b18a100d9134b831584e3f59f9",
+          "root_y": 721.0
+        },
+        {
+          "direction": 3,
+          "phase": 1,
+          "source_row": 3,
+          "owner": 20,
+          "rect": [
+            194,
+            550,
+            144,
+            171
+          ],
+          "root_x": 284,
+          "measured_ground": 721,
+          "rgba_sha256": "ade033d485e5e0dec06b696a4d0cd837579f0961726a7c6143db86f98cef871f",
+          "root_y": 721.0
+        },
+        {
+          "direction": 3,
+          "phase": 2,
+          "source_row": 3,
+          "owner": 21,
+          "rect": [
+            375,
+            550,
+            143,
+            171
+          ],
+          "root_x": 465,
+          "measured_ground": 721,
+          "rgba_sha256": "925bf1ab9b3ee02b1d7100fef79c2b210e5897c4e633bd3d1cdd96c14a410f93",
+          "root_y": 721.0
+        },
+        {
+          "direction": 3,
+          "phase": 3,
+          "source_row": 3,
+          "owner": 22,
+          "rect": [
+            553,
+            559,
+            156,
+            161
+          ],
+          "root_x": 646,
+          "measured_ground": 720,
+          "rgba_sha256": "57fb338cd9af258bc5e0a50030ef06657fdf2fffa2f281a461d96edb0f4703ea",
+          "root_y": 721.0
+        },
+        {
+          "direction": 3,
+          "phase": 4,
+          "source_row": 3,
+          "owner": 23,
+          "rect": [
+            738,
+            571,
+            156,
+            150
+          ],
+          "root_x": 830,
+          "measured_ground": 721,
+          "rgba_sha256": "8546e45319ee64a4ac5c60ceb3417f45f039904dd713534045bca4fbdd9b0563",
+          "root_y": 721.0
+        },
+        {
+          "direction": 3,
+          "phase": 5,
+          "source_row": 3,
+          "owner": 24,
+          "rect": [
+            927,
+            550,
+            134,
+            171
+          ],
+          "root_x": 1010,
+          "measured_ground": 721,
+          "rgba_sha256": "c4791c1c7119fc240690dd2c15e0891505bd9ca45b08007ef8b059cb2b079994",
+          "root_y": 721.0
+        },
+        {
+          "direction": 4,
+          "phase": 0,
+          "source_row": 4,
+          "owner": 25,
+          "rect": [
+            19,
+            729,
+            143,
+            171
+          ],
+          "root_x": 106,
+          "measured_ground": 900,
+          "rgba_sha256": "d8e52d8e929d962d04ca96d892407f3692505881c7fa6bca031a4e04e1412f83",
+          "root_y": 900.0
+        },
+        {
+          "direction": 4,
+          "phase": 1,
+          "source_row": 4,
+          "owner": 26,
+          "rect": [
+            195,
+            729,
+            148,
+            172
+          ],
+          "root_x": 287,
+          "measured_ground": 901,
+          "rgba_sha256": "ef417491d727f00635d35f9cadf18edca7b58569a928060bf29256815e466295",
+          "root_y": 900.0
+        },
+        {
+          "direction": 4,
+          "phase": 2,
+          "source_row": 4,
+          "owner": 27,
+          "rect": [
+            376,
+            729,
+            146,
+            171
+          ],
+          "root_x": 467,
+          "measured_ground": 900,
+          "rgba_sha256": "400940e41e61a16730c5176168a75159032a85117937a989285601778302a5b6",
+          "root_y": 900.0
+        },
+        {
+          "direction": 4,
+          "phase": 3,
+          "source_row": 4,
+          "owner": 28,
+          "rect": [
+            556,
+            732,
+            149,
+            168
+          ],
+          "root_x": 645,
+          "measured_ground": 900,
+          "rgba_sha256": "dd8b669d8b39f7eeea85ec454a7d7a4c9af1123be91a43ab7afdd8804c67a614",
+          "root_y": 900.0
+        },
+        {
+          "direction": 4,
+          "phase": 4,
+          "source_row": 4,
+          "owner": 29,
+          "rect": [
+            732,
+            752,
+            166,
+            149
+          ],
+          "root_x": 835,
+          "measured_ground": 901,
+          "rgba_sha256": "f8094cfb0cb6e93a3bcedfc937d1b3da5a122f97260aa1d9a24c958ca41da535",
+          "root_y": 900.0
+        },
+        {
+          "direction": 4,
+          "phase": 5,
+          "source_row": 4,
+          "owner": 30,
+          "rect": [
+            927,
+            729,
+            140,
+            171
+          ],
+          "root_x": 1013,
+          "measured_ground": 900,
+          "rgba_sha256": "4da6204dfe8a654a490456b134c7e3c03e1160490fa85ae4a65cfe2cac91e036",
+          "root_y": 900.0
+        },
+        {
+          "direction": 5,
+          "phase": 0,
+          "source_row": 5,
+          "owner": 31,
+          "rect": [
+            25,
+            910,
+            140,
+            170
+          ],
+          "root_x": 108,
+          "measured_ground": 1080,
+          "rgba_sha256": "f75435c9c0e81eb11b000c07cdf3213be9cbd50a7f27a3a388630da92838e0d0",
+          "root_y": 1080.0
+        },
+        {
+          "direction": 5,
+          "phase": 1,
+          "source_row": 5,
+          "owner": 32,
+          "rect": [
+            201,
+            910,
+            144,
+            170
+          ],
+          "root_x": 287,
+          "measured_ground": 1080,
+          "rgba_sha256": "f159bf6e851112cf05c3113e2747bfb04a5945ed24195664c8fd0514768e2638",
+          "root_y": 1080.0
+        },
+        {
+          "direction": 5,
+          "phase": 2,
+          "source_row": 5,
+          "owner": 33,
+          "rect": [
+            382,
+            910,
+            143,
+            170
+          ],
+          "root_x": 467,
+          "measured_ground": 1080,
+          "rgba_sha256": "32f726e71b68352705f61d82af232a72752fd60a8b0bc1ce59b8ac1311913cb6",
+          "root_y": 1080.0
+        },
+        {
+          "direction": 5,
+          "phase": 3,
+          "source_row": 5,
+          "owner": 34,
+          "rect": [
+            558,
+            915,
+            148,
+            167
+          ],
+          "root_x": 643,
+          "measured_ground": 1082,
+          "rgba_sha256": "c7c1b4c87ee92488c7160337cc496b6f4e83a8e55af2b46bb3a9a1410722c76f",
+          "root_y": 1080.0
+        },
+        {
+          "direction": 5,
+          "phase": 4,
+          "source_row": 5,
+          "owner": 35,
+          "rect": [
+            736,
+            928,
+            162,
+            153
+          ],
+          "root_x": 831,
+          "measured_ground": 1081,
+          "rgba_sha256": "479b758786d18427f8b51fe0ce16538b6d1228cdb8104c8f2bee3c2f8f7e97e6",
+          "root_y": 1080.0
+        },
+        {
+          "direction": 5,
+          "phase": 5,
+          "source_row": 5,
+          "owner": 36,
+          "rect": [
+            930,
+            912,
+            138,
+            168
+          ],
+          "root_x": 1010,
+          "measured_ground": 1080,
+          "rgba_sha256": "fdf87c0a86f899c0764e5baef9f75faeaab40cb1aa7bff1dcd5cda456d0214c8",
+          "root_y": 1080.0
+        },
+        {
+          "direction": 6,
+          "phase": 0,
+          "source_row": 6,
+          "owner": 37,
+          "rect": [
+            35,
+            1090,
+            139,
+            167
+          ],
+          "root_x": 90,
+          "measured_ground": 1257,
+          "rgba_sha256": "f361716e9627d93aca1eeae0c9a51a6277d540c3aff44d47df8c729d21e7414d",
+          "root_y": 1256.0
+        },
+        {
+          "direction": 6,
+          "phase": 1,
+          "source_row": 6,
+          "owner": 38,
+          "rect": [
+            213,
+            1088,
+            142,
+            168
+          ],
+          "root_x": 271,
+          "measured_ground": 1256,
+          "rgba_sha256": "72f4bec5ebaaebbd9c2349be26b112e86d284d852b7c4718bc62a22349836791",
+          "root_y": 1256.0
+        },
+        {
+          "direction": 6,
+          "phase": 2,
+          "source_row": 6,
+          "owner": 39,
+          "rect": [
+            393,
+            1088,
+            141,
+            168
+          ],
+          "root_x": 450,
+          "measured_ground": 1256,
+          "rgba_sha256": "5ab7676e01ee55496eee7e5b88d6dc63a20a8929aa98ed83f15dbf10240d2a09",
+          "root_y": 1256.0
+        },
+        {
+          "direction": 6,
+          "phase": 3,
+          "source_row": 6,
+          "owner": 40,
+          "rect": [
+            569,
+            1093,
+            138,
+            164
+          ],
+          "root_x": 631,
+          "measured_ground": 1257,
+          "rgba_sha256": "62b69f2368625d5bd209fb4e98cabf67be542c785fa70e97c93c8eba84caa421",
+          "root_y": 1256.0
+        },
+        {
+          "direction": 6,
+          "phase": 4,
+          "source_row": 6,
+          "owner": 41,
+          "rect": [
+            750,
+            1102,
+            145,
+            155
+          ],
+          "root_x": 814,
+          "measured_ground": 1257,
+          "rgba_sha256": "2d1ae10f0f8d9efb6c82aee9ac0a36cef2aaa5ed45de528f64d6ee840c3e3ff9",
+          "root_y": 1256.0
+        },
+        {
+          "direction": 6,
+          "phase": 5,
+          "source_row": 6,
+          "owner": 42,
+          "rect": [
+            939,
+            1090,
+            135,
+            167
+          ],
+          "root_x": 995,
+          "measured_ground": 1257,
+          "rgba_sha256": "f73d881e9b1b5b6d4a5eddc040070941523c89cc6058548edf243db65443df74",
+          "root_y": 1256.0
+        },
+        {
+          "direction": 7,
+          "phase": 0,
+          "source_row": 7,
+          "owner": 43,
+          "rect": [
+            34,
+            1268,
+            148,
+            166
+          ],
+          "root_x": 93,
+          "measured_ground": 1434,
+          "rgba_sha256": "17735ff4278043806c36a5daf19acab893dc30b880ed7ebfa119d20a398aa448",
+          "root_y": 1434.0
+        },
+        {
+          "direction": 7,
+          "phase": 1,
+          "source_row": 7,
+          "owner": 44,
+          "rect": [
+            215,
+            1268,
+            143,
+            166
+          ],
+          "root_x": 275,
+          "measured_ground": 1434,
+          "rgba_sha256": "7b00bb448d33a7cdacb9e9183c2208da95b14104ffe70f123b9c09bbc9eed8c4",
+          "root_y": 1434.0
+        },
+        {
+          "direction": 7,
+          "phase": 2,
+          "source_row": 7,
+          "owner": 45,
+          "rect": [
+            395,
+            1268,
+            139,
+            166
+          ],
+          "root_x": 454,
+          "measured_ground": 1434,
+          "rgba_sha256": "411c493c0c4f5878c519fd722fce6483dcfc739688bdde8ac22d5fb0c252e790",
+          "root_y": 1434.0
+        },
+        {
+          "direction": 7,
+          "phase": 3,
+          "source_row": 7,
+          "owner": 46,
+          "rect": [
+            568,
+            1272,
+            147,
+            162
+          ],
+          "root_x": 632,
+          "measured_ground": 1434,
+          "rgba_sha256": "ee05e8ed1c33b3452f534751e924b6ba68afceba7975a9ba2adc4e95b083ba01",
+          "root_y": 1434.0
+        },
+        {
+          "direction": 7,
+          "phase": 4,
+          "source_row": 7,
+          "owner": 47,
+          "rect": [
+            752,
+            1284,
+            154,
+            151
+          ],
+          "root_x": 815,
+          "measured_ground": 1435,
+          "rgba_sha256": "0ea4cf8ae772c9cfcce345178dd4903a1c80c8a26392707bf0e53fb75c6f9e6d",
+          "root_y": 1434.0
+        },
+        {
+          "direction": 7,
+          "phase": 5,
+          "source_row": 7,
+          "owner": 48,
+          "rect": [
+            939,
+            1269,
+            138,
+            165
+          ],
+          "root_x": 998,
+          "measured_ground": 1434,
+          "rgba_sha256": "de779d1e0ec220b55d10d3ce04250f1a9c31a0d081fd6d5294e249602c7119ce",
+          "root_y": 1434.0
+        }
+      ],
+      "fragments": [],
+      "unit_scale": 1.0
+    },
+    "death": {
+      "raw": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/raw/source-death.png",
+      "raw_sha256": "89bda1996c85040ba68e278198792c6cb8434478dfd9691edaaf9cd4242ef2ed",
+      "ownership": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/source-layout-155/death-ownership.png",
+      "ownership_sha256": "eb630f888cffc9edd25e8667dcd0454ec4841956fb88cb45ba9813cfb926501e",
+      "nominal": 512.0,
+      "counts": [
+        2,
+        2,
+        2
+      ],
+      "poses": [
+        {
+          "direction": 2,
+          "phase": 0,
+          "source_row": 0,
+          "owner": 1,
+          "rect": [
+            95,
+            62,
+            391,
+            437
+          ],
+          "root_x": 245,
+          "measured_ground": 499,
+          "rgba_sha256": "ba02aa58ad0f07c6961cf8a31d15a32c522ca6c32505806726464f6d32cb8c2b",
+          "root_y": 499
+        },
+        {
+          "direction": 2,
+          "phase": 1,
+          "source_row": 0,
+          "owner": 2,
+          "rect": [
+            560,
+            158,
+            451,
+            341
+          ],
+          "root_x": 722,
+          "measured_ground": 499,
+          "rgba_sha256": "0a06c4a9822111b68d0e6bc8f69e4b89b9280770c2c38bc37b093382624e08be",
+          "root_y": 499
+        },
+        {
+          "direction": 2,
+          "phase": 2,
+          "source_row": 1,
+          "owner": 3,
+          "rect": [
+            27,
+            657,
+            481,
+            296
+          ],
+          "root_x": 200,
+          "measured_ground": 953,
+          "rgba_sha256": "e7a7a53a70533e57f7cfd61b07b5c63e444adbdb9fd708bb93692dd0fe70ad60",
+          "root_y": 953
+        },
+        {
+          "direction": 2,
+          "phase": 3,
+          "source_row": 1,
+          "owner": 4,
+          "rect": [
+            519,
+            735,
+            484,
+            210
+          ],
+          "root_x": 692,
+          "measured_ground": 929,
+          "rgba_sha256": "1ac7ec7b263eccf27bb1cd9ab55e1c203b812e2e83c9a495f0384b68eec74493",
+          "root_y": 945
+        },
+        {
+          "direction": 2,
+          "phase": 4,
+          "source_row": 2,
+          "owner": 5,
+          "rect": [
+            15,
+            1217,
+            494,
+            229
+          ],
+          "root_x": 208,
+          "measured_ground": 1422,
+          "rgba_sha256": "04340cb7070b369d5fad732d6be3c1809f8d3747534cdd33e834cad26c4efaac",
+          "root_y": 1446
+        },
+        {
+          "direction": 2,
+          "phase": 5,
+          "source_row": 2,
+          "owner": 6,
+          "rect": [
+            517,
+            1216,
+            491,
+            214
+          ],
+          "root_x": 723,
+          "measured_ground": 1417,
+          "rgba_sha256": "6789f7038fcf91c70544c557953165b6c43bea474b863fa274cdbbcbb8dae61c",
+          "root_y": 1430
+        }
+      ],
+      "fragments": [],
+      "unit_scale": 0.353515625
+    }
+  },
+  "uniform_scale": 0.45217391304347826,
+  "cell": 224,
+  "pad": 16,
+  "ground": 143.999999059556,
+  "policy": "COMPLETE_SOURCE_POSES_NO_DUPLICATES_UNIFORM_SCALE_ROW_GROUND_NO_RUN_Y_SNAPS",
+  "final_approved": false
+}

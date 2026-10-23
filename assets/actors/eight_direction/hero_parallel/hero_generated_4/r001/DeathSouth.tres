@@ -1,0 +1,65 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/hero_parallel/hero_generated_4/r001/normalized-source-death.png" id="1_wahw4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6b8oh"]
+atlas = ExtResource("1_wahw4")
+region = Rect2(0, 0, 224, 224)
+margin = Rect2(16, 16, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qdw6"]
+atlas = ExtResource("1_wahw4")
+region = Rect2(224, 0, 224, 224)
+margin = Rect2(16, 16, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfu8l"]
+atlas = ExtResource("1_wahw4")
+region = Rect2(0, 224, 224, 224)
+margin = Rect2(16, 16, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gfh30"]
+atlas = ExtResource("1_wahw4")
+region = Rect2(224, 224, 224, 224)
+margin = Rect2(16, 16, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gngtb"]
+atlas = ExtResource("1_wahw4")
+region = Rect2(0, 448, 224, 224)
+margin = Rect2(16, 16, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mdwr0"]
+atlas = ExtResource("1_wahw4")
+region = Rect2(224, 448, 224, 224)
+margin = Rect2(16, 16, 32, 32)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6b8oh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8qdw6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xfu8l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gfh30")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gngtb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mdwr0")
+}],
+"loop": 0,
+"name": &"death_2",
+"speed": 7.5
+}]

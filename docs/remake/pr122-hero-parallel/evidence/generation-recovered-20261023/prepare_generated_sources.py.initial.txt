@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Detect complete painted poses before rendering; never invent a missing pose.
+
+PNG outputs are ownership-label DATA, not artwork. Godot samples the immutable
+original RGBA pixels using these labels and one uniform scale for the actor.
+"""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+import numpy as np
+from PIL import Image
+from scipy import ndimage
+
+ROOT = Path(__file__).resolve().parents[3]
+BASE = ROOT / 'docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023'
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def analyze(path, role, output):
+    image = np.array(Image.open(path).convert('RGBA'))
+    height, width = image.shape[:2]
+    rows = 3 if role == 'death' else 8
+    nominal = height / rows
+    labels, _ = ndimage.label(image[:, :, 3] > 16, np.ones((3, 3)))
+    areas = np.bincount(labels.ravel())
+    boxes = ndimage.find_objects(labels)
+    buckets = [[] for _ in range(rows)]
+    for label, box in enumerate(boxes, 1):
+        if areas[label] < max(60, width * height * .00010):
+            continue
+        yy, xx = box
+        row = min(rows - 1, int((yy.start + yy.stop) / 2 / nominal))
+        buckets[row].append((int(areas[label]), label, box))
+    selected = []
+    counts = []
+    for direction, bucket in enumerate(buckets):
+        assert bucket, (role, direction, 'NO_PAINTED_POSES')
+        threshold = max(item[0] for item in bucket) * .28
+        major = sorted([item for item in bucket if item[0] >= threshold], reverse=True)
+        required = 2 if role == 'death' else 6
+        if role == 'attack':
+            assert len(major) >= 4, (role, direction, 'FEWER_THAN_FOUR_REAL_ATTACK_POSES')
+            required = min(6, len(major))
+        assert len(major) >= required, (role, direction, 'MISSING_GENUINE_PHASES', len(major))
+        chosen = sorted(major[:required], key=lambda item: item[2][1].start)
+        counts.append(len(chosen))
+        for phase, (_, label, box) in enumerate(chosen):
+            selected.append(dict(label=label, direction=2 if role == 'death' else direction,
+                                 phase=len(selected) if role == 'death' else phase,
+                                 source_row=direction))
+    owner = np.zeros(labels.shape, dtype=np.uint8)
+    for index, pose in enumerate(selected, 1):
+        pose['owner'] = index
+        owner[labels == pose['label']] = index
+    distance, nearest = ndimage.distance_transform_edt(owner == 0, return_indices=True)
+    nearest_owner = owner[tuple(nearest)]
+    selected_labels = {p['label'] for p in selected}
+    fragments = []
+    for label, box in enumerate(boxes, 1):
+        if label in selected_labels or areas[label] < 12:
+            continue
+        local = labels[box] == label
+        d = float(distance[box][local].min())
+        if d > 16:
+            if areas[label] >= 60:
+                fragments.append(dict(pixels=int(areas[label]), gap=d, unassigned=True))
+            continue
+        neighbors = nearest_owner[box][local]
+        neighbors = neighbors[neighbors > 0]
+        if not len(neighbors):
+            continue
+        target = int(np.bincount(neighbors).argmax())
+        owner[box][local] = target
+        fragments.append(dict(pixels=int(areas[label]), gap=d, owner=target))
+    assert not any(f.get('unassigned') for f in fragments), (role, 'UNASSIGNED_SOURCE_MATERIAL', fragments)
+    distance, nearest = ndimage.distance_transform_edt(owner == 0, return_indices=True)
+    owner = np.where((image[:, :, 3] > 0) & (distance <= 2), owner[tuple(nearest)], 0).astype(np.uint8)
+    for pose in selected:
+        points = owner == pose['owner']
+        ys, xs = np.where(points)
+        left, right, top, bottom = int(xs.min()), int(xs.max()) + 1, int(ys.min()), int(ys.max()) + 1
+        # The tool leaves faint matte/antialias pixels in the empty gutter.
+        # Test actual visible ink, keeping every original pixel in the ROI.
+        ink_y, ink_x = np.where(points & (image[:,:,3] > 64))
+        assert ink_x.min() > 0 and ink_x.max() < width-1 and ink_y.min() > 0 and ink_y.max() < height-1, (role, 'OUTER_CANVAS_INK_CLIP', pose)
+        pose['rect'] = [left, top, right-left, bottom-top]
+        local = points[top:bottom, left:right]
+        dense = ndimage.distance_transform_edt(local)
+        weights = dense * dense
+        weights[:int(local.shape[0] * .20)] = 0
+        weights[int(local.shape[0] * .85):] = 0
+        horizontal = weights.sum(axis=0)
+        center = int(np.searchsorted(np.cumsum(horizontal), horizontal.sum() / 2))
+        pose['root_x'] = left + center
+        near = points[:, max(0,pose['root_x']-int(nominal*.30)):min(width,pose['root_x']+int(nominal*.30))]
+        feet = np.where(near)[0]
+        pose['measured_ground'] = int(feet.max()) + 1 if len(feet) else bottom
+        pose['rgba_sha256'] = hashlib.sha256(image[top:bottom,left:right].tobytes()+local.tobytes()).hexdigest()
+        pose.pop('label')
+    if role == 'death':
+        for pose in selected:
+            pose['root_y'] = pose['rect'][1] + pose['rect'][3]
+    else:
+        for direction in range(8):
+            group = [p for p in selected if p['direction'] == direction]
+            samples = [group[i]['measured_ground'] for i in ([0,1,3,4] if role == 'run' else [0,1,2] if role == 'support' else [0,len(group)-1])]
+            ground = float(np.median(samples))
+            for pose in group:
+                pose['root_y'] = ground
+            assert len({p['rgba_sha256'] for p in group}) == len(group), (role,direction,'DUPLICATE_RAW_POSES')
+    output.parent.mkdir(parents=True, exist_ok=True)
+    Image.fromarray(owner).save(output)
+    return dict(raw='res://'+str(path.relative_to(ROOT)), raw_sha256=sha(path),
+                ownership='res://'+str(output.relative_to(ROOT)), ownership_sha256=sha(output),
+                nominal=nominal, counts=counts, poses=selected, fragments=fragments)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--id', required=True)
+    args = parser.parse_args()
+    sid = args.id
+    folder = ROOT / 'assets/actors/eight_direction/hero_parallel' / ('death_155' if sid == '155' else 'hero_generated_'+sid) / 'r001'
+    scope = json.loads((ROOT/'data/pr122_hero_parallel_staging.json').read_text())
+    assert not scope['actors']['transform:'+sid]['final_approved']
+    baseline = json.loads((BASE/'baseline-profiles.json').read_text())[sid]
+    fingerprint = sha(__file__) + ''.join(sha(folder/'raw'/('source-'+r+'.png')) for r in ['run','attack','support','death']) + json.dumps(baseline, sort_keys=True)
+    fingerprint = hashlib.sha256(fingerprint.encode()).hexdigest()
+    manifest = folder/'source-layout.json'
+    if manifest.exists() and json.loads(manifest.read_text()).get('fingerprint') == fingerprint:
+        print('HERO_SOURCE_LAYOUT_REUSED id='+sid+' writes=0')
+        return
+    evidence = BASE/('source-layout-'+sid)
+    sources = {role:analyze(folder/'raw'/('source-'+role+'.png'),role,evidence/(role+'-ownership.png')) for role in ['run','attack','support','death']}
+    nominal = sources['support']['nominal']
+    support = [p for p in sources['support']['poses'] if p['direction'] == 2 and p['phase'] < 3]
+    body_height = float(np.median([p['rect'][3] for p in support]))
+    scale = min(float(baseline['height']) / body_height, 1.0)
+    ground = float(baseline['ground']) - 16.0
+    assert 20 < ground < 210, baseline
+    for role,source in sources.items():
+        unit = nominal/source['nominal']
+        source['unit_scale'] = unit
+        for pose in source['poses']:
+            x,y,w,h = pose['rect'];rx,ry = pose['root_x'],pose['root_y']
+            for extent,space in [(max(rx-x,x+w-rx)*unit,104),((ry-y)*unit,ground-8),((y+h-ry)*unit,224-ground-8)]:
+                if extent > 0: scale = min(scale,space/extent)
+    assert scale > .05
+    result = dict(schema='hero-detected-source-layout-v1',id=sid,fingerprint=fingerprint,
+                  baseline=baseline,folder='res://'+str(folder.relative_to(ROOT))+'/',
+                  sources=sources,uniform_scale=scale,cell=224,pad=16,ground=ground,
+                  policy='COMPLETE_SOURCE_POSES_NO_DUPLICATES_UNIFORM_SCALE_ROW_GROUND_NO_RUN_Y_SNAPS',final_approved=False)
+    manifest.write_text(json.dumps(result,indent=2)+'\n')
+    print('HERO_SOURCE_LAYOUT_PASS id='+sid+' real_run=48 attack='+str(sum(sources['attack']['counts']))+' source_paintings=4')
+
+
+if __name__ == '__main__':
+    main()

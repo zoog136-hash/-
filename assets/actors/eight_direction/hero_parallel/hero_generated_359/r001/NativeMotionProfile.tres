@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_wx77e"]
+
+[resource]
+script = ExtResource("1_wx77e")
+profile_id = "transform:359"
+resource_path_hint = "res://assets/catalog/ec230f19da2fd4dc5363ab53.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 2
+action_hit_frames = {
+"attack": 2.0,
+"cast": 2.0
+}
+sprite_offset = Vector2(0, -27.2)
+pixel_scale = 0.85
+embedded_shadow = true
+death_duration = 0.8
+idle_amplitude = 0.3
+stride_bob = 1.6
+stride_lean = 0.017
+attack_recoil = 0.85
+hit_recoil = 0.0
+death_tilt = 1.2
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

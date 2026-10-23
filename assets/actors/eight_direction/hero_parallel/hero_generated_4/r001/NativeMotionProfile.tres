@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1_n4dge"]
+
+[resource]
+script = ExtResource("1_n4dge")
+profile_id = "transform:4"
+resource_path_hint = "res://assets/catalog/8dad718d9d43087a10fc03d4.png"
+frames_path = "res://assets/actors/eight_direction/hero_parallel/hero_generated_4/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 18.0
+attack_hit_ratio = 0.44
+attack_hit_frame = 2
+action_hit_frames = {
+"attack": 2.0,
+"cast": 2.0
+}
+sprite_offset = Vector2(0, -33.6)
+pixel_scale = 1.05
+embedded_shadow = true
+death_duration = 0.8
+body_kind = "armored"
+idle_amplitude = 1.3
+stride_bob = 0.45
+stride_lean = 0.009
+attack_recoil = 0.8
+hit_recoil = 0.0
+death_tilt = 0.3
+authored_motion_weight = 0.0
+metadata/hero_parallel_candidate = true
+metadata/final_approved = false

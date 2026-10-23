@@ -254,7 +254,7 @@ func _run() -> void:
 	var suffix := "opengl" if captures > 0 else "headless"
 	var file := FileAccess.open(evidence + "validation-" + suffix + ".json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(result, "  ") + "\n")
-	if suffix == "opengl":
+	if suffix == "opengl" and OS.get_environment("TWILIGHT_HERO_VALIDATION_NO_STAGE_WRITE") != "1":
 		# Another sequential producer may have advanced an unrelated actor while
 		# this renderer ran. Never write a stale copy over those newer entries.
 		staging = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))

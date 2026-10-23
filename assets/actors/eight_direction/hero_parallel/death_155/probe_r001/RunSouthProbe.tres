@@ -1,0 +1,59 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/hero_parallel/death_155/probe_r001/source-run-S.png" id="1_wwd6u"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_87j6y"]
+atlas = ExtResource("1_wwd6u")
+region = Rect2(0, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_edrg0"]
+atlas = ExtResource("1_wwd6u")
+region = Rect2(512, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmoip"]
+atlas = ExtResource("1_wwd6u")
+region = Rect2(1024, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3b24"]
+atlas = ExtResource("1_wwd6u")
+region = Rect2(0, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_buo42"]
+atlas = ExtResource("1_wwd6u")
+region = Rect2(512, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dy7x1"]
+atlas = ExtResource("1_wwd6u")
+region = Rect2(1024, 512, 512, 512)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_87j6y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_edrg0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tmoip")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3b24")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_buo42")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dy7x1")
+}],
+"loop": 1,
+"name": &"run_2",
+"speed": 18.0
+}]
