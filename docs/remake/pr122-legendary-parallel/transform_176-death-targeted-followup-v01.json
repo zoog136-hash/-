@@ -1,0 +1,14 @@
+{
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "slot": [
+    "transform:176",
+    "S",
+    "death"
+  ],
+  "cause": "DEATH_TERMINAL_POSE_REGRESSION",
+  "discovered_during": "Targeted scale-registration world-unit comparison after the frozen whole review",
+  "observed": "Original new phase4 is lying flat, followed by original native phase5 folded/kneeling higher pose; terminal ordering moves back upward.",
+  "correction": "Keep every raw pose and existing asset; reorder only the new revision binding to0,1,2,3,5,4. Hold the former phase4 lying pose once.",
+  "newly_authored_poses": 0,
+  "original_assets_changed": false
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "dependency_required_slots": [
+    [
+      "transform:176",
+      "S",
+      "run"
+    ],
+    [
+      "transform:176",
+      "W",
+      "run"
+    ]
+  ],
+  "excluded_slots": [],
+  "revisions": [
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-run-record.json",
+      "record_sha256": "fc657db6b6f448e58a3a2b199ded9f4290120b2fefb0d608c5507d1522c08b82",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e8fcfc30a5c5102fcae44ba4e32e42c4c0309125989649135f5cc8dd2818f0d9",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-run-registration.json",
+      "registration_sha256": "7cc3ce6550376bf66cfe995c12345087979f1b78b0a81f331f66fe0f42056006",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "W",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-run-record.json",
+      "record_sha256": "5ac224440be465c15d5b54dc4556eef269a2e45d0145b6a36074804fd9c99541",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "835d8391626818dad7bff3c83f3a9ef57110927a17d73fc78c639508ec0602da",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-run-registration.json",
+      "registration_sha256": "dfa447221a6ac873b39e6f315e234206fcea29205397c691fb929a376c62b817",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    }
+  ],
+  "review_input_sha256": "baa8b23a27ee4c340ad72f58ef82e1ae0b06cb7d238688be9fda2e685cf443a5",
+  "pending_slots": [],
+  "immutable_native_frames_preserved": 59,
+  "source_PNG_mutations": 0,
+  "quality_status": "HOLD",
+  "final_approved": 0,
+  "scope": "ONLY two failed single-source preloader cases; prior31PASS are not repeated"
+}

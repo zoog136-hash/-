@@ -30,7 +30,13 @@ func _validate(entry: Dictionary) -> Dictionary:
 	if matched != 1:
 		errors.append("catalog ID not unique")
 	_retained.clear()
-	for source: Dictionary in record.get("source_files", []):
+	var sources: Array = record.get("source_files", [])
+	if sources.is_empty():
+		var single_path: String = str(record.get("source", ""))
+		if not single_path.begins_with("res://"):
+			single_path = "res://" + single_path
+		sources = [{"path": single_path, "sha256": record.get("source_sha256", "")}]
+	for source: Dictionary in sources:
 		var source_path: String = str(source["path"])
 		if FileAccess.get_sha256(source_path) != str(source["sha256"]):
 			errors.append("PNG SHA mismatch: " + source_path)

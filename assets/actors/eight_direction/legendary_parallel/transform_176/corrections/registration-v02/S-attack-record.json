@@ -1,0 +1,355 @@
+{
+  "key": "transform:176",
+  "name": "경비병(창) 대장",
+  "grade": "전설",
+  "direction": "S",
+  "role": "attack",
+  "reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+  "generation_request": {
+    "prompt": "TWILIGHT transform:176 경비병(창) 대장. Produce ONLY THREE missing articulated SOUTH ATTACK poses to supplement three preserved existing frames. The first catalog portrait is identity authority; the second existing 8-column by 8-row atlas establishes exact sprite rendering, scale, South camera, weapon hand and silhouette. In that second atlas the third column is SOUTH. Its row6 (zero-based row5) is preserved windup, row7 is preserved full-contact thrust, row8 is preserved recovery. DO NOT redraw those three preserved poses and do not output a complete six-frame sequence.\n\nCreate ONE transparent RGBA PNG with EXACTLY THREE equal columns and ONE row, left to right. Exactly one complete small painted RPG sprite in each cell. All face SOUTH/screen DOWN in the identical elevated front camera. Keep the closed silver-white pointed helmet and armor, dark joints, deep dark-purple cape and ONE original lavender-bladed long polearm in its established anatomical hand. Preserve exactly the original head, body proportions, ornament and weapon geometry; no exposed face, new shield, wings, tail or substitute weapon. Use the existing atlas rendered sprite size (about 106-114 native pixels high including equipment); avoid the scale of an enlarged portrait. Leave generous transparent empty space around every entire figure, full polearm blade and butt, hands and feet. Identical overall scale and ground level in all three cells.\n\nNEW CELL0, final sequence frame1: between preserved windup and launch. Lower the knees into a visibly loaded compression, retain firm original grip, draw elbows and polearm back with shoulders loading the downward-directed thrust. Keep face and chest in the same SOUTH camera and retain stable foot support. This must be a new joint pose, not the preserved upright windup.\nNEW CELL1, final sequence frame2: forward acceleration immediately BEFORE the preserved contact. Extend shoulders and arms partially toward screen DOWN, send the same polearm tip toward the downward target without reaching full extension yet. Rear foot drives and forward foot supports; maintain connected hands and shaft. Clear intermediate extension distinct from both compression and full contact.\nNEW CELL2, final sequence frame4: immediate follow-through AFTER preserved full contact, before preserved upright recovery. Keep the original polearm aligned along the same SOUTH thrust, briefly overextend the shoulders and torso then begin drawing the shaft inward, knees counterbalance and cape settles. Distinct partial retraction, neither a fresh attack nor an upright clone.\n\nThe final animation will be: existing windup, NEW cell0 compression, NEW cell1 pre-contact, existing contact, NEW cell2 follow-through, existing recovery. Only the three NEW cells belong in this output. Newly articulate joints and equipment without rotating, translating, mirroring, recoloring or cloning an existing sprite. No sideways axe chop, spinning attack, injury/death, detached effects, aura clouds, gore, scenery, ground, labels, grids, captions or extra figures. Alpha-zero outside silhouettes. Preserve all equipment tips inside each cell. Output only the one three-pose supplemental sheet.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/legendary_repo/assets/catalog/4954db6f65010804b3185b7a.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-0.png"
+    ]
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "new_poses_requested": 3,
+  "preserved_existing_poses": 3,
+  "reference_sha256": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+  "schema": "pr122-legendary-semantic-registration-clip-v1",
+  "status": "REGISTERED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "input_representation": "mixed_reuse3_new3_v1",
+  "source_grid": [
+    3,
+    1
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-source-v01.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-source-v01.png",
+  "source_sha256": "73755274ae0b7560c7995eb5c9815287cfd828d5afac68aec84cd3c49ae09787",
+  "source_bytes": 596313,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-reused-source-v01.png",
+      "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+      "source_kind": "reused",
+      "bytes": 1195751
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-source-v01.png",
+      "sha256": "73755274ae0b7560c7995eb5c9815287cfd828d5afac68aec84cd3c49ae09787",
+      "source_kind": "new",
+      "bytes": 596313
+    }
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-SpriteFrames.tres",
+  "output_spriteframes_sha256": "c840889e31b553c240c8b21ea0089be275bf0d93fd11df6e9ac7274db4ef1b2a",
+  "poses": 6,
+  "new_poses": 3,
+  "newly_authored_poses": 3,
+  "reused_poses": 3,
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "reused",
+      "original_pose_id": 42,
+      "original_region": [
+        383,
+        808,
+        64,
+        108
+      ],
+      "original_margin": [
+        90,
+        56,
+        192,
+        148
+      ],
+      "original_source_anchor": [
+        421,
+        912
+      ],
+      "rgba_sha256": "ddad66bc1f3271247eefabf6e111a98468619139c5d32bb4be47c24730b79b3f"
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        724,
+        724
+      ],
+      "rgba_sha256": "84419346d8a9542cb5123ade1696a6e35922201ada3fddaaba470c8188664ff2"
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        724,
+        0,
+        724,
+        724
+      ],
+      "rgba_sha256": "b2d6423a8d2d21997b0d4af47dc98ce47b3551cdbecea3dabad2d20a02101ac0"
+    },
+    {
+      "phase": 3,
+      "source_kind": "reused",
+      "original_pose_id": 50,
+      "original_region": [
+        386,
+        942,
+        61,
+        114
+      ],
+      "original_margin": [
+        93,
+        50,
+        195,
+        142
+      ],
+      "original_source_anchor": [
+        421,
+        1052
+      ],
+      "rgba_sha256": "e90fb5f1786b3bd7fe36f0396cc0b90166888dd6a3e5d25b0236b119813bf8df"
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1448,
+        0,
+        724,
+        724
+      ],
+      "rgba_sha256": "9487206fa7d93dcb5b91522e16adca4e1b748de77611c0ef7bf8cd92b22c67bf"
+    },
+    {
+      "phase": 5,
+      "source_kind": "reused",
+      "original_pose_id": 58,
+      "original_region": [
+        386,
+        1069,
+        66,
+        105
+      ],
+      "original_margin": [
+        93,
+        59,
+        190,
+        151
+      ],
+      "original_source_anchor": [
+        421,
+        1170
+      ],
+      "rgba_sha256": "dfda021df02a54772a5020afe01aa3a9545f535b00de89d86c7fd49df05994b2"
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "sheet": 0,
+      "source_kind": "reused",
+      "region": [
+        383,
+        808,
+        64,
+        108
+      ],
+      "rgba_sha256": "ddad66bc1f3271247eefabf6e111a98468619139c5d32bb4be47c24730b79b3f",
+      "normalized_visible_sha256": "58d31a75da87bc27a88ae431ac90a63db77475d244fdcacc25cb8a5ce4d67987",
+      "visible_pixels": 3679,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        64,
+        108
+      ],
+      "visible_height": 108,
+      "visible_width": 64,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "sheet": 1,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        724,
+        724
+      ],
+      "rgba_sha256": "84419346d8a9542cb5123ade1696a6e35922201ada3fddaaba470c8188664ff2",
+      "normalized_visible_sha256": "b7f6cb1e3adfdbfa254a85b365e3e88d4347270f96f2262833fb5a2f8ac287cd",
+      "visible_pixels": 63139,
+      "alpha_bbox_in_region": [
+        0,
+        21,
+        724,
+        724
+      ],
+      "visible_height": 703,
+      "visible_width": 724,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "sheet": 1,
+      "source_kind": "new",
+      "region": [
+        724,
+        0,
+        724,
+        724
+      ],
+      "rgba_sha256": "b2d6423a8d2d21997b0d4af47dc98ce47b3551cdbecea3dabad2d20a02101ac0",
+      "normalized_visible_sha256": "12ca08252b8cc11fef8bb7f9eaeb7b0729eb3534e529589bb169bda6ebfdae30",
+      "visible_pixels": 58402,
+      "alpha_bbox_in_region": [
+        47,
+        71,
+        708,
+        700
+      ],
+      "visible_height": 629,
+      "visible_width": 661,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "sheet": 0,
+      "source_kind": "reused",
+      "region": [
+        386,
+        942,
+        61,
+        114
+      ],
+      "rgba_sha256": "e90fb5f1786b3bd7fe36f0396cc0b90166888dd6a3e5d25b0236b119813bf8df",
+      "normalized_visible_sha256": "9eea3dd34149899696bf09fd700aa61dab81330c24b0d1192f2014d8a0bc12e7",
+      "visible_pixels": 2862,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        61,
+        114
+      ],
+      "visible_height": 114,
+      "visible_width": 61,
+      "border_alpha_pixels": 1
+    },
+    {
+      "index": 4,
+      "sheet": 1,
+      "source_kind": "new",
+      "region": [
+        1448,
+        0,
+        724,
+        724
+      ],
+      "rgba_sha256": "9487206fa7d93dcb5b91522e16adca4e1b748de77611c0ef7bf8cd92b22c67bf",
+      "normalized_visible_sha256": "5690be1dda89e89b6ccd95c6dfd102e5b51f5d48c946253d02cf38d8715a48dc",
+      "visible_pixels": 65693,
+      "alpha_bbox_in_region": [
+        89,
+        136,
+        654,
+        709
+      ],
+      "visible_height": 573,
+      "visible_width": 565,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "sheet": 0,
+      "source_kind": "reused",
+      "region": [
+        386,
+        1069,
+        66,
+        105
+      ],
+      "rgba_sha256": "dfda021df02a54772a5020afe01aa3a9545f535b00de89d86c7fd49df05994b2",
+      "normalized_visible_sha256": "9a07ba4fb3c843e99c7026d5ce78153a9a2f0a1830d081591ed8f23465e911c4",
+      "visible_pixels": 3507,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        66,
+        105
+      ],
+      "visible_height": 105,
+      "visible_width": 66,
+      "border_alpha_pixels": 1
+    }
+  ],
+  "reused_source_original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+  "reused_source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+  "reused_resource_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+  "reused_provenance_sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523",
+  "original_reused_regions_margins_rgba_unchanged": true,
+  "cell_size": [
+    724,
+    724
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "attack_2",
+  "loop": false,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "generation_service": "image_gen.imagegen",
+  "request_file_sha256": "5bf9e5f51b77f389bbe907af6a9d279f563770a0b7c0ad28a5c66c359014cfac",
+  "generation_request_sha256": "d374f0a7fe8f67c3ec8bca1df4dd11bb169292bf1532b1de3631fefad5807822",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "scale_comparison_hold": true,
+  "legacy_median_body_height": 108.0,
+  "clipped_cell_count": 2,
+  "hold_reasons": [
+    "Mixed-source visual continuity, contact, footing and exact original appearance require later review",
+    "New-source display scale differs from preserved legacy poses; do not approve before repair",
+    "Visible alpha reaches a selected region boundary"
+  ],
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_real_mixed_source_frames_extractable": "PASS",
+    "three_reused_source_regions_margins_rgba_unchanged": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "production_connected": false,
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-record-v01.json",
+  "revision_parent_sha256": "8371b900c68d329bcc4580b840308dc2f0d2a56597e1dd30f5d866a2ae0b3ac1",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-attack-registration.json",
+  "frame_registration_status": "REVIEWED_ANCHORS_AND_SCALE",
+  "semantic_review_input_sha256": "baa8b23a27ee4c340ad72f58ef82e1ae0b06cb7d238688be9fda2e685cf443a5",
+  "final_approved": false
+}

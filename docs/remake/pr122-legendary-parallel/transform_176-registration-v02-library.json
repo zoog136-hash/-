@@ -1,0 +1,650 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "dependency_required_slots": [
+    [
+      "transform:176",
+      "E",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "E",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "E",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "E",
+      "run"
+    ],
+    [
+      "transform:176",
+      "N",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "N",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "N",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "N",
+      "run"
+    ],
+    [
+      "transform:176",
+      "NE",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "NE",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "NE",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "NE",
+      "run"
+    ],
+    [
+      "transform:176",
+      "NW",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "NW",
+      "run"
+    ],
+    [
+      "transform:176",
+      "S",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "S",
+      "death"
+    ],
+    [
+      "transform:176",
+      "S",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "S",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "S",
+      "run"
+    ],
+    [
+      "transform:176",
+      "SE",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "SE",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "SE",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "SE",
+      "run"
+    ],
+    [
+      "transform:176",
+      "SW",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "SW",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "SW",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "SW",
+      "run"
+    ],
+    [
+      "transform:176",
+      "W",
+      "attack"
+    ],
+    [
+      "transform:176",
+      "W",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "W",
+      "run"
+    ],
+    [
+      "transform:176",
+      "NW",
+      "hit"
+    ],
+    [
+      "transform:176",
+      "NW",
+      "idle"
+    ],
+    [
+      "transform:176",
+      "W",
+      "idle"
+    ]
+  ],
+  "excluded_slots": [],
+  "revisions": [
+    {
+      "slot": [
+        "transform:176",
+        "E",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-attack-record.json",
+      "record_sha256": "d42d49894523bdcfa9c804d2d35527d2bd1d4d3014785d24e51f8ed8db46db14",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/E-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "d59b4b717242dc958874096965bdfb0e51cd602dc9f416998d3264725f32a43a",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-attack-registration.json",
+      "registration_sha256": "d20d8a94f0a8758bc9b1a961b6f89a8ac5ca01ceb665ba22b2de4e45852f7131",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "E",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-hit-record.json",
+      "record_sha256": "39b5821b3a90d8ba4de25c986a8a00924a2db46c141bf3ce002c2f76653d2d51",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/E-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "66a6d7a8c8242db35c2125c47c4eb459ed0e2930132b71dca6bdd7d15983734b",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-hit-registration.json",
+      "registration_sha256": "4f8be51f91601fd56d12c7e6c54fc08410e69fd786e479c63fcdc80fb50745b2",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "E",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-idle-record.json",
+      "record_sha256": "d1bd23ffced556a7338e739d9ccd75f7d2da8b3965239163b3d289ba8a19327c",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/E-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "f9f77e96143f2fe22b94a1b537b2b21cd71284256f067180241cc63b67f4c7e5",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-idle-registration.json",
+      "registration_sha256": "035250ed6c78a77c054ffc37068f966e1b8199cddfe859756d35bbf756b26af0",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "E",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-run-record.json",
+      "record_sha256": "2b7804309c55054a63c774f040d47b3f1e9979321f4e020c9ad7ee7e299dad6f",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/E-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "8c1667c9f9718f1a696124dadf90ccfb3b94444b3b31100c8feb04ea1564389a",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-run-registration.json",
+      "registration_sha256": "4136ad904197ad1056da131e90133d6f8e62cbe06862dcaa5e91d57104d3b9bd",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "N",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-attack-record.json",
+      "record_sha256": "58d8a130fa79547c7e97a1e73a08ed6c93f63ab2e710d9a3a6d8a859efd87d25",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/N-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "b0dc08c45a86b551d93c092c0b0830c283aadc36ed8f370f7f50693a51f8d83d",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-attack-registration.json",
+      "registration_sha256": "57a53b2647931203afdf5f899fe5b014e69e97519b6691b304aa07775d872a2a",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "N",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-hit-record.json",
+      "record_sha256": "3c1b75db06b9b5cc341e08bf8c7547e758f67a1293793ac48af7c8f00463529b",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/N-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e1100b59340db4d0d6d5dd487eb0e3d006fb0b946aab52d848caa6b11a710c78",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-hit-registration.json",
+      "registration_sha256": "8f10174e87a155286be6a70ebdba0f032b0d812583060443139977ffed85de1e",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "N",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-idle-record.json",
+      "record_sha256": "1b0f9e88c35de2f39befd763978ed5d36996489843878f1448ab9868bb234261",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/N-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "86fe0d6281fece24306484c413e2696dc07a3306ce55e9a258a7b14d53955a22",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-idle-registration.json",
+      "registration_sha256": "bf8f2d094ed9fe9b026ec69c48f52c4eb1949e5e9a90947e3ae1dde1f0dd7c6d",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "N",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-run-record.json",
+      "record_sha256": "988d3ba9df355a34310de3718366c38faece0c31536d067b3df4008e0db4bb84",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/N-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "b79087367d9c370a8912503ea2bb23f72028401199e9e300bf7309de3761bc86",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-run-registration.json",
+      "registration_sha256": "4fca366e47fdefce7602ce86e6f3894247c4866992c7abb908cec913b9dfb54d",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NE",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-attack-record.json",
+      "record_sha256": "29fd10af518616a0212a14d895f88923bfaffaab3472fc9a5ac72dd18052b6b2",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NE-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "72015919dbdfffb2fb6718ea5d6ab453ed5a2e57b72ff74a5e23ebd5e5855613",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-attack-registration.json",
+      "registration_sha256": "f9d8d9a088f121fccf011051cba2f382dd854e459fe2cc78610b46175d89ebd9",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NE",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-hit-record.json",
+      "record_sha256": "b85d98881e8252a08055f29ba85b94b6d68c822a6ab106e91d5549e5bf2e8bf5",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NE-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "6981fc9add04d086bdd726414007e2611b7cad65ab3aa0e6b33379839746ba36",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-hit-registration.json",
+      "registration_sha256": "ba8db7acaa80e5a78039c98c46713905679e5d611d14955e390a391837c861c5",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NE",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-idle-record.json",
+      "record_sha256": "4a371b5bcba476c1e06e6770eb979699b658fd775a19e2c6efe7365aa8451d54",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NE-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "f21e0f6ee855fb6273f2fd0f98376f3de14f2d304cae393499e2742228113d49",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-idle-registration.json",
+      "registration_sha256": "c4068a8aaf9fc51d716fc396d85ab7c4dfcf975b2064179b6a2043742bace03f",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NE",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-run-record.json",
+      "record_sha256": "54007772e000e9491c7d5fb678c8f9d6fcff13a9b76e6e090105291c1c8ae9a8",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/NE-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "52670d8065c2af656e31d88dc4601a6b519fa70e814863719d478081433ed598",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-run-registration.json",
+      "registration_sha256": "f8f5311a4974f332c377fc080b61f0120e129734a9c16805147019cc530817df",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NW",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-attack-record.json",
+      "record_sha256": "d2bfd37b6e8144b6eb4368c6e071f23c27eb89b47e17fd4b50dc87642b0b6996",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/NW-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "3bd14de8f4ac3cc39618b202dc23ec75a25c659004c8dfc914fc25416713c917",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-attack-registration.json",
+      "registration_sha256": "b0384cc7952c0ac715c9a087f6acfd12937b7eb6db2e8da9b7c943c25b7d2d9d",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NW",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-run-record.json",
+      "record_sha256": "aeb81cccb019323f38dba03eeed01a611bf1832aee36621d0ff5794ffff94645",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/NW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "edf7fd2c77e732cd06b465f9e866b6ce787ec21334796964c97283a8b0ea75fb",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-run-registration.json",
+      "registration_sha256": "5487c66a36607fdbd2134108048d0478d613d90b52848e8580371d8d18d5db6b",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-attack-record.json",
+      "record_sha256": "fbb9548ff1f0008133af7928b99902bef502d73fc7505fe38f46b3fbcb7fea4d",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "c840889e31b553c240c8b21ea0089be275bf0d93fd11df6e9ac7274db4ef1b2a",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-attack-registration.json",
+      "registration_sha256": "69d9cdf0cec8ecff35463adfc58834c2aea238c3b476bf8e0d67b6eba400c14a",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "death"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-record.json",
+      "record_sha256": "6834956c92eaccfbe2c7d114d45b73481a9acf22b54a1ac40e03a9889daffaf0",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-SpriteFrames.tres",
+      "SpriteFrames_sha256": "943ca17acaea47cf94a234060ed48a1b7eb04a1ff0bc5e67d34cfe0e20ef219e",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-registration.json",
+      "registration_sha256": "3387efeced826c821847441afb20636b5c5040e23fa1047a361bbb76862865e6",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE",
+      "expected_terminal_baseline_phase": 4,
+      "expected_terminal_source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-death-source-v01.png",
+      "expected_terminal_region": [
+        1448,
+        0,
+        724,
+        724
+      ]
+    },
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-hit-record.json",
+      "record_sha256": "2b464ad52eac431199dca89f5a758cc9d88687ec157ba6cc92f2a5ea2a7a7036",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "52199eff0819ed36b588bc87024f08b085bb31789a87f9b53bb5584f84d43bf6",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-hit-registration.json",
+      "registration_sha256": "270f389ef6d5beb2058f4bff129fc95e02173be61d2d3f4563ef0d462337c3e8",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-idle-record.json",
+      "record_sha256": "ffcc4d89899366329c52b528ac53e0b926a9220d184c8fa10e3e6f0692897566",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "f235154373ab1e1105f4243d10a1315e9fbfa3eecdc96f34f42d4e015a347abe",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-idle-registration.json",
+      "registration_sha256": "aac13345677d2a16239765f3fbec02849168198994c4f45b49563f33eb7896b4",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-run-record.json",
+      "record_sha256": "fc657db6b6f448e58a3a2b199ded9f4290120b2fefb0d608c5507d1522c08b82",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e8fcfc30a5c5102fcae44ba4e32e42c4c0309125989649135f5cc8dd2818f0d9",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-run-registration.json",
+      "registration_sha256": "7cc3ce6550376bf66cfe995c12345087979f1b78b0a81f331f66fe0f42056006",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SE",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-attack-record.json",
+      "record_sha256": "dfb2e34ad3973c62274fa84d6df0d00a80f55088cb6371ecdde802730b49314b",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "d6404f5124cd86bda641158f03dc6e1bc81d3d86b2b8da1702073f1ab3c63178",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-attack-registration.json",
+      "registration_sha256": "2f4e287891828dc9fea892298d7a79ec26f701ea33a35025d463bef2beed4fbf",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SE",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-hit-record.json",
+      "record_sha256": "48bc160d802759df469db131f56ca590fc8aa1f528ed66fe3b3f82ebb233e6df",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "02e651f13fd58b79afb77c05cce2d61a028275a09801689fdf38c5c1153f4b64",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-hit-registration.json",
+      "registration_sha256": "3393e4329ee71b7ce2bf0a13b3bc6f87ff89d1eb66c448007c710b3da0f5e529",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SE",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-idle-record.json",
+      "record_sha256": "16d66f189122e97a140d3ef36732edfb82dcf06ca0d337204f842f62c7ddfc3a",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "94b847d275984412785372bf54cb7427ab165cb2ce5ea145e1fdd15711f79032",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-idle-registration.json",
+      "registration_sha256": "aff089f4553f08fe156f47a530037a195068f2d515f468b763ad47cb6d291de9",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SE",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-run-record.json",
+      "record_sha256": "7333bec8231d8922c29a207895cb00edee1ce2064d086ac0b3eb1e3bd91e7ca0",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/SE-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "7c4a7ce5beca8edf51313fda39c406ea98a99f1d03fbd691dfd0c44d5fa5dac6",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-run-registration.json",
+      "registration_sha256": "81afa4a2bdbce3c9c8f05a3fd6289769bb775f1d638b9cdf034b780fbd2583ef",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SW",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-attack-record.json",
+      "record_sha256": "5b688670005d6096626787e419c7e96530f0b2977367659ed382f3374ebcb633",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/SW-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "b072829de80ac76d0161d25b618536807399b3e2535bffd2593b640bbb1abd89",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-attack-registration.json",
+      "registration_sha256": "f73d27d0fa9c475e89a429c093a87361552714d35b0e51a75beadc60ffb37c20",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-hit-record.json",
+      "record_sha256": "2c36c1b6ad281b73d0fc3441b4e32eb7baaefae51e07f536bf760fcb1dc7738a",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e8dfff96e9b126323bc36b57a061c1d6e6cdf363af375a6a0b85a306028417a3",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-hit-registration.json",
+      "registration_sha256": "0b1b12d102390523f2fc8d5e7773c5340614234b46b5b77373e0902131a643ba",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-idle-record.json",
+      "record_sha256": "bbd51946b194c510c39fc89d657e3d3bb060d6d9bab0051e882536b2cc1f7ab3",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "67370424d1fb89fa523cde2b3182ffb0e9b240bbef0fa037ebeaa787e7b54c52",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-idle-registration.json",
+      "registration_sha256": "1b4118795df51ea834b57d01372655ad77bee24c4ade584d80d388e7ca852c87",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "SW",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-run-record.json",
+      "record_sha256": "ca2fdef1f58b1f64dc0a86523ba017195103a03bcea592f92117a8104b5bb513",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/SW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "c401ed82c71ec33d644c97557b18cfaaa8b61488f3fe799f4632d13f5bd96f52",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-run-registration.json",
+      "registration_sha256": "2aea74897d041b09a37d9d4f7cdd80435287f6b559aa7e85cf270182a379fb08",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "W",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-attack-record.json",
+      "record_sha256": "49639ed40d5a71a67546c3dfc964172bb82412e067b7e03cb5844e6cd0a06bfb",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/W-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "0ef9e138b6e48aab7cf174d7230ccb06772df47cf16e0c6c6c780103b3dc8935",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-attack-registration.json",
+      "registration_sha256": "cfae08daa610e47b265ea9d41a1b8aa95bcf32d6053bcd9cc16c93fe7e9809a8",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "W",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-hit-record.json",
+      "record_sha256": "bca702d6fec58a211cd90c17694ce439b6711b96fed300b0ec597c3ff2456f10",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "c32fe64b7483ec6614249b86c6ad733d07dbe640fee7287a9af20dcf4615ee98",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-hit-registration.json",
+      "registration_sha256": "08e51df92ec69607de47b1694bd6657059c8affec5b1f38c0a1478fa6c0c736b",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "W",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-run-record.json",
+      "record_sha256": "5ac224440be465c15d5b54dc4556eef269a2e45d0145b6a36074804fd9c99541",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "835d8391626818dad7bff3c83f3a9ef57110927a17d73fc78c639508ec0602da",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-run-registration.json",
+      "registration_sha256": "dfa447221a6ac873b39e6f315e234206fcea29205397c691fb929a376c62b817",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-hit-record.json",
+      "record_sha256": "9a928d61946e32f2fe644f3be54b71cddfd0e0532dcdc80ed2a47396223541ea",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "b16a75fa918fb2c23f71d2c0fe561db83cd7668b1e2d34f6709a9c2a96b66fe1",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-hit-registration.json",
+      "registration_sha256": "a423f28a259ec701a1f418f7e98c542127ca2c968bbdbbf6681cb85d767d6ba1",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "NW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-idle-record.json",
+      "record_sha256": "e578d9fa436d18076111eb8cd5482c3c628134916b05c8982da6b53c7ad12d4c",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e8de23f3783990e097abddeb14bd241dfac7193f024c62912eecf63a2d3d242b",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-idle-registration.json",
+      "registration_sha256": "1f4827f4ffe032bdf4da75c92e715756d10051d75973b7a90defce612da1baa4",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    },
+    {
+      "slot": [
+        "transform:176",
+        "W",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-idle-record.json",
+      "record_sha256": "79ba3e52eb50bafe6562febe513284fc554dfa006261583d720ee229a7fb78d2",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "3a3819efb2fcf76e58e1cfd4c7476863b316aaff09dc78daaca23d6b0571fa98",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-idle-registration.json",
+      "registration_sha256": "2c5950cc3f984353ea950cc38c7911da5e31eb105d4e157a8fbad9218f3ad44f",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE"
+    }
+  ],
+  "review_input_sha256": "baa8b23a27ee4c340ad72f58ef82e1ae0b06cb7d238688be9fda2e685cf443a5",
+  "pending_slots": [],
+  "immutable_native_frames_preserved": 59,
+  "source_PNG_mutations": 0,
+  "quality_status": "HOLD",
+  "final_approved": 0
+}

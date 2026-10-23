@@ -70,6 +70,49 @@ def all_manifest_paths(current):
     return paths
 
 
+def adopt_ready_semantic_bundle():
+    relative = DOCS / 'transform_176-registration-delivery-bundle-v02.json'
+    if not (WORK / relative).exists():
+        return set()
+    bundle = read(WORK / relative)
+    ledger = read(REPO / LEDGER)
+    semantic = ledger['corrections'].setdefault('semantic_registration', {})
+    if 'transform:176' in semantic:
+        return set()
+    report = read(WORK / bundle['validation'].removeprefix('res://'))
+    assert report['failures_remaining'] == 0 and report['registered_clips'] == 33 and report['native_poses_preserved'] == 59
+    manifest = read(WORK / bundle['manifest'].removeprefix('res://'))
+    artifacts = {Path(path) for path in bundle['artifacts']} | {relative}
+    for path in artifacts:
+        copy_new(path)
+    previous = read(WORK / ledger['corrections']['active_revision_library'].removeprefix('res://'))
+    by_slot = {tuple(entry['slot']): entry for entry in previous['revisions']}
+    required = {tuple(slot) for slot in previous['dependency_required_slots']}
+    for entry in manifest['revisions']:
+        by_slot[tuple(entry['slot'])] = entry
+        required.add(tuple(entry['slot']))
+    previous['revisions'] = [by_slot[key] for key in sorted(by_slot)]
+    previous['dependency_required_slots'] = [list(slot) for slot in sorted(required)]
+    active = DOCS / 'revision-library-with-176-registration-v02.json'
+    write_json(WORK / active, previous, immutable=True)
+    copy_new(active)
+    artifacts.add(active)
+    ledger['corrections']['active_revision_library'] = 'res://' + str(active)
+    ledger['corrections']['active_revision_library_sha256'] = sha((WORK / active).read_bytes())
+    semantic['transform:176'] = dict(bundle, status='ENGINE_CHECKED_REGISTRATION_ONLY',
+                                      source_cameras='HOLD', final_approved=0)
+    by_slot = {tuple(entry['slot']): entry for entry in manifest['revisions']}
+    for actor in ledger['actors']:
+        if actor['key'] != 'transform:176':
+            continue
+        for draft in actor['drafts']:
+            entry = by_slot[(actor['key'], draft['direction'], draft['role'])]
+            draft.setdefault('correction_revisions', []).append(dict(entry, kind='semantic_registration', quality_status='HOLD'))
+    write_json(REPO / LEDGER, ledger)
+    shutil.copyfile(REPO / LEDGER, WORK / LEDGER)
+    return artifacts
+
+
 def update_ledger(batch, manifest_relative, validation_relative, selection):
     ledger = read(REPO / LEDGER)
     old_counts = copy.deepcopy(ledger['counts'])
@@ -208,6 +251,7 @@ def deliver(batch, local_only=False):
         if not target.exists() or target.read_bytes() != (WORK / relative).read_bytes():
             shutil.copyfile(WORK / relative, target)
         artifact_paths.add(relative)
+    artifact_paths.update(adopt_ready_semantic_bundle())
     aggregate_relative, counts = update_ledger(batch, manifest_relative, validation_relative, selection)
     copy_new(aggregate_relative)
     artifact_paths.update([aggregate_relative, LEDGER])

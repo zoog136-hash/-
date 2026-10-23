@@ -1,0 +1,50 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-01520a092553b024.png" id="texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-death-source-v01.png" id="texture_1"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("texture_0")
+region = Rect2(456, 490, 93, 135)
+margin = Rect2(150, 109, 291, 249)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("texture_1")
+region = Rect2(0, 0, 724, 724)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("texture_1")
+region = Rect2(724, 0, 724, 724)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_3"]
+atlas = ExtResource("texture_0")
+region = Rect2(451, 707, 101, 101)
+margin = Rect2(145, 143, 283, 283)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_4"]
+atlas = ExtResource("texture_0")
+region = Rect2(449, 863, 98, 99)
+margin = Rect2(143, 145, 286, 285)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_5"]
+atlas = ExtResource("texture_1")
+region = Rect2(1448, 0, 724, 724)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{"duration": 0.666666666666667, "texture": SubResource("pose_0")}, {"duration": 0.666666666666667, "texture": SubResource("pose_1")}, {"duration": 0.666666666666667, "texture": SubResource("pose_2")}, {"duration": 1.0, "texture": SubResource("pose_3")}, {"duration": 2.0, "texture": SubResource("pose_4")}, {"duration": 1.0, "texture": SubResource("pose_5")}],
+"loop": false,
+"name": &"death_2",
+"speed": 9.23076923
+}]
+metadata/twilight_revision_status = "HOLD"
+metadata/twilight_canvas_size = Vector2(256, 256)
