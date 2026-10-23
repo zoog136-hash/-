@@ -161,15 +161,15 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 170,
-    "minimally_validated_configurations": 170,
-    "newly_authored_poses": 1012,
-    "reused_existing_poses": 8,
-    "quality_held_configurations": 170,
+    "new_draft_configurations": 175,
+    "minimally_validated_configurations": 175,
+    "newly_authored_poses": 1040,
+    "reused_existing_poses": 10,
+    "quality_held_configurations": 175,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 1150
+    "remaining_draft_configurations": 1145
   },
   "actors": [
     {
@@ -3036,6 +3036,28 @@
         {
           "key": "transform:191",
           "direction": "S",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-idle-source-v01.png",
+          "source_sha256": "4e1d8a8a703dadd35d9791c69537cb472c1541f53184b8d9cc0292d080c17ebc",
+          "source_bytes": 2436963,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "0fcde47fc52013814c2d8eb3ecd04a2b58b3789eeff68ea869ae7ed7d2b6a84f",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch39-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:191",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-run-source-v01.png",
           "source_sha256": "a6617c772109ee8a2a1a37ed33674c6f6f1bc1db6962d72448233ab303dcb20a",
@@ -3056,7 +3078,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 29,
+      "remaining_draft_configurations": 28,
       "precision_final_approved": false
     },
     {
@@ -3140,6 +3162,28 @@
         {
           "key": "transform:190",
           "direction": "S",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-idle-source-v01.png",
+          "source_sha256": "ac8ff88bf2589ec0a6e336877b44f1cab6f6331231d89486406671019205e062",
+          "source_bytes": 2535024,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "ff269b7e5f7e6d87fcb9920af85d905d49c7cebcec32fc5ce0766bffa20c59c2",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch39-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:190",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-run-source-v01.png",
           "source_sha256": "d117c1d95fd545b336a4927f8dea48d9e7ff6ae750b789381705577af245cfc9",
@@ -3160,7 +3204,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 29,
+      "remaining_draft_configurations": 28,
       "precision_final_approved": false
     },
     {
@@ -3243,6 +3287,28 @@
         {
           "key": "transform:178",
           "direction": "S",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/S-idle-source-v01.png",
+          "source_sha256": "b7c68d63206f642a2e2da3fc06e67063a1b2b864fdd96a4940403243d7cd69eb",
+          "source_bytes": 2687265,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/draft001/S-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "a2ea5314e7358378c9b668327e5b9577e209c9f71488b0bc4f00ebbd9ef74162",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/S-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch39-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:178",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/S-run-source-v01.png",
           "source_sha256": "6f8088148f8aeda9c8dbe209a3567a31afc248b14adc7c20cfa6e33d4a2540cb",
@@ -3262,7 +3328,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 29,
+      "remaining_draft_configurations": 28,
       "precision_final_approved": false
     },
     {
@@ -3344,6 +3410,27 @@
         {
           "key": "transform:177",
           "direction": "S",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/S-idle-source-v01.png",
+          "source_sha256": "46f8c8c0226614c7344ce571bf8d7fcf85849a6fdd2388869de1a9280aa58e75",
+          "source_bytes": 2328350,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/S-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "3bc56293e25006db101dbf85ecedeecef5fccc725a2db6c058f9bb08ef8a3644",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/S-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch39-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:177",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/S-run-source-v01.png",
           "source_sha256": "b3f72c0fcc5b021fc724a4a1fe7d431cbf83ca9706ad2001b2b30ac50b82ecd8",
@@ -3363,7 +3450,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 29,
+      "remaining_draft_configurations": 28,
       "precision_final_approved": false
     },
     {
@@ -3450,6 +3537,28 @@
         {
           "key": "transform:176",
           "direction": "S",
+          "role": "idle",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-idle-source-v01.png",
+          "source_sha256": "c9fdf1d9ffbfcaf7b14fb33c123c45feeb66e01a20957ded131e94d83559d10a",
+          "source_bytes": 700676,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-idle-SpriteFrames.tres",
+          "SpriteFrames_sha256": "f235154373ab1e1105f4243d10a1315e9fbfa3eecdc96f34f42d4e015a347abe",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-idle-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch39-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Mixed-source original appearance, camera, footing and motion continuity require later quality review",
+            "New-source body scale differs; no PNG resizing performed"
+          ]
+        },
+        {
+          "key": "transform:176",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-run-source-v01.png",
           "source_sha256": "b8c1c3886b9b8660ce680916e3a14dba18c3955f42863a4e2658ca8e4f3eacd4",
@@ -3470,7 +3579,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 29,
+      "remaining_draft_configurations": 28,
       "precision_final_approved": false
     },
     {
