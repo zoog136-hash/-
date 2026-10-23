@@ -1,0 +1,410 @@
+{
+  "key": "transform:339",
+  "name": "실렌의 파수꾼",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "idle",
+  "reference": "res://assets/catalog/0e6c8d847abc53e0f210f938.png",
+  "reference_sha256": "401caa29182acec3478fae546407331156d03e511143075c4589afdbdebd2182",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc009",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-idle-source-v01.png",
+  "previous_source_sha256": "af500490798777307883fa2682d618d44c4105ed0c6e1bca26f45b5f91ff93f3",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-idle-record-v01.json",
+  "previous_record_sha256": "fab4a63dd88e4604bab2340126120557d55f862e0f81bedcb04d96d814f75fea",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "OWNERSHIP_REPAIRED_OTHER_QUALITY_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "339",
+    "direction": "SW",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-run-source-v01.png",
+    "sha256": "65247208dab8e768748b17da1b703207c40479dd24a4ab891a1e9282c6e3f5cb",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "339",
+      "direction": "SW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Front/right presentation is retained instead of the requested lower-left camera.",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-idle-source-v01.png",
+      "fix_kind": "hold_art_direction_fix",
+      "status": "ERROR_VISUAL",
+      "review_origin": "front20",
+      "issue_id": "visual-front20-0109",
+      "slot": [
+        "transform:339",
+        "SW",
+        "idle"
+      ],
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-idle-record-v01.json",
+      "source_sha256": "af500490798777307883fa2682d618d44c4105ed0c6e1bca26f45b5f91ff93f3"
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:339 실렌의 파수꾼, SW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Front/right presentation is retained instead of the requested lower-left camera.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-LEFT, screen DOWN-LEFT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/0e6c8d847abc53e0f210f938.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/0e6c8d847abc53e0f210f938.png": "401caa29182acec3478fae546407331156d03e511143075c4589afdbdebd2182",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-run-source-v01.png": "65247208dab8e768748b17da1b703207c40479dd24a4ab891a1e9282c6e3f5cb"
+  },
+  "schema": "legendary-versioned-ownership-execution-delta-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+  "source_sha256": "3f7171af5ec13fd26a17a0ecd9976e26fa143e139f8e27f5ffcd9befd468ed18",
+  "source_bytes": 2014990,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "sha256": "3f7171af5ec13fd26a17a0ecd9976e26fa143e139f8e27f5ffcd9befd468ed18",
+      "bytes": 2014990
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      659,
+      1318,
+      1977
+    ],
+    "y": [
+      0,
+      697,
+      1394
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "8343e4f8474dbecdee31785249f78315eaf3cfea43ac3ab5ffde9f634696aafa"
+    },
+    {
+      "index": 1,
+      "region": [
+        659,
+        0,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "d2f824fea18fa17aa94837afd64c46c99101134a64aeb2f5855cce922b244c3f"
+    },
+    {
+      "index": 2,
+      "region": [
+        1318,
+        0,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "dc861271444eb608d0c94028867ec9d7b81c8140a47383ea14804070a42bfd87"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        697,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "31b4860e87c3204eece6ca399cd0adad1a529955ace361326ebab0d4f8799df4"
+    },
+    {
+      "index": 4,
+      "region": [
+        659,
+        697,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "898721ce795304ebcca17bec3be355f94fd6449c494729d2711849bbafd13cfb"
+    },
+    {
+      "index": 5,
+      "region": [
+        1318,
+        697,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "f187695ffd2c894464938da3c2ac6f0f41808c1c98a4922ef61a8683454f2085"
+    }
+  ],
+  "cell_size": [
+    659,
+    697
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "2a8514f56232ae38d10bd0ce178710765946c6572ee24e51bc380f46ad4f4d7a",
+  "animation": "idle_3",
+  "loop": true,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-registration.json",
+  "request_file_sha256": "fb8e5fa09fab69cd359469b5cd3dcad92476e795a6f1fdd52e35ca302d701953",
+  "generation_request_sha256": "13cb1cc485fbf27a402ec2cad1a5fc0cfce7dd4cf688911227d863cfd077aff2",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-0ce5d610-8208-4939-8842-60ffe62004a5.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED",
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_339/quality-v02/SW-idle-record-v02.json",
+  "revision_parent_sha256": "2492c770d09ce3f932fb060f8be2ed513329f1d3486cc359b4c07602a27d723a",
+  "ownership_execution_delta": "res://docs/remake/pr122-legendary-parallel/ownership-quota-execution-delta-v01.json",
+  "newly_authored_correction_poses_added": 0,
+  "final_approved": false,
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.proof.json"
+  ],
+  "ownership_delta_remaining_quality_holds": [
+    "camera"
+  ],
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_339/quality-v02/SW-idle-source-v02.png",
+  "raw_authored_source_sha256": "fea7bf8671201b8c2ca11083f33772211365c2cefe6e3b534ce694c87f55c6d1",
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "region": [
+        0,
+        0,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "region": [
+        659,
+        0,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "region": [
+        1318,
+        0,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "region": [
+        0,
+        697,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "region": [
+        659,
+        697,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/corrections/ownership-delta-v12/SW-idle-source-v02-isolated.png",
+      "region": [
+        1318,
+        697,
+        659,
+        697
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ]
+}
