@@ -162,6 +162,7 @@ static func bundled_enabled() -> bool:
 
 static func map_for_art(mid: String) -> String:
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
+	if mid in ["albino_03","albino_04"]: return "albino_02"
 	return mid
 
 static func installed() -> bool:
@@ -170,12 +171,13 @@ static func installed() -> bool:
 	return FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
 
 static func canonical(mid: String) -> String:
+	if mid in ["albino_03","albino_04"]: return "albino_02"
 	if not enabled(): return mid
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
-	if mid == "albino_04": return "albino_03"
 	return mid
 
 static func supports(mid: String) -> bool:
+	if mid in ["albino_03","albino_04"]: return false
 	# Keep old map IDs in ordinary saves; Escaros 01–05 share source artwork
 	# but not the saved alias. Review mode keeps its original canonical names.
 	var art_id: String = map_for_art(canonical(mid))
@@ -204,9 +206,11 @@ static func catalog_entries() -> Array[Dictionary]:
 	return entries
 
 static func menu_entries(records: Array) -> Array:
-	if not enabled(): return records
 	var visible: Array=records.filter(func(record: Dictionary) -> bool:
-		return str(record.id) not in ["albino_04","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"])
+		return str(record.id) not in ["albino_03","albino_04"])
+	if not enabled(): return visible
+	visible=visible.filter(func(record: Dictionary) -> bool:
+		return str(record.id) not in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"])
 	var specs: Dictionary=plan().maps
 	var menu: Array=[]
 	for record: Dictionary in visible:
