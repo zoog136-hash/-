@@ -786,3 +786,5 @@
 - 몬스터 batch07: 알비노몽크SW RUN6 신규1PNG/1클립6자세 strict기하/whole-source 및Godot실재생/발캔버스/무미러PASS. 기존128원화·WALK/다방향DEATH유지. 실제지지교대·방향·원형·groundplane/Main미검토HOLD, 추가승인0.
 
 - 몬스터 batch05: 같은원화공용일반악마4종(오만의탑공포의악마/마계악마전사/교만제노사이더/탐욕코아쿡) 새9PNG 전부보존, 선택8/실패1(E/SE전투bbox;방향별재제작해소). 공용33클립91고유자세, base1+무색변경adapter3. Godot4.7.2 각4바인딩×33클립 actualActorMotion/NPC124/전체프레임/Sdeath8헤딩종단PASS. 개별identity/hand/direction/support/contact/Main은HOLD, 공유후보를개별고유원화·신규승인으로중복계산하지않음.
+
+- First-pass production checkpoint: 224,212 N ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new N ATTACK drafts 8/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:224", "poses": 6, "clipped_cells": 6}, {"key": "transform:212", "poses": 6, "clipped_cells": 4}]. Continue transform:189 without draft polishing.
