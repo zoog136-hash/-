@@ -43,7 +43,7 @@ func _validate(record_path: String) -> Dictionary:
 		return {"key": key, "record": record_path, "status": "FAIL", "errors": errors}
 	var source_grid: Array = data.get("source_grid", [3, 2])
 	_check(source_grid.size() == 2 and int(source_grid[0]) in [2, 3] and int(source_grid[1]) in [1, 2], "source grid invalid", errors)
-	_check(image.get_width() % int(source_grid[0]) == 0 and image.get_height() % int(source_grid[1]) == 0, "source cells cannot be extracted", errors)
+	_check(image.get_width() >= int(source_grid[0]) and image.get_height() >= int(source_grid[1]), "source grid exceeds PNG dimensions", errors)
 	var source_files: Array = data.get("source_files", [{"path": source_path, "sha256": data.get("source_sha256", "")}])
 	for source_info: Dictionary in source_files:
 		var texture_path: String = str(source_info.get("path", ""))
@@ -68,6 +68,10 @@ func _validate(record_path: String) -> Dictionary:
 	for phase: int in range(6):
 		var atlas: AtlasTexture = frames.get_frame_texture(anim, phase) as AtlasTexture
 		_check(atlas != null and atlas.atlas != null and atlas.get_width() > 0 and atlas.get_height() > 0, "AtlasTexture extraction failed at " + str(phase), errors)
+		if atlas != null and atlas.atlas != null:
+			var selected: Rect2 = atlas.region
+			var extent: Vector2 = atlas.atlas.get_size()
+			_check(selected.position.x >= 0.0 and selected.position.y >= 0.0 and selected.size.x > 0.0 and selected.size.y > 0.0 and selected.end.x <= extent.x and selected.end.y <= extent.y, "AtlasTexture region leaves original PNG at " + str(phase), errors)
 	var duration_weight: float = 0.0
 	var phase_starts: Array[float] = []
 	for phase: int in range(6):

@@ -174,7 +174,10 @@ def preserve(request_path, generated_png, existing_root):
     assert image.mode == "RGBA" and image.format == "PNG"
     image.load()
     columns, rows = config["new_source_grid"]
-    assert image.width % columns == 0 and image.height % rows == 0
+    assert image.width >= columns and image.height >= rows
+    integer_grid_rounding = image.width % columns != 0 or image.height % rows != 0
+    grid_x = [i * image.width // columns for i in range(columns + 1)]
+    grid_y = [i * image.height // rows for i in range(rows + 1)]
     cell_w, cell_h = image.width // columns, image.height // rows
     folder = ROOT / "assets/actors/eight_direction/legendary_parallel" / f"transform_{actor_id}" / "draft001"
     new_path = folder / f"{direction}-{role}-source-v01.png"
@@ -212,7 +215,8 @@ def preserve(request_path, generated_png, existing_root):
                              "original_region": old["region"], "original_margin": old["margin"],
                              "original_source_anchor": old["source_anchor"], "rgba_sha256": old["rgba_sha256"]})
         else:
-            region = [ordinal % columns * cell_w, ordinal // columns * cell_h, cell_w, cell_h]
+            column, row = ordinal % columns, ordinal // columns
+            region = [grid_x[column], grid_y[row], grid_x[column+1]-grid_x[column], grid_y[row+1]-grid_y[row]]
             frame = {"region": region, "margin": [0, 0, 0, 0], "sheet": new_sheet}
             check = frame_check(image, region, phase, kind)
             sequence.append({"phase": phase, "source_kind": kind, "new_sheet_cell": ordinal,
@@ -242,6 +246,7 @@ def preserve(request_path, generated_png, existing_root):
                   status="MIXED_REUSED_AND_NEW_DRAFT_NOT_REVIEWED", source=new_path.relative_to(ROOT).as_posix(),
                   source_resource_path=source_files[-1]["path"], source_sha256=sha(new_raw), source_bytes=len(new_raw),
                   source_files=source_files, source_grid=[columns, rows], cell_size=[cell_w, cell_h],
+                  partition_edges={"x": grid_x, "y": grid_y}, integer_grid_rounding_hold=integer_grid_rounding,
                   output_spriteframes="res://" + resource_path.relative_to(ROOT).as_posix(), output_spriteframes_sha256=sha(resource_raw),
                   poses=6, new_poses=legacy["new_poses"], newly_authored_poses=legacy["new_poses"], reused_poses=legacy["reused_poses"],
                   frame_order=list(range(6)), source_pose_sequence=sequence, automatic_checks=checks,
@@ -257,6 +262,7 @@ def preserve(request_path, generated_png, existing_root):
                   request_file_sha256=sha(request_raw), generation_service="image_gen.imagegen",
                   generation_request_sha256=sha(json.dumps(q["generation_request"], ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()),
                   hold_reasons=["Mixed-source original appearance, camera, footing and motion continuity require later quality review"] +
+                               (["Complete integer source partitions differ by at most one pixel; display registration review pending"] if integer_grid_rounding else []) +
                                (["New-source body scale differs; no PNG resizing performed"] if scale_hold else []) +
                                (["Visible alpha reaches a selected region boundary"] if any(c["border_alpha_pixels"] for c in checks) else []),
                   minimal_checks={"actual_png_exists": "PASS", "six_real_mixed_source_frames_extractable": "PASS",
