@@ -18418,6 +18418,436 @@
       "quality_tier": "mythic_transform",
       "tracks": [
         {
+          "role": "attack",
+          "direction": "E",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/E-attack-v01.png",
+          "source_sha256": "f48edece32c5f223ebd106b6c388ecc8a066089985edc0c1727e7476277625a8",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/E-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1920,
+              1280
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  3,
+                  3,
+                  522,
+                  617
+                ],
+                "margin": [
+                  456,
+                  377,
+                  902,
+                  807
+                ],
+                "source_anchor": [
+                  259,
+                  516
+                ],
+                "rgba_sha256": "b80e906a3e68e8468c797cf7ab5b3b27049b36cce4816c85c1d2ff2f2644f972",
+                "original_source_region": [
+                  0,
+                  1,
+                  522,
+                  617
+                ],
+                "original_source_anchor": [
+                  256,
+                  514
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  643,
+                  3,
+                  545,
+                  584
+                ],
+                "margin": [
+                  401,
+                  379,
+                  879,
+                  840
+                ],
+                "source_anchor": [
+                  954,
+                  514
+                ],
+                "rgba_sha256": "90855dab885639c1e6b17f963740d27afa40b6fd0d4c3088ff8e7f0dc977f20d",
+                "original_source_region": [
+                  457,
+                  0,
+                  545,
+                  584
+                ],
+                "original_source_anchor": [
+                  768,
+                  511
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  1283,
+                  3,
+                  597,
+                  604
+                ],
+                "margin": [
+                  357,
+                  403,
+                  827,
+                  820
+                ],
+                "source_anchor": [
+                  1638,
+                  490
+                ],
+                "rgba_sha256": "72cd2ea6ae6560a907aae4a8ac90450ff125ce72d4fa4e39955c85f12177eb3a",
+                "original_source_region": [
+                  925,
+                  20,
+                  597,
+                  604
+                ],
+                "original_source_anchor": [
+                  1280,
+                  507
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  3,
+                  643,
+                  633,
+                  454
+                ],
+                "margin": [
+                  481,
+                  439,
+                  791,
+                  970
+                ],
+                "source_anchor": [
+                  234,
+                  1094
+                ],
+                "rgba_sha256": "1453a919289930de941ac39319ede3d66f81c27665e20f381ab58882a5146c60",
+                "original_source_region": [
+                  25,
+                  541,
+                  633,
+                  454
+                ],
+                "original_source_anchor": [
+                  256,
+                  992
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  643,
+                  643,
+                  501,
+                  511
+                ],
+                "margin": [
+                  463,
+                  387,
+                  923,
+                  913
+                ],
+                "source_anchor": [
+                  892,
+                  1146
+                ],
+                "rgba_sha256": "da6ae113c89b6b767b5d01ef05888a3716e523e92b415a3b37834a6115976858",
+                "original_source_region": [
+                  519,
+                  487,
+                  501,
+                  511
+                ],
+                "original_source_anchor": [
+                  768,
+                  990
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  1283,
+                  643,
+                  465,
+                  495
+                ],
+                "margin": [
+                  487,
+                  403,
+                  959,
+                  929
+                ],
+                "source_anchor": [
+                  1508,
+                  1130
+                ],
+                "rgba_sha256": "db00f702e95eff2dbfc5c682472b5f3ab5e7c777bebc4e54944aae74be85adcf",
+                "original_source_region": [
+                  1055,
+                  513,
+                  465,
+                  495
+                ],
+                "original_source_anchor": [
+                  1280,
+                  1000
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 535.5,
+            "canvas_size": [
+              1424,
+              1424
+            ],
+            "foot": [
+              712,
+              890
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/E-attack-v01.json"
+        },
+        {
+          "role": "hit",
+          "direction": "E",
+          "animation": "hit_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/E-hit-v01.png",
+          "source_sha256": "834ac3e30955f749d3120cb8fbba2a9da22a07de1fddab0643840cbfc99a587b",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/E-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1776,
+              1184
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  3,
+                  3,
+                  532,
+                  550
+                ],
+                "margin": [
+                  436,
+                  388,
+                  852,
+                  834
+                ],
+                "source_anchor": [
+                  259,
+                  480
+                ],
+                "rgba_sha256": "91c55b321f7151cd1469ec7584704c753b45150802a38d6d8593a5516697746d",
+                "original_source_region": [
+                  0,
+                  32,
+                  532,
+                  550
+                ],
+                "original_source_anchor": [
+                  256,
+                  509
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  595,
+                  3,
+                  513,
+                  586
+                ],
+                "margin": [
+                  443,
+                  370,
+                  871,
+                  798
+                ],
+                "source_anchor": [
+                  844,
+                  498
+                ],
+                "rgba_sha256": "e548b69b428ddede4862dc76c58e11d9ce485cd43e77617ed21eba362c21ae3a",
+                "original_source_region": [
+                  519,
+                  16,
+                  513,
+                  586
+                ],
+                "original_source_anchor": [
+                  768,
+                  511
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  1187,
+                  3,
+                  525,
+                  570
+                ],
+                "margin": [
+                  409,
+                  379,
+                  859,
+                  814
+                ],
+                "source_anchor": [
+                  1470,
+                  489
+                ],
+                "rgba_sha256": "aaa5104a672517c73255bc53618210e6191fe45d98cd1b7a45d0ea9252a6ed4b",
+                "original_source_region": [
+                  997,
+                  24,
+                  525,
+                  570
+                ],
+                "original_source_anchor": [
+                  1280,
+                  510
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  3,
+                  595,
+                  499,
+                  489
+                ],
+                "margin": [
+                  477,
+                  383,
+                  885,
+                  895
+                ],
+                "source_anchor": [
+                  218,
+                  1077
+                ],
+                "rgba_sha256": "aacd2229355bd95d5048ed9d9d29b34ae0e68562ddec0b1fdd3e5496149c7f4f",
+                "original_source_region": [
+                  41,
+                  517,
+                  499,
+                  489
+                ],
+                "original_source_anchor": [
+                  256,
+                  999
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  595,
+                  595,
+                  467,
+                  519
+                ],
+                "margin": [
+                  465,
+                  363,
+                  917,
+                  865
+                ],
+                "source_anchor": [
+                  822,
+                  1097
+                ],
+                "rgba_sha256": "8c428ff840729dceff983080151a69776c29a1c686f7dca1d38167732e86e43f",
+                "original_source_region": [
+                  541,
+                  505,
+                  467,
+                  519
+                ],
+                "original_source_anchor": [
+                  768,
+                  1007
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  1187,
+                  595,
+                  399,
+                  506
+                ],
+                "margin": [
+                  453,
+                  362,
+                  985,
+                  878
+                ],
+                "source_anchor": [
+                  1426,
+                  1098
+                ],
+                "rgba_sha256": "7351134f2622ec697061eb8a5f1bf1c828ae8e937d635b5d82451c3d6a535f40",
+                "original_source_region": [
+                  1041,
+                  505,
+                  399,
+                  506
+                ],
+                "original_source_anchor": [
+                  1280,
+                  1008
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 519.5,
+            "canvas_size": [
+              1384,
+              1384
+            ],
+            "foot": [
+              692,
+              865
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/E-hit-v01.json"
+        },
+        {
           "role": "idle",
           "direction": "E",
           "animation": "idle_0",
@@ -18619,6 +19049,3290 @@
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
           "production_connected": false
+        },
+        {
+          "role": "run",
+          "direction": "E",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/E-run-v01.png",
+          "source_sha256": "d878ce28f776f372d1d2746cb5354ee989ba23c32d9b18b27a4d6003ca7edf6a",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/E-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  59,
+                  6,
+                  413,
+                  486
+                ],
+                "margin": [
+                  435,
+                  308,
+                  851,
+                  778
+                ],
+                "source_anchor": [
+                  256,
+                  488
+                ],
+                "rgba_sha256": "1c4f6803b9791fd07d7f27d9a657e6020033a2e02414734422e437aff0e30035",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  580,
+                  10,
+                  356,
+                  492
+                ],
+                "margin": [
+                  444,
+                  302,
+                  908,
+                  772
+                ],
+                "source_anchor": [
+                  768,
+                  498
+                ],
+                "rgba_sha256": "f3cdd2ccfe4288877ea8922dec14b4b604107f1d5737dcc6325a2109f91412aa",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  1089,
+                  9,
+                  403,
+                  493
+                ],
+                "margin": [
+                  441,
+                  301,
+                  861,
+                  771
+                ],
+                "source_anchor": [
+                  1280,
+                  498
+                ],
+                "rgba_sha256": "ed9419b3f3d70027474fc738df36fe5a2aa5f01bc70f706e64d3a381f7670af1",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  69,
+                  518,
+                  417,
+                  471
+                ],
+                "margin": [
+                  445,
+                  323,
+                  847,
+                  793
+                ],
+                "source_anchor": [
+                  256,
+                  985
+                ],
+                "rgba_sha256": "83670ef48f33ff38be3fb0e26c2030c5d39723518ab82ea59a6b5413052cba9e",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  578,
+                  519,
+                  381,
+                  481
+                ],
+                "margin": [
+                  442,
+                  313,
+                  883,
+                  783
+                ],
+                "source_anchor": [
+                  768,
+                  996
+                ],
+                "rgba_sha256": "6517360786c00a0dfb8a1b05542b05ba88cd10159ddb1f8b83bf5ff64c3704df",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  1101,
+                  517,
+                  404,
+                  477
+                ],
+                "margin": [
+                  453,
+                  317,
+                  860,
+                  787
+                ],
+                "source_anchor": [
+                  1280,
+                  990
+                ],
+                "rgba_sha256": "091712522e408e73bab3ab7743a96f4785ec9015f37084c47829a392ed773dc8",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 472.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "attack",
+          "direction": "N",
+          "animation": "attack_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/N-attack-v01.png",
+          "source_sha256": "6830d1bbdbd18747f5b69812bb8f10b3ee598ca4648bf58e270e0c20e5c4b6fa",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/N-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  106,
+                  15,
+                  369,
+                  484
+                ],
+                "margin": [
+                  466,
+                  290,
+                  863,
+                  748
+                ],
+                "source_anchor": [
+                  256,
+                  495
+                ],
+                "rgba_sha256": "f98793dd9f6133a174c5cd6ecd458c31ec43ceb06d07d5809d53dbb1e0af0273",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  575,
+                  10,
+                  356,
+                  493
+                ],
+                "margin": [
+                  423,
+                  281,
+                  876,
+                  739
+                ],
+                "source_anchor": [
+                  768,
+                  499
+                ],
+                "rgba_sha256": "24d5570c8a4dca0fd269e46ebde741ba6669d487766a0107613b3e28da152312",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  1044,
+                  13,
+                  455,
+                  490
+                ],
+                "margin": [
+                  380,
+                  284,
+                  777,
+                  742
+                ],
+                "source_anchor": [
+                  1280,
+                  499
+                ],
+                "rgba_sha256": "cfd95f7dbfd32a61c82a35a6b7c59a7d0deba243cd07569837aa00ac8d7cf9db",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  44,
+                  547,
+                  489,
+                  451
+                ],
+                "margin": [
+                  404,
+                  323,
+                  743,
+                  781
+                ],
+                "source_anchor": [
+                  256,
+                  994
+                ],
+                "rgba_sha256": "b25fad0dc831d63fcc21cfd8b06f4255ae0a2490a1aa4fd337ddcd7330483b28",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  585,
+                  531,
+                  368,
+                  465
+                ],
+                "margin": [
+                  433,
+                  309,
+                  864,
+                  767
+                ],
+                "source_anchor": [
+                  768,
+                  992
+                ],
+                "rgba_sha256": "9cc2145d8e81ff50ceac7c7d6c838b6e92ecc3b6c2e08c3c92254cc1fb41757c",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1124,
+                  522,
+                  386,
+                  481
+                ],
+                "margin": [
+                  460,
+                  293,
+                  846,
+                  751
+                ],
+                "source_anchor": [
+                  1280,
+                  999
+                ],
+                "rgba_sha256": "14987d598c0eb3895357bb8af97c042d466e66e90b6aa502ad91b044d42caff3",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 461.5,
+            "canvas_size": [
+              1232,
+              1232
+            ],
+            "foot": [
+              616,
+              770
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "N",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/N-hit-v01.png",
+          "source_sha256": "32d649f763129168d31dd7d843ee05d6b81c2740d373d9390130d1117131dba5",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/N-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  25,
+                  16,
+                  479,
+                  493
+                ],
+                "margin": [
+                  393,
+                  291,
+                  769,
+                  755
+                ],
+                "source_anchor": [
+                  256,
+                  505
+                ],
+                "rgba_sha256": "738536c87e0c9a3ac2bd1bc2582d9a60545eca4a58b562b02d25c30fe09b54be",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  544,
+                  20,
+                  437,
+                  489
+                ],
+                "margin": [
+                  400,
+                  295,
+                  811,
+                  759
+                ],
+                "source_anchor": [
+                  768,
+                  505
+                ],
+                "rgba_sha256": "ba7e4556a7fde442f5515a643e93306d5698dea35a2ccce5b68148301250da77",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  1034,
+                  11,
+                  464,
+                  499
+                ],
+                "margin": [
+                  378,
+                  285,
+                  784,
+                  749
+                ],
+                "source_anchor": [
+                  1280,
+                  506
+                ],
+                "rgba_sha256": "593196d978ee257bf06a7eb6a559b2e888a401304038ddf01f0eb1121bb08bbe",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  97,
+                  531,
+                  397,
+                  455
+                ],
+                "margin": [
+                  465,
+                  329,
+                  851,
+                  793
+                ],
+                "source_anchor": [
+                  256,
+                  982
+                ],
+                "rgba_sha256": "1908c18d33c12eece224d7edd8e422657684e37566ee2492893cd03e169e8c7e",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  624,
+                  525,
+                  365,
+                  465
+                ],
+                "margin": [
+                  480,
+                  319,
+                  883,
+                  783
+                ],
+                "source_anchor": [
+                  768,
+                  986
+                ],
+                "rgba_sha256": "aae4dd5f61e95657c43f44aead2b774d9745104512d12fdaebd0281d0e1f3def",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1140,
+                  511,
+                  367,
+                  478
+                ],
+                "margin": [
+                  484,
+                  306,
+                  881,
+                  770
+                ],
+                "source_anchor": [
+                  1280,
+                  985
+                ],
+                "rgba_sha256": "f0c616bb7f821f7090f0efda7fb002feae04680ba454d7a465679132e880f297",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 468.0,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "idle",
+          "direction": "N",
+          "animation": "idle_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/N-idle-v01.png",
+          "source_sha256": "0f9f5b249535fe023113ca3521ff3c9eb9966782042f5ba6f41a80c4b163818f",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/N-idle-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  117,
+                  5,
+                  370,
+                  490
+                ],
+                "margin": [
+                  509,
+                  324,
+                  926,
+                  806
+                ],
+                "source_anchor": [
+                  256,
+                  491
+                ],
+                "rgba_sha256": "460a302f6a433c4b93949cc120aa785697ac76f0fd139e6296af0ba5553b952f",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  625,
+                  2,
+                  377,
+                  493
+                ],
+                "margin": [
+                  505,
+                  321,
+                  919,
+                  803
+                ],
+                "source_anchor": [
+                  768,
+                  491
+                ],
+                "rgba_sha256": "91761fc7ca9df41f709788ff8f063bedcae429798344376428c491d3ab277bf7",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  1135,
+                  2,
+                  387,
+                  493
+                ],
+                "margin": [
+                  503,
+                  321,
+                  909,
+                  803
+                ],
+                "source_anchor": [
+                  1280,
+                  491
+                ],
+                "rgba_sha256": "453c3f37d312c84492b3a54cc39f72b4a52669501d9c5b6cf8a82b0e984d41f7",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  102,
+                  512,
+                  402,
+                  493
+                ],
+                "margin": [
+                  494,
+                  321,
+                  894,
+                  803
+                ],
+                "source_anchor": [
+                  256,
+                  1001
+                ],
+                "rgba_sha256": "74597fd1eb2b7a3688b132a10c0dca3eb71026bf62dbfd18aba0b4631f50c723",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  620,
+                  516,
+                  383,
+                  490
+                ],
+                "margin": [
+                  500,
+                  324,
+                  913,
+                  806
+                ],
+                "source_anchor": [
+                  768,
+                  1002
+                ],
+                "rgba_sha256": "6c5ea1adb336a41dee641c94768db9b7802e8dc90bf9e51d6d8d77fb9bc8b2fd",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1137,
+                  520,
+                  375,
+                  486
+                ],
+                "margin": [
+                  505,
+                  328,
+                  921,
+                  810
+                ],
+                "source_anchor": [
+                  1280,
+                  1002
+                ],
+                "rgba_sha256": "ecf74edae8e15fee3cbf8d0ddde71938ccacd3e95f89ebb4ac3a33ffa711fef5",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 485.5,
+            "canvas_size": [
+              1296,
+              1296
+            ],
+            "foot": [
+              648,
+              810
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "run",
+          "direction": "N",
+          "animation": "run_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/N-run-v01.png",
+          "source_sha256": "9c2e062ac1426cd273e27fc0bbb614dc1f3dbe06ab8fe1f5a07018fb71183831",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/N-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  131,
+                  8,
+                  337,
+                  489
+                ],
+                "margin": [
+                  515,
+                  315,
+                  943,
+                  791
+                ],
+                "source_anchor": [
+                  256,
+                  493
+                ],
+                "rgba_sha256": "32515182ece16ebc38239cb3fc67ba97c55d0ee931bd88d4287f8587d2184968",
+                "canvas_size": [
+                  1280,
+                  1280
+                ],
+                "foot": [
+                  640,
+                  800
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  616,
+                  10,
+                  332,
+                  487
+                ],
+                "margin": [
+                  488,
+                  317,
+                  948,
+                  793
+                ],
+                "source_anchor": [
+                  768,
+                  493
+                ],
+                "rgba_sha256": "0c49944bcfa10a276db77bb4aee52465da8f62b4790500a30c2c5f8a55ff5a1a",
+                "canvas_size": [
+                  1280,
+                  1280
+                ],
+                "foot": [
+                  640,
+                  800
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  1105,
+                  10,
+                  345,
+                  488
+                ],
+                "margin": [
+                  465,
+                  316,
+                  935,
+                  792
+                ],
+                "source_anchor": [
+                  1280,
+                  494
+                ],
+                "rgba_sha256": "5463630a5252dc5b9da7b2dec8c995abd504160017d266f376f4f2095704e2a0",
+                "canvas_size": [
+                  1280,
+                  1280
+                ],
+                "foot": [
+                  640,
+                  800
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  94,
+                  518,
+                  335,
+                  482
+                ],
+                "margin": [
+                  478,
+                  322,
+                  945,
+                  798
+                ],
+                "source_anchor": [
+                  256,
+                  996
+                ],
+                "rgba_sha256": "9df77943bc06f316a036c63f762c8a47d965bb457c7793661e497d46af4c80ee",
+                "canvas_size": [
+                  1280,
+                  1280
+                ],
+                "foot": [
+                  640,
+                  800
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  588,
+                  520,
+                  338,
+                  460
+                ],
+                "margin": [
+                  460,
+                  344,
+                  942,
+                  820
+                ],
+                "source_anchor": [
+                  768,
+                  976
+                ],
+                "rgba_sha256": "32be82013f0c9b9bbf73a1d919f921f0a905ccdc213d6d3ea5e8d7d55226f144",
+                "canvas_size": [
+                  1280,
+                  1280
+                ],
+                "foot": [
+                  640,
+                  800
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1097,
+                  522,
+                  339,
+                  480
+                ],
+                "margin": [
+                  457,
+                  324,
+                  941,
+                  800
+                ],
+                "source_anchor": [
+                  1280,
+                  998
+                ],
+                "rgba_sha256": "664407f5a73bde0c8a13b9406e243f8a179d0abfadfc2b91046ce9695c4bb4f6",
+                "canvas_size": [
+                  1280,
+                  1280
+                ],
+                "foot": [
+                  640,
+                  800
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 479.5,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "attack",
+          "direction": "NE",
+          "animation": "attack_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NE-attack-v01.png",
+          "source_sha256": "5ef5faa595ee47b41fa92274f15400515b5babb89845d9e0ad8a6648f3c945dd",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NE-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  134,
+                  12,
+                  409,
+                  495
+                ],
+                "margin": [
+                  502,
+                  289,
+                  839,
+                  753
+                ],
+                "source_anchor": [
+                  256,
+                  503
+                ],
+                "rgba_sha256": "bd9ebbaf4a9c65a0b1c3da2fc74e3df323a6b1ed99946b84daa4d3bf5c0f1e80",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  587,
+                  9,
+                  337,
+                  498
+                ],
+                "margin": [
+                  443,
+                  286,
+                  911,
+                  750
+                ],
+                "source_anchor": [
+                  768,
+                  503
+                ],
+                "rgba_sha256": "d393ce8f05c64f0a89220d7e371538e05a519d5663b7d8dd7e3fc4d28013b615",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  1042,
+                  64,
+                  453,
+                  443
+                ],
+                "margin": [
+                  386,
+                  341,
+                  795,
+                  805
+                ],
+                "source_anchor": [
+                  1280,
+                  503
+                ],
+                "rgba_sha256": "5841c19435bb9f2e8aff705adb12c158803ea451a84d055bd93a221d4a7996c3",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  59,
+                  547,
+                  517,
+                  456
+                ],
+                "margin": [
+                  427,
+                  328,
+                  731,
+                  792
+                ],
+                "source_anchor": [
+                  256,
+                  999
+                ],
+                "rgba_sha256": "b67ef03a7bf10e96668b7e7a470538f84c5890a81391fc8b3f3c022a7937a8ab",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  604,
+                  528,
+                  390,
+                  473
+                ],
+                "margin": [
+                  460,
+                  311,
+                  858,
+                  775
+                ],
+                "source_anchor": [
+                  768,
+                  997
+                ],
+                "rgba_sha256": "edb07c18fba856d82ca48e39760744b0852247d5aa3f362fe4831f15c2556428",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  1120,
+                  521,
+                  394,
+                  482
+                ],
+                "margin": [
+                  464,
+                  302,
+                  854,
+                  766
+                ],
+                "source_anchor": [
+                  1280,
+                  999
+                ],
+                "rgba_sha256": "a27ec59a1cb162be43c4210ff68b3cef589ffbc57beda837c637b107f60f73ca",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 469.5,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "NE",
+          "animation": "hit_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NE-hit-v01.png",
+          "source_sha256": "94dbfd6b418f1e24f656f88fafa38ad671ebdae5505c4dddb2db5c826e13554d",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NE-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  117,
+                  103,
+                  458,
+                  416
+                ],
+                "margin": [
+                  421,
+                  288,
+                  662,
+                  704
+                ],
+                "source_anchor": [
+                  256,
+                  515
+                ],
+                "rgba_sha256": "190321c44f7570f156829f0a153ec818f489fadce797bea6193403ed85dd1e58",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  613,
+                  11,
+                  481,
+                  508
+                ],
+                "margin": [
+                  405,
+                  196,
+                  639,
+                  612
+                ],
+                "source_anchor": [
+                  768,
+                  515
+                ],
+                "rgba_sha256": "659c87c83ae818fcac0482095c79eb15812f22e49ec86dde81c00f2d010d5237",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  1103,
+                  69,
+                  423,
+                  448
+                ],
+                "margin": [
+                  383,
+                  256,
+                  697,
+                  672
+                ],
+                "source_anchor": [
+                  1280,
+                  513
+                ],
+                "rgba_sha256": "575fd9490a495a47281732013d1c0d78d1b84a0d2c97b5087c7336438051c02f",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  131,
+                  565,
+                  434,
+                  436
+                ],
+                "margin": [
+                  435,
+                  268,
+                  686,
+                  684
+                ],
+                "source_anchor": [
+                  256,
+                  997
+                ],
+                "rgba_sha256": "35e9a73ac0680a37fed0702671a02e6f92e783edbf33ee546d84bce8ed0ff298",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  644,
+                  532,
+                  427,
+                  472
+                ],
+                "margin": [
+                  436,
+                  232,
+                  693,
+                  648
+                ],
+                "source_anchor": [
+                  768,
+                  1000
+                ],
+                "rgba_sha256": "0d4e6ac2c8812dc72a871633896b81584437bce9a15c1f1ecf9d856fe163a499",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  1150,
+                  527,
+                  375,
+                  476
+                ],
+                "margin": [
+                  430,
+                  228,
+                  745,
+                  644
+                ],
+                "source_anchor": [
+                  1280,
+                  999
+                ],
+                "rgba_sha256": "febde4ff9ee70fad5621df0ae3dc241f469a3ff5e70d2e878b9f56f6cdf8fad9",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 420.0,
+            "canvas_size": [
+              1120,
+              1120
+            ],
+            "foot": [
+              560,
+              700
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "idle",
+          "direction": "NE",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NE-idle-v01.png",
+          "source_sha256": "2ddafdc3f0c55d123cf753f5369cc2095fcb29db1981454faf7b0a0a28d43629",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NE-idle-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  164,
+                  5,
+                  403,
+                  507
+                ],
+                "margin": [
+                  572,
+                  327,
+                  925,
+                  821
+                ],
+                "source_anchor": [
+                  256,
+                  508
+                ],
+                "rgba_sha256": "8616152a3f11294c29db9dbfc4280beb023fe5c2c116df77ef779b027d65f835",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  645,
+                  7,
+                  422,
+                  507
+                ],
+                "margin": [
+                  541,
+                  327,
+                  906,
+                  821
+                ],
+                "source_anchor": [
+                  768,
+                  510
+                ],
+                "rgba_sha256": "e1a83568fc4ef51dda43d3ab597e99c773759b125ade9b4cad0d3cd8fb48aa31",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  1133,
+                  3,
+                  402,
+                  511
+                ],
+                "margin": [
+                  517,
+                  323,
+                  926,
+                  817
+                ],
+                "source_anchor": [
+                  1280,
+                  510
+                ],
+                "rgba_sha256": "3cb969c9aed172e4c95a7fe003e4aeefd2a494f63e1a8309c712ba8bb0b017d1",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  157,
+                  512,
+                  426,
+                  504
+                ],
+                "margin": [
+                  565,
+                  330,
+                  902,
+                  824
+                ],
+                "source_anchor": [
+                  256,
+                  1012
+                ],
+                "rgba_sha256": "390a0b709c464f56009dff539bfe0548ab79ec55b4df9650a90dc4ed123b7008",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  639,
+                  514,
+                  411,
+                  502
+                ],
+                "margin": [
+                  535,
+                  332,
+                  917,
+                  826
+                ],
+                "source_anchor": [
+                  768,
+                  1012
+                ],
+                "rgba_sha256": "0fc61e27bd82dfd829df601f69f19bc6dacba30a524458ed48523834b03945c7",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  1124,
+                  514,
+                  398,
+                  502
+                ],
+                "margin": [
+                  508,
+                  332,
+                  930,
+                  826
+                ],
+                "source_anchor": [
+                  1280,
+                  1012
+                ],
+                "rgba_sha256": "cfc7f782ba60ce32684a0be60283bccc5fe8c7ac92dc64e6ac33b9c7656df634",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 499.5,
+            "canvas_size": [
+              1328,
+              1328
+            ],
+            "foot": [
+              664,
+              830
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "run",
+          "direction": "NE",
+          "animation": "run_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NE-run-v01.png",
+          "source_sha256": "a3c8b45a0bec932e0201d18a5d012811873fe1ba3c63ebf4f8380b14a8a382c2",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NE-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  72,
+                  9,
+                  404,
+                  483
+                ],
+                "margin": [
+                  440,
+                  301,
+                  844,
+                  765
+                ],
+                "source_anchor": [
+                  256,
+                  488
+                ],
+                "rgba_sha256": "17fd86c4072c22c84478daecbe8382cac9a933fa8253b5e581319bc723122637",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  600,
+                  5,
+                  362,
+                  476
+                ],
+                "margin": [
+                  456,
+                  308,
+                  886,
+                  772
+                ],
+                "source_anchor": [
+                  768,
+                  477
+                ],
+                "rgba_sha256": "be3d9a68f7d53d923ca431c00441871d9156081da1b076f83c818e8edf9e8198",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  1097,
+                  10,
+                  411,
+                  487
+                ],
+                "margin": [
+                  441,
+                  297,
+                  837,
+                  761
+                ],
+                "source_anchor": [
+                  1280,
+                  493
+                ],
+                "rgba_sha256": "e83207d74521b6fd01aadc533239229a1af4364a75393d7404cc7af0bf39d187",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  88,
+                  508,
+                  397,
+                  466
+                ],
+                "margin": [
+                  456,
+                  318,
+                  851,
+                  782
+                ],
+                "source_anchor": [
+                  256,
+                  970
+                ],
+                "rgba_sha256": "1d0ead2eb4b3c158ebaf705245bf706383dcc8918a9bfe0963a7cd3694ca5f79",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  611,
+                  515,
+                  361,
+                  480
+                ],
+                "margin": [
+                  467,
+                  304,
+                  887,
+                  768
+                ],
+                "source_anchor": [
+                  768,
+                  991
+                ],
+                "rgba_sha256": "b87679bd1db25c08c50daa26020bbbbe48dd9ac4edaebb19842fc60491c22d48",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  1101,
+                  510,
+                  397,
+                  498
+                ],
+                "margin": [
+                  445,
+                  286,
+                  851,
+                  750
+                ],
+                "source_anchor": [
+                  1280,
+                  1004
+                ],
+                "rgba_sha256": "abba03a6f5a7043f77fd03ba7b7f50ebf17198e96f9c2cb6055d7a61a383c4a1",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 468.5,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "attack",
+          "direction": "NW",
+          "animation": "attack_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NW-attack-v01.png",
+          "source_sha256": "cf0b5902c44f0f6e20231083c765e662d71dd03d55038bf00465e72c899c6e46",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NW-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  134,
+                  11,
+                  428,
+                  500
+                ],
+                "margin": [
+                  510,
+                  294,
+                  836,
+                  764
+                ],
+                "source_anchor": [
+                  256,
+                  507
+                ],
+                "rgba_sha256": "4b2b9bbc923d10497e783f655e9071866e4e76bc4345f29565ecef13cc42d7ce",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  567,
+                  3,
+                  395,
+                  506
+                ],
+                "margin": [
+                  431,
+                  288,
+                  869,
+                  758
+                ],
+                "source_anchor": [
+                  768,
+                  505
+                ],
+                "rgba_sha256": "3a4bf24506bca44b64819720a3f1d6b88acc7e0fb196cc050bb8fd8f0a63932e",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  965,
+                  46,
+                  564,
+                  454
+                ],
+                "margin": [
+                  317,
+                  340,
+                  700,
+                  810
+                ],
+                "source_anchor": [
+                  1280,
+                  496
+                ],
+                "rgba_sha256": "bcd7d4e6a7d44eb12b00eb011da342d45b28aab7e1cfb80c9bec16a3f18ab8f5",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  31,
+                  526,
+                  500,
+                  461
+                ],
+                "margin": [
+                  407,
+                  333,
+                  764,
+                  803
+                ],
+                "source_anchor": [
+                  256,
+                  983
+                ],
+                "rgba_sha256": "82c978bc045514ed5a647430cf3d7d6774035f1ba1ca124116cd7f0f8ffeea9b",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  629,
+                  516,
+                  444,
+                  481
+                ],
+                "margin": [
+                  493,
+                  313,
+                  820,
+                  783
+                ],
+                "source_anchor": [
+                  768,
+                  993
+                ],
+                "rgba_sha256": "819b41922f4182e5a971ab7a356b445f36d9ceaac05c77767f9fa55555fe075c",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1130,
+                  507,
+                  406,
+                  495
+                ],
+                "margin": [
+                  482,
+                  299,
+                  858,
+                  769
+                ],
+                "source_anchor": [
+                  1280,
+                  998
+                ],
+                "rgba_sha256": "a99bef082803e525733024982d3b41544b7ef17a7f5851ad2360e605289db994",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 474.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "NW",
+          "animation": "hit_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NW-hit-v01.png",
+          "source_sha256": "33c3e41a4f8b71890bc6a70417a92fc2a234f422db122d75d672bbfa90b65a17",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NW-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  98,
+                  4,
+                  446,
+                  494
+                ],
+                "margin": [
+                  458,
+                  280,
+                  786,
+                  738
+                ],
+                "source_anchor": [
+                  256,
+                  494
+                ],
+                "rgba_sha256": "9d15a04a45c9e40c4bc7d390b2f055d68a11fff6252f8b7aa1e6a187bcfc06fd",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  603,
+                  13,
+                  448,
+                  481
+                ],
+                "margin": [
+                  451,
+                  293,
+                  784,
+                  751
+                ],
+                "source_anchor": [
+                  768,
+                  490
+                ],
+                "rgba_sha256": "3fc734d05ee991350ddb0f179179bfdcc120b15f2b2c9c49b0e2dba354d3c653",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  1091,
+                  48,
+                  430,
+                  444
+                ],
+                "margin": [
+                  427,
+                  330,
+                  802,
+                  788
+                ],
+                "source_anchor": [
+                  1280,
+                  488
+                ],
+                "rgba_sha256": "a0b2c09878b96f21d7984b285d87f6c0c75cdf178f198eee8e1bf45444f4f542",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  91,
+                  537,
+                  446,
+                  445
+                ],
+                "margin": [
+                  451,
+                  329,
+                  786,
+                  787
+                ],
+                "source_anchor": [
+                  256,
+                  978
+                ],
+                "rgba_sha256": "8ba1e77659fb314fff3f559af83cdc28e50f0e4b5d15365ad4a89a21de34b9ab",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  631,
+                  520,
+                  412,
+                  467
+                ],
+                "margin": [
+                  479,
+                  307,
+                  820,
+                  765
+                ],
+                "source_anchor": [
+                  768,
+                  983
+                ],
+                "rgba_sha256": "c9d09f150b87000f2804cb454ea827203acaaf7aa4b072e4b63933d4895cfd0a",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1121,
+                  503,
+                  385,
+                  495
+                ],
+                "margin": [
+                  457,
+                  279,
+                  847,
+                  737
+                ],
+                "source_anchor": [
+                  1280,
+                  994
+                ],
+                "rgba_sha256": "0d7c76f4fb80ff6f7879fd9c8a844c81d631a6698986e9fc6cc4b3aae2350bb5",
+                "canvas_size": [
+                  1232,
+                  1232
+                ],
+                "foot": [
+                  616,
+                  770
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 463.5,
+            "canvas_size": [
+              1232,
+              1232
+            ],
+            "foot": [
+              616,
+              770
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "idle",
+          "direction": "NW",
+          "animation": "idle_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NW-idle-v01.png",
+          "source_sha256": "42499c0613519426824d803ed49f891fd503cb0f0cc92c124fef30f09264aaaf",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/NW-idle-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  144,
+                  19,
+                  419,
+                  481
+                ],
+                "margin": [
+                  520,
+                  313,
+                  845,
+                  783
+                ],
+                "source_anchor": [
+                  256,
+                  496
+                ],
+                "rgba_sha256": "d34dfc4f102f9813a1bb7b6e8abef196c3001727d773e0e8d7435396140e0e1c",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  626,
+                  18,
+                  417,
+                  482
+                ],
+                "margin": [
+                  490,
+                  312,
+                  847,
+                  782
+                ],
+                "source_anchor": [
+                  768,
+                  496
+                ],
+                "rgba_sha256": "c6a8c41dfdaa22ef7ae3a29dc0f5377bb45b38fbb83a7848b9746493af44b023",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  1108,
+                  18,
+                  419,
+                  482
+                ],
+                "margin": [
+                  460,
+                  312,
+                  845,
+                  782
+                ],
+                "source_anchor": [
+                  1280,
+                  496
+                ],
+                "rgba_sha256": "b8a10ce56a83c0d68bff297f2176a1cd060569f535c1857d9ac80a312cc59414",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  142,
+                  529,
+                  423,
+                  480
+                ],
+                "margin": [
+                  518,
+                  314,
+                  841,
+                  784
+                ],
+                "source_anchor": [
+                  256,
+                  1005
+                ],
+                "rgba_sha256": "1f646e98c188b7e99d8c49a7d327f7dbefb4e7475a7320e48e59c0ccc2d63193",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  621,
+                  530,
+                  423,
+                  479
+                ],
+                "margin": [
+                  485,
+                  315,
+                  841,
+                  785
+                ],
+                "source_anchor": [
+                  768,
+                  1005
+                ],
+                "rgba_sha256": "f4deab24a2fb6b0ecdac9dba31dfd713bd6d67dc04d96a373515d841935364b4",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1107,
+                  530,
+                  416,
+                  479
+                ],
+                "margin": [
+                  459,
+                  315,
+                  848,
+                  785
+                ],
+                "source_anchor": [
+                  1280,
+                  1005
+                ],
+                "rgba_sha256": "17c19878e04614d0740310daffce050a62cceea8d7ca0ffcde75e9d986050e85",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 474.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "run",
+          "direction": "NW",
+          "animation": "run_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/NW-run-v01.png",
+          "source_sha256": "b8871449dc35d2ff3a34be2b6e894354ccbb7513796e30d231147094e46f3ccc",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/NW-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1944,
+              1296
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  3,
+                  3,
+                  617,
+                  598
+                ],
+                "margin": [
+                  500,
+                  446,
+                  895,
+                  914
+                ],
+                "source_anchor": [
+                  259,
+                  502
+                ],
+                "rgba_sha256": "aaf858d4f2777ca04f83d79258b05856043a91e9e1418cb03a9900e6740842c1",
+                "original_source_region": [
+                  0,
+                  8,
+                  617,
+                  598
+                ],
+                "original_source_anchor": [
+                  256,
+                  507
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  651,
+                  3,
+                  641,
+                  562
+                ],
+                "margin": [
+                  475,
+                  447,
+                  871,
+                  950
+                ],
+                "source_anchor": [
+                  932,
+                  501
+                ],
+                "rgba_sha256": "9aa24b721fd7f09cb4ff563c1b6e7ddd3214446b2f55d6ae38d62f0299feacbd",
+                "original_source_region": [
+                  487,
+                  0,
+                  641,
+                  562
+                ],
+                "original_source_anchor": [
+                  768,
+                  498
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  1299,
+                  3,
+                  527,
+                  600
+                ],
+                "margin": [
+                  485,
+                  431,
+                  985,
+                  912
+                ],
+                "source_anchor": [
+                  1570,
+                  517
+                ],
+                "rgba_sha256": "d58e5bbe2e5116460e0cafef71b0dfa931b0b74dcc13282dd48c828bc8367cc5",
+                "original_source_region": [
+                  1009,
+                  0,
+                  527,
+                  600
+                ],
+                "original_source_anchor": [
+                  1280,
+                  514
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  3,
+                  651,
+                  604,
+                  537
+                ],
+                "margin": [
+                  500,
+                  463,
+                  908,
+                  975
+                ],
+                "source_anchor": [
+                  259,
+                  1133
+                ],
+                "rgba_sha256": "cc9c938cdbc68f221ce61e7a94204a11ec12fa4d6ac036535f89404a57d2de3b",
+                "original_source_region": [
+                  0,
+                  487,
+                  604,
+                  537
+                ],
+                "original_source_anchor": [
+                  256,
+                  969
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  651,
+                  651,
+                  593,
+                  567
+                ],
+                "margin": [
+                  519,
+                  407,
+                  919,
+                  945
+                ],
+                "source_anchor": [
+                  888,
+                  1189
+                ],
+                "rgba_sha256": "04d50eb947374158c6a4bec635ccdf07b7adc531136d42a36f2b892dd9120713",
+                "original_source_region": [
+                  531,
+                  439,
+                  593,
+                  567
+                ],
+                "original_source_anchor": [
+                  768,
+                  977
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1299,
+                  651,
+                  531,
+                  575
+                ],
+                "margin": [
+                  481,
+                  385,
+                  981,
+                  937
+                ],
+                "source_anchor": [
+                  1574,
+                  1211
+                ],
+                "rgba_sha256": "c1a1290aa813f51b2354834d15288413f146713d6edf9e927a3c2c059eb6ba65",
+                "original_source_region": [
+                  1005,
+                  435,
+                  531,
+                  575
+                ],
+                "original_source_anchor": [
+                  1280,
+                  995
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 567.5,
+            "canvas_size": [
+              1512,
+              1512
+            ],
+            "foot": [
+              756,
+              945
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/NW-run-v01.json"
+        },
+        {
+          "role": "attack",
+          "direction": "S",
+          "animation": "attack_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/S-attack-v01.png",
+          "source_sha256": "e4f5731c45cd07b7b3fa019329581993a7877e19829722ef45fc57f08716257f",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/S-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1848,
+              1232
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  3,
+                  3,
+                  541,
+                  593
+                ],
+                "margin": [
+                  464,
+                  396,
+                  899,
+                  847
+                ],
+                "source_anchor": [
+                  259,
+                  507
+                ],
+                "rgba_sha256": "ff474095e2a9237750e3494b3176f3cdbcfbbdd659701d425ced0a83d717dae3",
+                "original_source_region": [
+                  0,
+                  9,
+                  541,
+                  593
+                ],
+                "original_source_anchor": [
+                  256,
+                  513
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  619,
+                  3,
+                  575,
+                  588
+                ],
+                "margin": [
+                  467,
+                  390,
+                  865,
+                  852
+                ],
+                "source_anchor": [
+                  872,
+                  513
+                ],
+                "rgba_sha256": "59f9e306359bc7c75a7b4070a0626c2f125f79820af977c68be7fa6df8f9df52",
+                "original_source_region": [
+                  515,
+                  0,
+                  575,
+                  588
+                ],
+                "original_source_anchor": [
+                  768,
+                  510
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1235,
+                  3,
+                  505,
+                  610
+                ],
+                "margin": [
+                  449,
+                  391,
+                  935,
+                  830
+                ],
+                "source_anchor": [
+                  1506,
+                  512
+                ],
+                "rgba_sha256": "aafbe65596ddea50641b21be7fef151d1c06bc4bb1dc725ab4dba42c585ba109",
+                "original_source_region": [
+                  1009,
+                  8,
+                  505,
+                  610
+                ],
+                "original_source_anchor": [
+                  1280,
+                  517
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  3,
+                  619,
+                  576,
+                  486
+                ],
+                "margin": [
+                  464,
+                  418,
+                  864,
+                  954
+                ],
+                "source_anchor": [
+                  259,
+                  1101
+                ],
+                "rgba_sha256": "dd92e879fe8811c5f5d76d30ccd6112f3d161f2ae501a4ce2b1bc2699ef64d52",
+                "original_source_region": [
+                  0,
+                  525,
+                  576,
+                  486
+                ],
+                "original_source_anchor": [
+                  256,
+                  1007
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  619,
+                  619,
+                  467,
+                  494
+                ],
+                "margin": [
+                  519,
+                  418,
+                  973,
+                  946
+                ],
+                "source_anchor": [
+                  820,
+                  1101
+                ],
+                "rgba_sha256": "81ba3e57ca932fc7d7626472ea1e2f869c42f807d20fee0b991602094c10ad3f",
+                "original_source_region": [
+                  567,
+                  511,
+                  467,
+                  494
+                ],
+                "original_source_anchor": [
+                  768,
+                  993
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1235,
+                  619,
+                  390,
+                  525
+                ],
+                "margin": [
+                  505,
+                  379,
+                  1050,
+                  915
+                ],
+                "source_anchor": [
+                  1450,
+                  1140
+                ],
+                "rgba_sha256": "9ef7dfc06efea2338f2a260ed3fae457f1bf0bde5532983cb208b7ed0a01f8d9",
+                "original_source_region": [
+                  1065,
+                  479,
+                  390,
+                  525
+                ],
+                "original_source_anchor": [
+                  1280,
+                  1000
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 539.5,
+            "canvas_size": [
+              1440,
+              1440
+            ],
+            "foot": [
+              720,
+              900
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/S-attack-v01.json"
+        },
+        {
+          "role": "death",
+          "direction": "S",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/S-death-v01.png",
+          "source_sha256": "3b33e4dfbb41c792e7be9f9f009d5a3c8e1d2f2ccecec8a9c76f512dddf0d927",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/S-death-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  82,
+                  5,
+                  320,
+                  549
+                ],
+                "margin": [
+                  402,
+                  175,
+                  832,
+                  603
+                ],
+                "source_anchor": [
+                  256,
+                  550
+                ],
+                "rgba_sha256": "09363ed61b77871ef181cdb1ae44942b35881de1b6f46b43fef7816900c0f4d0",
+                "canvas_size": [
+                  1152,
+                  1152
+                ],
+                "foot": [
+                  576,
+                  720
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  574,
+                  69,
+                  352,
+                  473
+                ],
+                "margin": [
+                  382,
+                  251,
+                  800,
+                  679
+                ],
+                "source_anchor": [
+                  768,
+                  538
+                ],
+                "rgba_sha256": "31212e981d7555417e08f19b8aa6216c60c6f3026e5b6a7698cc0a544aa0fdf2",
+                "canvas_size": [
+                  1152,
+                  1152
+                ],
+                "foot": [
+                  576,
+                  720
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1095,
+                  145,
+                  365,
+                  387
+                ],
+                "margin": [
+                  391,
+                  337,
+                  787,
+                  765
+                ],
+                "source_anchor": [
+                  1280,
+                  528
+                ],
+                "rgba_sha256": "4291b344c6e4aaf3e6c222e1485ce7f910ff6c0006e9f29f2982b41a1d396ac5",
+                "canvas_size": [
+                  1152,
+                  1152
+                ],
+                "foot": [
+                  576,
+                  720
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  15,
+                  658,
+                  492,
+                  328
+                ],
+                "margin": [
+                  335,
+                  396,
+                  660,
+                  824
+                ],
+                "source_anchor": [
+                  256,
+                  982
+                ],
+                "rgba_sha256": "25fea619ee86843fe1c3ff76c45d1ba773c88fff07ce4a2b3f37a9383ce7087b",
+                "canvas_size": [
+                  1152,
+                  1152
+                ],
+                "foot": [
+                  576,
+                  720
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  510,
+                  728,
+                  519,
+                  218
+                ],
+                "margin": [
+                  318,
+                  506,
+                  633,
+                  934
+                ],
+                "source_anchor": [
+                  768,
+                  942
+                ],
+                "rgba_sha256": "93b351a0679f400fd52c865a639367d1aa334bdbbb0040021ef4c6a9c39d6d6b",
+                "canvas_size": [
+                  1152,
+                  1152
+                ],
+                "foot": [
+                  576,
+                  720
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1030,
+                  748,
+                  499,
+                  183
+                ],
+                "margin": [
+                  326,
+                  541,
+                  653,
+                  969
+                ],
+                "source_anchor": [
+                  1280,
+                  927
+                ],
+                "rgba_sha256": "617358c6b257dbe3e589528719ab1e499cb0c55aa904b24c661dee14b7da1729",
+                "canvas_size": [
+                  1152,
+                  1152
+                ],
+                "foot": [
+                  576,
+                  720
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 432.5,
+            "canvas_size": [
+              1152,
+              1152
+            ],
+            "foot": [
+              576,
+              720
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "S",
+          "animation": "hit_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/S-hit-v01.png",
+          "source_sha256": "991b6fc8463e5616a8e20f1df40a3b9990cb80c8dc12f8617e204455aa067bd4",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/S-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1728,
+              1152
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  3,
+                  3,
+                  562,
+                  537
+                ],
+                "margin": [
+                  400,
+                  351,
+                  750,
+                  775
+                ],
+                "source_anchor": [
+                  259,
+                  472
+                ],
+                "rgba_sha256": "f4288dbfa1430761961e07eeddeeaeaf089f2bb97fbb2dc990b8a75cf98b42a9",
+                "original_source_region": [
+                  0,
+                  47,
+                  562,
+                  537
+                ],
+                "original_source_anchor": [
+                  256,
+                  516
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  579,
+                  3,
+                  511,
+                  551
+                ],
+                "margin": [
+                  427,
+                  324,
+                  801,
+                  761
+                ],
+                "source_anchor": [
+                  808,
+                  499
+                ],
+                "rgba_sha256": "ea173c472821f1711feb4d4542d8ea35e368b06a1fc652b37f9a45a6465fe7b4",
+                "original_source_region": [
+                  539,
+                  17,
+                  511,
+                  551
+                ],
+                "original_source_anchor": [
+                  768,
+                  513
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1155,
+                  3,
+                  543,
+                  568
+                ],
+                "margin": [
+                  359,
+                  325,
+                  769,
+                  744
+                ],
+                "source_anchor": [
+                  1452,
+                  498
+                ],
+                "rgba_sha256": "95b3a79a5ccd5c39fed4e68079f8cb2ed7322614006cd93ed2f5cd808b4103a7",
+                "original_source_region": [
+                  983,
+                  18,
+                  543,
+                  568
+                ],
+                "original_source_anchor": [
+                  1280,
+                  513
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  3,
+                  579,
+                  541,
+                  446
+                ],
+                "margin": [
+                  417,
+                  380,
+                  771,
+                  866
+                ],
+                "source_anchor": [
+                  242,
+                  1019
+                ],
+                "rgba_sha256": "eebfa03058df628a440224ca7427c72eab7a784ae7b420266d1d2600f907a9f9",
+                "original_source_region": [
+                  17,
+                  560,
+                  541,
+                  446
+                ],
+                "original_source_anchor": [
+                  256,
+                  1000
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  579,
+                  579,
+                  485,
+                  491
+                ],
+                "margin": [
+                  441,
+                  334,
+                  827,
+                  821
+                ],
+                "source_anchor": [
+                  794,
+                  1065
+                ],
+                "rgba_sha256": "03c14650b3d1179bd633b06a6260082fc678a7c16f8b1b488e088f49ab46fae5",
+                "original_source_region": [
+                  553,
+                  515,
+                  485,
+                  491
+                ],
+                "original_source_anchor": [
+                  768,
+                  1001
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1155,
+                  579,
+                  443,
+                  507
+                ],
+                "margin": [
+                  415,
+                  319,
+                  869,
+                  805
+                ],
+                "source_anchor": [
+                  1396,
+                  1080
+                ],
+                "rgba_sha256": "82c9ebd83a3fb4edc0c74943b45ae97316e6c26bc2aa66d7f34b416af0d1a976",
+                "original_source_region": [
+                  1039,
+                  499,
+                  443,
+                  507
+                ],
+                "original_source_anchor": [
+                  1280,
+                  1000
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 491.5,
+            "canvas_size": [
+              1312,
+              1312
+            ],
+            "foot": [
+              656,
+              820
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/S-hit-v01.json"
         },
         {
           "role": "idle",
@@ -18824,6 +22538,1451 @@
           "production_connected": false
         },
         {
+          "role": "run",
+          "direction": "S",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/S-run-v01.png",
+          "source_sha256": "b54a7b5ae3fb75f4af887fb7e2c7ad0a2b99c79470323ce03f8d3d08b43371db",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/S-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  47,
+                  7,
+                  418,
+                  500
+                ],
+                "margin": [
+                  451,
+                  329,
+                  902,
+                  820
+                ],
+                "source_anchor": [
+                  256,
+                  503
+                ],
+                "rgba_sha256": "e92de6c9110036d37a19a2a28357aed40ef8279c00e87d8a52be71f759000e42",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  539,
+                  12,
+                  412,
+                  486
+                ],
+                "margin": [
+                  431,
+                  343,
+                  908,
+                  834
+                ],
+                "source_anchor": [
+                  768,
+                  494
+                ],
+                "rgba_sha256": "36038951aeecefbb753c8a4695e79528c7b132f954de04c01885c19ac625c720",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1004,
+                  7,
+                  408,
+                  487
+                ],
+                "margin": [
+                  384,
+                  342,
+                  912,
+                  833
+                ],
+                "source_anchor": [
+                  1280,
+                  490
+                ],
+                "rgba_sha256": "4dfc92885fa94affd0e430cac66ab13fcc6bce5343d16999d29d9dbc86e35324",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  29,
+                  507,
+                  436,
+                  502
+                ],
+                "margin": [
+                  433,
+                  327,
+                  884,
+                  818
+                ],
+                "source_anchor": [
+                  256,
+                  1005
+                ],
+                "rgba_sha256": "78eb285f477fef4e59b954c5abca6e26b2b02b83cac78f467f795e8bd506256a",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  540,
+                  513,
+                  400,
+                  468
+                ],
+                "margin": [
+                  432,
+                  361,
+                  920,
+                  852
+                ],
+                "source_anchor": [
+                  768,
+                  977
+                ],
+                "rgba_sha256": "9214ae2e724d4545e52807353d3cdd7c78e77edf11bc8fc29bd8f04d3493d829",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1009,
+                  508,
+                  420,
+                  485
+                ],
+                "margin": [
+                  389,
+                  344,
+                  900,
+                  835
+                ],
+                "source_anchor": [
+                  1280,
+                  989
+                ],
+                "rgba_sha256": "fb509c98f880f4471ece1bd6ad9029b7a80d82bca5643fe513dad2f2e4bb6546",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 495.0,
+            "canvas_size": [
+              1320,
+              1320
+            ],
+            "foot": [
+              660,
+              825
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "attack",
+          "direction": "SE",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SE-attack-v01.png",
+          "source_sha256": "39502f2aa0a5539a71d4ca46bdcd23d323df5d427d09b2d201da943b83532e92",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/SE-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  88,
+                  2,
+                  338,
+                  517
+                ],
+                "margin": [
+                  484,
+                  302,
+                  966,
+                  787
+                ],
+                "source_anchor": [
+                  256,
+                  515
+                ],
+                "rgba_sha256": "887718d4f7cd88e6c715e1a6120ca1d1e2eb91293d5e9f8ac2dc23cc1b834cb2",
+                "canvas_size": [
+                  1304,
+                  1304
+                ],
+                "foot": [
+                  652,
+                  815
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  541,
+                  13,
+                  444,
+                  505
+                ],
+                "margin": [
+                  425,
+                  314,
+                  860,
+                  799
+                ],
+                "source_anchor": [
+                  768,
+                  514
+                ],
+                "rgba_sha256": "0a6a3e26810a4f27e612a2c88c81558203558c2f485948759d2268b000a7c23b",
+                "canvas_size": [
+                  1304,
+                  1304
+                ],
+                "foot": [
+                  652,
+                  815
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1003,
+                  62,
+                  516,
+                  432
+                ],
+                "margin": [
+                  375,
+                  387,
+                  788,
+                  872
+                ],
+                "source_anchor": [
+                  1280,
+                  490
+                ],
+                "rgba_sha256": "f96daaae438c478b4671c45cb026059f6b4edf00763bb5fa78b0602e9c9c7a53",
+                "canvas_size": [
+                  1304,
+                  1304
+                ],
+                "foot": [
+                  652,
+                  815
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  96,
+                  527,
+                  468,
+                  475
+                ],
+                "margin": [
+                  492,
+                  344,
+                  836,
+                  829
+                ],
+                "source_anchor": [
+                  256,
+                  998
+                ],
+                "rgba_sha256": "bc19dcc91e1c29a26fdf3a62feb9bb7c29ec5ffdc6509cf86669cc173d27d182",
+                "canvas_size": [
+                  1304,
+                  1304
+                ],
+                "foot": [
+                  652,
+                  815
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  605,
+                  520,
+                  371,
+                  474
+                ],
+                "margin": [
+                  489,
+                  345,
+                  933,
+                  830
+                ],
+                "source_anchor": [
+                  768,
+                  990
+                ],
+                "rgba_sha256": "0adc175e1dc11c93e5263be25323d8d711507ab86e9018c523aa689e5dd0900b",
+                "canvas_size": [
+                  1304,
+                  1304
+                ],
+                "foot": [
+                  652,
+                  815
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1091,
+                  509,
+                  356,
+                  504
+                ],
+                "margin": [
+                  463,
+                  315,
+                  948,
+                  800
+                ],
+                "source_anchor": [
+                  1280,
+                  1009
+                ],
+                "rgba_sha256": "e44ba85b247e60f5871c0fcc8bd5872b82bfa49becdf8d784b27c225db8a7332",
+                "canvas_size": [
+                  1304,
+                  1304
+                ],
+                "foot": [
+                  652,
+                  815
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 490.0,
+            "canvas_size": [
+              1304,
+              1304
+            ],
+            "foot": [
+              652,
+              815
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "SE",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SE-hit-v01.png",
+          "source_sha256": "711514633039b8e858420246fe66ee6c0c986e4dd485278f001ee24ae8fbab5f",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/SE-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  114,
+                  25,
+                  362,
+                  481
+                ],
+                "margin": [
+                  470,
+                  288,
+                  862,
+                  743
+                ],
+                "source_anchor": [
+                  256,
+                  502
+                ],
+                "rgba_sha256": "47e572a78a49392c080f75d03058167301f56604b9ea2efe5e26756024bb208e",
+                "canvas_size": [
+                  1224,
+                  1224
+                ],
+                "foot": [
+                  612,
+                  765
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  592,
+                  28,
+                  385,
+                  478
+                ],
+                "margin": [
+                  436,
+                  291,
+                  839,
+                  746
+                ],
+                "source_anchor": [
+                  768,
+                  502
+                ],
+                "rgba_sha256": "27eeb613936617aece3773fea6b3ac130caa7835d099c93ab02f1c20c8124e9e",
+                "canvas_size": [
+                  1224,
+                  1224
+                ],
+                "foot": [
+                  612,
+                  765
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1061,
+                  46,
+                  409,
+                  460
+                ],
+                "margin": [
+                  393,
+                  309,
+                  815,
+                  764
+                ],
+                "source_anchor": [
+                  1280,
+                  502
+                ],
+                "rgba_sha256": "a2ac0f780013017d617bcc3369b14e9314612f6c393f1165340b42f60f84fc4e",
+                "canvas_size": [
+                  1224,
+                  1224
+                ],
+                "foot": [
+                  612,
+                  765
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  113,
+                  552,
+                  405,
+                  450
+                ],
+                "margin": [
+                  469,
+                  319,
+                  819,
+                  774
+                ],
+                "source_anchor": [
+                  256,
+                  998
+                ],
+                "rgba_sha256": "e93cc0edd557f7f418c1688c5242939e211151a128214c29b5f3b9c0463441e5",
+                "canvas_size": [
+                  1224,
+                  1224
+                ],
+                "foot": [
+                  612,
+                  765
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  603,
+                  526,
+                  355,
+                  477
+                ],
+                "margin": [
+                  447,
+                  292,
+                  869,
+                  747
+                ],
+                "source_anchor": [
+                  768,
+                  999
+                ],
+                "rgba_sha256": "9e0fbb983c86be698d1f4e75f7ab1d30737b2772369e877f220b1ca53f3f751b",
+                "canvas_size": [
+                  1224,
+                  1224
+                ],
+                "foot": [
+                  612,
+                  765
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1101,
+                  510,
+                  291,
+                  498
+                ],
+                "margin": [
+                  433,
+                  271,
+                  933,
+                  726
+                ],
+                "source_anchor": [
+                  1280,
+                  1004
+                ],
+                "rgba_sha256": "2cdebacbf0de6b64572098cb2b7717382a44554b041695e98a965c77203f574a",
+                "canvas_size": [
+                  1224,
+                  1224
+                ],
+                "foot": [
+                  612,
+                  765
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 459.5,
+            "canvas_size": [
+              1224,
+              1224
+            ],
+            "foot": [
+              612,
+              765
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "idle",
+          "direction": "SE",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SE-idle-v01.png",
+          "source_sha256": "f4beed0e6eb91768ff1d7bbd2dfe52eeef16438486379aabbb01595bd9ae6625",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/SE-idle-v01.png",
+          "geometry": {
+            "image_size": [
+              1824,
+              1216
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  3,
+                  3,
+                  512,
+                  568
+                ],
+                "margin": [
+                  464,
+                  390,
+                  928,
+                  872
+                ],
+                "source_anchor": [
+                  259,
+                  513
+                ],
+                "rgba_sha256": "0f8d9608efd1da8c4941f608294b93ee65c82b1e0fe5f2e7352486d255279c92",
+                "original_source_region": [
+                  0,
+                  0,
+                  512,
+                  568
+                ],
+                "original_source_anchor": [
+                  256,
+                  510
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  611,
+                  3,
+                  487,
+                  584
+                ],
+                "margin": [
+                  497,
+                  390,
+                  953,
+                  856
+                ],
+                "source_anchor": [
+                  834,
+                  513
+                ],
+                "rgba_sha256": "ab3ccac2ca322a4b7770c24edc3d482d6a4593e75c81992ed113803c7ef408f4",
+                "original_source_region": [
+                  545,
+                  0,
+                  487,
+                  584
+                ],
+                "original_source_anchor": [
+                  768,
+                  510
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1219,
+                  3,
+                  501,
+                  602
+                ],
+                "margin": [
+                  455,
+                  390,
+                  939,
+                  838
+                ],
+                "source_anchor": [
+                  1484,
+                  513
+                ],
+                "rgba_sha256": "a9d627aeccfad1b2ca95237934179cc1a4750a1f8b0bfdb1a360f910f9d3452c",
+                "original_source_region": [
+                  1015,
+                  0,
+                  501,
+                  602
+                ],
+                "original_source_anchor": [
+                  1280,
+                  510
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  3,
+                  611,
+                  463,
+                  514
+                ],
+                "margin": [
+                  513,
+                  399,
+                  977,
+                  926
+                ],
+                "source_anchor": [
+                  210,
+                  1112
+                ],
+                "rgba_sha256": "25c18de665c363b26c125ce6a88e9b4afcb5392435db0b73bba68ccb5ca0745a",
+                "original_source_region": [
+                  49,
+                  510,
+                  463,
+                  514
+                ],
+                "original_source_anchor": [
+                  256,
+                  1011
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  611,
+                  611,
+                  431,
+                  504
+                ],
+                "margin": [
+                  503,
+                  400,
+                  1009,
+                  936
+                ],
+                "source_anchor": [
+                  828,
+                  1111
+                ],
+                "rgba_sha256": "ac90da9422d8275361642d4d5a12e1c39e41a1c6cb7e5dc624ba24efe64aac1d",
+                "original_source_region": [
+                  551,
+                  511,
+                  431,
+                  504
+                ],
+                "original_source_anchor": [
+                  768,
+                  1011
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1219,
+                  611,
+                  413,
+                  513
+                ],
+                "margin": [
+                  489,
+                  401,
+                  1027,
+                  927
+                ],
+                "source_anchor": [
+                  1450,
+                  1110
+                ],
+                "rgba_sha256": "9568b2cfd41e3d158733afecab4e38ae4035836f60963a77fa1e91371c962514",
+                "original_source_region": [
+                  1049,
+                  511,
+                  413,
+                  513
+                ],
+                "original_source_anchor": [
+                  1280,
+                  1010
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 541.0,
+            "canvas_size": [
+              1440,
+              1440
+            ],
+            "foot": [
+              720,
+              900
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/SE-idle-v01.json"
+        },
+        {
+          "role": "run",
+          "direction": "SE",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SE-run-v01.png",
+          "source_sha256": "7f9ad2f72d6343bae207a2564d06243faeed37ad682dc69a63215b6928458a0b",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/SE-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  120,
+                  5,
+                  413,
+                  504
+                ],
+                "margin": [
+                  524,
+                  325,
+                  907,
+                  816
+                ],
+                "source_anchor": [
+                  256,
+                  505
+                ],
+                "rgba_sha256": "e05d4b0a5169bbbe8a49f3150af3ed76f1e257789fd6f65a720e8985ce70619a",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  579,
+                  14,
+                  410,
+                  486
+                ],
+                "margin": [
+                  471,
+                  343,
+                  910,
+                  834
+                ],
+                "source_anchor": [
+                  768,
+                  496
+                ],
+                "rgba_sha256": "fb8a9ba31063c597d31687370371a11144857517844fbe5f316ee4ea2221c562",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1103,
+                  8,
+                  379,
+                  493
+                ],
+                "margin": [
+                  483,
+                  336,
+                  941,
+                  827
+                ],
+                "source_anchor": [
+                  1280,
+                  497
+                ],
+                "rgba_sha256": "9549655189820f76d46735bab4f6fd4ebe801e7e412e8594267012fd6d660899",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  146,
+                  514,
+                  367,
+                  499
+                ],
+                "margin": [
+                  550,
+                  330,
+                  953,
+                  821
+                ],
+                "source_anchor": [
+                  256,
+                  1009
+                ],
+                "rgba_sha256": "6f6b0f3c7ae30da9d032f8e225b277a924ba710b813dea846ae5cc061877b56a",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  606,
+                  526,
+                  388,
+                  475
+                ],
+                "margin": [
+                  498,
+                  354,
+                  932,
+                  845
+                ],
+                "source_anchor": [
+                  768,
+                  997
+                ],
+                "rgba_sha256": "96e00d0611b7c730eefdb47d584699f6e61b837f47ad39bd64795f1fb449f26b",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1143,
+                  509,
+                  335,
+                  489
+                ],
+                "margin": [
+                  523,
+                  340,
+                  985,
+                  831
+                ],
+                "source_anchor": [
+                  1280,
+                  994
+                ],
+                "rgba_sha256": "544a20021c4a5a42498927cc8f6d07ac84f2037499c24973672cfc3722d27c52",
+                "canvas_size": [
+                  1320,
+                  1320
+                ],
+                "foot": [
+                  660,
+                  825
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 495.5,
+            "canvas_size": [
+              1320,
+              1320
+            ],
+            "foot": [
+              660,
+              825
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "attack",
+          "direction": "SW",
+          "animation": "attack_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-attack-v01.png",
+          "source_sha256": "a261b301d6d86513be21fdd99b447020b0f94169f29bebc89efde507ba8f17a1",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/SW-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  29,
+                  7,
+                  484,
+                  497
+                ],
+                "margin": [
+                  401,
+                  292,
+                  772,
+                  759
+                ],
+                "source_anchor": [
+                  256,
+                  500
+                ],
+                "rgba_sha256": "ea830daf22b03692e8ff56901ed9e3df344c1687fa58422ef4402f27fd775646",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  585,
+                  14,
+                  382,
+                  491
+                ],
+                "margin": [
+                  445,
+                  298,
+                  874,
+                  765
+                ],
+                "source_anchor": [
+                  768,
+                  501
+                ],
+                "rgba_sha256": "defd9d27df7bbcf5ec41ac9ecb0cf8ebcbb57ae07eac7c302018c763070db722",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  967,
+                  80,
+                  550,
+                  425
+                ],
+                "margin": [
+                  315,
+                  364,
+                  706,
+                  831
+                ],
+                "source_anchor": [
+                  1280,
+                  501
+                ],
+                "rgba_sha256": "ee03a38fae4968619a1e105eefb89603379a36f9e3c34dfbb2256039d4ce26cb",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  80,
+                  538,
+                  445,
+                  458
+                ],
+                "margin": [
+                  452,
+                  331,
+                  811,
+                  798
+                ],
+                "source_anchor": [
+                  256,
+                  992
+                ],
+                "rgba_sha256": "c716a9616505a5fd907829ffce1f6215c4fc8cb71d1c56e6281eed22e1776c11",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  624,
+                  517,
+                  343,
+                  488
+                ],
+                "margin": [
+                  484,
+                  301,
+                  913,
+                  768
+                ],
+                "source_anchor": [
+                  768,
+                  1001
+                ],
+                "rgba_sha256": "ac908c40d587138ff299c1b9034b1eb0defd0144af18b6663a5e5b26de750d2d",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  975,
+                  520,
+                  481,
+                  491
+                ],
+                "margin": [
+                  323,
+                  298,
+                  775,
+                  765
+                ],
+                "source_anchor": [
+                  1280,
+                  1007
+                ],
+                "rgba_sha256": "0bc035443653dae3a4c06f6d69c0941348c838b1667828a1a996a191b55b857e",
+                "canvas_size": [
+                  1256,
+                  1256
+                ],
+                "foot": [
+                  628,
+                  785
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 471.5,
+            "canvas_size": [
+              1256,
+              1256
+            ],
+            "foot": [
+              628,
+              785
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "SW",
+          "animation": "hit_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-hit-v01.png",
+          "source_sha256": "035cf624e7b32406ad29131d2d57464a936b6f44dce26674f5a134f24c31a3ab",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/SW-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1800,
+              1200
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  3,
+                  3,
+                  495,
+                  491
+                ],
+                "margin": [
+                  427,
+                  319,
+                  785,
+                  789
+                ],
+                "source_anchor": [
+                  216,
+                  484
+                ],
+                "rgba_sha256": "b3cbe7f4e73a72eb38e28c66967d9dfb021a57a716e093843275e4dfbdad509f",
+                "original_source_region": [
+                  43,
+                  23,
+                  495,
+                  491
+                ],
+                "original_source_anchor": [
+                  256,
+                  504
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  603,
+                  3,
+                  485,
+                  580
+                ],
+                "margin": [
+                  415,
+                  308,
+                  795,
+                  700
+                ],
+                "source_anchor": [
+                  828,
+                  495
+                ],
+                "rgba_sha256": "7060c7d924d17d1d1e4322cc4f7d353594ed6725433851622b444af01f686c5c",
+                "original_source_region": [
+                  543,
+                  15,
+                  485,
+                  580
+                ],
+                "original_source_anchor": [
+                  768,
+                  507
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  1203,
+                  3,
+                  537,
+                  590
+                ],
+                "margin": [
+                  345,
+                  311,
+                  743,
+                  690
+                ],
+                "source_anchor": [
+                  1498,
+                  492
+                ],
+                "rgba_sha256": "a4935611dc8cc29c9e1d824731dbc15e0fb5b4a3ca1978c3fac8621526d16346",
+                "original_source_region": [
+                  985,
+                  18,
+                  537,
+                  590
+                ],
+                "original_source_anchor": [
+                  1280,
+                  507
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  3,
+                  603,
+                  491,
+                  471
+                ],
+                "margin": [
+                  433,
+                  337,
+                  789,
+                  809
+                ],
+                "source_anchor": [
+                  210,
+                  1066
+                ],
+                "rgba_sha256": "4dfd9215de3f1538bb81ef41e642b65e92bb7998665b83648b8ea1aae74e466a",
+                "original_source_region": [
+                  49,
+                  531,
+                  491,
+                  471
+                ],
+                "original_source_anchor": [
+                  256,
+                  994
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  603,
+                  603,
+                  475,
+                  510
+                ],
+                "margin": [
+                  407,
+                  297,
+                  805,
+                  770
+                ],
+                "source_anchor": [
+                  836,
+                  1106
+                ],
+                "rgba_sha256": "e315da52ad1adce550410816360840cbb9a2a9691169c937cd4310b09afaf9b4",
+                "original_source_region": [
+                  535,
+                  496,
+                  475,
+                  510
+                ],
+                "original_source_anchor": [
+                  768,
+                  999
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  1203,
+                  603,
+                  487,
+                  513
+                ],
+                "margin": [
+                  379,
+                  291,
+                  793,
+                  767
+                ],
+                "source_anchor": [
+                  1464,
+                  1112
+                ],
+                "rgba_sha256": "9f7393499f9e402a18767fb2fc42ce2b6c4b6378021832bb1a74f3b86ab4cd6a",
+                "original_source_region": [
+                  1019,
+                  495,
+                  487,
+                  513
+                ],
+                "original_source_anchor": [
+                  1280,
+                  1004
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 481.0,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/SW-hit-v01.json"
+        },
+        {
           "role": "idle",
           "direction": "SW",
           "animation": "idle_3",
@@ -19025,6 +24184,639 @@
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
           "production_connected": false
+        },
+        {
+          "role": "run",
+          "direction": "SW",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-run-v01.png",
+          "source_sha256": "f7e6c190637d910b5e5745344d9ab5d7118ca3e594cfe6da8effa1d1df15d04a",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/SW-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1728,
+              1152
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  3,
+                  3,
+                  525,
+                  531
+                ],
+                "margin": [
+                  489,
+                  419,
+                  939,
+                  933
+                ],
+                "source_anchor": [
+                  246,
+                  499
+                ],
+                "rgba_sha256": "562b43aa6413bd52a707a02b91b0a7b3782e5a42d2c65711b253ff2266d9ad5e",
+                "original_source_region": [
+                  13,
+                  7,
+                  525,
+                  531
+                ],
+                "original_source_anchor": [
+                  256,
+                  503
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  579,
+                  3,
+                  535,
+                  517
+                ],
+                "margin": [
+                  485,
+                  423,
+                  929,
+                  947
+                ],
+                "source_anchor": [
+                  826,
+                  495
+                ],
+                "rgba_sha256": "cb2332e4df27b0c83635d49d3bb1b370b3f379b57cd7968b5f9e06327665f33a",
+                "original_source_region": [
+                  521,
+                  5,
+                  535,
+                  517
+                ],
+                "original_source_anchor": [
+                  768,
+                  497
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  1155,
+                  3,
+                  502,
+                  530
+                ],
+                "margin": [
+                  468,
+                  456,
+                  962,
+                  934
+                ],
+                "source_anchor": [
+                  1419,
+                  462
+                ],
+                "rgba_sha256": "24637d691c55f76d0b1651091602308c645ee1cf37bc9f96f37b548c70c2ee27",
+                "original_source_region": [
+                  1016,
+                  10,
+                  502,
+                  530
+                ],
+                "original_source_anchor": [
+                  1280,
+                  469
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  3,
+                  579,
+                  560,
+                  567
+                ],
+                "margin": [
+                  476,
+                  353,
+                  904,
+                  897
+                ],
+                "source_anchor": [
+                  259,
+                  1141
+                ],
+                "rgba_sha256": "b623106a0448986e4e44e353e58ddcb228c188d2265bd12249ad299e6ad34899",
+                "original_source_region": [
+                  0,
+                  441,
+                  560,
+                  567
+                ],
+                "original_source_anchor": [
+                  256,
+                  1003
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  579,
+                  579,
+                  543,
+                  521
+                ],
+                "margin": [
+                  461,
+                  456,
+                  921,
+                  943
+                ],
+                "source_anchor": [
+                  850,
+                  1038
+                ],
+                "rgba_sha256": "ff6d57b14aafdafb93dc53d0fcddc1c410d70ca4811d7c947a68becc023e069b",
+                "original_source_region": [
+                  497,
+                  503,
+                  543,
+                  521
+                ],
+                "original_source_anchor": [
+                  768,
+                  962
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  1155,
+                  579,
+                  527,
+                  514
+                ],
+                "margin": [
+                  437,
+                  422,
+                  937,
+                  950
+                ],
+                "source_anchor": [
+                  1450,
+                  1072
+                ],
+                "rgba_sha256": "cd97cc7cd7b4e09cad8c23d12fb31aa1b403393ed82bd7a4543cb5d1e28fe1f1",
+                "original_source_region": [
+                  985,
+                  484,
+                  527,
+                  514
+                ],
+                "original_source_anchor": [
+                  1280,
+                  977
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 549.0,
+            "canvas_size": [
+              1464,
+              1464
+            ],
+            "foot": [
+              732,
+              915
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/SW-run-v01.json"
+        },
+        {
+          "role": "attack",
+          "direction": "W",
+          "animation": "attack_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/W-attack-v01.png",
+          "source_sha256": "2078d5ae0c58a880f44143d0e682c2bbf703365b6272ec20a3a389f3b169c168",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/sources/W-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  91,
+                  6,
+                  283,
+                  501
+                ],
+                "margin": [
+                  483,
+                  313,
+                  1013,
+                  795
+                ],
+                "source_anchor": [
+                  256,
+                  503
+                ],
+                "rgba_sha256": "961ee0823893ddc8d3106987df2f5b2ea364da25cba0b73ef2b074b51b835a48",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  510,
+                  5,
+                  391,
+                  501
+                ],
+                "margin": [
+                  390,
+                  313,
+                  905,
+                  795
+                ],
+                "source_anchor": [
+                  768,
+                  502
+                ],
+                "rgba_sha256": "72b6eb6ff87d8cb855851fa7a8607f63c9cc9ea1f4377338e8b884c6f83e6c61",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  934,
+                  87,
+                  588,
+                  408
+                ],
+                "margin": [
+                  302,
+                  406,
+                  708,
+                  888
+                ],
+                "source_anchor": [
+                  1280,
+                  491
+                ],
+                "rgba_sha256": "78277d0e6bf6d9b8ccdb419d0079b72493a650f21bcf330701f8b1aab403877b",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  31,
+                  515,
+                  469,
+                  481
+                ],
+                "margin": [
+                  423,
+                  333,
+                  827,
+                  815
+                ],
+                "source_anchor": [
+                  256,
+                  992
+                ],
+                "rgba_sha256": "ed3b3513942bc6002abd1035a7fc824013c8961fe3b3b9cd82709e7d4a254ed3",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  594,
+                  518,
+                  380,
+                  468
+                ],
+                "margin": [
+                  474,
+                  346,
+                  916,
+                  828
+                ],
+                "source_anchor": [
+                  768,
+                  982
+                ],
+                "rgba_sha256": "438e5b598969f91d6589a464df0f250646427ef32c2af105c8aaa6f1dd98c053",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  1112,
+                  507,
+                  292,
+                  492
+                ],
+                "margin": [
+                  480,
+                  322,
+                  1004,
+                  804
+                ],
+                "source_anchor": [
+                  1280,
+                  995
+                ],
+                "rgba_sha256": "35779ae86cab6ff20bd7f785f7bbd1b414c2db5660964133364a24187857692e",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 485.0,
+            "canvas_size": [
+              1296,
+              1296
+            ],
+            "foot": [
+              648,
+              810
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "W",
+          "animation": "hit_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/W-hit-v01.png",
+          "source_sha256": "23780dd903327f6bd617c6fd46e59acc8079813abf04da71becf288d0d5c0952",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_anubis/owned_parts_v01/W-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1824,
+              1216
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  3,
+                  3,
+                  570,
+                  567
+                ],
+                "margin": [
+                  460,
+                  417,
+                  862,
+                  865
+                ],
+                "source_anchor": [
+                  259,
+                  481
+                ],
+                "rgba_sha256": "73feb42a46e08e5df8d9d5f21116df9a744fdf7b6c776574d750f6f8131b2515",
+                "original_source_region": [
+                  0,
+                  19,
+                  570,
+                  567
+                ],
+                "original_source_anchor": [
+                  256,
+                  497
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  611,
+                  3,
+                  493,
+                  579
+                ],
+                "margin": [
+                  473,
+                  415,
+                  939,
+                  853
+                ],
+                "source_anchor": [
+                  854,
+                  483
+                ],
+                "rgba_sha256": "395951d87e4ce6cba99abf7ab22614aa731df673000b8c5030cd969d9276d23d",
+                "original_source_region": [
+                  525,
+                  17,
+                  493,
+                  579
+                ],
+                "original_source_anchor": [
+                  768,
+                  497
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  1219,
+                  3,
+                  556,
+                  599
+                ],
+                "margin": [
+                  415,
+                  408,
+                  876,
+                  833
+                ],
+                "source_anchor": [
+                  1520,
+                  490
+                ],
+                "rgba_sha256": "cf42f223c1a4847dc1a6d1f4eab68b05a023af69e934673c0f34eb1bb0f0958c",
+                "original_source_region": [
+                  979,
+                  8,
+                  556,
+                  599
+                ],
+                "original_source_anchor": [
+                  1280,
+                  495
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  3,
+                  611,
+                  552,
+                  509
+                ],
+                "margin": [
+                  460,
+                  396,
+                  880,
+                  923
+                ],
+                "source_anchor": [
+                  259,
+                  1110
+                ],
+                "rgba_sha256": "c0dd3c71c34c7e5d47d7b2a5095e287e3e03ef8e65cdfd12d1841db05b913428",
+                "original_source_region": [
+                  0,
+                  497,
+                  552,
+                  509
+                ],
+                "original_source_anchor": [
+                  256,
+                  996
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  611,
+                  611,
+                  497,
+                  523
+                ],
+                "margin": [
+                  485,
+                  381,
+                  935,
+                  909
+                ],
+                "source_anchor": [
+                  842,
+                  1125
+                ],
+                "rgba_sha256": "70a61900cc5fd2ace38b68feaddb4aeb0b598cf7bd71e26b0a023744d5c796e4",
+                "original_source_region": [
+                  537,
+                  483,
+                  497,
+                  523
+                ],
+                "original_source_anchor": [
+                  768,
+                  997
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  1219,
+                  611,
+                  523,
+                  515
+                ],
+                "margin": [
+                  445,
+                  388,
+                  909,
+                  917
+                ],
+                "source_anchor": [
+                  1490,
+                  1118
+                ],
+                "rgba_sha256": "721b5cbdb94060f2e0c6019cc480320d60a7d2669efc3322928119e1e23c3d31",
+                "original_source_region": [
+                  1009,
+                  491,
+                  523,
+                  515
+                ],
+                "original_source_anchor": [
+                  1280,
+                  998
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 538.0,
+            "canvas_size": [
+              1432,
+              1432
+            ],
+            "foot": [
+              716,
+              895
+            ]
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_anubis/W-hit-v01.json"
         },
         {
           "role": "idle",
@@ -19230,51 +25022,23 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/draft001/SpriteFrames.tres",
-      "frames_sha256": "f9c9287bcc06f6bf3afd653fe30fa0da422891e05dd5eef04480ff2412aff7d2",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/draft001/NativeMotionProfile.tres",
-      "native_profile_sha256": "2696644e3e88ea1f3f94e5e858ae84b2a7a18182f5104b3a2f8eec719636a3fc",
-      "native_track_count": 4,
-      "native_pose_count": 24,
-      "distinct_source_pose_count": 24,
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/reviewed002/SpriteFrames.tres",
+      "frames_sha256": "e31b53de1febbcbd4e3ca7fbcaaff79d9f8d590414f9aac69d6d64838b4bf35e",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/reviewed002/NativeMotionProfile.tres",
+      "native_profile_sha256": "7a41e8cf2991bbe799100521261639ab5322a9b4b1dd068c7917c103c71c4174",
+      "native_track_count": 32,
+      "native_pose_count": 192,
+      "distinct_source_pose_count": 192,
       "missing_required_tracks": [
-        "attack_0",
-        "attack_1",
-        "attack_2",
-        "attack_3",
-        "attack_4",
-        "attack_5",
-        "attack_6",
-        "attack_7",
-        "death_2",
-        "hit_0",
-        "hit_1",
-        "hit_2",
-        "hit_3",
-        "hit_4",
-        "hit_5",
-        "hit_6",
-        "hit_7",
-        "idle_1",
-        "idle_5",
-        "idle_6",
-        "idle_7",
-        "run_0",
-        "run_1",
-        "run_2",
-        "run_3",
-        "run_4",
-        "run_5",
-        "run_6",
-        "run_7"
+        "run_4"
       ],
       "production_connected": false,
       "detailed_completed": false,
       "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
       "replaces_previous_staging_selection": true,
       "source_candidate": {
-        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/draft001/candidate.json",
-        "sha256": "4418981841390d468ea72ada1417f52436d575799f8f3901ef8dd7dbc403630c"
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/reviewed002/candidate.json",
+        "sha256": "857328a6df22d19e692bca3c94ca9ebd97a5143c1edd867ae91d384994f5079e"
       }
     },
     "monster:테베 호루스": {
@@ -28837,8 +34601,8 @@
       "sha256": "860c64a16a297eb88ff673e7667c53e33b42234da1f49229f1692aa4b8a9b5a6"
     },
     {
-      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/draft001/candidate.json",
-      "sha256": "4418981841390d468ea72ada1417f52436d575799f8f3901ef8dd7dbc403630c"
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/reviewed002/candidate.json",
+      "sha256": "857328a6df22d19e692bca3c94ca9ebd97a5143c1edd867ae91d384994f5079e"
     },
     {
       "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/candidate.json",
@@ -28874,5 +34638,5 @@
     }
   ],
   "selection_policy": "Latest verified source selection replaces prior drafts; existing art and approvals remain preserved. Technical playback does not grant visual approval.",
-  "latest_authoring_session": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/draft001"
+  "latest_authoring_session": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/reviewed002"
 }
