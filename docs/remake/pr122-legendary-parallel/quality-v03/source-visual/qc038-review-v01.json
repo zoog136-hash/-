@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc038",
+  "actor": "225",
+  "direction": "NE",
+  "role": "idle",
+  "slot": [
+    "transform:225",
+    "NE",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NE-idle-source-v02.png",
+  "source_sha256": "089d43fec001a5054f950906676b425431d5707aa0a2c597a1c5d48fc5cd56f9",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NE-idle-record-v02.json",
+  "record_sha256": "2fd313d56409493844d9972007eb6b56811cf77300fdda9d1f99be55458cc5b0",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NE-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "a32e0c5180f5adfade0c7d6f5045965793ddc3f899bb789fe498538422e24256",
+  "remote_commit": "59787ef0bddfdf235401297ea74144a0a4976d7b",
+  "camera_result": "RESOLVED_STATIC",
+  "identity_result": "HOLD",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "idle_guard_result": "HOLD_CAMERA_OR_IDENTITY",
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_OR_IDENTITY",
+  "detail": "Back-right NE camera is established, but the original prominent gold horned helmet/crest is omitted in favor of exposed brown hair. Preserve this identity/helmet continuity HOLD.",
+  "remaining_issues": [
+    {
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Back-right NE camera is established, but the original prominent gold horned helmet/crest is omitted in favor of exposed brown hair. Preserve this identity/helmet continuity HOLD.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ],
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc038-review-v01.json",
+    "sha256": "e6e0f481401665a4020d23bb66d65e10d8baa9c9ff0401835565e88536c674d5"
+  },
+  "visual_board": "quality-v03/visual-boards/qc038-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0
+}

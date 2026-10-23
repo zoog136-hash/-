@@ -1,0 +1,67 @@
+{
+  "qc094": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left guard with matching black/red molten armor, white plume, spiked full-face helmet, red cloak and red-edged blade. Planted six small stances retain living SW idle.",
+    "remaining_issues": []
+  },
+  "qc095": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "HOLD",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "The back-left camera is established, but the six new poses expose bare white hair and ear instead of the prominent red spiked/full-face helmet in the catalog and paired SW correction. Rear armor, red cape and blade otherwise match.",
+    "remaining_issues": [
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "The back-left camera is established, but the six new poses expose bare white hair and ear instead of the prominent red spiked/full-face helmet in the catalog and paired SW correction. Rear armor, red cape and blade otherwise match.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc096": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left hooded guard retains matching black armor, glowing red face, purple chains, ring shoulder ornament and heavy weapon. Six planted restrained body/cloth changes remain living IDLE.",
+    "remaining_issues": []
+  },
+  "qc097": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "A rear-left torso is shown, but the glowing red face/orbs still point toward the viewer from the hood across all six poses, rather than one consistent back-left NW head/camera. Gear and cloak otherwise match.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "A rear-left torso is shown, but the glowing red face/orbs still point toward the viewer from the hood across all six poses, rather than one consistent back-left NW head/camera. Gear and cloak otherwise match.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc099": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left mage guard retains white hair, red-black feathered collar, gold/white robes and purple staff. Six small planted stance/cloth changes remain living SW IDLE without a cast/release.",
+    "remaining_issues": []
+  }
+}

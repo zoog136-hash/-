@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc054",
+  "actor": "191",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:191",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "8a585c41e226ba180c01aee0238a194f63f5eba4da5eaf5df8c20791d511a307",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "d94bd198981148a31d131247e6d132bd3fbe0f837ec7d4ad79153d7da22299e7",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "dc85e8d0e14fb97d4b801b378b68e6b1e2bc366a88101a627972f8c9cf8513eb",
+  "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "idle_guard_result": "HOLD_CAMERA",
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA",
+  "detail": "The bright face/helmet beak and torso remain front/right-oriented and reproduce the portrait-facing camera instead of down-left SW.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "The bright face/helmet beak and torso remain front/right-oriented and reproduce the portrait-facing camera instead of down-left SW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ],
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc054-review-v01.json",
+    "sha256": "796c3d0e01073cc95adc080b2b2c5d840e7f2e33df0c6f36a5d3487b97a16af3"
+  },
+  "visual_board": "quality-v03/visual-boards/qc054-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0
+}

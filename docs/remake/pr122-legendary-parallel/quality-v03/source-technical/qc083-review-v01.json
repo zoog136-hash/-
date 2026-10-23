@@ -1,0 +1,137 @@
+{
+  "sha256": "94996fa2e0c52ca158e02003a0b3e5d6858712a91d37c25fe20e3007ebf0457e",
+  "grid": [
+    3,
+    2
+  ],
+  "findings": [
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 4,
+      "pixels_alpha_gt16": 179,
+      "strong_pixels": 128,
+      "bbox_in_frame": [
+        0,
+        207,
+        6,
+        323
+      ],
+      "physical_owner_rows": {
+        "3": 179
+      },
+      "source_grid": [
+        3,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    }
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/SW-idle-source-v02.png",
+  "authored_slot": [
+    "transform:175",
+    "SW",
+    "idle"
+  ],
+  "dependents": [
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "phase": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "phase": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "phase": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "phase": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "phase": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "029ca6d4949efcadc062492a0ed810f43f32aaa4c6d10d0e3673e9a00a2aac99",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "cefcd6d5d33c79c3f47e582538e98ae3cde6131fb62079a58e0bb0d42081f04e",
+  "correction_candidate_id": "qc083",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+  "previous_source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+  "batch": 298,
+  "remote_commit": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+  "remote_receipt_sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444",
+  "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+  "final_approved": 0
+}

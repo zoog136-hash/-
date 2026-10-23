@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc045",
+  "actor": "193",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:193",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "538ccc96c12237e96288547392f6bff170a7ddfc3d83c0a0dd8593f19415d94a",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "930032ea3a02b38c9231fd332a6c1f9ee2c29db4f805f75bc06b2fcebc8be608",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "9ff1c49585fdfc9bd65c3482676f4bcc29208e62c0978a5b031e2038a6902a60",
+  "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "idle_guard_result": "HOLD_CAMERA",
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA",
+  "detail": "Helmet/front face and torso still orient toward screen-right/front in all six poses, rather than down-left SW.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Helmet/front face and torso still orient toward screen-right/front in all six poses, rather than down-left SW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ],
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc045-review-v01.json",
+    "sha256": "b9caf3e924f224cc41c32359454ae655bbbcc40c57f81d3c33e288f15a61e6d3"
+  },
+  "visual_board": "quality-v03/visual-boards/qc045-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0
+}

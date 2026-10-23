@@ -1,0 +1,63 @@
+{
+  "qc077": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "All six poses show a straight rear view with matching purple/white/gold archer armor, crest and lowered bow. Planted living stance changes keep N camera and do not aim/release.",
+    "remaining_issues": []
+  },
+  "qc080": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Only the four new supplement poses were inspected: helmet face opening and white chest face front/right rather than the requested left W. Purple halberd, black/white armor and cape match. Existing native poses remain untouched.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "detail": "New supplement bodies face front/right, rather than left W.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc081": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Only the four new supplement poses were inspected: the back is visible, but the helmet/profile and feet face right/up-right, rather than the requested up-left NW. Matching purple halberd, armor and cape remain. Native poses are preserved.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "detail": "New supplement bodies retain back-right orientation instead of back-left NW.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc083": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left guard with matching gold/black armor, white lower mask, purple cloak and purple blade. Six small planted breath/cloth changes retain living idle.",
+    "remaining_issues": []
+  },
+  "qc084": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Clear back-left/up-left guard with matching gold/black armor, purple mane/cloak and blade. Six planted stances show the rear and preserve IDLE.",
+    "remaining_issues": []
+  }
+}

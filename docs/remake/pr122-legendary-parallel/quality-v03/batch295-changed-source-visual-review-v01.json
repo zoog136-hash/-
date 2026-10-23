@@ -1,0 +1,269 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-review-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "batch": 295,
+  "changed_sources_reviewed_once": 5,
+  "results": [
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc045",
+      "actor": "193",
+      "direction": "SW",
+      "role": "idle",
+      "slot": [
+        "transform:193",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "538ccc96c12237e96288547392f6bff170a7ddfc3d83c0a0dd8593f19415d94a",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "930032ea3a02b38c9231fd332a6c1f9ee2c29db4f805f75bc06b2fcebc8be608",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "9ff1c49585fdfc9bd65c3482676f4bcc29208e62c0978a5b031e2038a6902a60",
+      "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "idle_guard_result": "HOLD_CAMERA",
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HOLD_CAMERA",
+      "detail": "Helmet/front face and torso still orient toward screen-right/front in all six poses, rather than down-left SW.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Helmet/front face and torso still orient toward screen-right/front in all six poses, rather than down-left SW.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc045-review-v01.json",
+        "sha256": "b9caf3e924f224cc41c32359454ae655bbbcc40c57f81d3c33e288f15a61e6d3"
+      },
+      "visual_board": "quality-v03/visual-boards/qc045-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc046",
+      "actor": "193",
+      "direction": "NW",
+      "role": "idle",
+      "slot": [
+        "transform:193",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "8fdff5ccc94a5fceebef254e9372d16d1d626041533343c9cde5b6e5a58b3641",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "d7805ceef2a74687e043ce022f8dbe3ae02e330dda947fee1d191f5e16ad0868",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "96d5050d13feb1cf4f77c89f44912990ebaccea0995dfadb19dc8bba864b32f7",
+      "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "idle_guard_result": "HOLD_CAMERA",
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HOLD_CAMERA",
+      "detail": "The back is visible, but head, torso profile and toes point up-right/right; this is NE rather than the requested up-left NW.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "The back is visible, but head, torso profile and toes point up-right/right; this is NE rather than the requested up-left NW.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc046-review-v01.json",
+        "sha256": "173779942b4f89f75da2c634631e692e574cce0330e0742738bedcc1d3b045e6"
+      },
+      "visual_board": "quality-v03/visual-boards/qc046-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc051",
+      "actor": "192",
+      "direction": "SW",
+      "role": "idle",
+      "slot": [
+        "transform:192",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "1b806f1b5215777d1b2e324d8c5a774abfcdb37501582616208485cda39bf721",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "67f0a7c57bd7f87ec1ebbcc925131c8ddbf85de96e014ea0fa0ab67113a2c8b8",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "611c7bd803dd77d6369425febf2cf9b8d4aeb2457dc5057ffa37eca5b35f62cc",
+      "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "idle_guard_result": "HEALTHY_STATIC",
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HEALTHY_STATIC",
+      "detail": "Front-left/down-left guard with matching helmet, black/red armor and red blade; six small living stance/breath changes preserve idle rather than attack.",
+      "remaining_issues": [],
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc051-review-v01.json",
+        "sha256": "14af2458f10648f3173888e2d0b8c9d846a640fb8d37b6f596d51b25d6335721"
+      },
+      "visual_board": "quality-v03/visual-boards/qc051-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc052",
+      "actor": "192",
+      "direction": "NW",
+      "role": "idle",
+      "slot": [
+        "transform:192",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "fdace8c4b48d399224579191a57ffdf3af7f744cf7c34ca66fa0aca3394208ab",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "876c1e9166962b0ed816dea9c44b14390505ed4ba10a8d8f76d035aba4e866e8",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/NW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "5fb422a20eacf27ce44f68f07240c310fd5c48fa3a4292f3bc56cce7f6ca6160",
+      "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "idle_guard_result": "HEALTHY_STATIC",
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HEALTHY_STATIC",
+      "detail": "Consistent back-left/up-left view with original black/red armor and resting red blade; six small living stance changes, no attacking or charging pose.",
+      "remaining_issues": [],
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc052-review-v01.json",
+        "sha256": "208d00053bb686333fed431c6c1a9ffdc4382f16b261d0ffce1d511ea607f6b7"
+      },
+      "visual_board": "quality-v03/visual-boards/qc052-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc054",
+      "actor": "191",
+      "direction": "SW",
+      "role": "idle",
+      "slot": [
+        "transform:191",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "8a585c41e226ba180c01aee0238a194f63f5eba4da5eaf5df8c20791d511a307",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "d94bd198981148a31d131247e6d132bd3fbe0f837ec7d4ad79153d7da22299e7",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "dc85e8d0e14fb97d4b801b378b68e6b1e2bc366a88101a627972f8c9cf8513eb",
+      "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "idle_guard_result": "HOLD_CAMERA",
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HOLD_CAMERA",
+      "detail": "The bright face/helmet beak and torso remain front/right-oriented and reproduce the portrait-facing camera instead of down-left SW.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "The bright face/helmet beak and torso remain front/right-oriented and reproduce the portrait-facing camera instead of down-left SW.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc054-review-v01.json",
+        "sha256": "796c3d0e01073cc95adc080b2b2c5d840e7f2e33df0c6f36a5d3487b97a16af3"
+      },
+      "visual_board": "quality-v03/visual-boards/qc054-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0
+    }
+  ],
+  "camera_resolved_static": 2,
+  "camera_hold": 3,
+  "whole_corpus_rereviews": 0,
+  "image_calls": 0,
+  "final_approved": 0
+}

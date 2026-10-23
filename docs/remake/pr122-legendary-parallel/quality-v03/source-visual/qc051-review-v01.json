@@ -1,0 +1,42 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc051",
+  "actor": "192",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:192",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "1b806f1b5215777d1b2e324d8c5a774abfcdb37501582616208485cda39bf721",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "67f0a7c57bd7f87ec1ebbcc925131c8ddbf85de96e014ea0fa0ab67113a2c8b8",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "611c7bd803dd77d6369425febf2cf9b8d4aeb2457dc5057ffa37eca5b35f62cc",
+  "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+  "camera_result": "RESOLVED_STATIC",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "idle_guard_result": "HEALTHY_STATIC",
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HEALTHY_STATIC",
+  "detail": "Front-left/down-left guard with matching helmet, black/red armor and red blade; six small living stance/breath changes preserve idle rather than attack.",
+  "remaining_issues": [],
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc051-review-v01.json",
+    "sha256": "14af2458f10648f3173888e2d0b8c9d846a640fb8d37b6f596d51b25d6335721"
+  },
+  "visual_board": "quality-v03/visual-boards/qc051-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0
+}

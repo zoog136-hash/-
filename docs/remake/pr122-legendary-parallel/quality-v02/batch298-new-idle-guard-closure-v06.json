@@ -1,0 +1,1213 @@
+{
+  "schema": "legendary-new-quality-idle-guard-closure-v06",
+  "batch": 298,
+  "scope": "Only this new IDLE replacement batch and its two same-direction action metadata bindings",
+  "remote_receipt": "/workspace/legendary_delivery_logs/quality-batch298-delivery.json",
+  "remote_receipt_sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444",
+  "delivered_remote_sha": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+  "observed_active_manifest": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch298-v02.json",
+  "observed_active_manifest_sha256": "2fdc7e11cd59dea3da2bfee28e5eb5ddd9f837f165fdcdb94668b29d8119142b",
+  "changed_idle_sources": 5,
+  "sources": [
+    {
+      "candidate": "qc077",
+      "idle_slot": [
+        "transform:177",
+        "N",
+        "idle"
+      ],
+      "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-record-v01.json",
+      "previous_record_sha256": "5fad125f5a2479b86b89c0e4a37de3a6ba7f718fdc98d28e73f7d1053a707d1d",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/N-idle-record-v02.json",
+      "new_idle_record_sha256": "1ef63e08a691ec4d0ce279c67aa390de43259d171fca386a594be1caf4e9c169",
+      "new_idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/N-idle-SpriteFrames.tres",
+      "new_idle_SpriteFrames_sha256": "b003c8e4e97fdee7c3cd5591e8f5d12479693d22f77899cd8cd335fabda48e9a",
+      "actions": [
+        {
+          "slot": [
+            "transform:177",
+            "N",
+            "attack"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/corrections/ownership-delta-v05/N-attack-record.json",
+          "record_sha256": "4a72ab11546d045e914ad4822f4f3e064e28a35dcf391f2f6e51273e85cee4e8",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/corrections/ownership-delta-v05/N-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "8f646ac6e64e0a739185bc076e901be32f384fa176c96db7de60d6b7ff5bd7ad",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+              "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+              "region": [
+                0,
+                0,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "58d1865e6662851b4d75cfb53d01f234b06913032af862901d65e49d7388f217",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+                "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+                "region": [
+                  0,
+                  0,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 0
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+              "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+              "region": [
+                1024,
+                512,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "121e209fd4ccd2f1bc99a4fc790938d4108e78d5f0d84298c06f4963613c4adc",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+                "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+                "region": [
+                  1024,
+                  512,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 5
+            }
+          ],
+          "actual_borrowed_phases": [
+            0,
+            5
+          ],
+          "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+        },
+        {
+          "slot": [
+            "transform:177",
+            "N",
+            "hit"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-hit-record-v01.json",
+          "record_sha256": "54cefd0cf303d9768455268e589e6668e5e00c90f4a887c07fd49cdbd8fc5c62",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "8bd519268e099b8d67fc75abe7f024f95a8aa53b405c72c346a1ce7c5aaa008e",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+              "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+              "region": [
+                0,
+                0,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "58d1865e6662851b4d75cfb53d01f234b06913032af862901d65e49d7388f217",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+                "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+                "region": [
+                  0,
+                  0,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 0
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+              "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+              "region": [
+                1024,
+                512,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "121e209fd4ccd2f1bc99a4fc790938d4108e78d5f0d84298c06f4963613c4adc",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+                "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+                "region": [
+                  1024,
+                  512,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 5
+            }
+          ],
+          "actual_borrowed_phases": [
+            0,
+            5
+          ],
+          "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+        }
+      ]
+    },
+    {
+      "candidate": "qc080",
+      "idle_slot": [
+        "transform:176",
+        "W",
+        "idle"
+      ],
+      "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-idle-record-v01.json",
+      "previous_record_sha256": "a043f59ebc7f116ffa8bf49a2f4730771a37555b471c0dfe6616f283896c5e05",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/W-idle-record-v02.json",
+      "new_idle_record_sha256": "b20145cbe3b4fd78aaf1f34613b0c3d93cc985556091f8e51fe58ce4bc3572ff",
+      "new_idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/W-idle-SpriteFrames.tres",
+      "new_idle_SpriteFrames_sha256": "8764b362e29edd4a10a07da77c14052263aa972eb102ada97b3d4c58962fd39b",
+      "actions": [
+        {
+          "slot": [
+            "transform:176",
+            "W",
+            "attack"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-attack-record.json",
+          "record_sha256": "49639ed40d5a71a67546c3dfc964172bb82412e067b7e03cb5844e6cd0a06bfb",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/W-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "0ef9e138b6e48aab7cf174d7230ccb06772df47cf16e0c6c6c780103b3dc8935",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+              "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+              "region": [
+                654,
+                809,
+                97,
+                105
+              ],
+              "margin": [
+                64,
+                59,
+                159,
+                151
+              ],
+              "rgba_sha256": "86b1a46935942e25736a64a81108f49fe797232ecc3ec8da085fabb0a8a387b1",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+                "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+                "region": [
+                  654,
+                  809,
+                  97,
+                  105
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+              "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+              "region": [
+                683,
+                1067,
+                64,
+                107
+              ],
+              "margin": [
+                93,
+                57,
+                192,
+                149
+              ],
+              "rgba_sha256": "486350f0e7e8360873b42c980d97844bd7490c16383896200b2d4b034786794c",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+                "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+                "region": [
+                  683,
+                  1067,
+                  64,
+                  107
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            }
+          ],
+          "actual_borrowed_phases": [],
+          "status": "UNRELATED_ACTION_UNCHANGED"
+        },
+        {
+          "slot": [
+            "transform:176",
+            "W",
+            "hit"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-hit-record.json",
+          "record_sha256": "bca702d6fec58a211cd90c17694ce439b6711b96fed300b0ec597c3ff2456f10",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "c32fe64b7483ec6614249b86c6ad733d07dbe640fee7287a9af20dcf4615ee98",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-01520a092553b024.png",
+              "source_sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+              "region": [
+                848,
+                68,
+                81,
+                154
+              ],
+              "margin": [
+                156,
+                90,
+                303,
+                230
+              ],
+              "rgba_sha256": "9a49ee7fcd4cab755a09a075700f7939b994dafea8c57f87e1c9d7e231698c7d",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-01520a092553b024.png",
+                "source_sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+                "region": [
+                  848,
+                  68,
+                  81,
+                  154
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-hit-source-v01.png",
+              "source_sha256": "dc27d4cf4b4cba3062ae49042e065075760ba0b3ea0193856bae2843e96e048b",
+              "region": [
+                659,
+                596,
+                660,
+                597
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "2d807a3ebdb80153ba4c36a4ebcf135b1b7b2b3d5c87359d8e600a405525b988",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/W-hit-source-v01.png",
+                "source_sha256": "dc27d4cf4b4cba3062ae49042e065075760ba0b3ea0193856bae2843e96e048b",
+                "region": [
+                  659,
+                  596,
+                  660,
+                  597
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            }
+          ],
+          "actual_borrowed_phases": [],
+          "status": "UNRELATED_ACTION_UNCHANGED"
+        }
+      ]
+    },
+    {
+      "candidate": "qc081",
+      "idle_slot": [
+        "transform:176",
+        "NW",
+        "idle"
+      ],
+      "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-idle-record-v01.json",
+      "previous_record_sha256": "7fd54074f4420862f1be364a09dfd151cac8232d4973778c58a1d73bb7bf9acd",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-idle-record-v02.json",
+      "new_idle_record_sha256": "f3e969fa8b8b88cb623f1233a617f626ece20b7d4a1e4fb76fce175d8624c0ca",
+      "new_idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-idle-SpriteFrames.tres",
+      "new_idle_SpriteFrames_sha256": "2ce4c68c915ab49b8ed36fb99bb1cf7c80d1c9a83d3eb143c4f20e2689ceea90",
+      "actions": [
+        {
+          "slot": [
+            "transform:176",
+            "NW",
+            "attack"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-attack-record.json",
+          "record_sha256": "d2bfd37b6e8144b6eb4368c6e071f23c27eb89b47e17fd4b50dc87642b0b6996",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/NW-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "3bd14de8f4ac3cc39618b202dc23ec75a25c659004c8dfc914fc25416713c917",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+              "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+              "region": [
+                833,
+                816,
+                76,
+                97
+              ],
+              "margin": [
+                94,
+                67,
+                180,
+                159
+              ],
+              "rgba_sha256": "b16d7802b258ecb6614f235796c80d544bd0e34ba1101842adf55438bf622697",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+                "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+                "region": [
+                  833,
+                  816,
+                  76,
+                  97
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+              "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+              "region": [
+                841,
+                1065,
+                65,
+                107
+              ],
+              "margin": [
+                102,
+                57,
+                191,
+                149
+              ],
+              "rgba_sha256": "ea69ca1c54c3880ce50e27bf6a85301abb803eaeba27c45644df7777503ab2e7",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png",
+                "source_sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+                "region": [
+                  841,
+                  1065,
+                  65,
+                  107
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            }
+          ],
+          "actual_borrowed_phases": [],
+          "status": "UNRELATED_ACTION_UNCHANGED"
+        },
+        {
+          "slot": [
+            "transform:176",
+            "NW",
+            "hit"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-hit-record.json",
+          "record_sha256": "9a928d61946e32f2fe644f3be54b71cddfd0e0532dcdc80ed2a47396223541ea",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "b16a75fa918fb2c23f71d2c0fe561db83cd7668b1e2d34f6709a9c2a96b66fe1",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-01520a092553b024.png",
+              "source_sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+              "region": [
+                1041,
+                71,
+                86,
+                152
+              ],
+              "margin": [
+                151,
+                92,
+                298,
+                232
+              ],
+              "rgba_sha256": "f4dfbc9220dbae40db74f30fbac17a0ee99dfd55e09c14bffadb1a857fcdf640",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-01520a092553b024.png",
+                "source_sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+                "region": [
+                  1041,
+                  71,
+                  86,
+                  152
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-hit-source-v01.png",
+              "source_sha256": "c7756c9ab98792f2436c80df12b6f38872dd400ac7c9abb1d96a28e1a6a5b868",
+              "region": [
+                661,
+                595,
+                661,
+                595
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "589b203ba29839adf440f7c13ffb5604c7565742bd1097493d4b20bf0649e674",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-hit-source-v01.png",
+                "source_sha256": "c7756c9ab98792f2436c80df12b6f38872dd400ac7c9abb1d96a28e1a6a5b868",
+                "region": [
+                  661,
+                  595,
+                  661,
+                  595
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            }
+          ],
+          "actual_borrowed_phases": [],
+          "status": "UNRELATED_ACTION_UNCHANGED"
+        }
+      ]
+    },
+    {
+      "candidate": "qc083",
+      "idle_slot": [
+        "transform:175",
+        "SW",
+        "idle"
+      ],
+      "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-record-v01.json",
+      "previous_record_sha256": "c1c99b9e46bed1fa6ad4d4a4babd9c4981a387eee760cf6754d9072990fca83f",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/SW-idle-record-v02.json",
+      "new_idle_record_sha256": "029ca6d4949efcadc062492a0ed810f43f32aaa4c6d10d0e3673e9a00a2aac99",
+      "new_idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/SW-idle-SpriteFrames.tres",
+      "new_idle_SpriteFrames_sha256": "cefcd6d5d33c79c3f47e582538e98ae3cde6131fb62079a58e0bb0d42081f04e",
+      "actions": [
+        {
+          "slot": [
+            "transform:175",
+            "SW",
+            "attack"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-attack-record.json",
+          "record_sha256": "aa79b932c0be20a5b1cf734ecdac44d2775e897f6d4029079734eeb5e95edb9d",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "3e249fb33678d2280e5a8f80b19910dce33a565557787075ea2342b66a4978d4",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+              "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+              "region": [
+                0,
+                0,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "90d324f543695abe09e8a808c90260d63273457b3609a6cbb7ae8a893eaf8915",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+                "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+                "region": [
+                  0,
+                  0,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 0
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+              "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+              "region": [
+                1024,
+                512,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "86a048e8543c21886b20aca6107ae455b02c65e9c8ab7b81f50aa3d1ea8b8deb",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+                "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+                "region": [
+                  1024,
+                  512,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 5
+            }
+          ],
+          "actual_borrowed_phases": [
+            0,
+            5
+          ],
+          "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+        },
+        {
+          "slot": [
+            "transform:175",
+            "SW",
+            "hit"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-hit-record.json",
+          "record_sha256": "43fd27d0832e9642ab6a8f5808db9ed55156f8c5a64d7c6b44264e7da873c18f",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "21ec8ae287c66817f714ad8ce1f424233c1099a90afa7af164f977a642cae2f8",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+              "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+              "region": [
+                0,
+                0,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "90d324f543695abe09e8a808c90260d63273457b3609a6cbb7ae8a893eaf8915",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+                "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+                "region": [
+                  0,
+                  0,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 0
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+              "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+              "region": [
+                1024,
+                512,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "86a048e8543c21886b20aca6107ae455b02c65e9c8ab7b81f50aa3d1ea8b8deb",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+                "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+                "region": [
+                  1024,
+                  512,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": 5
+            }
+          ],
+          "actual_borrowed_phases": [
+            0,
+            5
+          ],
+          "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+        }
+      ]
+    },
+    {
+      "candidate": "qc084",
+      "idle_slot": [
+        "transform:175",
+        "NW",
+        "idle"
+      ],
+      "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-idle-record-v01.json",
+      "previous_record_sha256": "abfd1df4883a9693f55e7d1c71b16cbfac05c63509dbed762fde10a94b831e64",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+      "new_idle_record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+      "new_idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-SpriteFrames.tres",
+      "new_idle_SpriteFrames_sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1",
+      "actions": [
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "attack"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-attack-record-v01.json",
+          "record_sha256": "f2852d18ef6888bec0041b72125e79aed6dcc91babe8de74122c9c6d8f3fb51e",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "db158b3a01bdfa8211bc6d6f827b746ae4c475e0690ed471545614d4b6add639",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-attack-source-v01.png",
+              "source_sha256": "3a0481d85801e6dd62c8bb57e2bdd342f58fd9c39d530359a278fc75dc18a2f8",
+              "region": [
+                0,
+                0,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "cb60623e3882557598fee321ba63dba42f75f0cf41a691536c7fcc29292ab37c",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-attack-source-v01.png",
+                "source_sha256": "3a0481d85801e6dd62c8bb57e2bdd342f58fd9c39d530359a278fc75dc18a2f8",
+                "region": [
+                  0,
+                  0,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-attack-source-v01.png",
+              "source_sha256": "3a0481d85801e6dd62c8bb57e2bdd342f58fd9c39d530359a278fc75dc18a2f8",
+              "region": [
+                1024,
+                512,
+                512,
+                512
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "40001c8a95beac0b35f8c2341544770d9491a6629af7b0b01acdb20a64a116fe",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-attack-source-v01.png",
+                "source_sha256": "3a0481d85801e6dd62c8bb57e2bdd342f58fd9c39d530359a278fc75dc18a2f8",
+                "region": [
+                  1024,
+                  512,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": []
+              },
+              "borrowed_replaced_idle_phase": null
+            }
+          ],
+          "actual_borrowed_phases": [],
+          "status": "UNRELATED_ACTION_UNCHANGED"
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-hit-record.json",
+          "record_sha256": "da91e6e34f37d201ddbdec6a437822e2b68195a541a2ff02d1bb055bd01286d5",
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "9995ab986b4c529ae48e8f8054da371e1cfdc30f56cab62161e5f921ea3e7477",
+          "frame_bindings": [
+            {
+              "phase": 0,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-hit-source-v01-isolated.png",
+              "source_sha256": "2ddf9b6bdf4f3046f56b103e9ea853f641f8e8c2430d32208c848019e1ebd2c7",
+              "region": [
+                0,
+                0,
+                667,
+                659
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "cfb12b28b032eba221ec636db11d4fcf25c89038acc707a1a15db084c3df4f0d",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-source-v01.png",
+                "source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+                "region": [
+                  0,
+                  0,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": [
+                  {
+                    "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-hit-source-v01-isolated.proof.json",
+                    "proof_sha256": "5b12a5b21bf4894cffdaa3587882ef685b44d4e4d62b08cb80a989804df64ec2",
+                    "output_source_sha256": "2ddf9b6bdf4f3046f56b103e9ea853f641f8e8c2430d32208c848019e1ebd2c7",
+                    "original_source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+                    "current_region": [
+                      0,
+                      0,
+                      667,
+                      659
+                    ],
+                    "original_region": [
+                      0,
+                      0,
+                      512,
+                      512
+                    ]
+                  }
+                ]
+              },
+              "borrowed_replaced_idle_phase": null
+            },
+            {
+              "phase": 5,
+              "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-hit-source-v01-isolated.png",
+              "source_sha256": "2ddf9b6bdf4f3046f56b103e9ea853f641f8e8c2430d32208c848019e1ebd2c7",
+              "region": [
+                1334,
+                659,
+                667,
+                659
+              ],
+              "margin": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "rgba_sha256": "6a7b5f5acbf3ba504055f45ef3ec30fd55fc8df6718d699e07018e95de173d17",
+              "resolved_origin": {
+                "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-source-v01.png",
+                "source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+                "region": [
+                  1024,
+                  512,
+                  512,
+                  512
+                ],
+                "integer_isolation_ancestry": [
+                  {
+                    "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-hit-source-v01-isolated.proof.json",
+                    "proof_sha256": "5b12a5b21bf4894cffdaa3587882ef685b44d4e4d62b08cb80a989804df64ec2",
+                    "output_source_sha256": "2ddf9b6bdf4f3046f56b103e9ea853f641f8e8c2430d32208c848019e1ebd2c7",
+                    "original_source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+                    "current_region": [
+                      1334,
+                      659,
+                      667,
+                      659
+                    ],
+                    "original_region": [
+                      1024,
+                      512,
+                      512,
+                      512
+                    ]
+                  }
+                ]
+              },
+              "borrowed_replaced_idle_phase": null
+            }
+          ],
+          "actual_borrowed_phases": [],
+          "status": "UNRELATED_ACTION_UNCHANGED"
+        }
+      ]
+    }
+  ],
+  "actual_guard_borrowers": [
+    {
+      "slot": [
+        "transform:177",
+        "N",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/corrections/ownership-delta-v05/N-attack-record.json",
+      "record_sha256": "4a72ab11546d045e914ad4822f4f3e064e28a35dcf391f2f6e51273e85cee4e8",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/corrections/ownership-delta-v05/N-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "8f646ac6e64e0a739185bc076e901be32f384fa176c96db7de60d6b7ff5bd7ad",
+      "frame_bindings": [
+        {
+          "phase": 0,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+          "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "58d1865e6662851b4d75cfb53d01f234b06913032af862901d65e49d7388f217",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+            "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+            "region": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 0
+        },
+        {
+          "phase": 5,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+          "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "121e209fd4ccd2f1bc99a4fc790938d4108e78d5f0d84298c06f4963613c4adc",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+            "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+            "region": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 5
+        }
+      ],
+      "actual_borrowed_phases": [
+        0,
+        5
+      ],
+      "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+    },
+    {
+      "slot": [
+        "transform:177",
+        "N",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-hit-record-v01.json",
+      "record_sha256": "54cefd0cf303d9768455268e589e6668e5e00c90f4a887c07fd49cdbd8fc5c62",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "8bd519268e099b8d67fc75abe7f024f95a8aa53b405c72c346a1ce7c5aaa008e",
+      "frame_bindings": [
+        {
+          "phase": 0,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+          "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "58d1865e6662851b4d75cfb53d01f234b06913032af862901d65e49d7388f217",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+            "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+            "region": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 0
+        },
+        {
+          "phase": 5,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+          "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "121e209fd4ccd2f1bc99a4fc790938d4108e78d5f0d84298c06f4963613c4adc",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-idle-source-v01.png",
+            "source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+            "region": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 5
+        }
+      ],
+      "actual_borrowed_phases": [
+        0,
+        5
+      ],
+      "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-attack-record.json",
+      "record_sha256": "aa79b932c0be20a5b1cf734ecdac44d2775e897f6d4029079734eeb5e95edb9d",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "3e249fb33678d2280e5a8f80b19910dce33a565557787075ea2342b66a4978d4",
+      "frame_bindings": [
+        {
+          "phase": 0,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+          "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "90d324f543695abe09e8a808c90260d63273457b3609a6cbb7ae8a893eaf8915",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+            "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+            "region": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 0
+        },
+        {
+          "phase": 5,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+          "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "86a048e8543c21886b20aca6107ae455b02c65e9c8ab7b81f50aa3d1ea8b8deb",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+            "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+            "region": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 5
+        }
+      ],
+      "actual_borrowed_phases": [
+        0,
+        5
+      ],
+      "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+    },
+    {
+      "slot": [
+        "transform:175",
+        "SW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-hit-record.json",
+      "record_sha256": "43fd27d0832e9642ab6a8f5808db9ed55156f8c5a64d7c6b44264e7da873c18f",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/isolation-v05/SW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "21ec8ae287c66817f714ad8ce1f424233c1099a90afa7af164f977a642cae2f8",
+      "frame_bindings": [
+        {
+          "phase": 0,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+          "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "90d324f543695abe09e8a808c90260d63273457b3609a6cbb7ae8a893eaf8915",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+            "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+            "region": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 0
+        },
+        {
+          "phase": 5,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+          "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "86a048e8543c21886b20aca6107ae455b02c65e9c8ab7b81f50aa3d1ea8b8deb",
+          "resolved_origin": {
+            "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/SW-idle-source-v01.png",
+            "source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+            "region": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "integer_isolation_ancestry": []
+          },
+          "borrowed_replaced_idle_phase": 5
+        }
+      ],
+      "actual_borrowed_phases": [
+        0,
+        5
+      ],
+      "status": "DEPENDENCY_HOLD_NO_AUTOMATIC_REBIND"
+    }
+  ],
+  "lineage_HOLD": [],
+  "action_rebindings": 0,
+  "new_action_generation_calls": 0,
+  "healthy_source_regeneration": 0,
+  "quality_status": "HOLD",
+  "final_approved": 0
+}

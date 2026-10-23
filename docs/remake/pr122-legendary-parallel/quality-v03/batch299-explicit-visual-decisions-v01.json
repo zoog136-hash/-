@@ -1,0 +1,63 @@
+{
+  "qc088": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left standing guard retains matching black armor, purple energy blade, orange cracks and dark flowing mane. Six small stance/cloth changes remain living IDLE.",
+    "remaining_issues": []
+  },
+  "qc089": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Clear back-left/up-left guard retains matching black armor, orange cracks, purple blade and dark mane. Standing body and feet remain in the requested NW camera.",
+    "remaining_issues": []
+  },
+  "qc091": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left guard retains matching black/red molten armor, horned headgear, red cape and large glowing blade resting over the shoulder. Planted feet and subtle torso/cloth variation remain living IDLE.",
+    "remaining_issues": []
+  },
+  "qc092": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Mounted rider and horse show front-left/down-left SW orientation with matching gold/black armor, white hair, red cloak and flaming chain/horse. Small standing mount/cloth changes remain living mounted IDLE.",
+    "remaining_issues": []
+  },
+  "qc093": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "A rear view is established, but phases0..2 and3..5 switch the horse/rider lean and the flaming chain from screen-right to screen-left. This creates a within-clip handedness/camera continuity hold instead of one consistent N guard.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "A rear view is established, but phases0..2 and3..5 switch the horse/rider lean and the flaming chain from screen-right to screen-left. This creates a within-clip handedness/camera continuity hold instead of one consistent N guard.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      },
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "frames": [
+          3,
+          4,
+          5
+        ],
+        "detail": "Flaming chain hand/side changes between the two rows.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  }
+}

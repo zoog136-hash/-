@@ -1,0 +1,78 @@
+{
+  "schema": "legendary-targeted-new-idle-parent-quality-v03",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "records": [
+    {
+      "slot": [
+        "transform:178",
+        "NW",
+        "idle"
+      ],
+      "record_sha256": "67b28886bc6fb7e3fd713ad02862f3110042f6aed1f503577200ab12827a24d5",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "idle_guard_result": "HEALTHY_STATIC",
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "eb7878b2e70df272ac1f35b4fa107a5efbf4b2987ab00c1d021d0ded51d92331",
+      "registration": {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-raster-registration-v02.json",
+        "sha256": "dd42c346396181ddcf42bc33048b36551ef4b5746bf86deda15791f83bb44d6d"
+      },
+      "registration_record_sha256": "67b28886bc6fb7e3fd713ad02862f3110042f6aed1f503577200ab12827a24d5",
+      "preserve_guard_transforms": [
+        {
+          "index": 0,
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "anchor_in_texture": [
+            256.0,
+            256.0
+          ],
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "basis": "Raw corrected-source centered raster only; semantic scale/feet unapproved"
+        },
+        {
+          "index": 5,
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "anchor_in_texture": [
+            256.0,
+            256.0
+          ],
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "basis": "Raw corrected-source centered raster only; semantic scale/feet unapproved"
+        }
+      ],
+      "new_action_registration_rule": "Inherit these exact original parent texture canvas/anchor/scale for phases0/5; do not recenter an isolated virtual canvas",
+      "visual_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-visual/qc062-review-v01.json",
+        "sha256": "b3a11741effaf1d543b52966815c152ab8c8c9df6f752acdb7bc8884135c126a"
+      },
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc062-review-v01.json",
+        "sha256": "43166c46394636674262564878c430df5897814fdeb543c899aeff998d03c0aa"
+      },
+      "scope": "Static camera/identity/living-idle guard selection only; other HOLDs and final approval unchanged"
+    }
+  ],
+  "new_png_reads": 0,
+  "new_visual_reviews": 0,
+  "new_image_calls": 0,
+  "automatic_rebindings": 0,
+  "final_approved": 0
+}

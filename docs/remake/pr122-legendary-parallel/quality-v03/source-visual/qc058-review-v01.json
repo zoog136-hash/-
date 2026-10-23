@@ -1,0 +1,42 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc058",
+  "actor": "190",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:190",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_190/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "2c164b1ddad3a02deb5454563a98a6cd02ae8f0baa63adb506f484e84ba5f50a",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_190/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "89df4d99e6402fd1f15fbe8efe543b0c043f414329bdafc95aab60b3313e2b03",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_190/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "c944ef42292f8d94831aa02b8a7f19e7499d12ce3c884f9afb48ceea68eb9049",
+  "remote_commit": "25a1f645e072e528c54cc960aa19cdcd1edb9b73",
+  "camera_result": "RESOLVED_STATIC",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "idle_guard_result": "WAIT_TECHNICAL_OWNERSHIP",
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HEALTHY_STATIC",
+  "detail": "Front-left/down-left female guard with matching red/gold armor, white-pink hair, horned helmet and spear. Planted living idle; phase4 foreign pixels require exact lossless isolation.",
+  "remaining_issues": [],
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc058-review-v01.json",
+    "sha256": "d44b89e7956a9dabc915ab7b42c0a8ebfe5c202da0597bfa85e961db8856964b"
+  },
+  "visual_board": "quality-v03/visual-boards/qc058-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0
+}
