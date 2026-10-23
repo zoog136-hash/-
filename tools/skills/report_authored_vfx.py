@@ -31,11 +31,11 @@ def main():
     ]
     (OUT/'references.json').write_text(json.dumps({'cutoff_exclusive':'2026-10-23','sources':sources,
         'measurement_rule':'Original ms/frame fields remain null until a decoded in-game sequence is inspected.',
-        'original_skill_sequences_measured':0},ensure_ascii=False,indent=2)+'\n')
+        'original_skill_sequences_measured':0,'additional_decoded_reference_review':'evidence/reference-review-r2.json'},ensure_ascii=False,indent=2)+'\n')
     rows=[]
     for skill in master:
         sid=skill['id'];p=manifest['profiles'][sid]
-        playback='INHERITS_BASE_NO_NEW_VISUAL_CLAIM' if 'inherits_visual' in p else 'AUTHORED_STUDY' if 'atlas' in p else 'NO_STANDALONE_VISUAL_EVENT'
+        playback='INHERITS_BASE_NO_NEW_VISUAL_CLAIM' if 'inherits_visual' in p else 'AUTHORED_RASTER_REVISION_2' if 'atlas' in p else 'NO_STANDALONE_VISUAL_EVENT'
         rows.append({'id':sid,'name':skill['name'],'class':skill['class'],'mode':skill['mode'],
             'runtime_effect':skill['runtime_effect'],'original_video':'UNVERIFIED','partial_visual_observation':False,
             'original_timing_ms':None,'original_frame_numbers':None,'before_after_reboot_visual_delta':'UNVERIFIED',
@@ -62,7 +62,9 @@ def main():
     summary={'runtime_records':len(rows),'inventory_records':len(inventory),'classes':13,
         'playback_counts':dict(collections.Counter(x['current_playback'] for x in rows)),
         'inventory_implementation_counts':dict(collections.Counter(x['implementation'] for x in pending)),
-        'new_public_atlases':len(manifest['assets']),'authored_cells':sum(x['frames'] for x in manifest['assets']),
+        'art_revision':manifest.get('art_revision',1),'public_png_bytes':sum(x['bytes'] for x in manifest['assets']),
+        'atlas_dimensions':[manifest['columns']*manifest['cell_size'],manifest['rows']*manifest['cell_size']],
+        'cache_budget_rgba_bytes':manifest['max_resident_rgba_bytes'],'new_public_atlases':len(manifest['assets']),'authored_cells':sum(x['frames'] for x in manifest['assets']),
         'blocked_preview_only':len(manifest.get('preview_profiles',{})),
         'original_visual_approvals':0,'android_device':'NOT_RUN','final_full_ci':'DEFERRED_UNTIL_PRODUCTION_COMPLETE'}
     (OUT/'coverage-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')

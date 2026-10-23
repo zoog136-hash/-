@@ -287,7 +287,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			continue
 		if str(skill.mode) == "status":
 			if status.apply(skill, target, world):
-				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position())
+				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 				vfx.maintain_status(presentation_id(skill), target, str(skill.get("status", "")))
 			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 			continue
@@ -334,7 +334,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	# Use the NPC death signal/drop/XP path, with no weapon lifesteal, critical
 	# roll or recursive on-hit proc attached to this instant-death effect.
 	target.take_damage(target.hp, false, "turnUndead")
-	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position())
+	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 	world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 언데드 즉사")
 
@@ -355,7 +355,7 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
 	world._deal_successful_player_hit(target, maxi(1, amount), critical)
 	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), link_from,
-		{"direction":world.player.global_position.direction_to(target.global_position), "critical":critical})
+		{"direction":world.player.global_position.direction_to(target.global_position), "critical":critical, "ground_point":target.global_position})
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 
 func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:

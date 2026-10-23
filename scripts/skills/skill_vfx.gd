@@ -127,8 +127,12 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 	container.show()
 	var body := container.get_child(0) as AnimatedSprite2D
 	_play_layer(container, 0, frames, phase, .74 if phase == "persistent" else 1.0)
-	var offset: Array = entry.profile.get("impact_offset", [0, 0]) if phase == "impact" else entry.profile.get("persistent_offset", [0, -22]) if phase == "persistent" else [0, 0]
+	var offset: Array = entry.profile.get("impact_offset", [0, 0]) if phase in ["impact", "aftermath"] else entry.profile.get("persistent_offset", [0, -38]) if phase in ["persistent", "end"] else entry.profile.get("cast_body_offset", [0, -38]) if phase == "cast" else entry.profile.get("status_offset", [0, 0]) if phase == "status" else [0, 0]
 	body.position = Vector2(float(offset[0]), float(offset[1]))
+	var contact: Variant = entry.profile.get("ground_contact_y")
+	var ground_point: Vector2 = context.get("ground_point", Vector2.INF)
+	if phase in ["impact", "aftermath"] and contact != null and ground_point.is_finite():
+		body.position = ground_point - point - Vector2(0, float(contact))
 	var direction: Vector2 = context.get("direction", Vector2.ZERO)
 	if phase in ["travel", "release"] or (phase == "impact" and bool(entry.profile.get("directional", false))):
 		if direction.length_squared() > .0001: body.rotation = direction.angle()
@@ -137,13 +141,20 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 		body.position = to_local(point.lerp(end, .5)) - to_local(point)
 		body.rotation = (point - end).angle()
 		body.scale.x = point.distance_to(end) / 112.0
-	if phase == "cast" and not low_detail: _play_layer(container, 1, frames, "ground", .62)
+	if phase == "cast" and not low_detail:
+		_play_layer(container, 1, frames, "ground", .8)
+		var ground_offset: Array = entry.profile.get("ground_offset", [0, -40])
+		(container.get_child(1) as AnimatedSprite2D).position = Vector2(float(ground_offset[0]), float(ground_offset[1]))
 	if phase == "impact" and not low_detail:
-		_play_layer(container, 2, frames, "flare", .42)
+		_play_layer(container, 2, frames, "flare", .8)
 		var flare := container.get_child(2) as AnimatedSprite2D
 		flare.position = body.position
 		flare.rotation = body.rotation
 		flare.scale = body.scale
+		if str(entry.profile.program) == "chain_lightning":
+			flare.position = Vector2.ZERO
+			flare.rotation = 0
+			flare.scale = Vector2.ONE
 	var durations: Array[float] = [_clip_duration(frames, phase), 0.0, 0.0]
 	if phase == "cast" and not low_detail: durations[1] = _clip_duration(frames, "ground")
 	if phase == "impact" and not low_detail: durations[2] = _clip_duration(frames, "flare")
@@ -197,26 +208,44 @@ func flight_options(id: String) -> Dictionary:
 
 func _flight_step(flight: Dictionary, id: String, token: Dictionary) -> bool:
 	if int(token.epoch) != epoch: return false
-	var direction: Vector2 = (flight.position as Vector2) - (flight.previous as Vector2)
+	var pose := _flight_visual_pose(flight, id, token)
+	var direction: Vector2 = pose.direction
+	var visual_point: Vector2 = pose.point
 	if not bool(token.started):
 		token.started = true
 		emit_skill(id, "release", flight.origin, Vector2.INF, {"direction":direction})
 		if str(flight.kind) != "timed":
-			var visual := _emit(id, "travel", flight.position, Vector2.INF, {"direction":direction})
+			var visual := _emit(id, "travel", visual_point, Vector2.INF, {"direction":direction})
 			if not visual.is_empty():
 				visual.ttl = INF
 				token["item"] = visual
 	var item: Dictionary = token.get("item", {})
 	if item.is_empty(): return false
-	item.point = flight.position
+	item.point = visual_point
 	var layers: Node2D = item.get("layers")
 	if is_instance_valid(layers):
-		layers.global_position = flight.position
+		layers.global_position = visual_point
 		if direction.length_squared() > .0001:
 			var body := layers.get_child(0) as AnimatedSprite2D
 			body.rotation = direction.angle()
 			body.position = Vector2(-48, 0).rotated(body.rotation)
 	return true
+
+func _flight_visual_pose(flight: Dictionary, id: String, token: Dictionary) -> Dictionary:
+	var point: Vector2 = flight.position
+	var direction: Vector2 = point - (flight.previous as Vector2)
+	if str(library.profile_for(id).get("program", "")) == "meteor":
+		var target: Node2D = flight.target.get_ref()
+		if is_instance_valid(target):
+			var end: Vector2 = target.combat_hit_position() if target.has_method("combat_hit_position") else target.global_position + Vector2(0, -24)
+			if not token.has("initial_distance"): token.initial_distance = maxf(1, (flight.origin as Vector2).distance_to(end))
+			var progress := clampf(1.0 - point.distance_to(end) / float(token.initial_distance), 0, 1)
+			# Authored visual drop. The existing flight still owns speed, obstruction,
+			# cancellation and the sole impact callback; the final tip is the real target.
+			point = end + Vector2(-28, -145) * pow(1.0 - progress, .85)
+			direction = point - (token.get("last_visual_point", point - Vector2(28, 145)) as Vector2)
+	token["last_visual_point"] = point
+	return {"point":point, "direction":direction}
 
 func _flight_end(token: Dictionary) -> void:
 	# Flight cancellation is visual only. Successful damage owns the impact cue.
@@ -330,6 +359,7 @@ func _process(delta: float) -> void:
 			var id := str(item.id)
 			var point: Vector2 = item.point
 			var phase := str(item.phase)
+			var tail_context: Dictionary = item.context.duplicate(false)
 			var overflow := float(item.age) - float(item.ttl)
 			_retire(index)
 			if phase == "impact" and not low_detail:
@@ -337,7 +367,7 @@ func _process(delta: float) -> void:
 				var length := 0.0
 				for milliseconds: Variant in times: length += float(milliseconds) / 1000.0
 				if overflow < length:
-					var tail := _emit(id, "aftermath", point)
+					var tail := _emit(id, "aftermath", point, Vector2.INF, tail_context)
 					if not tail.is_empty():
 						tail.age = overflow
 						_seek_layers(tail, overflow)

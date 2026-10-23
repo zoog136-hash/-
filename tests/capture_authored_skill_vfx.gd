@@ -14,7 +14,14 @@ func run() -> void:
 	root.add_child(lab)
 	lab.autoplay = false
 	var serial := 0
-	for sample: int in range(12):
+	var all_skills := OS.get_cmdline_user_args().has("--all")
+	var samples: Array[int] = []
+	var report: Array[Dictionary] = []
+	for index: int in range(lab.skill_names.size()):
+		if all_skills:
+			if lab.vfx.library.profiles[str(lab.ids[lab.skill_names[index]])].has("atlas"): samples.append(index)
+		elif index < 12: samples.append(index)
+	for sample: int in samples:
 		lab.selected = sample
 		lab.play_selected()
 		for frame: int in range(36):
@@ -26,8 +33,12 @@ func run() -> void:
 				quit(1)
 				return
 			serial += 1
-			if frame == 15:
+			if frame == 12:
 				picture.save_png(output.path_join("sample_%02d.png" % sample))
+		report.append({"id":lab.current_id, "name":lab.skill_names[sample], "class":lab.current.get("class"), "preview_contacts":lab.hits})
+	var metadata := FileAccess.open(output.path_join("capture.json"), FileAccess.WRITE)
+	metadata.store_string(JSON.stringify({"frames":serial, "fps":30, "all_natural_effects":all_skills, "samples":report, "visual_fidelity_approval":"PENDING"}, "  "))
+	metadata.close()
 	# Eight actual sprite orientations, captured separately from the movie.
 	lab.selected = 2
 	for direction: int in range(8):

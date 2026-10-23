@@ -22,8 +22,9 @@ def main():
         assert len(blob)==asset['bytes']
         if args.require_tracked:assert asset['path'] in tracked,f"not tracked: {asset['path']}"
         with Image.open(path) as image:
-            image.load();assert image.size==(1024,1024) and image.mode=='RGBA'
-            assert image.getchannel('A').getextrema()==(0,255)
+            image.load();assert image.size==(asset['width'],asset['height']) and image.mode=='RGBA'
+            assert image.size==(manifest['cell_size']*manifest['columns'],manifest['cell_size']*manifest['rows'])
+            assert image.getchannel('A').getextrema()[0]==0 and image.getchannel('A').getextrema()[1]>=240
         by_path['res://'+asset['path']]=asset
         total+=len(blob);frames+=asset['frames']
     inherited=0;dormant=0
@@ -34,9 +35,14 @@ def main():
         if row['mode']=='upgrade':inherited+=1
         if profile.get('standalone_event'):
             assert profile['atlas'] in by_path
+            asset=by_path[profile['atlas']]
+            assert profile['atlas_rgba_bytes']==asset['width']*asset['height']*4
+            occupied=[]
             for clip in profile['clips'].values():
-                assert 0<=clip['first']<64 and clip['first']+len(clip['durations_ms'])<=64
+                occupied.extend(range(clip['first'],clip['first']+len(clip['durations_ms'])))
+                assert 0<=clip['first']<manifest['columns']*manifest['rows'] and clip['first']+len(clip['durations_ms'])<=manifest['columns']*manifest['rows']
                 assert all(0<ms<=1000 for ms in clip['durations_ms'])
+            assert len(set(occupied))==len(occupied)==manifest['columns']*manifest['rows']
         else:
             assert row['mode'] in ('stats','stack_defense','stack_attack','amplify')
             dormant+=1

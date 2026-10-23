@@ -3,7 +3,8 @@ class_name TwilightSkillVFXLibrary
 
 ## Bounded, pinned atlas cache. Visual admission never gates a combat event.
 const PATH := "res://data/skills/authored_vfx.json"
-const MAX_ATLASES := 12
+const MAX_ATLASES := 8
+const MAX_RGBA_BYTES := 48 * 1024 * 1024
 var profiles: Dictionary = {}
 var preview_profiles: Dictionary = {}
 var entries: Dictionary = {}
@@ -31,7 +32,9 @@ func acquire(id: String) -> Dictionary:
 	if path.is_empty(): return {}
 	clock += 1
 	if not entries.has(path):
-		if entries.size() >= MAX_ATLASES:
+		var cost := int(profile.get("atlas_rgba_bytes", 6 * 1024 * 1024))
+		if cost > MAX_RGBA_BYTES: return {}
+		while entries.size() >= MAX_ATLASES or resident_rgba_bytes() + cost > MAX_RGBA_BYTES:
 			var victim := ""
 			var oldest := 2147483647
 			for key: String in entries:
@@ -56,10 +59,12 @@ func acquire(id: String) -> Dictionary:
 			for index: int in range(clip.durations_ms.size()):
 				var texture := AtlasTexture.new()
 				texture.atlas = atlas
-				texture.region = Rect2(((first + index) % 8) * 128, floori(float(first + index) / 8.0) * 128, 128, 128)
+				var cell := int(profile.get("cell_size", 128))
+				var columns := int(profile.get("columns", 8))
+				texture.region = Rect2(((first + index) % columns) * cell, floori(float(first + index) / float(columns)) * cell, cell, cell)
 				texture.filter_clip = true
 				frames.add_frame(phase, texture, float(clip.durations_ms[index]))
-		entries[path] = {"frames":frames, "users":0, "stamp":clock}
+		entries[path] = {"frames":frames, "users":0, "stamp":clock, "rgba_bytes":atlas.get_width() * atlas.get_height() * 4}
 	entries[path].users += 1
 	entries[path].stamp = clock
 	return {"frames":entries[path].frames, "key":path, "profile":profile}
@@ -72,4 +77,6 @@ func trim() -> void:
 		if int(entries[key].users) == 0: entries.erase(key)
 
 func resident_rgba_bytes() -> int:
-	return entries.size() * 1024 * 1024 * 4
+	var bytes := 0
+	for entry: Dictionary in entries.values(): bytes += int(entry.rgba_bytes)
+	return bytes

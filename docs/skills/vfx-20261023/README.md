@@ -1,3 +1,7 @@
+# 스킬 VFX 2차 제작 — 전면 완료 아님
+
+현재 제작 상태와 새 영상은 [REVISION_2.md](REVISION_2.md)를 기준으로 본다. 아래 기록은 1차 체크포인트이며 리소스 수·프레임·캐시·성능 결과는 당시 값이다.
+
 # 스킬 VFX 제작 체크포인트 — 전면 완료 아님
 
 기준 main은 `a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec`, 작업 브랜치는 `feature/twilight-skill-vfx-20261023`이다. 다른 작업 디렉터리와 분리한 새 clone에서 제작했다. PR #122의 브랜치 `feature/twilight-remaining106-20261016`와 HEAD `edf9b86be5cab9cafd60d382b767c2c42e2d1ae4`는 변경하지 않았다. main 병합도 하지 않았다.

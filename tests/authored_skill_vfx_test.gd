@@ -42,10 +42,26 @@ func run() -> void:
 		var a := frames.get_frame_texture("impact", 0) as AtlasTexture
 		var b := frames.get_frame_texture("impact", 1) as AtlasTexture
 		check(a.region != b.region and a.region.size == Vector2(128, 128), "independent frame regions")
-		check(is_equal_approx(frames.get_frame_duration("impact", 0) / frames.get_animation_speed("impact"), .025), "nonuniform milliseconds survive SpriteFrames")
+		check(a.atlas.get_size() == Vector2(1024, 1536), "96 real raster cells imported")
+		check(frames.get_frame_count("impact") == 20 and frames.get_frame_count("travel") == 8, "denser contact and travel animation")
+		check(is_equal_approx(frames.get_frame_duration("impact", 0) / frames.get_animation_speed("impact"), .016), "nonuniform milliseconds survive SpriteFrames")
 		library.release(str(entry.key))
-	check(atlases >= 70, "natural effects and upgrade inheritance have real assets")
+	check(atlases == 80, "natural effects and upgrade inheritance have real assets")
 	check(library.resident_rgba_bytes() <= 48 * 1024 * 1024, "bounded decoded atlas cache")
+	check(library.entries.size() <= 8, "96-cell atlases keep the same 48MiB budget")
+	library.trim()
+	var pinned: Array[Dictionary] = []
+	var unique: Array[String] = []
+	for id: String in library.profiles:
+		if library.profiles[id].has("atlas"): unique.append(id)
+	for index: int in range(8): pinned.append(library.acquire(unique[index]))
+	check(library.resident_rgba_bytes() == 48 * 1024 * 1024, "memory accounting includes every extra atlas row")
+	check(library.acquire(unique[8]).is_empty(), "pinned atlas budget cannot be evicted or exceeded")
+	library.release(str(pinned[0].key))
+	var admitted := library.acquire(unique[8])
+	check(not admitted.is_empty() and library.resident_rgba_bytes() == 48 * 1024 * 1024, "unpinned least recent atlas makes room")
+	for entry: Dictionary in pinned: library.release(str(entry.key))
+	library.release(str(admitted.get("key", "")))
 	library.trim()
 	check(library.entries.is_empty(), "idle trim releases textures")
 	var vfx: TwilightOriginalSkillVFX = VFX.new()
@@ -101,6 +117,33 @@ func run() -> void:
 	check(not stale.visual_step.call({"position":Vector2.ONE, "previous":Vector2.ZERO}), "clear invalidates old visual generation")
 	check(vfx.live.is_empty() and vfx.library.entries.is_empty(), "clear releases live nodes and atlas pins")
 	vfx.set_detail("full")
+	vfx.emit_skill("lm_dcb006041216f9c6", "impact", Vector2(300, 100), Vector2.INF, {"ground_point":Vector2(300, 154)})
+	var lightning_body := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
+	check((lightning_body.global_position + Vector2(0, 42)).distance_to(Vector2(300, 154)) < .01, "lightning feet use actual actor ground independent of hit height")
+	var pinned_ground := lightning_body.global_position
+	vfx._process(.63)
+	check(vfx.live.size() == 1 and str(vfx.live[0].phase) == "aftermath", "contact transfers to its tail")
+	var tail_body := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
+	check(tail_body.global_position.distance_to(pinned_ground) < .01, "ground contact cannot jump when the tail begins")
+	vfx.clear()
+	var chain_id := ""
+	for id: String in vfx.library.profiles:
+		if vfx.library.profiles[id].get("program") == "chain_lightning": chain_id = id; break
+	vfx.emit_skill(chain_id, "impact", Vector2(300, 100), Vector2(100, 100))
+	var chain_layers: Node2D = vfx.live[0].layers
+	var chain_body := chain_layers.get_child(0) as AnimatedSprite2D
+	var chain_flare := chain_layers.get_child(2) as AnimatedSprite2D
+	check((chain_body.global_transform * Vector2(-56, 0)).distance_to(Vector2(100, 100)) < .01 and (chain_body.global_transform * Vector2(56, 0)).distance_to(Vector2(300, 100)) < .01, "electric bridge terminates at both real link endpoints")
+	check(chain_flare.global_position.distance_to(Vector2(300, 100)) < .01 and chain_flare.scale == Vector2.ONE, "chain collision light stays on target instead of stretching at link midpoint")
+	vfx.clear()
+	var meteor_token: Dictionary = {}
+	var meteor_flight := {"position":Vector2.ZERO, "previous":Vector2.ZERO, "origin":Vector2.ZERO, "target":weakref(target), "speed":1050.0}
+	var meteor_origin := vfx._flight_visual_pose(meteor_flight, "lm_45cdacd8a42d0e5a", meteor_token)
+	check(meteor_origin.point.y < target.position.y - 100, "meteor begins above the target")
+	meteor_flight.position = target.position + Vector2(0, -24)
+	var meteor_end := vfx._flight_visual_pose(meteor_flight, "lm_45cdacd8a42d0e5a", meteor_token)
+	check(meteor_end.point.distance_to(target.position + Vector2(0, -24)) < .01, "meteor tip terminates at actual target")
+	check(meteor_flight.speed == 1050.0 and not meteor_flight.has("callback"), "render path does not rewrite combat flight state")
 	vfx.emit_skill(arrow, "impact", Vector2.ZERO)
 	vfx._process(2.0)
 	check(vfx.live.is_empty(), "long frame consumes elapsed aftermath instead of resurrecting a fresh tail")
