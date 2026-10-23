@@ -79,8 +79,8 @@
       "remaining": 17,
       "statuses": {
         "VERIFIED_COMPLETED": 43,
-        "IN_PROGRESS": 3,
-        "NOT_AUTHORED": 13,
+        "IN_PROGRESS": 4,
+        "NOT_AUTHORED": 12,
         "SOURCE_HOLD": 1
       }
     }
@@ -1376,10 +1376,10 @@
       ],
       "spawn_evidence": [],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
-      "reason": "No identity-compatible licensed source for dark_knight",
+      "reason": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
       "historical_reason_preserved": "No identity-compatible licensed source for dark_knight",
       "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
       "runtime_proxy": true,
@@ -1450,7 +1450,49 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 1,
+        "native_pose_count": 6,
+        "missing_required_tracks": [
+          "attack_0",
+          "hit_0",
+          "idle_0",
+          "run_0",
+          "attack_6",
+          "hit_6",
+          "idle_6",
+          "run_6",
+          "attack_7",
+          "hit_7",
+          "idle_7",
+          "run_7",
+          "attack_5",
+          "hit_5",
+          "idle_5",
+          "run_5",
+          "attack_2",
+          "death_2",
+          "hit_2",
+          "idle_2",
+          "run_2",
+          "attack_1",
+          "hit_1",
+          "idle_1",
+          "run_1",
+          "attack_3",
+          "hit_3",
+          "idle_3",
+          "run_3",
+          "attack_4",
+          "hit_4",
+          "run_4"
+        ],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false,
       "current_review_requirement": "mythic_quality",
       "historical_visual_holds_block_current_review": true
@@ -30246,7 +30288,7 @@
     },
     {
       "path": "data/pr122_monster_boss_repair_staging.json",
-      "sha256": "9f60719e1edddba2f896eb0b95722962390f732747e9468b6effd9dd4c572e76"
+      "sha256": "738c9fa9a0329232312e4f29087aa8b9a5d0a476a557d8132caa7c6b9550d510"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.",
