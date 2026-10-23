@@ -1,0 +1,80 @@
+{
+  "schema": "hero-batch-review-final-v1",
+  "date": "2026-10-23 Asia/Seoul",
+  "base_commit": "b95df024480273d50fac2cc247c74d557b79950d",
+  "branch": "feature/pr122-hero-parallel",
+  "observed_main_head_read_only": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "observed_pr122_head_read_only": "28d447748d2e4be211aa367b99272f8b0d2e6cb7",
+  "review_stats": {
+    "heroes": 109,
+    "tracks": 5064,
+    "phase_references": 23944,
+    "selected_candidates": 36,
+    "run_pose_references": 1715
+  },
+  "confirmed_common_cause_groups": 3,
+  "resolved_groups": [
+    {
+      "id": "TOOL_SCOPE_SCHEMA",
+      "fix": "Use actual contiguous per-heading pose rows and include isolated supplemental repair actors. Reject missing headings and duplicate phases.",
+      "targeted_character_checks": 14
+    },
+    {
+      "id": "REVIEW_EVIDENCE_SCHEMA",
+      "fix": "Bind11 directly reviewed tiny isolated fragments to exact actor/pose RGBA and atlas SHA. Original gap criteria stay strict.",
+      "reviewed_actors": [
+        "transform:16",
+        "transform:359"
+      ],
+      "retained_pose_findings": 11
+    },
+    {
+      "id": "ROSTER_METADATA_LOSS",
+      "fix": "Preserve supplementary scopes and all hero-owned review annotations; unchanged semantic state produces no write.",
+      "previously_affected_actors": 21,
+      "repair_scope_preserved": 11
+    }
+  ],
+  "unresolved_errors": [],
+  "remaining_accepted_minor_pixel_findings": 11,
+  "minor_findings_file": "reviewed-isolated-pixels.json",
+  "normal_clip_regenerations": 0,
+  "source_painting_generations": 0,
+  "game_asset_modifications": 0,
+  "shared_runtime_modifications": 0,
+  "prior_25_approval_entries_unchanged": true,
+  "remediation18_entries_unchanged": true,
+  "verification": {
+    "targeted_resource_rechecks": {
+      "passed": 14,
+      "total": 14,
+      "writes": 0
+    },
+    "regression_tests": {
+      "passed": 8,
+      "total": 8
+    },
+    "actual_combined_Main": {
+      "status": "PASS",
+      "heroes": 109,
+      "selected_production_and_repair_results": 36,
+      "checks": 7636,
+      "report": "integration-main.json"
+    },
+    "related_gameplay_suite": {
+      "passed": 9,
+      "total": 9,
+      "report": "gameplay-summary.json"
+    },
+    "cached_full_phase_Main_evidence_reused": 36
+  },
+  "retry_policy": {
+    "same_cause_max_attempts": 2,
+    "art_retries": 0,
+    "completed_runtime_integration_passes": 1,
+    "environment_precondition_recovery": "Previously idle display99 was unavailable; isolated display105 started before actual integration. Raw precondition failure retained."
+  },
+  "formal_PR122_merge": false,
+  "default_catalog_connections": 0,
+  "full33_workflow_CI": "NOT_RUN; targeted final branch integration and nine related game checks completed"
+}

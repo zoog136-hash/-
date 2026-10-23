@@ -1,0 +1,30 @@
+{
+  "total": 9,
+  "passed": 9,
+  "failed": [],
+  "skipped": [],
+  "not_run": [],
+  "checks": [
+    "boot",
+    "actor_motion_test",
+    "animation_restore_test",
+    "authored_state_motion_test",
+    "combat_resolution_equivalence_test",
+    "combat_timing_test",
+    "ground_drop_smoke_test",
+    "speed_option_smoke_test",
+    "stage5_save_compatibility_test"
+  ],
+  "validation_scopes": {
+    "boot": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "actor_motion_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "animation_restore_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "authored_state_motion_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "combat_resolution_equivalence_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "combat_timing_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "ground_drop_smoke_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "speed_option_smoke_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "stage5_save_compatibility_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "boot,actor_motion_test,authored_state_motion_test,animation_restore_test,combat_timing_test,combat_resolution_equivalence_test,speed_option_smoke_test,ground_drop_smoke_test,stage5_save_compatibility_test"
+}

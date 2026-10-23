@@ -2707,5 +2707,24 @@
   "source_498_ledger": "docs/remake/evidence/pr122-remaining106/batch17/all498-production-status.json",
   "source_498_ledger_sha256": "6c8eb6246a86c1f873bc15aadbf2366bf007eaafd5c120af4d1ec4eb8b361e19",
   "target_scope_total": 25.0,
-  "walk_policy": "USER_EXCLUDED_20261020_EXISTING_ASSETS_PRESERVED"
+  "walk_policy": "USER_EXCLUDED_20261020_EXISTING_ASSETS_PRESERVED",
+  "audit_once_20261023": {
+    "scope": "109 hero resources; 36 selected production/repair results",
+    "isolated_pixel_review": {
+      "report": "res://docs/remake/pr122-hero-parallel/evidence/audit-once-20261023/reviewed-isolated-pixels.json",
+      "sha256": "af0982b42ae3eb6b51047b01b1e78f909b574b34bfcfc1193673813190fc9abf"
+    },
+    "normal_clip_regenerations": 0,
+    "asset_content_modifications": 0,
+    "error_list": "res://docs/remake/pr122-hero-parallel/evidence/audit-once-20261023/confirmed-errors.json",
+    "status": "RESOLVED_AND_FINAL_INTEGRATION_PASS",
+    "reviewed_hero_count": 109,
+    "selected_candidate_count": 36,
+    "confirmed_common_cause_groups": 3,
+    "resolved_common_cause_groups": 3,
+    "unresolved_errors": [],
+    "accepted_minor_artifact_pose_count": 11,
+    "final_report": "res://docs/remake/pr122-hero-parallel/evidence/audit-once-20261023/final-result.json",
+    "integration_report": "res://docs/remake/pr122-hero-parallel/evidence/audit-once-20261023/integration-main.json"
+  }
 }

@@ -67,20 +67,15 @@ def build():
             'status': 'NOT_STARTED', 'production_connected': False,
             'independent_validation': 'NOT_RUN', 'final_approved': False,
         }
-        # Only explicitly authored hero-only state may survive a roster refresh.
+        # Preserve hero-owned review/provenance fields, including newer schemas.
+        # Identity/classification still comes from the exact 498/catalog join.
         old = previous.get('actors', {}).get(key, {})
-        for field in ['status', 'frames', 'native_profile', 'rig', 'tracks',
-                      'independent_validation', 'quality_holds', 'source_donor',
-                      'source_frames_sha256', 'new_run_poses', 'production_connected',
-                      'final_approved', 'raster_review', 'main_validation_report', 'shared_run_poses',
-                      'unique_art_candidates', 'prior_candidates', 'death_policy_scope',
-                      'death_reuse_assessment', 'new_unique_authored_poses',
-                      'new_death_authored_directions', 'new_death_unique_poses', 'death_hold_review_source',
-                      'death_validation_report', 'visual_review_state', 'visual_review_report',
-                      'approval_receipt', 'source_paintings_reused', 'baked_rig_pose_count',
-                      'image_generation_recovery', 'accepted_minor_pixels']:
-            if field in old:
-                actors[key][field] = old[field]
+        identity_fields = {'name', 'grade', 'historical_status', 'reference',
+                           'reference_sha256', 'body', 'equipment', 'attack_family',
+                           'priority', 'classification_is_art_approval'}
+        for field, value in old.items():
+            if field not in identity_fields:
+                actors[key][field] = value
     for key, actor in actors.items():
         if actor['final_approved']:
             receipt_path = ROOT / actor['approval_receipt'].removeprefix('res://')
@@ -107,10 +102,11 @@ def build():
         'default_game_connections': 0, 'actors': actors,
         'historical_approved_ids_read_only': ['transform:' + str(r['sourceId']) for r in approved],
     }
-    if previous.get('animation_policy'):
-        result['animation_policy'] = previous['animation_policy']
+    # Supplemental repairs are not new species and must never disappear here.
+    result = {**previous, **result}
     assert len(heroes) == 109 and len(approved) == 84 and len(pending) == 25
-    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+    if result != previous:
+        OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     print(f"HERO_ROSTER_OK total=109 excluded_approved=84 scope=25 pending={result['pending_total']} new_approvals={result['new_final_approvals']} walk=excluded")
 
 
