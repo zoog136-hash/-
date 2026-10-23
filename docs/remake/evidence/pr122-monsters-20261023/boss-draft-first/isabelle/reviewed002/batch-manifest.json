@@ -1,0 +1,1463 @@
+{
+  "schema": "pr122-boss-production-batch-v1",
+  "actor": "monster:질투의 공주 이자벨",
+  "clips": 29,
+  "poses": 174,
+  "missing_required_slots": 4,
+  "root_Godot_real_speed": "PASS",
+  "viewport_captures": 243,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/E-attack-v01.png",
+      "bytes": 1861505,
+      "sha256": "3da064745884b61edfb4c501c3c9d302a84914136a709ce1bfd55c58116ffa37"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/N-hit-v01.png",
+      "bytes": 1789719,
+      "sha256": "4338baad0ac61306a971ec2d3c8acd04957e6ded3860d7beb52bcafb8e965ac0"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/NE-attack-v01.png",
+      "bytes": 1777158,
+      "sha256": "9da47ec3979acb9836d93bd15f46b20f415cf39522c03ddef5445b35ade10db6"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/NE-run-v01.png",
+      "bytes": 1921715,
+      "sha256": "4411acd40b70eb9918bf67c413d3e906d399bec9d140fe5871fc07ba93fbff8d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/NW-attack-v01.png",
+      "bytes": 1828754,
+      "sha256": "584072a56491cc0145dc578f316bf94006501a5e7bbd1bee2c7615f5e4fbd78c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/NW-hit-v01.png",
+      "bytes": 1936728,
+      "sha256": "69199113343e287e09d8b7193fef5660edf918453868af96381fc9323130964b"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/NW-run-v01.png",
+      "bytes": 1890546,
+      "sha256": "8e4c85160fdb9fa93c57508515c67aa2e281b3a9aa03abea060629e8e4995dab"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/S-death-v01.png",
+      "bytes": 2086309,
+      "sha256": "4c34dc24a9a5ac796f2b45f107728f7b7483e67450ad1410c2d5320c0b8e01bd"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/S-hit-v01.png",
+      "bytes": 2144241,
+      "sha256": "098b54520af0550eae53eba2df330c0ddc53cc15aaf2ac5e2b11e92c7c7fb751"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/S-idle-v01.png",
+      "bytes": 2006882,
+      "sha256": "e817a06d6212405d58cfe96616c0480f84b6a855b50856cf75e59574a065d288"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SE-attack-v01.png",
+      "bytes": 1913919,
+      "sha256": "e78f025db25df2cc7ff2d6a45e06aea688bfde5758b32637d9ff4fa0adbc286d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SE-hit-v01.png",
+      "bytes": 2108063,
+      "sha256": "44a8c4bd4f18b4a37798e0960920323bc46352090d72a695f79952d524625b1e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SE-idle-v01.png",
+      "bytes": 1754404,
+      "sha256": "566547ea48986689e937c18fbfcd157a5411a46f415ec1109d6ec6fa7a88dd24"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SW-attack-v01.png",
+      "bytes": 1878059,
+      "sha256": "9fdeeaa0f775249c959a7a9db7e9abfb9e827c7aa5ce7e351bd034d27cc8e8f9"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SW-hit-v01.png",
+      "bytes": 2033970,
+      "sha256": "83865510b2889c14427823395388efe3839c81aedd1df734a4d90babd834dc68"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SW-idle-v01.png",
+      "bytes": 2087788,
+      "sha256": "dc587faab9b5328e16db605d349eb69dc2a464150cb0f14441bb3087c3a98061"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SW-run-v01.png",
+      "bytes": 1879739,
+      "sha256": "858efd5c6b351153f1526d72acffeebdcb639897f627bda5f948281f2e7d9ed0"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/W-attack-v01.png",
+      "bytes": 1748199,
+      "sha256": "d3b396d74fe2f6826671833c65633babd82134a5a78c6b954b276f23da947d4d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/W-hit-v01.png",
+      "bytes": 2038354,
+      "sha256": "d185798e77b6a75ffdecf72ceb155bfdd482e601b29f2bd745e927217051234a"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/W-idle-v01.png",
+      "bytes": 1947551,
+      "sha256": "4a608e3b5acf103a71eb7244246aff386477820dd307f138852151e802df2cb5"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/NativeMotionProfile.tres",
+      "bytes": 797,
+      "sha256": "97879d1e65593f3542730e3d8cb88a7f1d0b74776198e769843913a33edd4780"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/SpriteFrames.tres",
+      "bytes": 44901,
+      "sha256": "3bf3e338ba3c764f7b57e2eee6ec6d2c8033b9654d139aaa411273af4f3181d3"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/E-hit-v01.png",
+      "bytes": 2546752,
+      "sha256": "1ecf59cc314c845f56f3fbb35617bbf3746a307930d18d9102a2b99a0e331d7e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/E-idle-v01.png",
+      "bytes": 2497066,
+      "sha256": "67846fa32efa32d0f8f7bc6567d8b72080cf9b4356edcd83a0a8e60a2bf2f5e6"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/E-run-v01.png",
+      "bytes": 2492101,
+      "sha256": "a7c27b56959101dc7a77c01744e51e558f754ef256d2a743df2202e323fefeeb"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/N-attack-v01.png",
+      "bytes": 2460338,
+      "sha256": "4919b9d3fcac1554420f8b241167beab6360a4c0b2ee9ddcee994a180ac56632"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/N-idle-v01.png",
+      "bytes": 2411865,
+      "sha256": "e841d4c58e3e78694f24979eb40734af85362c44beb0c87af6937407bc41f846"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/NW-idle-v01.png",
+      "bytes": 2473555,
+      "sha256": "1a784457440f0695efe1e5bb47d836917a8ec270a2bdf10310d3cd39596095ed"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/S-attack-v01.png",
+      "bytes": 2579551,
+      "sha256": "1b266a5f00787a9eaead4143302b76df18531e64d17aa7d8fbb083b2e364d6be"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/S-run-v01.png",
+      "bytes": 2645294,
+      "sha256": "304295ec66d10798c21035850108992a00aaa710197e4ff3319e31831e82f3a6"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/SE-run-v01.png",
+      "bytes": 2541069,
+      "sha256": "f40f64fab8820207cf2ba7af5d70f81e424d0b7e8f2c0f38e8f3115900c972a4"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 2059048,
+      "sha256": "23b84166ebe46b12b8f27b14f3c4286ff40f2e8a75c0d0f64a066dcd9c7a9ae0"
+    },
+    {
+      "path": "data/pr122_monster_production_scope.json",
+      "bytes": 907225,
+      "sha256": "2b6c6ad71a8e9d8284b20a092654186bcefdba0580f4a2c17e804062f520a6f5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/candidate.json",
+      "bytes": 172318,
+      "sha256": "469b0393bf958eb7e6b5fbf5c51eed4705e4deb22767f0b50ee25d07423329d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/capture-manifest.json",
+      "bytes": 57284,
+      "sha256": "74428ec0c74d7e1f10a229bbcec7b6ec3b7dd88d1e09f319626f27cf0719d7f1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/command.json",
+      "bytes": 379,
+      "sha256": "4db52557c4c773e121d0794f6959a94639ebc8a01acf8d92b839bfb6c740afd7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/config.json",
+      "bytes": 2636,
+      "sha256": "a1611523f14b70dc5b4b2ff81adff6e35c6729a7cc094675ae51cade2fa013cc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/godot-run.txt",
+      "bytes": 16936,
+      "sha256": "aa6dd3c7457ae8db24c9de98d77e2de81b466331e51ff90f1a1e1536768c72d4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-0.png",
+      "bytes": 52012,
+      "sha256": "94331f053f82ee6e4b4f81472b24c10aa0062774306e1938a82e6f0a5c471fa1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-1.png",
+      "bytes": 53055,
+      "sha256": "a68ae68005dbe0cfa85adca51332ec54bafc2c388476dbbad5d95dcb3a9a4821"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-2-strike.png",
+      "bytes": 50730,
+      "sha256": "04048001763eebf56864bbf55a665eadb04bba9a27e12da41819fd3a86183f82"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-2.png",
+      "bytes": 50385,
+      "sha256": "638afd795a334285b14726bd2ee172864191cc917f58fd2c25338ae0dbff867c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-3.png",
+      "bytes": 55770,
+      "sha256": "a2cef7652965bb061d79d11b1bf67ce4f233744cb82fc374d36269fcb50a1786"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-4.png",
+      "bytes": 53486,
+      "sha256": "cdfc51e8d796e2caf7d1f88065fdba800ed0c050ecbb6650e790abe7afb43ebd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-attack_0-5.png",
+      "bytes": 52919,
+      "sha256": "8a3ac4f075df8f0cd6d70c85277aaf860025baee045bf115a94cd9295416180e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-idle_0-0.png",
+      "bytes": 50958,
+      "sha256": "2836315831b937f78d86845d636534a7884a3520d7c6de0107f696c8d1fa3208"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-action-idle_0-1.png",
+      "bytes": 51952,
+      "sha256": "2f8502ac656f0876eaaee51cd711ab9de2442bb74f5de593330ff4a4b087d8ed"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-E-pre-idle-idle_0-0.png",
+      "bytes": 50793,
+      "sha256": "1b255be0f3e71d1777341571f00cae89927a6fba1bd92c687373a5db58b4a06b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-0.png",
+      "bytes": 51530,
+      "sha256": "2c8f8baac014032ea48118f45f7f297391f2554b86eab87ab18ec1c35a164e12"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-1.png",
+      "bytes": 51572,
+      "sha256": "b2f2f2f0a8145f7a05d095efd73bde695f36d0d875b6c430bd7f5be2c451d7af"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-2-strike.png",
+      "bytes": 52183,
+      "sha256": "657b300e38274fe0398b4f5344f09c494a50d7f896e6c43cf7183d0bcdec5b34"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-2.png",
+      "bytes": 51856,
+      "sha256": "d2a91cca1b4144acb51107ddf80ca0b3d86ddb3264d34f4a10c846697f89123c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-3.png",
+      "bytes": 55306,
+      "sha256": "fcf9459a57ad94b5a8a51e663ccf2708ff4f4b2fc18899d1a0b1954a813e3116"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-4.png",
+      "bytes": 51770,
+      "sha256": "69ac3da736f6d4934ae08dde6b44576581e16802a0b00be1dd021544d2033785"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-attack_6-5.png",
+      "bytes": 51792,
+      "sha256": "3efe5afcf2e19d40f9d2c1a5fbea125ffc860fab91c1361c829f9b7344e4238f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-idle_6-0.png",
+      "bytes": 49398,
+      "sha256": "ba0eac47630c0b21fd739f47dd06cc869a57a9d889714f566eaaa4c6aef5ce74"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-action-idle_6-1.png",
+      "bytes": 49961,
+      "sha256": "633828697c58ecc67779c48ae77fb23f4e06c6ab8468014f174a6ad4f5551971"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-N-pre-idle-idle_6-0.png",
+      "bytes": 49269,
+      "sha256": "6a15b0e8aef09bedbf654f889ed3957a0cdbb352b00830787c0734257e1da75d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_0-0.png",
+      "bytes": 51956,
+      "sha256": "a05d8db5730cb0082bc5df6b7b4ee598f373ffa33fe45487cc1204a9ea862428"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-0.png",
+      "bytes": 47650,
+      "sha256": "f7837b8af9c573f6eb1498e982a02a599f4c4251385135971b49b88d26304647"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-1.png",
+      "bytes": 48284,
+      "sha256": "4d0e1d76069335bc7130d05187807542d8bc74aeafb693775ed073b8770ae379"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-2-strike.png",
+      "bytes": 47956,
+      "sha256": "e53412788e1c1d5fbffde85a0d9d2d69c80c12803f6574c8c64bd2cbf9c582b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-2.png",
+      "bytes": 47744,
+      "sha256": "080613be16b2ed813437ae033492b206d279a1edd35c9d9f8a83fba7e18c909c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-3.png",
+      "bytes": 48424,
+      "sha256": "ab03879ccc3bce8fb260f48dce7d77e953e39a77a18934742611fb8daf5d1d31"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-4.png",
+      "bytes": 48209,
+      "sha256": "c7d90a37c64d8747d85128cceabd5fe3f745f95b80b5b6d9e3fc573c40b111b5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NE-action-attack_7-5.png",
+      "bytes": 48120,
+      "sha256": "f4bc4082be16c1518f93cc739513261fc91e690012e13d7d117f1f45b55bc75c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-0.png",
+      "bytes": 50695,
+      "sha256": "118c1b7f7a4e36bf99203eb243dbbb17fcdd18820f99c76cebe13edbb640ba0f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-1.png",
+      "bytes": 52818,
+      "sha256": "747dc3e7fdadd6925e1375a5719cd1c44ed7386bf5eeb1121103338ab5411836"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-2-strike.png",
+      "bytes": 49282,
+      "sha256": "6bbcc72ce9f70094092fb0c61931533f51fbfb0b0208c58c3603854a4cc9ccf9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-2.png",
+      "bytes": 48741,
+      "sha256": "5745057127f90e11156750d139a903f4fccf78ff33db5703b1f3136f70719914"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-3.png",
+      "bytes": 53752,
+      "sha256": "285612b9b59ffe5d0f9a351a9215bcda9cd00ef672fcfe1240670a36e5890425"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-4.png",
+      "bytes": 49723,
+      "sha256": "b187dda3940527b295a48344894ef68e29c350e797e6bff32681dfeae6b5ddd9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-attack_5-5.png",
+      "bytes": 51819,
+      "sha256": "e9cab589888aa5ca39d1f95c9419fb938181a978fb6c59e736d7f9949c558b93"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-idle_5-0.png",
+      "bytes": 50875,
+      "sha256": "61ac4110bd0f0e66ae35914da6cfcb649ae2f89fdc7b658b65e330b5a3774379"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-action-idle_5-1.png",
+      "bytes": 50387,
+      "sha256": "993409511839160d24c8fac92c58737ef520f81b66ce3ccdba5015ef3391ff18"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-NW-pre-idle-idle_5-0.png",
+      "bytes": 50778,
+      "sha256": "b057f5fddd94d6ebb1168dd97ac7da2825021e13685cb4e4f7f08b15ab30f32f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-0.png",
+      "bytes": 55112,
+      "sha256": "958bdf6f274e3522bca56291fcf8149d5576441cbe0aadd9dca8f160119f2d74"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-1.png",
+      "bytes": 53746,
+      "sha256": "375d03a4ee0f40f51626769524349c33c6415b9325b76425dd210b3b40eae7b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-2-strike.png",
+      "bytes": 55478,
+      "sha256": "cc7f959e71e753f5082d304253167b98c89cbf0b580a0b0ed8c3baf89a8c5ed6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-2.png",
+      "bytes": 55146,
+      "sha256": "15539fb68fa673df85cf0bb3df2bbbe87feb1e5a325ccc36bcc9ca0a9328b430"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-3.png",
+      "bytes": 55453,
+      "sha256": "ff3a3ef437e7924745fadebfe04cc87f7a261e68fb913c90efc4385886954b7c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-4.png",
+      "bytes": 53808,
+      "sha256": "338bc519e0be1984d82f329644491aab96b6728b98e2a86d523f5e5b4f9653a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-attack_2-5.png",
+      "bytes": 55011,
+      "sha256": "35a58c673e6bfdc58110b568c2ee08fea51ff19e99710bbb8c34225d40a93898"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-idle_2-0.png",
+      "bytes": 48812,
+      "sha256": "133f899b5fbb4308b8145817731149c5ba855cc3d77738ed6824c47e91dd27e3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-action-idle_2-1.png",
+      "bytes": 48810,
+      "sha256": "c8bf4327aa9b42bf454efffb87ca237825b9fc7b26bf15fc0995643023a55e27"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-pre-idle-idle_2-0.png",
+      "bytes": 48580,
+      "sha256": "b7c0e19215ac1c91216b5ad61dea28ef0485c66ffa4cb0db14cd6e25c66b59d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-S-pre-idle-idle_2-1.png",
+      "bytes": 48965,
+      "sha256": "cd4717c034e3d0814c090cddf6b9c3175df4bc3624be94dc0b8a81a95bcbd6c0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-0.png",
+      "bytes": 49642,
+      "sha256": "e22233468cff21d85ce20761ddacc9753969a8c4ff7224aad72d69c6c1a443dc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-1.png",
+      "bytes": 51381,
+      "sha256": "280a2bab5f9eaccd8779a472bc70ea8ce425e7a25629dd3fe1cb9fb5f619764e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-2-strike.png",
+      "bytes": 49471,
+      "sha256": "eb3f4256039fd2bc3c3cb7086cce8c3c859757bace16d1bfcf8a60720ebbbcc5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-2.png",
+      "bytes": 49112,
+      "sha256": "c5bdb149e5c7936001262d7677d69e1df4d8ecefd7bb6b609682c9f3e3d155e6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-3.png",
+      "bytes": 50473,
+      "sha256": "8b025353e54efcbc882e0456e67fc29452f0f42ab5cb05264e2be3dab4f8ea2c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-4.png",
+      "bytes": 48844,
+      "sha256": "7381fd658188cca5400dd6d43dbe0dd442314c38ab31fbf044d7f1445997647b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-attack_1-5.png",
+      "bytes": 48779,
+      "sha256": "8207b5c647db5daf7db3a19636b5e55759990b57bbdbe202033953d0e16605b4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-idle_1-0.png",
+      "bytes": 47299,
+      "sha256": "67e73fedf06320a29e9d912e76252e5ac95c776a7ed8d04af188a0273627edfc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-action-idle_1-1.png",
+      "bytes": 47268,
+      "sha256": "281ff9519c23bb9e71f46780262fa7ddf14a500d9d5aa9145a23de3f37aa99a2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SE-pre-idle-idle_1-0.png",
+      "bytes": 47189,
+      "sha256": "fdb9e333095037881c3dda33b1cab628d36a7afefe4dd2b3a24e1522f9070444"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-0.png",
+      "bytes": 53020,
+      "sha256": "76b60bef71596023a39bb9480e1e47e022d5abeac70b46e38f3f271b94c466ee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-1.png",
+      "bytes": 54840,
+      "sha256": "111b1de2e36849af47942e3cd52a764c973b67edf063a53e43b4cfd3af0cdb72"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-2-strike.png",
+      "bytes": 51646,
+      "sha256": "f9ba42402272008dd548989181de4abe549f1821c13f6392e408c319a384604d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-2.png",
+      "bytes": 51585,
+      "sha256": "20dd4664718259c2940448650802d8bde8354578b0ef18b80290c1fc92239e7f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-3.png",
+      "bytes": 56101,
+      "sha256": "4dbc8c36374939b93912bfe8f4044cbe0f175d868f24dfa7793e3ea993f53f97"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-4.png",
+      "bytes": 53456,
+      "sha256": "6a7d21f02b3c46d3b70df507ab2ec353dcd11e739e40947dc8506a66ae4fc843"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-attack_3-5.png",
+      "bytes": 52579,
+      "sha256": "a6f7f27b9911da380c474f121cb62264a17055d51cee40ce592609ba07f70d9b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-idle_3-0.png",
+      "bytes": 48828,
+      "sha256": "e5bcb18557c972e23b6f7fb50cdf8470942272ea6f07f6255dc08723994aeea3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-action-idle_3-1.png",
+      "bytes": 48835,
+      "sha256": "2d1b9decc80babe822151e9c5547447e0f9b8922622843d33388f4a8dd0688f3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-SW-pre-idle-idle_3-0.png",
+      "bytes": 48834,
+      "sha256": "fc2bb255d3ab78cb99813bf316b7a52444c3f44525503a85d1d1cb9686b89f38"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-0.png",
+      "bytes": 49846,
+      "sha256": "06880e9f2229debaa38efeb27e5136d34016738bc8f7241f060a18a1a38ff612"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-1.png",
+      "bytes": 49438,
+      "sha256": "855c743f358634fdfadf203bede74b3f5ca549bbde05a0d828db666be227edf5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-2-strike.png",
+      "bytes": 48774,
+      "sha256": "20ada7848f05273299a9efd977fab9ee9a1fa95d1ad6a37ec6fbc81b7492c209"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-2.png",
+      "bytes": 48387,
+      "sha256": "64744d4caaf3dee74baa90c993ff963b02ec5d77293acf211ee77099910070d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-3.png",
+      "bytes": 52226,
+      "sha256": "781f485d7e5b0a90324bc16fd0307ca679173927bb9fd14941314bff5d035e26"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-4.png",
+      "bytes": 48113,
+      "sha256": "72bf965daa4bb77a6f0133ef9f56c08f8bbfdf607cade8175c9bc66022658397"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-attack_4-5.png",
+      "bytes": 50502,
+      "sha256": "999f8bd1bfc9608219eb078bb2b682460d1b686681583f72b411aa2aa95d5cf8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-idle_4-0.png",
+      "bytes": 47386,
+      "sha256": "08d94a4bbd4b0be5f94bb829ef42406d47f1004e1298897c418b5a1ed5a99116"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-action-idle_4-1.png",
+      "bytes": 47645,
+      "sha256": "4fba63c81046336bac59090e880bcfa8ebf27495a11db7420ad8a91454838c0b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/captures/attack-W-pre-idle-idle_4-0.png",
+      "bytes": 47451,
+      "sha256": "7db36083ef1a8af855dc2cd29089f34171cb6c2be993e1b8875b23e911f6b22e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-attack/samples.json",
+      "bytes": 521336,
+      "sha256": "f329d8faec408a86775f5637bdc330b6b61354b035ceec85773bd2a379e9c504"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-action-death_2-0.png",
+      "bytes": 56143,
+      "sha256": "699ac13f462f616b28cbe032ada4d5d2be512052899929c4a7a3e85dba9a7fd3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-action-death_2-1.png",
+      "bytes": 53220,
+      "sha256": "67d035f196e03db28a1de392ac45bac67bc4a8585883e60a80eedd70f731514f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-action-death_2-2.png",
+      "bytes": 50940,
+      "sha256": "4d2db351aafa36b3c890ee817c342126b7fb34b0c26436a699f952872dc722f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-action-death_2-3.png",
+      "bytes": 51699,
+      "sha256": "2df8c9aac1da336ba6b3374b7d9f58b344fdb070a8740714b89384ed5629aa26"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-action-death_2-4.png",
+      "bytes": 55228,
+      "sha256": "134b765e3e2f1f55d06c433fece2b9d436ae24a3710351ab4e02e09a850a5ff3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-action-death_2-5.png",
+      "bytes": 56844,
+      "sha256": "89cf02e7e6182514fd71ee8d71300e011e0a0abc8f0b4b20969fa38e82fd2b5d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-pre-idle-idle_2-0.png",
+      "bytes": 48495,
+      "sha256": "2e6ab2d34e1dff29160de016a75485b42e90bb4c278fbfd1aac26cd9f70f139e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/captures/death-S-pre-idle-idle_2-1.png",
+      "bytes": 48772,
+      "sha256": "6158c86005f8149cad9f335a08da976bb0d8a196f0385e9a13c03628b36f5311"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-death/samples.json",
+      "bytes": 49832,
+      "sha256": "c7a3846c3465be74eabd793b66323f5b67c937285dccdae6a16d7f931aa836f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-hit_0-1.png",
+      "bytes": 57332,
+      "sha256": "6c6da5d22c22ec6326e74dd0c7538ec409238102a8f33666e9d4222f84e8d176"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-hit_0-2.png",
+      "bytes": 58396,
+      "sha256": "90ee0fb5c1939b274d764f91aef264bfb196b2829a5b3cba95e41630a02ddbdb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-hit_0-3.png",
+      "bytes": 58257,
+      "sha256": "451ae678abfd9151b9ca8a79607e907752100304fbb3b7f1ed0dbc54f051d431"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-hit_0-4.png",
+      "bytes": 56526,
+      "sha256": "98c6ed6e82e31ff89b3695454c5274cf9b7399b3b67af08f1f107f3ba32c9d49"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-hit_0-5.png",
+      "bytes": 56037,
+      "sha256": "d6784ba1dbab3537772c9726f4fbdf338e76e95dac715e1daeb48463232a79ed"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-idle_0-0.png",
+      "bytes": 50330,
+      "sha256": "e284e7c95ab5b0c4aa98dcd35391ba0112e84f7956ef34ff5f285037ac5112af"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-idle_0-1.png",
+      "bytes": 51310,
+      "sha256": "aa0e476fff6760bbab9e7fa499409e4a7f5523f0cfd8a753789572cff624bb1f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-action-idle_0-2.png",
+      "bytes": 52812,
+      "sha256": "fa2ce75fa7a991a393d29eb6b87df120ea76377d4b1680cc66cf4a2e9cdc1076"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-E-pre-idle-idle_0-0.png",
+      "bytes": 50077,
+      "sha256": "c51b0baf272de3b92798e04b0b3c93584cdb7c12912a9ceb7aa24b81ec672a26"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-hit_6-1.png",
+      "bytes": 50777,
+      "sha256": "e82a3d604bf34b8dab6af803678b4041e561305896e7313acbaa79beb0483193"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-hit_6-2.png",
+      "bytes": 51082,
+      "sha256": "fabcc9708b6be0c759c4f22a767223655d3e5e5897fbfb43c453f32c03f88cb7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-hit_6-3.png",
+      "bytes": 48374,
+      "sha256": "cd2a3322b112ed06d67c809da67d642cc6686f517c16e26b9fd4ee87cc42c737"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-hit_6-4.png",
+      "bytes": 50068,
+      "sha256": "2a8e815808d73550e75b564713a991c0586791c92c6a529342e870fc121b8c21"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-hit_6-5.png",
+      "bytes": 47956,
+      "sha256": "764eac5b02f12ce288c5d8bee10ce37ef873511f3193e6bff484b3264a08a635"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-idle_6-0.png",
+      "bytes": 49035,
+      "sha256": "dfda23ec2e1dc18db4008beecc5d8ca128196cb4eb833a0038817b92a7aa4ada"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-idle_6-1.png",
+      "bytes": 49620,
+      "sha256": "72efeec676e3bce20802e904689b7cc623a213b5d51c007fdf591d0b1b87e7d3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-action-idle_6-2.png",
+      "bytes": 51565,
+      "sha256": "9a7392fdea6c137f1046c65b7d4fc50d045e3bf2cd0c6182d4cc6b35d74f7c94"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-N-pre-idle-idle_6-0.png",
+      "bytes": 48671,
+      "sha256": "cea2541a2504b3c05731592b4f47356f8f205dd241e23cca8cbcfefb8a5aefaa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-hit_5-1.png",
+      "bytes": 50998,
+      "sha256": "127a3e293bd40fe7071dd870639f23c745bbdc5e5c86a50fd60b3eb60411e090"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-hit_5-2.png",
+      "bytes": 51246,
+      "sha256": "ac00925a1d4f2906228cb86769dffaf4ff7afb9930357cf8aa40f76e9d764667"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-hit_5-3.png",
+      "bytes": 50834,
+      "sha256": "66bae47c9cdb3d5f706d420b3b94762a81effde9627b9994b2d0e0b511e095a8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-hit_5-4.png",
+      "bytes": 49633,
+      "sha256": "d8ce542a590172768a54fde5a6c20db8d4db72bf4190230d1253378080e14439"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-hit_5-5.png",
+      "bytes": 48070,
+      "sha256": "5620593780fc38d5cdb2f099c17382c0e45869f1126fdf4fc57f54ce47d00d75"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-idle_5-0.png",
+      "bytes": 50698,
+      "sha256": "4e317f9950895deed55bae73314c978c6da10f5afd93e35e3c5cecaf67bd564a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-idle_5-1.png",
+      "bytes": 50225,
+      "sha256": "4ea3981248c4f9ed043f22d9678d76e828901bd30b923eb10b4ee8571f551ece"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-action-idle_5-2.png",
+      "bytes": 51406,
+      "sha256": "95698fdbcdc7789c613751f5da0aaa568140596a19566579e569c97cecdd56cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-NW-pre-idle-idle_5-0.png",
+      "bytes": 50152,
+      "sha256": "0eeb2c0dc917e5d4b1a7641258c4f6a92b03e10953f6ed5390d07609fe0bac8d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-hit_2-1.png",
+      "bytes": 55162,
+      "sha256": "607eb07553173484f101d5f33d095267b56447a5426d595c00a8d455c9c85193"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-hit_2-2.png",
+      "bytes": 55954,
+      "sha256": "076ca8ae2a22c5ff8ecf3e0f1a3764f94dc75726487d94752b48a16d2832e6c6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-hit_2-3.png",
+      "bytes": 53991,
+      "sha256": "f02cf1e99ba291d29adecb65460299b9955e259405d0ba0cee214ee6d9eded23"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-hit_2-4.png",
+      "bytes": 52027,
+      "sha256": "242104a8a12b5e4776ed22887f323761d63819e8b43f5ea0f0c7986353a294ad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-hit_2-5.png",
+      "bytes": 53023,
+      "sha256": "373b8524b90800500b57ffc23b49187161b2a394ff7eb9a69a04202681050d3f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-idle_2-0.png",
+      "bytes": 48435,
+      "sha256": "1db002b0edd2129cfa7bf26ca464349e8ac3f8a60055d2af254b9f95367831c2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-idle_2-1.png",
+      "bytes": 48404,
+      "sha256": "699d89bda43ad3377f2379352b072cf3bc65a24175aad2f0c6b4d2dfe09bf91f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-action-idle_2-2.png",
+      "bytes": 48806,
+      "sha256": "b03c10ea5828928aea123688fdca711e9db4c0366f97ba4be27ee1c0213c716f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-pre-idle-idle_2-0.png",
+      "bytes": 48145,
+      "sha256": "637b064f85a601767a5947437a7061f1f89146ddc316be1a1d2dabd370321ac7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-S-pre-idle-idle_2-1.png",
+      "bytes": 48335,
+      "sha256": "44e60e5b7df0f98c3aff1df5815e58a7f5568b0db51606fe5784ee55fd764f0d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-hit_1-1.png",
+      "bytes": 52748,
+      "sha256": "bfd8a4fbc5fcecc3fa537a65d9ff308431ddd15184ffffcbdb18711252ebfdbe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-hit_1-2.png",
+      "bytes": 54149,
+      "sha256": "b3155452d13ee2394aabcfab9e34ebfdcfd7107aa1fdde46b273a33cdca2e18d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-hit_1-3.png",
+      "bytes": 50336,
+      "sha256": "5088891ed304329f61b2fb015165046eebb08422252a33393d9f6a1765272e06"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-hit_1-4.png",
+      "bytes": 51430,
+      "sha256": "3d910d8376a065bdc5f9546a9a23eca8c7a5f58856295e37806a61b7da86fac2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-hit_1-5.png",
+      "bytes": 50636,
+      "sha256": "b1ee9578385dcf840298051d3218b731bcb39f36ede742605c24448a954c93da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-idle_1-0.png",
+      "bytes": 47096,
+      "sha256": "c636586f3c936e26c2ffea3ff1dcb42019fe9835b1da46620550cfb2d76ed263"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-idle_1-1.png",
+      "bytes": 47074,
+      "sha256": "9c2f09d66c84eb89c1142800de4c411f8c3c68726b638077353a7d0071fbf75a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-action-idle_1-2.png",
+      "bytes": 47352,
+      "sha256": "76e9a383dc63bd93dfb125afdc4e370bb6f5cf4df1fba81d46ac116d08b2631a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SE-pre-idle-idle_1-0.png",
+      "bytes": 46598,
+      "sha256": "18425d246c7bb448926af3ae3b4ac126d119966b2ee8080ec4803a5c5c0b52d4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-hit_3-1.png",
+      "bytes": 54175,
+      "sha256": "c2ba5a0fd01d77a4afcf2dfb1c9b41fcbeed8c807fe579cc77344cacdbacf88a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-hit_3-2.png",
+      "bytes": 54442,
+      "sha256": "27320ba3662bc438baf129d40254bafead4a19d22652def7655b5b089f24deb5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-hit_3-3.png",
+      "bytes": 52207,
+      "sha256": "5080e82d7bc43806c4c1923e0ae2180dc485eaf08bfea3c9beb63a7bf5cb0ca2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-hit_3-4.png",
+      "bytes": 52817,
+      "sha256": "ac8491476315a07f210a6d0c8e9f4088a8f0f18e866a2e74617fc07c250c1e62"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-hit_3-5.png",
+      "bytes": 51112,
+      "sha256": "229e7edfee94bda6153cc80a164f0e66525d0c55b73e279f826844dc147bb4d0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-idle_3-0.png",
+      "bytes": 48466,
+      "sha256": "89899c3727c6717d84039b796b639c1f8c082f1b0c204cd91a460340ae610bfc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-idle_3-1.png",
+      "bytes": 48510,
+      "sha256": "94994d4924c1eb6b47e84654d27a42583d8d7acda27e811b9dd60d5746831144"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-action-idle_3-2.png",
+      "bytes": 49044,
+      "sha256": "2f894406ef995325bb7740f27460c23a78d51c2fa7a396fba96ba2badc56542d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-SW-pre-idle-idle_3-0.png",
+      "bytes": 48304,
+      "sha256": "6d7915b3b567d060416a82109438c175d58118c07877123bc9f4b7a111027f05"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-hit_4-1.png",
+      "bytes": 54021,
+      "sha256": "a70c8882702cf5ea56695d1040279d0bed2eac7f4b50414f8932dcfabe3a87e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-hit_4-2.png",
+      "bytes": 53890,
+      "sha256": "2f35c191d67228dc1e57cf3a76ae21979a18754914f570436f92ec1c632ee45e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-hit_4-3.png",
+      "bytes": 51665,
+      "sha256": "81d34cbe611a4cb674ed18f294d3c69398b267b3fbe4194f2e8b341e2429f537"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-hit_4-4.png",
+      "bytes": 53803,
+      "sha256": "925baca7d825359fa2c0c9e6ee8ba32e7eb083e6ad99b11f005f8e96e03a170f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-hit_4-5.png",
+      "bytes": 50909,
+      "sha256": "5d8ec549bfb6b883e201ff9792bda5c1279a700a7f55b97928c4cead6856fee5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-idle_4-0.png",
+      "bytes": 47111,
+      "sha256": "1f48d7e945772427bd07c9d237d7a0ba681c54269723483274d9872a29616a05"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-idle_4-1.png",
+      "bytes": 47386,
+      "sha256": "64a4fb2ea42101e98f259af26d94ac258e7b3d2b9dd60b73524ed97cff834a33"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-action-idle_4-2.png",
+      "bytes": 47641,
+      "sha256": "74293681e3911dc2e6c8c3d36d61298ef50649c877990e20af6c2940da648089"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/captures/hit-W-pre-idle-idle_4-0.png",
+      "bytes": 46717,
+      "sha256": "e4a59cf029747c069d071c487e29dd10bb7bbb581a82ed9f71946c3ab184d812"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-hit/samples.json",
+      "bytes": 197294,
+      "sha256": "1f093084295b288cc718205c89ca45993a09241a9f9555d81297b56bc3a1fc91"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-action-idle_0-0.png",
+      "bytes": 50134,
+      "sha256": "cb170f7001f848b287320e515ea7e039b7db748c82ebe5062198b27f43250c16"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-action-idle_0-1.png",
+      "bytes": 51791,
+      "sha256": "61f731e776ea799c98f739764eda7dff298b63791749fdde906234077cba1c4d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-action-idle_0-2.png",
+      "bytes": 53135,
+      "sha256": "bbc953b88fa03ed8fa870dce77054f28e3a039830b3355722f399c7b0bbe7076"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-action-idle_0-3.png",
+      "bytes": 51492,
+      "sha256": "bbc7947d24ffbd355f54bba3a3e560304d2b703a3b38dbce809893d088babfc2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-action-idle_0-4.png",
+      "bytes": 50893,
+      "sha256": "bbd45df945f07120c8bfc26b6c9d4e95b95be69b0fa2501c1448d0cafa1f3984"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-action-idle_0-5.png",
+      "bytes": 49658,
+      "sha256": "4345130a75047e44343d2e56839ca13f62ddc34ddc6e4067616a5b3170a3ef68"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 50160,
+      "sha256": "4ec9b2216f8dc5123bd3c170bf9658e21985c9664ac2dddf91fb33d0dd67a818"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-action-idle_6-0.png",
+      "bytes": 48795,
+      "sha256": "afa32d844e316653d0a5ecf6f9efdc6fd47089f9b93d9b82ae91b7cbef82a58d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-action-idle_6-1.png",
+      "bytes": 50053,
+      "sha256": "7a2251d788028ac167c0f50e216486f079340b6061cde0ef50cb9cf45d702c8b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-action-idle_6-2.png",
+      "bytes": 51847,
+      "sha256": "c26260d297c159c2f21ed7c5d7d8d3c2f8a15325a8d7afe1611f046ffd51697e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-action-idle_6-3.png",
+      "bytes": 51449,
+      "sha256": "976aa2626d216811a088f096960e34f16d6f07b276b89832e048deb742e81eab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-action-idle_6-4.png",
+      "bytes": 50414,
+      "sha256": "2a29fa126dbbcba99f767681de5f19e5a73b920886818bb7dfa21741062271cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-action-idle_6-5.png",
+      "bytes": 48637,
+      "sha256": "12cf77aec4d482604340b206ae7e058624370d63783fbb1364e58c487790f64e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-N-pre-idle-idle_6-0.png",
+      "bytes": 48748,
+      "sha256": "efcdb91904f95cd9c6aec179fd62de3e450b8978d6962d92f208b708e9f3fb2a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-action-idle_5-0.png",
+      "bytes": 50103,
+      "sha256": "bd3e3e3095a9936764eac50ca147940096189cd509e9ebedef71aeeab18fc32e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-action-idle_5-1.png",
+      "bytes": 50244,
+      "sha256": "92ed9cee92ad65222663bee4cdc49bcbe1c2e9cdac44217ce4bfe78dcec1813b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-action-idle_5-2.png",
+      "bytes": 51285,
+      "sha256": "538443f0ca7a15be60c6df31e52fa6b2d52829c24561d07ea2c0a583affa080e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-action-idle_5-3.png",
+      "bytes": 51989,
+      "sha256": "cc5ec351ab5faae0ace5e4ed37c27a1f46e734d777825a9a4abfe639633f613a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-action-idle_5-4.png",
+      "bytes": 51536,
+      "sha256": "6a121517eda82fdf495f520e79f4b2ee01ff1568069d479005f8d49b35759523"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-action-idle_5-5.png",
+      "bytes": 51107,
+      "sha256": "9a9ef42be9ed6ec247bbf40ed7636c292ede329c43d43ec2f09f0d68d62d239c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-NW-pre-idle-idle_5-0.png",
+      "bytes": 50081,
+      "sha256": "44e9dfe99748ef62b6baf0973235676064b5e59c4eaf4d6932b977547a3cd303"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-action-idle_2-0.png",
+      "bytes": 48289,
+      "sha256": "4d234fb07383fbab243d1fe1884cce11f5d87332bd21fef10b5ba1ec2d36898b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-action-idle_2-1.png",
+      "bytes": 48304,
+      "sha256": "d8b91c4d9580f74e5663be0095b12742a4e2fc2af4f2c48f2867c1e2938aad99"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-action-idle_2-2.png",
+      "bytes": 48933,
+      "sha256": "cf0133d5d89579de4eb86a9bbd04c2b0eeef169cc39eb43e3092f439776e5b7f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-action-idle_2-3.png",
+      "bytes": 48393,
+      "sha256": "401ef7cd3315dfff7337a6b9181650b31fbf4e8b5a18057b79925c0be75d11cc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-action-idle_2-4.png",
+      "bytes": 48315,
+      "sha256": "68a5757b5ff4ba4b26abafa24f8431fc28c6ab72a7bd1b45c9e8bbda1d8f354d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-action-idle_2-5.png",
+      "bytes": 48350,
+      "sha256": "8cef9e4b1dd47955d37799cd95b94725300b6eff68698ec0dd3708961c706a76"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 48270,
+      "sha256": "be4d23fce12337785cd25258c8e9437508da6e97bfa7442d8085ff1e22d42da1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-S-pre-idle-idle_2-1.png",
+      "bytes": 48454,
+      "sha256": "7cc0a28c8546e03da68b1045b50c8fb85dee64584307c03cd3e9a7834e5ed1f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-action-idle_1-0.png",
+      "bytes": 46629,
+      "sha256": "da391312f34dcdd99f728c9384edddba25078dc61e1b31c70b3d02422b0e5b17"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-action-idle_1-1.png",
+      "bytes": 47066,
+      "sha256": "226cdbebbca8b4efc5f737f0d5a402eb12cef804a770d91c7a596fd444243d9b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-action-idle_1-2.png",
+      "bytes": 47276,
+      "sha256": "5cd6d97f3e9469f48ef5dc7fbdc8addbbc997585c067d8046fe91b58e63c40cc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-action-idle_1-3.png",
+      "bytes": 47398,
+      "sha256": "d0d13b48224bf352c6b1faec086ba7dfad71ea2ace3a051e817ca2011d12b9d6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-action-idle_1-4.png",
+      "bytes": 47351,
+      "sha256": "cf7a54a9b202abbf14b53e7ebf7c6b90cbafbfefdd41fbfd8943dfb7d9ebe4a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-action-idle_1-5.png",
+      "bytes": 47020,
+      "sha256": "4d147f5c489e43520aec39c6b2cbdc11c750a36c9ceffeb0e98d7481edf743c2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SE-pre-idle-idle_1-0.png",
+      "bytes": 46694,
+      "sha256": "1b3f46e2341c7e660bd6d40352f68cc87f4812982069e7719505e6d1aaeb4680"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-action-idle_3-0.png",
+      "bytes": 48447,
+      "sha256": "b8b1fa6ba294c28eaee4127bab57e8c13d899ee416aaca013dfd391999665e9d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-action-idle_3-1.png",
+      "bytes": 48848,
+      "sha256": "286ecdb83f61a50cc6970833379c21e1f959f40a0023bec10c6e8f4eb3222a31"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-action-idle_3-2.png",
+      "bytes": 49483,
+      "sha256": "5bece4d1638e62eae12c999c9761cf013bcc9cf64aa67df2f6da9c9ec12642e6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-action-idle_3-3.png",
+      "bytes": 48680,
+      "sha256": "fbd0d364ec871d935edddce075f55c3281ae71a86e1eeed2d76a19ff43686709"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-action-idle_3-4.png",
+      "bytes": 48907,
+      "sha256": "15065b37b578e5b08f29e63228838bf54f85b89dd21d907ae0227e304628ef05"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-action-idle_3-5.png",
+      "bytes": 48655,
+      "sha256": "f489e7e5d49bb7aa8809becaf02d450948cb15030688cf80d131629cc27dacbc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-SW-pre-idle-idle_3-0.png",
+      "bytes": 48486,
+      "sha256": "705e8df7d22dfd8f383b9fae3352d9762d3e86bc3f5c37a65ffc2d74fc5bbba3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-action-idle_4-0.png",
+      "bytes": 46968,
+      "sha256": "8e87746f2edabfe58d102cc9e94c6298b70258f10e5dfdb20af1676ce8284c5f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-action-idle_4-1.png",
+      "bytes": 47643,
+      "sha256": "951b9b0b6078f6f51886a5918aa75d5eea562afb36063b1ce11b9efa98e33bf2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-action-idle_4-2.png",
+      "bytes": 47823,
+      "sha256": "e29acf94013b78d09d3882d8871b3b159f2d9270148e6442e04accfff74da824"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-action-idle_4-3.png",
+      "bytes": 47808,
+      "sha256": "5f56332251bdd0d9131f5734265c4d623542778ddf9e95a08a796eab20d78416"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-action-idle_4-4.png",
+      "bytes": 47533,
+      "sha256": "a682724b7aec63d6481c57b3cb939597992d8ce9e8a69e052ccd8fc816295fff"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-action-idle_4-5.png",
+      "bytes": 47404,
+      "sha256": "241717ed520c90f8cb0b01c104cb61b7182be471d80b106c21c24cba688f3325"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 47073,
+      "sha256": "39cabc67fe6ba7a40566f1b79edea9144df6dead1a2d424a638f97d52a8babf1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-idle/samples.json",
+      "bytes": 374178,
+      "sha256": "d42ebdd682c35c1fc9fc091412e482d4d57b8b8c9fd292aac25100937104e92f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-action-run_0-0.png",
+      "bytes": 54032,
+      "sha256": "0b867a095c70fb0808b4dc50fb93fe72481ce71f40fa3d92aefcdcc55512014f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-action-run_0-1.png",
+      "bytes": 52980,
+      "sha256": "1d080517f854e1b9ecd63ed940b6fb35f1e84d7aa18d14ac55e3dbc726ae7056"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-action-run_0-2.png",
+      "bytes": 53768,
+      "sha256": "0358b33acd2e8becbbda9834e97939f75a81125b1daac5c52e6f538858311f2d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-action-run_0-3.png",
+      "bytes": 52624,
+      "sha256": "9aabed47a09c2d83c1031e7f0992d6eec2a98e4e685254c8ba065c32f2a97186"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-action-run_0-4.png",
+      "bytes": 51966,
+      "sha256": "f9250b955ca07cefd5a96e97d792793830be43ff0aa584ae45a91b1921d8ffc3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-action-run_0-5.png",
+      "bytes": 52566,
+      "sha256": "d03cae3bc5c976add19631fbb87973007628f540d4423ebbed3b228ee6fe23f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 49976,
+      "sha256": "24d7a630f4fa72604135240070b673a221529b6b026895bc758cce465149a572"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NE-action-run_7-0.png",
+      "bytes": 48009,
+      "sha256": "af9c11b9ada5c79854e12f19312ece4d971d5be2cdd1e45de2770c4af4bcf5a1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NE-action-run_7-1.png",
+      "bytes": 47633,
+      "sha256": "a846f1149b2a0fb6670162ec709179e8f820961e1efb7563b095075f1e41edc7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NE-action-run_7-2.png",
+      "bytes": 48062,
+      "sha256": "aedbd2eb1aa0ede9600856e404176248d5cd659e22bcaea478e916f8e7915c73"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NE-action-run_7-3.png",
+      "bytes": 48490,
+      "sha256": "cf9a13836d10dc973195609b00e4e972cdcf0c006e73cfd27656055245aaa9b0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NE-action-run_7-4.png",
+      "bytes": 47280,
+      "sha256": "62cf320d5e5ac58bd070b7ef31dd75270c449f9fe0b3ba269c2f8c2349f0bd89"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NE-action-run_7-5.png",
+      "bytes": 47612,
+      "sha256": "e4f7ba1f9b0c6b74371f513bba28a7e7776183f4eefb97234340520a335e9ac3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-action-run_5-0.png",
+      "bytes": 49321,
+      "sha256": "36da87e2b887117a2667fe4b1e25a16cde8988ca1951490518795f76a59a64e4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-action-run_5-1.png",
+      "bytes": 50068,
+      "sha256": "21751edad446493e3f8980ecf6b7a2a31fd057ec5f82c0a28c1a34e9d0b4de7c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-action-run_5-2.png",
+      "bytes": 51030,
+      "sha256": "31e3258d8d9f16b7d7149ad21fb96cd335324e0d61c3006997db82eae7f99c24"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-action-run_5-3.png",
+      "bytes": 50138,
+      "sha256": "a3930a5dc5b4b6fa64ab1c19a504d7564954176791b24fb6326f1d2c37c7de11"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-action-run_5-4.png",
+      "bytes": 49237,
+      "sha256": "c1523c62e2aeec565b5f3d6f9412117d65095030015b4d74c047cdbf0a16a7ba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-action-run_5-5.png",
+      "bytes": 49212,
+      "sha256": "3bc0d5e20331d701aed2addd97b0e3d4b037d533b1f53143d85a58e6bfc0a59d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-NW-pre-idle-idle_5-0.png",
+      "bytes": 50124,
+      "sha256": "6c7653c1eac184e564ca9385054523cc60300fe76104aebb85bf27d5278fbbe4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-action-run_2-0.png",
+      "bytes": 55857,
+      "sha256": "df1bbf29eafe6cd6338fd83665f38f8e7181d859e1e226d9c4efe6040d9fe691"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-action-run_2-1.png",
+      "bytes": 54142,
+      "sha256": "fc6990abf4a26e3c8ecbec5d6bb36ba500af6d3eb268e064c71af986f2bf09da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-action-run_2-2.png",
+      "bytes": 55027,
+      "sha256": "53feb93b11281b2987b98c96ac65608221c998576765799f08d96bc1c2e03d1d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-action-run_2-3.png",
+      "bytes": 55933,
+      "sha256": "7fb89ff24f6e6a04a74bee1fb2c3c7bfe49f67a53579e324743374accf6eb8d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-action-run_2-4.png",
+      "bytes": 54410,
+      "sha256": "14d7cd62e6c85a67a1d4c7d4fa2e8af9eae71ff2f22fb701b2c1d2876eb8f3b5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-action-run_2-5.png",
+      "bytes": 52638,
+      "sha256": "59eb10a5e3bd19a7504430ee3df66ee674c85cc57e0227701d465c8e5fa8a72c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 48156,
+      "sha256": "cc4afac72b0ad3bf3895f83ecd1da302fa776caced5d04cc03d07f61fba2655e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-S-pre-idle-idle_2-1.png",
+      "bytes": 48344,
+      "sha256": "7b0aac980a7f3575f7ea15bcee71b3988f0052500821c110e1d1ad349b7ad88c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-action-run_1-0.png",
+      "bytes": 54331,
+      "sha256": "931020625acf212e9540b88ed2ad8cb3855743d0926469f843fc1cfcf1ef5e64"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-action-run_1-1.png",
+      "bytes": 54313,
+      "sha256": "ee7249b7426c01c5a94c9a0124ded022caadb7eb107375f8feb50ff8f14ce74a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-action-run_1-2.png",
+      "bytes": 57136,
+      "sha256": "8ddc7dbbd805dad1958f5076f2e64b92b5863ee79b2a8d5f11be58ea583f65c0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-action-run_1-3.png",
+      "bytes": 55430,
+      "sha256": "610ed73c3e90a877a47ca472b0228ebfddf909678c6858b8930ac9a93cf640f7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-action-run_1-4.png",
+      "bytes": 55782,
+      "sha256": "b48e344b567a23965d8f86b0cba1e08c9a87c10bf097c1852795e685acbb2825"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-action-run_1-5.png",
+      "bytes": 55198,
+      "sha256": "6f7e9a870ca07e92c6abfda88ee251e96cb38b82b6c080cd99c3bf212109bf4c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SE-pre-idle-idle_1-0.png",
+      "bytes": 46586,
+      "sha256": "b3b584083e3d7c499dd9175f32efb0c5d95b900e2688595018b551b8f194608e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-action-run_3-0.png",
+      "bytes": 51902,
+      "sha256": "373c92aafc50e5c942c773ac7e5a515cffc9951748aa8b0720a6eec0b0039d63"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-action-run_3-1.png",
+      "bytes": 50592,
+      "sha256": "b9731c3eb044fdc9f87f06d17be7c7b897d6a8f6f584313891d5b4cfbd8dceb9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-action-run_3-2.png",
+      "bytes": 52329,
+      "sha256": "4682b9e1c6bdd1dd5634b0db155ff2c2a6545c1006939da540384810e7b584ef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-action-run_3-3.png",
+      "bytes": 51770,
+      "sha256": "c6ddee2d4e34c54c578a6fc9c8ac51a3565647c0721e76657bb7905b8b82e70d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-action-run_3-4.png",
+      "bytes": 53297,
+      "sha256": "6a3318a50fabed9c44574499ad4948688e7ef941a470ecf35b36bf85d638439b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-action-run_3-5.png",
+      "bytes": 52977,
+      "sha256": "0a797dc822995c12d207bfb0cc0b94bb6959a7da1df7881ada858ab56e22bb07"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/captures/run-SW-pre-idle-idle_3-0.png",
+      "bytes": 48288,
+      "sha256": "d5fb00f4000eb6fbeedb1a8b85b865a2682e40bd9230284a9651744714b736cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/isabelle-run/samples.json",
+      "bytes": 223623,
+      "sha256": "b87e8503775a89546072306b84549e34f0c73cf7864140a6ce183d049ac44ee0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/process.json",
+      "bytes": 246,
+      "sha256": "d9c3d38fb1c3949481ab2f8a701d90811952b6b02a4d4d9c263bc93a15fa71b7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/report.json",
+      "bytes": 23329,
+      "sha256": "a9dcf1c6094e88243db137ef4279afe6e225a63e6e70901d665fbf8aaee81e91"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed002/playback/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/save_batch.py",
+      "bytes": 4548,
+      "sha256": "f4194633e76dd92459a1c48ba959f9e2b5aded692f261377fd80f8cdfbb17ab2"
+    }
+  ]
+}
