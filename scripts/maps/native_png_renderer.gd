@@ -101,13 +101,15 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		label.text=str(portal.name);label.position=ring.position+Vector2(-28,-40)
 		label.add_theme_font_size_override("font_size",14);markers.add_child(label)
 	refresh_visible()
-	# Entry may decode synchronously before the first displayed field. Moving
-	# refreshes never decode PNGs or masks on the rendering thread.
+	# Decode only the entry tile synchronously; other visible chunks stream.
+	var source_position: Vector2=player.global_position/native_field.artwork_scale
 	for filename: String in visible_files:
-		if chunks.has(filename): continue
 		var row: Dictionary=visible_files[filename]
+		var source_rect:=Rect2(Vector2(row.position[0],row.position[1]),Vector2(row.size[0],row.size[1]))
+		if not source_rect.has_point(source_position) or row.has("foot_image"): continue
 		synchronous_decodes+=1
 		commit_chunk(filename,decode_chunk(native_field.png_root+"/"+filename,row,field.data.get("runtime_foreground",[])))
+		break
 
 func set_visual_mode(_mode: String) -> void:
 	# Preserve original source RGBA in both UI display modes.
@@ -152,6 +154,17 @@ func commit_chunk(filename: String, result: Dictionary) -> void:
 	for piece: Dictionary in result.pieces: add_image(filename+"#"+str(piece.id),filename,piece,piece.image)
 	access_serial+=1;last_used[filename]=access_serial;upload_count+=1
 
+func can_decode_without_thrash(filename: String, row: Dictionary) -> bool:
+	var need: int=forecast_pixels({filename:row})
+	var evictable: int=0
+	for cached_name: String in last_used:
+		if visible_files.has(cached_name): continue
+		for key: String in chunks:
+			var sprite: Sprite2D=chunks[key]
+			if str(sprite.get_meta("source_file"))==cached_name:
+				evictable+=int(sprite.get_meta("pixels"))
+	return decoded_pixels+need-evictable<=texture_pixel_budget
+
 func pump_stream() -> void:
 	if shutting_down: return
 	# At most one bounded source chunk is uploaded per displayed frame.
@@ -162,6 +175,7 @@ func pump_stream() -> void:
 		if wanted_rows.has(worker_file): commit_chunk(worker_file,result)
 	for filename: String in wanted_rows:
 		if chunks.has(filename): continue
+		if not can_decode_without_thrash(filename,wanted_rows[filename]): continue
 		worker_file=filename;worker=Thread.new();decode_count+=1
 		var job: Callable=decode_chunk.bind(native_field.png_root+"/"+filename,wanted_rows[filename].duplicate(true),field.data.get("runtime_foreground",[]).duplicate(true))
 		var error: Error=worker.start(job,Thread.PRIORITY_LOW)
