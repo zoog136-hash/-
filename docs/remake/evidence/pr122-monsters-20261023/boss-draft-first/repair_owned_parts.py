@@ -6,7 +6,7 @@ No inpainting, silhouette guessing, fixed-cell cutting or original PNG edits.
 Every source texel with alpha>0 must have exactly one identical RGBA owner.
 Six disconnected strong bodies and unambiguous alpha16 topology are required.
 """
-import hashlib,json,sys
+import argparse,hashlib,json,sys
 from pathlib import Path
 from collections import Counter
 import numpy as np
@@ -85,8 +85,10 @@ def repair(row,out):
     return dict(status='LOSSLESS_OWNED_PARTS_PASS',source=row['source'],source_sha256=row['source_sha256'],texture=dest.relative_to(ROOT).as_posix(),texture_sha256=sha(dest),geometry=g,proof=dict(**proof,**topology,subthreshold_fringe_texels=int(fringe.sum()),rule='alpha16 topology; alpha1..16 nearest proven foreground only',pose_regions_may_interleave_in_source=True,original_png_unchanged=sha(source)==row['source_sha256'],pose_pixels_invented=0))
 
 def main():
-    rows=json.loads((HERE/'whole-review-v01/structural-inventory.json').read_text())['clips']
-    out=HERE/'whole-review-v01/owned-parts-repair';out.mkdir(exist_ok=True)
+    parser=argparse.ArgumentParser();parser.add_argument('--review-root',type=Path);a=parser.parse_args()
+    review=a.review_root.resolve() if a.review_root else HERE/'whole-review-v01'
+    rows=json.loads((review/'structural-inventory.json').read_text())['clips']
+    out=review/'owned-parts-repair';out.mkdir(exist_ok=True)
     candidates=[r for r in rows if r.get('cause') in ('foreign_body_rectangle','omitted_foreground','foreground_ownership')]
     results=[]
     for r in candidates:
