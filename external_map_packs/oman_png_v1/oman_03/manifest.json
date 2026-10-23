@@ -1,0 +1,888 @@
+{
+  "schema": 2,
+  "map_id": "oman_03",
+  "source_map_id": 103,
+  "status": "REVIEW_REQUIRED",
+  "collision_status": "SOURCE_RULES_ACTIVE_PNG_CORRESPONDENCE_REVIEW_REQUIRED",
+  "occlusion_status": "MANUAL_CUTS_PARTIAL",
+  "png_sha256": "0dd54350ed407f06e1f4fae7fff6e70fe3d5640cef725de189e3a0b07a2d16fe",
+  "png_size": [
+    9216,
+    4608
+  ],
+  "source_grid_sha256": "959e6fcb4239b995baea1492fe084842552b11547b61767ede80420cfc587138",
+  "coordinate_evidence": {
+    "method": "NATIVE_48_24_CANVAS_IDENTITY_CANDIDATE",
+    "verified": false,
+    "reason": "PNG is 9216x4608, same as 192x192 source projection; wall/occlusion review remains"
+  },
+  "actor_scale_changed": false,
+  "navigation_regenerated": false,
+  "regions": [
+    {
+      "source_rect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        0,
+        1919
+      ],
+      "file": "ground-0-0.png",
+      "sha256": "4fe2bf46b2a15edd7c17efc6fe49e265c3be14a088aeafeeee09fd9fdeae1b61",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        767,
+        1535
+      ],
+      "file": "ground-1-0.png",
+      "sha256": "ceb5709b7b807a44c3948d2caf26660a6768630fa2d7865438707724a0267bb8",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        1535,
+        1151
+      ],
+      "file": "ground-2-0.png",
+      "sha256": "b3500ac41734af9694c10ba219253d457abf46eaef821c3958632fecfce5bc1d",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        2303,
+        767
+      ],
+      "file": "ground-3-0.png",
+      "sha256": "06699ffd04a74c8e1399a6c94c2067e0c4b589057eb1015ae07884d78fc733cd",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3071,
+        383
+      ],
+      "file": "ground-4-0.png",
+      "sha256": "4bfe46f48686fb7e54fe01f3ac029734e67206c94414270e8826161d78104932",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3839,
+        0
+      ],
+      "file": "ground-5-0.png",
+      "sha256": "4ed44218b86a237f0baa80563685040a0fdd0a13e2b2c05b40d160ad554f4015",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        0,
+        32,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        767,
+        2303
+      ],
+      "file": "ground-0-1.png",
+      "sha256": "d36a75d85adc0fb2a3b8f35ed3f07cd342a630ad7fefde241b7bba4f136f2890",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        32,
+        32,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        1535,
+        1919
+      ],
+      "file": "ground-1-1.png",
+      "sha256": "5190678044f17c4ed359e08cbb9a4282c712f89ea292144ea333305d789928d0",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        64,
+        32,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        2303,
+        1535
+      ],
+      "file": "ground-2-1.png",
+      "sha256": "6f8bfee1734bff390f905d16b57917790c69691a2ac479ef45b1d35a5390a6f9",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        96,
+        32,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3071,
+        1151
+      ],
+      "file": "ground-3-1.png",
+      "sha256": "2d25b7926c3cbc5e220ad4de37467894776d554a476b343c5c1610538a99492f",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        128,
+        32,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3839,
+        767
+      ],
+      "file": "ground-4-1.png",
+      "sha256": "b4e6b7ce264612d228a02ac5014a5b33f852804fc0a72a0fd0e570aff0824ebf",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        160,
+        32,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        4607,
+        383
+      ],
+      "file": "ground-5-1.png",
+      "sha256": "0ff6006d923fc8a53cf0ed8c5000c0cebe9a53c1ae7dc4db732c6f7f06d77e50",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        0,
+        64,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        1535,
+        2687
+      ],
+      "file": "ground-0-2.png",
+      "sha256": "5e87a39cc21be9cb33e0662c239691473930db2356350762054253d8ab002871",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        32,
+        64,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        2303,
+        2303
+      ],
+      "file": "ground-1-2.png",
+      "sha256": "d755ae506f3111d5c6e50293b20cb6e30a87f233fe15ac04ec39ecc1634b6f98",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        64,
+        64,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3071,
+        1919
+      ],
+      "file": "ground-2-2.png",
+      "sha256": "a1d97f2eb6708bea0cd56884fc961955f8ffdf8b9e63820e60fd8f09633193bf",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        96,
+        64,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3839,
+        1535
+      ],
+      "file": "ground-3-2.png",
+      "sha256": "efd25295d00ef471eb5f530c2341d6f253188999328de9b33562432ae2de6aac",
+      "cuts": [
+        {
+          "id": "stairs_front_trunk",
+          "image_origin": [
+            4563,
+            2132
+          ],
+          "foot_world": [
+            4588.0,
+            2276.0
+          ],
+          "foot_image": [
+            4588.0,
+            2276.0
+          ],
+          "provenance": "MANUAL_MASK_FROM_SINGLE_COMPOSITE",
+          "collision_correspondence": "SOURCE_STAIRS_REGION_LOCAL_REVIEW",
+          "file": "foreground-stairs_front_trunk.png",
+          "sha256": "4e86e95d682c15a5af84478745acfcc181c2a2059c3bd4847bd77a66384926b3",
+          "owner_chunk": [
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "source_rect": [
+        128,
+        64,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        4607,
+        1151
+      ],
+      "file": "ground-4-2.png",
+      "sha256": "7f1cc0af683bb47f90fead5e30f993ce908096e3ffa1664abf0d0055e1ac61a5",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        160,
+        64,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        5375,
+        767
+      ],
+      "file": "ground-5-2.png",
+      "sha256": "79238def44ead14089089f17c310c2ee1a95082a2d5d58a43595bf6451a3d9ac",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        0,
+        96,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        2303,
+        3071
+      ],
+      "file": "ground-0-3.png",
+      "sha256": "75a210e793f0ce7c14a78d69db64886fcaab5772778b77e9a9f30db854dbebd3",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        32,
+        96,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3071,
+        2687
+      ],
+      "file": "ground-1-3.png",
+      "sha256": "9729a7f1a53f889381ad514d543948b1f03cf5f4b501b03bee00f31f8b8f8da0",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        64,
+        96,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3839,
+        2303
+      ],
+      "file": "ground-2-3.png",
+      "sha256": "c14cff1164f4691b3e21e6c851e6c12a0b42e02f750b24c4c0ed1cbf36ca50da",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        96,
+        96,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        4607,
+        1919
+      ],
+      "file": "ground-3-3.png",
+      "sha256": "70cdfe00aaf625273f975189ddf488ef8138cf67c4eee5a313cde723ce8e32dd",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        128,
+        96,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        5375,
+        1535
+      ],
+      "file": "ground-4-3.png",
+      "sha256": "f98d0a5cc38899a085b3c96c009c857af0443d244576fee7415aac01a1ac7866",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        160,
+        96,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        6143,
+        1151
+      ],
+      "file": "ground-5-3.png",
+      "sha256": "9841084fe8439d8cd1317a30319acbe14b88a37794404583b3eed8823ca917ee",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        0,
+        128,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3071,
+        3455
+      ],
+      "file": "ground-0-4.png",
+      "sha256": "e33ec7aa15c718a12b1975ae0b886b8b8d3eccb337dadb65146f243cfa221983",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        32,
+        128,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3839,
+        3071
+      ],
+      "file": "ground-1-4.png",
+      "sha256": "484a2a8f43276d3612b4e24bd36575cd6f1e14265db3f942b07a2331c7ef5177",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        64,
+        128,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        4607,
+        2687
+      ],
+      "file": "ground-2-4.png",
+      "sha256": "9d7ac11377cedef0a4a44dfcb3cc8d9c8fb5bac3742cfeb69db908b1e3d2d7f2",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        96,
+        128,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        5375,
+        2303
+      ],
+      "file": "ground-3-4.png",
+      "sha256": "e82667eef8b9f37c34200bc1f865268b57038c1e0f16e0f8b909fa27d1fba796",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        128,
+        128,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        6143,
+        1919
+      ],
+      "file": "ground-4-4.png",
+      "sha256": "7a1dc76aaa39312964eaebc48ba0d0f94bfb544d0d37315557303a90cf449591",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        160,
+        128,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        6911,
+        1535
+      ],
+      "file": "ground-5-4.png",
+      "sha256": "ad679b693474dc384322f4541fa28f176a95fd965fb40f573d3535e57dafcfcc",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        0,
+        160,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        3839,
+        3839
+      ],
+      "file": "ground-0-5.png",
+      "sha256": "14301437402dead566b4dd14d82cdb4449d28b20e50deac0902d84d5046c6dfa",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        32,
+        160,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        4607,
+        3455
+      ],
+      "file": "ground-1-5.png",
+      "sha256": "4813e8e7522bb94ff702a4d3750e8733a4ed3329215844c23ade8504d146f54e",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        64,
+        160,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        5375,
+        3071
+      ],
+      "file": "ground-2-5.png",
+      "sha256": "1a87bdb55865f800aed0f8452abc6840d0af488a0a1f51f9fd2a5f27d9cdcdb8",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        96,
+        160,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        6143,
+        2687
+      ],
+      "file": "ground-3-5.png",
+      "sha256": "58add89150a2fda45e1ce45a43d1042a2db97b2f1c4b8f932a3c55d5563bf902",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        128,
+        160,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        6911,
+        2303
+      ],
+      "file": "ground-4-5.png",
+      "sha256": "ffd974799b7c3746a9e8467a6f6d0b0c2cdfe2b46793610c5d274428ab6e6446",
+      "cuts": []
+    },
+    {
+      "source_rect": [
+        160,
+        160,
+        32,
+        32
+      ],
+      "world_to_image": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "image_origin": [
+        7679,
+        1919
+      ],
+      "file": "ground-5-5.png",
+      "sha256": "a9d409e6732fbd1f4004aca0f63cf3b6cc5d2e846658c6f2ad2c2e7444421829",
+      "cuts": []
+    }
+  ],
+  "review_spawn_cell": [
+    95,
+    96
+  ],
+  "review_placements": {},
+  "manual_footprints": [],
+  "ground_sampler": "nearest",
+  "layer_provenance": {
+    "ground": "COMPOSITE_MINUS_MANUAL_FOREGROUND",
+    "water": "STILL_COMPOSITE",
+    "foreground": "MANUAL_MASKS_NO_INPAINTING",
+    "actors": "EXISTING_GAME"
+  }
+}

@@ -7,6 +7,7 @@ var reservations: Array[Dictionary] = []
 var aden_routes: RefCounted
 var aden_routes_attempted: bool = false
 var png_review_footprints: RefCounted
+var png_game_pack: RefCounted
 const BODY_PROFILE = preload("res://scripts/maps/source_body_profile.gd")
 
 func uses_original_gameplay_rules() -> bool:
@@ -143,6 +144,7 @@ func build_physics(parent: Node2D) -> StaticBody2D:
 	return body
 
 func close() -> void:
+	png_game_pack=null
 	png_review_footprints = null
 	region_cells.clear()
 	aden_routes=null

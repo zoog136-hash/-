@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 from png_layers import split_foreground
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -182,8 +182,20 @@ def build(sources, plan_path, output):
             image.save(output/(mid+'_source.png'))
         else:
             with Image.open(sources/spec['file']) as original:
-                box = list(original.getchannel('A').getbbox())
-                image = original.crop(box)
+                original.load()
+                visual = original
+                mask_spec = spec.get('visual_void_mask')
+                if mask_spec:
+                    name = mask_spec['file']
+                    if Path(name).name != name or digest(sources/name) != mask_spec['sha256']:
+                        raise ValueError('Reviewed visual-only mask identity mismatch')
+                    with Image.open(sources/name) as mask:
+                        if mask.mode != 'L' or mask.size != original.size:
+                            raise ValueError('Visual-only mask must match the original canvas')
+                        visual = original.copy()
+                        visual.putalpha(ImageChops.multiply(original.getchannel('A'), ImageChops.invert(mask)))
+                box = list(visual.getchannel('A').getbbox())
+                image = visual.crop(box)
         alpha_solid_runs = transparent_runs(image)
         # Keep the minimap as the untouched original composite.
         overview = image.copy()
@@ -199,6 +211,9 @@ def build(sources, plan_path, output):
                         collision_scope=spec['collision_scope'], foreground=foreground,
                         layer_rgba_roundtrip=True,
                         foreground_scope='MANUALLY_REVIEWED_CUTS' if foreground else 'NOT_RECONSTRUCTED')
+        if spec.get('visual_void_mask'):
+            manifest['visual_void_mask_sha256'] = spec['visual_void_mask']['sha256']
+            manifest['void_mask_scope'] = 'RENDER_ALPHA_ONLY_NOT_COLLISION'
         write(output/mid/'manifest.json', manifest)
         built[mid] = dict(manifest=mid+'/manifest.json', sha256=digest(output/mid/'manifest.json'),
                           chunks=len(chunks), bounds=manifest['bounds'])

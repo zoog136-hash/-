@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "mode": "ORDINARY_MAIN_NO_PNG_REVIEW_FLAGS",
+  "main_base": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
+  "public_tower_png_delivery": "USER_AUTHORIZED_ACTUAL_TRACKED_RUNTIME_FILES_IN_DRAFT_PR_150",
+  "android_device": "NOT_RUN",
+  "whole_map_complete": false,
+  "import": "PASS_CLEAN_GIT_CHECKOUT_OFFICIAL_ENGINE_EXISTING_IMPORTED_CHARACTER_TEXTURE_CACHE",
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "PASS"
+  },
+  "private_pack": {
+    "archive": "twilight-tower-png-20261023.zip",
+    "bytes": 553535530,
+    "sha256": "716105d740074fc59f1f7efd9dafbfdf8ac58e2c92166b08941574aef4f29328",
+    "crc": "PASS",
+    "textures": 414,
+    "actual_installer": "PASS",
+    "negative_path_traversal_and_corruption_preserve_existing_packs": "PASS"
+  },
+  "tests": {
+    "tower_all_10_plus_domination": {
+      "checks": 475,
+      "failures": [],
+      "latest_foot_guard_and_bundled_assets": "PASS_AGAIN_FROM_CLEAN_GIT_CHECKOUT",
+      "verified_commit": "7d29688f78df430b42d3dc642097f3e974cdd4ec"
+    },
+    "latest_30fps_actual_movie": {
+      "checks": 73,
+      "failures": [],
+      "frames": 1271,
+      "fps": 30,
+      "native_physics_foot": "4px; 0.1px test tolerance",
+      "foreground_rgb_filtering": "COMPLEMENTARY_ALPHA_OWNERS_ORIGINAL_RGB_PRESERVED"
+    },
+    "scale_real_historical_saves": {
+      "checks": 50,
+      "failures": []
+    },
+    "compiler_unittests": {
+      "tests": 12,
+      "status": "PASS_CODE_FIXTURES_SEPARATE_FROM_ORIGINAL_ART"
+    },
+    "installer_security_unittests": {
+      "tests": 1,
+      "status": "PASS_CODE_FIXTURES"
+    },
+    "related_regressions": {
+      "initial": "13/16",
+      "two_new_compatibility_failures": "FIXED_AND_2_2_RERUN_PASS",
+      "source_render_suite": {
+        "all_10_floors_first_run": {
+          "checks": 5953,
+          "failures": [
+            "obsolete expectation that domination_summit remained authored with a capsule"
+          ]
+        },
+        "changed_fixture": "Use unchanged authored albino_04 to test capsule restoration. Native Domination correctly keeps a circle.",
+        "latest_focused_oman10_boss_npc_all_portals_and_restoration": {
+          "checks": 674,
+          "failures": []
+        },
+        "full_10_floor_repeat_after_fixture_only_change": "NOT_REPEATED; earlier floor business assertions passed; changed restoration path independently rerun"
+      }
+    },
+    "latest_domination_and_missing_pack": {
+      "checks": 85,
+      "failures": []
+    },
+    "source_png_ownership_fixture": {
+      "checks": 4,
+      "exclusive_pixels": 121,
+      "failures": []
+    },
+    "aden_faith_population_bosses_drops_and_all_routes": {
+      "checks": 1261,
+      "failures": [],
+      "actual_aden_travel_gates": 18,
+      "actual_aden_habitats": 17,
+      "boss_identities": 9,
+      "normal_deaths": 5,
+      "actual_ground_drops": 10
+    },
+    "native_catalog": {
+      "checks": 52,
+      "failures": []
+    },
+    "aden_faith_rendering_physics_saves_portals": {
+      "checks": 295,
+      "failures": []
+    },
+    "desktop_mobile_ratio_capture_and_occlusion": {
+      "checks": 76,
+      "failures": [],
+      "android_device": "NOT_RUN"
+    },
+    "github_update_png_autoload": {
+      "checks": 66,
+      "failures": [],
+      "maps": "all 10 Oman source PNG attachments plus 111 native field; no review flags or resource path overrides"
+    }
+  },
+  "open_local_regression": null,
+  "failure_attribution": {
+    "initial_missing_display": "TEST_ENVIRONMENT_SETUP_NOT_GAME_REGRESSION",
+    "new_bool_null_fixture_and_historical_revision_expectation": "THIS_CHANGE_FIXED",
+    "no_claim_of_preexisting_failure_without_reproduction": true,
+    "pr120_current_latest_checks": "28 checks snapshot: no failed conclusion; historical failure records are not reassigned to this change",
+    "pr147_current_latest_checks": "83 checks snapshot: no failed conclusion; branch unmerged"
+  },
+  "legacy_release_audit": "check_resource_integrity --release-dir expects TWILIGHT-original-resources.zip and asset paths, not a map-only ZIP. Map archive separately verified with its hash-pinned installer; no global original-resource delivery claim.",
+  "ci": {
+    "status": "PENDING_NOT_CLAIMED_GREEN",
+    "snapshot_for_code_art_commit": "7d29688f78df430b42d3dc642097f3e974cdd4ec",
+    "pull_request": "https://github.com/zoog136-hash/-/pull/150",
+    "tower_workflow": "https://github.com/zoog136-hash/-/actions/runs/39939760558",
+    "github_autoload_workflow": "https://github.com/zoog136-hash/-/actions/runs/39939761050",
+    "tower_workflow_snapshot_status": "QUEUED"
+  },
+  "authorization": "data/maps/tower_png_authorization.json",
+  "public_delivery_manifest": "data/maps/tower_png_delivery_manifest.json",
+  "public_evidence": "docs/png-runtime-correction-20261023/evidence/manifest.json",
+  "tracked_tower_delivery": {
+    "status": "PASS",
+    "tracked_files": 428,
+    "bytes": 553472728,
+    "textures": {
+      "oman_png_v1": 366,
+      "domination_png_v1": 48
+    },
+    "authorization": "data/maps/tower_png_authorization.json",
+    "all_original_art_integrated": false
+  },
+  "clean_git_checkout": {
+    "verified_commit": "7d29688f78df430b42d3dc642097f3e974cdd4ec",
+    "method": "Remove QA-installed tower folders; Git checkout restores both packs; no installer, no PNG path environment variables, no review flags",
+    "git_tracked_tower_files": 428,
+    "git_worktree_clean_after_real_game": true,
+    "official_engine": "4.7.2.stable.official.ed1daf0bf",
+    "godot_import_script_parse": "PASS; existing imported character texture cache reused",
+    "github_autoload_checks": 66,
+    "ordinary_main_tower_checks": 475,
+    "ordinary_main_sample_checks": 76,
+    "failures": [],
+    "remote_git_asset_roundtrip": {
+      "source": "GITHUB_API_BRANCH_CONTENT",
+      "file": "external_map_packs/oman_png_v1/oman_01/ground-0-0.png",
+      "bytes": 660962,
+      "sha256": "1525a8185cf4373ab52167401bc6a15d0759d3c0d9cd8fac83653c5cdb997c25",
+      "status": "PASS"
+    },
+    "android_device": "NOT_RUN",
+    "whole_map_complete": false
+  }
+}

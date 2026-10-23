@@ -14,6 +14,33 @@ from build_native_png_maps import ROOT, build, compile_chunks, compile_layers, p
 
 
 class LosslessPreparation(unittest.TestCase):
+    def test_reviewed_void_mask_changes_only_alpha_never_collision_or_rgb(self):
+        from build_native_png_maps import digest
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pixels = np.random.default_rng(111).integers(0, 256, (50, 70, 4), dtype=np.uint8)
+            pixels[:, :, 3] = 255
+            source = root/'source.png'
+            Image.fromarray(pixels).save(source)
+            mask = np.zeros((50, 70), dtype=np.uint8)
+            mask[10:30, 20:40] = 255
+            Image.fromarray(mask).save(root/'void.png')
+            original_sha = digest(source)
+            plan = root/'plan.json'
+            plan.write_text(json.dumps({'sources': {'source.png': {
+                'sha256': original_sha, 'bytes': source.stat().st_size, 'size': [70, 50]}},
+                'maps': {'sample': {'file': 'source.png', 'collision_scope': 'CODE_FIXTURE',
+                    'visual_void_mask': {'file': 'void.png', 'sha256': digest(root/'void.png')}}}}))
+            build(root, plan, root/'pack')
+            manifest = json.loads((root/'pack/sample/manifest.json').read_text())
+            with Image.open(root/'pack/sample'/manifest['chunks'][0]['file']) as image:
+                result = np.asarray(image)
+                np.testing.assert_array_equal(result[mask == 0], pixels[mask == 0])
+                self.assertTrue(np.all(result[mask != 0, 3] == 0))
+            self.assertEqual(digest(source), original_sha)
+            self.assertEqual(manifest['void_mask_scope'], 'RENDER_ALPHA_ONLY_NOT_COLLISION')
+            self.assertFalse(json.loads((root/'pack/index.json').read_text())['collision_from_image_colors'])
+
     def test_irregular_partition_is_exclusive_and_lossless(self):
         rng = np.random.default_rng(19)
         pixels = rng.integers(0, 256, (91, 177, 4), dtype=np.uint8)
