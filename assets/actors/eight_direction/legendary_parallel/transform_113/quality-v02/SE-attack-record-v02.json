@@ -1,0 +1,367 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "SE",
+  "role": "attack",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc112",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-source-v01.png",
+  "previous_source_sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-record-v01.json",
+  "previous_record_sha256": "893fa2236fe601bfc2da6fc4e2e1da1bdd7a5ee46e66a46276fcf84d8a506ad1",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "CORRECTED_SOURCE_DRAFT_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "113",
+    "direction": "SE",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-run-source-v01.png",
+    "sha256": "d746d2df75792cebde9ca4315812e682ed181f00e52474e4a7eeebd0dc1634f2",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "113",
+      "direction": "SE",
+      "role": "attack",
+      "cause": "identity_weapon_action",
+      "detail": "Original blue crescent energy bow is used as a raised/sweeping blade; the sequence lacks coherent nock/draw/arrow release seen in S ATTACK.",
+      "fix_kind": "source_equipment_action",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-record-v01.json",
+      "source_sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0237",
+      "slot": [
+        "transform:113",
+        "SE",
+        "attack"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:113 달의 질리언, SE ATTACK. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"identity_weapon_action\", \"detail\": \"Original blue crescent energy bow is used as a raised/sweeping blade; the sequence lacks coherent nock/draw/arrow release seen in S ATTACK.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-RIGHT, screen DOWN-RIGHT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Actual original-weapon attack: guard, anticipation, full windup/aim, active strike/shot/cast EXACTLY along the selected screen-facing direction, follow-through, living guard. Bow nock/draw/release; firearm aim/fire/recoil; real polearm thrust; blade cut; original magical cast. Never invent or replace weapons or use an unrelated attack type. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. WEAPON/ACTION IDENTITY CORRECTION: preserve the original BLUE CRESCENT ENERGY BOW. Perform coherent nock, connected-string draw, aim, arrow release exactly along the facing direction, and recovery. Never swing or thrust the bow as a sword, spear or crescent blade. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-run-source-v01.png": "d746d2df75792cebde9ca4315812e682ed181f00e52474e4a7eeebd0dc1634f2"
+  },
+  "request_preparation_clarification": "Exact frozen identity finding resolves the action class before any tool call; earlier unexecuted prepared request remains preserved.",
+  "schema": "pr122-legendary-bounded-quality-correction-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SE-attack-source-v02.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SE-attack-source-v02.png",
+  "source_sha256": "626b3ec2f45959c806b922b7db730838f68ec014fa680c34c9ee7588c61335e2",
+  "source_bytes": 2364772,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SE-attack-source-v02.png",
+      "sha256": "626b3ec2f45959c806b922b7db730838f68ec014fa680c34c9ee7588c61335e2",
+      "bytes": 2364772,
+      "source_kind": "new_bounded_correction"
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "f9ed6e31777aa7fa8bec18ecabc921143c20736bd0b9ff2d4f9ceb6d254f9192",
+      "normalized_visible_sha256": "527f3ae2889e9d945743ea829bc627f3d63a044aac3ee3bd185623c943956394",
+      "visible_pixels": 79135,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "afa33ed4d557f9d196de10f5bf84215ee0f7454def27911960c89d20be01731b",
+      "normalized_visible_sha256": "26c7bb56f3bfcdb8d94fe24829c129ba2840d7f61c4e9b11bb0ceec12fe5e1f1",
+      "visible_pixels": 75017,
+      "visible_height": 495,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        17,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "248b6de94b674796d4a10d2864a72e6e4e41a1a78c8fe5d53ab7de05054627f2",
+      "normalized_visible_sha256": "11cc6a4c0f0d6838845e8dc234d9b2db91a00eced5ab864bd809cc7ec0635797",
+      "visible_pixels": 79310,
+      "visible_height": 512,
+      "visible_width": 500,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        500,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "source_kind": "new",
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "ca4f64740122a24bf14bdf116eefc881d5db03fbf740908f7d7f02d30b5d5ddb",
+      "normalized_visible_sha256": "639be205ca40e1b6fa061fee3c330cbd3e2537db8783de60f21881335d862390",
+      "visible_pixels": 91046,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 139,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "370f1b9dbdc2beb36cf0a12b4c3078aa1831b9a0eaa7ac6614d6dcd5912ce91a",
+      "normalized_visible_sha256": "c354fab9a9dd28c3d686f1b82dd8c063e01440ad52295aed49c172a0a519f2b5",
+      "visible_pixels": 91131,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 137,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "source_kind": "new",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "ac8f952f742ec7192d5ed56e62b5dcb264295cff10608423a539dc18ee13e0cb",
+      "normalized_visible_sha256": "aba53846ad090df777eb59ac7f24eaaf0a857adbeb92401f1033430c15cc008d",
+      "visible_pixels": 78508,
+      "visible_height": 507,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        5,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "cell_size": [
+    512,
+    512
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SE-attack-SpriteFrames.tres",
+  "output_spriteframes_sha256": "a4319b734dc89f7838526bdea06619e374ad844544ce034a0c373bede1de544b",
+  "animation": "attack_1",
+  "loop": false,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SE-attack-raster-registration-v02.json",
+  "request_file_sha256": "a5bcf2afa0f5e895e258bd8c8d002ccf25985f7ec9a42ba7fa7d84b49ed4e1ec",
+  "generation_request_sha256": "b8211eed4721142fe1d5fe5e8cd56c152eed041d760c96bd194eedc3d5a7b422",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-4cdbd5b3-deb6-40e8-b705-993c5e817c32.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED"
+}

@@ -1,0 +1,132 @@
+{
+  "key": "transform:402",
+  "name": "세계수의 현신",
+  "grade": "전설",
+  "direction": "N",
+  "role": "attack",
+  "reference": "res://assets/catalog/7dd4f1199ec22252e98f0112.png",
+  "reference_sha256": "43e8d9b1a7dde25b54ccf2c746d32ef26faf8db986738537d55e62afa0e245a2",
+  "draft_guard_reuse": {
+    "key": "transform:402",
+    "direction": "N",
+    "idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-idle-record-v01.json",
+    "idle_record_sha256": "23bf3faefb0c51ae27476e3ed6bd574bd829a4bcbd93c4fe772f6655ee01a3db",
+    "idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-idle-SpriteFrames.tres",
+    "idle_SpriteFrames_sha256": "6d4f2076be5e484d97644b3ac4a7e673c16fb392308c41d297de16f9c3f7059a",
+    "source_visual_status": "HOLD_NOT_REVIEWED",
+    "reference": "res://assets/catalog/7dd4f1199ec22252e98f0112.png",
+    "reference_sha256": "43e8d9b1a7dde25b54ccf2c746d32ef26faf8db986738537d55e62afa0e245a2",
+    "source_files": [
+      {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-idle-source-v01.png",
+        "sha256": "811f2a0329b172407da935b0f92fef66cd4201c431ae98912cb78bc547945569",
+        "bytes": 2169561
+      }
+    ],
+    "guards": [
+      {
+        "idle_phase": 0,
+        "action_phase": 0,
+        "original_pose_id": 0,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-idle-source-v01.png",
+        "region": [
+          0,
+          0,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "3c2171733df38163de84a706d9949c54311ca83ffbf6f0a219318e408a162403"
+      },
+      {
+        "idle_phase": 5,
+        "action_phase": 5,
+        "original_pose_id": 5,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-idle-source-v01.png",
+        "region": [
+          1024,
+          512,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "6919ae0aa6b913ecf7bb2de2cea314c37f99aefc7d5a0f04e39d82177c574f95"
+      }
+    ],
+    "reused_poses": 2,
+    "newly_authored_poses": 4,
+    "source_quality_approval_inherited": false
+  },
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc003",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-attack-source-v01.png",
+  "previous_source_sha256": "208702b9826b6855aa719994102e3b3d8f4589a92000c3b724482c406997cd13",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-attack-record-v01.json",
+  "previous_record_sha256": "149ff2782e6416b13cfe50de6e91bcf5e435559f7633785da2342ea5ea8a41e0",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "correction_representation": "mixed_draft_guard_reuse_v1",
+  "correction_source_grid": [
+    2,
+    2
+  ],
+  "camera_reference": {
+    "actor": "402",
+    "direction": "N",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-run-source-v01.png",
+    "sha256": "93b204b7cfbc34838b22b945569c102c6db6880687cef6b0332de1b2f5c3194f",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "402",
+      "direction": "N",
+      "role": "attack",
+      "cause": "camera",
+      "detail": "Middle thrust poses turn to a rear-right/side presentation and the weapon projects rightward instead of consistently away/up for north.",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-attack-source-v01.png",
+      "fix_kind": "hold_art_direction_fix",
+      "status": "ERROR_VISUAL",
+      "review_origin": "front20",
+      "issue_id": "visual-front20-0019",
+      "slot": [
+        "transform:402",
+        "N",
+        "attack"
+      ],
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-attack-record-v01.json",
+      "source_sha256": "208702b9826b6855aa719994102e3b3d8f4589a92000c3b724482c406997cd13"
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:402 세계수의 현신, N ATTACK. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Middle thrust poses turn to a rear-right/side presentation and the weapon projects rightward instead of consistently away/up for north.\"}]. MANDATORY CAMERA IN EVERY CELL: full BACK, screen UP, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1024x1024, 2 equal columns by 2 equal rows, 4 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. The six-frame clip preserves existing correct IDLE guards exactly as frames0 and5; do not redraw them. Output ONLY four middle poses: phase1 anticipation or first impact, phase2 loaded attack or maximal nonfatal stagger, phase3 correctly directed contact or non-attacking counterbalance, phase4 follow-through or recovery toward guard. Actual original-weapon attack: guard, anticipation, full windup/aim, active strike/shot/cast EXACTLY along the selected screen-facing direction, follow-through, living guard. Bow nock/draw/release; firearm aim/fire/recoil; real polearm thrust; blade cut; original magical cast. Never invent or replace weapons or use an unrelated attack type. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/7dd4f1199ec22252e98f0112.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/7dd4f1199ec22252e98f0112.png": "43e8d9b1a7dde25b54ccf2c746d32ef26faf8db986738537d55e62afa0e245a2",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-run-source-v01.png": "93b204b7cfbc34838b22b945569c102c6db6880687cef6b0332de1b2f5c3194f"
+  }
+}

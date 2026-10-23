@@ -1,0 +1,72 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "SE",
+  "role": "attack",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc112",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-source-v01.png",
+  "previous_source_sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-record-v01.json",
+  "previous_record_sha256": "893fa2236fe601bfc2da6fc4e2e1da1bdd7a5ee46e66a46276fcf84d8a506ad1",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "113",
+    "direction": "SE",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-run-source-v01.png",
+    "sha256": "d746d2df75792cebde9ca4315812e682ed181f00e52474e4a7eeebd0dc1634f2",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "113",
+      "direction": "SE",
+      "role": "attack",
+      "cause": "identity_weapon_action",
+      "detail": "Original blue crescent energy bow is used as a raised/sweeping blade; the sequence lacks coherent nock/draw/arrow release seen in S ATTACK.",
+      "fix_kind": "source_equipment_action",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-record-v01.json",
+      "source_sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0237",
+      "slot": [
+        "transform:113",
+        "SE",
+        "attack"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:113 달의 질리언, SE ATTACK. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"identity_weapon_action\", \"detail\": \"Original blue crescent energy bow is used as a raised/sweeping blade; the sequence lacks coherent nock/draw/arrow release seen in S ATTACK.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-RIGHT, screen DOWN-RIGHT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Actual original-weapon attack: guard, anticipation, full windup/aim, active strike/shot/cast EXACTLY along the selected screen-facing direction, follow-through, living guard. Bow nock/draw/release; firearm aim/fire/recoil; real polearm thrust; blade cut; original magical cast. Never invent or replace weapons or use an unrelated attack type. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. WEAPON/ACTION IDENTITY CORRECTION: preserve the original BLUE CRESCENT ENERGY BOW. Perform coherent nock, connected-string draw, aim, arrow release exactly along the facing direction, and recovery. Never swing or thrust the bow as a sword, spear or crescent blade. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-run-source-v01.png": "d746d2df75792cebde9ca4315812e682ed181f00e52474e4a7eeebd0dc1634f2"
+  },
+  "request_preparation_clarification": "Exact frozen identity finding resolves the action class before any tool call; earlier unexecuted prepared request remains preserved."
+}
