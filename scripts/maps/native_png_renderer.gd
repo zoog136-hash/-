@@ -73,7 +73,7 @@ func add_image(key: String, source_file: String, row: Dictionary, image: Image) 
 	sprite.scale=Vector2.ONE*native_field.artwork_scale
 	if row.has("foot_image"):
 		sprite.z_index=0;sprite.position=Vector2(row.foot_image[0],row.foot_image[1])*native_field.artwork_scale
-		sprite.offset=Vector2(row.position[0],row.position[1])-sprite.position
+		sprite.offset=Vector2(row.position[0],row.position[1])-Vector2(row.foot_image[0],row.foot_image[1])
 		sprite.set_meta("native_foreground",row.id)
 	var pixels: int=image.get_width()*image.get_height()
 	sprite.texture=ImageTexture.create_from_image(image)
