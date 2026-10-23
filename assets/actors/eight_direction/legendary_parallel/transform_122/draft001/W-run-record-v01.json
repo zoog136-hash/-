@@ -1,0 +1,222 @@
+{
+  "key": "transform:122",
+  "name": "다크 슬레이어",
+  "grade": "전설",
+  "direction": "W",
+  "role": "run",
+  "reference": "res://assets/catalog/6c6351f9f922f269b7950573.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:122 다크 슬레이어. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body W RUN poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use true side profile WEST, screen LEFT with anatomical LEFT side nearer, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Genuine articulated RUNNING CYCLE, never walking or attacking: frame0 anatomical LEFT foot contacts ground while RIGHT leg recovers; frame1 LEFT support compression and RIGHT knee forward swing; frame2 flight transition with RIGHT foot reaching; frame3 anatomical RIGHT foot contacts ground while LEFT leg recovers; frame4 RIGHT support compression and LEFT forward swing; frame5 flight transition with LEFT reaching toward frame0. Natural alternating support, real hip/knee/ankle changes and opposite arm counter-swing. Preserve original carried equipment safely, no weapon attack or casting. Same camera/body scale and common ground plane. If the original is inherently hovering, preserve that anatomy and create a genuine articulated forward flight cycle; do not invent limbs, wings, or feet hidden by the original garment. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: WEST means a true LEFT-facing side profile: the nose and body facing point toward the LEFT screen edge, never right or front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/6c6351f9f922f269b7950573.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 153,
+  "reference_sha256": "6f5738632d769d8d1d3e4e193731f719c5d6712d007adbdba964a4fafe54aaf6",
+  "schema": "pr122-legendary-generated-clip-v1",
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_122/draft001/W-run-source-v01.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/W-run-source-v01.png",
+  "source_sha256": "a5f0fadfc6ce36eed6ee97ebb4819ad2c6b557ef332140222b4a56a16c53f05e",
+  "source_bytes": 2251750,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/W-run-SpriteFrames.tres",
+  "output_spriteframes_sha256": "5a0ff07e67aaa4d27ff7c82319cc813716f663cedb51de972899985f1b68ab33",
+  "generated_original_path": "/workspace/generated_images/exec-81d0018b-3b38-46ad-936e-4ab4f6e8cc11.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_122-W-run-v01.json",
+  "request_file_sha256": "ac6d13e4fd8b8b5d1804884e975236ccf535f6ba9056ee8385d11b8269b36dec",
+  "generation_request_sha256": "71cfae78b649ce84e5091d615a6c23e07a74a3f6b21bb0f2e883c0e4c0581dcd",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "run_4",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "8a1408ff99eba581fe64117e3ae5d1c4dd5f818763ec357967fce8b427bc5764",
+      "normalized_visible_sha256": "ac5bacb68a231d96e340a11087c02083f1cf6d1372bd03442ced89323c7bfda6",
+      "visible_pixels": 76432,
+      "alpha_bbox_in_cell": [
+        0,
+        13,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "b24fe888c6fc6ec8ffb7ab109006853e70b16492571a349887868eccbb859833",
+      "normalized_visible_sha256": "93e14ddcf059162512da77b9e9be2bb35fb9aa4807012b5afd0ce769d6a17da3",
+      "visible_pixels": 74394,
+      "alpha_bbox_in_cell": [
+        1,
+        17,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "d53934bdc1532fa7b9cd243f529928053f668ac813b4c3e0fd56a0875799c972",
+      "normalized_visible_sha256": "c3778a1a93d8eac741f9eddab8a6a781e94f5ee79a15a4f0550cce81f5a5057d",
+      "visible_pixels": 76324,
+      "alpha_bbox_in_cell": [
+        1,
+        9,
+        496,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "74662ff19719085b1095e0b0030193ced9d9c93aaaf9fabbde09786f05687f08",
+      "normalized_visible_sha256": "7ec832b5235d539c89a00e8bb7aa5f08cad5cc550272f85d1161af6ab085fc2e",
+      "visible_pixels": 72919,
+      "alpha_bbox_in_cell": [
+        21,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 12
+    },
+    {
+      "index": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "1ffb5e71032e4a3a0333ab46c56bd0f291f6476af2636076c0f3a4fc350392d4",
+      "normalized_visible_sha256": "a810119d3f77e757342b3d2d12e7170cc91bf70dcb5eb4e0bdf869463ff11aee",
+      "visible_pixels": 72769,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "34523756c23cc8d9e8efb9a07dcd5e977a411d0a1edef1f67c93fef9dc5ecbbb",
+      "normalized_visible_sha256": "81971ff0db053203d3a52d93b6b0c685c6c3d309234a006bda0689a3a553f308",
+      "visible_pixels": 71490,
+      "alpha_bbox_in_cell": [
+        1,
+        0,
+        500,
+        512
+      ],
+      "border_alpha_pixels": 0
+    }
+  ],
+  "clipped_cell_count": 1,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false
+}
