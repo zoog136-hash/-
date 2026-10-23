@@ -1,0 +1,392 @@
+{
+  "schema": "hero-remediation18-delivery-v1",
+  "base_head": "e66e9632b073db91b7526f6440342bfd1e92a0b0",
+  "production_commit": "ef9ff404700efcbe6eb1428b1e626f82a54c073a",
+  "branch": "feature/pr122-hero-parallel",
+  "new_source_pngs": 9,
+  "reused_approved_characters": 7,
+  "new_run_repairs": 11,
+  "palette_reuse_characters": 2,
+  "not_new_species": true,
+  "new_final_approved_run_motions": 11,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/rig-proof.json",
+      "bytes": 53872,
+      "sha256": "dd51c6f9eebc6e9f687ae2e68716993c06a56153d42b4549a8f2a3729103cb85"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/run.png",
+      "bytes": 519553,
+      "sha256": "94cdf114ead7450d704697cfdfc64e7844efc71251f4df9609465b6f0b84ed90"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/normalized-source-run.png",
+      "bytes": 513402,
+      "sha256": "88e07475f34b7bf83c832fdac5474d1c63c7e8b47837e976d1a2e3073d88f40b"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/NativeMotionProfile.tres",
+      "bytes": 807,
+      "sha256": "78ed29adec0f1eabc80c2bd4d2b219fc3791a461cfe2ae841f20cfdad5843014"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/source-layout.json",
+      "bytes": 25955,
+      "sha256": "70131c27f5761c7a60b771f0f7d7f56be11571ba883a4d7c93a4c78f01f474cb"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/SpriteFrames.tres",
+      "bytes": 32889,
+      "sha256": "8a24727926e3de7210b78ed442fa0dd00ed2e4b5a80295bdb878794a034b7cbd"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_2/r001/raw/source-run.png",
+      "bytes": 1831883,
+      "sha256": "0b9d18f3aed6b35a5b3902d2acdd9c83a8636ed162fddf2ea5fca0272edb659b"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/rig-proof.json",
+      "bytes": 54203,
+      "sha256": "e2e4091de405ccd555251f178ab272d1006f1a828c6e3f009e2a8d9985dda08d"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/run.png",
+      "bytes": 336162,
+      "sha256": "906a2a7975978d06e9df83b7b17cdc350e19b54ee03ba60957aadcd836b4393e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/normalized-source-run.png",
+      "bytes": 331502,
+      "sha256": "bcdf8ec344d6e19c0dc3085c22ff74fd1d7a0f3e108b58875ae2401fa9e3076a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/NativeMotionProfile.tres",
+      "bytes": 812,
+      "sha256": "807da7e3d7d19ce72099b381cbd960352862dfef5dc65e4811536c09149dbe06"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/source-layout.json",
+      "bytes": 26126,
+      "sha256": "9f769adadd81eb5db2ed2612de00a5db50b94dc0703a21b7e564b25d589db158"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_110/r001/SpriteFrames.tres",
+      "bytes": 32973,
+      "sha256": "4e26f324a084b1c9ec80b6620508da96c1c5c403acf4ec60b93fa64f2bd9eb3e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_167/r001/rig-proof.json",
+      "bytes": 54207,
+      "sha256": "2ef0be516c79aa201c3125980ec0746ba63a4927937fa52c515b475890bffc27"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_167/r001/run.png",
+      "bytes": 652089,
+      "sha256": "dd817f5186dca193d769b8f984a4ee6bc4c6de64580505d09973a505062ac52f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_167/r001/normalized-source-run.png",
+      "bytes": 646573,
+      "sha256": "3776e2cb1855d5dd5d118ebdb7cfcd23f7330a62174f402d9411c5f2915bd369"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_167/r001/NativeMotionProfile.tres",
+      "bytes": 813,
+      "sha256": "6e429bd4fdf1cdf8cca079c62b25a1c68aa010b460044aea7df5077c9dd691ac"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_167/r001/source-layout.json",
+      "bytes": 26126,
+      "sha256": "35e7c0a647dcce04fd4111f4d465542d120e4e34b01146128d11dffbe02069d4"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_167/r001/SpriteFrames.tres",
+      "bytes": 32903,
+      "sha256": "c2607707e0f54017e5af657d2c2d26b6f94f6209c3d7940302f7c2ba657176e8"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/rig-proof.json",
+      "bytes": 54326,
+      "sha256": "a6b28da81824be28eb635cb303b90203faaf69cb75cb0480dd82baf481235b2a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/run.png",
+      "bytes": 554250,
+      "sha256": "95422dad07444ce4d92be24e7825aaad0ef016c7c3ecd65657a9f6b9a7f5002c"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/normalized-source-run.png",
+      "bytes": 548137,
+      "sha256": "b44ee5b6bf08c8cf8d9eb9eafe4e961c89fdb5425b20cb691251318dafa4b0d2"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/NativeMotionProfile.tres",
+      "bytes": 885,
+      "sha256": "c1ba9a60408760be4f0b9f6c8d1a561ac56bb4f71e72ec7d5296d51ffa81773f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/source-layout.json",
+      "bytes": 26143,
+      "sha256": "4f1860729697bf48fcc20e3b066cd78e65c9d3bbb69d1af3fb840414b22008b4"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/SpriteFrames.tres",
+      "bytes": 34964,
+      "sha256": "1a6acf970e1e7bd4c2fd62925c6c61a38e3fccb5b86bbccc4e46be6a549badd2"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_173/r001/raw/source-run.png",
+      "bytes": 1754046,
+      "sha256": "522503167839aae4f9b1cf2f30a0e17f5850c4600d2bfe426e55ca79ff1af41a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/rig-proof.json",
+      "bytes": 54058,
+      "sha256": "536a24a4852a4011391d48dda59c9621d47a5bd0a154c0ba859b443fdc171e8b"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/run.png",
+      "bytes": 909380,
+      "sha256": "bbb012f3051c71bff7801b22cf8561469635d177d7cd2ceadcca0afde88d9e43"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/normalized-source-run.png",
+      "bytes": 900407,
+      "sha256": "54b60a442fbc1508a5379440d331641f84beccbfc8354242a2721d95fb51b1f5"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/NativeMotionProfile.tres",
+      "bytes": 873,
+      "sha256": "3583d4602dd04ddf7460d9d5732dd2dfc1e1b9e115d11beb1f31c06e70ebeda0"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/source-layout.json",
+      "bytes": 25960,
+      "sha256": "9b5a352404551affb17d329be8547d6ad396c2bf4eea3fd6327cc484384e0ca3"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/SpriteFrames.tres",
+      "bytes": 32835,
+      "sha256": "8c7b4de180fb7fe7bd64004ccd9db56ff3e92f4c25638eef65e999e449404fba"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_218/r001/raw/source-run.png",
+      "bytes": 1636230,
+      "sha256": "079d5fd1b38ab018db7dc721a7204be7e11b2ede698361ba44ac7484e4bde543"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/rig-proof.json",
+      "bytes": 54082,
+      "sha256": "703faeba97a344e98d5abc9138dd2d37f3a531d96f838602cf1ec6c6d7f7b025"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/run.png",
+      "bytes": 1334132,
+      "sha256": "b73845ee008303a213eec8ee68664ace4bfadb920c9fd8b148afa9058bcfb082"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/normalized-source-run.png",
+      "bytes": 1323552,
+      "sha256": "6c775b757056fa9ef1c784d003af96f8b80c2104de7773595e5bda9561cef6f7"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/NativeMotionProfile.tres",
+      "bytes": 873,
+      "sha256": "8287ec8fc9562617f025814a73cdeb18e8e8355cc2daf993f1980bbce36dd859"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/source-layout.json",
+      "bytes": 25974,
+      "sha256": "cab123ad846c3fb443f1e2e94de3c82d6f4b6d643978a65710a882215319475f"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/SpriteFrames.tres",
+      "bytes": 32692,
+      "sha256": "05bd7ae07316339be4b668f0979ba10a6517bc7f978ab53319085a53d58622c9"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_249/r001/raw/source-run.png",
+      "bytes": 2201878,
+      "sha256": "b42db1618d802c92d0543451d8389e8211c5829214c959d918f60ce4893062e1"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/rig-proof.json",
+      "bytes": 54084,
+      "sha256": "1ba58b7b03574f550f2f477974ed20ab77ade6b0e8dfcd59df489bc614c9d2d9"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/run.png",
+      "bytes": 607563,
+      "sha256": "834551ae1fb51852eb51db984b2a2d39e41e2e2656c2df0c601ea80adb5cbda1"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/normalized-source-run.png",
+      "bytes": 601456,
+      "sha256": "b534562422afd0b6fd38384187c3aba7d631b03b5a71a136df8ec8b0bd3c5aca"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/NativeMotionProfile.tres",
+      "bytes": 872,
+      "sha256": "9e6479fa827497c585404eb11a41906d280ffa56c84e2a8c62fe0bf797341171"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/source-layout.json",
+      "bytes": 25996,
+      "sha256": "fb2f69f1bd619557aa9e867b3c6426e6a94c2b79f31988f4d4a8470146fb7cc9"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/SpriteFrames.tres",
+      "bytes": 33062,
+      "sha256": "04cface9f12a0063f4a97f4cc953d98eebc2b11e74b25234efed47bf7d85c978"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_288/r001/raw/source-run.png",
+      "bytes": 1463318,
+      "sha256": "1b20f30c2ccef13ae20a869a52586ca20dd9d93e087390972be8efce0ec23dcd"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/rig-proof.json",
+      "bytes": 54112,
+      "sha256": "cd0e3a2c26faa49c2ad6f62c180b051cf09231b8e8d8f7555850f791f5f194c4"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/run.png",
+      "bytes": 869907,
+      "sha256": "7403f8aa99a6b4a773b858fa1923f6c0e22a1c814efd037dfdb7e7e994e2d849"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/normalized-source-run.png",
+      "bytes": 862119,
+      "sha256": "b085453d7d2370af0ec5e1d6f366b980a72c110799c34545f58bdefe5cce3836"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/NativeMotionProfile.tres",
+      "bytes": 813,
+      "sha256": "c42a5af2bafd647eb533f58a10c4b06439deddcb82ddcf6c4afbb5e46cdd1387"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/source-layout.json",
+      "bytes": 25994,
+      "sha256": "9ec25c2b21e52ec7b3b2451c19b52334b816db6a6fea887730f894920086517a"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/SpriteFrames.tres",
+      "bytes": 35283,
+      "sha256": "2b14f3570d139ffea622de12a05d52afdbd38808b2c2d16b865eb0a5899836b2"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_328/r001/raw/source-run.png",
+      "bytes": 1737207,
+      "sha256": "f29fbc20538b1a0dc5a7036a41ea36e18c9efbf45e2e8123de4ded4b052771ab"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/rig-proof.json",
+      "bytes": 54116,
+      "sha256": "7cfca990fe65f3127b44d8068c8a81ff6fe92052f2b09228d216b760d810cb68"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/run.png",
+      "bytes": 886627,
+      "sha256": "6163fa2f3ca2a8a34d1653dba40a6ad0577153212a2cedbf36923adb1bd6eabd"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/normalized-source-run.png",
+      "bytes": 880880,
+      "sha256": "7745edf3d5d5d2373b1bd8c7515d6afeb2d5a17cf8511e208f06530d6e44c230"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/NativeMotionProfile.tres",
+      "bytes": 871,
+      "sha256": "49acb3982b747b586831c322ab4c133189482582e3cf149d95705e200c28eb9d"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/source-layout.json",
+      "bytes": 25982,
+      "sha256": "e5c8a23c38b906a112bbb5ba74367febf84e4f09314a491249c4fce1de98b76b"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/SpriteFrames.tres",
+      "bytes": 33087,
+      "sha256": "83a5b5abbc3a8f995542e19ca9e32f38630e8ad013a66e0a423609ede6e4dcca"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_349/r001/raw/source-run.png",
+      "bytes": 2828469,
+      "sha256": "f3b24cb3caafa7e37177f86657ee38991152cba23d33a5ef99e8aef49c480fbd"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/rig-proof.json",
+      "bytes": 54086,
+      "sha256": "6a96c04a744a38ed33f320df6a7cdf7975a279330f0968d2e5736baa0a85b226"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/run.png",
+      "bytes": 1505805,
+      "sha256": "c9c466919049e6a403dcf43872dca6c5282c0f3533f71bdc543fcc4fd275da8c"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/normalized-source-run.png",
+      "bytes": 1498885,
+      "sha256": "77b46cbebabac234ec4911584ff2c27d645fbb578b759655c9e50b5b3e77d3c6"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/NativeMotionProfile.tres",
+      "bytes": 870,
+      "sha256": "ea1f3a75d9055aa2ebde1d968bda8ff3e03ec53dc9e9c8bd44a15d639b71ca9e"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/source-layout.json",
+      "bytes": 25983,
+      "sha256": "75338fd236deada4d3123c7d0c47facf3a7b3e0040944321c9640c4a188b78cd"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/SpriteFrames.tres",
+      "bytes": 32744,
+      "sha256": "d51d88a3c1dc38778cb556b8d20180be971b62987eff60ef758fb6ec288a70f4"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_351/r001/raw/source-run.png",
+      "bytes": 2296510,
+      "sha256": "c0919ca54f38beaa0546a4906c34641a30bda4623fbedbb786af925135a0a066"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/rig-proof.json",
+      "bytes": 54084,
+      "sha256": "73ee3619ebd67f3b48a9343bca6c8f769af90e0dd7e0b62c3d069f33dd511c62"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/run.png",
+      "bytes": 1424866,
+      "sha256": "f4253d5877f4124c6b488c6f2a2daf45a27982f276281a2f4aa9cb0724a60470"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/normalized-source-run.png",
+      "bytes": 1417283,
+      "sha256": "a0c69606b22768a8416f93adab9c12e7640a8238744d969e8098960693f0e6ec"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/NativeMotionProfile.tres",
+      "bytes": 873,
+      "sha256": "7d59d97d80c3dd94ec97bbdba927ffb641a9dbd63c0d041141b883473eda2820"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/source-layout.json",
+      "bytes": 25970,
+      "sha256": "10c5e51f8e6277af96a8de9dfd421a715c49ee49b908e3beb63fbd2a89654f95"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/SpriteFrames.tres",
+      "bytes": 32763,
+      "sha256": "a23fccef0724cab7c6019a3b18b767a177dd82586067b7a7b3e8e0cb147788d1"
+    },
+    {
+      "path": "assets/actors/eight_direction/hero_parallel/hero_repair_401/r001/raw/source-run.png",
+      "bytes": 3025212,
+      "sha256": "7b2c372834b1a067a36a052a56ca44305668f94d9f9a33608559d2858907b465"
+    }
+  ],
+  "final_review": "res://docs/remake/pr122-hero-parallel/evidence/remediation18-20261023/final-review.json",
+  "production_connected": false,
+  "PR122_merged": false
+}
