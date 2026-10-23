@@ -217,10 +217,18 @@ def _analyze_source_geometry(path, record, manifest, source, direction):
     canonical_kwargs = reviewed_layout.declared_canonical_preflight_kwargs(
         record.get('source_canvas_review'), manifest.get('reviewed_runtime_layouts', {}).get(source),
         record['sha256'], direction, canvas)
+    axis = record.get('directions_axis', 'phase_grid2')
+    if axis not in ('phase_grid2', 'phase_grid3'):
+        raise ValueError('Native source requires an explicit supported phase grid')
+    layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
+    if layout is not None and layout.get('directions_axis', 'phase_grid2') != axis:
+        raise ValueError('Source and reviewed runtime phase grids differ')
     geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                                directions_axis='phase_grid2', canvas_size=canvas,
+                                directions_axis=axis, canvas_size=canvas,
                                 directions=[direction], **canonical_kwargs)
     if record.get('source_region_review') is not None:
+        if record['source_region_review'].get('directions_axis', 'phase_grid2') != axis:
+            raise ValueError('Source and reviewed region phase grids differ')
         geometry, region_proof = apply_reviewed_regions(path, geometry, record['source_region_review'])
         assert region_proof == record['source_region_proof'], 'Reviewed source region proof changed'
     importer.require_complete_pose_regions(path, geometry)
