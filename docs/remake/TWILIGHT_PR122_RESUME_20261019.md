@@ -580,3 +580,5 @@
 - 몬스터 batch03: 얼음 여왕 남은SE/SW/W/NW/N/NE RUN6씩 새6PNG/6클립36자세 제작. strict2048 whole-source 및Godot4.7.2 전자세PASS. E/S와source coverage는8방향48자세가됐지만두profile크기통합/방향·외형·지지/Main은HOLD. 작은140px캔버스실패SE/SW기록보존, 보스승인추가0.
 - 몬스터 batch04: 알비노 피쉬맨 새RUN32+Sdeath3=35자세, 기존living80원본보존. 필수33클립91자세+기존WALK8/24=41클립115자세 연결. 실제Godot4.7.2 모든필수자세/발/Sdeath8방향끝자세PASS, 115 rendered-visible fingerprint고유PASS. 같은원화의에바왕국심해어인·알비노심해어는무색변경재사용profile후보이며신규원화수·완료수중복계산하지않는다. 정체성/지지/접촉/Main승인HOLD.
 - 신규배치단일인덱스 `data/pr122_monster_production_batches.json`. 일반완료221/잔여37, 보스완료43/잔여17 그대로. 범위누락으로승인하지않는다. 새미제작일반3종은IN_PROGRESS로갱신, 이전all498원장완료이력보존.
+
+- First-pass production checkpoint: 399,367 SW ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW ATTACK drafts 4/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:399", "poses": 6, "clipped_cells": 6}, {"key": "transform:367", "poses": 6, "clipped_cells": 3}]. Continue transform:346 without draft polishing.
