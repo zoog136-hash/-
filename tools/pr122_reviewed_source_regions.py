@@ -25,6 +25,34 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage
 
+
+def require_native_source_part_ownership(source_rgba, materials):
+    """Require each visible original texel in aligned native parts exactly once.
+
+    Hidden fill occupying the same coordinates does not preserve an original
+    texel. Parts must retain its full RGBA value. Different hidden paint may
+    overlap in image space; it is not another owner of the original texel.
+    This source-input guard does not provide visual or actor approval.
+    """
+    if (not isinstance(source_rgba, np.ndarray) or source_rgba.dtype != np.uint8
+            or source_rgba.ndim != 3 or source_rgba.shape[2] != 4):
+        raise ValueError("Require a native uint8 RGBA source")
+    if not isinstance(materials, dict) or not materials:
+        raise ValueError("Require named native source parts")
+    expected = source_rgba[:, :, 3] > 0
+    owners = np.zeros(expected.shape, np.uint32)
+    for name, material in materials.items():
+        if (not isinstance(name, str) or not isinstance(material, np.ndarray)
+                or material.dtype != np.uint8 or material.shape != source_rgba.shape):
+            raise ValueError("Native source parts must share the original RGBA coordinates")
+        owners += (material[:, :, 3] > 0) & np.all(material == source_rgba, axis=2)
+    missing = int(np.count_nonzero(expected & (owners == 0)))
+    duplicate = int(np.count_nonzero(expected & (owners > 1)))
+    if missing or duplicate:
+        raise ValueError(f"Original RGBA ownership: missing={missing}, duplicate={duplicate}")
+    return {"original_visible_texels": int(np.count_nonzero(expected)),
+            "missing": missing, "duplicate": duplicate}
+
 import import_original_based_motion as importer
 
 

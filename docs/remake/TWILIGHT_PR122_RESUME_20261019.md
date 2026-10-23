@@ -278,3 +278,11 @@
 - 원화/실제 연산자/프레임/패킷은 `docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-S-death-actual-six-stationary-landing-source-20261022/preserved-source-index.json`에서 SHA별 원경로와 저장경로 연결.
 - E RUN 기존 최종 SOURCE LOOP PASS는 유지. 무손실2304 패킷을 만들었으나 phase5 공중자세의 고정root가 tight pose 밖이라 request 검사는 HOLD. 검사기준·root·원화는 변경하지 않았다.
 - 다음 게임 연결: W HIT r041 → S ATTACK r042 → SW ATTACK r043. S 사망·W 공격·미완성 RUN은 품질/연결 HOLD를 마감하기 전 완료로 올리지 않는다. 전체/수동 CI 실행 없음.
+
+
+## 2026-10-23 — W RUN source ownership and incremental repair
+- Approved Unique W provenance was narrowly compared: existing PR122 import/region/layout and runtime implementations are reused; its selected producer assembles whole authored poses and provides no shared part-skinning renderer. No approved art or character ratios were changed.
+- Confirmed W-local causes: 922 original inter-calf pixels followed the torso; hidden leg fill incorrectly hid 641 original foreground pixels; the earlier linear knee blend folded native texels. Exact original RGBA ownership and nonfolding checks now run before pose rendering. Five known defect cases are rejected; source coverage is 109,922 original lower-body texels with zero missing/duplicate ownership. Repeated-foot/direction defects were not reproduced in the current settings.
+- Only six changed body/cloth nodes were rendered; 54 unchanged arm/gear/leg nodes and all pose controls/bone lengths/root/C were reused exactly. Character-specific settings remain separate. Source visual/anatomical and world foot-contact review remain HOLD; actual Main/Player six-pose replay passed using an explicit unapproved fixture, with no production W adoption.
+- Recovery source index: `docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-source-index.json`. All prior versions and work are preserved. E RUN replacement remains saved at `ffd856e9f49e6c580797c9a3672aa083828d2a7a`.
+- New final motion approvals: 0. Existing unapproved production clips replaced: 1 (E RUN). Active actors remain **2/19 approved, 17 incomplete**; historical 2/31 is preserved. New death authoring remains S only; existing directions remain preserved. Next: 413 W source/continuous-motion/foot-contact quality review and remaining W ATTACK/S DEATH, SE/S/SW/W RUN work.

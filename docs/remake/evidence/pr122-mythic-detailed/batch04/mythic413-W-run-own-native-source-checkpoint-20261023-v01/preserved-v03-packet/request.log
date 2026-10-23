@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py", line 163, in <module>
+    if __name__ == '__main__': main()
+                               ^^^^^^
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py", line 108, in main
+    base = advance.staging.importer.analyze(atlas, rows_count=6, reference_rows=[0,3],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/import_original_based_motion.py", line 178, in analyze
+    raise ValueError(f"Expected exactly {expected} separated poses, found {len(bodies)}; review/re-author, never invent slots")
+ValueError: Expected exactly 6 separated poses, found 7; review/re-author, never invent slots
