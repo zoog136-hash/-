@@ -27,6 +27,58 @@ func _save_snapshot() -> String:
 		result.append(FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "ABSENT")
 	return JSON.stringify(result)
 
+func _check_main_attack(profile: Resource, record: Dictionary) -> void:
+	var key := StringName(OS.get_environment("TWILIGHT_NATIVE_MAIN_ACTION"))
+	var expected_sha := OS.get_environment("TWILIGHT_NATIVE_MAIN_EXPECTED_SOURCE_SHA")
+	var texture_path := ""
+	for track: Dictionary in record.tracks:
+		if str(track.animation) == str(key): texture_path = "res://" + str(track.texture)
+	if not check(not texture_path.is_empty() and FileAccess.get_sha256(texture_path) == expected_sha, "Exact selected new action source required"):
+		return
+	check(fixture.has_animation(key) and not fixture.get_animation_loop(key), "New attack is a real one-shot clip")
+	var duration := float(fixture.get_frame_count(key)) / fixture.get_animation_speed(key)
+	check(is_equal_approx(duration, 0.42), "Retain the authored W attack clock")
+	var world: Node = load("res://Main.tscn").instantiate()
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	root.add_child(world)
+	await process_frame
+	world.save_timer = -10000.0
+	world.player.set_physics_process(false)
+	var before := _snapshot(world)
+	var before_saves := _save_snapshot()
+	var old_class_frames: SpriteFrames = world.player.class_sprite.sprite_frames
+	world.player.set_transform_visual("res://assets/catalog/e82707989c7744b45919684b.png",1.0,profile)
+	var motion: MOTION = world.player.motion
+	var sprite: AnimatedSprite2D = world.player.transform_sprite
+	motion.face(Vector2.LEFT)
+	var strikes: Array[int] = []
+	motion.strike.connect(func(id: int) -> void: strikes.append(id))
+	var sequence: int = motion.begin_attack(duration,Vector2.LEFT,profile.motion_style)
+	var seen: Dictionary = {}
+	var marker_checked := false
+	for tick: int in range(int(ceil((duration+0.4)*240.0))):
+		motion.advance(1.0/240.0,Vector2.ZERO)
+		motion.apply(sprite,sprite.get_meta("base_scale",Vector2.ONE))
+		if sprite.animation == key:
+			seen[sprite.frame] = true
+			var actual := sprite.sprite_frames.get_frame_texture(key,sprite.frame) as AtlasTexture
+			check(actual != null and actual.atlas.resource_path == texture_path,"Use the selected new W source rather than an alias")
+		if not strikes.is_empty() and not marker_checked:
+			check(strikes == [sequence] and sprite.animation == key and sprite.frame == 3,"One authoritative hit marker at native strike frame 3")
+			marker_checked = true
+	check(seen.size() == 6 and strikes == [sequence] and marker_checked,"Six poses and one strike event required")
+	check(sprite.animation == &"idle_4" and motion.state == "idle","One-shot attack returns to preserved W idle")
+	check(_snapshot(world) == before and _save_snapshot() == before_saves,"Visual action preserves gameplay and saves")
+	check(world.player.class_sprite.sprite_frames == old_class_frames,"Preserve class animation resources")
+	var proof_path := OS.get_environment("PR122_ACTION_RUNTIME_PROOF")
+	if not proof_path.is_empty():
+		var output := FileAccess.open(proof_path,FileAccess.WRITE)
+		output.store_string(JSON.stringify({"actor":"transform:413","animation":str(key),"actual_staged_profile":true,"fixture_override":false,"source_sha256":expected_sha,"poses_reached":seen.size(),"marker_count":strikes.size(),"returned_to_idle":sprite.animation == &"idle_4","failures":failures,"gameplay_and_saves_unchanged":_snapshot(world) == before and _save_snapshot() == before_saves,"source_visual_status":"HOLD_NOT_REVIEWED","production_connected":false,"actor_approvals_added":0},"\t")+"\n")
+		output.close()
+	print("PR122_NATIVE_MAIN_ATTACK_PASS poses="+str(seen.size())+" markers="+str(strikes.size())+" failures="+str(failures)+" approvals_added=0")
+	world.queue_free()
+	await process_frame
+
 func _run() -> void:
 	if not check(OS.get_environment("XDG_DATA_HOME").get_file().begins_with("twilight-test-"), "Use isolated test saves"):
 		quit(1)
@@ -70,6 +122,10 @@ func _run() -> void:
 		profile = load(original.native_profile).duplicate()
 		profile.profile_id = "runtime-only-S-death-contract-test"
 		profile.frames_path = fixture.resource_path
+	if actual_staged and not OS.get_environment("TWILIGHT_NATIVE_MAIN_ACTION").is_empty():
+		await _check_main_attack(profile,original)
+		quit(0 if failures == 0 else 1)
+		return
 	var before_saves := _save_snapshot()
 	var direction_results: Array = []
 	for direction: int in range(8):

@@ -28132,6 +28132,328 @@
       ],
       "source_visual_status": "HOLD_NOT_REVIEWED",
       "staging_only": true
+    },
+    {
+      "key": "transform:413",
+      "direction": "W",
+      "role": "attack",
+      "version": "WattackCuffNative04",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-attack-WattackCuffNative04.png",
+      "original_generated_file": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-attack-distal-cuff-six-exact-packed-candidate-v01/thunder_female-W-attack-cuff-real-six-v04.png",
+      "bytes": 3925041,
+      "sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+        "base_geometry_sha256": "957a0c8b7abc84f8eff7d09f0effd21ecb43d7ddf07e3e8492a4c57cb078662f",
+        "direction": "W",
+        "regions": [
+          [
+            720,
+            145,
+            675,
+            1172
+          ],
+          [
+            2945,
+            128,
+            752,
+            1189
+          ],
+          [
+            535,
+            2434,
+            855,
+            1187
+          ],
+          [
+            2742,
+            2522,
+            1058,
+            1099
+          ],
+          [
+            454,
+            4829,
+            1052,
+            1096
+          ],
+          [
+            2996,
+            4743,
+            709,
+            1182
+          ]
+        ],
+        "nearest_owner_sha256": "4b76af216d90487c36aec6745d14618c166ff359ce71b60060985f6a0807b199",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 88f39b27a75e1c60f887f682bb186e3c581064107b7dcfb5dc7e69b3a5284e31"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+        "source_RGBA_sha256": "92570bc2703b376d1c78dfd6ab67698a3167333312132f8045e194898e65f26b",
+        "base_geometry_sha256": "957a0c8b7abc84f8eff7d09f0effd21ecb43d7ddf07e3e8492a4c57cb078662f",
+        "derived_geometry_sha256": "45f651bce5a385ecab352d8cde997b0c42cd707d4a60a18952dfff1a8f3fd4ce",
+        "review_sha256": "7bcde6aba039abd8ec3901e705a910d7b3c704d4b01a153ff23415b8ad1f6f35",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 88f39b27a75e1c60f887f682bb186e3c581064107b7dcfb5dc7e69b3a5284e31",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1663355,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            720,
+            145,
+            675,
+            1172
+          ],
+          [
+            2945,
+            128,
+            752,
+            1189
+          ],
+          [
+            535,
+            2434,
+            855,
+            1187
+          ],
+          [
+            2742,
+            2522,
+            1058,
+            1099
+          ],
+          [
+            454,
+            4829,
+            1052,
+            1096
+          ],
+          [
+            2996,
+            4743,
+            709,
+            1182
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "4b76af216d90487c36aec6745d14618c166ff359ce71b60060985f6a0807b199",
+        "foreground_owner_sha256": "b84246a63f5ee446b37fe9d9304cb076a8d399fb7f43f1d2e3aee96b0e8aa4ae",
+        "detached_pixels": 23,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3371,
+              410,
+              3372,
+              411
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 2070.9536450630662,
+            "owner_margin_min": 2068.12521793832
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3266,
+              487,
+              3267,
+              488
+            ],
+            "nearest_max": 4.242640687119285,
+            "second_nearest_min": 1948.4673464033212,
+            "owner_margin_min": 1944.224705716202
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              1061,
+              856,
+              1062,
+              857
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1583.9712749920689,
+            "owner_margin_min": 1581.7352070145691
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3365,
+              856,
+              3366,
+              857
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1671.2875276265302,
+            "owner_margin_min": 1669.0514596490304
+          },
+          {
+            "row": 3,
+            "pixels": 11,
+            "bbox": [
+              3327,
+              2696,
+              3333,
+              2701
+            ],
+            "nearest_max": 7.810249675906654,
+            "second_nearest_min": 1383.0,
+            "owner_margin_min": 1375.1897503240934
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              974,
+              2790,
+              975,
+              2791
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 1477.2846712803866,
+            "owner_margin_min": 1473.6791200049227
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              3170,
+              2881,
+              3171,
+              2882
+            ],
+            "nearest_max": 11.661903789690601,
+            "second_nearest_min": 1573.8138390546703,
+            "owner_margin_min": 1562.1519352649798
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              1061,
+              3160,
+              1062,
+              3161
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1673.6322774134107,
+            "owner_margin_min": 1671.396209435911
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              3365,
+              3160,
+              3366,
+              3161
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1605.4273574347735,
+            "owner_margin_min": 1603.1912894572738
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3360,
+              5014,
+              3361,
+              5015
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1397.3009697269947,
+            "owner_margin_min": 1394.4725426022485
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3257,
+              5093,
+              3258,
+              5094
+            ],
+            "nearest_max": 4.242640687119285,
+            "second_nearest_min": 1476.8466406502741,
+            "owner_margin_min": 1472.6039999631548
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              1061,
+              5464,
+              1062,
+              5465
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1847.3129133961036,
+            "owner_margin_min": 1845.0768454186039
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3365,
+              5464,
+              3366,
+              5465
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1847.3129133961036,
+            "owner_margin_min": 1845.0768454186039
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      },
+      "authoring_dependencies": [
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+          "sha256": "fbbbb85ff8f066be19ba328a80930d46e237fe3b557cba90c24c96dc7c82b847"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-W-attack-author-fresh-20261020-v01/actual-W-ATTACK6-native-profile-rig-v04-distal-cuff-bind-20261022/W-ATTACK6-actual-native-profile-RIGHT-fullstaff-LEFTguard-realcloth-candidate-v04.json",
+          "sha256": "4939a867923efc11cf2145c2266cd407a9e8abd43635d53138714305cbc42779"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-shared-W-settings-incremental-20261023-v01/W-exact-native-complete-RIGHT-staff-LEFT-upper-and-true-bow-parts-v04-shared-bindings.json",
+          "sha256": "31e0b544e41ea6f161618eaea046453b09cb1dd98089ae8ba8e7547d1deb6da5"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-shared-W-settings-incremental-20261023-v01/W-shared-direction-bindings-equivalence.json",
+          "sha256": "ea1f729189a1008b6658be1c3c44d8212e6aba8d56889f41afebe39f7926ef24"
+        }
+      ],
+      "source_visual_status": "HOLD_NOT_REVIEWED",
+      "staging_only": true
     }
   ],
   "mythic_detail_total": 31,
@@ -28283,9 +28605,10 @@
     "transform:413:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-hit-WhitSixActualRig01.png",
     "transform:413:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-attack-SattackSixActualRig01.png",
     "transform:413:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png",
-    "transform:413:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png"
+    "transform:413:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png",
+    "transform:413:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-attack-WattackCuffNative04.png"
   },
-  "selected_detailed_action_native_poses": 558,
+  "selected_detailed_action_native_poses": 564,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -34902,6 +35225,48 @@
         ]
       },
       "canonical_preflight_sha256": "7a2ec5e2f695b024b25a25657fc9bc6e15de5732d70cde010b92019b27af6b72",
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-attack-WattackCuffNative04.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+      "direction": "W",
+      "role": "attack",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          1030,
+          1120
+        ],
+        [
+          3334,
+          1120
+        ],
+        [
+          1030,
+          3424
+        ],
+        [
+          3334,
+          3424
+        ],
+        [
+          1030,
+          5728
+        ],
+        [
+          3334,
+          5728
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2560,
+        2560,
+        2560,
+        2560,
+        2560,
+        2560
+      ],
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
   },
