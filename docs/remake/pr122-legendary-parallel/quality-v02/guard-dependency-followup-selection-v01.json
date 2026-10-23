@@ -1,0 +1,338 @@
+{
+  "schema": "legendary-corrected-idle-guard-dependency-followup-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "review_type": "Only13changedIDLE source dependencies; no full corpus or healthy source image review",
+  "sources": [
+    {
+      "candidate": "qc001",
+      "idle_slot": [
+        "transform:402",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_402/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:402",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:402",
+          "SW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc002",
+      "idle_slot": [
+        "transform:402",
+        "NW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/NW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_402/quality-v02/NW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:402",
+          "NW",
+          "attack"
+        ],
+        [
+          "transform:402",
+          "NW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc005",
+      "idle_slot": [
+        "transform:375",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_375/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_375/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:375",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:375",
+          "SW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc006",
+      "idle_slot": [
+        "transform:375",
+        "NE",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_375/draft001/NE-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_375/quality-v02/NE-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:375",
+          "NE",
+          "attack"
+        ],
+        [
+          "transform:375",
+          "NE",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc008",
+      "idle_slot": [
+        "transform:368",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_368/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_368/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:368",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:368",
+          "SW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc009",
+      "idle_slot": [
+        "transform:339",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_339/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "UNRESOLVED_HOLD_NO_RETRY",
+      "rebind_allowed": false,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:339",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:339",
+          "SW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc010",
+      "idle_slot": [
+        "transform:338",
+        "N",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/N-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_338/quality-v02/N-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:338",
+          "N",
+          "attack"
+        ],
+        [
+          "transform:338",
+          "N",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc013",
+      "idle_slot": [
+        "transform:338",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_338/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:338",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:338",
+          "SW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc014",
+      "idle_slot": [
+        "transform:337",
+        "NW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_337/draft001/NW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:337",
+          "NW",
+          "attack"
+        ],
+        [
+          "transform:337",
+          "NW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc016",
+      "idle_slot": [
+        "transform:332",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_332/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:332",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:332",
+          "SW",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc018",
+      "idle_slot": [
+        "transform:282",
+        "E",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/E-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/E-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:282",
+          "E",
+          "attack"
+        ],
+        [
+          "transform:282",
+          "E",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc019",
+      "idle_slot": [
+        "transform:282",
+        "SE",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/SE-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/SE-idle-record-v02.json",
+      "camera_result": "RESOLVED_STATIC",
+      "rebind_allowed": true,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:282",
+          "SE",
+          "attack"
+        ],
+        [
+          "transform:282",
+          "SE",
+          "hit"
+        ]
+      ]
+    },
+    {
+      "candidate": "qc020",
+      "idle_slot": [
+        "transform:275",
+        "SW",
+        "idle"
+      ],
+      "old_source": "res://assets/actors/eight_direction/legendary_parallel/transform_275/draft001/SW-idle-source-v01.png",
+      "new_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_275/quality-v02/SW-idle-record-v02.json",
+      "camera_result": "UNRESOLVED_HOLD_NO_RETRY",
+      "rebind_allowed": false,
+      "actual_guard_dependents": [],
+      "unaffected_actions": [
+        [
+          "transform:275",
+          "SW",
+          "attack"
+        ],
+        [
+          "transform:275",
+          "SW",
+          "hit"
+        ]
+      ]
+    }
+  ],
+  "allowed_dependent_clips": 0,
+  "held_dependent_clips": 0,
+  "unaffected_actions": 26,
+  "original_art_mutations": 0,
+  "new_generation_calls": 0,
+  "final_approved": 0
+}

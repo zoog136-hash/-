@@ -1,0 +1,8628 @@
+{
+  "schema": "legendary-quota-execution-delta-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "quota_checkpoint": "res://docs/remake/pr122-legendary-parallel/quality-v02/tool-quota-checkpoint-v01.json",
+  "quota_checkpoint_sha256": "ebac8b962830b51860ac1441c5f0378e9dc74035323d47560b900bb6c8c853ca",
+  "initial_safe_sources_completed": 622,
+  "successful_replacement_sources": 13,
+  "nonreplacement_original_sources": 113,
+  "additional_original_safe_sources": 58,
+  "targeted_new_safe_sources": 2,
+  "planned_sources": 60,
+  "generation_calls": 0,
+  "camera_identity_action_approvals_added": 0,
+  "resolves_only": [
+    "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME"
+  ],
+  "sources": [
+    {
+      "sha256": "f9d0898d323a7f3c2253c13742e3f1f53496c882596ee2d7dfd4bdc25764ab79",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 243,
+          "strong_pixels": 204,
+          "bbox_in_frame": [
+            499,
+            18,
+            512,
+            55
+          ],
+          "physical_owner_rows": {
+            "1": 243
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 3,
+          "pixels_alpha_gt16": 13,
+          "strong_pixels": 6,
+          "bbox_in_frame": [
+            257,
+            0,
+            262,
+            4
+          ],
+          "physical_owner_rows": {
+            "0": 13
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 153,
+          "strong_pixels": 120,
+          "bbox_in_frame": [
+            0,
+            407,
+            14,
+            429
+          ],
+          "physical_owner_rows": {
+            "4": 153
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-source-v01.png",
+      "authored_slot": [
+        "transform:1",
+        "S",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:1",
+            "S",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "S",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "S",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "S",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "S",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "S",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "identity_weapon_action"
+      ]
+    },
+    {
+      "sha256": "b3e72d4f0cc4dd688a2804e512749b92a9c1370c2d2f343f87f69cf17a437d17",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 4,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            137,
+            509,
+            139,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 4
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:1",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:1",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "631a673324190c80a1020d37eb40b9f55714b20e9f2c8f77a6443974f63424c6",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 20,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            505,
+            346,
+            512,
+            351
+          ],
+          "physical_owner_rows": {
+            "5": 20
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-idle-source-v01.png",
+      "authored_slot": [
+        "transform:112",
+        "N",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "217ec93ba1ec919955c1a9c25325f5285fb4b486b2dc74373c818dfae8aab504",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1232,
+          "strong_pixels": 482,
+          "bbox_in_frame": [
+            0,
+            293,
+            32,
+            350
+          ],
+          "physical_owner_rows": {
+            "3": 1232
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 192,
+          "strong_pixels": 14,
+          "bbox_in_frame": [
+            0,
+            311,
+            12,
+            338
+          ],
+          "physical_owner_rows": {
+            "4": 192
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-run-source-v01.png",
+      "authored_slot": [
+        "transform:112",
+        "N",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "N",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "226b7a0cfbe5d500fbaa78312f5dc4423808abc5683ddeabc7794476c5176c95",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 175,
+          "strong_pixels": 139,
+          "bbox_in_frame": [
+            0,
+            304,
+            20,
+            332
+          ],
+          "physical_owner_rows": {
+            "2": 175
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:112",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "fddd715fad1fd7a7af7705371a57458b53bffa301dbf6061e0d1f1d089c549fc",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 47,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            509,
+            351,
+            512,
+            378
+          ],
+          "physical_owner_rows": {
+            "1": 47
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 28,
+          "strong_pixels": 11,
+          "bbox_in_frame": [
+            0,
+            122,
+            2,
+            143
+          ],
+          "physical_owner_rows": {
+            "3": 28
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:112",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "4cfcedb83d29e8b3049506bab976aeb550e06dec39ee325b3b3527aa5059f27b",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 89,
+          "strong_pixels": 2,
+          "bbox_in_frame": [
+            504,
+            321,
+            512,
+            339
+          ],
+          "physical_owner_rows": {
+            "2": 89
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 64,
+          "strong_pixels": 8,
+          "bbox_in_frame": [
+            0,
+            238,
+            512,
+            333
+          ],
+          "physical_owner_rows": {
+            "3": 18,
+            "5": 46
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:112",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:112",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "635fa1dafa0ae8124d94160e244b52d68f865f5132e6592c5e4b5e6609e89f1e",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 15185,
+          "strong_pixels": 10338,
+          "bbox_in_frame": [
+            0,
+            2,
+            114,
+            232
+          ],
+          "physical_owner_rows": {
+            "3": 15185
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 12713,
+          "strong_pixels": 10097,
+          "bbox_in_frame": [
+            0,
+            61,
+            88,
+            264
+          ],
+          "physical_owner_rows": {
+            "4": 12713
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-attack-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "identity_weapon_action"
+      ]
+    },
+    {
+      "sha256": "d4e7c55acc533b762f2db77e1569f992217e460ea439c464f1016d5cc834d46d",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 929,
+          "strong_pixels": 113,
+          "bbox_in_frame": [
+            9,
+            611,
+            118,
+            627
+          ],
+          "physical_owner_rows": {
+            "2": 929
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 10409,
+          "strong_pixels": 7575,
+          "bbox_in_frame": [
+            0,
+            253,
+            95,
+            515
+          ],
+          "physical_owner_rows": {
+            "2": 10409
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NW-attack-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "NW",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "identity_weapon_action"
+      ]
+    },
+    {
+      "sha256": "e513b4a1fa512ef902009b8bad02aaa050cda2ffc1c55c0aa2a517a818f20985",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1661,
+          "strong_pixels": 1478,
+          "bbox_in_frame": [
+            0,
+            306,
+            32,
+            508
+          ],
+          "physical_owner_rows": {
+            "2": 1661
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "2578b81a2c29496a16de64628121421ee80ba064af1d4316f669dbc7064f13f3",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 811,
+          "strong_pixels": 310,
+          "bbox_in_frame": [
+            0,
+            347,
+            22,
+            406
+          ],
+          "physical_owner_rows": {
+            "3": 811
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "cc6af21e73abf3c6b0169326946374cb234951dfc0ede199e2abf011e7f4e23b",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 10,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            161,
+            508,
+            164,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 10
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NW-run-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "NW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 139,
+          "strong_pixels": 106,
+          "bbox_in_frame": [
+            0,
+            352,
+            7,
+            384
+          ],
+          "physical_owner_rows": {
+            "1": 139
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 6879,
+          "strong_pixels": 5729,
+          "bbox_in_frame": [
+            0,
+            208,
+            126,
+            351
+          ],
+          "physical_owner_rows": {
+            "3": 6879
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 3642,
+          "strong_pixels": 3060,
+          "bbox_in_frame": [
+            0,
+            159,
+            74,
+            253
+          ],
+          "physical_owner_rows": {
+            "4": 3642
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SE-attack-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "SE",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "SE",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SE",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SE",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SE",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SE",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SE",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "identity_weapon_action"
+      ]
+    },
+    {
+      "sha256": "6758e90e43a9d51376192c707d63cccb4749b9dbdb5dd31a1f1d6d2b9f77bd50",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 4,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            180,
+            509,
+            182,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 4
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:113",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "589b859f92fc7cfb51efa301796b0f199ef5723ce9ab69565378994d6b506ad3",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 3887,
+          "strong_pixels": 1227,
+          "bbox_in_frame": [
+            0,
+            110,
+            76,
+            241
+          ],
+          "physical_owner_rows": {
+            "2": 3887
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/NE-attack-source-v01.png",
+      "authored_slot": [
+        "transform:114",
+        "NE",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:114",
+            "NE",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:114",
+            "NE",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:114",
+            "NE",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:114",
+            "NE",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "e79fc0c8d601dbda268d6ce0c151e02042e7cbbe057983f4a86148763d2a9c2e",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1780,
+          "strong_pixels": 1561,
+          "bbox_in_frame": [
+            0,
+            143,
+            51,
+            304
+          ],
+          "physical_owner_rows": {
+            "3": 1780
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:122",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:122",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:122",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:122",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:122",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:122",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:122",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "e807a29561c7c62428790d651d30a2bd24e581321f33ea91f4f485135a7e05dc",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 208,
+          "strong_pixels": 93,
+          "bbox_in_frame": [
+            0,
+            288,
+            19,
+            304
+          ],
+          "physical_owner_rows": {
+            "3": 208
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 106,
+          "strong_pixels": 35,
+          "bbox_in_frame": [
+            0,
+            306,
+            15,
+            319
+          ],
+          "physical_owner_rows": {
+            "4": 106
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_143/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:143",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:143",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "9b06da5e3a6d43c692002f2731e08d163c4a19615861ded134faa7414eb98773",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 586,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            0,
+            213,
+            14,
+            276
+          ],
+          "physical_owner_rows": {
+            "3": 586
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 55,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            0,
+            198,
+            3,
+            226
+          ],
+          "physical_owner_rows": {
+            "4": 55
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:143",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:143",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:143",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "75bcfa0dc1bab89c98676b2ffa127c875cc36aa7d7e6679d7ff8617da0e45e6d",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 1,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            365,
+            511,
+            366,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 1
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 17,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            0,
+            153,
+            8,
+            157
+          ],
+          "physical_owner_rows": {
+            "3": 17
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:166",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:166",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 97,
+          "strong_pixels": 74,
+          "bbox_in_frame": [
+            498,
+            458,
+            512,
+            476
+          ],
+          "physical_owner_rows": {
+            "2": 97
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:175",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "d5db124db66c5ed5c9402614d802a0e0e4dc6ffd544aed77552614d165a8e16d",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 15,
+          "strong_pixels": 4,
+          "bbox_in_frame": [
+            507,
+            419,
+            512,
+            426
+          ],
+          "physical_owner_rows": {
+            "2": 15
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 12,
+          "strong_pixels": 4,
+          "bbox_in_frame": [
+            508,
+            395,
+            512,
+            401
+          ],
+          "physical_owner_rows": {
+            "5": 12
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-run-source-v01.png",
+      "authored_slot": [
+        "transform:175",
+        "NW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:175",
+            "NW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "200a54ad2d1e986a02724a84b5cd99d2cc3aa00ba90ada1739638f67ec26a5d7",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1700,
+          "strong_pixels": 1464,
+          "bbox_in_frame": [
+            0,
+            284,
+            38,
+            470
+          ],
+          "physical_owner_rows": {
+            "2": 1700
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/N-attack-source-v01.png",
+      "authored_slot": [
+        "transform:177",
+        "N",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:177",
+            "N",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:177",
+            "N",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:177",
+            "N",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:177",
+            "N",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "165ff63c466292b9eec2cd75666d8a92ba3e2c2259f704ff2cb856498c880a5e",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 2473,
+          "strong_pixels": 2031,
+          "bbox_in_frame": [
+            0,
+            178,
+            83,
+            230
+          ],
+          "physical_owner_rows": {
+            "2": 2473
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/SW-attack-source-v01.png",
+      "authored_slot": [
+        "transform:177",
+        "SW",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:177",
+            "SW",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:177",
+            "SW",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:177",
+            "SW",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:177",
+            "SW",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "0563361cf1afba709114b200d20f91a9eb9b630a479d31ee79a6f34f53b5b677",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 11,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            273,
+            510,
+            280,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 11
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 34,
+          "strong_pixels": 13,
+          "bbox_in_frame": [
+            258,
+            508,
+            272,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 34
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 33,
+          "strong_pixels": 9,
+          "bbox_in_frame": [
+            259,
+            508,
+            285,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 33
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-run-source-v01.png",
+      "authored_slot": [
+        "transform:178",
+        "N",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:178",
+            "N",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "N",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "N",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "N",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "N",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "N",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "32f188ff339a1a0a52493a7b0e4b94b9f77240a66a8e3d8254545a10ad0ad6b2",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1611,
+          "strong_pixels": 688,
+          "bbox_in_frame": [
+            0,
+            227,
+            58,
+            277
+          ],
+          "physical_owner_rows": {
+            "2": 1611
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/NE-attack-source-v01.png",
+      "authored_slot": [
+        "transform:178",
+        "NE",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "77879c676c1fbcebcbcf568a44925e66de9334545ad2d9e0708227bf05d19a9f",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 2960,
+          "strong_pixels": 2800,
+          "bbox_in_frame": [
+            0,
+            302,
+            41,
+            441
+          ],
+          "physical_owner_rows": {
+            "0": 2960
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 525,
+          "strong_pixels": 464,
+          "bbox_in_frame": [
+            0,
+            394,
+            15,
+            459
+          ],
+          "physical_owner_rows": {
+            "2": 525
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/NE-hit-source-v01.png",
+      "authored_slot": [
+        "transform:178",
+        "NE",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NE",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "5750a184e2b083f0e8b13823bb2fb3764461df85b43f78a4a3a717c57b1c822c",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 573,
+          "strong_pixels": 512,
+          "bbox_in_frame": [
+            0,
+            342,
+            21,
+            401
+          ],
+          "physical_owner_rows": {
+            "3": 573
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 49,
+          "strong_pixels": 37,
+          "bbox_in_frame": [
+            0,
+            270,
+            10,
+            279
+          ],
+          "physical_owner_rows": {
+            "4": 49
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:178",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "0f73e651bf8245d4318db13750cf9350c00a0dde9902ae4a3a4d15bf924726a1",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 21,
+          "strong_pixels": 9,
+          "bbox_in_frame": [
+            0,
+            350,
+            3,
+            360
+          ],
+          "physical_owner_rows": {
+            "3": 21
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 35,
+          "strong_pixels": 22,
+          "bbox_in_frame": [
+            0,
+            334,
+            6,
+            345
+          ],
+          "physical_owner_rows": {
+            "4": 35
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:178",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "1677578d19f76237bc5105a36f6b2080ece12350a01540e8db45d45891d729df",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 14,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            263,
+            510,
+            291,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 14
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 2,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            290,
+            511,
+            292,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 2
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:178",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:178",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:178",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "ae0b8180b30074ee7843cd7d23b526da66fef2680ba5831db1d7064479c75703",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 32,
+          "strong_pixels": 21,
+          "bbox_in_frame": [
+            505,
+            414,
+            512,
+            424
+          ],
+          "physical_owner_rows": {
+            "2": 32
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 106,
+          "strong_pixels": 73,
+          "bbox_in_frame": [
+            0,
+            342,
+            10,
+            369
+          ],
+          "physical_owner_rows": {
+            "3": 106
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:190",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:190",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:190",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:190",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:190",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:190",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:190",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "7e802c0892f3b238c2d3f54355ec15fc6a8dcf5252c1cef7784f9183f6f87987",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 129,
+          "strong_pixels": 103,
+          "bbox_in_frame": [
+            0,
+            344,
+            12,
+            392
+          ],
+          "physical_owner_rows": {
+            "3": 129
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:191",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "6dcf60ef58f7ccb2649954bc29c3cf5e99f0984e013b2b5ab509c529864828e6",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 17,
+          "strong_pixels": 8,
+          "bbox_in_frame": [
+            369,
+            505,
+            374,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 17
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 19,
+          "strong_pixels": 9,
+          "bbox_in_frame": [
+            359,
+            505,
+            364,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 19
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 20,
+          "strong_pixels": 7,
+          "bbox_in_frame": [
+            342,
+            504,
+            347,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 20
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:191",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:191",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "87157c2c672808ba01684799ad4851557ee5fa1c13277dcc83b8db2f9a1a2567",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 211,
+          "strong_pixels": 92,
+          "bbox_in_frame": [
+            249,
+            490,
+            401,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 211
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 97,
+          "strong_pixels": 78,
+          "bbox_in_frame": [
+            0,
+            440,
+            7,
+            460
+          ],
+          "physical_owner_rows": {
+            "3": 97
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:192",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:192",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:192",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:192",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:192",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:192",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:192",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "8ef2a4a2c6cbf27907c6fc67cd0d5d3b3eeba4bfcbd057b24065034b8085e696",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 11193,
+          "strong_pixels": 10267,
+          "bbox_in_frame": [
+            0,
+            233,
+            126,
+            519
+          ],
+          "physical_owner_rows": {
+            "2": 11193
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-attack-source-v01.png",
+      "authored_slot": [
+        "transform:193",
+        "NW",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "8e8acaa7a4db3816909103d4d0a85438030099400c4ce66ea7835513b048add1",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 236,
+          "strong_pixels": 175,
+          "bbox_in_frame": [
+            0,
+            374,
+            21,
+            515
+          ],
+          "physical_owner_rows": {
+            "2": 236
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:193",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "5fd7a19d426a16cc4d92b930dfb1700a5ebe542eb78774b76a0d65a02334273a",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 585,
+          "strong_pixels": 486,
+          "bbox_in_frame": [
+            0,
+            276,
+            32,
+            361
+          ],
+          "physical_owner_rows": {
+            "3": 585
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:193",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "36388a1815913b9d28e922eb8897c38de2b88748e1de2c23001798e3d74a923d",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 10,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            276,
+            509,
+            281,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 10
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-run-source-v01.png",
+      "authored_slot": [
+        "transform:193",
+        "NW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "NW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "d822fe20829e38513d63b112b451d1e11e7b85a36c90d377a32a52faa7d7e2cc",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 13339,
+          "strong_pixels": 10089,
+          "bbox_in_frame": [
+            0,
+            159,
+            143,
+            327
+          ],
+          "physical_owner_rows": {
+            "2": 13339
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/SW-attack-source-v01.png",
+      "authored_slot": [
+        "transform:193",
+        "SW",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:193",
+            "SW",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "SW",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "SW",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:193",
+            "SW",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "310d7341972ad974658ffc643627e6f11ebc1b616409a1433fd8a38bc70922b4",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 388,
+          "strong_pixels": 335,
+          "bbox_in_frame": [
+            0,
+            363,
+            34,
+            396
+          ],
+          "physical_owner_rows": {
+            "0": 388
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 6692,
+          "strong_pixels": 6275,
+          "bbox_in_frame": [
+            0,
+            225,
+            69,
+            563
+          ],
+          "physical_owner_rows": {
+            "2": 6692
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/NW-attack-source-v01.png",
+      "authored_slot": [
+        "transform:213",
+        "NW",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "355404c8ed6ee90cd5906692e79795ac0517cf582e128cddd359219e46987f58",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 988,
+          "strong_pixels": 886,
+          "bbox_in_frame": [
+            0,
+            302,
+            36,
+            391
+          ],
+          "physical_owner_rows": {
+            "2": 988
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/NW-hit-source-v01.png",
+      "authored_slot": [
+        "transform:213",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "c8ba87e751c2dfb37e3000a09a1c5be8761b1badd1759f6f0ecf081658e875b2",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 35,
+          "strong_pixels": 26,
+          "bbox_in_frame": [
+            0,
+            293,
+            2,
+            313
+          ],
+          "physical_owner_rows": {
+            "3": 35
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:213",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "a04b5f078df93a68b62e5a869419d656e40a6e9707c4a40c99ff6c5d9d28516f",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 51,
+          "strong_pixels": 25,
+          "bbox_in_frame": [
+            168,
+            502,
+            258,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 51
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 52,
+          "strong_pixels": 30,
+          "bbox_in_frame": [
+            159,
+            501,
+            247,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 52
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 47,
+          "strong_pixels": 25,
+          "bbox_in_frame": [
+            161,
+            502,
+            249,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 47
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/NW-run-source-v01.png",
+      "authored_slot": [
+        "transform:213",
+        "NW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "NW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "304705a179b54da62e6bb7544d98453bc1053b44f62f4750000e85a342b609c9",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 183,
+          "strong_pixels": 140,
+          "bbox_in_frame": [
+            0,
+            325,
+            6,
+            371
+          ],
+          "physical_owner_rows": {
+            "3": 183
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:213",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:213",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "b3ef04e4aea84b29ef77f71c49e447150bf90ee844ad202f3cf2e4aca7313692",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 128,
+          "strong_pixels": 6,
+          "bbox_in_frame": [
+            0,
+            426,
+            8,
+            449
+          ],
+          "physical_owner_rows": {
+            "0": 128
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 12899,
+          "strong_pixels": 10577,
+          "bbox_in_frame": [
+            0,
+            94,
+            97,
+            306
+          ],
+          "physical_owner_rows": {
+            "3": 12899
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 4669,
+          "strong_pixels": 2885,
+          "bbox_in_frame": [
+            0,
+            103,
+            63,
+            252
+          ],
+          "physical_owner_rows": {
+            "4": 4669
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NE-attack-source-v01.png",
+      "authored_slot": [
+        "transform:225",
+        "NE",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:225",
+            "NE",
+            "attack"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NE",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NE",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NE",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NE",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NE",
+            "attack"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "69cf7ff60e56530d5357d98a2cc2d75af4a42caf3d12b5679a5caccaf451fdd2",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 10467,
+          "strong_pixels": 7169,
+          "bbox_in_frame": [
+            0,
+            181,
+            78,
+            457
+          ],
+          "physical_owner_rows": {
+            "2": 10467
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NW-attack-source-v01.png",
+      "authored_slot": [
+        "transform:225",
+        "NW",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "b9d5f7f5a47cbc0db15c38435351157f940821c999057d32b111af2483a55d6a",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 5,
+          "pixels_alpha_gt16": 412,
+          "strong_pixels": 113,
+          "bbox_in_frame": [
+            0,
+            333,
+            16,
+            367
+          ],
+          "physical_owner_rows": {
+            "4": 412
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NW-run-source-v01.png",
+      "authored_slot": [
+        "transform:225",
+        "NW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:225",
+            "NW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "3679f31e8d5958ab418c311994d562e2b4928e7dceb0c9a32be6796732bfc202",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 446,
+          "strong_pixels": 6,
+          "bbox_in_frame": [
+            121,
+            494,
+            170,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 446
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 13,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            146,
+            509,
+            154,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 13
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_227/draft001/SW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:227",
+        "SW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:227",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:227",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:227",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:227",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:227",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:227",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "430ac16630e227b2c0de0ae6e5df9f0124800595fbe9dd18374aba7d9fe66d73",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1092,
+          "strong_pixels": 513,
+          "bbox_in_frame": [
+            0,
+            336,
+            37,
+            390
+          ],
+          "physical_owner_rows": {
+            "3": 1092
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/N-hit-source-v01.png",
+      "authored_slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "d973c7549fdeab7ba70717a10bd876bd90771c7bca0a7b285b92f74677bba78f",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 11,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            315,
+            510,
+            325,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 11
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NE-idle-source-v01.png",
+      "authored_slot": [
+        "transform:245",
+        "NE",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:245",
+            "NE",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NE",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NE",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NE",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NE",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NE",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "9d1fad5ceab2178b80fb03f9fb51697ea00f642d185614c059c74a143b8d4bb7",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 2,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            511,
+            341,
+            512,
+            343
+          ],
+          "physical_owner_rows": {
+            "2": 2
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NW-idle-source-v01.png",
+      "authored_slot": [
+        "transform:245",
+        "NW",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:245",
+            "NW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:245",
+            "NW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "8c0f68a685986a05c1d0ec6f1382630d6c05e8533ca0614d9fc36eb60f58e4db",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 880,
+          "strong_pixels": 502,
+          "bbox_in_frame": [
+            378,
+            497,
+            486,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 880
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 599,
+          "strong_pixels": 274,
+          "bbox_in_frame": [
+            370,
+            499,
+            480,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 599
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 516,
+          "strong_pixels": 180,
+          "bbox_in_frame": [
+            384,
+            500,
+            486,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 516
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/E-idle-source-v01.png",
+      "authored_slot": [
+        "transform:273",
+        "E",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:273",
+            "E",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "E",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "E",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "E",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "E",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "E",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "36e88324174b81c00653e99eecaccc061dd8888febb38c065be5a970cb8da199",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 288,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            389,
+            505,
+            456,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 288
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 482,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            399,
+            503,
+            480,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 482
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 462,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            417,
+            503,
+            496,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 462
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/SE-idle-source-v01.png",
+      "authored_slot": [
+        "transform:273",
+        "SE",
+        "idle"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:273",
+            "SE",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "SE",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "SE",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "SE",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "SE",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:273",
+            "SE",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "f399b03f6a61eec70985f06bf6a5064be24314ff410760caa993784df6a79603",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 233,
+          "strong_pixels": 38,
+          "bbox_in_frame": [
+            498,
+            330,
+            512,
+            358
+          ],
+          "physical_owner_rows": {
+            "1": 233
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 328,
+          "strong_pixels": 49,
+          "bbox_in_frame": [
+            0,
+            275,
+            15,
+            310
+          ],
+          "physical_owner_rows": {
+            "3": 328
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_330/draft001/SW-run-source-v01.png",
+      "authored_slot": [
+        "transform:330",
+        "SW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:330",
+            "SW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:330",
+            "SW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:330",
+            "SW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:330",
+            "SW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:330",
+            "SW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:330",
+            "SW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "092fb30d1b951b5edb4f810c8067f3c36b987a58dec0e7a64b3ab9e98b255168",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 16,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            128,
+            509,
+            138,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 16
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 1,
+          "pixels_alpha_gt16": 13,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            113,
+            510,
+            122,
+            512
+          ],
+          "physical_owner_rows": {
+            "4": 13
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 18,
+          "strong_pixels": 0,
+          "bbox_in_frame": [
+            91,
+            509,
+            102,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 18
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_337/draft001/NW-run-source-v01.png",
+      "authored_slot": [
+        "transform:337",
+        "NW",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:337",
+            "NW",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:337",
+            "NW",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:337",
+            "NW",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:337",
+            "NW",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:337",
+            "NW",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:337",
+            "NW",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "6ed0e819f90e2d656d5f79242a2678d3a3c48059c9d693fc66e2afe6a9f97c53",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 10,
+          "strong_pixels": 5,
+          "bbox_in_frame": [
+            253,
+            508,
+            257,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 10
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_338/draft001/N-run-source-v01.png",
+      "authored_slot": [
+        "transform:338",
+        "N",
+        "run"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:338",
+            "N",
+            "run"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:338",
+            "N",
+            "run"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:338",
+            "N",
+            "run"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:338",
+            "N",
+            "run"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:338",
+            "N",
+            "run"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:338",
+            "N",
+            "run"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "f73a0c7e7b4e6217e546b5429f6d85fc35c3d612df5caafbc00e5e0d5b882c18",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 1328,
+          "strong_pixels": 1184,
+          "bbox_in_frame": [
+            0,
+            161,
+            59,
+            194
+          ],
+          "physical_owner_rows": {
+            "2": 1328
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_375/draft001/N-attack-source-v01.png",
+      "authored_slot": [
+        "transform:375",
+        "N",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:375",
+            "N",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:375",
+            "N",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:375",
+            "N",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:375",
+            "N",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "bb2a15bac5b2b17f2bdc7b559021c11ccbc8f88b9cc5587b7221c758a48d130b",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 8307,
+          "strong_pixels": 6361,
+          "bbox_in_frame": [
+            0,
+            0,
+            498,
+            272
+          ],
+          "physical_owner_rows": {
+            "1": 30,
+            "2": 8277
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-attack-source-v01.png",
+      "authored_slot": [
+        "transform:387",
+        "N",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:387",
+            "N",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:387",
+            "N",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:387",
+            "N",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:387",
+            "N",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "sha256": "208702b9826b6855aa719994102e3b3d8f4589a92000c3b724482c406997cd13",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 2450,
+          "strong_pixels": 1262,
+          "bbox_in_frame": [
+            0,
+            191,
+            76,
+            240
+          ],
+          "physical_owner_rows": {
+            "2": 2450
+          },
+          "source_grid": [
+            2,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/N-attack-source-v01.png",
+      "authored_slot": [
+        "transform:402",
+        "N",
+        "attack"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:402",
+            "N",
+            "attack"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "N",
+            "attack"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "N",
+            "attack"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "N",
+            "attack"
+          ],
+          "phase": 4,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "selection_kind": "EXISTING_SOURCE_RETAINED_AFTER_QUOTA",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+      "source_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_402/quality-v02/SW-idle-source-v02.png",
+      "sha256": "7b56dda2c378fdaae5eea852a911a7e524f2873f7686f509f173a06577fed1c4",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 118,
+          "strong_pixels": 79,
+          "bbox_in_frame": [
+            0,
+            284,
+            3,
+            340
+          ],
+          "physical_owner_rows": {
+            "3": 118
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "authored_slot": [
+        "transform:402",
+        "SW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_402/quality-v02/SW-idle-record-v02.json",
+      "correction_candidate_id": "qc001",
+      "dependents": [
+        {
+          "slot": [
+            "transform:402",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:402",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "CHANGED_SOURCE_TARGETED_FOLLOWUP",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/quality-v02/changed-source-technical-index-v01.json",
+      "source_review_sha256": "cf6d387e854e93000f66daa6f76529b0a4c5dd0c5151d7dc23f7bb6ac439be02",
+      "retained_quality_holds": []
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_339/quality-v02/SW-idle-source-v02.png",
+      "sha256": "fea7bf8671201b8c2ca11083f33772211365c2cefe6e3b534ce694c87f55c6d1",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 0,
+          "pixels_alpha_gt16": 62,
+          "strong_pixels": 34,
+          "bbox_in_frame": [
+            328,
+            507,
+            441,
+            512
+          ],
+          "physical_owner_rows": {
+            "3": 62
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 45,
+          "strong_pixels": 16,
+          "bbox_in_frame": [
+            299,
+            504,
+            415,
+            512
+          ],
+          "physical_owner_rows": {
+            "5": 45
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 128,
+          "strong_pixels": 110,
+          "bbox_in_frame": [
+            0,
+            93,
+            7,
+            163
+          ],
+          "physical_owner_rows": {
+            "3": 128
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "authored_slot": [
+        "transform:339",
+        "SW",
+        "idle"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_339/quality-v02/SW-idle-record-v02.json",
+      "correction_candidate_id": "qc009",
+      "dependents": [
+        {
+          "slot": [
+            "transform:339",
+            "SW",
+            "idle"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:339",
+            "SW",
+            "idle"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:339",
+            "SW",
+            "idle"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:339",
+            "SW",
+            "idle"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:339",
+            "SW",
+            "idle"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:339",
+            "SW",
+            "idle"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "selection_kind": "CHANGED_SOURCE_TARGETED_FOLLOWUP",
+      "source_review_path": "res://docs/remake/pr122-legendary-parallel/quality-v02/changed-source-technical-index-v01.json",
+      "source_review_sha256": "cf6d387e854e93000f66daa6f76529b0a4c5dd0c5151d7dc23f7bb6ac439be02",
+      "retained_quality_holds": [
+        "camera"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "batch": 1,
+      "actors": [
+        "transform:1",
+        "transform:112"
+      ]
+    },
+    {
+      "batch": 2,
+      "actors": [
+        "transform:113",
+        "transform:114"
+      ]
+    },
+    {
+      "batch": 3,
+      "actors": [
+        "transform:122",
+        "transform:143"
+      ]
+    },
+    {
+      "batch": 4,
+      "actors": [
+        "transform:166",
+        "transform:175"
+      ]
+    },
+    {
+      "batch": 5,
+      "actors": [
+        "transform:177",
+        "transform:178"
+      ]
+    },
+    {
+      "batch": 6,
+      "actors": [
+        "transform:190",
+        "transform:191"
+      ]
+    },
+    {
+      "batch": 7,
+      "actors": [
+        "transform:192",
+        "transform:193"
+      ]
+    },
+    {
+      "batch": 8,
+      "actors": [
+        "transform:213",
+        "transform:225"
+      ]
+    },
+    {
+      "batch": 9,
+      "actors": [
+        "transform:227",
+        "transform:244"
+      ]
+    },
+    {
+      "batch": 10,
+      "actors": [
+        "transform:245",
+        "transform:273"
+      ]
+    },
+    {
+      "batch": 11,
+      "actors": [
+        "transform:330",
+        "transform:337"
+      ]
+    },
+    {
+      "batch": 12,
+      "actors": [
+        "transform:338",
+        "transform:339"
+      ]
+    },
+    {
+      "batch": 13,
+      "actors": [
+        "transform:375",
+        "transform:387",
+        "transform:402"
+      ]
+    }
+  ],
+  "unsafe_sources_remain_HOLD": true,
+  "quality_status": "HOLD",
+  "final_approved": 0
+}

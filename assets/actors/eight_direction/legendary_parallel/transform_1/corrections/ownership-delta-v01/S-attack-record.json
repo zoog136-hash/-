@@ -1,0 +1,311 @@
+{
+  "key": "transform:1",
+  "name": "드래곤 슬레이어",
+  "grade": "전설",
+  "direction": "S",
+  "role": "attack",
+  "reference": "res://assets/catalog/1438e0d431040e79f73ef780.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:1 드래곤 슬레이어. Attached catalog PNG is authoritative. Create ONE transparent PNG, exactly SIX new full-body SOUTH ATTACK poses in THREE equal columns by TWO equal rows, reading order0..5. All six face DOWN, true front SOUTH, at one fixed slightly elevated isometric game camera. 드래곤 슬레이어 is the original broad black/gold heavy armored knight in a closed golden helmet with tall gold shoulder horns/spikes and exact original enormous golden-hilted sword. Use a powerful SOUTH two-hand greatsword attack with connected grip, stable support and clear impact at frame3. Preserve exact black/gold proportions, helmet, boots and cape, no new armor design. The image overrides verbal ambiguity. Preserve original face, hair, costume, skin, proportions, colors, exact equipment, and anatomical weapon hand. Phases:0 guard;1 preparation and weight shift;2 full windup/charge;3 actual SOUTH strike, shot or spell;4 follow-through;5 recovery. Six distinct articulated joint poses, connected hands and grip, natural planted feet and coherent weapon movement with contact at frame3. Match original detailed painted fantasy RPG sprite style. No generic replacements, image rotation, mirroring, translated still, invented accessories or new weapons. Entire full body, head ornaments, feet and COMPLETE weapon must fit inside each equal cell with generous transparent margins, no clipping/overlap. ZERO alpha outside figure and original small effects. No opaque/gradient backdrop, ground, scenery, grid, text, labels or extra figures. Output only the six-frame sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/1438e0d431040e79f73ef780.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "reference_sha256": "c5a8a907f090a012e7043c5689be93cfe15e4f8730cda5c4d73efb94531b3747",
+  "schema": "legendary-versioned-ownership-execution-delta-v2",
+  "status": "OWNERSHIP_REPAIRED_OTHER_QUALITY_HOLD",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+  "source_sha256": "14d5b092d8578c6d809e63a3474a38c6a755d21ae130070b030be140bcca3a81",
+  "source_bytes": 1524320,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-SpriteFrames.tres",
+  "output_spriteframes_sha256": "05aa925eec9535192e837887c6476c066461e8b782781fbd4996db3ba44ccd3e",
+  "generated_original_path": "/workspace/generated_images/exec-447bd994-740e-45ca-a455-2689235e51a3.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_1-S-attack-v01.json",
+  "request_file_sha256": "c63f5d3d124e368c38222ae82c75faa6a8cc294d4b099234a8f43020501b459c",
+  "generation_request_sha256": "9e42f5afb7e199c0a62536249529ea04cbd86a86c10cff893c515e72c20b42e4",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    631,
+    665
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "attack_2",
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "d92dc561a985c826afd2f6a2bdeb208c5f832a4bf9faa7734dc1b67017891d9a"
+    },
+    {
+      "index": 1,
+      "region": [
+        631,
+        0,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "95763da98ebba492f5e0e33416e6e6cd91c99e0cbfdc607fbf90b421ebab5799"
+    },
+    {
+      "index": 2,
+      "region": [
+        1262,
+        0,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "53928043aa97a9aa430fa4b1e9524fb9acc90b04c58aef5097b07e799bac74d3"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        665,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "af8a9d698d3e460e5628cff5bd615f2556e0b2235bd3c70a1c7e463333dc48bd"
+    },
+    {
+      "index": 4,
+      "region": [
+        631,
+        665,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "3e48fae2f22536f13eb49343ead2ef6e991d0c55e41b5d93fe288c79bef34b25"
+    },
+    {
+      "index": 5,
+      "region": [
+        1262,
+        665,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "7d19357f8d17a19a06c49a74a89b779c142ac8021787506305833a9eca1040d6"
+    }
+  ],
+  "clipped_cell_count": 5,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-record-v01.json",
+  "revision_parent_sha256": "f3aa9a0d91de01f0afdf617b633b7097fa6e98c0ff10f9f90f69433682d9a790",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-registration.json",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "ownership_execution_delta": "res://docs/remake/pr122-legendary-parallel/ownership-quota-execution-delta-v01.json",
+  "newly_authored_correction_poses_added": 0,
+  "final_approved": false,
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.proof.json"
+  ],
+  "ownership_delta_remaining_quality_holds": [
+    "identity_weapon_action"
+  ],
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-source-v01.png",
+  "raw_authored_source_sha256": "f9d0898d323a7f3c2253c13742e3f1f53496c882596ee2d7dfd4bdc25764ab79",
+  "partition_edges": {
+    "x": [
+      0,
+      631,
+      1262,
+      1893
+    ],
+    "y": [
+      0,
+      665,
+      1330
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "sha256": "14d5b092d8578c6d809e63a3474a38c6a755d21ae130070b030be140bcca3a81",
+      "bytes": 1524320
+    }
+  ],
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "region": [
+        631,
+        0,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "region": [
+        1262,
+        0,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "region": [
+        0,
+        665,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "region": [
+        631,
+        665,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/ownership-delta-v01/S-attack-source-v01-isolated.png",
+      "region": [
+        1262,
+        665,
+        631,
+        665
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ]
+}
