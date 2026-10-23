@@ -15,8 +15,8 @@
   },
   "private_pack": {
     "archive": "twilight-tower-png-20261023.zip",
-    "bytes": 553535365,
-    "sha256": "ea864f08ce9b725037809ec35dc15621ad6e15e161fce0a3b09be18d00214976",
+    "bytes": 553535530,
+    "sha256": "716105d740074fc59f1f7efd9dafbfdf8ac58e2c92166b08941574aef4f29328",
     "crc": "PASS",
     "textures": 414,
     "actual_installer": "PASS",
@@ -51,7 +51,20 @@
     "related_regressions": {
       "initial": "13/16",
       "two_new_compatibility_failures": "FIXED_AND_2_2_RERUN_PASS",
-      "source_render_suite": "5953 checks over 10 floors: one obsolete assumption that Domination remained authored; updated restoration fixture to actually authored Albino4; focused Oman10+restoration rerun pending"
+      "source_render_suite": {
+        "all_10_floors_first_run": {
+          "checks": 5953,
+          "failures": [
+            "obsolete expectation that domination_summit remained authored with a capsule"
+          ]
+        },
+        "changed_fixture": "Use unchanged authored albino_04 to test capsule restoration. Native Domination correctly keeps a circle.",
+        "latest_focused_oman10_boss_npc_all_portals_and_restoration": {
+          "checks": 674,
+          "failures": []
+        },
+        "full_10_floor_repeat_after_fixture_only_change": "NOT_REPEATED; earlier floor business assertions passed; changed restoration path independently rerun"
+      }
     },
     "latest_domination_and_missing_pack": {
       "checks": 85,
@@ -70,6 +83,10 @@
       "boss_identities": 9,
       "normal_deaths": 5,
       "actual_ground_drops": 10
+    },
+    "native_catalog": {
+      "checks": 52,
+      "failures": []
     }
   },
   "open_local_regression": null,
@@ -80,5 +97,6 @@
     "pr120_current_latest_checks": "28 checks snapshot: no failed conclusion; historical failure records are not reassigned to this change",
     "pr147_current_latest_checks": "83 checks snapshot: no failed conclusion; branch unmerged"
   },
-  "legacy_release_audit": "check_resource_integrity --release-dir expects TWILIGHT-original-resources.zip and asset paths, not a map-only ZIP. Map archive separately verified with its hash-pinned installer; no global original-resource delivery claim."
+  "legacy_release_audit": "check_resource_integrity --release-dir expects TWILIGHT-original-resources.zip and asset paths, not a map-only ZIP. Map archive separately verified with its hash-pinned installer; no global original-resource delivery claim.",
+  "ci": "DRAFT_PR_NOT_YET_PUSHED"
 }

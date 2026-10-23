@@ -45,7 +45,7 @@ NativePngField가 기존에는 raster solid cells만 물리화해 사선 기둥�
 
 **오만·지배 PNG는 아직 공개 Git에 추가하지 않았다.** main의 기존 공개 허용 기록은 9개 원본에 한정되고 101~111은 포함하지 않는다. 추가 공개 재배포 허용을 요청한 상태다. 허용 전에는 GitHub 코드 업데이트만으로 새 오만·지배 그림이 들어 있다고 보고하지 않는다. 이 브랜치는 개인 팩을 프로젝트에 설치한 상태에서 일반 실행으로 검사했다. 아덴 원본은 이미 main에 포함되어 있다.
 
-개인 팩 `twilight-tower-png-20261023.zip`: 553,535,365 bytes, SHA-256 `ea864f08ce9b725037809ec35dc15621ad6e15e161fce0a3b09be18d00214976`. 360개 오만 바닥 청크+전경 6개, 지배 바닥 47개+전경 1개를 담는다. 공개 코드의 receipt가 index→manifest→414개 텍스처 SHA를 검증한다. 안전 설치기는 두 팩 모두 검증한 후 교체하고 실패하면 기존 설치를 복구한다.
+개인 팩 `twilight-tower-png-20261023.zip`: 553,535,530 bytes, SHA-256 `716105d740074fc59f1f7efd9dafbfdf8ac58e2c92166b08941574aef4f29328`. 360개 오만 바닥 청크+전경 6개, 지배 바닥 47개+전경 1개를 담는다. 공개 코드의 receipt가 index→manifest→414개 텍스처 SHA를 검증한다. 안전 설치기는 두 팩 모두 검증한 후 교체하고 실패하면 기존 설치를 복구한다.
 
 ```sh
 python3 tools/map_restore/install_tower_png_pack.py /path/to/twilight-tower-png-20261023.zip --project /path/to/TWILIGHT
