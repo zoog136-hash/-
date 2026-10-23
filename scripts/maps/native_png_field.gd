@@ -57,6 +57,12 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		var next: String = "albino_%02d" % (int(mid.right(2))%3+1)
 		portals.append({"id":"next","name":"다음 구역","position":[spawn[0]+60,spawn[1]],"target_map":next,"radius":18})
 	portals=spec.get("portals",portals).duplicate(true)
+	# Keep retired Albino map aliases out of both live portals and generated spawns.
+	if mid=="albino_02":
+		for portal: Dictionary in portals:
+			if str(portal.get("target_map","")) in ["albino_03","albino_04"]:
+				portal["target_map"]="faith_01"
+				portal["name"]="신념의 탑 입장"
 	var monster_spawns: Array=NATIVE_SPAWNS.build(mid,spec,portals)
 	var npcs: Array=[]
 	if mid=="domination_summit":
