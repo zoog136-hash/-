@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+OBSTACLE_END aden_world palace_fountain (0.0, -1.0) at=(70572.0, 17425.7) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world palace_fountain (1.0, 0.0) at=(70660.15, 17526.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world palace_fountain (0.0, 1.0) at=(70572.0, 17626.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world palace_fountain (-1.0, 0.0) at=(70483.85, 17526.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world east_tree (0.0, -1.0) at=(66840.0, 14063.85) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world east_tree (1.0, 0.0) at=(66868.15, 14100.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world east_tree (0.0, 1.0) at=(66840.0, 14128.15) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END aden_world east_tree (-1.0, 0.0) at=(66803.85, 14100.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END domination_summit crystal (0.0, -1.0) at=(8342.0, 3606.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END domination_summit crystal (1.0, 0.0) at=(8416.0, 3648.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END domination_summit crystal (0.0, 1.0) at=(8342.0, 3682.0) clear=[true, true, true, true] radius=4.0
+OBSTACLE_END domination_summit crystal (-1.0, 0.0) at=(8259.699, 3648.0) clear=[true, true, true, true] radius=4.0
+NORMAL_SAMPLE_RESULT {"android_device":"NOT_RUN","checks":76,"failures":[],"occlusion":[{"cut":"east_tree_crown","map":"aden_world","states":[{"correct":791,"overlap":791,"position":[66900.0,14040.0],"state":"behind","wrong":0},{"correct":212,"overlap":217,"position":[66912.0,14104.0],"state":"front","wrong":0}]},{"cut":"central_crystal_column","map":"domination_summit","states":[{"correct":371,"overlap":371,"position":[8339.0,3605.0],"state":"behind","wrong":0},{"correct":245,"overlap":310,"position":[8339.0,3685.0],"state":"front","wrong":0}]}],"whole_map_complete":false}
