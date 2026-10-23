@@ -1,0 +1,44 @@
+{
+  "duplicate_recovery_objects": {
+    "status": "PASS",
+    "scope": "/workspace/scratch/twilight-recovered-objects",
+    "verified_live_repository": "/workspace/twilight",
+    "duplicate_objects_removed": 9030,
+    "compressed_bytes_removed": 1079585749,
+    "unique_or_unverified_preserved_count": 4602,
+    "source_assets_deleted": 0,
+    "approved_assets_deleted": 0,
+    "incomplete_pack_backup_preserved": true,
+    "verification": "Existing local object inventory only; full live Git object body SHA-256 equals decompressed recovery object body, SHA-1 object ID checked before removal",
+    "manifest_sha256": "594232685cf5a4e4beef4904c9da0d9cd58dc1281a4ecad2b63eae4a5f4f4f85",
+    "elapsed_seconds": 11.6
+  },
+  "saved_checkpoint_bundles": {
+    "status": "PASS",
+    "verified_remote": "f2ebe0c7ada00a4526bc3fac70b2008f172a5406",
+    "removed_bundles": 27,
+    "bytes_removed": 996623744,
+    "preserved_bundles": [],
+    "scope": "Only generated Git checkpoint bundles whose every advertised head is already an ancestor of verified remote commit"
+  },
+  "abandoned_git_temporaries": {
+    "status": "PASS",
+    "removed_files": 9,
+    "bytes_removed": 6696910252,
+    "all_indexed_git_packs_preserved": true,
+    "all_refs_and_head_preserved": true,
+    "source_assets_deleted": 0
+  },
+  "regenerable_cache_relocation": {
+    "status": "PASS",
+    "scope": "Generated Godot import cache only; no tracked source or asset deleted",
+    "files": 9544,
+    "bytes_moved": 1419184516,
+    "original_cache_path": "/workspace/twilight/.godot/imported",
+    "temporary_cache_path": "/tmp/pr122-godot-imported-cache",
+    "all_file_sha256_equal": true,
+    "cache_access_preserved": true
+  },
+  "total_deleted_bytes": 8773119745,
+  "tracked_source_or_approved_asset_deletions": 0
+}
