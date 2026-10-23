@@ -34,13 +34,21 @@ def main():
         assert sha(png) == d['source_sha256'] and sha(tres) == d['output_spriteframes_sha256']
         report = reports.get((d['key'], d['direction'], d['role']))
         assert report is not None, 'Do not commit an untested SpriteFrames track'
+        reused_poses=d.get('reused_poses',0)
+        prior_draft_poses=d.get('reused_prior_draft_poses',0)
+        legacy_poses=d.get('reused_legacy_poses',reused_poses-prior_draft_poses)
+        assert legacy_poses >= 0 and prior_draft_poses >= 0
+        assert legacy_poses+prior_draft_poses == reused_poses
+        assert d.get('newly_authored_poses',6)+reused_poses == 6
         authored.append({'key':d['key'], 'direction':d['direction'], 'role':d['role'],
                          'source':d['source'], 'source_sha256':d['source_sha256'],
                          'source_bytes':png.stat().st_size, 'SpriteFrames':d['output_spriteframes'],
                          'SpriteFrames_sha256':d['output_spriteframes_sha256'],
                          'record':p.relative_to(ROOT).as_posix(), 'poses':6,
                          'newly_authored_poses':d.get('newly_authored_poses',6),
-                         'reused_poses':d.get('reused_poses',0),
+                         'reused_poses':reused_poses,
+                         'reused_legacy_poses':legacy_poses,
+                         'reused_prior_draft_poses':prior_draft_poses,
                          'minimal_Godot_report':report, 'draft_status':'MINIMAL_CHECK_PASS',
                          'quality_status':'HOLD_NOT_REVIEWED', 'actor_final_approval':False,
                          'hold_reasons':d['hold_reasons']})
@@ -60,6 +68,8 @@ def main():
               'new_draft_configurations':len(authored),'minimally_validated_configurations':len(authored),
               'newly_authored_poses':sum(x['newly_authored_poses'] for x in authored),
               'reused_existing_poses':sum(x['reused_poses'] for x in authored),
+              'reused_legacy_poses':sum(x['reused_legacy_poses'] for x in authored),
+              'reused_prior_draft_poses':sum(x['reused_prior_draft_poses'] for x in authored),
               'quality_held_configurations':len(authored),'new_final_approved_actors':0,
               'new_final_approved_configurations':0,'verified_complete_existing_reuse_configurations':0,
               'remaining_draft_configurations':1320-len(authored)}
