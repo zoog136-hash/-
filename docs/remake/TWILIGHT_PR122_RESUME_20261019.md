@@ -582,3 +582,5 @@
 - 신규배치단일인덱스 `data/pr122_monster_production_batches.json`. 일반완료221/잔여37, 보스완료43/잔여17 그대로. 범위누락으로승인하지않는다. 새미제작일반3종은IN_PROGRESS로갱신, 이전all498원장완료이력보존.
 
 - First-pass production checkpoint: 399,367 SW ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW ATTACK drafts 4/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:399", "poses": 6, "clipped_cells": 6}, {"key": "transform:367", "poses": 6, "clipped_cells": 3}]. Continue transform:346 without draft polishing.
+
+- First-pass production checkpoint: 346,242 SW ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW ATTACK drafts 6/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:346", "poses": 6, "clipped_cells": 5}, {"key": "transform:242", "poses": 6, "clipped_cells": 3}]. Continue transform:224 without draft polishing.
