@@ -19,15 +19,15 @@ func run() -> void:
 	var world: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(world)
 	check(QA.enter_game(world),"actual Main character entry")
 	world.set_process(false);world.save_timer=-100000
-	check(world.maps.size()==27,"25 persistent legacy IDs plus two independent temples")
-	check(REGISTRY.menu_entries(world.maps).size()==27,"temples available in ordinary region selection")
+	check(world.maps.size()==25,"23 active legacy IDs plus two independent temples")
+	check(REGISTRY.menu_entries(world.maps).size()==25,"temples available with retired Albino zones hidden")
 	check(world.maps_by_id.yahee_temple.name=="야히의신전" and world.maps_by_id.balrog_temple.name=="발록의 시전","exact user display names")
-	for mid: String in ["albino_01","albino_02","albino_03","escaros_01","escaros_05"]:
+	for mid: String in ["albino_01","albino_02","escaros_01","escaros_05"]:
 		world._set_map(mid,false)
 		check(world.field_map is NativePngField and world.active_map_id==mid,mid+" normal save ID shows verified native PNG")
 		check(not world.field_map.data.monster_spawn.is_empty(),mid+" registered PNG encounter population retained")
 	world._set_map("albino_04",false)
-	check(not world.field_map is NativePngField and world.active_map_id=="albino_04","Albino fourth historical ID remains legacy")
+	check(world.field_map is NativePngField and world.active_map_id=="albino_02","removed Albino fourth zone redirects to the safe second area")
 	world._set_map("aden_world",false)
 	var bosses: Dictionary=world.field_population.boss_director.export_state().bosses.duplicate(true)
 	var db_hash: String=FileAccess.get_sha256("res://data/game_db_v17.json")
