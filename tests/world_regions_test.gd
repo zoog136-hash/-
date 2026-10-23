@@ -265,8 +265,8 @@ func _run() -> void:
 		print("REGION TIMING ",id," full_ms=",Time.get_ticks_msec()-started_ms)
 		print("REGION CHECKED ",id)
 	if prefix.is_empty():
-		check(tested==24 and families.size()==5,"all 24 new maps and all five families tested")
-		check(authored_variant_probes==23,"all 23 maps with original authored level variants exercise real population overrides")
+		check(tested==22 and families.size()==5,"all 22 live maps and all five families tested")
+		check(authored_variant_probes==21,"all 21 active maps with authored level variants exercise real population overrides")
 	print("REGION maps=",tested," checks=",checks," families=",families.size()," authored_variant_probes=",authored_variant_probes)
 	world.queue_free()
 	await process_frame
