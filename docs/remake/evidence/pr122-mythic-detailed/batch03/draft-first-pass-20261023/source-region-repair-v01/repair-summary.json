@@ -1,0 +1,33 @@
+{
+  "repaired_extraction_clips": 121,
+  "whole_pose_instead_of_fixed_cell": 97,
+  "topology_owned_region_expansion": 24,
+  "existing_normal_clips_preserved": 83,
+  "original_pngs_modified": 0,
+  "source_frames_regenerated": 0,
+  "final_quality_approvals_added": 0,
+  "actors_final_approved": 2,
+  "active_actor_total": 19,
+  "actors_unapproved": 17,
+  "remaining_source_clips": 321,
+  "missing_generation_clips": 3,
+  "primary_causes": {
+    "large_component_count_not_six": 245,
+    "foreign_component_inside_pose_rectangle": 64,
+    "foreground_ownership_or_overlapping_expansion": 4,
+    "original_outer_boundary_contact": 7,
+    "grid_pose_assignment": 1
+  },
+  "integration": {
+    "actors": 15,
+    "clips": 204,
+    "poses": 1224,
+    "death_input_direction_cases": 56,
+    "status": "PASS_CANDIDATE_ONLY",
+    "sized_candidate_profiles": 13,
+    "unsized_frame_fixtures": 2,
+    "production_switches": 0
+  },
+  "approved_393_267_and_existing_413_records_unchanged": true,
+  "limitations": "Whole pose/ownership and game playback pass are not visual approval. Semantic joints, knee bending, foot alternation, direction appearance and runtime size remain NOT_REVIEWED."
+}

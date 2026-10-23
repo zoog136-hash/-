@@ -152,6 +152,9 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
     canonical_kwargs = declared_canonical_preflight_kwargs(review, review, source_sha, direction, base_canvas[0])
     if canonical_kwargs and canonical_kwargs["source_anchors"] != [f.get("source_anchor") for f in frames]:
         raise ValueError("Declared canonical roots differ from exact base geometry")
+    axis = review.get("directions_axis", "phase_grid2")
+    if axis not in ("phase_grid2", "phase_grid3"):
+        raise ValueError("Reviewed layout requires a supported explicit phase grid")
     anchors = review.get("source_anchors")
     if "source_anchors" in review and (
             not isinstance(anchors, list) or len(anchors) != 6
@@ -163,7 +166,7 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
         # Revalidate source identity with its original canonical anchors first.
         seed_anchors = [f.get("source_anchor") for f in frames] if sizes is not None else anchors
         derived = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                                   directions_axis="phase_grid2", canvas_size=canvas,
+                                   directions_axis=axis, canvas_size=canvas,
                                    source_anchors=seed_anchors, directions=[direction])
         if sizes is not None:
             _apply_actual_pose_layout(derived, canvas, sizes, anchors)
@@ -173,8 +176,10 @@ def apply_reviewed_layout(source_path, base_geometry, review, *, source_region_r
         # never by reanalyzing the expanded rectangles as an automatic layout.
         import pr122_reviewed_source_regions as reviewed_regions
 
+        if source_region_review.get("directions_axis", "phase_grid2") != axis:
+            raise ValueError("Reviewed region and layout phase grids differ")
         canonical = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                                     directions_axis="phase_grid2", canvas_size=base_canvas[0],
+                                     directions_axis=axis, canvas_size=base_canvas[0],
                                      directions=[direction], **canonical_kwargs)
         checked, _ = reviewed_regions.apply_reviewed_regions(path, canonical, source_region_review)
         if checked != base_geometry or _digest(checked) != _digest(base_geometry):

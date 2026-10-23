@@ -1,0 +1,52 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_399/native001/S-idle.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="track_0_0"]
+atlas = ExtResource("1")
+region = Rect2(7, 66, 496, 437)
+margin = Rect2(263, 244, 528, 587)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_1"]
+atlas = ExtResource("1")
+region = Rect2(518, 65, 494, 436)
+margin = Rect2(262, 243, 530, 588)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_2"]
+atlas = ExtResource("1")
+region = Rect2(2, 567, 506, 447)
+margin = Rect2(258, 233, 518, 577)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_3"]
+atlas = ExtResource("1")
+region = Rect2(531, 528, 492, 447)
+margin = Rect2(275, 194, 532, 577)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_4"]
+atlas = ExtResource("1")
+region = Rect2(11, 1040, 491, 447)
+margin = Rect2(267, 194, 533, 577)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_5"]
+atlas = ExtResource("1")
+region = Rect2(517, 1043, 502, 444)
+margin = Rect2(261, 197, 522, 580)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("track_0_0")},
+{"duration": 1.0, "texture": SubResource("track_0_1")},
+{"duration": 1.0, "texture": SubResource("track_0_2")},
+{"duration": 1.0, "texture": SubResource("track_0_3")},
+{"duration": 1.0, "texture": SubResource("track_0_4")},
+{"duration": 1.0, "texture": SubResource("track_0_5")}], "loop": true, "name": &"idle_2", "speed": 5.000000000}
+]
+metadata/twilight_canvas_size = Vector2(1024, 1024)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_detailed_completed = false

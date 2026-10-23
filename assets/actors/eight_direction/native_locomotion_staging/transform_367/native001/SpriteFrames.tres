@@ -1,0 +1,140 @@
+[gd_resource type="SpriteFrames" load_steps=22 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native001/S-death.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native001/S-idle.png" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native001/W-idle.png" id="3"]
+
+[sub_resource type="AtlasTexture" id="track_0_0"]
+atlas = ExtResource("1")
+region = Rect2(94, 60, 357, 431)
+margin = Rect2(350, 284, 667, 593)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_1"]
+atlas = ExtResource("1")
+region = Rect2(600, 99, 381, 390)
+margin = Rect2(344, 323, 643, 634)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_2"]
+atlas = ExtResource("1")
+region = Rect2(62, 694, 417, 311)
+margin = Rect2(318, 406, 607, 713)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_3"]
+atlas = ExtResource("1")
+region = Rect2(541, 670, 471, 259)
+margin = Rect2(285, 382, 553, 765)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_4"]
+atlas = ExtResource("1")
+region = Rect2(15, 1222, 461, 235)
+margin = Rect2(271, 422, 563, 789)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_5"]
+atlas = ExtResource("1")
+region = Rect2(521, 1299, 476, 175)
+margin = Rect2(265, 499, 548, 849)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_0"]
+atlas = ExtResource("2")
+region = Rect2(108, 46, 339, 446)
+margin = Rect2(364, 222, 685, 578)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_1"]
+atlas = ExtResource("2")
+region = Rect2(598, 34, 324, 452)
+margin = Rect2(342, 210, 700, 572)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_2"]
+atlas = ExtResource("2")
+region = Rect2(84, 532, 352, 471)
+margin = Rect2(340, 196, 672, 553)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_3"]
+atlas = ExtResource("2")
+region = Rect2(621, 531, 370, 446)
+margin = Rect2(365, 195, 654, 578)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_4"]
+atlas = ExtResource("2")
+region = Rect2(84, 1056, 363, 436)
+margin = Rect2(340, 208, 661, 588)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_5"]
+atlas = ExtResource("2")
+region = Rect2(598, 1052, 336, 440)
+margin = Rect2(342, 204, 688, 584)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_0"]
+atlas = ExtResource("3")
+region = Rect2(52, 43, 433, 447)
+margin = Rect2(308, 214, 591, 577)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_1"]
+atlas = ExtResource("3")
+region = Rect2(556, 41, 424, 447)
+margin = Rect2(300, 212, 600, 577)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_2"]
+atlas = ExtResource("3")
+region = Rect2(43, 535, 422, 472)
+margin = Rect2(299, 194, 602, 552)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_3"]
+atlas = ExtResource("3")
+region = Rect2(567, 542, 429, 440)
+margin = Rect2(311, 201, 595, 584)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_4"]
+atlas = ExtResource("3")
+region = Rect2(48, 1072, 454, 422)
+margin = Rect2(304, 219, 570, 602)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_5"]
+atlas = ExtResource("3")
+region = Rect2(566, 1054, 429, 440)
+margin = Rect2(310, 201, 595, 584)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("track_0_0")},
+{"duration": 1.0, "texture": SubResource("track_0_1")},
+{"duration": 1.0, "texture": SubResource("track_0_2")},
+{"duration": 1.0, "texture": SubResource("track_0_3")},
+{"duration": 1.0, "texture": SubResource("track_0_4")},
+{"duration": 1.0, "texture": SubResource("track_0_5")}], "loop": false, "name": &"death_2", "speed": 9.230769231},
+{"frames": [{"duration": 1.0, "texture": SubResource("track_1_0")},
+{"duration": 1.0, "texture": SubResource("track_1_1")},
+{"duration": 1.0, "texture": SubResource("track_1_2")},
+{"duration": 1.0, "texture": SubResource("track_1_3")},
+{"duration": 1.0, "texture": SubResource("track_1_4")},
+{"duration": 1.0, "texture": SubResource("track_1_5")}], "loop": true, "name": &"idle_2", "speed": 5.000000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("track_2_0")},
+{"duration": 1.0, "texture": SubResource("track_2_1")},
+{"duration": 1.0, "texture": SubResource("track_2_2")},
+{"duration": 1.0, "texture": SubResource("track_2_3")},
+{"duration": 1.0, "texture": SubResource("track_2_4")},
+{"duration": 1.0, "texture": SubResource("track_2_5")}], "loop": true, "name": &"idle_4", "speed": 5.000000000}
+]
+metadata/twilight_canvas_size = Vector2(1024, 1024)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_detailed_completed = false

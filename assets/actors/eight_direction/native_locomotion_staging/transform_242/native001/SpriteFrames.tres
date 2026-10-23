@@ -1,0 +1,184 @@
+[gd_resource type="SpriteFrames" load_steps=29 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native001/N-idle.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native001/NE-idle.png" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native001/SE-idle.png" id="3"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native001/SW-idle.png" id="4"]
+
+[sub_resource type="AtlasTexture" id="track_0_0"]
+atlas = ExtResource("1")
+region = Rect2(33, 20, 437, 491)
+margin = Rect2(289, 187, 587, 533)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_1"]
+atlas = ExtResource("1")
+region = Rect2(538, 9, 439, 492)
+margin = Rect2(282, 176, 585, 532)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_2"]
+atlas = ExtResource("1")
+region = Rect2(38, 518, 447, 504)
+margin = Rect2(294, 173, 577, 520)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_3"]
+atlas = ExtResource("1")
+region = Rect2(551, 525, 461, 466)
+margin = Rect2(295, 180, 563, 558)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_4"]
+atlas = ExtResource("1")
+region = Rect2(20, 1026, 446, 472)
+margin = Rect2(276, 169, 578, 552)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_5"]
+atlas = ExtResource("1")
+region = Rect2(548, 1038, 412, 466)
+margin = Rect2(292, 181, 612, 558)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_0"]
+atlas = ExtResource("2")
+region = Rect2(28, 15, 391, 475)
+margin = Rect2(284, 168, 633, 549)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_1"]
+atlas = ExtResource("2")
+region = Rect2(534, 14, 423, 477)
+margin = Rect2(278, 167, 601, 547)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_2"]
+atlas = ExtResource("2")
+region = Rect2(43, 524, 427, 484)
+margin = Rect2(299, 165, 597, 540)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_3"]
+atlas = ExtResource("2")
+region = Rect2(535, 527, 437, 474)
+margin = Rect2(279, 168, 587, 550)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_4"]
+atlas = ExtResource("2")
+region = Rect2(14, 1049, 461, 463)
+margin = Rect2(270, 178, 563, 561)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_1_5"]
+atlas = ExtResource("2")
+region = Rect2(560, 1039, 408, 473)
+margin = Rect2(304, 168, 616, 551)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_0"]
+atlas = ExtResource("3")
+region = Rect2(73, 31, 388, 469)
+margin = Rect2(329, 184, 636, 555)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_1"]
+atlas = ExtResource("3")
+region = Rect2(553, 34, 404, 465)
+margin = Rect2(297, 187, 620, 559)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_2"]
+atlas = ExtResource("3")
+region = Rect2(45, 542, 397, 470)
+margin = Rect2(301, 183, 627, 554)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_3"]
+atlas = ExtResource("3")
+region = Rect2(579, 534, 402, 466)
+margin = Rect2(323, 175, 622, 558)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_4"]
+atlas = ExtResource("3")
+region = Rect2(45, 1050, 407, 465)
+margin = Rect2(301, 179, 617, 559)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_2_5"]
+atlas = ExtResource("3")
+region = Rect2(570, 1050, 392, 465)
+margin = Rect2(314, 179, 632, 559)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_3_0"]
+atlas = ExtResource("4")
+region = Rect2(44, 19, 420, 486)
+margin = Rect2(300, 172, 604, 538)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_3_1"]
+atlas = ExtResource("4")
+region = Rect2(528, 18, 440, 485)
+margin = Rect2(272, 171, 584, 539)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_3_2"]
+atlas = ExtResource("4")
+region = Rect2(3, 539, 465, 478)
+margin = Rect2(259, 180, 559, 546)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_3_3"]
+atlas = ExtResource("4")
+region = Rect2(551, 532, 456, 468)
+margin = Rect2(295, 173, 568, 556)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_3_4"]
+atlas = ExtResource("4")
+region = Rect2(20, 1055, 467, 458)
+margin = Rect2(276, 184, 557, 566)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_3_5"]
+atlas = ExtResource("4")
+region = Rect2(544, 1038, 406, 476)
+margin = Rect2(288, 167, 618, 548)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("track_0_0")},
+{"duration": 1.0, "texture": SubResource("track_0_1")},
+{"duration": 1.0, "texture": SubResource("track_0_2")},
+{"duration": 1.0, "texture": SubResource("track_0_3")},
+{"duration": 1.0, "texture": SubResource("track_0_4")},
+{"duration": 1.0, "texture": SubResource("track_0_5")}], "loop": true, "name": &"idle_6", "speed": 5.000000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("track_1_0")},
+{"duration": 1.0, "texture": SubResource("track_1_1")},
+{"duration": 1.0, "texture": SubResource("track_1_2")},
+{"duration": 1.0, "texture": SubResource("track_1_3")},
+{"duration": 1.0, "texture": SubResource("track_1_4")},
+{"duration": 1.0, "texture": SubResource("track_1_5")}], "loop": true, "name": &"idle_7", "speed": 5.000000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("track_2_0")},
+{"duration": 1.0, "texture": SubResource("track_2_1")},
+{"duration": 1.0, "texture": SubResource("track_2_2")},
+{"duration": 1.0, "texture": SubResource("track_2_3")},
+{"duration": 1.0, "texture": SubResource("track_2_4")},
+{"duration": 1.0, "texture": SubResource("track_2_5")}], "loop": true, "name": &"idle_1", "speed": 5.000000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("track_3_0")},
+{"duration": 1.0, "texture": SubResource("track_3_1")},
+{"duration": 1.0, "texture": SubResource("track_3_2")},
+{"duration": 1.0, "texture": SubResource("track_3_3")},
+{"duration": 1.0, "texture": SubResource("track_3_4")},
+{"duration": 1.0, "texture": SubResource("track_3_5")}], "loop": true, "name": &"idle_3", "speed": 5.000000000}
+]
+metadata/twilight_canvas_size = Vector2(1024, 1024)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_detailed_completed = false

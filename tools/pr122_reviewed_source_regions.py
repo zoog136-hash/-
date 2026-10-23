@@ -172,7 +172,7 @@ def apply_reviewed_regions(source_path, base_geometry, review):
     """
     required = {"status", "source_sha256", "base_geometry_sha256", "direction",
                 "review_basis", "regions", "nearest_owner_sha256"}
-    allowed = required | {"schema", "ownership_rule"}
+    allowed = required | {"schema", "ownership_rule", "directions_axis"}
     if (not isinstance(review, dict) or not required <= review.keys()
             or set(review) - allowed or review.get("status") != STATUS):
         raise ValueError("An explicit complete REVIEWED_SOURCE_REGIONS_PROPOSAL is required")
@@ -225,8 +225,11 @@ def apply_reviewed_regions(source_path, base_geometry, review):
         raise ValueError("Each original source anchor must contain two integers")
     base_rects = [_rect(frame.get("region"), image_size, "Base region") for frame in frames]
     _disjoint(base_rects, "Base")
+    axis = review.get("directions_axis", "phase_grid2")
+    if axis not in ("phase_grid2", "phase_grid3"):
+        raise ValueError("Reviewed regions require a supported explicit phase grid")
     fresh = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                             directions_axis="phase_grid2", canvas_size=canvas[0],
+                             directions_axis=axis, canvas_size=canvas[0],
                              source_anchors=anchors, directions=[direction])
     for key in ("image_size", "frames", "distinct_pixel_frames", "neutral_height", "canvas_size", "foot"):
         if base_geometry.get(key) != fresh[key]:
