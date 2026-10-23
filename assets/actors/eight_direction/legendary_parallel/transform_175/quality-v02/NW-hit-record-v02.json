@@ -1,0 +1,634 @@
+{
+  "key": "transform:175",
+  "name": "증오의 데스나이트",
+  "grade": "전설",
+  "direction": "NW",
+  "role": "hit",
+  "reference": "res://assets/catalog/74a1b57396dd896edc6daadc.png",
+  "reference_sha256": "29946eb00d0ba196a7886ccbba18563af1c37ce8a0d9d5c50e4ccfa02f0e7e09",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc087",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-source-v01.png",
+  "previous_source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-record-v01.json",
+  "previous_record_sha256": "f948e91319836cc55f8963f6d117487dd656c12010ae48e479c918e2c5bb393e",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "CORRECTED_SOURCE_DRAFT_HOLD",
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "correction_representation": "mixed_draft_guard_reuse_v1",
+  "correction_source_grid": [
+    2,
+    2
+  ],
+  "camera_reference": null,
+  "frozen_error_findings": [
+    {
+      "actor": "175",
+      "direction": "NW",
+      "role": "hit",
+      "cause": "camera",
+      "detail": "Front-left armor/face view persists instead of rear-left.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-hit-record-v01.json",
+      "source_sha256": "27b05335c7e4f5a7c9687cc08afa97f44c29696db16f3ddb3dc7a97640884ad7",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0156",
+      "slot": [
+        "transform:175",
+        "NW",
+        "hit"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:175 증오의 데스나이트, NW HIT. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Front-left armor/face view persists instead of rear-left.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter BACK-LEFT, screen UP-LEFT, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. Output ONE transparent RGBA PNG, exactly 1024x1024, 2 equal columns by 2 equal rows, 4 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Nonfatal HIT with guard, first external impact/flinch, maximal stagger, supported counterbalance, recovery, living guard. Keep original weapon safely held, no attack, shot, cast, death, wound or blood. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero.  Preserved current healthy IDLE guards are frames0 and5 of the assembled action; do not redraw either. Generate ONLY four middle articulated action poses, in a 2x2 sheet. The appended current guard source is the accepted facing/identity reference. Preserve its exact camera, costume, equipment and body proportions. The old erroneous IDLE source is not a camera authority. No new guard, crop inference or middle-pose copying.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/74a1b57396dd896edc6daadc.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/74a1b57396dd896edc6daadc.png": "29946eb00d0ba196a7886ccbba18563af1c37ce8a0d9d5c50e4ccfa02f0e7e09",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png": "1f0d0bbf185bac5945833767b226202a10bedd00264d2147070c0fed35a4ac42"
+  },
+  "draft_guard_reuse": {
+    "key": "transform:175",
+    "direction": "NW",
+    "idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+    "idle_record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+    "idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-SpriteFrames.tres",
+    "idle_SpriteFrames_sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1",
+    "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+    "reference": "res://assets/catalog/74a1b57396dd896edc6daadc.png",
+    "reference_sha256": "29946eb00d0ba196a7886ccbba18563af1c37ce8a0d9d5c50e4ccfa02f0e7e09",
+    "source_files": [
+      {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+        "sha256": "1f0d0bbf185bac5945833767b226202a10bedd00264d2147070c0fed35a4ac42",
+        "bytes": 2175765
+      }
+    ],
+    "guards": [
+      {
+        "idle_phase": 0,
+        "action_phase": 0,
+        "original_pose_id": 0,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+        "region": [
+          0,
+          0,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "dabe5b49daae5a719ef891a14e46d31508aba180ad2362bf747600016f052b04"
+      },
+      {
+        "idle_phase": 5,
+        "action_phase": 5,
+        "original_pose_id": 5,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+        "region": [
+          1024,
+          512,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "0dc86fd44f4d3f5d10e9c072f66c223bdc8b1eaffc40d77efd9d265f78b73f2d"
+      }
+    ],
+    "reused_poses": 2,
+    "newly_authored_poses": 4,
+    "source_quality_approval_inherited": false,
+    "idle_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-raster-registration-v02.json",
+    "idle_registration_sha256": "8bd59eee96213b8bafae10d0074a385010d9e0571a1290e4ab48c0c05357025b"
+  },
+  "resume_guard_binding": {
+    "schema": "legendary-exact-active-guard-rebinding-v06",
+    "previous_guard_binding": null,
+    "selected_record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+    "selected_record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+    "guard_frames_preserved": [
+      0,
+      5
+    ],
+    "new_middle_poses_only": 4,
+    "resampled": false,
+    "recolored": false,
+    "intermediate_pose_inference": false,
+    "final_approvals_added": 0
+  },
+  "resume_camera_reference": {
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+    "sha256": "1f0d0bbf185bac5945833767b226202a10bedd00264d2147070c0fed35a4ac42",
+    "scope": "Exact current healthy guard camera; no final approval inherited"
+  },
+  "resume_parent_evidence": {
+    "slot": [
+      "transform:175",
+      "NW",
+      "idle"
+    ],
+    "record": {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+      "sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576"
+    },
+    "SpriteFrames": {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-SpriteFrames.tres",
+      "sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1"
+    },
+    "registration": {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-raster-registration-v02.json",
+      "sha256": "8bd59eee96213b8bafae10d0074a385010d9e0571a1290e4ab48c0c05357025b"
+    },
+    "quality_review": {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/parent-evidence/qc084-review-v01.json",
+      "sha256": "5f8f663a844d86e51f1806b0e3e3066872948a233b0fc0abf5f3b555b74d5b0e"
+    },
+    "validation": {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch298-affected-validation-v02.json",
+      "sha256": "48db76ec2f44e334feb52dffa41a41c5c0179309a69067da92cdbe3394980ab1"
+    },
+    "remote_receipt": {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/parent-evidence-remote-saved-61b02feb-v01.json",
+      "sha256": "87ef66886117f5bd832323f403a580e0767b0bacc70aaf2232949c40fc736873"
+    },
+    "preserve_guard_registration": {
+      "metadata": {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-raster-registration-v02.json",
+        "sha256": "8bd59eee96213b8bafae10d0074a385010d9e0571a1290e4ab48c0c05357025b"
+      },
+      "record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+      "SpriteFrames_sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1",
+      "frames": [
+        {
+          "index": 0,
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "anchor_in_texture": [
+            256.0,
+            256.0
+          ],
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "basis": "Raw corrected-source centered raster only; semantic scale/feet unapproved"
+        },
+        {
+          "index": 5,
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "anchor_in_texture": [
+            256.0,
+            256.0
+          ],
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "basis": "Raw corrected-source centered raster only; semantic scale/feet unapproved"
+        }
+      ],
+      "original_parent_texture_canvas_must_be_preserved": true,
+      "recenter_isolated_guard_virtual_canvas": false
+    }
+  },
+  "resume_parent_registration": {
+    "metadata": {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-raster-registration-v02.json",
+      "sha256": "8bd59eee96213b8bafae10d0074a385010d9e0571a1290e4ab48c0c05357025b"
+    },
+    "record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+    "SpriteFrames_sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1",
+    "frames": [
+      {
+        "index": 0,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchor_in_texture": [
+          256.0,
+          256.0
+        ],
+        "target_anchor": [
+          0.0,
+          0.0
+        ],
+        "basis": "Raw corrected-source centered raster only; semantic scale/feet unapproved"
+      },
+      {
+        "index": 5,
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchor_in_texture": [
+          256.0,
+          256.0
+        ],
+        "target_anchor": [
+          0.0,
+          0.0
+        ],
+        "basis": "Raw corrected-source centered raster only; semantic scale/feet unapproved"
+      }
+    ],
+    "original_parent_texture_canvas_must_be_preserved": true,
+    "recenter_isolated_guard_virtual_canvas": false
+  },
+  "schema": "pr122-legendary-bounded-quality-correction-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-hit-source-v02.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-hit-source-v02.png",
+  "source_sha256": "2ed75f9df134ba2a6bd3c1231691a33762731ca6f696b5b2b594ab59fafc6365",
+  "source_bytes": 1519206,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-hit-source-v02.png",
+      "sha256": "2ed75f9df134ba2a6bd3c1231691a33762731ca6f696b5b2b594ab59fafc6365",
+      "bytes": 1519206,
+      "source_kind": "new_bounded_correction"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+      "sha256": "1f0d0bbf185bac5945833767b226202a10bedd00264d2147070c0fed35a4ac42",
+      "bytes": 2175765,
+      "source_kind": "reused_idle_guard"
+    }
+  ],
+  "source_grid": [
+    2,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      627,
+      1254
+    ],
+    "y": [
+      0,
+      627,
+      1254
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "idle_phase": 0,
+      "action_phase": 0,
+      "original_pose_id": 0,
+      "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "dabe5b49daae5a719ef891a14e46d31508aba180ad2362bf747600016f052b04",
+      "phase": 0,
+      "source_kind": "reused_idle_guard"
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        627,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        0,
+        627,
+        627,
+        627
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        627,
+        627,
+        627,
+        627
+      ]
+    },
+    {
+      "idle_phase": 5,
+      "action_phase": 5,
+      "original_pose_id": 5,
+      "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "0dc86fd44f4d3f5d10e9c072f66c223bdc8b1eaffc40d77efd9d265f78b73f2d",
+      "phase": 5,
+      "source_kind": "reused_idle_guard"
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "guard",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "dabe5b49daae5a719ef891a14e46d31508aba180ad2362bf747600016f052b04",
+      "normalized_visible_sha256": "5ebab11ad6fa40aabc75025d37104e6148329a730cbf9e483f7d3a5c33899671",
+      "visible_pixels": 67126,
+      "visible_height": 484,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        28,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "rgba_sha256": "7b5d91458e8142b092239831f3d64e22bedefe2ccd359e064359d85955d88eef",
+      "normalized_visible_sha256": "c6c2d0391d60ba703e80f82e012c4664f9aee56a6dbaf9c035a37335ba7964f7",
+      "visible_pixels": 112421,
+      "visible_height": 596,
+      "visible_width": 627,
+      "alpha_bbox_in_region": [
+        0,
+        31,
+        627,
+        627
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        627,
+        0,
+        627,
+        627
+      ],
+      "rgba_sha256": "f37f8eec07a9745f6d3a0c0a1b3f646cb687370467886672085e9de0fb2bb0a2",
+      "normalized_visible_sha256": "479369cbb30e3b6058becf3c736b0c8139be3c81e9ae3fc8a134a77d9f7fa2af",
+      "visible_pixels": 111568,
+      "visible_height": 604,
+      "visible_width": 626,
+      "alpha_bbox_in_region": [
+        0,
+        23,
+        626,
+        627
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "source_kind": "new",
+      "region": [
+        0,
+        627,
+        627,
+        627
+      ],
+      "rgba_sha256": "50039418f46d2c95cac0c9919003d22941d45046279af6bba97f851aa7076833",
+      "normalized_visible_sha256": "4262666b5b9c48c021767e58b351de1980c8e5b0e4faac91b292a912fd637028",
+      "visible_pixels": 89480,
+      "visible_height": 627,
+      "visible_width": 627,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        627,
+        627,
+        627,
+        627
+      ],
+      "rgba_sha256": "58e79cfc50fb898e60b954760bfa585883e20bb87d12a66de1c0bd8d4e9afa33",
+      "normalized_visible_sha256": "01a61fe35aae10e66eb0c3074be814c4eeb44987db94141aee20da338b07dacb",
+      "visible_pixels": 101174,
+      "visible_height": 626,
+      "visible_width": 627,
+      "alpha_bbox_in_region": [
+        0,
+        1,
+        627,
+        627
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "source_kind": "guard",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "0dc86fd44f4d3f5d10e9c072f66c223bdc8b1eaffc40d77efd9d265f78b73f2d",
+      "normalized_visible_sha256": "1897e841a0506205e25368e9ece273b57c225b0a14a119804d575a963261cdba",
+      "visible_pixels": 66150,
+      "visible_height": 512,
+      "visible_width": 495,
+      "alpha_bbox_in_region": [
+        1,
+        0,
+        496,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "cell_size": [
+    627,
+    627
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-hit-SpriteFrames.tres",
+  "output_spriteframes_sha256": "0700ad3c6cbba3c9075ec74f3a7afad51a402d670847d193f3b97c5777a2a97e",
+  "animation": "hit_5",
+  "loop": false,
+  "new_poses": 4,
+  "newly_authored_poses": 4,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 2,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-hit-raster-registration-v02.json",
+  "request_file_sha256": "869dfab6f3eeb9db291de8652b1c454ba6dd3414e21fc09900ac855b8875fe45",
+  "generation_request_sha256": "9f165b1640976b18db89d190ea94035b9e196a18f7365802c86c7738ade224f8",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-0f0be745-5414-4b1a-97a7-a32f81b12779.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v03.py",
+    "sha256": "6f987b8a1ad4ea25aeba6555ab4c0b29b6302c46731cf60b21e64ea3fa5f203d",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED",
+  "guard_registration_inheritance": [
+    {
+      "action_phase": 0,
+      "idle_phase": 0,
+      "parent_record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+      "parent_record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+      "parent_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-SpriteFrames.tres",
+      "parent_SpriteFrames_sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1",
+      "parent_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-raster-registration-v02.json",
+      "parent_registration_sha256": "8bd59eee96213b8bafae10d0074a385010d9e0571a1290e4ab48c0c05357025b",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "action_phase": 5,
+      "idle_phase": 5,
+      "parent_record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+      "parent_record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+      "parent_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-SpriteFrames.tres",
+      "parent_SpriteFrames_sha256": "b7e1b05e3bc14c8cd81d6e0c96a4351d1d0b58cc999ff2df358cff7a498429a1",
+      "parent_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-raster-registration-v02.json",
+      "parent_registration_sha256": "8bd59eee96213b8bafae10d0074a385010d9e0571a1290e4ab48c0c05357025b",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-source-v02.png",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}
