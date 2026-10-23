@@ -129,6 +129,8 @@ static func bundled_enabled() -> bool:
 
 static func map_for_art(mid: String) -> String:
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
+	# Deprecated Albino 3/4 are never constructed, even via direct API callers.
+	if mid in ["albino_03","albino_04"]: return "albino_02"
 	return mid
 
 static func installed() -> bool:
@@ -137,9 +139,10 @@ static func installed() -> bool:
 	return FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
 
 static func canonical(mid: String) -> String:
+	# Redirect old save IDs in both normal and explicit PNG modes; no stale field.
+	if mid in ["albino_03","albino_04"]: return "albino_02"
 	if not enabled(): return mid
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
-	if mid == "albino_04": return "albino_03"
 	return mid
 
 static func supports(mid: String) -> bool:
@@ -166,9 +169,12 @@ static func catalog_entries() -> Array[Dictionary]:
 	return entries
 
 static func menu_entries(records: Array) -> Array:
-	if not enabled(): return records
+	# Always remove Albino 3/4 from the visible catalog; do not depend on CLI mode.
 	var visible: Array=records.filter(func(record: Dictionary) -> bool:
-		return str(record.id) not in ["albino_04","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"])
+		return str(record.id) not in ["albino_03","albino_04"])
+	if not enabled(): return visible
+	visible=visible.filter(func(record: Dictionary) -> bool:
+		return str(record.id) not in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"])
 	var specs: Dictionary=plan().maps
 	var menu: Array=[]
 	for record: Dictionary in visible:
@@ -220,5 +226,7 @@ static func load_field(mid: String) -> PlayableField:
 		if handle.get_32() != int(dimensions[0]) or handle.get_32() != int(dimensions[1]): return null
 	var field: NativePngField = FIELD.new()
 	field.configure_png(mid,spec_plan,manifest,local_root+"/"+mid)
-	if not field.walkable(Vector2(specs[mid].spawn[0],specs[mid].spawn[1])): return null
+	# The native PNG map can have a runtime artwork-to-world scale distinct
+	# from source pixels; validate the *world* spawn after conversion.
+	if not field.walkable(Vector2(field.data.spawn_position[0],field.data.spawn_position[1])): return null
 	return field
