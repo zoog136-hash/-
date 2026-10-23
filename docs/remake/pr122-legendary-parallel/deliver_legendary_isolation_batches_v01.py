@@ -123,7 +123,7 @@ def update_ledger(batch, manifest_relative, validation_relative, selection):
     return aggregate_relative, ownership
 
 
-def deliver(batch):
+def deliver(batch, local_only=False):
     receipt_path = LOGS / f'isolation-batch{batch:03d}-delivery.json'
     if receipt_path.exists():
         receipt = read(receipt_path)
@@ -132,6 +132,9 @@ def deliver(batch):
     pending_path = LOGS / f'isolation-batch{batch:03d}-pending-remote.json'
     if pending_path.exists():
         pending = read(pending_path)
+        if local_only:
+            print(json.dumps(pending, ensure_ascii=False), flush=True)
+            return pending
         assert git('rev-parse', 'HEAD') == pending['remote_sha'] and not git('status', '--porcelain')
         env = dict(os.environ, GIT_ASKPASS='/workspace/legendary_runtime/git-askpass.py', GIT_TERMINAL_PROMPT='0')
         remote = subprocess.check_output(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], cwd=REPO, env=env, text=True).split()[0]
@@ -196,6 +199,9 @@ def deliver(batch):
                'cumulative_clips': counts['revised_configurations'], 'newly_authored_poses_added': 0,
                'final_approved': 0, 'quality_status': 'HOLD', 'semantic_scale_registration': 'PENDING_REVIEWED_INPUT'}
     write_json(pending_path, receipt, immutable=True)
+    if local_only:
+        print(json.dumps(receipt, ensure_ascii=False), flush=True)
+        return receipt
     env = dict(os.environ, GIT_ASKPASS='/workspace/legendary_runtime/git-askpass.py', GIT_TERMINAL_PROMPT='0')
     run(['git', 'push', 'origin', 'HEAD:refs/heads/' + BRANCH], f'isolation-batch{batch:03d}-push.log', env=env)
     remote_sha = subprocess.check_output(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], cwd=REPO, env=env, text=True).split()[0]
@@ -210,11 +216,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('first', type=int)
     parser.add_argument('last', type=int)
+    parser.add_argument('--local-only', action='store_true', help='Preserve a normal local commit and pending receipt; do not attempt network')
     args = parser.parse_args()
     assert 1 <= args.first <= args.last <= 20
     LOGS.mkdir(exist_ok=True)
     for batch in range(args.first, args.last + 1):
-        deliver(batch)
+        deliver(batch, args.local_only)
 
 
 if __name__ == '__main__':
