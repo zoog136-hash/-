@@ -1,0 +1,48 @@
+import collections,hashlib,json,pathlib,shutil,subprocess,sys
+r=pathlib.Path('/workspace/twilight'); s=pathlib.Path('/workspace/scratch/pr122-soft-bridge-repair-20261023'); b=r/'docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023'; out=b/'soft-bridge-repair-v01'; ev=out/'evidence'
+def load(p):return json.loads(p.read_text())
+def write(p,d):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+summary=load(s/'integration-summary.json');stage=load(s/'staging-summary.json');rows=load(s/'contour-assembly-results.json')
+assert summary['status']=='PASS' and len(rows)==27 and stage['added_contour_clips']==27
+for p in s.iterdir():
+ if p.suffix not in ('.json','.py','.log') or p.name=='finalize.log':continue
+ q=ev/p.name
+ if q.exists():assert q.read_bytes()==p.read_bytes(),str(q)
+ else:shutil.copyfile(p,q)
+old=load(b/'contour-repair-v01/remaining-errors.json'); repaired={x['original_source'] for x in rows};remaining=[x for x in old['source_holds'] if x['source'] not in repaired]
+assert len(remaining)==263 and len(repaired)==27
+regpath=r/'data/pr122_native_locomotion_staging.json';mpath=r/'docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json';reg=load(regpath);manifest=load(mpath);before=json.loads(subprocess.check_output(['git','show','HEAD:data/pr122_native_locomotion_staging.json'],cwd=r));keys=set(stage['keys']);oldtracks=0
+for key,actor in before['actors'].items():
+ if key not in keys:assert actor==reg['actors'][key],f'Unrelated actor changed: {key}'
+ now={x['animation']:x for x in reg['actors'][key]['tracks']}
+ for t in actor['tracks']:
+  assert all(now[t['animation']][f]==t[f] for f in ('source','source_sha256','texture','geometry'))
+  if key not in ('transform:393','transform:267','transform:413'):oldtracks+=1
+assert oldtracks==235
+for row in rows:
+ assert sha(r/row['original_source'])==row['original_source_sha256'] and sha(r/row['source'])==row['sha256']
+ assert row['original_RGBA_ownership']['missing']==row['original_RGBA_ownership']['duplicate']==0
+ records=[x for x in manifest['raw_images'] if x['source']==row['source']];assert len(records)==1
+ for dep in records[0]['authoring_dependencies']:assert sha(r/dep['path'])==dep['sha256'],dep['path']
+for key in keys:
+ a=reg['actors'][key]
+ for field in ('frames','native_profile'):assert sha(r/a[field].removeprefix('res://'))==a[field+'_sha256']
+ for t in a['tracks']:
+  assert sha(r/t['source'])==t['source_sha256'];assert sha(r/t['texture'])==t['source_sha256']
+ a['verification']=dict(source_sha256_and_saved_geometry='PASS',distinct_native_poses=a['native_pose_count'],spriteframes_parse_and_all_frame_cycles='PASS',actual_Main_and_Player_candidate_injection='PASS',production_default_catalog_playback='NOT_RUN',visual_approval='NOT_RUN',completed_added=0,frames_sha256=a['frames_sha256'],evidence=str((ev/'integration-summary.json').relative_to(r)))
+write(regpath,reg)
+sys.path.insert(0,str(r/'tools'));import pr122_native_production_approvals as approvals
+state=approvals.load_state(r,manifest=manifest,register=reg);state.assert_preserved(manifest,reg)
+cause_counts=collections.Counter()
+for item in remaining:
+ e=item.get('geometry_error','')
+ category=('physical_component_count_not_six' if e.startswith('Expected exactly') else 'ambiguous_or_connected_foreground' if e.startswith('A pose rectangle') else 'unowned_foreground_outside_regions' if 'outside pose regions' in e else 'original_outer_boundary_contact' if 'touches the image boundary' in e else 'phase_assignment_not_unique')
+ cause_counts[category]+=1
+assert sum(cause_counts.values())==263
+write(out/'remaining-errors.json',dict(schema='pr122-soft-bridge-repair-remaining-v1',previous_source_holds=290,repaired_source_clips=27,remaining_source_holds=263,primary_cause_counts=dict(cause_counts),source_holds=remaining,generation_holds=old['generation_holds'],new_boundary_variants=old['new_boundary_variants'],contour_candidate_secondary_holds=old['contour_candidate_secondary_holds']+[dict(key=x['key'],direction=x['direction'],role=x['role'],unclassified_soft_residue_pixels=x['unclassified_soft_residue_pixels'],max_alpha=x['unclassified_soft_residue_max_alpha'],reason='Unclassified soft source layer preserved separately; semantic/visual approval NOT_RUN') for x in rows],method_stop='Remaining physical-component count, foreground ownership, source-boundary and phase assignment failures retain unchanged guards; no repeated reauthoring or guessed cuts',final_quality_approvals_added=0,visual_quality='NOT_REVIEWED'))
+result=dict(schema='pr122-soft-bridge-repair-summary-v1',date='2026-10-23 UTC',cause='Alpha<=16 bridges joined otherwise independently owned foreground poses; one full-contour region also omitted a detached pixel',actual_fix='Reuse unchanged foreground ownership and reviewed-pose assembler to isolate exact contour RGBA layers and rigidly translate them onto spaced cells',repaired_clips=27,reused_original_poses=162,frames_regenerated=0,normal_clips_preserved=235,new_final_approvals=0,approved_active_actors=2,unapproved_active_actors=17,primary_source_holds=263,primary_cause_counts=dict(cause_counts),missing_generation_holds=3,rendered_contour_nonzero_coverage='exactly_once',original_source_RGBA_storage_ownership=dict(missing=0,duplicate=0),soft_layer_review='27 unclassified alpha<=16 residue layers archived; not rendered or approved',main_player=summary,roles=dict(collections.Counter(x['role'] for x in rows)),code_changes=0,production_switches=0)
+write(out/'summary.json',result)
+resume=r/'docs/remake/TWILIGHT_PR122_RESUME_20261019.md';text=resume.read_text();marker='2026-10-23 soft bridge repair v01:';assert marker not in text
+resume.write_text(text+'\n'+marker+f' Additional27 clips repaired with unchanged alpha>16 foreground topology and >32 ownership margin; ambiguous low-alpha bridges stored separately. Original RGBA storage0 missing/duplicate, selected contour pixels exactly once; no straight crop through foreground, scaling, repainting or new frames. Reused162 poses, prior235 normal candidate clips and protected393/267/413 preserved. Main/Player candidate integration PASS:{summary["actors"]} actors,{summary["clips"]} clips,{summary["death_directions"]} death input cases. Remaining263 primary source HOLD +3 missing-generation HOLD. Visual/semantic approvals added0; approved2/19. Prior29 plus new27 candidate clips retain explicit soft-layer visual HOLD. Full list: draft-first-pass-20261023/soft-bridge-repair-v01/remaining-errors.json. Existing generators/checkers/gameplay/catalogs unchanged; no CI or previews.\n')
+print(json.dumps(dict(status='PASS',repaired=27,primary_remaining=263,normal_preserved=oldtracks,approvals_added=0,roles=result['roles'])))

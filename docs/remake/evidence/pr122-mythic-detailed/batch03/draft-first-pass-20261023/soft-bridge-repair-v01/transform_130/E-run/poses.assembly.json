@@ -1,0 +1,556 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:130",
+  "role": "run",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "E",
+  "metadata_sha256": "aeaa2809fb3724e10e4512b9b86a9edfb2d1f2b8a79a73789af307fa7dae4e34",
+  "metadata_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/pose-map.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/poses.png",
+  "output_sha256": "ae7c06b956e7b340d9a9688eaf577e6144f1a69ff70125a0831917a49f43fccf",
+  "output_canvas": [
+    2560,
+    3840
+  ],
+  "cell_size": [
+    1280,
+    1280
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/parts/phase_0.png",
+      "source_sha256": "9bdcbcb75b24ca4109c2b245d6c6f976820eb288054ee575b94f0f59f05be9e4",
+      "source_pose": 0,
+      "source_region": [
+        31,
+        109,
+        515,
+        375
+      ],
+      "rgba_sha256": "4b3a98d38ba311cac221dbebdfa5f42803eca99c396d43b3887ac8eac74b3e44",
+      "visible_pose_sha256": "17855c3260f9cad84639e176b46db4bbd7ae9f84ce3d9654542c91c531092a88",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material; multi-pose alpha<=16 bridges assigned only with unchanged >32 distance margin, uncertain pixels kept in separate residue layer. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        382,
+        452,
+        515,
+        375
+      ],
+      "translation": [
+        351,
+        343
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 76086
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/parts/phase_1.png",
+      "source_sha256": "828fe2284cb6a66f41a0b2c848db2a03b9febefda117033f3ff6a4733ca6559d",
+      "source_pose": 1,
+      "source_region": [
+        549,
+        113,
+        495,
+        371
+      ],
+      "rgba_sha256": "02363ddbcd6a9e6e5e53ad6767b786a509053c18f5072bfe5259b431b71a529f",
+      "visible_pose_sha256": "ec6450cc3d90d49ba31dd364f37f02ef0ab376b77e8c36d76572ebff07f8a8cb",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material; multi-pose alpha<=16 bridges assigned only with unchanged >32 distance margin, uncertain pixels kept in separate residue layer. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        1672,
+        454,
+        495,
+        371
+      ],
+      "translation": [
+        1123,
+        341
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 75111
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/parts/phase_2.png",
+      "source_sha256": "d129c617cb9d58f5247a52c161e69e22922474aa773a2291711fbc7b42f4dbc5",
+      "source_pose": 2,
+      "source_region": [
+        989,
+        79,
+        531,
+        379
+      ],
+      "rgba_sha256": "61d11fb9ea3ac0ce4d67a824dcdc8abeaf0c99452fb760533e7341f212cae4c5",
+      "visible_pose_sha256": "1dc035f7099d4e8cbc54bd7bcf787381f9a898247f23bf325550fab423646cf1",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material; multi-pose alpha<=16 bridges assigned only with unchanged >32 distance margin, uncertain pixels kept in separate residue layer. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        374,
+        1730,
+        531,
+        379
+      ],
+      "translation": [
+        -615,
+        1651
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 75717
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/parts/phase_3.png",
+      "source_sha256": "e7186c40f28f058ca1996afa79aaf395bd4f0de1042c228b96f8cf11883164d4",
+      "source_pose": 3,
+      "source_region": [
+        43,
+        583,
+        508,
+        363
+      ],
+      "rgba_sha256": "0c79b28f02f4608b796343e08be72281252191aae684272bc26ab02b3ad3cd34",
+      "visible_pose_sha256": "20e36e302f0a904113a020520f0ba9a8680336317ff877b556c533c8149db3ea",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material; multi-pose alpha<=16 bridges assigned only with unchanged >32 distance margin, uncertain pixels kept in separate residue layer. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        1666,
+        1738,
+        508,
+        363
+      ],
+      "translation": [
+        1623,
+        1155
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 75207
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/parts/phase_4.png",
+      "source_sha256": "8e7d55f1ebeae00765f9dfd7bbaae5e03ed00fd2752b85fe3f7730fc201ee5f4",
+      "source_pose": 4,
+      "source_region": [
+        544,
+        587,
+        514,
+        358
+      ],
+      "rgba_sha256": "e239d17bc2a06dcae33c5edaa519815c6a8b479fa52ec4395f4e893d3abf7f1d",
+      "visible_pose_sha256": "2bfd4c981c11b2e8f743ece1e79cc33ae30737c62db775d4c39f7cb5e06b511d",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material; multi-pose alpha<=16 bridges assigned only with unchanged >32 distance margin, uncertain pixels kept in separate residue layer. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        383,
+        3021,
+        514,
+        358
+      ],
+      "translation": [
+        -161,
+        2434
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 69913
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/parts/phase_5.png",
+      "source_sha256": "fe8b790974cb2d342d17c0fbbdd86735e95833b0b3f268cc6612812fcb0c4c15",
+      "source_pose": 5,
+      "source_region": [
+        1015,
+        570,
+        521,
+        363
+      ],
+      "rgba_sha256": "59e62194ff2b41b230c83931f9a3e444a7a2a8a60c40a349daab0254d74289c2",
+      "visible_pose_sha256": "0febbba398e7caaf7f3b62a2ad9ba1e9ca20b67bb14ca3f71000857b8eb43bdf",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material; multi-pose alpha<=16 bridges assigned only with unchanged >32 distance margin, uncertain pixels kept in separate residue layer. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        1659,
+        3018,
+        521,
+        363
+      ],
+      "translation": [
+        644,
+        2448
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 73724
+    }
+  ],
+  "newly_authored_poses": 0,
+  "reused_poses": 6,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      2560,
+      3840
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "E",
+        "region": [
+          382,
+          452,
+          515,
+          375
+        ],
+        "margin": [
+          766,
+          912,
+          1533,
+          1673
+        ],
+        "source_anchor": [
+          640,
+          820
+        ],
+        "rgba_sha256": "4b3a98d38ba311cac221dbebdfa5f42803eca99c396d43b3887ac8eac74b3e44"
+      },
+      {
+        "row": 1,
+        "direction": "E",
+        "region": [
+          1672,
+          454,
+          495,
+          371
+        ],
+        "margin": [
+          776,
+          920,
+          1553,
+          1677
+        ],
+        "source_anchor": [
+          1920,
+          814
+        ],
+        "rgba_sha256": "02363ddbcd6a9e6e5e53ad6767b786a509053c18f5072bfe5259b431b71a529f"
+      },
+      {
+        "row": 2,
+        "direction": "E",
+        "region": [
+          374,
+          1730,
+          531,
+          379
+        ],
+        "margin": [
+          758,
+          908,
+          1517,
+          1669
+        ],
+        "source_anchor": [
+          640,
+          2102
+        ],
+        "rgba_sha256": "61d11fb9ea3ac0ce4d67a824dcdc8abeaf0c99452fb760533e7341f212cae4c5"
+      },
+      {
+        "row": 3,
+        "direction": "E",
+        "region": [
+          1666,
+          1738,
+          508,
+          363
+        ],
+        "margin": [
+          770,
+          922,
+          1540,
+          1685
+        ],
+        "source_anchor": [
+          1920,
+          2096
+        ],
+        "rgba_sha256": "0c79b28f02f4608b796343e08be72281252191aae684272bc26ab02b3ad3cd34"
+      },
+      {
+        "row": 4,
+        "direction": "E",
+        "region": [
+          383,
+          3021,
+          514,
+          358
+        ],
+        "margin": [
+          767,
+          927,
+          1534,
+          1690
+        ],
+        "source_anchor": [
+          640,
+          3374
+        ],
+        "rgba_sha256": "e239d17bc2a06dcae33c5edaa519815c6a8b479fa52ec4395f4e893d3abf7f1d"
+      },
+      {
+        "row": 5,
+        "direction": "E",
+        "region": [
+          1659,
+          3018,
+          521,
+          363
+        ],
+        "margin": [
+          763,
+          921,
+          1527,
+          1685
+        ],
+        "source_anchor": [
+          1920,
+          3377
+        ],
+        "rgba_sha256": "59e62194ff2b41b230c83931f9a3e444a7a2a8a60c40a349daab0254d74289c2"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 353.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    358,
+    379
+  ],
+  "possible_region_height_mismatch": false,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed.",
+  "finalization": "EXISTING_IMMUTABLE_ATLAS_WITH_REVIEWED_OUTPUT_REGIONS",
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "ae7c06b956e7b340d9a9688eaf577e6144f1a69ff70125a0831917a49f43fccf",
+    "base_geometry_sha256": "378b07606b3c30d5cc7e6d5cbca9e8da2aa77b77b6d37ffafe75198fb5a9fd50",
+    "direction": "E",
+    "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+    "regions": [
+      [
+        382,
+        452,
+        515,
+        375
+      ],
+      [
+        1672,
+        454,
+        495,
+        371
+      ],
+      [
+        374,
+        1730,
+        531,
+        379
+      ],
+      [
+        1666,
+        1738,
+        508,
+        363
+      ],
+      [
+        383,
+        3021,
+        514,
+        358
+      ],
+      [
+        1659,
+        3018,
+        521,
+        363
+      ]
+    ],
+    "nearest_owner_sha256": "acf496998ce60379b1f25489f99c205a1fd755e9bc9dee1e60ffb950f33d45f7"
+  },
+  "source_region_proof": {
+    "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "ae7c06b956e7b340d9a9688eaf577e6144f1a69ff70125a0831917a49f43fccf",
+    "source_RGBA_sha256": "56ff9e0b1ccd1d605cc54c621840e0776ab46773310b40076101863f99f35ccc",
+    "base_geometry_sha256": "378b07606b3c30d5cc7e6d5cbca9e8da2aa77b77b6d37ffafe75198fb5a9fd50",
+    "derived_geometry_sha256": "79a46b96f3a1fda7400c8e3e2569e0a4a05db880cc3feb93650b51361be88dbc",
+    "review_sha256": "0e0ca66a871e85f8c252d5ec835ccea3dbe2c73f8c01b6d2dfb75cf5ada97f8c",
+    "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+    "source_unchanged": true,
+    "canonical_canvas_foot_anchors_unchanged": true,
+    "all_alpha_gt16_covered_exactly_once": true,
+    "foreign_foreground_pixels": 0,
+    "alpha_gt16_pixels": 445758,
+    "added_alpha_gt16_pixels": 127,
+    "all_alpha_positive_covered": true,
+    "expanded_regions": [
+      [
+        382,
+        452,
+        515,
+        375
+      ],
+      [
+        1672,
+        454,
+        495,
+        371
+      ],
+      [
+        374,
+        1730,
+        531,
+        379
+      ],
+      [
+        1666,
+        1738,
+        508,
+        363
+      ],
+      [
+        383,
+        3021,
+        514,
+        358
+      ],
+      [
+        1659,
+        3018,
+        521,
+        363
+      ]
+    ],
+    "default_importer_repacker_unchanged": true,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "acf496998ce60379b1f25489f99c205a1fd755e9bc9dee1e60ffb950f33d45f7",
+    "foreground_owner_sha256": "ef6232b497ec55a27f8dbf98a789863831351824e476c38064099fb422dfe12b",
+    "detached_pixels": 67,
+    "detached_fragments": [
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          711,
+          504,
+          712,
+          505
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 978.9177697845719,
+        "owner_margin_min": 976.681701807072
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          496,
+          692,
+          497,
+          693
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 1057.8062204392636,
+        "owner_margin_min": 1054.8062204392636
+      },
+      {
+        "row": 2,
+        "pixels": 64,
+        "bbox": [
+          382,
+          1784,
+          396,
+          1796
+        ],
+        "nearest_max": 34.88552708502482,
+        "second_nearest_min": 1006.9642496136594,
+        "owner_margin_min": 972.0787225286346
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          540,
+          3165,
+          541,
+          3166
+        ],
+        "nearest_max": 9.848857801796104,
+        "second_nearest_min": 1065.3023045126674,
+        "owner_margin_min": 1055.4534467108713
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "original_failed_receipt": {
+    "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/E-run/poses.assembly-error.json",
+    "sha256": "a3e135e89a2ea98a854492ff18141927957a34d02601647fd3ec67881c3fb0d3"
+  },
+  "atlas_and_original_error_unchanged": true
+}
