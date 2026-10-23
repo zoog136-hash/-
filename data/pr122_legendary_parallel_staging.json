@@ -161,15 +161,15 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 22,
-    "minimally_validated_configurations": 22,
-    "newly_authored_poses": 132,
+    "new_draft_configurations": 27,
+    "minimally_validated_configurations": 27,
+    "newly_authored_poses": 162,
     "reused_existing_poses": 0,
-    "quality_held_configurations": 22,
+    "quality_held_configurations": 27,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 1298
+    "remaining_draft_configurations": 1293
   },
   "actors": [
     {
@@ -1012,8 +1012,31 @@
       "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
-      "drafts": [],
-      "remaining_draft_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:194",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-attack-source-v01.png",
+          "source_sha256": "0c1cc55d70d03f1611efd58c70f5746b095c0d594465dda3b71277c9ac1622dd",
+          "source_bytes": 2695041,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "dd5b4563f45d23b38147c5e81c66ef3677bcfa91070d6f028a07b83dea507b36",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch06-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
       "precision_final_approved": false
     },
     {
@@ -1027,8 +1050,30 @@
       "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
-      "drafts": [],
-      "remaining_draft_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:193",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-attack-source-v01.png",
+          "source_sha256": "472fd65d6b161663942e02a3b74bb35c5ef5335b8f7a079955b21f21e43f5ee8",
+          "source_bytes": 2477371,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "326af871d09f53cb15a17116a10e709cabf11cf61f420c1a360fffd37ba3e492",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch06-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
       "precision_final_approved": false
     },
     {
@@ -1042,8 +1087,31 @@
       "legacy_frames_path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
-      "drafts": [],
-      "remaining_draft_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:192",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-attack-source-v01.png",
+          "source_sha256": "622981424dcd980923ed090249b74dd68c3f4f41211ffccf7b96b200f30eab9a",
+          "source_bytes": 2102664,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "99513d53fbaeff9917a7c83020d1d8de20266d8a5291b77a74f9f664c5ab279f",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch06-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
       "precision_final_approved": false
     },
     {
@@ -1057,8 +1125,30 @@
       "legacy_frames_path": "",
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
-      "drafts": [],
-      "remaining_draft_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:191",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-attack-source-v01.png",
+          "source_sha256": "65e5a1c5f93375c4e8ec6ddc1ec0509097ed01e939ca2e3da91a71b3c930c627",
+          "source_bytes": 2422005,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "59ff87d03e80c2b601c0993642f5fa70e3f616e3d8e278aa84699289e360280b",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch06-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
       "precision_final_approved": false
     },
     {
@@ -1072,8 +1162,31 @@
       "legacy_frames_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
-      "drafts": [],
-      "remaining_draft_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:190",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-attack-source-v01.png",
+          "source_sha256": "1cd317ba7be780ef41be9ec988faa9d0698dd95d7e9880f7712e8bb84ecf0171",
+          "source_bytes": 2507248,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "44cd71efe8c6f3e7a28e99932de1b0595412dedd1e4d0e334dabe7f6037c1c40",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch06-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
       "precision_final_approved": false
     },
     {
