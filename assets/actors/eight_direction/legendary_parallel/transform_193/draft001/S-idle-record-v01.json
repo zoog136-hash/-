@@ -1,0 +1,222 @@
+{
+  "key": "transform:193",
+  "name": "공작 마커스",
+  "grade": "전설",
+  "direction": "S",
+  "role": "idle",
+  "reference": "res://assets/catalog/8eea146bc63c088334b96aba.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:193 공작 마커스. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body S IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use true front-facing SOUTH, screen DOWN, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8eea146bc63c088334b96aba.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": "38",
+  "reference_sha256": "7208b7a7d9c4880ac1ae30753641fa162019caa4df8fdd1c221215cd6c470e60",
+  "schema": "pr122-legendary-generated-clip-v1",
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-idle-source-v01.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-idle-source-v01.png",
+  "source_sha256": "44da2b8bd05e00684e504cf4707a40614c2ed45e30ca20a0c991007f07ec8d61",
+  "source_bytes": 2389033,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "09a72d375a2b5cd8c0c12c4a5e274c8cc6c714943e76e28ce219a4a93dd5c150",
+  "generated_original_path": "/workspace/generated_images/exec-e3fcc06c-6c0d-46af-a9dc-9fa44bc4c542.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_193-S-idle-v01.json",
+  "request_file_sha256": "bfc9b4ed6575313dc537e1540276bff8025753e74ac0691329bcc89d07ad3c63",
+  "generation_request_sha256": "0e96b788dc76d0a570f0a8994e94d3edd6fe6ffb41363482c029b92ede218c63",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "idle_2",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "e1cc383e6e51629479a71e4cafc2d668104554f256221ca9251106aab8490117",
+      "normalized_visible_sha256": "44a9a12fb421be6ecf5946957991d2bdb99a9d7333ddae99b81cef724836ed09",
+      "visible_pixels": 73315,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 62
+    },
+    {
+      "index": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "ac371a3c7c6c50f64b19cfada47654cdc1702885b2352e28bd6278cf32e10411",
+      "normalized_visible_sha256": "b8bc3a781f19f7ba0216124ce096bc14ba23c2c5f6e0459496f8451f5033d8e1",
+      "visible_pixels": 74185,
+      "alpha_bbox_in_cell": [
+        1,
+        17,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "0ae4edc80f20ce2492d14055eb123a9e67e9f09d3f8c6bcfc323942e5a28ead2",
+      "normalized_visible_sha256": "767b386d92319befa3fab3f77e9dc712891cc59e216d8331cb09192856a2f0d8",
+      "visible_pixels": 79300,
+      "alpha_bbox_in_cell": [
+        0,
+        9,
+        498,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "b6671e404ec06e82fc5939c9d781df0a94b78383bb2fca98d3ae07f456aba062",
+      "normalized_visible_sha256": "b898ed1f41719d2adfefa9a6a126675fa660258bb1080635c45231235e790755",
+      "visible_pixels": 99680,
+      "alpha_bbox_in_cell": [
+        17,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 68
+    },
+    {
+      "index": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "d2c13da6b439636b6c760011cebac6abd865aa8f2ea5657dbb4d9b40788d15a0",
+      "normalized_visible_sha256": "7b8abfd52cd85c253f268d2bfaa7dd5a18bf519aa0823355809be14e7e1b513f",
+      "visible_pixels": 82876,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "0e4990173c8c2b951f69adf406fd2131e1b24c9872a9b0453703a6f7f2d4cfea",
+      "normalized_visible_sha256": "03afb7a45b3a70b32184a5b974d2c6065d821aa58526545136199a779c0f6905",
+      "visible_pixels": 79508,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        498,
+        512
+      ],
+      "border_alpha_pixels": 0
+    }
+  ],
+  "clipped_cell_count": 2,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false
+}
