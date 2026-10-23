@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""Keep three actual targeted attempts and exact HOLD reasons without changing r003."""
+from pathlib import Path
+import hashlib
+import json
+from PIL import Image
+import numpy as np
+
+ROOT=Path(__file__).resolve().parents[5]
+BASE=Path(__file__).resolve().parent
+PREVIOUS=BASE.parent/'boss-fix08-demon-e'
+
+
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def pin(p):return {'path':p.relative_to(ROOT).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)}
+def write(name,value):(BASE/name).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
+
+
+def freeze():
+    previous_manifest=PREVIOUS/'file-manifest.json'
+    assert sha(previous_manifest)=='3465a06107c4d6f9b62b7ce9857fc6674f6a2a1f2d03a04e5e4f1fa4c2f02d04'
+    previous=json.loads(previous_manifest.read_text())
+    assert len(previous['files'])==25
+    for entry in previous['files']:assert sha(ROOT/entry['path'])==entry['sha256']
+    candidate=PREVIOUS/'candidate.json'
+    assert sha(candidate)=='52c90583a5d40ae87040a3d82b25fd7fe27431286fe1bf6ca3272b94f96d8e0b'
+    independent=BASE/'independent-review.json'
+    assert independent.exists(),'Freeze after the independent observed-source review is recorded'
+    records=[]
+    for name in ['NW-contact-v01','SE-opposite-half3-v01','SE-opposite-half3-v02']:
+        request_path=BASE/'requests'/(name+'.json')
+        record=json.loads(request_path.read_text())
+        assert json.loads((BASE/'requests'/(name+'-request.json')).read_text())['request']==record['request']
+        image=ROOT/record['preserved_path'];assert sha(image)==record['sha256']
+        check_path=BASE/'checks'/(name+'.json');check=json.loads(check_path.read_text())
+        with Image.open(image) as source:
+            alpha=np.asarray(source.convert('RGBA'))[:,:,3]>100
+        records.append({'name':name,'source':pin(image),'exact_request':pin(request_path),'strict_check':pin(check_path),
+                        'geometry_status':check['status'],'geometry_reason':check.get('reason'),
+                        'visible_edge_pixels':{'top':int(alpha[0].sum()),'bottom':int(alpha[-1].sum()),'left':int(alpha[:,0].sum()),'right':int(alpha[:,-1].sum())},
+                        'selected':False})
+    review={
+        'schema':'pr122-demon-SE-NW-targeted-attempt-review-v1','id':'monster:알비노 데몬','date':'2026-10-23','frozen':True,
+        'current_review':'HOLD','new_approvals':0,'new_completed_bosses':0,'new_selected_poses':0,'new_native_clips':0,
+        'generation_calls':3,'generated_PNGs':3,'generated_pose_count':7,'r004_created':False,
+        'method':'Actual private source-image vision of all three generated PNGs, with an independent reviewer of the same new sources. PNGs and exact prompts are preserved losslessly. No source was connected after the concrete failures below.',
+        'preserved_candidate':pin(candidate),'preserved_r003_manifest':pin(previous_manifest),'all_previous_25_manifest_files_verified_unchanged':True,
+        'source_attempts':records,'independent_review':pin(independent),
+        'confirmed_improvements':[
+            {'scope':'SE source anatomy','observation':'Both newly authored SE groups actually place SCREEN LEFT/anatomical RIGHT foot low and SCREEN RIGHT/anatomical LEFT knee/foot high, opposite the preserved source screen-right support. The RIGHT axe hand remains SCREEN LEFT, so this is not a whole-body mirror.'},
+            {'scope':'NW source blade trajectory','observation':'The single new NW contact extends the blade beyond the head toward UPPER LEFT instead of leaving it overhead.'}],
+        'confirmed_rejection_reasons':[
+            {'source':'NW-contact-v01','criterion':'anatomical_weapon_ownership','observation':'Actual back-left image shows the near anatomical LEFT arm gripping the extended axe and the far RIGHT arm empty. The forward reach cannot be adopted because it reverses the boss weapon hand. Geometry passes, visual identity fails.'},
+            {'source':'SE-opposite-half3-v01','criterion':'full_pose_crop_geometry','observation':'Strict importer rejects a pose rectangle including an adjacent body. The good opposite-support anatomy is preserved but cannot be safely bound as complete independent source regions.'},
+            {'source':'SE-opposite-half3-v02','criterion':'source_boundary','observation':'The final rightmost figure reaches the image right edge at its empty claw; two alpha>100 pixels touch that boundary. Strict importer rejects the source as potentially truncated. No padding, guard relaxation or clipped adoption is used.'}],
+        'unreviewed_details_not_additional_gates':['No new native timeline or runtime frames were created because the specific source failures were established first.','Further timing or detailed secondary motion review was not needed to decide these rejections.'],
+        'decision':'Retain verified r003 and its E/S/NW improvements. Preserve all actual new art and exact requests as HOLD. Stop at the authorized three targeted calls rather than counting unsafe or wrong-hand art as a repair.',
+        'resume_basis':'Reuse the visibly corrected SE opposite-support model in a future complete, roomy source; correct NW weapon ownership together with its new forward blade reach before adopting either.'}
+    write('review.json',review)
+    write('checkpoint.json',{'schema':1,'date':'2026-10-23','frozen':True,'stage':'TARGETED_SOURCE_HOLD_R003_PRESERVED','generation_calls':3,'generated_PNGs':3,'generated_pose_count':7,'selected_poses':0,'new_approvals':0,'r004_created':False,'selected_candidate':pin(candidate),'review':pin(BASE/'review.json')})
+    files=[pin(p) for p in sorted(BASE.rglob('*')) if p.is_file() and p.name!='file-manifest.json' and '__pycache__' not in p.parts]
+    write('file-manifest.json',{'schema':1,'frozen':True,'files':files,'file_count':len(files),'bytes':sum(p['bytes'] for p in files),'current_review':'HOLD','r003_candidate_unchanged':sha(candidate),'previous_r003_manifest_unchanged':sha(previous_manifest),'new_approvals':0,'new_native_clips':0})
+    for entry in files:assert sha(ROOT/entry['path'])==entry['sha256']
+    print(json.dumps({'files':len(files),'bytes':sum(p['bytes'] for p in files),'manifest_sha256':sha(BASE/'file-manifest.json'),'review_sha256':sha(BASE/'review.json'),'r003_preserved':True,'r004_created':False,'current_review':'HOLD'}))
+
+
+if __name__=='__main__':freeze()
