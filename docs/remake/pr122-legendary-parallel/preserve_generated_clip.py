@@ -98,14 +98,21 @@ def preserve(request_path, generated):
     with Image.open(generated) as source:
         assert source.format == "PNG" and source.mode == "RGBA", "A real RGBA PNG is required"
         source.load()
-        assert source.width % 3 == 0 and source.height % 2 == 0, "Six equal cells must fit a 3x2 sheet"
+        integer_grid_rounding = source.width % 3 != 0 or source.height % 2 != 0
+        assert not integer_grid_rounding or q.get("grid_rounding_policy") == "integer_partition_preserve_all_pixels", "Non-divisible 3x2 grid needs an explicit pixel-preserving boundary record"
         width, height = source.width // 3, source.height // 2
         assert width > 0 and height > 0
+        grid_x = [i * source.width // 3 for i in range(4)]
+        grid_y = [i * source.height // 2 for i in range(3)]
+        assert max(grid_x[i+1]-grid_x[i] for i in range(3))-min(grid_x[i+1]-grid_x[i] for i in range(3)) <= 1
+        assert max(grid_y[i+1]-grid_y[i] for i in range(2))-min(grid_y[i+1]-grid_y[i] for i in range(2)) <= 1
         geometry, checks = {"frames": []}, []
         for phase in range(6):
-            x, y = phase % 3 * width, phase // 3 * height
-            region = [x, y, width, height]
-            rgba = np.asarray(source.crop((x, y, x + width, y + height)))
+            column, row = phase % 3, phase // 3
+            x, y = grid_x[column], grid_y[row]
+            right, bottom = grid_x[column+1], grid_y[row+1]
+            region = [x, y, right-x, bottom-y]
+            rgba = np.asarray(source.crop((x, y, right, bottom)))
             alpha = rgba[:, :, 3]
             ys, xs = np.nonzero(alpha > 0)
             assert len(xs), f"Frame {phase} is blank"
@@ -167,6 +174,9 @@ def preserve(request_path, generated):
                   request_file_sha256=digest(request_raw), generation_request_sha256=digest(request_canonical),
                   generation_service="image_gen.imagegen", poses=6, cell_size=[width, height],
                   frame_order=list(range(6)), animation=f"{role}_{direction_index}",
+                  source_grid=[3, 2], source_grid_pixel_boundaries={"x": grid_x, "y": grid_y},
+                  partition_edges={"x": grid_x, "y": grid_y},
+                  integer_grid_rounding_hold=integer_grid_rounding,
                   loop=role in ("idle", "run"), automatic_checks=checks,
                   clipped_cell_count=sum(c["border_alpha_pixels"] > 0 for c in checks),
                   compiler_origin=COMPILER_ORIGIN,
@@ -176,6 +186,7 @@ def preserve(request_path, generated):
                                   "SpriteFrames_actual_Godot_playback": "NOT_RUN"},
                   source_visual_status="HOLD_NOT_REVIEWED", geometry_review="NOT_RUN",
                   hold_reasons=["Full source identity, footing, camera, articulation and clipping review pending"] +
+                               (["Non-divisible source grid uses complete integer boundaries; adjacent cell sizes differ by at most one pixel; display registration review pending"] if integer_grid_rounding else []) +
                                (["Visible alpha reaches cell edge"] if any(c["border_alpha_pixels"] for c in checks) else []),
                   actual_Main_Player="NOT_RUN", required_Godot_4_7_2_full_QA="NOT_RUN",
                   final_motion_approvals_added=0, actor_approvals_added=0, production_connected=False)
