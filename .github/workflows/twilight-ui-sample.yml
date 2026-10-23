@@ -1,0 +1,53 @@
+name: TWILIGHT standalone UI sample
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'samples/twilight-ui/**'
+      - '.github/workflows/twilight-ui-sample.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'samples/twilight-ui/**'
+      - '.github/workflows/twilight-ui-sample.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: samples/twilight-ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: samples/twilight-ui/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Run desktop, touch and hit-area regressions
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist > /tmp/twilight-ui-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: twilight-ui-sample-evidence
+          path: |
+            samples/twilight-ui/evidence/*.json
+            samples/twilight-ui/evidence/*.png
+          if-no-files-found: error
