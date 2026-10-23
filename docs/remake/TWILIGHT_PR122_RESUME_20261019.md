@@ -550,3 +550,6 @@
 - First-pass production checkpoint: 224,212 SW IDLE six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW IDLE drafts 8/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:224", "poses": 6, "clipped_cells": 1}, {"key": "transform:212", "poses": 6, "clipped_cells": 4}]. Continue transform:189 without draft polishing.
 
 - First-pass production checkpoint: 189,174 SW IDLE six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW IDLE drafts 10/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:189", "poses": 6, "clipped_cells": 0}, {"key": "transform:174", "poses": 6, "clipped_cells": 0}]. Continue transform:141 without draft polishing.
+
+- 몬스터 batch02: 사라만다(기존 NOT_AUTHORED) 전용 새6PNG 중5선택/1bbox실패보존, idle/run/attack/hit 각8 +deathS =33클립91고유자세 제작. `monster_staging/salamander/r001` SpriteFrames/NativeMotionProfile 연결. Godot4.7.2 실제ActorMotion33클립/91자세·NPC속도124 RUN·S사망8방향fallback/끝자세정지PASS. 기본Main/정체성/지지발/접촉은HOLD, 새승인0. 누적현재3종37클립112자세.
+- 신규몬스터RUN-only 런타임: 실제NPC속도100/124에서도RUN선택, 기존WALK-only는기존fallback보존. 변신/미등록개체/physics/공격clock불변 검사PASS. 증거runtime-scope.

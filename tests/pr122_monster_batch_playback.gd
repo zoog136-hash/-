@@ -12,6 +12,8 @@ func _run() -> void:
 	var poses: int = 0
 	var report_actors: Dictionary = {}
 	for key: String in register.actors:
+		if key not in ["monster:놀", "monster:얼음 여왕"]:
+			continue
 		var actor: Dictionary = register.actors[key]
 		var textures: Array[ImageTexture] = []
 		for track: Dictionary in actor.tracks:

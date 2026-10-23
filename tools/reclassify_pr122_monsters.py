@@ -46,6 +46,8 @@ def build(root):
                     boss(name, 'world_spawn_profiles:' + map_id + ':' + row.get('id', ''))
     profiles = read('data/combat_animation_profiles.json')['profiles']
     binding_counts = Counter(profile.get('frames_path') for profile in profiles.values())
+    staging_path = root / 'data/pr122_monster_animation_staging.json'
+    staged = json.loads(staging_path.read_text()).get('actors', {}) if staging_path.is_file() else {}
     result = []
     for old in monsters:
         key, name = old['id'], old['name']
@@ -56,6 +58,9 @@ def build(root):
         is_boss = bool(evidence)
         profile = profiles[key]
         completed = old['production_status'] == 'VERIFIED_COMPLETED'
+        production_status = old['production_status']
+        if not completed and key in staged and production_status == 'NOT_AUTHORED':
+            production_status = 'IN_PROGRESS'
         shared = (any(profile.get(field) for field in ('shared_visual_source', 'shared_visual_policy'))
                   or binding_counts[profile.get('frames_path')] > 1)
         frames_path = root / profile.get('frames_path', '').removeprefix('res://')
@@ -73,7 +78,7 @@ def build(root):
             'quality_tier': 'mythic_transform' if is_boss else 'hero_transform',
             'classification_evidence': evidence or ['coverage:normal_monster; no boss DB/spawn flag'],
             'spawn_evidence': spawn_evidence.get(name, []),
-            'preserved_status': old['production_status'], 'production_status': old['production_status'],
+            'preserved_status': old['production_status'], 'production_status': production_status,
             'queue': queue, 'priority': 0 if old['production_status'] == 'IN_PROGRESS' else (1 if old['production_status'] == 'SOURCE_HOLD' else 2),
             'reason': old['reason'], 'frames_path': profile.get('frames_path', ''),
             'runtime_proxy': bool(profile.get('shared_visual_source')),
@@ -82,7 +87,8 @@ def build(root):
             'existing_death_directions': existing_deaths,
             'metadata_screen': {'SpriteFrames_present': frames_path.is_file(), 'track_counts': tracks,
                                 'PNG_and_visual_quality': 'NOT_REVIEWED_BY_METADATA_SCREEN'},
-            'quality_screen': 'REVIEW_SHARED_BOSS' if completed and is_boss and shared else 'PRESERVE_APPROVAL_DETAILED_REVIEW_PENDING',
+            'quality_screen': ('REVIEW_SHARED_BOSS' if is_boss and shared else 'PRESERVE_APPROVAL_DETAILED_REVIEW_PENDING') if completed else 'SOURCE_PRODUCTION_PENDING',
+            'new_staging': {field: staged[key][field] for field in ('native_track_count', 'native_pose_count', 'missing_required_tracks', 'quality_review')} if key in staged else None,
             'new_approval': False,
         })
     summary = {}

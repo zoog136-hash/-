@@ -49,7 +49,7 @@ def frames_bytes(tracks):
         poses = ',\n'.join('{"duration": 1.0, "texture": SubResource("pose_%d_%d")}' % (i, j)
                             for j in range(len(track['geometry']['frames'])))
         loop = str(track['role'] in ('idle', 'run')).lower()
-        seconds = {'run': .48, 'attack': .42}[track['role']]
+        seconds = {'idle': 1.2, 'run': .48, 'attack': .42, 'hit': .22, 'death': .65}[track['role']]
         animations.append('{"frames": [%s], "loop": %s, "name": &"%s", "speed": %.9f}' %
                           (poses, loop, track['animation'], len(track['geometry']['frames']) / seconds))
     lines += ['', '[resource]', 'animations = [\n' + ',\n'.join(animations) + '\n]',
@@ -136,6 +136,17 @@ def build(root, request_dir):
                 'new_approvals': 0, 'default_catalog_switches': 0,
                 'preservation': 'Previous approved art, shared proxies, WALK and multiview DEATH remain byte-identical.'}
     destination = root / REGISTER
+    if destination.exists():
+        previous = json.loads(destination.read_text())
+        for key, actor in actors.items():
+            old = previous.get('actors', {}).get(key)
+            if old and (old['production_connected'] or old['detailed_completed']) and old != actor:
+                raise ValueError('Cannot replace an approved/connected actor: ' + key)
+        # Other batches own other actor entries. Rerunning this batch must
+        # retain their work instead of replacing the whole shared registry.
+        merged = previous.get('actors', {}).copy()
+        merged.update(actors)
+        register['actors'] = merged
     if destination.exists() and destination.read_bytes() != json_bytes(register):
         previous = json.loads(destination.read_text())
         assert previous['new_approvals'] == previous['default_catalog_switches'] == 0
