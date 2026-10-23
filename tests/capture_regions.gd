@@ -6,7 +6,7 @@ const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const DETAIL_KINDS: Dictionary = {"domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
 # Oman 1F now uses authored ReferenceGeography, not the removed tomb prop.
-# Photograph its current boss landmark anchor; retain all 37 required views.
+# Photograph its current boss landmark anchor; retain all 33 live-map views.
 const DETAIL_ANCHORS: Dictionary = {"oman_01":"boss"}
 var capture_count: int = 0
 var captured_files: Dictionary = {}
@@ -200,7 +200,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	return report
 
 func _run() -> void:
-	# All 37 views refer to authored review_points, landmarks and room IDs.
+	# The 33 live-map views refer to authored review_points, landmarks and room IDs.
 	# Keep that renderer contract on its original layouts; native PNG captures
 	# are checked by their separate Main/streaming and population suites.
 	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/capture_regions.gd",true): return
@@ -223,7 +223,7 @@ func _run() -> void:
 	var directory: String = "user://world-regions-review"
 	DirAccess.make_dir_recursive_absolute(directory)
 	var timing: Array[float] = []
-	for id: String in ["oman_01","oman_10","domination_summit","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05","albino_01","albino_02","albino_03","albino_04","faith_01","faith_04"]:
+	for id: String in ["oman_01","oman_10","domination_summit","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05","albino_01","albino_02","faith_01","faith_04"]:
 		world.rng.seed = 20261008
 		world._set_map(id,false)
 		# Review points can overlap travel markers. Keep static shots on this
@@ -322,11 +322,11 @@ func _run() -> void:
 	var report: Dictionary = {"adapter":RenderingServer.get_video_adapter_name(), "os":OS.get_name(), "frame_cap":Engine.max_fps,
 		"viewport":[1280,720], "static_render":{"median_ms":timing[timing.size()/2],"p95_ms":timing[int(timing.size()*.95)]},
 		"note":"Desktop GL probe; not an Android device FPS guarantee.", "active_play":[]}
-	for id: String in ["aden_world","oman_10","albino_04","faith_04"]:
+	for id: String in ["aden_world","oman_10","albino_02","faith_04"]:
 		report["active_play"].append(await _benchmark_play(world,id,directory))
 	report["captures"] = capture_count
-	if capture_count != 37:
-		push_error("Expected 37 gameplay captures, got "+str(capture_count))
+	if capture_count != 33:
+		push_error("Expected 33 gameplay captures, got "+str(capture_count))
 		failed = true
 	var file: FileAccess = FileAccess.open(directory+"/performance.json",FileAccess.WRITE)
 	if file == null:
