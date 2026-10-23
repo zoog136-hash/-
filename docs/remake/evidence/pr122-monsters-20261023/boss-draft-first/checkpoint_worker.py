@@ -52,11 +52,12 @@ def count():return len(list(HERE.glob('*/*-receipt.json')))
 
 def main():
     if STOP.exists():raise RuntimeError('Remove the explicit stop file before starting a new worker')
-    previous=count();last_change=time.monotonic();number=1;network_failures=0
+    previous=count();observed=previous;last_change=time.monotonic();number=1;network_failures=0
     print(json.dumps(dict(status='CHECKPOINT_WORKER_STARTED',already_saved_sources=previous)),flush=True)
     while not STOP.exists():
         current=count()
-        if current!=previous:last_change=time.monotonic()
+        if current!=observed:
+            observed=current;last_change=time.monotonic()
         if current-previous>=6:
             while (HERE/'checkpoints'/f'auto{number:03}.json').exists():number+=1
             label=f'auto{number:03}';number+=1
@@ -64,7 +65,7 @@ def main():
                 result,error=locked_batch(label,network_failures<3)
                 previous=current
                 if error:network_failures+=1
-                else:network_failures=0
+                elif result.get('remote_PR_commit'):network_failures=0
                 result.update(checkpoint=label,publish_error=error,publishing_paused=network_failures>=3)
                 print(json.dumps(result,ensure_ascii=False),flush=True)
                 (HERE/'delivery-worker-state.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
