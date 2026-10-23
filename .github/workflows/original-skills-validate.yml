@@ -22,6 +22,10 @@ jobs:
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
       - name: Dated data and graph invariants
         run: python3 tools/validate_original_skills.py --report test-results/data-validation.json
+      - name: Delivered authored VFX atlases and roster bindings
+        run: |
+          python3 -m pip install Pillow
+          python3 tools/skills/verify_authored_vfx.py --require-tracked
       - name: All behavioral and regression suites
         run: python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --logs test-results
       - name: Real OpenGL render
