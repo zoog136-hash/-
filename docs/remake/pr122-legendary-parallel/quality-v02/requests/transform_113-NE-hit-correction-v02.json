@@ -1,0 +1,71 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "NE",
+  "role": "hit",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc111",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-hit-source-v01.png",
+  "previous_source_sha256": "35965ae4913ea50edb8286fa935f951111b055c96d2b9e5a670beffd09184e13",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-hit-record-v01.json",
+  "previous_record_sha256": "87ebeb3c48d24ff811a7d8dac5f45dab04c4d696d984f099b54000406287dfc6",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "113",
+    "direction": "NE",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-run-source-v01.png",
+    "sha256": "5b65e32cb7b607a8401f19f30e24dff497c76e6470a5cd5f20b6014906924d9e",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "113",
+      "direction": "NE",
+      "role": "hit",
+      "cause": "camera",
+      "detail": "Frontal face/chest is visible rather than the rear-right view of the recovered NE IDLE.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-hit-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-hit-record-v01.json",
+      "source_sha256": "35965ae4913ea50edb8286fa935f951111b055c96d2b9e5a670beffd09184e13",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0236",
+      "slot": [
+        "transform:113",
+        "NE",
+        "hit"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:113 달의 질리언, NE HIT. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Frontal face/chest is visible rather than the rear-right view of the recovered NE IDLE.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter BACK-RIGHT, screen UP-RIGHT, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Nonfatal HIT with guard, first external impact/flinch, maximal stagger, supported counterbalance, recovery, living guard. Keep original weapon safely held, no attack, shot, cast, death, wound or blood. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-run-source-v01.png": "5b65e32cb7b607a8401f19f30e24dff497c76e6470a5cd5f20b6014906924d9e"
+  }
+}
