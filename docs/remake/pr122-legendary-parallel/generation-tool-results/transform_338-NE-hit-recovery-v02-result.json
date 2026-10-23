@@ -1,0 +1,62 @@
+{
+  "id": "338",
+  "direction": "NE",
+  "role": "hit",
+  "request": "docs/remake/pr122-legendary-parallel/requests/transform_338-NE-hit-recovery-v02.json",
+  "request_sha256": "3d67168e010b63e6e25b059bd5cee475aaf96a91b0c6263203dfdde079dda046",
+  "recovery_attempt_limit": 1,
+  "recovery_attempt_index": 1,
+  "generated": "/workspace/generated_images/exec-88a70523-38b6-4ec2-94aa-69185cf5f3d7.png",
+  "blocked": false,
+  "tool_return_type": "object",
+  "tool_result_without_base64": {
+    "image_url": {
+      "omitted": "Base64/binary payload",
+      "characters": 2437398
+    },
+    "output_hint": "Generated images are saved to /workspace/generated_images as /workspace/generated_images/exec-88a70523-38b6-4ec2-94aa-69185cf5f3d7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  "thrown_error_without_base64": null,
+  "original_failure": {
+    "original_request": "docs/remake/pr122-legendary-parallel/requests/transform_338-NE-hit-guard-supplement-v01.json",
+    "original_request_sha256": "30ad31ebede3639c46fec2716a01c8a2521c37718d3ae157f50ead78b5a77ac7",
+    "original_failed_receipt": "docs/remake/pr122-legendary-parallel/generation-receipts/transform_338-NE-hit-v01.json",
+    "original_failed_receipt_sha256": "dd53b0045aacfd7ff184c9ce87722db7b5e7df63c463038c707f8495789f8d02",
+    "original_error": "Image tool returned no PNG",
+    "cause": "unknown no-PNG tool result; other raw fields not captured",
+    "recovery_attempt_limit": 1,
+    "recovery_attempt_index": 1,
+    "normal_clips_regenerated": 0,
+    "authorized_scope": "First successful missing NE clip only; preserve old blocked request/receipt and existing original guard pixels",
+    "connection_recovery_evidence": "Same original catalog reference later produced a normal NE RUN PNG",
+    "recovery_batch": 266,
+    "expected_newly_authored_poses": 4,
+    "expected_reused_prior_draft_poses": 2,
+    "preceding_ne_attack_hit_delivery": {
+      "source_batches_remote_saved": 16,
+      "source_attempts": 80,
+      "successful_source_rows": 78,
+      "blocked_source_rows": 2,
+      "blocked_source_members": [
+        {
+          "id": "274",
+          "direction": "NE",
+          "role": "attack",
+          "request": "docs/remake/pr122-legendary-parallel/requests/transform_274-NE-attack-guard-supplement-v01.json",
+          "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 98a06eb4-2386-4a72-91e4-0259e1a97b37. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+        },
+        {
+          "id": "338",
+          "direction": "NE",
+          "role": "hit",
+          "request": "docs/remake/pr122-legendary-parallel/requests/transform_338-NE-hit-guard-supplement-v01.json",
+          "error": "Image tool returned no PNG"
+        }
+      ],
+      "success_count_requirement": "No hardcoded success count; preserved normal or individually blocked source rows both pass the delivery gate."
+    },
+    "created_at_utc": "2026-10-23T17:47:01.405562+00:00"
+  },
+  "normal_clips_regenerated": 0,
+  "final_approval": false
+}

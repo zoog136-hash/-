@@ -1,0 +1,58 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "NE",
+  "role": "idle",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:113 달의 질리언. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body NE IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter rear NORTH-EAST, screen UP-RIGHT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH-EAST means diagonally AWAY toward the TOP-RIGHT screen corner: show the BACK of the head and costume plus the RIGHT side, not the face or chest front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 241,
+  "recovery": {
+    "original_request": "docs/remake/pr122-legendary-parallel/requests/transform_113-NE-idle-v01.json",
+    "original_request_sha256": "20b65352f3b94733ef2e946c19db09701f79be6e402ed4a70f81dad904a3f910",
+    "original_failed_receipt": "docs/remake/pr122-legendary-parallel/generation-receipts/transform_113-NE-idle-v01.json",
+    "original_failed_receipt_sha256": "5772f2d402ff0d5540be9cfc30c5d47b46897e69bcd260d7f35bd46ddb470c8f",
+    "original_error": "unable to read referenced image at `/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png`: exec-server transport closed",
+    "cause": "referenced-image exec-server transport closed",
+    "recovery_attempt_limit": 1,
+    "recovery_attempt_index": 1,
+    "normal_clips_regenerated": 0,
+    "authorized_scope": "First successful missing NE clip only; preserve old blocked request/receipt and existing original guard pixels",
+    "connection_recovery_evidence": "Same original catalog reference later produced a normal NE RUN PNG",
+    "recovery_batch": 266,
+    "expected_newly_authored_poses": 6,
+    "expected_reused_prior_draft_poses": 0,
+    "preceding_ne_attack_hit_delivery": {
+      "source_batches_remote_saved": 16,
+      "source_attempts": 80,
+      "successful_source_rows": 78,
+      "blocked_source_rows": 2,
+      "blocked_source_members": [
+        {
+          "id": "274",
+          "direction": "NE",
+          "role": "attack",
+          "request": "docs/remake/pr122-legendary-parallel/requests/transform_274-NE-attack-guard-supplement-v01.json",
+          "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 98a06eb4-2386-4a72-91e4-0259e1a97b37. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+        },
+        {
+          "id": "338",
+          "direction": "NE",
+          "role": "hit",
+          "request": "docs/remake/pr122-legendary-parallel/requests/transform_338-NE-hit-guard-supplement-v01.json",
+          "error": "Image tool returned no PNG"
+        }
+      ],
+      "success_count_requirement": "No hardcoded success count; preserved normal or individually blocked source rows both pass the delivery gate."
+    },
+    "created_at_utc": "2026-10-23T17:47:01.404124+00:00"
+  },
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a"
+}
