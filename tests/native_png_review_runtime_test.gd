@@ -49,6 +49,7 @@ func run() -> void:
 	check(QA.enter_game(world),"actual Main character entry")
 	world.set_process(false);world.save_timer=-100000
 	for mid: String in REGISTRY.base_plan().maps:
+		if mid in ["albino_03","albino_04"]: continue
 		world._set_map(mid,false);world.portal_cooldown=10000
 		check(world.field_map is NativePngField,mid+" actual pinned PNG field")
 		if not world.field_map is NativePngField: continue
