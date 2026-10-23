@@ -788,3 +788,5 @@
 - 몬스터 batch05: 같은원화공용일반악마4종(오만의탑공포의악마/마계악마전사/교만제노사이더/탐욕코아쿡) 새9PNG 전부보존, 선택8/실패1(E/SE전투bbox;방향별재제작해소). 공용33클립91고유자세, base1+무색변경adapter3. Godot4.7.2 각4바인딩×33클립 actualActorMotion/NPC124/전체프레임/Sdeath8헤딩종단PASS. 개별identity/hand/direction/support/contact/Main은HOLD, 공유후보를개별고유원화·신규승인으로중복계산하지않음.
 
 - First-pass production checkpoint: 224,212 N ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new N ATTACK drafts 8/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:224", "poses": 6, "clipped_cells": 6}, {"key": "transform:212", "poses": 6, "clipped_cells": 4}]. Continue transform:189 without draft polishing.
+
+- First-pass production checkpoint: 189,174 N ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new N ATTACK drafts 10/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:189", "poses": 6, "clipped_cells": 6}, {"key": "transform:174", "poses": 6, "clipped_cells": 5}]. Continue transform:141 without draft polishing.
