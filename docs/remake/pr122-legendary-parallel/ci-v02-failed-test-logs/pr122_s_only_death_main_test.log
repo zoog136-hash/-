@@ -1,0 +1,8 @@
+VALIDATION_SCOPE ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PR122_S_ONLY_DEATH_MAIN_RESULT directions=8 poses=6 actual_staged=false art_approvals=0 failures=0
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r031/S-death.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2780)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://tests/pr122_s_only_death_main_test.gd:106)

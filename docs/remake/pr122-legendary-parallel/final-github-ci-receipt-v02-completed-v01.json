@@ -1,0 +1,117 @@
+{
+  "schema": "legendary-final-github-ci-completed-v02-v01",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/pr122-legendary-parallel-20261023",
+  "workflow": "twilight-integration-validate.yml",
+  "commit": "a2dbbb01659e562980653c8d33898d3b7d761e58",
+  "run_id": 40014699342,
+  "url": "https://github.com/zoog136-hash/-/actions/runs/40014699342",
+  "dispatch_attempts_added": 0,
+  "original_observer_receipt": {
+    "path": "res://docs/remake/pr122-legendary-parallel/final-github-ci-receipt-v02.json",
+    "sha256": "d8a943110728f85eb12f97e39467b5a06cfee7b9ac7a6658e79b08dd97efb991",
+    "status": "OBSERVATION_BLOCKED",
+    "cause": "gh credential HTTP 401; the existing CI run continues, no redispatch"
+  },
+  "status": "completed",
+  "conclusion": "failure",
+  "updated_UTC": "2026-10-23 21:41:18 UTC",
+  "source": "GitHub completed jobs and original uploaded workflow artifact",
+  "jobs": [
+    {
+      "id": 120623650116,
+      "name": "godot-integration",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 40014699342,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Check out integration candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Install Godot 4.7.2 and software GL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Full project regression, import, boot and all smoke tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 4
+        },
+        {
+          "name": "Floor-loot visual, manual pickup and live AUTO regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Combat animation and world rendering regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Monster-crowd and authored-state animation regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Preserve Godot test evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Check out integration candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    }
+  ],
+  "final_approvals_added": 0,
+  "summary": {
+    "total": 233,
+    "passed": 216,
+    "failed": 12,
+    "skipped": 5,
+    "not_run": 0,
+    "import": "PASS",
+    "boot": "PASS"
+  },
+  "artifact": {
+    "artifact_id": 12532363168,
+    "bytes": 2285560,
+    "path": "res://docs/remake/pr122-legendary-parallel/ci-v02-artifact-original.zip",
+    "sha256": "77ddb99ca5e619afb1a9371c30dab0fc20fe39b16b4b982a0e1d16e04c764c53",
+    "summary_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-summary-original.json",
+    "summary_sha256": "c8b83e07de159a917aa2f78e6fc94cecd65149a099c72a7016b2ca50d5c51df2"
+  },
+  "diagnosis": "res://docs/remake/pr122-legendary-parallel/ci-v02-focused-failure-diagnosis-v01.json",
+  "whole_ci_dispatches_added": 0,
+  "limits": [
+    "Exact suite input is a2db; subsequent isolated staging corrections use affected-only local validation.",
+    "Current staging direct loader/.gdignore is not production native-import or export approval."
+  ],
+  "diagnosis_sha256": "a5d5339252604170d2c5f60e45b28446dc7cf746fc223463c186662fe335840f"
+}

@@ -1,0 +1,196 @@
+{
+  "schema": "legendary-ci2-focused-failure-diagnosis-v01",
+  "run_id": 40014699342,
+  "commit": "a2dbbb01659e562980653c8d33898d3b7d761e58",
+  "suite_result": {
+    "total": 233,
+    "passed": 216,
+    "failed": 12,
+    "skipped": 5,
+    "not_run": 0
+  },
+  "failure_groups": {
+    "PROTECTED_EXISTING_ANIMATION": 3,
+    "TEST_PRECONDITION_ASSERTION": 2,
+    "TEST_RESULT_CONTRACT": 7
+  },
+  "failed": [
+    {
+      "test": "animation_presentation_test",
+      "status": "FAIL",
+      "cause_group": "PROTECTED_EXISTING_ANIMATION",
+      "cause_ko": "기존 몬스터 사망 318건 실패.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/animation_presentation_test.log",
+      "log_sha256": "0f5ec02a96859202f7dd7669298ed618e4c6f572d16011de426fce6b8763e3fa",
+      "error_regex_matched": true,
+      "accepted_ok_marker_present": false
+    },
+    {
+      "test": "full_visual_manifest_test",
+      "status": "FAIL",
+      "cause_group": "PROTECTED_EXISTING_ANIMATION",
+      "cause_ko": "기존 WALK 트랙 선택 1848건 실패. WALK 보존.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/full_visual_manifest_test.log",
+      "log_sha256": "c860202a18c72d78b532b1ac421148eff10b03f0bbf52056690c25d329522897",
+      "error_regex_matched": true,
+      "accepted_ok_marker_present": false
+    },
+    {
+      "test": "native_animation_expansion_test",
+      "status": "FAIL",
+      "cause_group": "PROTECTED_EXISTING_ANIMATION",
+      "cause_ko": "기존 native profile 1, virtual canvas 240, 방향 트랙 24, 자세 구별 40건 실패.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/native_animation_expansion_test.log",
+      "log_sha256": "95115c5a1de48faff2d70097fb5733fc0cfbf75349f14e9e4d35b413af497360",
+      "error_regex_matched": true,
+      "accepted_ok_marker_present": false
+    },
+    {
+      "test": "pr122_girtas_native_default_main_connection_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_girtas_native_default_main_connection_test.log",
+      "log_sha256": "5214141e0466f7beb67ed44a88d170f10937f0e2798a972318e84aa0a83789a3",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    },
+    {
+      "test": "pr122_native_action_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_native_action_test.log",
+      "log_sha256": "6e8657e12456f5647dab9ceae39e53ade20b25e8c644a29de0a31150f3dbcb82",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    },
+    {
+      "test": "pr122_native_default_main_connection_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_native_default_main_connection_test.log",
+      "log_sha256": "08c5fb0fbaa1bdc26492ae00ef82c1966ddf020e38f84c3e65cdf7e527f48cf4",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    },
+    {
+      "test": "pr122_native_locomotion_resource_test",
+      "status": "FAIL",
+      "cause_group": "TEST_PRECONDITION_ASSERTION",
+      "cause_ko": "16행은 모든 기존 actor의 production_connected=false 및 detailed_completed=false를 요구. 레지스터 조건 불일치 후150초 종료.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_native_locomotion_resource_test.log",
+      "log_sha256": "7e99fed18de3fd857f77526866c8af8622b754f55fbeefc5e423a24c137a0fb8",
+      "error_regex_matched": true,
+      "accepted_ok_marker_present": false
+    },
+    {
+      "test": "pr122_native_main_connection_test",
+      "status": "FAIL",
+      "cause_group": "TEST_PRECONDITION_ASSERTION",
+      "cause_ko": "20행은 TWILIGHT_NATIVE_MAIN_KEY를 요구하지만 전체 실행에서는 미지정. assertion 후150초 종료.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_native_main_connection_test.log",
+      "log_sha256": "c84cdd83a1dd29f6a1d60f16c591063ef655a31903eb0129cb9f7333a30129a4",
+      "error_regex_matched": true,
+      "accepted_ok_marker_present": false
+    },
+    {
+      "test": "pr122_native_player_connection_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_native_player_connection_test.log",
+      "log_sha256": "4aa50f0125e5fa3c905042d0d0956b2cfdc775cbf207682b4a3ad21495a7fc53",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    },
+    {
+      "test": "pr122_native_reaction_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_native_reaction_test.log",
+      "log_sha256": "d3b1ab3a95d5265cf10acd5d629e2103ae6f9f13ce1d09da203631f0c734c31e",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    },
+    {
+      "test": "pr122_s_only_death_main_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_s_only_death_main_test.log",
+      "log_sha256": "bbd5fb1dc1a6ba77ae20fed2e4c1a1b168ec409b77c951e4ed51747ae9a55c01",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    },
+    {
+      "test": "pr122_transform_run_only_scope_test",
+      "status": "FAIL",
+      "cause_group": "TEST_RESULT_CONTRACT",
+      "cause_ko": "출력 _PASS 또는 비JSON _RESULT는 공통 판정기의 _OK/JSON failures=[] 계약에 맞지 않음. CI FAIL 유지.",
+      "log_path": "res://docs/remake/pr122-legendary-parallel/ci-v02-failed-test-logs/pr122_transform_run_only_scope_test.log",
+      "log_sha256": "a032df4182511f27b85d086cab23ff288ef3c7aec721f205f35cdb8a9e3cc32b",
+      "error_regex_matched": false,
+      "accepted_ok_marker_present": false,
+      "classifier_with_zero_exit": [
+        false,
+        false
+      ],
+      "raw_artifact_omits_numeric_exit_status": true
+    }
+  ],
+  "skipped_tests": [
+    "original_map_catalog_test",
+    "original_world_runtime_test",
+    "remake_door_runtime_test",
+    "remake_source_runtime_test",
+    "source_first_map_test"
+  ],
+  "later_workflow_steps_skipped": [
+    "Floor-loot visual, manual pickup and live AUTO regression",
+    "Combat animation and world rendering regression",
+    "Monster-crowd and authored-state animation regression"
+  ],
+  "import_and_boot_passed": true,
+  "original_900s_import_timeout_recurred": false,
+  "full_suite_redispatches_added": 0,
+  "test_sources_or_protected_assets_modified": false,
+  "limits": [
+    "Raw per-test logs omit numeric exit status. Seven output-contract failures independently reproduce with the unchanged classifier assuming zero exit.",
+    "Printed PASS does not override CI failure.",
+    "Exact suite input a2db; later isolated corrections use affected-only local validation.",
+    "Direct staging loader is not production export/native-import approval."
+  ]
+}
