@@ -1,0 +1,44 @@
+{
+  "status": "FOUR_SOURCE_REPAIRS_AND_MAIN_PLAYER_CANDIDATE_PASS",
+  "actor": "transform:412",
+  "clips": [
+    "N:idle",
+    "S:attack",
+    "SE:attack",
+    "W:attack"
+  ],
+  "newly_authored_source_frames": 7,
+  "unchanged_original_frames_reused_exact_RGBA": 17,
+  "existing_staged_tracks_reused": 25,
+  "old_PNG_analyses": 0,
+  "source_part_or_frame_checker_changes": 0,
+  "main_player": {
+    "status": "PASS",
+    "actors": 1,
+    "clips": 29,
+    "death_directions": 8,
+    "groups": [
+      {
+        "keys": [
+          "transform:412"
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "clips": 29,
+        "death_directions": 8,
+        "unsized_frame_fixtures": 0,
+        "log": "main-player-final-00.log"
+      }
+    ],
+    "production_switches": 0,
+    "final_approvals_added": 0
+  },
+  "new_final_motion_approvals": 0,
+  "active_actor_approvals": "2/19",
+  "remaining_source_holds": 258,
+  "generation_holds": 3,
+  "production_switches": 0,
+  "held_generation_variants": 6,
+  "held_variant_requested_poses": 36,
+  "next": "412 E/NW/NE attack and W run remain HOLD; no repeated whole-sheet generation. Continue next producible original sources in actor priority."
+}

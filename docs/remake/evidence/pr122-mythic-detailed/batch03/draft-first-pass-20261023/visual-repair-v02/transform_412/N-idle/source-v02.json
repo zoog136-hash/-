@@ -1,0 +1,27 @@
+{
+  "key": "transform:412",
+  "direction": "N",
+  "role": "idle",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v02/transform_412/N-idle/source-v02.png",
+  "source_sha256": "2eccee731832de33f00625be0db6d58b9a605d7cc58fffff1c35b35600df9527",
+  "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-N-idle-draft-v01.png",
+  "previous_source_sha256": "0e14a718c3f4a4fae450284c419b1f2918b2b6d873c23d0b683e63ffad8d9708",
+  "reference": "res://assets/catalog/e090d7a50d6f7a23fe55576c.png",
+  "reference_sha256": "d0c26b83f744e9ba811eb2649ac78ae32938a437ef5d3f6984f2c9c3cc367af7",
+  "generation_request": {
+    "prompt": "Repair this ONE existing NORTH/back-facing idle frame for character 412, using the padded 1024x1024 reference. Keep the character at EXACTLY THE SAME SMALL NATIVE SIZE and location in this 1024 canvas: about 500px tall, centered around x512/y512, with roughly 250px transparent margin above/below/left/right. Do not enlarge or reframe. Preserve all existing art, silver hair, black-gold-teal robe, anatomical hand grips, stance, boots, scythe shape and chains. There is a clipped gold outer scythe tip on the right, around x767,y580..610. Draw the missing tapered gold tip naturally into the available transparent margin to its right, reconnecting the same blade; do not shorten the blade, do not change the rest of the character, do not add particles/limbs. This is a tiny outpainting completion of an existing cut weapon, not a new character or pose. Fully transparent alpha PNG, same 1024x1024 canvas and same approximately 500px body size, no background haze or shadow rectangle, no text. Local production only; no chat image.",
+    "transparent_background": true,
+    "reference": "single clipped phase5 with transparent padded canvas",
+    "new_HD_file": "/workspace/generated_images/exec-adef8437-3361-475f-a2de-1cfb0edbc5a8.png",
+    "normalization_proof": "idle-phase5-normalization-proof.json"
+  },
+  "generation_service": "image_gen.imagegen",
+  "newly_authored_frames": 1,
+  "source_visual_review": {
+    "source_identity": "PASS: complete same scythe tip authored, original5 phases preserved exact RGBA",
+    "phase5_native_height": "462px strong height matches original462px after one HD-frame normalization",
+    "remaining": "Composed6-pose atlas/runtime inspection required, no final approval"
+  },
+  "final_approval": false,
+  "previous_source_preserved": true
+}
