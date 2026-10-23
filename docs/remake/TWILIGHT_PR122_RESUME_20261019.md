@@ -557,3 +557,6 @@
 - 몬스터 batch03: 얼음 여왕 남은SE/SW/W/NW/N/NE RUN6씩 새6PNG/6클립36자세 제작. strict2048 whole-source 및Godot4.7.2 전자세PASS. E/S와source coverage는8방향48자세가됐지만두profile크기통합/방향·외형·지지/Main은HOLD. 작은140px캔버스실패SE/SW기록보존, 보스승인추가0.
 - 몬스터 batch04: 알비노 피쉬맨 새RUN32+Sdeath3=35자세, 기존living80원본보존. 필수33클립91자세+기존WALK8/24=41클립115자세 연결. 실제Godot4.7.2 모든필수자세/발/Sdeath8방향끝자세PASS, 115 rendered-visible fingerprint고유PASS. 같은원화의에바왕국심해어인·알비노심해어는무색변경재사용profile후보이며신규원화수·완료수중복계산하지않는다. 정체성/지지/접촉/Main승인HOLD.
 - 신규배치단일인덱스 `data/pr122_monster_production_batches.json`. 일반완료221/잔여37, 보스완료43/잔여17 그대로. 범위누락으로승인하지않는다. 새미제작일반3종은IN_PROGRESS로갱신, 이전all498원장완료이력보존.
+
+- 몬스터 batch06: 로머/에스카로스치프 동일원화·region·body·전투/신장근거확인. 새로운공용오크대장5PNG91고유자세/33클립과무색변경2프로필 제작. 두profile Godot4.7.2 각33클립91자세/NPC124 RUN/Sdeath8방향끝자세PASS. 공유후보를고유원화·신규승인으로중복계산하지않음, identity/support/contact/Main HOLD.
+- 몬스터 batch07: 알비노몽크SW RUN6 신규1PNG/1클립6자세 strict기하/whole-source 및Godot실재생/발캔버스/무미러PASS. 기존128원화·WALK/다방향DEATH유지. 실제지지교대·방향·원형·groundplane/Main미검토HOLD, 추가승인0.

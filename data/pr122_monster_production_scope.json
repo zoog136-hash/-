@@ -69,8 +69,8 @@
       "statuses": {
         "VERIFIED_COMPLETED": 221,
         "SOURCE_HOLD": 9,
-        "IN_PROGRESS": 3,
-        "NOT_AUTHORED": 25
+        "IN_PROGRESS": 5,
+        "NOT_AUTHORED": 23
       }
     },
     "boss": {
@@ -16273,7 +16273,7 @@
         }
       ],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
       "reason": "No identity-compatible licensed source for orc_captain",
@@ -16338,7 +16338,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 33,
+        "native_pose_count": 91,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/orc_family/r001/romer-NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false
     },
     {
@@ -20864,7 +20873,49 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 1,
+        "native_pose_count": 6,
+        "missing_required_tracks": [
+          "attack_0",
+          "hit_0",
+          "idle_0",
+          "run_0",
+          "attack_6",
+          "hit_6",
+          "idle_6",
+          "run_6",
+          "attack_7",
+          "hit_7",
+          "idle_7",
+          "run_7",
+          "attack_5",
+          "hit_5",
+          "idle_5",
+          "run_5",
+          "attack_2",
+          "death_2",
+          "hit_2",
+          "idle_2",
+          "run_2",
+          "attack_1",
+          "hit_1",
+          "idle_1",
+          "run_1",
+          "attack_3",
+          "hit_3",
+          "idle_3",
+          "attack_4",
+          "hit_4",
+          "idle_4",
+          "run_4"
+        ],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false
     },
     {
@@ -23049,7 +23100,7 @@
         }
       ],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
       "reason": "No identity-compatible licensed source for orc_captain",
@@ -23122,7 +23173,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 33,
+        "native_pose_count": 91,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/orc_family/r001/escaros_chief-NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false
     },
     {
@@ -29125,7 +29185,7 @@
     },
     {
       "path": "data/pr122_monster_production_batches.json",
-      "sha256": "e87a1b037ef861acc8ebb0e9a3ce1f509bca2a550f9a479ced8ebf3dc8d194c5"
+      "sha256": "35938ccdea26e0b7e92f8cbbb183660aadb8a21920fc608e7c15a5a038fa5891"
     },
     {
       "path": "data/pr122_monster_animation_staging.json",
@@ -29138,6 +29198,14 @@
     {
       "path": "data/pr122_monster_hold_staging.json",
       "sha256": "d4342b213e37df81bcedc166dc04c347183a454a636792de93ef350569128a8e"
+    },
+    {
+      "path": "data/pr122_monster_orc_family_staging.json",
+      "sha256": "b53430b2b082dafd48f33bde5c60fbdf07b4e35c322e402b1b64fdb4532a973c"
+    },
+    {
+      "path": "data/pr122_monster_monk_staging.json",
+      "sha256": "0e576100e88ef715624eb506e38b7e3bfa47ef44cec3e73028e9d92c2f5cc189"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred."
