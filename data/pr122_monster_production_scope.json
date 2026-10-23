@@ -1225,27 +1225,29 @@
       },
       "quality_screen": "REVIEW_SHARED_BOSS",
       "new_staging": {
-        "native_track_count": 19,
-        "native_pose_count": 76,
+        "native_track_count": 17,
+        "native_pose_count": 58,
         "missing_required_tracks": [
           "attack_0",
-          "hit_0",
-          "idle_0",
           "attack_6",
           "attack_7",
           "attack_5",
-          "hit_2",
-          "idle_2",
+          "hit_5",
+          "idle_5",
+          "run_5",
+          "attack_2",
           "attack_1",
-          "hit_1",
-          "idle_1",
           "hit_3",
           "idle_3",
-          "attack_4"
+          "run_3",
+          "attack_4",
+          "hit_4",
+          "idle_4",
+          "run_4"
         ],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r002/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres"
         ],
         "source_coverage_only": false
       },
@@ -2468,14 +2470,12 @@
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
       "new_staging": {
-        "native_track_count": 32,
-        "native_pose_count": 102,
-        "missing_required_tracks": [
-          "run_6"
-        ],
+        "native_track_count": 33,
+        "native_pose_count": 108,
+        "missing_required_tracks": [],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r001/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres"
         ],
         "source_coverage_only": false
       },
@@ -21209,7 +21209,7 @@
         "missing_required_tracks": [],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres"
         ],
         "source_coverage_only": false
       },
@@ -26757,7 +26757,7 @@
         "missing_required_tracks": [],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres"
         ],
         "source_coverage_only": false
       },
@@ -30224,7 +30224,7 @@
     },
     {
       "path": "data/pr122_monster_boss_repair_staging.json",
-      "sha256": "8280f1bd2f5b8e1cd2b062170eeaec792d481a74e414004defaaf349259ec4fc"
+      "sha256": "936922dafe4dc3c85579ab8268473e7a2f036f29d217fc4b740471345b26de47"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.",

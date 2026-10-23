@@ -1,0 +1,134 @@
+{
+  "schema": "pr122-demon-SE-NW-independent-source-review-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "method": "Actual private full-image view of exact prior SE RUN source, NW contact-v01, SE opposite-half-v01 and final horizontal SE opposite-half-v02. Read-only SHA and geometry-status checks. No generation/render/Godot, source edits, guard weakening or image forwarding.",
+  "current_review": "HOLD_NO_ADOPTABLE_NEW_SOURCE",
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "approved_new_clips": 0,
+  "prior_r003_assets_unchanged": true,
+  "new_r004_created_by_reviewer": false,
+  "reference": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/28.png",
+    "bytes": 196146,
+    "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b"
+  },
+  "prior_SE_source": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SE-run6-v01.png",
+    "bytes": 2633045,
+    "sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db"
+  },
+  "sources": [
+    {
+      "name": "NW-contact-v01",
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/raw/NW-contact-v01.png",
+        "bytes": 1811343,
+        "sha256": "2704d0e40d05a22a71158cd2c04b59cb7a32755d8ba0979a0b6c518b56bfa788"
+      },
+      "image_size": [
+        1536,
+        1024
+      ],
+      "geometry_check": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/checks/NW-contact-v01.json",
+        "bytes": 996,
+        "sha256": "c3462b99ed3d59f07935df2424524d2078f2668012f07793a75ef47318831049"
+      },
+      "producer_geometry_status": "GEOMETRY_PASS_ONLY",
+      "producer_geometry_reason": null,
+      "visible_alpha_boundary_pixels": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    {
+      "name": "SE-opposite-half3-v01",
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/raw/SE-opposite-half3-v01.png",
+        "bytes": 1958415,
+        "sha256": "ee79ad507b4e70fd9ce6a0d7065407b4a5faeb6727588b5dd13f908d87ac2cba"
+      },
+      "image_size": [
+        1024,
+        1536
+      ],
+      "geometry_check": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/checks/SE-opposite-half3-v01.json",
+        "bytes": 429,
+        "sha256": "d0f3c5b24f423d331f95b187d5512d616121287fa9e5e18c4ee774987bec164d"
+      },
+      "producer_geometry_status": "SOURCE_HOLD",
+      "producer_geometry_reason": "A pose rectangle includes another body; cannot safely crop",
+      "visible_alpha_boundary_pixels": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    {
+      "name": "SE-opposite-half3-v02",
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/raw/SE-opposite-half3-v02.png",
+        "bytes": 1759507,
+        "sha256": "9f5d63accabff2b392bd8104183e5c9ea446a3948de1c130f056efccdcbaeacf"
+      },
+      "image_size": [
+        2172,
+        724
+      ],
+      "geometry_check": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/checks/SE-opposite-half3-v02.json",
+        "bytes": 409,
+        "sha256": "964fcf6b2abcc55c452c2d9686d67c13235d10a79557acbdfa310749cdb3bfec"
+      },
+      "producer_geometry_status": "SOURCE_HOLD",
+      "producer_geometry_reason": "A visible pose touches the image boundary",
+      "visible_alpha_boundary_pixels": {
+        "top": 0,
+        "bottom": 17,
+        "left": 0,
+        "right": 23
+      }
+    }
+  ],
+  "NW_contact_v01": {
+    "examined_poses": 1,
+    "source_first_review": "REJECT_WRONG_ANATOMICAL_WEAPON_HAND",
+    "geometry_status": "GEOMETRY_PASS_ONLY",
+    "positive_observation": "The back-left/NW body and forward upper-left axe extension are actually visible, so forward reach is improved. The body retains red musculature, two swept horns, spiked armor and tail without wings.",
+    "blocking_observation": "The visible near anatomical LEFT shoulder/upper arm/forearm extends toward screen-left and its hand grips the axe. The farther anatomical RIGHT arm on screen-right terminates in an empty claw. This reverses required RIGHT axe ownership and is directly visible despite the correct reach direction. Geometric success cannot approve it.",
+    "decision": "Do not select this NW contact pose or mirror it into a completed slot."
+  },
+  "SE_opposite_half_v01": {
+    "examined_poses": 3,
+    "source_first_review": "SOURCE_HOLD_GEOMETRY",
+    "semantic_support_observation": "All three new poses place SCREEN LEFT/anatomical RIGHT leg low while SCREEN RIGHT/anatomical LEFT knee and foot are high. In the examined prior SE source the exposed low/leading leg reads on SCREEN RIGHT. The new half therefore visibly supplies an opposite anatomical support configuration instead of repeating the prior exposed leg.",
+    "hand_and_camera_observation": "RIGHT axe grip remains on SCREEN LEFT and the opposite LEFT hand on SCREEN RIGHT stays empty. All three read as front-right/SE; no whole-body mirror or introduced wings was observed.",
+    "blocking_observation": "Producer strict complete-pose check rejects the vertical sheet because a pose rectangle includes another body and cannot be safely cropped. This review preserves that SOURCE_HOLD and proposes no guard relaxation or partial crop adoption.",
+    "decision": "Preserve the raw source and positive pose observation, but do not select it for native frames."
+  },
+  "SE_opposite_half_v02": {
+    "examined_poses": 3,
+    "source_order": "left,middle,right",
+    "source_first_review": "SOURCE_HOLD_ACTUAL_VISIBLE_CLAW_CLIPPING",
+    "semantic_support_observation": "The horizontal revision retains the same opposite half: SCREEN LEFT/anatomical RIGHT leg low with SCREEN RIGHT/anatomical LEFT knee/foot high, while RIGHT-hand axe and SE heading stay stable across all three figures. This is a real semantic improvement over the prior low-leg configuration.",
+    "identity_observation": "Red muscular biped, two black swept horns, spiked dark armor, skull belt/chains, attached tail and axe identity remain readable; no severe whole-body collapse or extra limbs/wings was observed.",
+    "blocking_observation": "The rightmost third figure extends its empty anatomical LEFT hand/claw to the PNG right edge; outer fingers/claw are visibly truncated there. Producer geometry check independently reports a visible pose touching the image boundary. This is an actual source cutoff, not a contact-sheet viewport artifact.",
+    "decision": "Do not select the clipped third pose, use a partial workaround, or count this sheet as a complete three-pose replacement."
+  },
+  "final_decision": "All three authored sources stay preserved but unadopted. NW fails actual handedness; SE-v01 fails complete-pose extraction; SE-v02 retains useful opposite-support semantics but has a visibly clipped final claw. Preserve current r003 and do not claim a new complete SE/NW revision from these failures.",
+  "unseen_not_reviewed": [
+    "Native SpriteFrames integration of these unadopted sources",
+    "Timed loop continuity and transitions",
+    "Other directions and roles of the full boss",
+    "Detailed collision/physical ground or target contact",
+    "Full mythic/release approval"
+  ],
+  "scope_note": "Unseen items are deferred scope and not newly invented Main/3D-floor gates. The reject/HOLD decisions above rely on observed wrong weapon ownership and concrete source-region/boundary failures."
+}
