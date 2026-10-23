@@ -1,0 +1,330 @@
+{
+  "key": "transform:143",
+  "name": "나이트 슬레이셔",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "idle",
+  "reference": "res://assets/catalog/5198381d3a74e4724b7e2050.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:143 나이트 슬레이셔. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body SW IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter front SOUTH-WEST, screen DOWN-LEFT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/5198381d3a74e4724b7e2050.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 112,
+  "reference_sha256": "b1254d0ed0b44169e4f5818aed4c591209270e026e414cc0a95d9afcd91369de",
+  "schema": "legendary-versioned-ownership-execution-delta-v2",
+  "status": "OWNERSHIP_REPAIRED_OTHER_QUALITY_HOLD",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+  "source_sha256": "758952482f5384ac5f50c1d3f95917ebc293e0a6af1575890d3454946871dfbf",
+  "source_bytes": 2053830,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "f6e34568f1a8ea1364c9b5c3a90808cbcab1cc07c437a67f3da1a5e23c898101",
+  "generated_original_path": "/workspace/generated_images/exec-0a8eeaf1-8afc-4b37-b21e-469824064724.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_143-SW-idle-v01.json",
+  "request_file_sha256": "8df70ae9024a2d295a5f2accebc931a381dd84242fe572e5429a1b489fb1355d",
+  "generation_request_sha256": "fc9658aa4b84f576a9d18d61490c4c1b6e9f1d8d6255a8dba488ed889c3cd1e9",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    645,
+    650
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "idle_3",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "partition_edges": {
+    "x": [
+      0,
+      645,
+      1290,
+      1935
+    ],
+    "y": [
+      0,
+      650,
+      1300
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "74bfe5caffbb164835327c1129963a5653a785d153ff06617b4318cc76886ce9"
+    },
+    {
+      "index": 1,
+      "region": [
+        645,
+        0,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "b0b17d08e807f73e4289944291f2a741d436f87644f7d50f76a99a34d587edd9"
+    },
+    {
+      "index": 2,
+      "region": [
+        1290,
+        0,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "85921ff0113c6ec6b9a7ce4772a137f26848ee52dda403ba0223070ce41a2ff2"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        650,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "1279e0695de3e6dae271cb19c6ab64a8e4e26748de88e9b87bafdc251d286e6e"
+    },
+    {
+      "index": 4,
+      "region": [
+        645,
+        650,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "0ab223a7d73878041db876e0640afecd1fd2e0d76132e2f60133f8b9cc314b6b"
+    },
+    {
+      "index": 5,
+      "region": [
+        1290,
+        650,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "fd9d45ba2beeb15d9b9b4f58f4bcc48e25c3e4d4eae0f517a84c1842f361b4b1"
+    }
+  ],
+  "clipped_cell_count": 3,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-idle-record-v01.json",
+  "revision_parent_sha256": "c879e5037c6fad320f1cb71d64643640332e52ebde723faebabf5ca469f26e67",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-registration.json",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "ownership_execution_delta": "res://docs/remake/pr122-legendary-parallel/ownership-quota-execution-delta-v01.json",
+  "newly_authored_correction_poses_added": 0,
+  "final_approved": false,
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.proof.json"
+  ],
+  "ownership_delta_remaining_quality_holds": [
+    "camera"
+  ],
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-idle-source-v01.png",
+  "raw_authored_source_sha256": "9b06da5e3a6d43c692002f2731e08d163c4a19615861ded134faa7414eb98773",
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "sha256": "758952482f5384ac5f50c1d3f95917ebc293e0a6af1575890d3454946871dfbf",
+      "bytes": 2053830
+    }
+  ],
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "region": [
+        645,
+        0,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "region": [
+        1290,
+        0,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        650,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "region": [
+        645,
+        650,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/ownership-delta-v03/SW-idle-source-v01-isolated.png",
+      "region": [
+        1290,
+        650,
+        645,
+        650
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ]
+}
