@@ -56,9 +56,10 @@ def main():
     ledger['latest_authoring_session'] = HERE.relative_to(ROOT).as_posix()
     ledger_path.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + '\n')
     subprocess.run(['python3', 'tools/reclassify_pr122_monsters.py'], cwd=ROOT, check=True, stdout=subprocess.DEVNULL)
-    folders = [evidence, HERE / ('single' if args.new_direction == 'E' else 'single-' + args.new_direction),
-               ROOT / 'assets/actors/eight_direction/monster_boss_repair/kurtz' / args.revision,
+    folders = [evidence, ROOT / 'assets/actors/eight_direction/monster_boss_repair/kurtz' / args.revision,
                HERE / 'references']
+    folders += [HERE / ('single' if direction == 'E' else 'single-' + direction)
+                for direction in args.new_direction.split(',')]
     paths = {p for folder in folders for p in folder.rglob('*') if p.is_file() and '__pycache__' not in p.parts
              and p.suffix not in ('.pyc', '.import')}
     paths.update(HERE / name for name in ('record_phase.py', 'build_attacks.py', 'save_revision.py'))
