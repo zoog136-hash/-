@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 1095,
-    "minimally_validated_configurations": 1095,
-    "newly_authored_poses": 5853,
-    "reused_existing_poses": 717,
+    "new_draft_configurations": 1100,
+    "minimally_validated_configurations": 1100,
+    "newly_authored_poses": 5873,
+    "reused_existing_poses": 727,
     "reused_legacy_poses": 47,
-    "reused_prior_draft_poses": 670,
-    "quality_held_configurations": 1095,
+    "reused_prior_draft_poses": 680,
+    "quality_held_configurations": 1100,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 225
+    "remaining_draft_configurations": 220
   },
   "actors": [
     {
@@ -13960,6 +13960,31 @@
         {
           "key": "transform:225",
           "direction": "N",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/N-attack-source-v01.png",
+          "source_sha256": "e8a9a8200fa41e8048ab7e624bea438813f20303bde3d96c46b494113436a012",
+          "source_bytes": 1980997,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_225/draft001/N-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "e22c0e3f682f1063fb46c833e8f147bd8207f346ff6d72d63da9d5af8f6b05e7",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/N-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch222-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:225",
+          "direction": "N",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/N-idle-source-v01.png",
           "source_sha256": "e711c67c9d9dd08f9c11a4bbaf47460e96420255f093402d57f7259bce18c85d",
@@ -14507,7 +14532,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 6,
+      "remaining_draft_configurations": 5,
       "precision_final_approved": false
     },
     {
@@ -14617,6 +14642,31 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:213",
+          "direction": "N",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/N-attack-source-v01.png",
+          "source_sha256": "fc71e4e50ac59cf98a97aae21f7ac618a75e2b97c0e3569740514d23ddb9bce1",
+          "source_bytes": 1780192,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_213/draft001/N-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "37e0701c6e9bd7c60287e7707e63c4c154d973fd0a281bc7d8507f4e0cf183de",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/N-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch222-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
           ]
         },
         {
@@ -15177,7 +15227,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 6,
+      "remaining_draft_configurations": 5,
       "precision_final_approved": false
     },
     {
@@ -15287,6 +15337,31 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:194",
+          "direction": "N",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/N-attack-source-v01.png",
+          "source_sha256": "6b7a290016e9108a5802d25c22ce214eaafe54afca1bcdb6728ee5556208790a",
+          "source_bytes": 1865785,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/N-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "8e1f9f6b57d4ddb2881d8b47c000954afffc065bde77d65ac62112ddb856a58e",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/N-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch222-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
           ]
         },
         {
@@ -15851,7 +15926,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 6,
+      "remaining_draft_configurations": 5,
       "precision_final_approved": false
     },
     {
@@ -15960,6 +16035,31 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:193",
+          "direction": "N",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/N-attack-source-v01.png",
+          "source_sha256": "ba011d8d785a7a7522bfee25bede625285989e5901002ae66905635417ffe8b4",
+          "source_bytes": 2063192,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/draft001/N-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "66bc1e4c016a6ea56068a36efdd78eaace9d478677e63858eab25006c217de97",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/N-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch222-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
           ]
         },
         {
@@ -16514,7 +16614,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 6,
+      "remaining_draft_configurations": 5,
       "precision_final_approved": false
     },
     {
@@ -16624,6 +16724,31 @@
           "actor_final_approval": false,
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:192",
+          "direction": "N",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/N-attack-source-v01.png",
+          "source_sha256": "cb9045f12e8a26ac351de10327ab8de187c85be4637393b3b75f1b623ee3846f",
+          "source_bytes": 1436930,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/N-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "43963d223bddb081a0df596e015e3e17fd33ddc79fd150f4e6f5ad55e62be05b",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/N-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch222-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
           ]
         },
         {
@@ -17175,7 +17300,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 6,
+      "remaining_draft_configurations": 5,
       "precision_final_approved": false
     },
     {
