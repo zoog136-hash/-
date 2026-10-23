@@ -4005,7 +4005,7 @@ func _load_game(quiet: bool) -> void:
 		var known_native_upgrade: bool=(native_saved_field!=null and plan_changed and not migration.is_empty()
 			and saved_map_id in migration.map_ids
 			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
-			and int(native_saved_field.data.layout_revision)==int(migration.to_revision)
+			and int(native_saved_field.data.layout_revision)==(2026102003 if saved_map_id=="aden_world" else int(migration.to_revision))
 			and str(data.get("native_png_review_sha256",""))==saved_plan)
 		if native_saved_field==null or (plan_changed and not known_native_upgrade):
 			source_save_blocked=true
