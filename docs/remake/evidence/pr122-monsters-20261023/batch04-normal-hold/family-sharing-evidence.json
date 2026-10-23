@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "same_reference_proven": true,
+  "same_rendered_body_attack_and_height_proven": true,
+  "group": "normal_monster",
+  "targets": [
+    {
+      "key": "monster:에바 왕국 심해어인",
+      "name": "에바 왕국 심해어인",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 9,
+          "body": "fishman",
+          "variant": 14,
+          "width": 1.076,
+          "weapon": "sword",
+          "crest": 1,
+          "accent": "b76d5a"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:알비노 심해어",
+      "name": "알비노 심해어",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 9,
+          "body": "fishman",
+          "variant": 9,
+          "width": 1.076,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:알비노 피쉬맨",
+      "name": "알비노 피쉬맨",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 9,
+          "body": "fishman",
+          "variant": 6,
+          "width": 0.998,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    }
+  ],
+  "comparison_omissions": [
+    "variant",
+    "width",
+    "crest",
+    "accent"
+  ],
+  "comparison_omission_reason": "User permits compatible normal-monster same-source family reuse; per-alias width explicitly retained in staged adapter. No palette re-tint added.",
+  "shared_new_sources": {
+    "run_poses": 32,
+    "S_death_poses": 3,
+    "counted_once": true
+  },
+  "preserved_old_sources": {
+    "idle": 16,
+    "attack": 24,
+    "hit": 16,
+    "walk": 24
+  },
+  "adapters": {
+    "monster:에바 왕국 심해어인": {
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/family-adapters/eva_deep_fishman.tres",
+      "native_profile_sha256": "95fc01394fb027603eb0338e8d847cf5e2ea144314d171c1ae77d2d7c1de0903",
+      "source_actor": "monster:알비노 피쉬맨",
+      "frames": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/SpriteFrames.tres",
+      "native_width_ratio": 1.0781563126252505,
+      "new_source_poses": 0,
+      "new_approval": false,
+      "production_connected": false,
+      "quality_review": "HOLD: same-source family adapter identity/contact/default-Main review pending"
+    },
+    "monster:알비노 심해어": {
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/family-adapters/albino_deep_fish.tres",
+      "native_profile_sha256": "fe4a77cfda3300cdfcbcefc51e0a4ed33590a7cd767c272f253c9f4c2ce54488",
+      "source_actor": "monster:알비노 피쉬맨",
+      "frames": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/SpriteFrames.tres",
+      "native_width_ratio": 1.0781563126252505,
+      "new_source_poses": 0,
+      "new_approval": false,
+      "production_connected": false,
+      "quality_review": "HOLD: same-source family adapter identity/contact/default-Main review pending"
+    }
+  },
+  "newly_completed": 0,
+  "default_catalog_switches": 0,
+  "claim": "One same-source fishman family candidate. Adapters are not independently authored species or approvals."
+}

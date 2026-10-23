@@ -48,6 +48,33 @@ def build(root):
     binding_counts = Counter(profile.get('frames_path') for profile in profiles.values())
     staging_path = root / 'data/pr122_monster_animation_staging.json'
     staged = json.loads(staging_path.read_text()).get('actors', {}) if staging_path.is_file() else {}
+    staged_parts = {key: [actor] for key, actor in staged.items()}
+    index_path = root / 'data/pr122_monster_production_batches.json'
+    if index_path.is_file():
+        for ledger in json.loads(index_path.read_text())['staging_ledgers']:
+            if ledger == 'data/pr122_monster_animation_staging.json':
+                continue
+            table = read(ledger)
+            actors = table.get('actors', {})
+            for key, actor in actors.items():
+                staged_parts.setdefault(key, []).append(actor)
+            for key, adapter in table.get('family_adapters', {}).items():
+                source = actors[adapter['source_actor']]
+                staged_parts.setdefault(key, []).append(dict(source, **{
+                    'native_profile': adapter['native_profile'],
+                    'quality_review': adapter['quality_review'], 'new_source_poses': 0}))
+    staged = {}
+    for key, parts in staged_parts.items():
+        tracks = {(track['direction'], track['role']): track for part in parts for track in part['tracks']}
+        required = {(direction, role) for role in ('idle', 'run', 'attack', 'hit') for direction in DIRECTIONS} | {('S', 'death')}
+        staged[key] = {
+            'native_track_count': len(tracks),
+            'native_pose_count': sum(len(track['geometry']['frames']) for track in tracks.values()),
+            'missing_required_tracks': [f'{role}_{DIRECTIONS.index(direction)}' for direction, role in sorted(required - tracks.keys())],
+            'quality_review': 'HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback',
+            'profiles': [part['native_profile'] for part in parts],
+            'source_coverage_only': len(parts) > 1,
+        }
     result = []
     for old in monsters:
         key, name = old['id'], old['name']
@@ -88,7 +115,7 @@ def build(root):
             'metadata_screen': {'SpriteFrames_present': frames_path.is_file(), 'track_counts': tracks,
                                 'PNG_and_visual_quality': 'NOT_REVIEWED_BY_METADATA_SCREEN'},
             'quality_screen': ('REVIEW_SHARED_BOSS' if is_boss and shared else 'PRESERVE_APPROVAL_DETAILED_REVIEW_PENDING') if completed else 'SOURCE_PRODUCTION_PENDING',
-            'new_staging': {field: staged[key][field] for field in ('native_track_count', 'native_pose_count', 'missing_required_tracks', 'quality_review')} if key in staged else None,
+            'new_staging': staged.get(key),
             'new_approval': False,
         })
     summary = {}
@@ -99,6 +126,9 @@ def build(root):
                          'statuses': dict(Counter(row['production_status'] for row in rows))}
     pins = [STATUS, COVERAGE, 'data/monsters/monster_world_catalog.json',
             'data/monsters/world_spawn_profiles.json', 'data/catalog_v19.json']
+    if index_path.is_file():
+        pins.append(index_path.relative_to(root).as_posix())
+        pins.extend(json.loads(index_path.read_text())['staging_ledgers'])
     return {
         'schema': 'pr122-monster-motion-scope-v1', 'user_instruction_date': '2026-10-23',
         'actor_kind': 'monster', 'required_roles': ['idle', 'run', 'attack', 'hit', 'death'],

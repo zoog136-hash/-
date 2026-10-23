@@ -69,8 +69,8 @@
       "statuses": {
         "VERIFIED_COMPLETED": 221,
         "SOURCE_HOLD": 9,
-        "NOT_AUTHORED": 27,
-        "IN_PROGRESS": 1
+        "IN_PROGRESS": 3,
+        "NOT_AUTHORED": 25
       }
     },
     "boss": {
@@ -2368,8 +2368,8 @@
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
       "new_staging": {
-        "native_track_count": 2,
-        "native_pose_count": 12,
+        "native_track_count": 8,
+        "native_pose_count": 48,
         "missing_required_tracks": [
           "attack_0",
           "hit_0",
@@ -2377,15 +2377,12 @@
           "attack_6",
           "hit_6",
           "idle_6",
-          "run_6",
           "attack_7",
           "hit_7",
           "idle_7",
-          "run_7",
           "attack_5",
           "hit_5",
           "idle_5",
-          "run_5",
           "attack_2",
           "death_2",
           "hit_2",
@@ -2393,17 +2390,19 @@
           "attack_1",
           "hit_1",
           "idle_1",
-          "run_1",
           "attack_3",
           "hit_3",
           "idle_3",
-          "run_3",
           "attack_4",
           "hit_4",
-          "idle_4",
-          "run_4"
+          "idle_4"
         ],
-        "quality_review": "HOLD: new textual-brief art has not had identity/support/contact or Main visual approval"
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
+          "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": true
       },
       "new_approval": false
     },
@@ -6261,7 +6260,7 @@
       ],
       "spawn_evidence": [],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
       "reason": "No identity-compatible licensed source for fishman",
@@ -6334,7 +6333,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 41,
+        "native_pose_count": 115,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/family-adapters/eva_deep_fishman.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false
     },
     {
@@ -15805,7 +15813,11 @@
           "idle_4",
           "run_4"
         ],
-        "quality_review": "HOLD: new textual-brief art has not had identity/support/contact or Main visual approval"
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/gnoll/r002/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
       },
       "new_approval": false
     },
@@ -19129,7 +19141,11 @@
         "native_track_count": 33,
         "native_pose_count": 91,
         "missing_required_tracks": [],
-        "quality_review": "HOLD: text-brief identity against existing reference, support/contact/source-plane anchors and default Main review pending"
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/salamander/r001/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
       },
       "new_approval": false
     },
@@ -21211,7 +21227,7 @@
         }
       ],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
       "reason": "No identity-compatible licensed source for fishman",
@@ -21284,7 +21300,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 41,
+        "native_pose_count": 115,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/family-adapters/albino_deep_fish.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false
     },
     {
@@ -22080,7 +22105,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 41,
+        "native_pose_count": 115,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false
     },
     {
@@ -29088,6 +29122,22 @@
     {
       "path": "data/catalog_v19.json",
       "sha256": "92d520f4caa178927d3598844e6b275e987854f080e102913b676fb2c6663b00"
+    },
+    {
+      "path": "data/pr122_monster_production_batches.json",
+      "sha256": "e87a1b037ef861acc8ebb0e9a3ce1f509bca2a550f9a479ced8ebf3dc8d194c5"
+    },
+    {
+      "path": "data/pr122_monster_animation_staging.json",
+      "sha256": "94339b973f5a01c52625905b2deccd0dd865616e3eed73195bd9524dd965fd64"
+    },
+    {
+      "path": "data/pr122_monster_queen_run_staging.json",
+      "sha256": "9028fa6aa9ca645afb275b255286dd24a4652b69d9ce0653bb6943ec97130f32"
+    },
+    {
+      "path": "data/pr122_monster_hold_staging.json",
+      "sha256": "d4342b213e37df81bcedc166dc04c347183a454a636792de93ef350569128a8e"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred."

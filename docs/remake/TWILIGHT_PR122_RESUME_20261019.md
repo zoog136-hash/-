@@ -553,3 +553,7 @@
 
 - 몬스터 batch02: 사라만다(기존 NOT_AUTHORED) 전용 새6PNG 중5선택/1bbox실패보존, idle/run/attack/hit 각8 +deathS =33클립91고유자세 제작. `monster_staging/salamander/r001` SpriteFrames/NativeMotionProfile 연결. Godot4.7.2 실제ActorMotion33클립/91자세·NPC속도124 RUN·S사망8방향fallback/끝자세정지PASS. 기본Main/정체성/지지발/접촉은HOLD, 새승인0. 누적현재3종37클립112자세.
 - 신규몬스터RUN-only 런타임: 실제NPC속도100/124에서도RUN선택, 기존WALK-only는기존fallback보존. 변신/미등록개체/physics/공격clock불변 검사PASS. 증거runtime-scope.
+
+- 몬스터 batch03: 얼음 여왕 남은SE/SW/W/NW/N/NE RUN6씩 새6PNG/6클립36자세 제작. strict2048 whole-source 및Godot4.7.2 전자세PASS. E/S와source coverage는8방향48자세가됐지만두profile크기통합/방향·외형·지지/Main은HOLD. 작은140px캔버스실패SE/SW기록보존, 보스승인추가0.
+- 몬스터 batch04: 알비노 피쉬맨 새RUN32+Sdeath3=35자세, 기존living80원본보존. 필수33클립91자세+기존WALK8/24=41클립115자세 연결. 실제Godot4.7.2 모든필수자세/발/Sdeath8방향끝자세PASS, 115 rendered-visible fingerprint고유PASS. 같은원화의에바왕국심해어인·알비노심해어는무색변경재사용profile후보이며신규원화수·완료수중복계산하지않는다. 정체성/지지/접촉/Main승인HOLD.
+- 신규배치단일인덱스 `data/pr122_monster_production_batches.json`. 일반완료221/잔여37, 보스완료43/잔여17 그대로. 범위누락으로승인하지않는다. 새미제작일반3종은IN_PROGRESS로갱신, 이전all498원장완료이력보존.
