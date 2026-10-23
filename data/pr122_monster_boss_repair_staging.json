@@ -6,16 +6,16 @@
     "monster:얼음 여왕": {
       "kind": "boss",
       "quality_tier": "mythic_transform",
-      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/SpriteFrames.tres",
-      "frames_sha256": "a1482c63a3e8d85b1d616a1cbd93c68a8e0fe6b4c42f7ec7f3133c50eb463306",
-      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
-      "native_profile_sha256": "1e982278ba664a05c0f8cfc5facfeb4334a9ed886b9aaa80b4a575de5d9e6000",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r003/SpriteFrames.tres",
+      "frames_sha256": "7f00d728f81d2582df44afd4a12db3df5ca4a3e748aacb75aa9eb4ad6528a054",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r003/NativeMotionProfile.tres",
+      "native_profile_sha256": "5a5ccc4fdbcf391b016dac3f813fe3e1a60b8cfca473b301d9c80120c992a57e",
       "native_track_count": 33,
       "native_pose_count": 108,
       "missing_required_tracks": [],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "HOLD: complete technical33-track candidate; preserved source QA limits, full timed gait/contact/mythic acceptance not promoted by composition",
+      "quality_review": "N IDLE costume-side swap repaired with two new dedicated source poses; exact 32 other clips/106 poses and all timing retained. Full mythic acceptance remains separate.",
       "tracks": [
         {
           "role": "idle",
@@ -675,7 +675,7 @@
           "role": "idle",
           "direction": "N",
           "animation": "idle_6",
-          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/raw/queen-combat-N-v03.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/raw/N-idle-phase0.png",
           "source_slots": [
             0,
             1
@@ -687,82 +687,72 @@
           "normalized_canvas": 576,
           "frame_count": 2,
           "contact_index": null,
-          "source_sha256": "776d4c2a743d2224fe74c941bbbb1230e98f4e6a889f76d693cb6a7c4cd13095",
-          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/queen-combat-N-v03.png",
+          "source_sha256": "4402e640845702f354c6267ef9fb01d01c6200bd519786b82dda5fae3253bd18",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r003/N-idle-phase0.png",
           "geometry": {
-            "image_size": [
-              1024,
-              1536
-            ],
             "frames": [
               {
                 "row": 0,
                 "direction": "N",
                 "region": [
-                  123,
-                  21,
-                  291,
-                  359
+                  170,
+                  112,
+                  947,
+                  1047
                 ],
                 "margin": [
-                  155,
-                  5,
-                  285,
-                  217
+                  454,
+                  57,
+                  813,
+                  713
                 ],
                 "source_anchor": [
-                  256,
-                  376
+                  596,
+                  1155
                 ],
-                "rgba_sha256": "5a9cf478535247e388c7291487d6d0186eace558beaeea3f1a80f0368d0cf447",
-                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/raw/queen-combat-N-v03.png",
-                "source_sha256": "776d4c2a743d2224fe74c941bbbb1230e98f4e6a889f76d693cb6a7c4cd13095",
-                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/queen-combat-N-v03.png",
-                "canvas_size": [
-                  576,
-                  576
+                "rgba_sha256": "1c21e6016cee1e5dad93e7aa2855e92613f2805f709e2a906766f08218e25459",
+                "physical_source_row": 0,
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/raw/N-idle-phase0.png",
+                "source_sha256": "4402e640845702f354c6267ef9fb01d01c6200bd519786b82dda5fae3253bd18",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r003/N-idle-phase0.png",
+                "source_canvas_size": [
+                  1760,
+                  1760
                 ],
-                "duration": 1.0
+                "reviewed_helm_crest_y": 192,
+                "reviewed_boot_sole_y": 1155
               },
               {
                 "row": 1,
                 "direction": "N",
                 "region": [
-                  602,
-                  21,
-                  311,
-                  359
+                  119,
+                  121,
+                  1000,
+                  1029
                 ],
                 "margin": [
-                  122,
-                  5,
-                  265,
-                  217
+                  407,
+                  53,
+                  720,
+                  691
                 ],
                 "source_anchor": [
-                  768,
-                  376
+                  572,
+                  1143
                 ],
-                "rgba_sha256": "d2163210d55cf847c9ea7c8c669e1b818802a976551260c2ff96ae2eb520397d",
-                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/raw/queen-combat-N-v03.png",
-                "source_sha256": "776d4c2a743d2224fe74c941bbbb1230e98f4e6a889f76d693cb6a7c4cd13095",
-                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/queen-combat-N-v03.png",
-                "canvas_size": [
-                  576,
-                  576
+                "rgba_sha256": "738476b6c66c09c916c0641f598efd332cb37cde061bf375a82c0ed688957e1a",
+                "physical_source_row": 0,
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/raw/N-idle-phase1.png",
+                "source_sha256": "7a320f91d2a785ec5561f11bc590b586c71edef6024ad01e4c22fcd60e960735",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r003/N-idle-phase1.png",
+                "source_canvas_size": [
+                  1720,
+                  1720
                 ],
-                "duration": 1.0
+                "reviewed_helm_crest_y": 204,
+                "reviewed_boot_sole_y": 1143
               }
-            ],
-            "distinct_pixel_frames": 7,
-            "neutral_height": 353.0,
-            "canvas_size": [
-              576,
-              576
-            ],
-            "foot": [
-              288,
-              360
             ]
           },
           "frozen_input_source_identifier": "queen-combat-N-v03",
@@ -778,7 +768,21 @@
           "frame_durations": [
             1.0,
             1.0
-          ]
+          ],
+          "multi_source": true,
+          "source_sheets": [
+            {
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/raw/N-idle-phase0.png",
+              "source_sha256": "4402e640845702f354c6267ef9fb01d01c6200bd519786b82dda5fae3253bd18",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r003/N-idle-phase0.png"
+            },
+            {
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/raw/N-idle-phase1.png",
+              "source_sha256": "7a320f91d2a785ec5561f11bc590b586c71edef6024ad01e4c22fcd60e960735",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r003/N-idle-phase1.png"
+            }
+          ],
+          "source_visual_first_pass": "PASS: both BACK poses keep RIGHT bare thigh viewer-right and LEFT staff/covered leg viewer-left."
         },
         {
           "role": "idle",
@@ -5870,11 +5874,11 @@
         "per_AtlasTexture_source_and_virtual_canvas_preserved": true,
         "source_pixels_resampled": false
       },
+      "distinct_source_pose_count": 108,
       "replaces_previous_staging_selection": true,
       "source_candidate": {
-        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/candidate.json",
-        "bytes": 215055,
-        "sha256": "7afbaa48d97eb626900e550c83056f0558b65fbbcc81317e0a3bf7461da52f06"
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/candidate.json",
+        "sha256": "3eb3c04bf799a9c99f4cac84dddfdbea0f4d4ea25d5a124c35047febb736a6ee"
       }
     },
     "monster:죽음의 좀비 로드": {
@@ -17929,9 +17933,8 @@
   "default_catalog_switches": 0,
   "source_inputs": [
     {
-      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/candidate.json",
-      "bytes": 215055,
-      "sha256": "7afbaa48d97eb626900e550c83056f0558b65fbbcc81317e0a3bf7461da52f06"
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/queen-N-idle/candidate.json",
+      "sha256": "3eb3c04bf799a9c99f4cac84dddfdbea0f4d4ea25d5a124c35047febb736a6ee"
     },
     {
       "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/candidate.json",
