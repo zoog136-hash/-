@@ -1,0 +1,189 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "S",
+  "role": "attack",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:113 달의 질리언. Attached catalog PNG is authoritative. Create ONE transparent PNG, exactly SIX new full-body SOUTH ATTACK poses in THREE equal columns by TWO equal rows, reading order0..5. All six face DOWN, true front SOUTH, at one fixed slightly elevated isometric game camera. 달의 질리언 is the original golden/pale blond-haired archer in dark/white/gold armor with exact original radiant blue crescent-shaped energy bow. Show ready, nock, full draw, SOUTH arrow release at frame3, bow-arm follow-through and recovery, connected hands/string, preserve the original blue bow shape. The image overrides verbal ambiguity. Preserve original face, hair, costume, skin, proportions, colors, exact equipment, and anatomical weapon hand. Phases:0 guard;1 preparation and weight shift;2 full windup/charge;3 actual SOUTH strike, shot or spell;4 follow-through;5 recovery. Six distinct articulated joint poses, connected hands and grip, natural planted feet and coherent weapon movement with contact at frame3. Match original detailed painted fantasy RPG sprite style. No generic replacements, image rotation, mirroring, translated still, invented accessories or new weapons. Entire full body, head ornaments, feet and COMPLETE weapon must fit inside each equal cell with generous transparent margins, no clipping/overlap. ZERO alpha outside figure and original small effects. No opaque/gradient backdrop, ground, scenery, grid, text, labels or extra figures. Output only the six-frame sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+  "schema": "pr122-legendary-generated-clip-v1",
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/S-attack-source-v01.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/S-attack-source-v01.png",
+  "source_sha256": "dae5277b2cf021a00bf38c449d7a963727aee375d05cd1ed7e4cde2e68b8a1f5",
+  "source_bytes": 2218687,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/S-attack-SpriteFrames.tres",
+  "output_spriteframes_sha256": "09f1abc071122b0260aae6f1b708081ad64289c792ac653070f3c066872edbd0",
+  "generated_original_path": "/workspace/generated_images/exec-b97c90ce-1952-407e-9c24-3c661b282954.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_113-S-attack-v01.json",
+  "request_file_sha256": "2880ec0e9cf233178c73ceacdf6f43262390d616d08b83ce5ea193d9e2653e11",
+  "generation_request_sha256": "c15311b658c2cb5f8349eb55f7553f51885ba7f43795855b41627e1bc3004b75",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "attack_2",
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "41e57f8e1be05aa6f13b10fcacf83b48622a8c5aa29c1352dc4fc1ea0641badd",
+      "normalized_visible_sha256": "6b9ec39238a0728b11554493097444fd1a2ab0022459963bccb7fd154ac48cad",
+      "visible_pixels": 59096,
+      "alpha_bbox_in_cell": [
+        23,
+        15,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "a34c5c4515f83768956b6b311112bc21391f00c73e6aefc191612787ef08949c",
+      "normalized_visible_sha256": "df6ef00f3a165844c1de240a2edff9824298d8e2221fb690bc33b3a445e4ff0e",
+      "visible_pixels": 64789,
+      "alpha_bbox_in_cell": [
+        1,
+        17,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "4e693cba6f043e32f99fb81e7b3fbf14e49b013212170bc642b1be32bf4fe5db",
+      "normalized_visible_sha256": "d17eeb147515645637ca228ac64c2561349ac17f6076163afef64ecdfe2c0257",
+      "visible_pixels": 74687,
+      "alpha_bbox_in_cell": [
+        0,
+        12,
+        498,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "153d69079b99da4f13992d19ec1df41b83541b31df7707e28d03e85cf91f57f5",
+      "normalized_visible_sha256": "a65c6c0265b02e9882969a5d353d8ba4432030e68dd73f64574e36d800ae9359",
+      "visible_pixels": 72346,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "22fa09190fbe3e7138f05a608ab5574c5d1998bfe462ce1fcd8181bfca9fb97a",
+      "normalized_visible_sha256": "716c54d31f87b641bc3a7e6025afdb8f2b5ad425420ef784db39ee9bf874a234",
+      "visible_pixels": 76978,
+      "alpha_bbox_in_cell": [
+        1,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "2f54e5574c2a2f4fdfcdd6332fc59ae03d99c3744f4f08772ad3c8fd660713fb",
+      "normalized_visible_sha256": "f41a143a3b4af4108cb9f07e689063b24e76f25678c8cd50fb75ff8b1a2075d8",
+      "visible_pixels": 56553,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        486,
+        512
+      ],
+      "border_alpha_pixels": 0
+    }
+  ],
+  "clipped_cell_count": 0,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false
+}
