@@ -1,0 +1,65 @@
+{
+  "schema": "legendary-targeted-registration-validation-reconciliation-v08",
+  "records": [
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v04/NW-hit-record.json",
+      "registration": "REVIEWED_ANCHORS_AND_SCALE",
+      "semantic_scale_registration": "REVIEWED_INPUT",
+      "slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    },
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/guard-registration-v07/W-attack-record.json",
+      "registration": "RASTER_COORDINATE_PRESERVATION",
+      "semantic_scale_registration": "HOLD",
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    }
+  ],
+  "guard_parent_checks": [
+    {
+      "compared_parent_guards": 2,
+      "errors": [],
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "failures": 0,
+  "engine": "4.7.2-stable (official)",
+  "primary_report": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/new-registration-followups-affected-validation-v08.json",
+    "sha256": "1a60e758e28e6243ebd98514bd89e8438a4d25a4af72a81a338fbf66df35ebeb",
+    "original_failures_preserved": 1
+  },
+  "targeted_binding_only_followup": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/new-registration-parent-binding-targeted-followup-v08.json",
+    "sha256": "4426b5fa41c2e350ffa32f1d5e23fa29440e92c78816f6d3f70d500bd567e4e7"
+  },
+  "cause": "Resource.take_over_path clears the previous in-memory texture.resource_path; actual RGBA bytes, regions, margins and transform remain identical",
+  "successful_playback_repeats": 0,
+  "PNG_mutations": 0,
+  "quality_status": "HOLD",
+  "final_approved": 0
+}
