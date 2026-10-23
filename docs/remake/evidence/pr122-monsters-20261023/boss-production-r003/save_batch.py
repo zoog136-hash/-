@@ -55,7 +55,7 @@ def main():
     actor['source_candidate'] = dict(path=candidate.relative_to(ROOT).as_posix(),sha256=sha(candidate))
     ledger['actors'][key] = actor
     ledger['source_inputs'] = [v['source_candidate'] for v in ledger['actors'].values()]
-    ledger['latest_authoring_session'] = HERE.relative_to(ROOT).as_posix()
+    ledger['latest_authoring_session'] = candidate.parent.relative_to(ROOT).as_posix()
     ledger_path.write_text(json.dumps(ledger,ensure_ascii=False,indent=2)+'\n')
     subprocess.run(['python3','tools/reclassify_pr122_monsters.py'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
     # Source folders are session-owned; earlier revisions and approved art are preserved.
