@@ -34,13 +34,21 @@ def main():
         sources=[]
         for index,row in enumerate(rows):
             source=ROOT/row['source'];assert sha(source)==row['source_sha256']
-            original=Image.open(source).convert('RGBA')
+            shown=source;status=row['status']
+            proof=review/'owned-parts-repair'/slug/(row['clip']+'.json')
+            if proof.exists():
+                repaired=json.loads(proof.read_text())
+                if repaired['status']=='LOSSLESS_OWNED_PARTS_PASS':
+                    assert repaired['source_sha256']==row['source_sha256']
+                    shown=ROOT/repaired['texture'];assert sha(shown)==repaired['texture_sha256']
+                    status='LOSSLESS_OWNED_PARTS_FIXED'
+            original=Image.open(shown).convert('RGBA')
             background=Image.new('RGBA',original.size,(66,70,73,255));background.alpha_composite(original)
             background.thumbnail((tilew-16,tileh-42),Image.Resampling.LANCZOS)
             x=tilew*(index%2)+(tilew-background.width)//2;y=48+tileh*(index//2)
             image.paste(background.convert('RGB'),(x,y+26))
-            draw.text((tilew*(index%2)+12,y+5),row['direction']+'  '+row['clip']+'  '+row['status'],fill='white')
-            sources.append(dict(source=row['source'],sha256=row['source_sha256'],clip=row['clip'],direction=row['direction']))
+            draw.text((tilew*(index%2)+12,y+5),row['direction']+'  '+row['clip']+'  '+status,fill='white')
+            sources.append(dict(source=row['source'],sha256=row['source_sha256'],clip=row['clip'],direction=row['direction'],display_texture=shown.relative_to(ROOT).as_posix(),display_texture_sha256=sha(shown),status=status))
         path=out/(slug+'-'+role+'.jpg');assert not path.exists();image.save(path,quality=94)
         pages.append(dict(slug=slug,role=role,path=path.relative_to(ROOT).as_posix(),sha256=sha(path),sources=sources))
     manifest=dict(source_sheets=sum(len(p['sources']) for p in pages),source_poses=6*sum(len(p['sources']) for p in pages),whole_visual_review='AWAITING_INSPECTION',pages=pages)
