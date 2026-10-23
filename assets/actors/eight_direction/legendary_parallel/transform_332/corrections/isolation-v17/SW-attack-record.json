@@ -1,0 +1,312 @@
+{
+  "key": "transform:332",
+  "name": "암흑룡 조우",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "attack",
+  "reference": "res://assets/catalog/d9a87518deb538ff3667abc4.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:332 암흑룡 조우. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body SW ATTACK poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter front SOUTH-WEST, screen DOWN-LEFT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. An authentic articulated ATTACK with the original weapon system: ready guard, preparation, full windup or aim, active SOUTH/EAST/etc strike or shot or spell in the selected facing at frame3, coherent follow-through, recovery. If the original holds a bow use real nock/draw/release with connected string and hands; for a firearm aim/fire/recoil; for magical equipment use proper spell discharge; for sword or axe use its actual cutting trajectory; for spear/polearm use its authentic thrust; if unarmed use its original natural attack. Never replace the original equipment or invent a different attack class. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: SOUTH-WEST means the character looks and travels diagonally toward the BOTTOM-LEFT of the screen, showing its FRONT and anatomical LEFT side, never a right-facing front view. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/d9a87518deb538ff3667abc4.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 123,
+  "reference_sha256": "f8494733249dbc907ef2ba07468255662e268943046695d0b5345b0ed5a15ca9",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+  "source_sha256": "e3b4fcbb46da23d36cb5f29352cc6713ac7445d7aab6f822b3b11767f8c39ccb",
+  "source_bytes": 1760434,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-SpriteFrames.tres",
+  "output_spriteframes_sha256": "ca83bd215856f7f54d0536235f35cb2f6234e5e93e43a755eff3d06c778de90b",
+  "generated_original_path": "/workspace/generated_images/exec-2c91b119-3cc9-4e03-94e5-cc2dd15f5982.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_332-SW-attack-v01.json",
+  "request_file_sha256": "43093e994ccde060c86cc4845b59c8205da07a71b4f334e9bb57c71b3d865c52",
+  "generation_request_sha256": "37a430908f354fd4f5efe3c4ea6bed9e4e124e784deabc3cf490eae76c954905",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "attack_3",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        691,
+        606
+      ],
+      "rgba_sha256": "61250d7fca9eab09c57f0c6d616645102299a19bda1cd8a7c30d20af61dd95d5"
+    },
+    {
+      "index": 1,
+      "region": [
+        691,
+        0,
+        691,
+        606
+      ],
+      "rgba_sha256": "8cbdc45878e1489f6acdf91ce5d2b2a770448ae34469e52744ec515762f65e76"
+    },
+    {
+      "index": 2,
+      "region": [
+        1382,
+        0,
+        691,
+        606
+      ],
+      "rgba_sha256": "837b7efacf724509e29ba5ebc1c54a1df05fb7d05d42870e8b0e2b5e68e445de"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        606,
+        691,
+        606
+      ],
+      "rgba_sha256": "dfb4fe5d4bb370c28ed13a7886b2cfdc1abdb3ff140666f3b686e79d3e4d70e9"
+    },
+    {
+      "index": 4,
+      "region": [
+        691,
+        606,
+        691,
+        606
+      ],
+      "rgba_sha256": "c61496589d4e97439eab970cc60722ee6391b13edbd4e390cb1b64365146a5ed"
+    },
+    {
+      "index": 5,
+      "region": [
+        1382,
+        606,
+        691,
+        606
+      ],
+      "rgba_sha256": "51b9736748f3598b8b6770adc0b0c0282715af2598b51a5e9afedd3943f912c9"
+    }
+  ],
+  "clipped_cell_count": 5,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-attack-record-v01.json",
+  "revision_parent_sha256": "242a0df3da9f5be0f052ad622b0da6d85a3cc545d7b5c2322e6f62dd5ab15e7b",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-attack-source-v01.png",
+  "raw_authored_source_sha256": "7ebb78088282709f8928a22d405d342ac6a2f57b3bf032d83042f0ff940b5f01",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        691,
+        606
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "region": [
+        691,
+        0,
+        691,
+        606
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "region": [
+        1382,
+        0,
+        691,
+        606
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "region": [
+        0,
+        606,
+        691,
+        606
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "region": [
+        691,
+        606,
+        691,
+        606
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "region": [
+        1382,
+        606,
+        691,
+        606
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    691,
+    606
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      691,
+      1382,
+      2073
+    ],
+    "y": [
+      0,
+      606,
+      1212
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/SW-attack-source-v01-isolated.png",
+      "sha256": "e3b4fcbb46da23d36cb5f29352cc6713ac7445d7aab6f822b3b11767f8c39ccb",
+      "bytes": 1760434,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
