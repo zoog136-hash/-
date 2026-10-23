@@ -1,0 +1,64 @@
+{
+  "schema": "legendary-native176-v04-followup-JSON-provenance-remote-saved-v06",
+  "status": "REMOTE_SAVED",
+  "commit_sha": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+  "remote_sha": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+  "native_version": "registration-v04",
+  "verified_registered_clips": 1,
+  "original_raw_REMOTE_SAVED_receipt": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v04/delivery-receipts/native-registration-v04-remote-saved-v05.json",
+    "sha256": "23079e8b8fe31ab4abacf086ec1970747db8f9ca25a4b8e7ed2568db689e7c31",
+    "byte_exact_original_REMOTE_SAVED_receipt": true
+  },
+  "original_native_resource_commit": "2a72d43e73afe9738f803cd56cdb449f768014eb",
+  "logical_reconciled_validation_first_saved_commit": "62142f11 (history observation; full final commit pins exact bytes below)",
+  "artifact_checks": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v04-library.json",
+      "sha256": "c7531948deb361a06c7377a8e327702e2fb1e1f87f985675880546cfdc765300",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-quality-registration-review-input-v04.json",
+      "sha256": "b0af21d9c83b20911e9330361673151cfdc710a858a8d3098e8d8251ac04ff99",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/new-registration-followups-validation-reconciled-v08.json",
+      "sha256": "81d3e063905dd88c18b0fd3f1a6bd2ef5e4d5280d752d68ee5dc4886b0145513",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/new-registration-followups-affected-validation-v08.json",
+      "sha256": "1a60e758e28e6243ebd98514bd89e8438a4d25a4af72a81a338fbf66df35ebeb",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/new-registration-parent-binding-targeted-followup-v08.json",
+      "sha256": "4426b5fa41c2e350ffa32f1d5e23fa29440e92c78816f6d3f70d500bd567e4e7",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v04/NW-hit-record.json",
+      "sha256": "523e29f122ad3c3d75447011a0399e7feca809f839620052ef5e5590d12f5fb1",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v04/NW-hit-registration.json",
+      "sha256": "cab685e90fe08db2f1d35fd62f81d1de240c9f87cbde0a38b4a9b9c78937f584",
+      "git_show_commit": "aaa44ec4e010ea6f36d24aeee5782a7f44975e4c",
+      "byte_exact": true
+    }
+  ],
+  "provenance_scope": "Existing immutable JSON artifacts at actual remote head only; no Godot/PNG/visual check repeated",
+  "asset_staging_mutations": 0,
+  "PNG_reads": 0,
+  "runtime_replays": 0,
+  "new_final_approvals": 0
+}

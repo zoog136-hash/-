@@ -1,0 +1,41 @@
+{
+  "schema": "legendary-final-reconciliation-precondition-attempt-v01",
+  "recorded_UTC": "2026-10-23T22:01:14.071855+00:00",
+  "attempt": 1,
+  "exit_code": 1,
+  "session_id": 30454,
+  "command": [
+    "python",
+    "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py",
+    "--finalize",
+    "--gate",
+    "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/remaining-findings-final-completion-gate-v05.json"
+  ],
+  "gate": {
+    "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-completion-gate-v05.json",
+    "sha256": "d7ae0aefde91e4cfc0c2888304ef1d758b6eb4695de1628e64ae794d76ba282a"
+  },
+  "runner": {
+    "path": "res://docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py",
+    "sha256": "59dca99804c7b2a1e9407e74f2fd9944301a482f41dcc9a2b8b1a13e2b62b10e"
+  },
+  "stage": "native176 registration-v04 exact validation/receipt ancestry precondition",
+  "stdout": "",
+  "stderr_traceback": "Traceback (most recent call last):\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py\", line 266, in <module>\n    finalize(args.gate)\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py\", line 196, in finalize\n    native = additional.native_followups(evidence, gate, core.native_registration_evidence(evidence, gate))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/additional_quality_evidence_v05.py\", line 52, in native_followups\n    follow=core.native_registration_evidence(e,{'native176':n});events.append(follow)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v01.py\", line 198, in native_registration_evidence\n    for ref in n['validations']:e.committed_json(ref['path'],commit,e.artifact(ref)[1])\n                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py\", line 35, in committed_json\n    super().committed_json(path, commit, expected)\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v01.py\", line 71, in committed_json\n    if result.returncode or digest(result.stdout)!=expected:raise ValueError('Committed JSON proof mismatch: '+p)\n                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Committed JSON proof mismatch: docs/remake/pr122-legendary-parallel/quality-v03/new-registration-followups-validation-reconciled-v08.json\n",
+  "cause": "Logical reconciled validation JSON was published after the original raw-resource receipt commit; original primary sixframe PASS and targeted guard comparison are preserved.",
+  "PNG_reads": 0,
+  "whole_visual_reviews": 0,
+  "generated_images": 0,
+  "source_or_staging_mutations": 0,
+  "precondition_attempts_started": 1,
+  "completed_final_corpus_reports": 0,
+  "automatic_retries": 0,
+  "checks_completed_before_stop": {
+    "unique_lossless_source_proofs": 721,
+    "successful_correction_source_units": 109,
+    "new_correction_pose_occurrences": 604,
+    "exact_guard_only_rebindings": 2
+  },
+  "root_bounded_resume_required": true,
+  "stderr_origin": "Copied from the original exec result for session30454; no exception/request rerun"
+}
