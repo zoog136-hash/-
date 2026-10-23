@@ -34,6 +34,8 @@ def main():
     temporary=receipt.with_suffix('.json.tmp')
     temporary.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
     temporary.replace(receipt)
-    print(json.dumps(dict(slug=a.slug,clip=a.clip,status=record['status'],bytes=len(data))))
+    print(json.dumps(dict(slug=a.slug,clip=a.clip,status=record['status'],bytes=len(data),
+        generation_stop_requested=Path('/tmp/twilight-pr122-generation-stop').exists(),
+        actor_defer_requested=(HERE/a.slug/'actor-generation-hold.json').exists())))
 
 if __name__=='__main__':main()
