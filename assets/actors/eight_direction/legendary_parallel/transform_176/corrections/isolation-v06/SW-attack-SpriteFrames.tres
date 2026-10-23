@@ -1,0 +1,49 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-da13e98e7135e215.png" id="texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/isolation-v06/SW-attack-source-v01-isolated.png" id="texture_1"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("texture_0")
+region = Rect2(504, 818, 107, 95)
+margin = Rect2(61, 69, 149, 161)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("texture_1")
+region = Rect2(0, 0, 868, 740)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("texture_1")
+region = Rect2(868, 0, 868, 740)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_3"]
+atlas = ExtResource("texture_0")
+region = Rect2(475, 967, 132, 70)
+margin = Rect2(32, 94, 124, 186)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_4"]
+atlas = ExtResource("texture_1")
+region = Rect2(1736, 0, 868, 740)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_5"]
+atlas = ExtResource("texture_0")
+region = Rect2(536, 1068, 65, 106)
+margin = Rect2(93, 58, 191, 150)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{"duration": 0.666666666666667, "texture": SubResource("pose_0")}, {"duration": 0.666666666666667, "texture": SubResource("pose_1")}, {"duration": 0.666666666666667, "texture": SubResource("pose_2")}, {"duration": 1.0, "texture": SubResource("pose_3")}, {"duration": 1.0, "texture": SubResource("pose_4")}, {"duration": 2.0, "texture": SubResource("pose_5")}],
+"loop": false,
+"name": &"attack_3",
+"speed": 14.285714286
+}]
+metadata/twilight_revision_status = "HOLD"
