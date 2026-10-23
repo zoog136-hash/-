@@ -1,0 +1,156 @@
+{
+  "schema": "pr122-demon-targeted-E-correction-review-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "revision": "r003",
+  "targeted_E_result": "PASS_USER_MINIMUM_BATCH_QA",
+  "overall_boss_completed": false,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "scope": "E RUN confirmed wrong-SE camera and repeated foreground support correction; preserve S/NW and all other old source art",
+  "generation_calls": 3,
+  "authored_new_PNGs": 3,
+  "authored_pose_count": 8,
+  "selected_new_E_poses": 6,
+  "reused_RGBA_poses": 101,
+  "native_clips": 33,
+  "native_poses": 107,
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/candidate.json",
+    "bytes": 98920,
+    "sha256": "52c90583a5d40ae87040a3d82b25fd7fe27431286fe1bf6ca3272b94f96d8e0b"
+  },
+  "independent_source_review": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/independent-review.json",
+    "bytes": 8481,
+    "sha256": "9e9004aa5876b5d67f488dd58264e66ec2f661143787ecc6de49a532df4b75cd"
+  },
+  "godot_playback": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/godot-playback.json",
+    "bytes": 6916,
+    "sha256": "a92e66974d04f9047cee214c7e53384a0b779dfaa6957658504cb7845bed5c94"
+  },
+  "minimum_batch_QA": {
+    "actual_RGBA_PNGs": "PASS",
+    "frame_counts_and_unique_selected_poses": "PASS",
+    "SpriteFrames_and_NativeProfile_load": "PASS",
+    "Godot4_7_2_actual_ActorMotion_playback": "PASS",
+    "actual_DB_speed_75_RUN_all8directions": "PASS",
+    "all107poses_and8contact_markers_visited": "PASS",
+    "canvas_anchor_and_bounds": "PASS",
+    "Sdeath_all8headings_terminal": "PASS",
+    "selected_E_obvious_grounding_clipping_body_collapse_visual_check": "PASS"
+  },
+  "confirmed_fixed_defects": [
+    {
+      "defect": "E source looked like frontal SE",
+      "result": "FIXED_IN_EXAMINED_SOURCE",
+      "observation": "All selected E figures have right-facing nose/one dominant eye, near shoulder occlusion and lateral torso. The belt ornament is foreshortened; the previous broad frontal chest/SE camera is visibly reduced."
+    },
+    {
+      "defect": "E phases0/3 used the same foreground support leg",
+      "result": "FIXED_IN_EXAMINED_SOURCE",
+      "observation": "The original successful pair is directly selected: phase0 large near RIGHT shin/foot plants low while far LEFT foot lifts; phase3 large near RIGHT knee/foot folds visibly up near waist while far LEFT foot plants low. The RIGHT axe grip stays fixed, so this is not whole-body mirroring."
+    },
+    {
+      "defect": "Support-pair large physical image exceeded native64 canvas guard",
+      "result": "FIXED_BY_REGISTRATION",
+      "observation": "New revision uses native reference96/pixel_scale128÷96 and proportional per-source physical canvases with common logical256. Strict source bounds and full-visible-region checks remain unchanged; no pixels were rescaled or retouched."
+    }
+  ],
+  "selected_E_source_mapping": [
+    {
+      "phase": 0,
+      "source": "pair-a-landing-v01",
+      "physical_row": 0
+    },
+    {
+      "phase": 1,
+      "source": "demon-E-right-half3-v01",
+      "physical_row": 1
+    },
+    {
+      "phase": 2,
+      "source": "demon-E-right-half3-v01",
+      "physical_row": 2
+    },
+    {
+      "phase": 3,
+      "source": "pair-a-landing-v01",
+      "physical_row": 1
+    },
+    {
+      "phase": 4,
+      "source": "demon-E-left-half3-v01",
+      "physical_row": 1
+    },
+    {
+      "phase": 5,
+      "source": "demon-E-left-half3-v01",
+      "physical_row": 2
+    }
+  ],
+  "not_selected_generated_poses": [
+    {
+      "source": "demon-E-right-half3-v01",
+      "physical_row": 0,
+      "reason": "Original pair phase0 retains the clearest established landing."
+    },
+    {
+      "source": "demon-E-left-half3-v01",
+      "physical_row": 0,
+      "reason": "Actually repeats near-RIGHT support; exclude rather than count as left landing."
+    }
+  ],
+  "confirmed_remaining_motion_defects": [
+    {
+      "clip": "SE RUN",
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SE-run6-v01.png",
+        "bytes": 2633045,
+        "sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db"
+      },
+      "observation": "A separate actual private source view confirms phase0 and phase3 both keep the screen-right forward leg low while the opposite foot stays folded behind the axe. The opposite support change repaired in E is still absent in this unchanged SE source.",
+      "status": "KNOWN_FOLLOWUP_NOT_FIXED_HERE",
+      "impact": "Prevents declaring the whole eight-direction RUN quality complete."
+    },
+    {
+      "clip": "NW ATTACK",
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_attack_NW_v01.png",
+        "bytes": 1807395,
+        "sha256": "7dfb9ef725d07b61993384ad2d6858720871a144e8957240c40f4e5e6f7a7b42"
+      },
+      "observation": "The preserved focused NW attack fixes RIGHT weapon ownership, but its nominated contact pose still holds the axe high overhead rather than showing a completed forward chop.",
+      "status": "SPECIFIC_CONTACT_POSE_FOLLOWUP_NOT_FIXED_HERE"
+    }
+  ],
+  "unreviewed_details_not_additional_batch_gates": [
+    "Fine loop timing and inter-direction transitions in the final arena",
+    "Other directions complete anatomical gait review beyond the confirmed SE issue",
+    "Detailed weapon/armor/tail secondary motion",
+    "Main-scene physical target contact and moving-world collision"
+  ],
+  "approval_note": "These unreviewed details are deferred review scope, not invented prerequisites for the user-minimum batch QA. The E repair passes that QA; the overall boss remains incomplete because specific unchanged motion defects are identified above.",
+  "preservation": {
+    "existing152_manifest": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/file-manifest.json",
+      "bytes": 37072,
+      "sha256": "a9b8b6162c18f4d615ec1deb3577bf2aaefa6fe4903ab526ec098ec04b323a84"
+    },
+    "previous_failed_followup_manifest": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/file-manifest.json",
+      "bytes": 2112,
+      "sha256": "de69b90e79b3b787e1451dca6791324a15fd97be4dc7c45c3d18d908deea1264"
+    },
+    "old_source_RGBA_poses_preserved": 101,
+    "reused_clips": 32,
+    "all_old_regions_source_anchors_and_phase_order_preserved": true,
+    "max_reused_display_size_error": 0.004016064257028273,
+    "all_errors_under_one_percent": true,
+    "S_and_NW_improvements_preserved": true
+  },
+  "multi_source_binding": "run_0 uses frame.texture/source_canvas_size for3 exact PNGs. Native SpriteFrames and headless ActorMotion loaded and visited every frame with common logicalcanvas256.",
+  "next_specific_fix": "Repair SE opposite support with targeted pose pairs; do not undo the new E camera/support or preserved S/NW improvements."
+}
