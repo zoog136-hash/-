@@ -1,0 +1,51 @@
+name: TWILIGHT option awakening
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/cards/option_awakening*.json'
+      - 'scripts/cards/option_awakening*.gd'
+      - 'scripts/animation/option_awakening_aura.gd'
+      - 'scripts/ui/option_awakening*.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/renewal_window.gd'
+      - 'scripts/world.gd'
+      - 'scripts/card_draw_fusion.gd'
+      - 'scripts/collections/equipment_collection_runtime.gd'
+      - 'tests/option_awakening*test.gd'
+      - 'tools/test_project.py'
+      - '.github/workflows/option-awakening.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  option-awakening:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and virtual OpenGL
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Check tracked runtime resource integrity
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Run isolated awakening and card regressions
+        run: |
+          python3 tools/test_project.py \
+            --godot "$PWD/Godot_v4.7.2-stable_linux.x86_64" \
+            --logs option-awakening-results \
+            --only import,bake_navigation,boot,card_draw_fusion_test,card_pack_items_test,option_awakening_service_test,option_awakening_world_test,option_awakening_ui_test,option_awakening_vfx_test,option_awakening_field_render_test
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-option-awakening-${{ github.sha }}
+          path: option-awakening-results
+          if-no-files-found: error
