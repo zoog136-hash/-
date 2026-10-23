@@ -79,8 +79,8 @@
       "remaining": 17,
       "statuses": {
         "VERIFIED_COMPLETED": 43,
-        "IN_PROGRESS": 9,
-        "NOT_AUTHORED": 7,
+        "IN_PROGRESS": 10,
+        "NOT_AUTHORED": 6,
         "SOURCE_HOLD": 1
       }
     }
@@ -3994,10 +3994,10 @@
       ],
       "spawn_evidence": [],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
-      "reason": "No identity-compatible licensed source for dark_knight",
+      "reason": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
       "historical_reason_preserved": "No identity-compatible licensed source for dark_knight",
       "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
       "runtime_proxy": true,
@@ -4068,7 +4068,44 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 6,
+        "native_pose_count": 36,
+        "missing_required_tracks": [
+          "attack_0",
+          "hit_0",
+          "run_0",
+          "attack_6",
+          "hit_6",
+          "run_6",
+          "attack_7",
+          "hit_7",
+          "run_7",
+          "attack_5",
+          "hit_5",
+          "idle_5",
+          "run_5",
+          "attack_2",
+          "death_2",
+          "hit_2",
+          "idle_2",
+          "run_2",
+          "attack_1",
+          "hit_1",
+          "idle_1",
+          "attack_3",
+          "hit_3",
+          "run_3",
+          "attack_4",
+          "hit_4",
+          "run_4"
+        ],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/boss_draft_first/zeros/draft001/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false,
       "current_review_requirement": "mythic_quality",
       "historical_visual_holds_block_current_review": true
@@ -30469,7 +30506,7 @@
     },
     {
       "path": "data/pr122_monster_boss_repair_staging.json",
-      "sha256": "e47b32845100787dd70f412cfd05061905c5c8f33f2495df7cf182e1d983da43"
+      "sha256": "c9bfd6c328d4526884fcd090cc8641b00c3bf4231673be63d0910a12f5e350f1"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.",
