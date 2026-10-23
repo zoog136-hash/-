@@ -1,0 +1,7113 @@
+{
+  "bosses": [
+    {
+      "index": 20,
+      "id": "monster:불사의 머미 로드",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "prior_visual_profile": null,
+        "name": "불사의 머미 로드",
+        "frames_path": "res://assets/actors/eight_direction/original_based/mummy_lord/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.895105,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -28.64336
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/monsters/original/atlas_3.png"
+      },
+      "profile_sha256": "129c718b5192c76a9001de847abed5b61e3b07b95d847f0b7caefc29a88c87b7",
+      "frames_path": "res://assets/actors/eight_direction/original_based/mummy_lord/SpriteFrames.tres",
+      "frames_sha256": "fffb08e40b1468f3e51d048d95dc0c702e9c463ccbfce91a6e372c501c2d51be",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          328,
+          599,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "89fe82955c6286936e08e0480881facbbcc2777dc2d1cc2ec5b948f47f16c149"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/20.png",
+      "reference_crop_sha256": "53756965d17eadf00031a25870178aff71e5771f037b588c10ee78478f2bdb5c",
+      "reference_rgba_sha256": "89fe82955c6286936e08e0480881facbbcc2777dc2d1cc2ec5b948f47f16c149",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/mummy_lord/poses-0.png",
+          "present": true,
+          "sha256": "17227dcc079f02ddddd77cceef5408fe9a35f3e3390198238078fd0afc24ef3a"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/mummy_lord/poses-1.png",
+          "present": true,
+          "sha256": "4e560fe0cb6b96ed128eb4a340a37b0534ed2c5c11ec680ca704c6cd6463f793"
+        }
+      ],
+      "missing_textures": [],
+      "model": "mummy_lord",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 21,
+      "id": "monster:불신의 시어",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "prior_visual_profile": null,
+        "name": "불신의 시어",
+        "frames_path": "res://assets/actors/eight_direction/original_based/seer_boss/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.969697,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -31.030304
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/monsters/original/atlas_3.png"
+      },
+      "profile_sha256": "ea5913d9e5631494dbd9f436a2570a91b1db1f3885a368a72693a02622e0a93b",
+      "frames_path": "res://assets/actors/eight_direction/original_based/seer_boss/SpriteFrames.tres",
+      "frames_sha256": "73686979e341cf430d33bfac87465d921a171b385cabff61429e69acee81eece",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          599,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 8,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "3f2b363d2c7b98f97de4faae4c72e2656883239e0b9a4799bda8ae6cab60b33c"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/21.png",
+      "reference_crop_sha256": "f2b2f34f76c293c23696af6447192247fb555aad8d0bbcce919f351c98dc3681",
+      "reference_rgba_sha256": "3f2b363d2c7b98f97de4faae4c72e2656883239e0b9a4799bda8ae6cab60b33c",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/seer_boss/poses-0.png",
+          "present": true,
+          "sha256": "657cf9adc9ea6ad3ee2daeb7ced8406f46ac728704d2fd1f21de9df12af09c42"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/seer_boss/poses-1.png",
+          "present": true,
+          "sha256": "6b72ec0d71200684cc208abf9e526fcaf4d54d396917c0c0b296f3f71fde6caf"
+        }
+      ],
+      "missing_textures": [],
+      "model": "seer_boss",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 22,
+      "id": "monster:살라흐",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "prior_visual_profile": null,
+        "name": "살라흐",
+        "frames_path": "res://assets/actors/eight_direction/original_based/salah/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.820513,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -26.256416
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/monsters/original/atlas_3.png"
+      },
+      "profile_sha256": "8104673b3d42dc29a54ed26cbc6b5d6a8dc1dfac77f1de98ffa3ce8bf65dfd97",
+      "frames_path": "res://assets/actors/eight_direction/original_based/salah/SpriteFrames.tres",
+      "frames_sha256": "83f39b00b3a5a64ee6c502c559bb7eff2ae9a15ed3e40d58f9f6d9eba4de2b2f",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 4,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "a87418cdcc59e8d2d6d1f9e561f501111eca0be40053b916f7ffcf4f8f321486"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/22.png",
+      "reference_crop_sha256": "e905608833ee5f6d4ca15157d034509eda03f988c29321087323fbe607452add",
+      "reference_rgba_sha256": "a87418cdcc59e8d2d6d1f9e561f501111eca0be40053b916f7ffcf4f8f321486",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/salah/poses-0.png",
+          "present": true,
+          "sha256": "dbb64203a29239d3d5f4f4b5f410969c8c54a24e1739e84d2a86e8d033043906"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/salah/poses-1.png",
+          "present": true,
+          "sha256": "8fdd54a0918193efb2917c75a3dc9ddb9cc8f648ebc33e7b452723b0c1ec30ea"
+        }
+      ],
+      "missing_textures": [],
+      "model": "salah",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 23,
+      "id": "monster:샌드 웜",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "샌드 웜",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "샌드 웜",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/sand_worm/SpriteFrames.tres",
+        "pixel_scale": 1.741497,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -55.727904
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/monsters/original/atlas_3.png"
+      },
+      "profile_sha256": "8d76b360ee226296bcbbfaf7bfb634ff95a68bb8e2f1a1c6743b8a56814123ca",
+      "frames_path": "res://assets/actors/eight_direction/original_based/sand_worm/SpriteFrames.tres",
+      "frames_sha256": "618c80b898c39a576970c9496ccada119053ac358229b9cff75d18ab95cc0136",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          984,
+          899,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 15,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "45c2fe8f910c918a5dab8c508d9cc6d9fd6e071c60f95d2c85577c4853ebf784"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/23.png",
+      "reference_crop_sha256": "2663fddbf2687e9fb89b08c802454fdbd4868d32dc780dd8be06722a572a591e",
+      "reference_rgba_sha256": "45c2fe8f910c918a5dab8c508d9cc6d9fd6e071c60f95d2c85577c4853ebf784",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/sand_worm/poses-0.png",
+          "present": true,
+          "sha256": "3b76d1aefbf3eb75842658a90353241c50f586baae62207524770ffba4fbc5c9"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/sand_worm/poses-1.png",
+          "present": true,
+          "sha256": "050593636764a531527c47da53823e3081d9021047ad850a8d7bc93c4586b033"
+        }
+      ],
+      "missing_textures": [],
+      "model": "sand_worm",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 24,
+      "id": "monster:수룡의 둥지의 지배자",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "수룡의 둥지의 지배자",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "aa8aaf",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "수룡의 둥지의 지배자",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "profile_sha256": "29af7a2ba491d4f6d3a3999a750f2af386d86898ae3cb1a0dddc6db0102cfdaa",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/24.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 25,
+      "id": "monster:시간의 균열의 지배자",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "시간의 균열의 지배자",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "aa8aaf",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "시간의 균열의 지배자",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "profile_sha256": "30d748bd0ff4a3e414f69b9fb55575f2830c7c70fe8e4000c17efa21cf6e236d",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/25.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 26,
+      "id": "monster:아크모",
+      "preserved_status": "NOT_AUTHORED",
+      "approval_preserved": false,
+      "profile": {
+        "name": "아크모",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "pixel_scale": 1.4,
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "movement_fps": 15.009380863039398,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "hit_recoil": 0,
+        "body_kind": "armored",
+        "color_tint": "c09cc3",
+        "shared_visual_source": "monster:커츠",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      },
+      "profile_sha256": "40fce3330968b9d6297731e569b63eed58c09782c91dece7eef43bbb5c6b9e5e",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/26.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 27,
+      "id": "monster:아틀란티스의 지배자",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "아틀란티스의 지배자",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "aa8aaf",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "아틀란티스의 지배자",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "profile_sha256": "74581ae9ed70a2d2e216ecc4ebb183304c98a3f0e4c46374313dac375f8dc251",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/27.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 28,
+      "id": "monster:알비노 데몬",
+      "preserved_status": "NOT_AUTHORED",
+      "approval_preserved": false,
+      "profile": {
+        "name": "알비노 데몬",
+        "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.877551,
+        "sprite_offset": [
+          0,
+          -28.081632
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "floating": false,
+        "color_tint": "d8e8fc",
+        "shared_visual_source": "monster:아시타지오",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      },
+      "profile_sha256": "7baf2be2658767c2426c1b2b2942fd4c916bf35c10a10ad8bb98adb36f9dabd0",
+      "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+      "frames_sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/28.png",
+      "reference_crop_sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b",
+      "reference_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/asitagio/poses-0.png",
+          "present": true,
+          "sha256": "5b269be5b859636a2a8547146e4d6054711ace7559efbbc55abfcd4e021fbeee"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/asitagio/poses-1.png",
+          "present": true,
+          "sha256": "94f0a6d05a0aafe0c5ef361b4dbab39640e3777fb45325dc04b0748be8854580"
+        }
+      ],
+      "missing_textures": [],
+      "model": "asitagio",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_1": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_2": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_3": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_4": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_5": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_6": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_7": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 29,
+      "id": "monster:알비노 유니콘",
+      "preserved_status": "SOURCE_HOLD",
+      "approval_preserved": false,
+      "profile": {
+        "name": "알비노 유니콘",
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.61054,
+        "sprite_offset": [
+          0,
+          -19.53728
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 16.666666666666668,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "e4ddf8",
+        "shared_visual_source": "monster:알비노 디어",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "quadruped_proxy_no_unicorn_horn_native_HOLD_preserved"
+      },
+      "profile_sha256": "cbe63ef45af4719b711371d103bcf3c38c1f78085b8adc5fbe1d7f24dc163a42",
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/SpriteFrames.tres",
+      "frames_sha256": "f59d6c1bca1e95393ae272326b9c05469b9a1981d1d8f2f15a14a49c236cb905",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          0,
+          925,
+          318,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "4c556c014a8cc80c1aee7ef871900017804d2c00e45d2290155759601b3f03b9"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/29.png",
+      "reference_crop_sha256": "dc81e96f715881c13ed73f3b9eeb36b714203c5e943cbd0819c0bb70a3051809",
+      "reference_rgba_sha256": "4c556c014a8cc80c1aee7ef871900017804d2c00e45d2290155759601b3f03b9",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-0.png",
+          "present": true,
+          "sha256": "52ebcac07c1c80042ba20b7e60c6e9e99ed23cb11523dd7a8f65acad6f0ddfc0"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-1.png",
+          "present": true,
+          "sha256": "43c557d2400286a1a7a8b54e20e58c320ac881255b15fa81080b9faad876bbae"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-10.png",
+          "present": true,
+          "sha256": "a584c6b7fb93709c7cf56f53493fa05089ceaf20e36c91a73bcc6452fdaee984"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-11.png",
+          "present": true,
+          "sha256": "73a374dbc3e33e7556507f825799f65c00ddc0b45716a79ed3cab28d983ca727"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-12.png",
+          "present": true,
+          "sha256": "8536b84846dbb0afbe48f2579e6aa8beaa2add48440a9e6aaadca136eb9c8685"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-13.png",
+          "present": true,
+          "sha256": "1f90aca76c532c5c423b748ec3516b6ceeb3fd54779db15db4b2023bfa944a39"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-14.png",
+          "present": true,
+          "sha256": "e2b8665ae830c10df41736c4d0a15314c0539844f3189f982a8c43aa332f0fcb"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-15.png",
+          "present": true,
+          "sha256": "b889c9022d5c6ae9717fbbb844f474bc1e1a5a80babe6b122540485124cc84e2"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-16.png",
+          "present": true,
+          "sha256": "46f95f0ba60d2f4e70ad3cfbe09c7fb11ac92526063af59725a58ef3201f272f"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-2.png",
+          "present": true,
+          "sha256": "f92eb67d80f643918fe83727327209a3bc9e4fd601852868bff26179f5171325"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-3.png",
+          "present": true,
+          "sha256": "8807e0408c831935efa682c378b7e48b913e0a53d866e8e10028ceeb78d2c8c6"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-4.png",
+          "present": true,
+          "sha256": "e089f78e20f189e4d7ccf4a4271bf99f97250bb10c99dfc9be0485a371d48588"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-5.png",
+          "present": true,
+          "sha256": "90f38514e1fd795a2a034da9c6d5235453bf0b581ba1728cdd7f2d06256cf32a"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-6.png",
+          "present": true,
+          "sha256": "1e635db3023d934a4a719e7f3323ad4682cb9bb5843758690f222f2c14ec56dc"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-7.png",
+          "present": true,
+          "sha256": "e9f3464280f5f98104f623cdbbabd2a37d6e700932bcb53b7c33844d987a9f2f"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-8.png",
+          "present": true,
+          "sha256": "fdfe772ae32c83663a5e25cebb4573eeea63bf4a934384366eb9907cea1621bc"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/poses-9.png",
+          "present": true,
+          "sha256": "1f281ad59fc78f7c30d587d9bd81b5e4e02aa16270f106a532e65539acb4bcad"
+        }
+      ],
+      "missing_textures": [],
+      "model": "albino_deer_batch16_authored",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 16.666666667,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 30,
+      "id": "monster:알비노 피닉스",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "authored_motion_weight": 0,
+        "authoring_reference": "res://assets/monsters/original/atlas_1.png",
+        "color_tint": [
+          0.983289411764706,
+          0.9920519607843138,
+          0.9981476470588235,
+          1.0
+        ],
+        "death_duration": 0.65,
+        "embedded_shadow": false,
+        "floating": true,
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_phoenix_project_source/SpriteFrames.tres",
+        "hit_recoil": 0,
+        "layout": "directional8",
+        "motion_style": "slash",
+        "movement_cadence_width_ratio": 1.0260521042084167,
+        "movement_fps": 10.15625,
+        "name": "알비노 피닉스",
+        "native_width_ratio": 1.0260521042084167,
+        "pixel_scale": 1.28,
+        "prior_visual_profile": null,
+        "sprite_offset": [
+          0.0,
+          -40.96
+        ]
+      },
+      "profile_sha256": "eedb84a43901eda385ecec3ac74f766f2fcefa73b63938ad90c7a4681fd9e9cb",
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_phoenix_project_source/SpriteFrames.tres",
+      "frames_sha256": "aa4242bd5655e0887f6877bda71480e76b5325ba94fbcce1f9c1a84503697d13",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          947,
+          934,
+          315,
+          312
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 15,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "8bb91d69ba53dd7695ed8bb0dbf06aac304adff0a6444ca924f5033c569d83bd"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/30.png",
+      "reference_crop_sha256": "ab9ed3042576703c1dae8c95fd5e0e5d041891ef8fb0c4a6902977f80555ddb6",
+      "reference_rgba_sha256": "8bb91d69ba53dd7695ed8bb0dbf06aac304adff0a6444ca924f5033c569d83bd",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "present": true,
+          "sha256": "221f0328878b4787d6bc4811651e2b42eccb4e9f76d6057905b6d81f5c30e8d3"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "present": true,
+          "sha256": "68160d7dbac383af03cef663bc5e4c6f6c897cde51531affc0c2cb2c60eaecd8"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "present": true,
+          "sha256": "1ddb1bfff868982c6a42482f59d7fc3ee596545ba739bf1de91c8175ab80e183"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-11.png",
+          "present": true,
+          "sha256": "c28a63d161550c20000cff204ad4a242831e04d72f671a485f6dddf2d7e1999c"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-12.png",
+          "present": true,
+          "sha256": "a81e1906f17bc0c0a72017308cccda1110fbd863123fc8d97d6b50edec9e27dd"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "present": true,
+          "sha256": "1d674958eaba9936b6a86bd232672a5c7b8115db2adeeae95abb66fad607ad71"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "present": true,
+          "sha256": "ded5ed0ef6611f096cb34d469e2b6bd3c519fdf57e5f0506bf75838b2da8e1bb"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-4.png",
+          "present": true,
+          "sha256": "65c469a8bcb3de1608f1b940dc52c8410428e51021680aa688bf0d8d90414a0e"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-5.png",
+          "present": true,
+          "sha256": "f5ffd2e1d46cd786c0d50dfb55c96fe99bf43343277699918a4813917ef676b1"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-6.png",
+          "present": true,
+          "sha256": "37cd2421bdb8915c4d3fce22d8cde8d13cf82f2229c471dbb1864a5c65165091"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-7.png",
+          "present": true,
+          "sha256": "2d0adbc3ebbfb411a4d0c1a0ff5747103bdce164dcd920a0465983548c714c79"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "present": true,
+          "sha256": "5d6dc91b7a60af044ea16b21345a31d61227568b4dd8b1abc597acb3c328c6a4"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "present": true,
+          "sha256": "cba8c2df34e3ffd7b0e430b7aa3d1edeb5cba693c20d8c918cdfb65ddee4ba2f"
+        }
+      ],
+      "missing_textures": [],
+      "model": "albino_phoenix_project_source",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 31,
+      "id": "monster:어둠의 나이트발드",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "어둠의 나이트발드",
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "aa8aaf",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/SpriteFrames.tres",
+        "layout": "directional8",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": null
+      },
+      "profile_sha256": "acdd2222bb65dae279b6c020b9c90cd4e1625273983ca07c7f0d558387976354",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/SpriteFrames.tres",
+      "frames_sha256": "4c4452ef4793cb005ad16c905aac91c695c9207fe6914cc6b83f26676e06884e",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          984,
+          599,
+          322,
+          300
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/31.png",
+      "reference_crop_sha256": "5e7abfe8fc8c30f1bbf358834b31c7e47d54699d0ae2957b5a6b5523fb341083",
+      "reference_rgba_sha256": "7184c0fff926f902fcca122dca46c4349d473c863f8ad65607b7638f16479252",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/attack.png",
+          "present": true,
+          "sha256": "042b73e3aa014733aa82e4eb438250f5b0e22ee116cc8462da98ff97a0c5d51f"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/cast.png",
+          "present": true,
+          "sha256": "3358278eeb3499d317abb5631b721c6cf8c43ec1c88059de603dadd86d6ce662"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/death.png",
+          "present": true,
+          "sha256": "7b4babea957c6f79d644238cb6498e7adadc39b905b1ca40d8c947a44e134c95"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/hit.png",
+          "present": true,
+          "sha256": "1a8a6c40968d3d47501185a50d9a7528af1a0527297c7687abd0cdbb73908736"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/idle.png",
+          "present": true,
+          "sha256": "565dc3336bc64b766d28b797e8ba1b12b0ce01d3820b05bdfefddae2c3d3befc"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/walk.png",
+          "present": true,
+          "sha256": "61cffe64b274bbb813b11b0b0ba48f68deb96211da6d5507a571ad78aae3e549"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_battle_axe",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 32,
+      "id": "monster:얼음 여왕",
+      "preserved_status": "IN_PROGRESS",
+      "approval_preserved": false,
+      "profile": {
+        "name": "얼음 여왕",
+        "motion_style": "slash",
+        "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0,
+          -33.6
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "movement_fps": 15.009380863039398,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "hit_recoil": 0,
+        "body_kind": "caster",
+        "floating": false,
+        "color_tint": "c5ddff",
+        "shared_visual_source": "transform:137",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "female_caster_proxy_native_queen_WIP_preserved"
+      },
+      "profile_sha256": "00df035d9ac41beb67111590415a1a85e05826005d1b0ea35ed74f93d195b01c",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "22832122a8177eaf568f6ef914b8c56e88afd216d01469a202b2f1ca1fb29ded",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          305,
+          965,
+          306,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 13,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/32.png",
+      "reference_crop_sha256": "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9",
+      "reference_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/attack.png",
+          "present": true,
+          "sha256": "ac819fc5d33e539bdef0e03bd29c6734f65d465a342bf97c3bbeccba57101814"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/cast.png",
+          "present": true,
+          "sha256": "aec342113bb25a83b4d5ff9ffa85fc0665c5f78d8f0816c8c4d5e2f36c13981b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/death.png",
+          "present": true,
+          "sha256": "c8a622543fe8dbbffb224195148bcfe72fdea32eddd09878cf495ab3b22e2c73"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/hit.png",
+          "present": true,
+          "sha256": "4d65e445f4d0018371fe22bbab0d924bc9d2dc20649d14c41b628bbaa9f6bdf2"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/idle.png",
+          "present": true,
+          "sha256": "393d714106405580195baeb509f3c65da7ed5795d19b3e001ffcd92ced2efcac"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/walk.png",
+          "present": true,
+          "sha256": "01dfd3269359cfca9dd948e00273d84835f56f4f394036d33324461569d2c6a2"
+        }
+      ],
+      "missing_textures": [],
+      "model": "female_mage_mage_hood_staff",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 33,
+      "id": "monster:에바 왕국의 지배자",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "에바 왕국의 지배자",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "c4aa64",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "에바 왕국의 지배자",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "profile_sha256": "43782f2e3ab5bff3dde4e48e14ccd17665b25ba783eecc6f4a8901d23d1584e9",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/33.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 34,
+      "id": "monster:오만의 탑의 지배자",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "오만의 탑의 지배자",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "b76d5a",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "오만의 탑의 지배자",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "profile_sha256": "e6377d360dfc26ca9a00ceaa729ffe1e69c0dfa875f68146196f3e4da5dc6cb8",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/34.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 35,
+      "id": "monster:오만한 우그누스",
+      "preserved_status": "NOT_AUTHORED",
+      "approval_preserved": false,
+      "profile": {
+        "name": "오만한 우그누스",
+        "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.877551,
+        "sprite_offset": [
+          0,
+          -28.081632
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "floating": false,
+        "color_tint": "ddc79f",
+        "shared_visual_source": "monster:아시타지오",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "horned_demon_boss_proxy"
+      },
+      "profile_sha256": "41f5adc55af1e889e22800d4e4dcf662345e17b8269069255e3169a4b7ec2772",
+      "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+      "frames_sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          916,
+          965,
+          306,
+          307
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 15,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "c92030ccc6d42397a5f86e8848104676efd59bf30cd65fd2d101e1b163e425ca"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/35.png",
+      "reference_crop_sha256": "23f4e2ee1e84c2b1ec445a49c837bf6d7acf7e1309a6dd95ca57370d4aa01047",
+      "reference_rgba_sha256": "c92030ccc6d42397a5f86e8848104676efd59bf30cd65fd2d101e1b163e425ca",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/asitagio/poses-0.png",
+          "present": true,
+          "sha256": "5b269be5b859636a2a8547146e4d6054711ace7559efbbc55abfcd4e021fbeee"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/asitagio/poses-1.png",
+          "present": true,
+          "sha256": "94f0a6d05a0aafe0c5ef361b4dbab39640e3777fb45325dc04b0748be8854580"
+        }
+      ],
+      "missing_textures": [],
+      "model": "asitagio",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_1": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_2": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_3": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_4": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_5": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_6": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_7": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 36,
+      "id": "monster:왜곡의 제니스 퀸",
+      "preserved_status": "NOT_AUTHORED",
+      "approval_preserved": false,
+      "profile": {
+        "name": "왜곡의 제니스 퀸",
+        "frames_path": "res://assets/actors/eight_direction/original_based/lamia/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.618705,
+        "sprite_offset": [
+          0,
+          -19.79856
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "cdb3e1",
+        "shared_visual_source": "monster:라미아",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "serpentine_queen_proxy"
+      },
+      "profile_sha256": "47daa385e9cf24e587d8c73c4f6b49bf15f104d44e759edbf81d6009abf8549d",
+      "frames_path": "res://assets/actors/eight_direction/original_based/lamia/SpriteFrames.tres",
+      "frames_sha256": "db7f285dcd2cefb59a7f7d004dc6c664e303f2aaf2d9a1144568009d5a2de7b0",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          984,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 7,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "e1a6c7cec796c1ce4549e2e898ff77dbff2f0c40bf255a7e95032090e0ca1928"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/36.png",
+      "reference_crop_sha256": "80757b1719c70c3e8fd509808a11bf76f013e50f314bb999d468c8f750db55f8",
+      "reference_rgba_sha256": "e1a6c7cec796c1ce4549e2e898ff77dbff2f0c40bf255a7e95032090e0ca1928",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/lamia/poses-0.png",
+          "present": true,
+          "sha256": "5f5eff0efd6fa1326c2c1c265bd406a3ec38aa0aba3a9526080364adf4871320"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/lamia/poses-1.png",
+          "present": true,
+          "sha256": "b3d93532b5c873d19e4a22f084b8f3d130fd23fa086d94996b02b3af5c9db63a"
+        }
+      ],
+      "missing_textures": [],
+      "model": "lamia",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 37,
+      "id": "monster:욥니르",
+      "preserved_status": "NOT_AUTHORED",
+      "approval_preserved": false,
+      "profile": {
+        "name": "욥니르",
+        "frames_path": "res://assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.616352,
+        "sprite_offset": [
+          0,
+          -19.723264
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "floating": false,
+        "color_tint": "b9d2de",
+        "shared_visual_source": "monster:에틴",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "large_biped_boss_proxy"
+      },
+      "profile_sha256": "f39b755fb8cc8ed49cb700a21959a527cc3fa1bae60e6e8144b85ada736ab7ac",
+      "frames_path": "res://assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres",
+      "frames_sha256": "221ad6774c03e1e418dd8f5c9746b003b960f5fd1fc4b887d0bb812acc800c3a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          328,
+          899,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 13,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "ac5d418fcb2c7155e4d781351cd5de30d400eacda518e2d40cd471103f1ecc4b"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/37.png",
+      "reference_crop_sha256": "2a69b5ab34e009df00c91f62c674d3fe593d701a6838280927a549b50116668c",
+      "reference_rgba_sha256": "ac5d418fcb2c7155e4d781351cd5de30d400eacda518e2d40cd471103f1ecc4b",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ettin/poses-0.png",
+          "present": true,
+          "sha256": "4aef3c11f239b0bd4762d7f102e71e44bc76326249bad381d617bc185a7a570b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ettin/poses-1.png",
+          "present": true,
+          "sha256": "098b197d9b979ea72a9f2a585445575dd78521ed2781de62a1aa8ae7c619c53a"
+        }
+      ],
+      "missing_textures": [],
+      "model": "ettin",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_1": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_2": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_3": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_4": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_5": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_6": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        },
+        "death_7": {
+          "count": 2,
+          "fps": 3.076923077,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 38,
+      "id": "monster:용의 계곡의 지배자",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "name": "용의 계곡의 지배자",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "aa8aaf",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "용의 계곡의 지배자",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "profile_sha256": "f7c2a6556420dfe5b850a51d5369715a4f60ab06d6f8a8e9c9e4759fb4b64679",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "current_world_project_atlas",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "identity_limit": "Existing project appearance; not verified external original game art"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/38.png",
+      "reference_crop_sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "reference_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/attack.png",
+          "present": true,
+          "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/cast.png",
+          "present": true,
+          "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/death.png",
+          "present": true,
+          "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/hit.png",
+          "present": true,
+          "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/idle.png",
+          "present": true,
+          "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/walk.png",
+          "present": true,
+          "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7"
+        }
+      ],
+      "missing_textures": [],
+      "model": "male_plate_plate_helm_longsword",
+      "tracks": {
+        "idle_0": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 6,
+          "fps": 5.0,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 8,
+          "fps": 15.0093808630394,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 15.0375939849624,
+          "loop": false
+        },
+        "death_0": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_7": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_6": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_5": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_4": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_3": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_2": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "death_1": {
+          "count": 6,
+          "fps": 7.5,
+          "loop": false
+        },
+        "cast_0": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_7": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_6": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_5": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_4": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_3": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_2": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        },
+        "cast_1": {
+          "count": 4,
+          "fps": 10.0,
+          "loop": false
+        }
+      }
+    },
+    {
+      "index": 39,
+      "id": "monster:웨링",
+      "preserved_status": "VERIFIED_COMPLETED",
+      "approval_preserved": true,
+      "profile": {
+        "prior_visual_profile": null,
+        "name": "웨링",
+        "frames_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.457859,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -46.651488
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/monsters/original/atlas_0.png"
+      },
+      "profile_sha256": "d8e5fc2c13ad45be23d3b8784d95d8708cdf826ad471103219702900a7ab4b32",
+      "frames_path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/SpriteFrames.tres",
+      "frames_sha256": "d7c2aacc63405280235a625b87d87e31dc5e154107ef14811fda290a5f9ee20c",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          929,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 14,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "4bacceef8441bfe9d702f484f963d496670c945679c1f56bdb8dc50a07328788"
+      },
+      "reference_crop": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/39.png",
+      "reference_crop_sha256": "bf49a1e5b4668b97c1e03b60623964e16189e3a3fe655c99dbdd473873fb8c0c",
+      "reference_rgba_sha256": "4bacceef8441bfe9d702f484f963d496670c945679c1f56bdb8dc50a07328788",
+      "texture_pins": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-0.png",
+          "present": true,
+          "sha256": "0c334c075da0c2937710ed9ccb2539ac7a1f66b45bd35da085fc48494f6cc27c"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-1.png",
+          "present": true,
+          "sha256": "c4ba5a6b1327c1dd042821db67cb84d9ec9c4b3e5cfe029c644740de0909e077"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-2.png",
+          "present": true,
+          "sha256": "d279177965e4d754a33cb641b184025ac59683204299d3fc1e568c4f68219773"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-3.png",
+          "present": true,
+          "sha256": "0fd9c18913ca072778bc13caeb2dff1ecc95e0ae634182f3869d5f49481ab719"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-4.png",
+          "present": true,
+          "sha256": "0be090ff7961b956984fd18403b1e4f4477160b3207ac5e83292013b1215e720"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-5.png",
+          "present": true,
+          "sha256": "4b92cb84bc329358e9f44bdd1b36e2955a53436d838ccd54399278c1264e1036"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-6.png",
+          "present": true,
+          "sha256": "be40c130ad62842f91c42ca36e346ab7a3c1c7ebe3ecfeba38ed88c7ca0d6c80"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-7.png",
+          "present": true,
+          "sha256": "9b648b9fed06cd19d8f006c0937ed6cbd065cc5eeabd07578872a93ef403d904"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-8.png",
+          "present": true,
+          "sha256": "e6ab0ef33c136626cadcd7af2b02a1f7391f2b90b1460c6c4e7aff2b85d8eab1"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/waring_monster_boss/poses-9.png",
+          "present": true,
+          "sha256": "fa7dfdfc02c2ed17d9c208e92a357f82b36f5fa56c0c76ae0ea0163e5b4a9dc2"
+        }
+      ],
+      "missing_textures": [],
+      "model": "waring_monster_boss",
+      "tracks": {
+        "idle_0": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_1": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_2": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_3": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_4": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_5": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_6": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "idle_7": {
+          "count": 2,
+          "fps": 1.666666667,
+          "loop": true
+        },
+        "walk_0": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_1": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_2": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_3": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_4": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_5": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_6": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "walk_7": {
+          "count": 3,
+          "fps": 6.25,
+          "loop": true
+        },
+        "attack_0": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_1": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_2": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_3": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_4": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_5": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_6": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "attack_7": {
+          "count": 3,
+          "fps": 7.142857143,
+          "loop": false
+        },
+        "hit_0": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_1": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_2": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_3": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_4": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_5": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_6": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "hit_7": {
+          "count": 2,
+          "fps": 9.090909091,
+          "loop": false
+        },
+        "death_0": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_1": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_2": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_3": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_4": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_5": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_6": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        },
+        "death_7": {
+          "count": 3,
+          "fps": 4.615384615,
+          "loop": false
+        }
+      }
+    }
+  ],
+  "model_sheets": {
+    "mummy_lord": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/mummy_lord.png",
+      "sha256": "73629f05b81b4a65acdb64c0b18b06bb864463f47cc22041fd72382795b4f613",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "seer_boss": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/seer_boss.png",
+      "sha256": "f1d7f42963729123c53ab868815b8506192591adb584a8c4484ee53e1a6d6b36",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "salah": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/salah.png",
+      "sha256": "f02721d0b7af451b2349b0d95232356020dedc26c83560f88dbfb5e8deb70419",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "sand_worm": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/sand_worm.png",
+      "sha256": "590bd6c45a38817697b04c14a894343a3ef7d8ea96d61f4ab52e12493f9a989b",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "male_plate_plate_helm_longsword": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/male_plate_plate_helm_longsword.png",
+      "sha256": "ae622dcbb33f87f0f5b1b86d9fea889703358ab9855d84c1c46e1a22f36dfcfc",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "idle",
+          2
+        ],
+        [
+          "idle",
+          3
+        ],
+        [
+          "idle",
+          4
+        ],
+        [
+          "idle",
+          5
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "walk",
+          3
+        ],
+        [
+          "walk",
+          4
+        ],
+        [
+          "walk",
+          5
+        ],
+        [
+          "walk",
+          6
+        ],
+        [
+          "walk",
+          7
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "attack",
+          3
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ],
+        [
+          "death",
+          3
+        ],
+        [
+          "death",
+          4
+        ],
+        [
+          "death",
+          5
+        ],
+        [
+          "cast",
+          0
+        ],
+        [
+          "cast",
+          1
+        ],
+        [
+          "cast",
+          2
+        ],
+        [
+          "cast",
+          3
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "asitagio": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/asitagio.png",
+      "sha256": "9403256b3c6e6519da35698a3e83247746a936526c907000e059f4bf005f40b5",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "albino_deer_batch16_authored": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/albino_deer_batch16_authored.png",
+      "sha256": "cce14a985d0f329d9bc335f1ee019d3f377fcf632863ac0c4cd09040e223e047",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "walk",
+          3
+        ],
+        [
+          "walk",
+          4
+        ],
+        [
+          "walk",
+          5
+        ],
+        [
+          "walk",
+          6
+        ],
+        [
+          "walk",
+          7
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "albino_phoenix_project_source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/albino_phoenix_project_source.png",
+      "sha256": "f8e28b88b061a9cece0b067443fed49dabbce1fa89c0556bbf2c659348e854d4",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "male_plate_plate_helm_battle_axe": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/male_plate_plate_helm_battle_axe.png",
+      "sha256": "69fa834147c7916b9667c0ba9ec150d52df5f46b7ed1f2c1e619632108b13b69",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "idle",
+          2
+        ],
+        [
+          "idle",
+          3
+        ],
+        [
+          "idle",
+          4
+        ],
+        [
+          "idle",
+          5
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "walk",
+          3
+        ],
+        [
+          "walk",
+          4
+        ],
+        [
+          "walk",
+          5
+        ],
+        [
+          "walk",
+          6
+        ],
+        [
+          "walk",
+          7
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "attack",
+          3
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ],
+        [
+          "death",
+          3
+        ],
+        [
+          "death",
+          4
+        ],
+        [
+          "death",
+          5
+        ],
+        [
+          "cast",
+          0
+        ],
+        [
+          "cast",
+          1
+        ],
+        [
+          "cast",
+          2
+        ],
+        [
+          "cast",
+          3
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "female_mage_mage_hood_staff": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/female_mage_mage_hood_staff.png",
+      "sha256": "6996768fb667b45a05f49cce569d40217d36933e07570f9457d44aeca0766c8a",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "idle",
+          2
+        ],
+        [
+          "idle",
+          3
+        ],
+        [
+          "idle",
+          4
+        ],
+        [
+          "idle",
+          5
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "walk",
+          3
+        ],
+        [
+          "walk",
+          4
+        ],
+        [
+          "walk",
+          5
+        ],
+        [
+          "walk",
+          6
+        ],
+        [
+          "walk",
+          7
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "attack",
+          3
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ],
+        [
+          "death",
+          3
+        ],
+        [
+          "death",
+          4
+        ],
+        [
+          "death",
+          5
+        ],
+        [
+          "cast",
+          0
+        ],
+        [
+          "cast",
+          1
+        ],
+        [
+          "cast",
+          2
+        ],
+        [
+          "cast",
+          3
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "lamia": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/lamia.png",
+      "sha256": "61bf77f1bf35986b7bbb7df5b52c0266c97eca3dcd32601e9704079aae2ccfbb",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "ettin": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/ettin.png",
+      "sha256": "6b910543e363975fb255250a458045484f01f0790090d212ccdf60c4a7e16327",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    },
+    "waring_monster_boss": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/sheets/waring_monster_boss.png",
+      "sha256": "256ef45186041979aef8e5ce7277e1de3031df0fc02b51f47ae384ebede7770d",
+      "rows": [
+        [
+          "idle",
+          0
+        ],
+        [
+          "idle",
+          1
+        ],
+        [
+          "walk",
+          0
+        ],
+        [
+          "walk",
+          1
+        ],
+        [
+          "walk",
+          2
+        ],
+        [
+          "attack",
+          0
+        ],
+        [
+          "attack",
+          1
+        ],
+        [
+          "attack",
+          2
+        ],
+        [
+          "hit",
+          0
+        ],
+        [
+          "hit",
+          1
+        ],
+        [
+          "death",
+          0
+        ],
+        [
+          "death",
+          1
+        ],
+        [
+          "death",
+          2
+        ]
+      ],
+      "note": "Runtime canvas normalization and profile pixel scale; fixed reviewed foot plane. No source edits. Timed playback/physics not inferred from the static sheet."
+    }
+  }
+}

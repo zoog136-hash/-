@@ -1,0 +1,338 @@
+{
+  "schema": "pr122-queen-staging-visual-review-v1",
+  "id": "monster:얼음 여왕",
+  "date": "2026-10-23",
+  "frozen": true,
+  "record_basis": "Formal extraction of the already observed private static source-frame review; no new visual inspection or playback was performed for this record.",
+  "review_target": "New Ice Queen RUN staging sources; separate from the currently connected hooded-mage runtime proxy",
+  "required_quality": "mythic_transform",
+  "current_review": "HOLD",
+  "new_approvals": 0,
+  "approval_granted": false,
+  "approval_changed": false,
+  "original_approval": false,
+  "original_status": "IN_PROGRESS",
+  "prior_status_unchanged": true,
+  "source_assets_changed": 0,
+  "production_connected": false,
+  "separate_current_runtime_review": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json",
+    "sha256": "6061a8e91f8775c97526099cb001a2188f356d9b9afabd80127a2fb4c4784652",
+    "id": "monster:얼음 여왕",
+    "current_review": "REWORK_CANDIDATE",
+    "note": "This existing runtime verdict is unchanged by the separate staging HOLD record."
+  },
+  "examined_views": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "examined_roles": [
+    "run"
+  ],
+  "examined_tracks": 8,
+  "poses_per_track": 6,
+  "examined_poses": 48,
+  "inspection_method": "Actual source poses were privately viewed in a direction-by-phase diagnostic against the exact current project reference. This is static visual screening; no timing or in-game support/contact approval is implied.",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_2.png",
+    "region": [
+      305,
+      965,
+      306,
+      322
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 2,
+    "cell": 13,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+    "image_size": [
+      1222,
+      1287
+    ],
+    "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+  },
+  "reference_crop": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/32.png",
+    "sha256": "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9"
+  },
+  "register_profile_pins": [
+    {
+      "register": "data/pr122_monster_animation_staging.json",
+      "profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "pixel_scale": 0.614285714286,
+      "profile_sha256": "04ee8d89f9b02f7150fbf73bc06b8ca381dde6f83995286afac3c2da229e7723",
+      "frames_sha256": "35613dcf25fde5343783d87c40c0f8eab04d6c60695ba9f7219ff6765ee32413",
+      "register_sha256": "94339b973f5a01c52625905b2deccd0dd865616e3eed73195bd9524dd965fd64"
+    },
+    {
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "pixel_scale": 2.25389025389,
+      "profile_sha256": "44ec1e8cf7b71d9ead4c347da1449d47900451f3f2feb49c4376497fb3a454d2",
+      "frames_sha256": "0487825374e9642545a1875ec6276e2e3beb0e5c2f3a397accb14557fb5e1b01",
+      "register_sha256": "9028fa6aa9ca645afb275b255286dd24a4652b69d9ce0653bb6943ec97130f32"
+    }
+  ],
+  "source_tracks": [
+    {
+      "direction": "E",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-E-run6.png",
+      "source_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/E-run.png",
+      "inspection_pixel_scale": 0.614285714286,
+      "texture_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+      "register": "data/pr122_monster_animation_staging.json",
+      "animation": "run_0",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        544,
+        544
+      ],
+      "geometry_frame_rgba_sha256": [
+        "0ffe7cfd1c94007e7bd3d1bf27e8eac04251bcd543f579d4e971df6b78eabdee",
+        "4b9ac985502cc3b0dabf4a48e3fcb0609733b56c70afc8c36e487a20b293aa9a",
+        "679c59bb19afd2525a6480dbcf24c635de31aba9f849d314af2f4fbc12aeaba8",
+        "d3288c2cb38d17d311ede265ac2adc43848fe03f2f5568c1890b1745df6615e8",
+        "b6bd1b1062dc80081f335d266c3520bab4d33f807c41351c25adbf1cfb2996df",
+        "5fe83ac6f877818e747671996085091acedccd0cec43d15553c040078f496e0d"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-S-run6.png",
+      "source_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/S-run.png",
+      "inspection_pixel_scale": 0.614285714286,
+      "texture_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+      "register": "data/pr122_monster_animation_staging.json",
+      "animation": "run_2",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        624,
+        624
+      ],
+      "geometry_frame_rgba_sha256": [
+        "6980c6fbffced100aee16e5b3992eaca60d861b3e99e96335f789b35054604d5",
+        "64e859606aeb28e2a97329d4a196475eaa46e312c0f77b48420ac4d6d62d9dd3",
+        "45bf94526483b793da0857a1cc0842d75105dea742f7b00804e36d2b86ee7600",
+        "f78f7bc0c66dc212cdbaa05544e511bedd6412efee7049ac43b5fa791eba2bd6",
+        "dc648e0231fe3e073b99aa2b5e106ce9f8eba4bc81ec168943d4c27550eac11c",
+        "79c67793e35e5f62887dd987ddeb85c157da7e0d02bae8bb8d5cb8ed0a44d20d"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-SE-run6-v01.png",
+      "source_sha256": "85de5856c079d199271dc59467ab5c94e4991849ebd1e4924cad6f0f8dc3cec4",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SE-run.png",
+      "inspection_pixel_scale": 2.25389025389,
+      "texture_sha256": "85de5856c079d199271dc59467ab5c94e4991849ebd1e4924cad6f0f8dc3cec4",
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "animation": "run_1",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        2048,
+        2048
+      ],
+      "geometry_frame_rgba_sha256": [
+        "380cd97f8c954f0884398f4c5bf6c4dd762555cfbe6b414013e59cb028d44f73",
+        "f45260aba6940f295551d9c8ce2513c5eb91990b625ad487e2f7d2391ce5b379",
+        "87df186e03e51363799ddcafe2cdd0bd24790e01129533f3c08f17f3dfd69bb3",
+        "71b77fea4c652abb4b701925ef1e84ffde1311b7604c43a618e119c44c09871f",
+        "7290cd18c76f20d9388b3b025c2e87d47048c15835be2907c98cbe81dffb546d",
+        "00d5f522fa216e47849415fdbe34ccd45ca12400d77b5618fa4e78bb59d6781b"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-SW-run6-v01.png",
+      "source_sha256": "0e804061dd55f756239ca2b7fab6b68ff5865086c5a2cfafe679c1d28d5383c7",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SW-run.png",
+      "inspection_pixel_scale": 2.25389025389,
+      "texture_sha256": "0e804061dd55f756239ca2b7fab6b68ff5865086c5a2cfafe679c1d28d5383c7",
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "animation": "run_3",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        2048,
+        2048
+      ],
+      "geometry_frame_rgba_sha256": [
+        "722f67964ce54eadfcbbafef6885a154d6be9d97d325f2a0323d783d737d5094",
+        "2b93815c9efff065ef349dfc87753b0597fefcb0592a842ada32654291b4283c",
+        "b92f3cd16ebbaf67c3d3282ba54be7e07e898513cb94159a1577382147121e6a",
+        "364359930952be6469b668feb72ea6a27d3d319c5fffc0c741b038c500a5d659",
+        "23125fb51c299f484c4674776c7b51f7707bcaab17a7fbe6890eda470d6f8911",
+        "bc7aaf93d99fcef63adcd523b72ce61792d40193d4c7ae0cb141bd1230ebe25f"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-W-run6-v01.png",
+      "source_sha256": "f7c6abcd1b3d6417a0faf3166a640256c43497bfb34ee2138f712e13e8497156",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/W-run.png",
+      "inspection_pixel_scale": 2.25389025389,
+      "texture_sha256": "f7c6abcd1b3d6417a0faf3166a640256c43497bfb34ee2138f712e13e8497156",
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "animation": "run_4",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        2048,
+        2048
+      ],
+      "geometry_frame_rgba_sha256": [
+        "2e2ae0b561f0427e280cd7c49fb39230331c97370bbb4bbfa9f2706ca3689ccd",
+        "95ae3ff02b5f7a359efc93ae3770ecfae452943b21baee651d388646668603e7",
+        "2ca128adb5ef289ec979830cb97660e579d6ebce36fe4798f4b7fda00d53b5b2",
+        "129266cbd8adafe2b2c3075dcf05e90ee8e8467233733205bc660eaaef057242",
+        "9d1eb3348a10d2d8682f291d4f3f0467dd82d446a032174423c137716939b8f1",
+        "db8aa4dd1f8777dc66491f04b824930ade11a8bc5dfea82f72f5e6924b952050"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-NW-run6-v01.png",
+      "source_sha256": "2d7bab89f617bf46151877c89335431a2c52c9baabf956f61b9d49eb7975890e",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NW-run.png",
+      "inspection_pixel_scale": 2.25389025389,
+      "texture_sha256": "2d7bab89f617bf46151877c89335431a2c52c9baabf956f61b9d49eb7975890e",
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "animation": "run_5",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        2048,
+        2048
+      ],
+      "geometry_frame_rgba_sha256": [
+        "22fcd2cdb82bc6b80e78b5a7b5de994192204aa5907a945298477a134a6a1cd4",
+        "c3c0445e36b46691dcc58e9a82be101eff0b142945489da9df326e1b1fd5e8bd",
+        "663eaf2de51ce1e6bc368ce00e57cee9ebf5128310a678254c8bf5690a0aa084",
+        "7b13680f408f0510d22455db18ade7edcca4cd3b50c8f582a7aa0d76cccc8448",
+        "fabd9f9815f758dc172e940c4b8099e3d1e9e3cadd7e446978eaa8822a8aba0e",
+        "29dd10b6a857c8aac2ad099427e69454ef3e124c227c868c810f9922f87f613d"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-N-run6-v01.png",
+      "source_sha256": "ce9d143a809930f76fb7e5563c2b815a920d64a96d4b4fb92ee403f7e159845f",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/N-run.png",
+      "inspection_pixel_scale": 2.25389025389,
+      "texture_sha256": "ce9d143a809930f76fb7e5563c2b815a920d64a96d4b4fb92ee403f7e159845f",
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "animation": "run_6",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        2048,
+        2048
+      ],
+      "geometry_frame_rgba_sha256": [
+        "a592a8438f12361c4702122f8511e9f65a8c244c04b5fd770352a4d44ae0baf1",
+        "6ea5c2a977f087cb6342f2b2c744203d34c1fbb114bc1f2c76a3ac1667220597",
+        "02459a95f75b7533e2f867bcbf8fc99c65d3168312a1086e37b9f3e8e4ff7d48",
+        "efd2e823c8a01439f6e4508ec3a2cd6338b92ddb59902f04f26142e75652bb14",
+        "0480008c816dabcc883a1cd17c329948567ada9b068920c508997850a697f62b",
+        "ee6099af3f24e28d6601ac50afdcbeda93efb505685de4526d15d165c2e79cf8"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-NE-run6-v01.png",
+      "source_sha256": "3979658a0110bc31190460cfb95c0ba5e85f2d8f0a4ca3071af70635f986894d",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NE-run.png",
+      "inspection_pixel_scale": 2.25389025389,
+      "texture_sha256": "3979658a0110bc31190460cfb95c0ba5e85f2d8f0a4ca3071af70635f986894d",
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "animation": "run_7",
+      "frames": 6,
+      "distinct_pixel_frames": 6,
+      "physical_canvas_size": [
+        2048,
+        2048
+      ],
+      "geometry_frame_rgba_sha256": [
+        "782c0a04a8c0d59ef80b7f491ee2f41329d220c421136c15ff05cc5b6d858dfc",
+        "4c38c024354e6edcd45c0d704904670108f5908b28d09aa0bf18bd618c9c14cc",
+        "b69d1f329a0a958c94a3e41bd5a728012cb8edf6468384e7cabf2d197655d905",
+        "a0db6f41ec8595a004a2b5a9172c17cd8fed4a4acaf8bf695050cf393b5ab40b",
+        "bc761900f8c47b823a0f5c985511ccea6efeb310cfc0b02eb85e68a786c040ab",
+        "41a486505b652c3ad663dabab4c29283f3990d7e6a2106f5436e5c34cdacb198"
+      ]
+    }
+  ],
+  "source_tracks_pin_file": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/queen-staging-pins.json",
+    "sha256": "e02b79cd08e0b14d2cbd66b68859113d6dbe0eadcd98634c9b4c5857cb92ea61"
+  },
+  "findings": [
+    {
+      "criterion": "identity",
+      "result": "PASS",
+      "observation": "New sources restore silver hair/crown, black-gold bodice, purple wings/dress and purple staff rather than the hooded-mage proxy."
+    },
+    {
+      "criterion": "opposite_support",
+      "result": "HOLD",
+      "observation": "In E/S and several front/side directions, phases0/3 retain a similar exposed leading-leg plant and phases1/4 and2/5 repeat a similar knee lift. Opposite anatomical LEFT support is not established; six distinct pixel hashes do not prove a six-phase alternating run."
+    },
+    {
+      "criterion": "NE_camera",
+      "result": "HOLD",
+      "observation": "NE reads close to an E/SE side/front silhouette with the face/front bodice visible; a convincing rear-right camera distinction needs correction or independent confirmation."
+    },
+    {
+      "criterion": "ground_plane",
+      "result": "HOLD",
+      "observation": "The source-plane anchoring is bbox-derived; named flight/contact phases lack independent anatomical sole/ground-plane proof. The technical canvas-foot PASS is not physical support approval."
+    }
+  ],
+  "reasons": [
+    "In E/S and several front/side directions, phases0/3 retain a similar exposed leading-leg plant and phases1/4 and2/5 repeat a similar knee lift. Opposite anatomical LEFT support is not established; six distinct pixel hashes do not prove a six-phase alternating run.",
+    "NE reads close to an E/SE side/front silhouette with the face/front bodice visible; a convincing rear-right camera distinction needs correction or independent confirmation.",
+    "The source-plane anchoring is bbox-derived; named flight/contact phases lack independent anatomical sole/ground-plane proof. The technical canvas-foot PASS is not physical support approval."
+  ],
+  "identity_restoration": {
+    "result": "PASS",
+    "observation": "New sources restore silver hair/crown, black-gold bodice, purple wings/dress and purple staff rather than the hooded-mage proxy.",
+    "scope": "Observed queen appearance only; this grants no completed animation or new approval."
+  },
+  "scale_review_note": "Each source was rendered using its own actual NativeMotionProfile pixel_scale and canvas256 normalization; source resolution differences were not misreported as body-scale defects.",
+  "evidence": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/queen-staging-run8.png",
+    "sha256": "1dfcd2490530ec6b9c2158f86242f855603c626b7bd828c5219c3ab89b445e89"
+  },
+  "timing_review": "NOT_REVIEWED",
+  "unseen_not_reviewed": [
+    "Timed RUN playback, per-frame durations and transitions in default Main",
+    "Actual alternating anatomical support and physical contact on a moving-world ground plane",
+    "NE camera confirmation in timed in-game playback",
+    "Staged idle, attack, hit and death sources",
+    "Attack contact/target hitbox interaction",
+    "GPU tint/material/VFX presentation",
+    "Final release or new approval decision"
+  ]
+}
