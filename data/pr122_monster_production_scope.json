@@ -79,8 +79,8 @@
       "remaining": 17,
       "statuses": {
         "VERIFIED_COMPLETED": 43,
-        "NOT_AUTHORED": 15,
-        "IN_PROGRESS": 1,
+        "NOT_AUTHORED": 14,
+        "IN_PROGRESS": 2,
         "SOURCE_HOLD": 1
       }
     }
@@ -1153,7 +1153,7 @@
       "production_status": "VERIFIED_COMPLETED",
       "queue": "preserve_completed",
       "priority": 2,
-      "reason": "Existing approved completion retained; this audit grants no new review for legacy art. Track any locomotion repair separately without recounting the species.",
+      "reason": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
       "historical_reason_preserved": "Existing approved completion retained; this audit grants no new review for legacy art. Track any locomotion repair separately without recounting the species.",
       "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
       "runtime_proxy": false,
@@ -1224,7 +1224,31 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "REVIEW_SHARED_BOSS",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 19,
+        "native_pose_count": 76,
+        "missing_required_tracks": [
+          "attack_0",
+          "hit_0",
+          "idle_0",
+          "attack_6",
+          "attack_7",
+          "attack_5",
+          "hit_2",
+          "idle_2",
+          "attack_1",
+          "hit_1",
+          "idle_1",
+          "hit_3",
+          "idle_3",
+          "attack_4"
+        ],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r002/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false,
       "current_review_requirement": "mythic_quality",
       "historical_visual_holds_block_current_review": true
@@ -2444,41 +2468,16 @@
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
       "new_staging": {
-        "native_track_count": 8,
-        "native_pose_count": 48,
+        "native_track_count": 32,
+        "native_pose_count": 102,
         "missing_required_tracks": [
-          "attack_0",
-          "hit_0",
-          "idle_0",
-          "attack_6",
-          "hit_6",
-          "idle_6",
-          "attack_7",
-          "hit_7",
-          "idle_7",
-          "attack_5",
-          "hit_5",
-          "idle_5",
-          "attack_2",
-          "death_2",
-          "hit_2",
-          "idle_2",
-          "attack_1",
-          "hit_1",
-          "idle_1",
-          "attack_3",
-          "hit_3",
-          "idle_3",
-          "attack_4",
-          "hit_4",
-          "idle_4"
+          "run_6"
         ],
         "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
         "profiles": [
-          "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
-          "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NativeMotionProfile.tres"
+          "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r001/NativeMotionProfile.tres"
         ],
-        "source_coverage_only": true
+        "source_coverage_only": false
       },
       "new_approval": false,
       "current_review_requirement": "mythic_quality",
@@ -21138,10 +21137,10 @@
         }
       ],
       "preserved_status": "NOT_AUTHORED",
-      "production_status": "NOT_AUTHORED",
+      "production_status": "IN_PROGRESS",
       "queue": "author_source",
       "priority": 2,
-      "reason": "No identity-compatible licensed source for demon",
+      "reason": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
       "historical_reason_preserved": "No identity-compatible licensed source for demon",
       "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
       "runtime_proxy": true,
@@ -21204,7 +21203,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "SOURCE_PRODUCTION_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 33,
+        "native_pose_count": 107,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false,
       "current_review_requirement": "mythic_quality",
       "historical_visual_holds_block_current_review": true
@@ -26672,7 +26680,7 @@
       "production_status": "VERIFIED_COMPLETED",
       "queue": "preserve_completed",
       "priority": 2,
-      "reason": "Existing approved completion retained; this audit grants no new review for legacy art. Track any locomotion repair separately without recounting the species.",
+      "reason": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
       "historical_reason_preserved": "Existing approved completion retained; this audit grants no new review for legacy art. Track any locomotion repair separately without recounting the species.",
       "frames_path": "res://assets/actors/eight_direction/expanded/zombie_dark/SpriteFrames.tres",
       "runtime_proxy": false,
@@ -26743,7 +26751,16 @@
         "PNG_and_visual_quality": "NOT_REVIEWED_BY_METADATA_SCREEN"
       },
       "quality_screen": "PRESERVE_APPROVAL_DETAILED_REVIEW_PENDING",
-      "new_staging": null,
+      "new_staging": {
+        "native_track_count": 33,
+        "native_pose_count": 116,
+        "missing_required_tracks": [],
+        "quality_review": "HOLD: source identity, actual support/contact, scale integration and default Main remain separate from technical playback",
+        "profiles": [
+          "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/NativeMotionProfile.tres"
+        ],
+        "source_coverage_only": false
+      },
       "new_approval": false,
       "current_review_requirement": "mythic_quality",
       "historical_visual_holds_block_current_review": true
@@ -30179,7 +30196,7 @@
     },
     {
       "path": "data/pr122_monster_production_batches.json",
-      "sha256": "b9a1e0593b76e61a1a9b5a5455e5b7857e9d3456a46ad595a43a6d6bdd5db626"
+      "sha256": "07d110de60bb070313984a54625ef796cd841337f539c3c62f18dc75caebd490"
     },
     {
       "path": "data/pr122_monster_animation_staging.json",
@@ -30204,6 +30221,10 @@
     {
       "path": "data/pr122_monster_demon_family_staging.json",
       "sha256": "c910e9095b5b0bd4b1a92e23a27f74af2b158a8f2ab2d7b7990713ca785aa394"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "sha256": "8280f1bd2f5b8e1cd2b062170eeaec792d481a74e414004defaaf349259ec4fc"
     }
   ],
   "quality_audit_limit": "DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.",

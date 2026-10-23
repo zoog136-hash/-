@@ -57,7 +57,12 @@ def build(root):
             table = read(ledger)
             actors = table.get('actors', {})
             for key, actor in actors.items():
-                staged_parts.setdefault(key, []).append(actor)
+                if actor.get('replaces_previous_staging_selection') is True:
+                    # Old sources remain in their immutable ledgers. A reviewed
+                    # boss selection must not silently inherit a rejected view.
+                    staged_parts[key] = [actor]
+                else:
+                    staged_parts.setdefault(key, []).append(actor)
             for key, adapter in table.get('family_adapters', {}).items():
                 source = actors[adapter['source_actor']]
                 staged_parts.setdefault(key, []).append(dict(source, **{
