@@ -1,0 +1,30 @@
+{
+  "schema": "legendary-targeted-runtime-capture-environment-hold-v01",
+  "frozen_review_modified": false,
+  "finding_scope": "QA capture environment; not an identified character-art defect",
+  "findings": [
+    {
+      "slot": [
+        "transform:402",
+        "E",
+        "attack"
+      ],
+      "cause": "capture_environment",
+      "status": "HOLD",
+      "finding_type": "QA_ENVIRONMENT_HOLD",
+      "detail": "At original speed on X11/llvmpipe, viewport readback missed phase2 in the staging-import-isolation effect test. Source PNG/SHA, six SpriteFrames entries, six static GPU warmup draws and one-shot terminal hold loaded correctly. This same clip passed all six timed phases in the preceding bounded targeted check. Preserve the recurrent capture limitation; do not retry again or regenerate art.",
+      "frames": [
+        2
+      ],
+      "active_record": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/E-attack-record-v01.json",
+      "active_record_sha256": "70975d818b901c69d238dd0b47b7f554acd668cbd4af061980448e61714e4c6c",
+      "rendered_evidence": {
+        "path": "docs/remake/pr122-legendary-parallel/staging-import-exclusion-affected-render-v01.json",
+        "sha256": "cb3b7208c668fd4ff6f630a759557b4ca58c516da5d05f3bfceb4d5ec52e67f4"
+      },
+      "source_or_resource_load_error": false,
+      "new_source_generation_attempts": 0,
+      "further_capture_retries": 0
+    }
+  ]
+}
