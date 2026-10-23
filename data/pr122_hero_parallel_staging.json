@@ -4,21 +4,13 @@
       "attack_family": "magic",
       "body": "demon",
       "classification_is_art_approval": false,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/beres_hero/r002/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_11/r002/NativeMotionProfile.tres",
-        "prior_main_validation_report": "",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "equipment": "beres",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_11/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "베레스",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_11/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -42,15 +34,13 @@
       ],
       "priority": 1.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/73d5ffcf7bd47bbbd9ff5338.png",
       "reference_sha256": "b9488518b5f578fe6df165f1e536fa24a8148136b679c22f2cee6dfe9705098c",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_11/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "bf91b7627f86c6ed3dc47ce4fe7d39ed7f5c3c229efe0252acd3dd8f470a8851",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -75,18 +65,29 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_11/r001/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/11/r001/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_11-r001-visible-main-generated_final_11_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-11.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-11.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:123": {
       "attack_family": "ranged",
       "body": "female_humanoid",
       "classification_is_art_approval": false,
       "equipment": "gun",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_123/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "이실로테(총)",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_123/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -96,20 +97,29 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/5a63357054f72a54d89e7b30.png",
       "reference_sha256": "97746bf25f41ed0660a5021df75fa5e8964f1d4dff25a3936d6d0f74850916b1",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_123/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "26d90089e012200aaa6e49abba45ec02aa05e677fc3bd8609bd232f32e87071d",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_123-r001-visible-main-generated_final_123_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-123.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-123.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:155": {
       "attack_family": "slash",
@@ -117,7 +127,7 @@
       "classification_is_art_approval": false,
       "death_policy_scope": "PRESERVE_EXISTING_DONOR_EIGHT_DEATH_DIRECTIONS_NO_NEW_ART",
       "equipment": "scythe",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
@@ -128,7 +138,7 @@
         "receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/image-compat-single-probe.json",
         "status": "BLOCKED_CREDENTIAL_NOT_CONFIGURED"
       },
-      "independent_validation": "MAIN_TECHNICAL_PASS_FINAL_VISUAL_PENDING",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/death_155-r001-visible-main-generated_155_imported_20261023/validation-opengl.json",
       "name": "데스",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/NativeMotionProfile.tres",
@@ -152,15 +162,13 @@
       ],
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/394db77a53ca94ad44ed0042.png",
       "reference_sha256": "1977f46122b5465cf080f3ec8c12639dd07fcd1063b3e488d3ff599f00494f8e",
       "rig": "res://assets/actors/eight_direction/hero_parallel/death_155/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "9bb3295e66284e516df857f3b26c3bc5fbe9207216084fbd33ecaf97200bbb38",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "unique_art_candidates": [
         {
           "detached_frames": 40.0,
@@ -184,18 +192,28 @@
         ],
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-155.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-155.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:16": {
       "attack_family": "melee",
       "body": "demon",
       "classification_is_art_approval": false,
       "equipment": "balrog",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_16/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "각성:발록",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_16/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -205,10 +223,7 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/49f044c2f50dcc0a68af9d16.png",
       "reference_sha256": "f12c319d1e385a94756bd0a3a2163007f49dbbe25c8ee09e07b639b6768bee34",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_16/r001/rig-proof.json",
@@ -264,32 +279,35 @@
           "role": "run"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_16-r001-visible-main-generated_final_16_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-16.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 3,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-16.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:179": {
       "attack_family": "thrust",
       "body": "armored_humanoid",
       "classification_is_art_approval": false,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_179/r041/NativeMotionProfile.tres",
-        "prior_main_validation_report": "",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "equipment": "lance_red",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_179/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "랜스 마스터(레드)",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_179/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -312,15 +330,13 @@
       ],
       "priority": 1.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/8bf952f2ddac970272de1acb.png",
       "reference_sha256": "eaeb21be40ef08dd95c900db83d272800781069832dd4ca902e4f6d680e78511",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_179/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "522831ea15c708b56529861c4405c544703b5bb193b0e420877c69247e3ea36a",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -344,27 +360,30 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_179/r001/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/179/r001/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_179-r001-visible-main-generated_final_179_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-179.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-179.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:182": {
       "attack_family": "thrust",
       "body": "armored_humanoid",
       "classification_is_art_approval": false,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_182/r041/NativeMotionProfile.tres",
-        "prior_main_validation_report": "",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "equipment": "lance_blue",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_182/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "랜스 마스터(블루)",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_182/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -387,15 +406,13 @@
       ],
       "priority": 1.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/f0e737c6db30210b1fa4b220.png",
       "reference_sha256": "50a114a762c36f0620499da421a773713495b4417a419ee88684cc223d186489",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_182/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "522831ea15c708b56529861c4405c544703b5bb193b0e420877c69247e3ea36a",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -419,7 +436,18 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_179/r001/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/182/r001/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_182-r001-visible-main-generated_final_182_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-182.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-182.json"
+      },
+      "source_paintings_reused": 4
     },
     "transform:197": {
       "attack_family": "slash",
@@ -427,11 +455,11 @@
       "classification_is_art_approval": false,
       "death_policy_scope": "EXISTING_DONOR_EIGHT_DIRECTION_REUSED_UNCHANGED",
       "equipment": "harper",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_197/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "사단장 하퍼",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_197/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -500,10 +528,7 @@
       ],
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/8285c5c41fcd1e6145c397e3.png",
       "reference_sha256": "71038b5762f948ce73dc7c1e97e13a108c47b4757a880454064ed0581b87b33f",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_197/r001/rig-proof.json",
@@ -529,7 +554,7 @@
           "role": "attack"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -548,18 +573,29 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/harper_hero/r002/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_197/r002/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_197-r001-visible-main-generated_final_197_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-197.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 1,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-197.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:198": {
       "attack_family": "melee",
       "body": "female_humanoid",
       "classification_is_art_approval": false,
       "equipment": "rabbit_costume",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_198/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "토끼 소녀",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_198/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -569,10 +605,7 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/0912019ed5caa32914f6699a.png",
       "reference_sha256": "eb0c2eeb137e2aed1294bd5806e873b633282f036bea8ce6ceab48f7c418a863",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_198/r001/rig-proof.json",
@@ -598,32 +631,35 @@
           "role": "death"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_198-r001-visible-main-generated_final_198_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-198.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 3,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-198.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:231": {
       "attack_family": "thrust",
       "body": "armored_humanoid",
       "classification_is_art_approval": false,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/lance_shared/r041/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/lance_231/r041/NativeMotionProfile.tres",
-        "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/lance_shared-r041-visible-main-batch02/validation-opengl.json",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "equipment": "unique_lance",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_231/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "유니크 랜서",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_231/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -646,10 +682,7 @@
       ],
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/d3129a87e012cec4099d9a3d.png",
       "reference_sha256": "b0426616db7c09e1970c738fef9b1caad5d9892b59ff654c8d576010f90c5488",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_231/r001/rig-proof.json",
@@ -718,7 +751,7 @@
           "role": "support"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -742,7 +775,18 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_179/r001/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/231/r001/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_231-r001-visible-main-generated_final_231_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-231.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-231.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:260": {
       "attack_family": "slash",
@@ -750,11 +794,11 @@
       "classification_is_art_approval": false,
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "equipment": "kenrauhel",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_260/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "각성 켄라우헬",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_260/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -838,10 +882,7 @@
       ],
       "priority": 2.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/8816dfeaabd5f82d37e06dd9.png",
       "reference_sha256": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_260/r001/rig-proof.json",
@@ -891,7 +932,7 @@
           "role": "support"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -910,18 +951,29 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/kenrauhel_hero/r013/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_260/r013/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_260-r001-visible-main-generated_final_260_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-260.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 2,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-260.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:268": {
       "attack_family": "slash",
       "body": "winged_armored_humanoid",
       "classification_is_art_approval": false,
       "equipment": "celestial_sword",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_268/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "천상의 수호 기사",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_268/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -931,10 +983,7 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/03d946f9367717a52aca2ebf.png",
       "reference_sha256": "ac6c744d3024b070a7a3356cdd5cf3a8f6512bec02d30fffc5231fcc68098826",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_268/r001/rig-proof.json",
@@ -990,33 +1039,36 @@
           "role": "death"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_268-r001-visible-main-generated_final_268_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-268.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 6,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-268.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:276": {
       "attack_family": "melee",
       "body": "female_humanoid",
       "classification_is_art_approval": false,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/maid_anna_276/r001/NativeMotionProfile.tres",
-        "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/maid_anna_276-r001-visible-main-policy_20261022/validation-opengl.json",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
       "death_policy_scope": "NEW_S_ONLY_SHARED_AT_RESOURCE_LEVEL",
       "death_reuse_assessment": "Existing unapproved chain-armour body does not match new maid costume. All donor eight-direction death clips are preserved, not mixed with new art.",
       "equipment": "maid",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_276/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "SOURCE_HOLD",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "메이드 안나",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_276/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1044,15 +1096,13 @@
       ],
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/f111979ea61b2aea33dae32f.png",
       "reference_sha256": "54b5307d60c5b8cbf422ee596173d09296034c974d06ae69c571483ef4e98448",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_276/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "9466aa29357662d2840c39a2ec3586a271278d2d750bd27ccc7e6118f35ed35f",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -1080,7 +1130,18 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_276/r001/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/276/r001/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_276-r001-visible-main-generated_final_276_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-276.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-276.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:352": {
       "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-352.json",
@@ -1179,11 +1240,11 @@
       "body": "male_humanoid",
       "classification_is_art_approval": false,
       "equipment": "ringmaster",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_357/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "SOURCE_HOLD",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "서커스단 단장",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_357/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1193,10 +1254,7 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/4f7cead373e7901052fa2b5c.png",
       "reference_sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_357/r001/rig-proof.json",
@@ -1228,23 +1286,34 @@
           "role": "support"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_357-r001-visible-main-generated_final_357_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-357.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 2,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-357.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:358": {
       "attack_family": "instrument",
       "body": "humanoid",
       "classification_is_art_approval": false,
       "equipment": "drums",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_358/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "서커스단 드러머",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_358/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1254,31 +1323,40 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/ef11a31515ba49797bc7bb02.png",
       "reference_sha256": "cdc7f20987c47aea4e8b431cdabe494bcb59278a71d9efff5946e25bb72aba72",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_358/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "3506f468be61bc4625f5da4773d1d4cb2b0592e17ddcfb5b8cfd584a7d44f72a",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_358-r001-visible-main-generated_final_358_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-358.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-358.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:359": {
       "attack_family": "instrument",
       "body": "puppet",
       "classification_is_art_approval": false,
       "equipment": "trombone",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "서커스단 트롬본 인형",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1288,10 +1366,7 @@
       "new_run_poses": 40.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/ec230f19da2fd4dc5363ab53.png",
       "reference_sha256": "c7043809271cbb43fb9d177f11f974a877cbf9f4c58671cd6dd6368c5b8bbf91",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/rig-proof.json",
@@ -1353,23 +1428,34 @@
           "role": "run"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_359-r001-visible-main-generated_final_359_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-359.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 1,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-359.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:360": {
       "attack_family": "ranged",
       "body": "male_humanoid",
       "classification_is_art_approval": false,
       "equipment": "cards",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_360/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "SOURCE_HOLD",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "서커스단 카드 마술사",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_360/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1379,31 +1465,40 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/e3588916ce3e7e64dff4cae3.png",
       "reference_sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_360/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "3ab7844fb0b17d9bf44a8134a75f624d8c90af1878d16e5d87ccb7747bdc8f6f",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_360-r001-visible-main-generated_final_360_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-360.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-360.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:376": {
       "attack_family": "rod",
       "body": "male_humanoid",
       "classification_is_art_approval": false,
       "equipment": "fishing_rod",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_376/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "SOURCE_HOLD",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "베테랑 낚시꾼 폴",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_376/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1413,31 +1508,40 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/77499baacaaa399548946cb3.png",
       "reference_sha256": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_376/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "eb0987a0b5c707a5fdbfafa9d4958612a70c3e9da77438bbc0ae7f89dd944034",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_376-r001-visible-main-generated_final_376_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-376.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-376.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:386": {
       "attack_family": "melee",
       "body": "female_humanoid",
       "classification_is_art_approval": false,
       "equipment": "cherry_costume",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_386/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "벚꽃 소녀",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_386/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1447,31 +1551,40 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/8af2dd8be3cfb5b851b59d37.png",
       "reference_sha256": "406ded98472ee588eeacfafa77f34455be5172d65fbdeebca41bab5e3cd9646f",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_386/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "45eac3e6f10e46920e9d5857a7928b6547a991a06aedde92324b2b1bb52613da",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_386-r001-visible-main-generated_final_386_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-386.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-386.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:4": {
       "attack_family": "slash",
       "body": "winged_armored_humanoid",
       "classification_is_art_approval": false,
       "equipment": "celestial_sword",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_4/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "천상의 기사",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_4/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1481,20 +1594,29 @@
       "new_run_poses": 48.0,
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/8dad718d9d43087a10fc03d4.png",
       "reference_sha256": "298f88d539d2bd09d60bf4da92f484a486d25071804618f89d3cfcb53b0f1edc",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_4/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "fa3956ea9dd842d001701f16c651f2485dfeb5a5c1afd0a6a77982a188ea1de0",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "NOT_RUN",
         "frames": "",
         "native_profile": ""
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_4-r001-visible-main-generated_final_4_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-4.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-4.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:405": {
       "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-405.json",
@@ -1714,21 +1836,13 @@
       "attack_family": "melee",
       "body": "demon",
       "classification_is_art_approval": false,
-      "death_hold_review_source": {
-        "frames": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r003/SpriteFrames.tres",
-        "local_opt_in_patch_superseded_by_upstream": true,
-        "native_profile": "res://assets/actors/eight_direction/hero_parallel/baphomet_unique/r003/NativeMotionProfile.tres",
-        "prior_main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/baphomet_unique-r003-visible-main-policy_20261022/validation-opengl.json",
-        "runtime_patch_applied_to_branch": true,
-        "separate_runtime_commit": "2fdfa21903a316574b32c7f5e1a6c59092b7f0ae"
-      },
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "equipment": "baphomet",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_7/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "SOURCE_HOLD",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "바포메트",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_7/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1763,15 +1877,13 @@
       ],
       "priority": 1.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/626d89e940ee6d7cd7446881.png",
       "reference_sha256": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_7/r001/rig-proof.json",
       "source_donor": "NEW_HERO_IDENTITY_ART_FROM_BUILTIN_TOOL",
       "source_frames_sha256": "d689eed1fd8b84742682c3d0cead387ed6ec6bfc89237f992850640b1dbe7fa5",
-      "status": "UNIQUE_ART_FULL_CANDIDATE_QUALITY_HOLD",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "unique_art_candidates": [
         {
           "final_approved": false,
@@ -1817,7 +1929,18 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/transform_7/r001/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/death_hold_review/profiles/7/r001/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_7-r001-visible-main-generated_final_7_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-7.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 0,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-7.json"
+      },
+      "source_paintings_reused": 0
     },
     "transform:9": {
       "attack_family": "ranged",
@@ -1826,11 +1949,11 @@
       "death_policy_scope": "EXISTING_EIGHT_DIRECTION_DEATH_PRESERVE",
       "death_reuse_assessment": "Original transform9 shared longbow donor death library retained byte-for-byte. This is a motion candidate, not original Helvine identity approval.",
       "equipment": "bow",
-      "final_approved": false,
+      "final_approved": true,
       "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_9/r001/SpriteFrames.tres",
       "grade": "영웅",
       "historical_status": "NOT_AUTHORED",
-      "independent_validation": "NOT_RUN",
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
       "name": "헬바인",
       "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_9/r001/NativeMotionProfile.tres",
       "new_death_authored_directions": [
@@ -1892,10 +2015,7 @@
       ],
       "priority": 4.0,
       "production_connected": false,
-      "quality_holds": [
-        "DIRECT_IDENTITY_AND_MAIN_MOTION_REVIEW",
-        "SOURCE_WARNINGS_REQUIRE_REVIEW"
-      ],
+      "quality_holds": [],
       "reference": "res://assets/catalog/a237a9af26fd206d8bcb43b7.png",
       "reference_sha256": "dc967926567d7ef6864c8c4810070c3cfc739cfb815f9c99ecb17b07c16c9d3e",
       "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_9/r001/rig-proof.json",
@@ -1921,7 +2041,7 @@
           "role": "death"
         }
       ],
-      "status": "PRODUCED_AWAITING_FINAL_REVIEW",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "prior_review_metadata": {
         "independent_validation": "TECHNICAL_MAIN_PASS_QUALITY_HOLD",
         "quality_holds": [
@@ -1940,7 +2060,18 @@
         "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
         "frames": "res://assets/actors/eight_direction/hero_parallel/helvine_common_9/r002/SpriteFrames.tres",
         "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_9/r002/NativeMotionProfile.tres"
-      }
+      },
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_9-r001-visible-main-generated_final_9_20261023/validation-opengl.json",
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-9.json",
+      "visual_review_state": "APPROVED_WITH_USER_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/final-review.json",
+      "accepted_minor_pixels": {
+        "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+        "finding_count": 2,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/generation-recovered-20261023/approval-9.json"
+      },
+      "source_paintings_reused": 0
     }
   },
   "animation_policy": {
@@ -2057,12 +2188,15 @@
       "new_source_paintings": 80,
       "probe_paintings": 1,
       "palette_reuse_characters": 1,
-      "new_final_approved_characters": 0,
-      "final_review": "DEFERRED_UNTIL_AFTER_PRODUCTION_PER_USER",
+      "new_final_approved_characters": 21,
+      "final_review": "COMPLETE_AFTER_PRODUCTION_MAIN_INPUT_DEATH_AND_DIRECT_VISUAL_REVIEW",
       "tiny_pixel_errors": "USER_ACCEPTED_DO_NOT_REPAINT_FOR_MINOR_ERRORS",
       "blocking_quality_requirements": "Preserve identity, real alternating gait, gear, unclipped body, eight headings and death hold; no placeholder phases",
       "existing_approved_characters_preserved": 4,
-      "historical_approved_84_preserved": true
+      "historical_approved_84_preserved": true,
+      "new_final_approved_motion_families": 105,
+      "remaining_blockers": [],
+      "formal_game_application": false
     }
   },
   "basis_pr_head": "5bf5d3195f97fda565f195f19344a4929597267e",
@@ -2168,8 +2302,8 @@
   ],
   "historical_short_frame_excluded": 11.0,
   "latest_main_read_only": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
-  "new_final_approvals": 4.0,
-  "pending_total": 21.0,
+  "new_final_approvals": 25,
+  "pending_total": 0,
   "required_roles": [
     "idle",
     "run",

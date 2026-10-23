@@ -1,0 +1,61 @@
+{
+  "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
+  "id": "transform:359",
+  "date_client": "2026-10-23 UTC",
+  "reviewer": "Codex direct catalog identity, complete source pose strips, eight-heading views and actual Main run/strike/death image inspection",
+  "frames": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/SpriteFrames.tres",
+  "frames_sha256": "bfce5cb436b65ff25ee33248df9b49b04e295b07c26f53f84b36c64f03ff7408",
+  "native_profile": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/NativeMotionProfile.tres",
+  "native_profile_sha256": "0f184aaeae493a9ebaf29c4fe4aeb7f687892a1e3b90a9996ae817557db35e10",
+  "rig": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/rig-proof.json",
+  "rig_sha256": "d2ffb22f56905397a81e419800cb2238dbfac21024c24b17f0a9c51c18a8d42a",
+  "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_359-r001-visible-main-generated_final_359_20261023/validation-opengl.json",
+  "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/generated_final_all_20261023/feature-main-death-policy-headless.json",
+  "keyboard_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/hero_generated_4-r001-visible-main-generated_final_all_20261023/keyboard-physics.json",
+  "source_identity": "PASS_RECOGNIZABLE_CATALOG_OUTFIT_HEAD_WEAPON_NO_UNRELATED_BODY_PALETTE_SUBSTITUTION",
+  "eight_headings": "PASS_SOURCE_HEADINGS_AND_NATURAL_HORIZONTAL_MIRRORING",
+  "run_articulation": "PASS_DISTINCT_PAINTED_ALTERNATING_LEGS_FIXED_VIEW_GROUND_NO_PER_FRAME_Y_SNAPPING",
+  "run_counts": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "attack_marker": "PASS_ORIGINAL_FRAME1_AND_STRIKE_CLOCK",
+  "one_shot_final_pose_hold": "PASS_30_SECONDS_ALL_EIGHT_INPUT_HEADINGS",
+  "new_source_paintings": 4,
+  "source_paintings_reused": 0,
+  "new_death_source_directions": 1,
+  "death_resource_directions": [
+    "S"
+  ],
+  "new_death_source_poses": 6,
+  "runtime_phase_references": 184,
+  "minor_pixel_policy": "User explicitly accepts tiny pixel errors. Body, equipment, alternating gait and actual clipping requirements retained; exact automatic findings and source bytes preserved. No repaint for small matte/isolated artifacts.",
+  "accepted_minor_pixel_findings": [
+    {
+      "id": "transform:359",
+      "role": "run",
+      "owner": 30,
+      "source": "res://assets/actors/eight_direction/hero_parallel/hero_generated_359/r001/raw/source-run.png",
+      "source_sha256": "b1ea8f1fcac118cf7c50c0f7144c16f785b2d54ed741e2a2f16223e3cec0f58d",
+      "border_pixels": 21,
+      "max_alpha": 175,
+      "max_rgb": 242,
+      "disposition": "SMALL_DETACHED_EDGE_FRAGMENT_BODY_AND_TROMBONE_COMPLETE",
+      "status": "APPROVED_MINOR_PIXEL_ARTIFACTS",
+      "accepted_by_latest_user_policy": true,
+      "automatic_finding_preserved": true
+    }
+  ],
+  "variable_source_cycle_policy": "Use all genuine five/six poses without duplicate padding. User specified eight directions, not a six-frame minimum.",
+  "source_files_preserved": true,
+  "historical_quality_holds_preserved": true,
+  "resource_metadata_note": "Immutable candidate flags remain authoring provenance, as for earlier approvals. This SHA-bound receipt and hero staging are authoritative.",
+  "default_catalog_connection": false,
+  "PR122_merged": false
+}

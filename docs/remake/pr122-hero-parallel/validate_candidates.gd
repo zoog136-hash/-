@@ -65,11 +65,22 @@ func _run() -> void:
 	if new_art or new_run_only:
 		for path: String in proof.source_hashes:
 			_check(FileAccess.get_sha256(path) == str(proof.source_hashes[path]), "immutable new art source SHA")
-	_check(proof.frames.size() == 48, "48 actual articulated poses")
+	var run_counts: Array = [6,6,6,6,6,6,6,6]
+	if new_art and proof.has("source_layout"):
+		var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(proof.source_layout)))
+		run_counts = layout.sources.run.counts
+	var total_run_poses := 0
+	for count: int in run_counts:
+		_check(count >= 4 and count <= 6, "genuine source run cycle, no duplicated padding")
+		total_run_poses += count
+	_check(proof.frames.size() == total_run_poses, "all actual articulated source poses")
+	var proof_index := 0
 	for direction: int in range(8):
 		var unique: Dictionary = {}
-		for phase: int in range(6):
-			var row: Dictionary = proof.frames[direction * 6 + phase]
+		for phase: int in range(int(run_counts[direction])):
+			var row: Dictionary = proof.frames[proof_index]
+			proof_index += 1
+			_check(int(row.direction) == direction and int(row.phase) == phase, "exact source pose order")
 			var region := image.get_region(Rect2i(phase * 256, direction * 256, 256, 256))
 			var hash := HashingContext.new()
 			hash.start(HashingContext.HASH_SHA256)
@@ -214,7 +225,7 @@ func _run() -> void:
 						released = true
 				_check(seen.size() == frames.get_frame_count(track), "all phases actually played " + key + "/" + track)
 				if role == "run" and DisplayServer.get_name() != "headless":
-					_check(rendered_unique.size() == 6, "six visible distinct Main run poses; no hidden character/overlay")
+					_check(rendered_unique.size() == int(run_counts[direction]), "all genuine visible distinct Main run poses; no hidden character/overlay")
 				_check((strikes.size() == strike_start + 1 and released) if role == "attack" else strikes.size() == strike_start, "no extra strikes")
 				var base: Vector2 = sprite.get_meta("base_scale", Vector2.ONE)
 				var expected_scale := base
