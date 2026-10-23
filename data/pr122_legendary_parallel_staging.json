@@ -7469,6 +7469,25 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:337",
+                "NW",
+                "run"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_337/corrections/ownership-delta-v11/NW-run-record.json",
+              "record_sha256": "e98575d3665d1bb15b2c07983432ab89b600c5907e9a893136589fb51ebd668f",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_337/corrections/ownership-delta-v11/NW-run-SpriteFrames.tres",
+              "SpriteFrames_sha256": "3740a9abf59a0646ec71baf405b9d1665cc46d6a9a4225c50d28151867035746",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_337/corrections/ownership-delta-v11/NW-run-registration.json",
+              "registration_sha256": "b9c5d3910056008b49b8749b0465f2fe692d090630e12e2f56eaf4d8550688ee",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "kind": "ownership_execution_delta",
+              "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch011-library-v01.json",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -11562,6 +11581,25 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:330",
+                "SW",
+                "run"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/ownership-delta-v11/SW-run-record.json",
+              "record_sha256": "ad0e89b2125fefbb04faf75a1c8b77e58d9155153cd331159d98629d433663eb",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/ownership-delta-v11/SW-run-SpriteFrames.tres",
+              "SpriteFrames_sha256": "a806d9458d3ca597dac4fbbd48cffcda8809f1b44ba2b509ba51bdbf86b3b639",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/ownership-delta-v11/SW-run-registration.json",
+              "registration_sha256": "597ca12bda2e8efd1ccc6bba6ccb5f15e2f259a584270d7710ccccfad76f14db",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "kind": "ownership_execution_delta",
+              "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch011-library-v01.json",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -47559,8 +47597,8 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/revision-library-ownership-delta-through-batch010-v01.json",
-    "active_revision_library_sha256": "2eeca4c4a45fa0be792e38e559999bd4faad89c558195abd4c9cf1ad27afdfdf",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/revision-library-ownership-delta-through-batch011-v01.json",
+    "active_revision_library_sha256": "2617601a358ce07ad90f3bbc509af1d5569082f157ee68b0c68a6618a6cd3e63",
     "final_approved": 0,
     "ownership_isolation": {
       "batches": [
@@ -48124,10 +48162,25 @@
           "validation_sha256": "0a8033a8b37d119fc620b78b7b4dface93cf8073be933100803631fc76cbc072",
           "source_holds": [],
           "held_dependencies": []
+        },
+        {
+          "batch": 11,
+          "actors": [
+            "transform:330",
+            "transform:337"
+          ],
+          "isolated_sources": 2,
+          "revised_configurations": 2,
+          "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch011-library-v01.json",
+          "manifest_sha256": "cdeb6fae4ec6e4c8753b455080ae8da6d352c53084bdc79d9ff6500e2de18f16",
+          "validation": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch011-affected-validation-v01.json",
+          "validation_sha256": "e29b47805547ec133546f8b2c2a57f7ca248163b64e7fb700243fa7b5c84989f",
+          "source_holds": [],
+          "held_dependencies": []
         }
       ],
-      "isolated_sources": 52,
-      "revised_configuration_events": 63,
+      "isolated_sources": 54,
+      "revised_configuration_events": 65,
       "original_source_mutations": 0,
       "newly_authored_poses_added": 0,
       "camera_identity_action_approvals_added": 0,
