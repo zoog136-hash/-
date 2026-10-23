@@ -1,0 +1,52 @@
+{
+  "schema": "pr122-legendary-generation-blocked-v1",
+  "status": "BLOCKED_GENERATION_ERROR",
+  "key": "transform:113",
+  "role": "idle",
+  "direction": "NE",
+  "origin": {
+    "generation_batch": 241,
+    "row_index": 2,
+    "map_sha256": "ec21d7316902d36e2824b516df3956d53249d332f1e36cc41393095ab9a86c06"
+  },
+  "error": "unable to read referenced image at `/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png`: exec-server transport closed",
+  "error_canonical_sha256": "b0492b8f5ee3818740262ec7498df685fa51b243d7941a2d110f57e11651a7d0",
+  "generation_map_path": "/workspace/legendary_work/generation-batch241-map.json",
+  "generation_map_sha256": "ec21d7316902d36e2824b516df3956d53249d332f1e36cc41393095ab9a86c06",
+  "generation_map_snapshot_utf8": "[\n  {\n    \"id\": \"122\",\n    \"role\": \"idle\",\n    \"direction\": \"NE\",\n    \"request\": \"docs/remake/pr122-legendary-parallel/requests/transform_122-NE-idle-v01.json\",\n    \"generated\": \"/workspace/generated_images/exec-85ebb16f-f1f1-4dd5-9fe4-f96cf1aefe6e.png\"\n  },\n  {\n    \"id\": \"114\",\n    \"role\": \"idle\",\n    \"direction\": \"NE\",\n    \"request\": \"docs/remake/pr122-legendary-parallel/requests/transform_114-NE-idle-v01.json\",\n    \"generated\": \"/workspace/generated_images/exec-d516a9b5-3f7a-4ec6-baaf-36b435a78810.png\"\n  },\n  {\n    \"id\": \"113\",\n    \"role\": \"idle\",\n    \"direction\": \"NE\",\n    \"request\": \"docs/remake/pr122-legendary-parallel/requests/transform_113-NE-idle-v01.json\",\n    \"blocked\": true,\n    \"error\": \"unable to read referenced image at `/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png`: exec-server transport closed\"\n  },\n  {\n    \"id\": \"112\",\n    \"role\": \"idle\",\n    \"direction\": \"NE\",\n    \"request\": \"docs/remake/pr122-legendary-parallel/requests/transform_112-NE-idle-v01.json\",\n    \"generated\": \"/workspace/generated_images/exec-4ffa98df-3269-4e36-a792-1af79d0fa368.png\"\n  },\n  {\n    \"id\": \"1\",\n    \"role\": \"idle\",\n    \"direction\": \"NE\",\n    \"request\": \"docs/remake/pr122-legendary-parallel/requests/transform_1-NE-idle-v01.json\",\n    \"generated\": \"/workspace/generated_images/exec-31769631-44ec-49b6-866a-987d6e90c12b.png\"\n  }\n]\n",
+  "map_row_snapshot": {
+    "id": "113",
+    "role": "idle",
+    "direction": "NE",
+    "request": "docs/remake/pr122-legendary-parallel/requests/transform_113-NE-idle-v01.json",
+    "blocked": true,
+    "error": "unable to read referenced image at `/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png`: exec-server transport closed"
+  },
+  "request_snapshots": [
+    {
+      "request_path": "docs/remake/pr122-legendary-parallel/requests/transform_113-NE-idle-v01.json",
+      "request_bytes": 2552,
+      "request_sha256": "20b65352f3b94733ef2e946c19db09701f79be6e402ed4a70f81dad904a3f910",
+      "request_snapshot_utf8": "{\n  \"key\": \"transform:113\",\n  \"name\": \"달의 질리언\",\n  \"grade\": \"전설\",\n  \"direction\": \"NE\",\n  \"role\": \"idle\",\n  \"reference\": \"res://assets/catalog/8e92f489ef86a806894b9855.png\",\n  \"generation_request\": {\n    \"prompt\": \"TWILIGHT PR122 legendary transform:113 달의 질리언. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body NE IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter rear NORTH-EAST, screen UP-RIGHT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH-EAST means diagonally AWAY toward the TOP-RIGHT screen corner: show the BACK of the head and costume plus the RIGHT side, not the face or chest front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.\",\n    \"referenced_image_paths\": [\n      \"/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png\"\n    ],\n    \"transparent_background\": true\n  },\n  \"source_base_sha\": \"16bb178426134dbc5ffcc32306de0a2509352c8f\",\n  \"batch_id\": 241\n}\n",
+      "generation_request_snapshot": {
+        "prompt": "TWILIGHT PR122 legendary transform:113 달의 질리언. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body NE IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter rear NORTH-EAST, screen UP-RIGHT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH-EAST means diagonally AWAY toward the TOP-RIGHT screen corner: show the BACK of the head and costume plus the RIGHT side, not the face or chest front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+        "referenced_image_paths": [
+          "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png"
+        ],
+        "transparent_background": true
+      },
+      "generation_request_canonical_sha256": "1e567de1d6f2ab4e7e220500548846b2019367c38eb2c82a5a27b7020434e396"
+    }
+  ],
+  "request_snapshot_issue": null,
+  "existing_motion_artifacts_preserved": [],
+  "existing_completion_or_approval_changed": false,
+  "generated_source": null,
+  "newly_authored_poses": 0,
+  "reused_poses": 0,
+  "completed_directional_motions_added": 0,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "retry_attempted": false,
+  "policy": "Only this generation attempt is blocked. Preserve existing source/record/tres unchanged; continue other ready rows. No regeneration or approval is implied."
+}
