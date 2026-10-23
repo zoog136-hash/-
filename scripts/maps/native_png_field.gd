@@ -126,7 +126,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		"constrain_all_population_patrol":mid in NATIVE_SPAWNS.EXTRA_MAP_IDS,
 		"collision":geometry.get("collision",[]),"monster_spawn":monster_spawns,"npc_spawn":[],"portal":portals,"teleport":[],
 		"regions":geometry.get("regions",[]),"surfaces":[],"roads":[],"water":[],"props":[],"bridges":[],
-		"safe_zone":spec.get("safe_zone",[]),"combat_zone":spec.get("combat_zone",[]),"boss_zone":spec.get("boss_zone",[]),"route_checks":geometry.route_checks,
+		"safe_zone":spec.get("safe_zone",[]),"combat_zone":spec.get("combat_zone",[]),"boss_zone":spec.get("boss_zone",[]),"route_checks":geometry.route_checks,"blocked_probes":geometry.get("blocked_probes",[]),
 		"minimap":{"title":spec.name},"collision_scope":spec.collision_scope,
 		"population_status":spec.get("population_status","LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES"),
 		"spawn_layout_revision":"aden_faith_png_spawns_20261020_v2" if mid in NATIVE_SPAWNS.EXTRA_MAP_IDS else "native_png_spawns_20261019"}
