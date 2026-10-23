@@ -432,6 +432,8 @@ func _load_data() -> void:
 	var maps_value: Variant = JSON.parse_string(maps_text)
 	if maps_value is Array:
 		maps = maps_value as Array
+	maps=maps.filter(func(record: Dictionary) -> bool:
+		return str(record.get("id","")) not in ["albino_03","albino_04"])
 	# Replace only the Aden entry; preserve every existing map ID and data path.
 	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_PATH))
 	if field_value is Dictionary:
@@ -3963,6 +3965,21 @@ func _load_game(quiet: bool) -> void:
 		hud.show_message(collection_error)
 		return
 	var saved_map_id: String = str(data.get("map_id", ""))
+	if saved_map_id in ["albino_03","albino_04"]:
+		var retirement_sha: String=FileAccess.get_sha256(save_path())
+		var retirement_backup: String=save_path()+".pre-albino-retirement-"+retirement_sha
+		if (not FileAccess.file_exists(retirement_backup) and DirAccess.copy_absolute(save_path(),retirement_backup)!=OK) or FileAccess.get_sha256(retirement_backup)!=retirement_sha:
+			source_save_blocked=true
+			hud.show_message("알비노 구역 이전 백업 실패: 기존 저장을 보존합니다")
+			return
+		data=data.duplicate(true)
+		data["map_id"]="albino_02"
+		data["position"]=[]
+		data["map_layout_revision"]=-1
+		data.erase("native_png_plan_sha256")
+		data.erase("native_png_review_sha256")
+		data.erase("original_position")
+		saved_map_id="albino_02"
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
 	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args() or (NATIVE_PNG.extra_map(saved_map_id) and "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args())
