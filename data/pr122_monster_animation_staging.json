@@ -1,0 +1,650 @@
+{
+  "schema": "pr122-monster-staging-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/batch01",
+  "actors": {
+    "monster:놀": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "frames_sha256": "3381ec73e0887e3fa24c297230259f585f00c1b2dfa3f832706362f0e1dae406",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/NativeMotionProfile.tres",
+      "native_profile_sha256": "b8e705a6ab87c7b58b809932028e665804bb2b5c55c25b925b59dd472f705359",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 2,
+      "native_pose_count": 9,
+      "missing_required_tracks": [
+        "hit_0",
+        "idle_0",
+        "attack_6",
+        "hit_6",
+        "idle_6",
+        "run_6",
+        "attack_7",
+        "hit_7",
+        "idle_7",
+        "run_7",
+        "attack_5",
+        "hit_5",
+        "idle_5",
+        "run_5",
+        "attack_2",
+        "death_2",
+        "hit_2",
+        "idle_2",
+        "run_2",
+        "attack_1",
+        "hit_1",
+        "idle_1",
+        "run_1",
+        "attack_3",
+        "hit_3",
+        "idle_3",
+        "run_3",
+        "attack_4",
+        "hit_4",
+        "idle_4",
+        "run_4"
+      ],
+      "quality_review": "HOLD: new textual-brief art has not had identity/support/contact or Main visual approval",
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/gnoll-E-run6.png",
+          "texture": "assets/actors/eight_direction/monster_staging/gnoll/r002/E-run.png",
+          "source_sha256": "eb57d8cf64ec6f0abf84a230d7ca10e045c1fbbe237861db9b11ae2e8123a5c3",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  40,
+                  78,
+                  480,
+                  378
+                ],
+                "margin": [
+                  520,
+                  546,
+                  992,
+                  1094
+                ],
+                "source_anchor": [
+                  256,
+                  452
+                ],
+                "rgba_sha256": "f0e45c3a129b8eac0df0dd76d6a9dfdc525d12b5a2c7dc37ac2033621ece768b"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  540,
+                  76,
+                  408,
+                  383
+                ],
+                "margin": [
+                  508,
+                  541,
+                  1064,
+                  1089
+                ],
+                "source_anchor": [
+                  768,
+                  455
+                ],
+                "rgba_sha256": "2db50e0ae5aebdccd3a712cba9cd63f28d9cd44b8aa100332f541aba3ba64bc4"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  1023,
+                  70,
+                  485,
+                  355
+                ],
+                "margin": [
+                  479,
+                  569,
+                  987,
+                  1117
+                ],
+                "source_anchor": [
+                  1280,
+                  421
+                ],
+                "rgba_sha256": "fc970dbaa4f623d6c8cfa1846fa8d5d7733d74fbae3c5f76c33db73ac90bd6e4"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  30,
+                  565,
+                  505,
+                  372
+                ],
+                "margin": [
+                  510,
+                  552,
+                  967,
+                  1100
+                ],
+                "source_anchor": [
+                  256,
+                  933
+                ],
+                "rgba_sha256": "55cf78a3f2c388a83a13fce3a5e54209e761bde01437da0da3f79aa6bcda7c18"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  573,
+                  569,
+                  402,
+                  383
+                ],
+                "margin": [
+                  541,
+                  541,
+                  1070,
+                  1089
+                ],
+                "source_anchor": [
+                  768,
+                  948
+                ],
+                "rgba_sha256": "809a8c1265b939d3e5e78875c6725535e74a9ba4e580c95aff963b87f3d8f383"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  1042,
+                  570,
+                  467,
+                  362
+                ],
+                "margin": [
+                  498,
+                  562,
+                  1005,
+                  1110
+                ],
+                "source_anchor": [
+                  1280,
+                  928
+                ],
+                "rgba_sha256": "e414e303cf9ec07c234eff973438b58d159cc9c27dfd0c334f5d186cef9dc0de"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 369.0,
+            "canvas_size": [
+              1472,
+              1472
+            ],
+            "foot": [
+              736,
+              920
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "attack",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/gnoll-E-attack3-v2.png",
+          "texture": "assets/actors/eight_direction/monster_staging/gnoll/r002/E-attack.png",
+          "source_sha256": "7ca790ef791bc8465da149d7e0e4d22a81d487bae42a008c315410f0b071cae0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  96,
+                  11,
+                  501,
+                  528
+                ],
+                "margin": [
+                  432,
+                  546,
+                  1211,
+                  1184
+                ],
+                "source_anchor": [
+                  520,
+                  535
+                ],
+                "rgba_sha256": "e70d9442b87c012bd8afbf4aaf451497074c1b0112ea7ff615c46638a2600989"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  120,
+                  618,
+                  886,
+                  401
+                ],
+                "margin": [
+                  456,
+                  673,
+                  826,
+                  1311
+                ],
+                "source_anchor": [
+                  520,
+                  1015
+                ],
+                "rgba_sha256": "13378d9f68448416ff71b579222b1267d6512768b97106eaf8bbf1c89f02ea8d"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  148,
+                  1069,
+                  744,
+                  434
+                ],
+                "margin": [
+                  484,
+                  640,
+                  968,
+                  1278
+                ],
+                "source_anchor": [
+                  520,
+                  1499
+                ],
+                "rgba_sha256": "56138c12093c40db8f7ecc3a5e2d6c5ddfcb66e557f5a0c55910d5a528f1f036"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 428.0,
+            "canvas_size": [
+              1712,
+              1712
+            ],
+            "foot": [
+              856,
+              1070
+            ]
+          }
+        }
+      ]
+    },
+    "monster:얼음 여왕": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "frames_sha256": "35613dcf25fde5343783d87c40c0f8eab04d6c60695ba9f7219ff6765ee32413",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
+      "native_profile_sha256": "04ee8d89f9b02f7150fbf73bc06b8ca381dde6f83995286afac3c2da229e7723",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 2,
+      "native_pose_count": 12,
+      "missing_required_tracks": [
+        "attack_0",
+        "hit_0",
+        "idle_0",
+        "attack_6",
+        "hit_6",
+        "idle_6",
+        "run_6",
+        "attack_7",
+        "hit_7",
+        "idle_7",
+        "run_7",
+        "attack_5",
+        "hit_5",
+        "idle_5",
+        "run_5",
+        "attack_2",
+        "death_2",
+        "hit_2",
+        "idle_2",
+        "attack_1",
+        "hit_1",
+        "idle_1",
+        "run_1",
+        "attack_3",
+        "hit_3",
+        "idle_3",
+        "run_3",
+        "attack_4",
+        "hit_4",
+        "idle_4",
+        "run_4"
+      ],
+      "quality_review": "HOLD: new textual-brief art has not had identity/support/contact or Main visual approval",
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-E-run6.png",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/E-run.png",
+          "source_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  285,
+                  9,
+                  305,
+                  304
+                ],
+                "margin": [
+                  173,
+                  40,
+                  239,
+                  240
+                ],
+                "source_anchor": [
+                  384,
+                  309
+                ],
+                "rgba_sha256": "0ffe7cfd1c94007e7bd3d1bf27e8eac04251bcd543f579d4e971df6b78eabdee"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  945,
+                  8,
+                  305,
+                  305
+                ],
+                "margin": [
+                  65,
+                  39,
+                  239,
+                  239
+                ],
+                "source_anchor": [
+                  1152,
+                  309
+                ],
+                "rgba_sha256": "4b9ac985502cc3b0dabf4a48e3fcb0609733b56c70afc8c36e487a20b293aa9a"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  281,
+                  347,
+                  307,
+                  302
+                ],
+                "margin": [
+                  169,
+                  42,
+                  237,
+                  242
+                ],
+                "source_anchor": [
+                  384,
+                  645
+                ],
+                "rgba_sha256": "679c59bb19afd2525a6480dbcf24c635de31aba9f849d314af2f4fbc12aeaba8"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  946,
+                  347,
+                  304,
+                  307
+                ],
+                "margin": [
+                  66,
+                  37,
+                  240,
+                  237
+                ],
+                "source_anchor": [
+                  1152,
+                  650
+                ],
+                "rgba_sha256": "d3288c2cb38d17d311ede265ac2adc43848fe03f2f5568c1890b1745df6615e8"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  282,
+                  685,
+                  307,
+                  308
+                ],
+                "margin": [
+                  170,
+                  36,
+                  237,
+                  236
+                ],
+                "source_anchor": [
+                  384,
+                  989
+                ],
+                "rgba_sha256": "b6bd1b1062dc80081f335d266c3520bab4d33f807c41351c25adbf1cfb2996df"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  947,
+                  686,
+                  308,
+                  307
+                ],
+                "margin": [
+                  67,
+                  37,
+                  236,
+                  237
+                ],
+                "source_anchor": [
+                  1152,
+                  989
+                ],
+                "rgba_sha256": "5fe83ac6f877818e747671996085091acedccd0cec43d15553c040078f496e0d"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 299.5,
+            "canvas_size": [
+              544,
+              544
+            ],
+            "foot": [
+              272,
+              340
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-S-run6.png",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/S-run.png",
+          "source_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  263,
+                  11,
+                  248,
+                  348
+                ],
+                "margin": [
+                  213,
+                  46,
+                  376,
+                  276
+                ],
+                "source_anchor": [
+                  362,
+                  355
+                ],
+                "rgba_sha256": "6980c6fbffced100aee16e5b3992eaca60d861b3e99e96335f789b35054604d5"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  934,
+                  11,
+                  254,
+                  348
+                ],
+                "margin": [
+                  160,
+                  46,
+                  370,
+                  276
+                ],
+                "source_anchor": [
+                  1086,
+                  355
+                ],
+                "rgba_sha256": "64e859606aeb28e2a97329d4a196475eaa46e312c0f77b48420ac4d6d62d9dd3"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  217,
+                  365,
+                  308,
+                  329
+                ],
+                "margin": [
+                  167,
+                  65,
+                  316,
+                  295
+                ],
+                "source_anchor": [
+                  362,
+                  690
+                ],
+                "rgba_sha256": "45bf94526483b793da0857a1cc0842d75105dea742f7b00804e36d2b86ee7600"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  927,
+                  366,
+                  268,
+                  349
+                ],
+                "margin": [
+                  153,
+                  45,
+                  356,
+                  275
+                ],
+                "source_anchor": [
+                  1086,
+                  711
+                ],
+                "rgba_sha256": "f78f7bc0c66dc212cdbaa05544e511bedd6412efee7049ac43b5fa791eba2bd6"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  244,
+                  714,
+                  275,
+                  354
+                ],
+                "margin": [
+                  194,
+                  40,
+                  349,
+                  270
+                ],
+                "source_anchor": [
+                  362,
+                  1064
+                ],
+                "rgba_sha256": "dc648e0231fe3e073b99aa2b5e106ce9f8eba4bc81ec168943d4c27550eac11c"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  912,
+                  719,
+                  301,
+                  331
+                ],
+                "margin": [
+                  138,
+                  63,
+                  323,
+                  293
+                ],
+                "source_anchor": [
+                  1086,
+                  1046
+                ],
+                "rgba_sha256": "79c67793e35e5f62887dd987ddeb85c157da7e0d02bae8bb8d5cb8ed0a44d20d"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 342.5,
+            "canvas_size": [
+              624,
+              624
+            ],
+            "foot": [
+              312,
+              390
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "preservation": "Previous approved art, shared proxies, WALK and multiview DEATH remain byte-identical."
+}

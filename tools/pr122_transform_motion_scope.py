@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import pr122_monster_motion_scope as monster_scope
 
 POLICY = Path('data/pr122_transform_motion_scope.json')
 CATALOG = Path('data/catalog_v19.json')
@@ -42,6 +43,9 @@ def load_policy(root):
 
 def required_roles(root, key):
     root = Path(root)
+    monster = monster_scope.required_roles(root, key)
+    if monster is not None:
+        return monster
     if not isinstance(key, str) or not key.startswith('transform:'):
         return FULL_ROLES
     policy = load_policy(root)
@@ -63,6 +67,9 @@ def requires_walk(root, key):
 
 def authoring_directions(root, key, role):
     """Directions for NEW sources; never removes an existing authored clip."""
+    monster = monster_scope.authoring_directions(root, key, role)
+    if monster is not None:
+        return monster
     if role != 'death' or not isinstance(key, str) or not key.startswith('transform:'):
         return DIRECTIONS
     policy = load_policy(root)
@@ -79,6 +86,9 @@ def authoring_directions(root, key, role):
 
 def required_directions(root, key, role):
     """New S requirement plus all recorded pre-existing directional deaths."""
+    monster = monster_scope.required_directions(root, key, role)
+    if monster is not None:
+        return monster
     directions = authoring_directions(root, key, role)
     if role != 'death' or directions != ('S',):
         return directions

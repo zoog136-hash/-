@@ -1,0 +1,97 @@
+[gd_resource type="SpriteFrames" load_steps=15 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/ice_queen/r001/E-run.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="pose_0_0"]
+atlas = ExtResource("1")
+region = Rect2(285, 9, 305, 304)
+margin = Rect2(173, 40, 239, 240)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_1"]
+atlas = ExtResource("1")
+region = Rect2(945, 8, 305, 305)
+margin = Rect2(65, 39, 239, 239)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_2"]
+atlas = ExtResource("1")
+region = Rect2(281, 347, 307, 302)
+margin = Rect2(169, 42, 237, 242)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_3"]
+atlas = ExtResource("1")
+region = Rect2(946, 347, 304, 307)
+margin = Rect2(66, 37, 240, 237)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_4"]
+atlas = ExtResource("1")
+region = Rect2(282, 685, 307, 308)
+margin = Rect2(170, 36, 237, 236)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_5"]
+atlas = ExtResource("1")
+region = Rect2(947, 686, 308, 307)
+margin = Rect2(67, 37, 236, 237)
+filter_clip = true
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/ice_queen/r001/S-run.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="pose_1_0"]
+atlas = ExtResource("2")
+region = Rect2(263, 11, 248, 348)
+margin = Rect2(213, 46, 376, 276)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_1"]
+atlas = ExtResource("2")
+region = Rect2(934, 11, 254, 348)
+margin = Rect2(160, 46, 370, 276)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_2"]
+atlas = ExtResource("2")
+region = Rect2(217, 365, 308, 329)
+margin = Rect2(167, 65, 316, 295)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_3"]
+atlas = ExtResource("2")
+region = Rect2(927, 366, 268, 349)
+margin = Rect2(153, 45, 356, 275)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_4"]
+atlas = ExtResource("2")
+region = Rect2(244, 714, 275, 354)
+margin = Rect2(194, 40, 349, 270)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_5"]
+atlas = ExtResource("2")
+region = Rect2(912, 719, 301, 331)
+margin = Rect2(138, 63, 323, 293)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("pose_0_0")},
+{"duration": 1.0, "texture": SubResource("pose_0_1")},
+{"duration": 1.0, "texture": SubResource("pose_0_2")},
+{"duration": 1.0, "texture": SubResource("pose_0_3")},
+{"duration": 1.0, "texture": SubResource("pose_0_4")},
+{"duration": 1.0, "texture": SubResource("pose_0_5")}], "loop": true, "name": &"run_0", "speed": 12.500000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("pose_1_0")},
+{"duration": 1.0, "texture": SubResource("pose_1_1")},
+{"duration": 1.0, "texture": SubResource("pose_1_2")},
+{"duration": 1.0, "texture": SubResource("pose_1_3")},
+{"duration": 1.0, "texture": SubResource("pose_1_4")},
+{"duration": 1.0, "texture": SubResource("pose_1_5")}], "loop": true, "name": &"run_2", "speed": 12.500000000}
+]
+metadata/twilight_canvas_size = Vector2(256, 256)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false
