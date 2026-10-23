@@ -1,0 +1,88 @@
+{
+  "key": "transform:160",
+  "name": "지옥의 데스나이트",
+  "grade": "전설",
+  "direction": "E",
+  "role": "attack",
+  "reference": "res://assets/catalog/4452407b6d9c7f3f87e22887.png",
+  "reference_sha256": "053447166ab756bb08e973c38696f266aefd1c1ac68d0056d585075d634428c3",
+  "draft_guard_reuse": {
+    "key": "transform:160",
+    "direction": "E",
+    "idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-record-v01.json",
+    "idle_record_sha256": "067ae83a902d367bd3804ff656def6e6f59ed7f90ba276389b05b89c381d6fa5",
+    "idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-SpriteFrames.tres",
+    "idle_SpriteFrames_sha256": "3be4d255a9dbff8edecb8e2a484f26383ae89ccdcbf1b07d3f1e618a56bb018d",
+    "source_visual_status": "HOLD_NOT_REVIEWED",
+    "reference": "res://assets/catalog/4452407b6d9c7f3f87e22887.png",
+    "reference_sha256": "053447166ab756bb08e973c38696f266aefd1c1ac68d0056d585075d634428c3",
+    "source_files": [
+      {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-source-v01.png",
+        "sha256": "9262e97850a0aa523ad6a62cd4a685259f82c146f9d42599f0b6526bf39c4097",
+        "bytes": 2592421
+      }
+    ],
+    "guards": [
+      {
+        "idle_phase": 0,
+        "action_phase": 0,
+        "original_pose_id": 0,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-source-v01.png",
+        "region": [
+          0,
+          0,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "73e6482850259d5f0fbe5a4863ae752cc938d6c6cfea3ec720c877a41b2468f7"
+      },
+      {
+        "idle_phase": 5,
+        "action_phase": 5,
+        "original_pose_id": 5,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-source-v01.png",
+        "region": [
+          1024,
+          512,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "87ec8910233a33aec73f25fd445306b81a645f1f889fcf753169f323b58b0a1b"
+      }
+    ],
+    "reused_poses": 2,
+    "newly_authored_poses": 4,
+    "source_quality_approval_inherited": false
+  },
+  "poses": 6,
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "generation_request": {
+    "prompt": "TWILIGHT transform:160, 지옥의 데스나이트: create ONLY FOUR NEW E ATTACK middle poses. The first original catalog PNG is identity authority. The second saved same-character/same-direction IDLE atlas is authoritative for the existing draft guard, body scale, camera, equipment hand, ground level and rendering. Its first top-left cell (IDLE frame0) and last bottom-right cell (IDLE frame5) will be reused EXACTLY as action frames0 and5. DO NOT redraw, output, mirror or modify these guards. Create ONE transparent RGBA source PNG, ideally 1024x1024, exactly TWO equal columns and TWO equal rows, reading order cell0..3. One complete full-body new pose per cell. All four face E at the same elevated game camera as the supplied E IDLE; newly articulate body parts without changing its orientation or substituting a front/back view. Match the existing 512x512 IDLE cell sprite scale and placement when possible; keep full head/hair, all feet, original costume and the entire original equipment inside every cell with generous transparent gutters. Preserve exact catalog identity, original weapon/armor silhouette, colors, face, anatomy and original anatomical equipment hand. No invented shield, wings, tail, new weapons or generic model. Only output these middle poses: cell0, phase1: articulated anticipation and backswing with coherent grip and weight shift; cell1, phase2: fully loaded torso and knees; original weapon, bow, firearm, rod or casting system ready for its own authentic attack; cell2, phase3: active contact/release/discharge exactly toward the requested facing direction; cell3, phase4: coherent follow-through and partial recovery that leads into the preserved final living guard. Preserve the original equipment's attack kind: do not swing a gun, replace a rod, turn casting into melee, or invent weapons. Remain mounted on the original horse in all cells; rider attacks with original sword from saddle, horse support stays plausible. Do not dismount, replace horse, or invent limbs. Six-frame assembly will be: preserved IDLE0, new cell0, new cell1, new cell2, new cell3, preserved IDLE5. Four genuine different joint poses, not translated/rotated/recolored/cloned stills. No duplicate guard cells, text, labels, grids, scenery, ground, opaque/gradient background, extra characters, detached limbs or diffuse effects. Alpha zero outside the full figure. Output only the four-pose supplement.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/4452407b6d9c7f3f87e22887.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/4452407b6d9c7f3f87e22887.png": "053447166ab756bb08e973c38696f266aefd1c1ac68d0056d585075d634428c3",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-idle-source-v01.png": "9262e97850a0aa523ad6a62cd4a685259f82c146f9d42599f0b6526bf39c4097"
+  },
+  "motion_notes": "Remain mounted on the original horse in all cells; rider attacks with original sword from saddle, horse support stays plausible. Do not dismount, replace horse, or invent limbs.",
+  "status": "REQUESTED_DRAFT_GUARD_SUPPLEMENT_NOT_APPROVED",
+  "policy": "Preserve IDLE0/5 pixels and their HOLD status. Reuse adds no approval. transform176 legacy source takes priority. RUN remains six new poses. Existing authored ATTACK/HIT outputs are skipped, never overwritten."
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "pr122-legendary-authorized-source-eof-normalization-v1",
+  "source": "docs/remake/pr122-legendary-parallel/normal_six_pose_launcher.js",
+  "original_sha256": "cdf6c55a36038d3ca935d3b70a4696e56ad9a5a4c10a6af6c90ed4013c3db21c",
+  "normalized_sha256": "0c4b76e6832fd9181241cc4254d1b7edbcec58b417fe2b8bcbc9aedd5a2daf9f",
+  "normalization": "rstrip('\\n')+'\\n'",
+  "function_body_and_prompt_strings_unchanged": true,
+  "parent_explicit_authorization": "Normalize newly introduced launcher EOF blanks, preserve one final newline, remove diff-check exception; keep pushed history unchanged",
+  "supersedes_whitespace_exception_evidence": "batch61-source-snapshot-whitespace-preservation-v01.json",
+  "all_generated_PNG_requests_records_SpriteFrames_changed": false,
+  "full_standard_diff_check_required": true,
+  "approvals_added": 0
+}

@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 310,
-    "minimally_validated_configurations": 310,
-    "newly_authored_poses": 1791,
-    "reused_existing_poses": 69,
+    "new_draft_configurations": 315,
+    "minimally_validated_configurations": 315,
+    "newly_authored_poses": 1811,
+    "reused_existing_poses": 79,
     "reused_legacy_poses": 15,
-    "reused_prior_draft_poses": 54,
-    "quality_held_configurations": 310,
+    "reused_prior_draft_poses": 64,
+    "quality_held_configurations": 315,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 1010
+    "remaining_draft_configurations": 1005
   },
   "actors": [
     {
@@ -6385,6 +6385,31 @@
         {
           "key": "transform:175",
           "direction": "E",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/E-attack-source-v01.png",
+          "source_sha256": "1d30713e5d67038bb35425a0850ffe7fae87ce68629a5dda9e90579e4497ac82",
+          "source_bytes": 1796647,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/E-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "cc30205aa899dca06559f2dd576d5d0f3fb0d1298cbfe9f6d93329a0c07d3c15",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/E-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch64-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:175",
+          "direction": "E",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/E-idle-source-v01.png",
           "source_sha256": "1242dd1b013b498254f2ed24985f7bd6f1ab0a3e83a306903010635c4f73cacf",
@@ -6545,7 +6570,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 26,
+      "remaining_draft_configurations": 25,
       "precision_final_approved": false
     },
     {
@@ -6560,6 +6585,31 @@
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
       "drafts": [
+        {
+          "key": "transform:166",
+          "direction": "E",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/E-attack-source-v01.png",
+          "source_sha256": "3118a0e509603614d95e80b3d95d5eabdff0447048f2c8ee11ff4e4217223254",
+          "source_bytes": 2108680,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_166/draft001/E-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "47428307ecc0c23f63342a7ef539f45945dae2572f20220ada82431e9fa1bd58",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/E-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch64-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
         {
           "key": "transform:166",
           "direction": "E",
@@ -6727,7 +6777,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 26,
+      "remaining_draft_configurations": 25,
       "precision_final_approved": false
     },
     {
@@ -6742,6 +6792,31 @@
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
       "drafts": [
+        {
+          "key": "transform:165",
+          "direction": "E",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_165/draft001/E-attack-source-v01.png",
+          "source_sha256": "42d8636d1d791630b0b31263063bb38324387ef32d40813671aa6f8df59a2586",
+          "source_bytes": 1529914,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_165/draft001/E-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "effe22ffc5639cd15ade3520f51d5254f2d2dd3d4c40a1b4370434a96b113d75",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_165/draft001/E-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch64-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
         {
           "key": "transform:165",
           "direction": "E",
@@ -6911,7 +6986,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 26,
+      "remaining_draft_configurations": 25,
       "precision_final_approved": false
     },
     {
@@ -6926,6 +7001,31 @@
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
       "drafts": [
+        {
+          "key": "transform:160",
+          "direction": "E",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-attack-source-v01.png",
+          "source_sha256": "8e79fe9a35801c8ec501b07736032c54d6679e1610274a8f0dccbbf1cde2b9d9",
+          "source_bytes": 2056455,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "b50e336ef5063836296f767fd4f200b704e21f78c25ec0b850facec152383186",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/E-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch64-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
         {
           "key": "transform:160",
           "direction": "E",
@@ -7093,7 +7193,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 26,
+      "remaining_draft_configurations": 25,
       "precision_final_approved": false
     },
     {
@@ -7108,6 +7208,31 @@
       "existing_WALK_and_directional_DEATH_preserved": true,
       "required_motion_configurations": 33,
       "drafts": [
+        {
+          "key": "transform:143",
+          "direction": "E",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_143/draft001/E-attack-source-v01.png",
+          "source_sha256": "44c2fabb2749b1abe606f4c605ea3f62ba98c755547ee561970b538b287e31e9",
+          "source_bytes": 1707833,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/E-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "0b1beaa6d9e7754aca32618a666a7db24c8ffd1535cade5b735f80851403dea9",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_143/draft001/E-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch64-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
         {
           "key": "transform:143",
           "direction": "E",
@@ -7275,7 +7400,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 26,
+      "remaining_draft_configurations": 25,
       "precision_final_approved": false
     },
     {

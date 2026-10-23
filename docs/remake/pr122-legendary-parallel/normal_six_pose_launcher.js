@@ -23,4 +23,3 @@ async (id,role,direction,batch) => {
  text({id,role,direction,path,error:r?.error});
  return {id,role,direction,request:"docs/remake/pr122-legendary-parallel/requests/transform_"+id+"-"+direction+"-"+role+"-v01.json",generated:path};
 }
-
