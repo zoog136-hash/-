@@ -66,10 +66,15 @@ def preserve_action(root, source, request):
         record['source_region_review'] = request['source_region_review']
         if geometry['status'] == 'GEOMETRY_PASS':
             record['source_region_proof'] = region_proof
+    if 'authoring_dependencies' in request:
+        record['authoring_dependencies'] = request['authoring_dependencies']
     manifest_path = root / staging.SOURCE_MANIFEST
     manifest = json.loads(manifest_path.read_text())
     manifest['raw_images'].append(record)
     write_json(manifest_path, manifest)
+    if geometry['status'] == 'GEOMETRY_PASS':
+        return staging.preserved_source_analysis(root, record, result)
+    return None
 
 
 def main():
@@ -87,6 +92,8 @@ def main():
     assert key in staging.ACTORS and direction in staging.importer.DIRECTIONS and role in staging.NATIVE_ROLES
     approval_state = production_approvals.load_state(root)
     approval_state.require_mutable(key, 'advance a source for')
+    reuse_context = staging.capture_geometry_reuse(root, key)
+    source_analysis = None
     source = args.generated.resolve()
     assert source.is_file() and not source.is_symlink()
     log_prefix = Path('/tmp') / ('twilight-' + staging.ACTORS[key] + '-' + args.revision)
@@ -99,7 +106,7 @@ def main():
                             '--role', role, '--version', request['version']],
                            cwd=root, stdout=out, stderr=subprocess.STDOUT, check=True)
     else:
-        preserve_action(root, source, request)
+        source_analysis = preserve_action(root, source, request)
     manifest_path = root / staging.SOURCE_MANIFEST
     manifest = json.loads(manifest_path.read_text())
     record = manifest['raw_images'][-1]
@@ -126,7 +133,9 @@ def main():
              str(staging.SOURCE_MANIFEST), str(request_path.relative_to(root))]
     subprocess.run(['git', 'add', '--sparse', '--', *files], cwd=root, check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-    staging.stage(root, key, args.revision)
+    with staging.source_analysis_context(root, key, reuse_context,
+            {record['source']: source_analysis} if source_analysis is not None else None):
+        staging.stage(root, key, args.revision)
     binder.bind(root, key)
     env = dict(os.environ, XDG_CONFIG_HOME='/tmp/twilight-godot-config',
                XDG_CACHE_HOME='/tmp/twilight-godot-cache', XDG_DATA_HOME='/tmp/twilight-godot-native-unit',

@@ -1,0 +1,171 @@
+{
+  "schema": "pr122-character-native-motion-settings-v1",
+  "key": "transform:413",
+  "direction": "W",
+  "role": "run",
+  "stride": [
+    [
+      -70,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      80,
+      24
+    ],
+    [
+      110,
+      100
+    ],
+    [
+      50,
+      170
+    ],
+    [
+      -100,
+      75
+    ]
+  ],
+  "phase_shift": {
+    "L-near": 0,
+    "R-far": 3
+  },
+  "phases": [
+    {
+      "role": "NEAR_CONTACT_FAR_AIR",
+      "body_deg": -6,
+      "torso": [
+        -8,
+        10
+      ],
+      "head_deg": 1,
+      "right_upper": 3,
+      "right_fore": -2,
+      "left_upper": 12,
+      "left_fore": -14,
+      "cloth": [
+        8,
+        -3
+      ],
+      "ribbon": [
+        8,
+        0
+      ]
+    },
+    {
+      "role": "NEAR_COMPRESSION_FAR_RECOVER",
+      "body_deg": -7,
+      "torso": [
+        -8,
+        35
+      ],
+      "head_deg": 0,
+      "right_upper": 1,
+      "right_fore": -5,
+      "left_upper": 6,
+      "left_fore": -7,
+      "cloth": [
+        12,
+        -1
+      ],
+      "ribbon": [
+        12,
+        1
+      ]
+    },
+    {
+      "role": "NEAR_TOEOFF_FAR_REACH",
+      "body_deg": -5,
+      "torso": [
+        -8,
+        -5
+      ],
+      "head_deg": -1,
+      "right_upper": -3,
+      "right_fore": -7,
+      "left_upper": -3,
+      "left_fore": 3,
+      "cloth": [
+        16,
+        -5
+      ],
+      "ribbon": [
+        15,
+        -1
+      ]
+    },
+    {
+      "role": "FAR_CONTACT_NEAR_AIR",
+      "body_deg": -6,
+      "torso": [
+        -8,
+        10
+      ],
+      "head_deg": 1,
+      "right_upper": -5,
+      "right_fore": -11,
+      "left_upper": -12,
+      "left_fore": 10,
+      "cloth": [
+        10,
+        -3
+      ],
+      "ribbon": [
+        9,
+        0
+      ]
+    },
+    {
+      "role": "FAR_COMPRESSION_NEAR_RECOVER",
+      "body_deg": -7,
+      "torso": [
+        -8,
+        35
+      ],
+      "head_deg": 0,
+      "right_upper": -1,
+      "right_fore": -9,
+      "left_upper": -6,
+      "left_fore": 0,
+      "cloth": [
+        14,
+        -1
+      ],
+      "ribbon": [
+        13,
+        1
+      ]
+    },
+    {
+      "role": "FAR_TOEOFF_NEAR_REACH",
+      "body_deg": -5,
+      "torso": [
+        -8,
+        -5
+      ],
+      "head_deg": -1,
+      "right_upper": 2,
+      "right_fore": -5,
+      "left_upper": 4,
+      "left_fore": -8,
+      "cloth": [
+        18,
+        -5
+      ],
+      "ribbon": [
+        16,
+        -1
+      ]
+    }
+  ],
+  "common_implementation": "Existing premultiplied-alpha sampling; existing PR122 import/region/layout validation; no approved Unique part-skinning renderer found in selected W provenance",
+  "original_producer_sha256": "85e55c6ca69f1f561ca51f67bd8794812302ae6112303cce9f473ec37d904c49",
+  "directional_material_manifest": {
+    "path": "/workspace/scratch/mythic413-W-attack-author-fresh-20261020-v01/native-W-source-parts-v03-exact-rims-bow/W-exact-native-complete-RIGHT-staff-LEFT-upper-and-true-bow-parts-v04-shared-bindings.json",
+    "bytes": 12580,
+    "sha256": "31e0b544e41ea6f161618eaea046453b09cb1dd98089ae8ba8e7547d1deb6da5"
+  }
+}

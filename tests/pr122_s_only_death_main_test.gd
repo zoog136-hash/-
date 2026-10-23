@@ -5,6 +5,7 @@ const PROFILE = preload("res://scripts/animation/animation_profile.gd")
 var atlas: ImageTexture
 var fixture: SpriteFrames
 var failures := 0
+var staged_textures: Array[ImageTexture] = []
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -31,34 +32,49 @@ func _run() -> void:
 		quit(1)
 		return
 	var register: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_native_locomotion_staging.json"))
-	var original: Dictionary = register.actors["transform:393"]
+	var staged_key := OS.get_environment("TWILIGHT_NATIVE_DEATH_ACTOR")
+	var actual_staged := not staged_key.is_empty()
+	var actor_key := staged_key if actual_staged else "transform:393"
+	var original: Dictionary = register.actors[actor_key]
 	var south: Dictionary = {}
 	for track: Dictionary in original.tracks:
 		if track.role == "death" and track.direction == "S": south = track
 	if not check(not south.is_empty(), "Existing validated S source must be present"):
 		quit(1)
 		return
-	atlas = ImageTexture.create_from_image(Image.load_from_file("res://" + str(south.texture)))
-	fixture = SpriteFrames.new()
-	fixture.remove_animation("default")
-	fixture.add_animation("death_2")
-	fixture.set_animation_loop("death_2", false)
-	fixture.set_animation_speed("death_2", 6.0 / 0.65)
-	fixture.set_meta("twilight_native_locomotion_staging", true)
-	for pose: Dictionary in south.geometry.frames:
-		var texture := AtlasTexture.new()
-		texture.atlas = atlas
-		texture.region = Rect2(pose.region[0], pose.region[1], pose.region[2], pose.region[3])
-		texture.margin = Rect2(pose.margin[0], pose.margin[1], pose.margin[2], pose.margin[3])
-		texture.filter_clip = true
-		fixture.add_frame("death_2", texture)
-	# Cache-only fixture path; no approved SpriteFrames or catalog is modified.
-	fixture.take_over_path("res://tests/runtime_only_s_death_fixture.tres")
-	var profile: Resource = load(original.native_profile).duplicate()
-	profile.profile_id = "runtime-only-S-death-contract-test"
-	profile.frames_path = fixture.resource_path
+	var profile: Resource
+	if actual_staged:
+		for track: Dictionary in original.tracks:
+			var image_texture := ImageTexture.create_from_image(Image.load_from_file("res://" + str(track.texture)))
+			image_texture.take_over_path("res://" + str(track.texture))
+			staged_textures.append(image_texture)
+		fixture = load(original.frames) as SpriteFrames
+		profile = load(original.native_profile)
+	else:
+		atlas = ImageTexture.create_from_image(Image.load_from_file("res://" + str(south.texture)))
+		fixture = SpriteFrames.new()
+		fixture.remove_animation("default")
+		fixture.add_animation("death_2")
+		fixture.set_animation_loop("death_2", false)
+		fixture.set_animation_speed("death_2", 6.0 / 0.65)
+		fixture.set_meta("twilight_native_locomotion_staging", true)
+		for pose: Dictionary in south.geometry.frames:
+			var texture := AtlasTexture.new()
+			texture.atlas = atlas
+			texture.region = Rect2(pose.region[0], pose.region[1], pose.region[2], pose.region[3])
+			texture.margin = Rect2(pose.margin[0], pose.margin[1], pose.margin[2], pose.margin[3])
+			texture.filter_clip = true
+			fixture.add_frame("death_2", texture)
+		# Cache-only fixture path; no approved SpriteFrames or catalog is modified.
+		fixture.take_over_path("res://tests/runtime_only_s_death_fixture.tres")
+		profile = load(original.native_profile).duplicate()
+		profile.profile_id = "runtime-only-S-death-contract-test"
+		profile.frames_path = fixture.resource_path
 	var before_saves := _save_snapshot()
+	var direction_results: Array = []
 	for direction: int in range(8):
+		var requested := StringName("death_" + str(direction))
+		var expected := requested if actual_staged and fixture.has_animation(requested) else &"death_2"
 		var world: Node = load("res://Main.tscn").instantiate()
 		world.process_mode = Node.PROCESS_MODE_DISABLED
 		root.add_child(world)
@@ -66,7 +82,7 @@ func _run() -> void:
 		world.save_timer = -10000.0
 		world.player.set_physics_process(false)
 		var before := _snapshot(world)
-		world.player.set_transform_visual("res://assets/catalog/0a4de2a60525e7bdee76bd2d.png", 1.0, profile)
+		world.player.set_transform_visual("res://assets/catalog/e82707989c7744b45919684b.png" if actual_staged else "res://assets/catalog/0a4de2a60525e7bdee76bd2d.png", 1.0, profile)
 		var motion: MOTION = world.player.motion
 		var sprite: AnimatedSprite2D = world.player.transform_sprite
 		motion.face(Vector2.RIGHT.rotated(direction * PI / 4.0))
@@ -75,7 +91,7 @@ func _run() -> void:
 		for step: int in range(121):
 			motion.advance(1.0 / 120.0, Vector2(200, 100))
 			motion.apply(sprite, Vector2.ONE)
-			check(sprite.animation == &"death_2", "Every requested view must use real S death")
+			check(sprite.animation == expected, "Preserve existing death direction; use real S for missing directions")
 			seen[sprite.frame] = true
 		check(seen.size() == 6, "One-shot death must visit all six source poses")
 		check(sprite.frame == 5 and not sprite.is_playing(), "Death must stop on terminal frame")
@@ -85,17 +101,19 @@ func _run() -> void:
 		motion.advance(4.0, Vector2(200, 100))
 		motion.apply(sprite, Vector2.ONE)
 		check(motion.dead and motion.state == "corpse", "No automatic standing/movement recovery")
-		check(motion.facing8 == direction and sprite.animation == &"death_2" and sprite.frame == 5, "Terminal death is irreversible")
+		check(motion.facing8 == direction and sprite.animation == expected and sprite.frame == 5, "Terminal death is irreversible")
 		check(sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame) == held_texture, "Hold the actual terminal texture")
 		check(is_equal_approx(sprite.modulate.a, 1.0), "Authored terminal pose stays visible until normal entity cleanup")
 		check(_snapshot(world) == before and _save_snapshot() == before_saves, "Visual death must not alter gameplay/save state")
+		direction_results.append({"input":direction,"resolved":str(expected),"poses_reached":seen.size(),"terminal_frame":sprite.frame,"corpse_held":motion.dead and motion.state == "corpse"})
 		world.queue_free()
 		await process_frame
 	# Preserve an existing E view even when S is available; no new art is added.
 	var partial := fixture.duplicate() as SpriteFrames
-	partial.add_animation("death_0")
-	partial.set_animation_loop("death_0", false)
-	for pose: int in range(6): partial.add_frame("death_0", fixture.get_frame_texture("death_2", pose))
+	if not partial.has_animation("death_0"):
+		partial.add_animation("death_0")
+		partial.set_animation_loop("death_0", false)
+		for pose: int in range(6): partial.add_frame("death_0", fixture.get_frame_texture("death_2", pose))
 	var test_motion := MOTION.new()
 	test_motion.profile = profile
 	test_motion.face(Vector2.RIGHT)
@@ -108,5 +126,10 @@ func _run() -> void:
 	missing.add_frame("idle_2", fixture.get_frame_texture("death_2", 0))
 	test_motion._resolve_frames(missing)
 	check(test_motion._resolved_key.is_empty(), "No fake death by aliasing idle/movement")
-	print("PR122_S_ONLY_DEATH_MAIN_RESULT directions=8 poses=6 fixture_override=1 art_approvals=0 failures=" + str(failures))
+	var proof_path := OS.get_environment("PR122_DEATH_RUNTIME_PROOF")
+	if not proof_path.is_empty():
+		var proof := FileAccess.open(proof_path,FileAccess.WRITE)
+		proof.store_string(JSON.stringify({"actor":actor_key,"actual_staged_profile":actual_staged,"directions":direction_results,"failures":failures,"source_visual_status":"HOLD_NOT_REVIEWED" if actual_staged else "EXISTING_APPROVAL_PRESERVED","actor_approvals_added":0,"gameplay_and_saves_unchanged":_save_snapshot() == before_saves},"\t")+"\n")
+		proof.close()
+	print("PR122_S_ONLY_DEATH_MAIN_RESULT directions=8 poses=6 actual_staged=" + str(actual_staged) + " art_approvals=0 failures=" + str(failures))
 	quit(0 if failures == 0 else 1)

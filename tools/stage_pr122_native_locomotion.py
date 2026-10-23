@@ -6,6 +6,10 @@ separate staging operation emits only existing, hash-pinned native tracks; it
 cannot manufacture missing views, roles, aliases, or approvals.
 """
 import argparse
+import ast
+from copy import deepcopy
+from contextlib import contextmanager
+from contextvars import ContextVar
 import hashlib
 import json
 from pathlib import Path
@@ -25,6 +29,18 @@ ACTORS = {'transform:393': 'halpas_393', 'transform:267': 'girtas_267',
 CORE_ROLES = ('idle', 'attack', 'hit', 'death')
 NATIVE_ROLES = ('walk', 'run', *CORE_ROLES)
 ROLE_SECONDS = dict(idle=1.2, walk=.48, run=.48, attack=.42, hit=.22, death=.65)
+_SOURCE_ANALYSIS_CONTEXT = ContextVar('pr122_source_analysis_context', default=None)
+
+
+@contextmanager
+def source_analysis_context(root, key, reuse_context, analyzed_sources):
+    """Keep the existing three-argument guarded staging wrappers compatible."""
+    token = _SOURCE_ANALYSIS_CONTEXT.set({'root': root.resolve(), 'key': key,
+        'reuse': reuse_context, 'fresh': analyzed_sources})
+    try:
+        yield
+    finally:
+        _SOURCE_ANALYSIS_CONTEXT.reset(token)
 
 
 def digest(path):
@@ -39,6 +55,130 @@ def preserve_write(path, content):
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
+
+
+def _json_sha(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
+                                     ensure_ascii=False).encode()).hexdigest()
+
+
+def _region_analysis_ast(data):
+    # This optional pre-render part guard never participates in PNG analysis.
+    tree = ast.parse(data)
+    tree.body = [node for node in tree.body if not isinstance(node, ast.FunctionDef)
+                 or node.name != 'require_native_source_part_ownership']
+    return ast.dump(tree, include_attributes=False)
+
+
+def _analysis_nodes(data):
+    tree = ast.parse(data)
+    helper = next((node for node in tree.body if isinstance(node, ast.FunctionDef)
+                   and node.name == '_analyze_source_geometry'), None)
+    if helper is not None:
+        return helper.body[:-1]  # The return only transports the unchanged result.
+    stage_function = next(node for node in tree.body if isinstance(node, ast.FunctionDef)
+                          and node.name == 'stage')
+    loop = next(node for node in stage_function.body if isinstance(node, ast.For)
+                and isinstance(node.target, ast.Tuple)
+                and [part.id for part in node.target.elts] == ['identity', 'source'])
+    result = []
+    started = False
+    for node in loop.body:
+        if isinstance(node, ast.Assign) and any(isinstance(part, ast.Name) and part.id == 'canvas'
+                                                for part in node.targets):
+            started = True
+        if (isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
+                and isinstance(node.value.func, ast.Attribute)
+                and isinstance(node.value.func.value, ast.Name)
+                and node.value.func.value.id == 'tracks'):
+            break
+        if started:
+            result.append(node)
+    return result
+
+
+def _analysis_versions(root):
+    return {
+        'analysis': _json_sha([ast.dump(node, include_attributes=False)
+                               for node in _analysis_nodes(Path(__file__).read_text())]),
+        'importer': digest(root / 'tools/import_original_based_motion.py'),
+        'reviewed_regions': hashlib.sha256(_region_analysis_ast(
+            (root / 'tools/pr122_reviewed_source_regions.py').read_text()).encode()).hexdigest(),
+        'runtime_layout': digest(root / 'tools/pr122_reviewed_runtime_layout.py'),
+        'clip_preserver': digest(root / 'tools/advance_pr122_native_locomotion.py'),
+    }
+
+
+def _source_input_sha(root, record, layout, versions):
+    dependencies = []
+    for pin in record.get('authoring_dependencies', []):
+        path = Path(pin['path'])
+        if not path.is_absolute():
+            path = root / path
+        if (not path.resolve().is_relative_to(root.resolve())
+                or not path.is_file() or path.is_symlink()):
+            raise ValueError('Missing preserved authoring dependency: ' + str(path))
+        dependencies.append({'path': str(path), 'expected': pin['sha256'], 'actual': digest(path)})
+    # Whole metadata includes frame order, authored roots/joints, part settings,
+    # generation/request versions and any preserved authoring dependency pins.
+    return _json_sha({'record': record, 'layout': layout, 'versions': versions,
+                      'geometry_file': digest((root / record['source']).with_suffix('.geometry.json')),
+                      'authoring_dependencies': dependencies})
+
+
+def capture_geometry_reuse(root, key):
+    """Pin previously verified tracked inputs; never decode or approve a PNG."""
+    manifest = json.loads((root / SOURCE_MANIFEST).read_text())
+    register = json.loads((root / REGISTER).read_text())
+    actor = register.get('actors', {}).get(key, {})
+    if actor.get('detailed_completed') or actor.get('verification', {}).get(
+            'source_sha256_and_saved_geometry') != 'PASS':
+        return None
+    def git_bytes(*args):
+        return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.PIPE)
+    try:
+        tracked = json.loads(git_bytes('show', 'HEAD:' + REGISTER.as_posix()))
+        tracked_manifest = json.loads(git_bytes('show', 'HEAD:' + SOURCE_MANIFEST.as_posix()))
+        if tracked['actors'].get(key) != actor:
+            return None  # Preserve an in-flight writer; do not trust its partial state.
+        baseline = git_bytes('log', '-1', '--format=%H', '--', REGISTER.as_posix()).decode().strip()
+        before = git_bytes('show', baseline + ':tools/stage_pr122_native_locomotion.py').decode()
+        current_nodes = [ast.dump(node, include_attributes=False)
+                         for node in _analysis_nodes(Path(__file__).read_text())]
+        if current_nodes != [ast.dump(node, include_attributes=False) for node in _analysis_nodes(before)]:
+            return None
+        for name in ('import_original_based_motion.py', 'pr122_reviewed_runtime_layout.py'):
+            if git_bytes('show', baseline + ':tools/' + name) != (root / 'tools' / name).read_bytes():
+                return None
+        old_regions = git_bytes('show', baseline + ':tools/pr122_reviewed_source_regions.py').decode()
+        if _region_analysis_ast(old_regions) != _region_analysis_ast(
+                (root / 'tools/pr122_reviewed_source_regions.py').read_text()):
+            return None
+    except (subprocess.CalledProcessError, KeyError, StopIteration, ValueError):
+        return None
+    records = {(row['key'], row['source']): row for row in manifest['raw_images']}
+    tracked_records = {(row['key'], row['source']): row for row in tracked_manifest['raw_images']}
+    versions = _analysis_versions(root)
+    entries = {}
+    for track in actor['tracks']:
+        source = track['source']
+        record = records[(key, source)]
+        layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
+        if (record != tracked_records.get((key, source)) or layout !=
+                tracked_manifest.get('reviewed_runtime_layouts', {}).get(source)):
+            continue
+        sidecar = Path(source).with_suffix('.geometry.json')
+        try:
+            if git_bytes('show', 'HEAD:' + sidecar.as_posix()) != (root / sidecar).read_bytes():
+                continue
+        except subprocess.CalledProcessError:
+            continue
+        if digest(root / source) != record['sha256'] or track['source_sha256'] != record['sha256']:
+            raise ValueError('Previously verified source changed: ' + source)
+        entries[source] = {'input_sha256': _source_input_sha(root, record,
+            layout, versions),
+            'track_sha256': _json_sha(track), 'track': deepcopy(track)}
+    return {'key': key, 'baseline_commit': baseline, 'versions': versions, 'entries': entries}
 
 
 def build_frames(tracks):
@@ -65,7 +205,112 @@ def build_frames(tracks):
     return '\n'.join(lines).encode()
 
 
-def stage(root, key, revision=None):
+def _analyze_source_geometry(path, record, manifest, source, direction):
+    canvas = record['geometry'].get('canvas', 1024)
+    assert type(canvas) is int and 64 <= canvas <= 2048 and canvas % 8 == 0
+    if canvas != 1024:
+        review = record.get('source_canvas_review', {})
+        assert review.get('status') == 'REVIEWED_SOURCE_CANVAS_PROPOSAL'
+        assert review.get('source_sha256') == record['sha256'] and review.get('canvas_size') == canvas
+        assert isinstance(review.get('review_basis'), str) and review['review_basis'].strip()
+    canonical_kwargs = reviewed_layout.declared_canonical_preflight_kwargs(
+        record.get('source_canvas_review'), manifest.get('reviewed_runtime_layouts', {}).get(source),
+        record['sha256'], direction, canvas)
+    geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
+                                directions_axis='phase_grid2', canvas_size=canvas,
+                                directions=[direction], **canonical_kwargs)
+    if record.get('source_region_review') is not None:
+        geometry, region_proof = apply_reviewed_regions(path, geometry, record['source_region_review'])
+        assert region_proof == record['source_region_proof'], 'Reviewed source region proof changed'
+    importer.require_complete_pose_regions(path, geometry)
+    saved = json.loads(path.with_suffix('.geometry.json').read_text())
+    assert json.loads(json.dumps(geometry)) == saved, f'Saved source geometry changed: {source}'
+    assert len(geometry['frames']) == geometry['distinct_pixel_frames'] == 6
+    assert geometry['canvas_size'] == [canvas, canvas] and geometry['foot'] == [canvas // 2, canvas * 5 // 8]
+    assert [frame['row'] for frame in geometry['frames']] == list(range(6))
+    assert all(frame['direction'] == direction for frame in geometry['frames'])
+    layout_proof = None
+    layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
+    if layout is not None:
+        geometry, layout_proof = reviewed_layout.apply_reviewed_layout(
+            path, geometry, layout, source_region_review=record.get('source_region_review'))
+    return geometry, layout_proof
+
+
+def preserved_source_analysis(root, record, geometry):
+    """Carry this invocation's verified base result to staging without a second decode."""
+    return {'record_sha256': _json_sha(record), 'source_sha256': record['sha256'],
+            'geometry_file_sha256': digest((root / record['source']).with_suffix('.geometry.json')),
+            'versions': _analysis_versions(root), 'geometry': deepcopy(geometry)}
+
+
+def _prepare_tracks(root, key, folder, manifest, records, previous_actor, reuse_context=None, analyzed_sources=None):
+    previous_textures = {(t['source'], t['source_sha256']): t['texture'] for t in previous_actor.get('tracks', [])}
+    selected = {**manifest['selected_locomotion_sheets'], **manifest.get('selected_detailed_action_sheets', {})}
+    versions = _analysis_versions(root)
+    entries = (reuse_context or {}).get('entries', {}) if (reuse_context or {}).get('versions') == versions and (reuse_context or {}).get('key') == key else {}
+    stats = dict(reused=0, fresh=0, analyzed=0)
+    tracks = []
+    # Validate the whole unit before writing any outputs.
+    for identity, source in sorted(selected.items()):
+        actor_key, direction, role = identity.rsplit(':', 2)
+        if actor_key != key:
+            continue
+        assert role in NATIVE_ROLES and direction in importer.DIRECTIONS
+        record = records[(key, source)]
+        assert record['direction'] == direction and record['role'] == role
+        assert record['geometry']['status'] == 'GEOMETRY_PASS'
+        assert record['requested_poses'] == 6
+        path = root / source
+        subprocess.run(['git', 'ls-files', '--error-unmatch', source], cwd=root,
+                       check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        assert path.stat().st_size == record['bytes'] and digest(path) == record['sha256']
+        layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
+        cached = entries.get(source)
+        fresh = (analyzed_sources or {}).get(source)
+        if (cached is not None and cached['input_sha256'] ==
+                _source_input_sha(root, record, layout, versions)
+                and cached['track_sha256'] == _json_sha(cached['track'])):
+            old = cached['track']
+            assert (old['source'], old['source_sha256'], old['direction'], old['role']) == (
+                source, record['sha256'], direction, role)
+            geometry = deepcopy(old['geometry'])
+            layout_proof = deepcopy(old.get('runtime_layout_proof'))
+            stats['reused'] += 1
+        elif (fresh is not None and fresh['versions'] == versions
+              and fresh['record_sha256'] == _json_sha(record)
+              and fresh['source_sha256'] == record['sha256']
+              and fresh['geometry_file_sha256'] == digest(path.with_suffix('.geometry.json'))):
+            geometry = deepcopy(fresh['geometry'])
+            assert geometry == json.loads(path.with_suffix('.geometry.json').read_text())
+            assert len(geometry['frames']) == geometry['distinct_pixel_frames'] == 6
+            assert [frame['row'] for frame in geometry['frames']] == list(range(6))
+            assert all(frame['direction'] == direction for frame in geometry['frames'])
+            layout_proof = None
+            if layout is not None:
+                geometry, layout_proof = reviewed_layout.apply_reviewed_layout(
+                    path, geometry, layout, source_region_review=record.get('source_region_review'))
+            stats['fresh'] += 1
+        else:
+            geometry, layout_proof = _analyze_source_geometry(path, record, manifest, source, direction)
+            stats['analyzed'] += 1
+        tracks.append(dict(direction=direction, role=role,
+                           animation=f'{role}_{importer.DIRECTIONS.index(direction)}',
+                           source=source, source_sha256=record['sha256'],
+                           texture=previous_textures.get((source, record['sha256']),
+                                       (folder / f'{direction}-{role}.png').as_posix()), geometry=geometry))
+        if layout_proof is not None:
+            tracks[-1]['runtime_layout_proof'] = layout_proof
+    return tracks, stats
+
+
+def stage(root, key, revision=None, *, reuse_context=None, analyzed_sources=None):
+    scope = _SOURCE_ANALYSIS_CONTEXT.get()
+    if scope and scope['root'] == root.resolve() and scope['key'] == key:
+        reuse_context = reuse_context if reuse_context is not None else scope['reuse']
+        analyzed_sources = analyzed_sources if analyzed_sources is not None else scope['fresh']
+    if reuse_context is None:
+        reuse_context = capture_geometry_reuse(root, key)
     manifest = json.loads((root / SOURCE_MANIFEST).read_text())
     records = {(row['key'], row['source']): row for row in manifest['raw_images']}
     selected = {**manifest['selected_locomotion_sheets'], **manifest.get('selected_detailed_action_sheets', {})}
@@ -83,56 +328,7 @@ def stage(root, key, revision=None):
         if not revision or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in revision):
             raise ValueError('Use a bounded ASCII revision directory')
         folder /= revision
-    tracks = []
-    # Validate the whole unit before writing any outputs.
-    for identity, source in sorted(selected.items()):
-        actor_key, direction, role = identity.rsplit(':', 2)
-        if actor_key != key:
-            continue
-        assert role in NATIVE_ROLES and direction in importer.DIRECTIONS
-        record = records[(key, source)]
-        assert record['direction'] == direction and record['role'] == role
-        assert record['geometry']['status'] == 'GEOMETRY_PASS'
-        assert record['requested_poses'] == 6
-        path = root / source
-        subprocess.run(['git', 'ls-files', '--error-unmatch', source], cwd=root,
-                       check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        assert path.stat().st_size == record['bytes'] and digest(path) == record['sha256']
-        canvas = record['geometry'].get('canvas', 1024)
-        assert type(canvas) is int and 64 <= canvas <= 2048 and canvas % 8 == 0
-        if canvas != 1024:
-            review = record.get('source_canvas_review', {})
-            assert review.get('status') == 'REVIEWED_SOURCE_CANVAS_PROPOSAL'
-            assert review.get('source_sha256') == record['sha256'] and review.get('canvas_size') == canvas
-            assert isinstance(review.get('review_basis'), str) and review['review_basis'].strip()
-        canonical_kwargs = reviewed_layout.declared_canonical_preflight_kwargs(
-            record.get('source_canvas_review'), manifest.get('reviewed_runtime_layouts', {}).get(source),
-            record['sha256'], direction, canvas)
-        geometry = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
-                                    directions_axis='phase_grid2', canvas_size=canvas,
-                                    directions=[direction], **canonical_kwargs)
-        if record.get('source_region_review') is not None:
-            geometry, region_proof = apply_reviewed_regions(path, geometry, record['source_region_review'])
-            assert region_proof == record['source_region_proof'], 'Reviewed source region proof changed'
-        importer.require_complete_pose_regions(path, geometry)
-        saved = json.loads(path.with_suffix('.geometry.json').read_text())
-        assert json.loads(json.dumps(geometry)) == saved, f'Saved source geometry changed: {source}'
-        assert len(geometry['frames']) == geometry['distinct_pixel_frames'] == 6
-        assert geometry['canvas_size'] == [canvas, canvas] and geometry['foot'] == [canvas // 2, canvas * 5 // 8]
-        assert [frame['row'] for frame in geometry['frames']] == list(range(6))
-        assert all(frame['direction'] == direction for frame in geometry['frames'])
-        layout_proof = None
-        layout = manifest.get('reviewed_runtime_layouts', {}).get(source)
-        if layout is not None:
-            geometry, layout_proof = reviewed_layout.apply_reviewed_layout(
-                path, geometry, layout, source_region_review=record.get('source_region_review'))
-        tracks.append(dict(direction=direction, role=role,
-                           animation=f'{role}_{importer.DIRECTIONS.index(direction)}',
-                           source=source, source_sha256=record['sha256'],
-                           texture=previous_textures.get((source, record['sha256']),
-                                       (folder / f'{direction}-{role}.png').as_posix()), geometry=geometry))
-        if layout_proof is not None:
-            tracks[-1]['runtime_layout_proof'] = layout_proof
+    tracks, analysis_stats = _prepare_tracks(root, key, folder, manifest, records, previous_actor, reuse_context, analyzed_sources)
     assert 1 <= len(tracks) <= len(NATIVE_ROLES) * 8
     fingerprints = [frame['rgba_sha256'] for track in tracks for frame in track['geometry']['frames']]
     assert len(set(fingerprints)) == len(fingerprints), 'No duplicated native poses across tracks'
@@ -187,7 +383,8 @@ def stage(root, key, revision=None):
     register['actors'][key] = entry
     approval_state.assert_preserved(manifest, register)
     register_path.write_text(json.dumps(register, ensure_ascii=False, indent=2) + '\n')
-    print(f'NATIVE_TRACKS_STAGED {key} tracks={len(tracks)} poses={len(fingerprints)} approvals_added=0')
+    print(f'NATIVE_TRACKS_STAGED {key} tracks={len(tracks)} poses={len(fingerprints)} approvals_added=0 analysis={analysis_stats}')
+    return analysis_stats
 
 
 def main():
