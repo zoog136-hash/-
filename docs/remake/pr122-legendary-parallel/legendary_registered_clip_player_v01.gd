@@ -57,12 +57,12 @@ func configure(record_path: String, registration_path: String = "") -> bool:
 		_registration = parsed
 		if str(_registration.get("record_sha256", "")) != FileAccess.get_sha256(record_path):
 			return _fail("Registration is pinned to another record")
-		if str(_registration.get("status", "")) != "REVIEWED_ANCHORS_AND_SCALE":
-			return _fail("Registration requires reviewed anchors and scale")
+		if not str(_registration.get("status", "")) in ["REVIEWED_ANCHORS_AND_SCALE", "RASTER_COORDINATE_PRESERVATION"]:
+			return _fail("Registration requires reviewed anchors/scale or exact raster-coordinate preservation")
 		if _registration.get("frames", []).size() != 6:
 			return _fail("Registration requires six frame transforms")
-	elif str(record.get("frame_registration_status", "")) == "REVIEWED_METADATA_REQUIRED":
-		return _fail("Corrected clip has no reviewed registration metadata")
+	elif not str(record.get("frame_registration_status", "")).is_empty():
+		return _fail("Corrected clip requires explicit registration metadata")
 	var sources: Array = record.get("source_files", [])
 	if sources.is_empty():
 		sources = [{"path": record.get("source", ""), "sha256": record.get("source_sha256", "")}]

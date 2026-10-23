@@ -42,7 +42,7 @@ func configure(staging_path: String, manifest_path: String) -> bool:
 		if FileAccess.get_sha256(str(revision.get("record", ""))) != str(revision.get("record_sha256", "")):
 			last_error = "Revision record SHA mismatch: " + slot
 			return false
-		if str(revision.get("registration_status", "")) != "REVIEWED_ANCHORS_AND_SCALE" or str(revision.get("registration", "")).is_empty():
+		if not str(revision.get("registration_status", "")) in ["REVIEWED_ANCHORS_AND_SCALE", "RASTER_COORDINATE_PRESERVATION"] or str(revision.get("registration", "")).is_empty():
 			last_error = "Revision registration not ready: " + slot
 			return false
 		if FileAccess.get_sha256(str(revision["registration"])) != str(revision.get("registration_sha256", "")):

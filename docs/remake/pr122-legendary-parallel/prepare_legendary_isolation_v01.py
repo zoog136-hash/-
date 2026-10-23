@@ -261,39 +261,76 @@ def write_revisions(root, output_root, version, substitutions, exclusions):
         if slot in exclude:
             continue
         parent_path, record, parsed = original_record(root, list(slot))
+        baseline_frames = copy.deepcopy(parsed['frames'])
         revision = copy.deepcopy(record)
         used_proofs = []
-        for frame in parsed['frames']:
+        registration_frames = []
+        for index, frame in enumerate(parsed['frames']):
+            original = baseline_frames[index]
+            original_size = [original['region'][2] + original['margin'][2], original['region'][3] + original['margin'][3]]
+            baseline_anchor = np.array(original_size, dtype=np.float64) * 0.5
+            anchor = baseline_anchor.copy()
             old = frame['source'].removeprefix('res://')
-            if old not in substitutions:
-                continue
-            sub = substitutions[old]
-            matching = [pose for pose in sub['proof']['poses'] if pose['original_region'] == frame['region']]
-            assert len(matching) == 1, 'A borrowed frame must match exactly one proven original region'
-            frame.update(source=resource(sub['atlas']), region=matching[0]['region'], margin=matching[0]['margin'])
-            used_proofs.append(sub['proof_path'])
+            if old in substitutions:
+                sub = substitutions[old]
+                matching = [pose for pose in sub['proof']['poses'] if pose['original_region'] == frame['region']]
+                assert len(matching) == 1, 'A borrowed frame must match exactly one proven original region'
+                pose = matching[0]
+                anchor = (baseline_anchor - np.array(original['margin'][:2]) + np.array(original['region'][:2])
+                          + np.array(pose['translation']) - np.array(pose['region'][:2]) + np.array(pose['margin'][:2]))
+                frame.update(source=resource(sub['atlas']), region=pose['region'], margin=pose['margin'])
+                used_proofs.append(sub['proof_path'])
+            registration_frames.append({'index': index, 'scale': [1.0, 1.0],
+                                        'anchor_in_texture': anchor.tolist(), 'target_anchor': [0.0, 0.0],
+                                        'basis': 'Exact baseline centered-raster origin; no anatomical or scale approval',
+                                        'baseline_center': baseline_anchor.tolist()})
         relative = ASSETS / ('transform_' + slot[0].split(':')[1]) / 'corrections' / version
         stem = slot[1] + '-' + slot[2]
         frames_path = relative / (stem + '-SpriteFrames.tres')
         record_path = relative / (stem + '-record.json')
+        registration_path = relative / (stem + '-raster-registration.json')
         frame_raw = render_tres(parsed)
         revision.update(schema='pr122-legendary-versioned-isolation-clip-v1', status='CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED',
                         revision_parent=resource(parent_path), revision_parent_sha256=sha((root / parent_path).read_bytes()),
                         raw_authored_source=record['source'], raw_authored_source_sha256=record['source_sha256'],
                         isolation_proofs=sorted(set(used_proofs)),
                         output_spriteframes=resource(frames_path), output_spriteframes_sha256=sha(frame_raw),
-                        frame_registration_status='REVIEWED_METADATA_REQUIRED', final_approved=False)
+                        frame_registration_status='RASTER_COORDINATE_PRESERVATION',
+                        frame_registration=resource(registration_path), scale_registration_status='HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED', final_approved=False)
+        # Historic generator/guard/pose declarations describe the immutable
+        # parent, not the new atlas. Keep them explicitly as provenance.
+        for field in ['source_pose_sequence', 'draft_guard_reuse', 'six_pose_config',
+                      'original_reused_regions_margins_rgba_unchanged',
+                      'minimal_checks', 'cell_size', 'partition_edges']:
+            if field in revision:
+                revision['raw_parent_' + field] = revision.pop(field)
+        revision['revision_source_pose_sequence'] = [dict(frame, phase=i) for i, frame in enumerate(parsed['frames'])]
+        revision['minimal_checks'] = {'integer_translation_RGBA_proof': 'PASS',
+                                      'SpriteFrames_actual_Godot_playback': 'NOT_RUN'}
         old_main = record['source'].removeprefix('res://')
         if old_main in substitutions:
             revision['source'] = substitutions[old_main]['atlas']
             revision['source_resource_path'] = resource(revision['source'])
             revision['source_sha256'] = substitutions[old_main]['atlas_sha256']
+            revision['source_bytes'] = (output_root / revision['source']).stat().st_size
+            proof = substitutions[old_main]['proof']
+            revision['source_grid'] = proof['grid']
+            cw = proof['output_canvas'][0] // proof['grid'][0]
+            ch = proof['output_canvas'][1] // proof['grid'][1]
+            revision['cell_size'] = [cw, ch]
+            revision['partition_edges'] = {'x': [i * cw for i in range(proof['grid'][0] + 1)],
+                                            'y': [i * ch for i in range(proof['grid'][1] + 1)]}
         revision['source_files'] = []
+        declared_raw = {resource(info['path']): info['sha256'] for info in record.get('source_files', [])}
+        declared_raw[resource(record['source'])] = record['source_sha256']
         for path in dict.fromkeys(frame['source'] for frame in parsed['frames']):
             input_path = safe_path(output_root, path)
             if not input_path.exists():
                 input_path = safe_path(root, path)
-            revision['source_files'].append({'path': path, 'sha256': sha(input_path.read_bytes()),
+            actual_sha = sha(input_path.read_bytes())
+            if not any(path == resource(s['atlas']) for s in substitutions.values()):
+                assert actual_sha == declared_raw[path], 'Unchanged raw source must retain its pinned SHA'
+            revision['source_files'].append({'path': path, 'sha256': actual_sha, 'bytes': input_path.stat().st_size,
                                              'source_kind': 'integer_translation_derivative' if any(path == resource(s['atlas']) for s in substitutions.values()) else 'preserved_raw'})
         checks = []
         for i, frame in enumerate(parsed['frames']):
@@ -304,11 +341,19 @@ def write_revisions(root, output_root, version, substitutions, exclusions):
             x, y, w, h = frame['region']
             checks.append({'index': i, 'region': frame['region'], 'rgba_sha256': sha(rgba[y:y+h, x:x+w].tobytes())})
         revision['automatic_checks'] = checks
+        revision_raw = json_bytes(revision)
+        registration = {'schema': 'legendary-frame-registration-v1', 'baseline_sha': BASELINE,
+                        'status': 'RASTER_COORDINATE_PRESERVATION', 'record_sha256': sha(revision_raw),
+                        'SpriteFrames_sha256': sha(frame_raw), 'frames': registration_frames,
+                        'semantic_registration_approved': False, 'quality_status': 'HOLD', 'final_approved': 0}
+        registration_raw = json_bytes(registration)
         immutable_write(output_root / frames_path, frame_raw)
-        immutable_write(output_root / record_path, json_bytes(revision))
+        immutable_write(output_root / record_path, revision_raw)
+        immutable_write(output_root / registration_path, registration_raw)
         manifest['revisions'].append({'slot': list(slot), 'record': resource(record_path),
-                                     'record_sha256': sha(json_bytes(revision)), 'SpriteFrames': resource(frames_path),
-                                     'SpriteFrames_sha256': sha(frame_raw), 'registration_status': 'REVIEWED_METADATA_REQUIRED'})
+                                     'record_sha256': sha(revision_raw), 'SpriteFrames': resource(frames_path),
+                                     'SpriteFrames_sha256': sha(frame_raw), 'registration_status': 'RASTER_COORDINATE_PRESERVATION',
+                                     'registration': resource(registration_path), 'registration_sha256': sha(registration_raw)})
     return manifest
 
 
@@ -317,6 +362,7 @@ def main():
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output-root', type=Path)
     parser.add_argument('--review', type=Path, required=True)
+    parser.add_argument('--frozen', type=Path, required=True)
     parser.add_argument('--selection', type=Path, required=True)
     parser.add_argument('--apply', action='store_true')
     args = parser.parse_args()
@@ -324,6 +370,12 @@ def main():
     review_raw = args.review.read_bytes()
     review = json.loads(review_raw)
     assert sha(review_raw) == selection['technical_review_sha256']
+    frozen_raw = args.frozen.read_bytes()
+    frozen = json.loads(frozen_raw)
+    assert frozen['baseline_sha'] == BASELINE and sha(frozen_raw) == selection['frozen_review_sha256']
+    frozen_allowed = {entry['source']: entry['sha256'] for entry in frozen['ownership_repair_candidates']}
+    assert all(entry['source'] in frozen_allowed and entry['source_sha256'] == frozen_allowed[entry['source']]
+               for entry in selection.get('sources', []) if entry['decision'] == 'ISOLATE'), 'Only frozen safe candidates are authorized'
     chosen = validated_selection(args.root, selection, review)
     if not args.apply:
         print(json.dumps({'status': 'PLAN_ONLY_NO_ARTIFACT_WRITES', 'selected_sources': len(chosen),
