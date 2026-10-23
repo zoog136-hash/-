@@ -1,0 +1,495 @@
+{
+  "key": "transform:176",
+  "name": "경비병(창) 대장",
+  "grade": "전설",
+  "direction": "SE",
+  "role": "hit",
+  "reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+  "reference_sha256": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+  "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+  "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+  "legacy_provenance_sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523",
+  "legacy_source_files": [
+    {
+      "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+      "bytes": 1221849
+    }
+  ],
+  "existing_pose_metadata": [
+    {
+      "ordinal": 0,
+      "original_pose_id": 65,
+      "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "duration": 1.0,
+      "start_seconds": 0.0,
+      "rgba_sha256": "f376f850880f879daf0ac2de846c21a6fe08143df5d6c864e5489284d414284b",
+      "source_anchor": [
+        304,
+        217
+      ],
+      "region": [
+        259,
+        64,
+        98,
+        157
+      ],
+      "margin": [
+        147,
+        87,
+        286,
+        227
+      ]
+    },
+    {
+      "ordinal": 1,
+      "original_pose_id": 73,
+      "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "duration": 1.0,
+      "start_seconds": 0.10999999999889999,
+      "rgba_sha256": "31e04e4c6da0a3683294ae15dac0387f7dec916babe2fb5c91bc9ac32c58d2d1",
+      "source_anchor": [
+        304,
+        422
+      ],
+      "region": [
+        262,
+        270,
+        84,
+        156
+      ],
+      "margin": [
+        150,
+        88,
+        300,
+        228
+      ]
+    }
+  ],
+  "six_pose_config": {
+    "sequence": [
+      {
+        "kind": "reused",
+        "ordinal": 0
+      },
+      {
+        "kind": "new",
+        "ordinal": 0
+      },
+      {
+        "kind": "new",
+        "ordinal": 1
+      },
+      {
+        "kind": "reused",
+        "ordinal": 1
+      },
+      {
+        "kind": "new",
+        "ordinal": 2
+      },
+      {
+        "kind": "new",
+        "ordinal": 3
+      }
+    ],
+    "duration_weights": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "speed": 27.272727273,
+    "total_duration_seconds": 0.21999999999779998,
+    "reused_pose_start_times": [
+      {
+        "legacy_pose_id": 65,
+        "final_phase": 0,
+        "legacy_start_seconds": 0.0,
+        "new_start_seconds": 0.0
+      },
+      {
+        "legacy_pose_id": 73,
+        "final_phase": 3,
+        "legacy_start_seconds": 0.10999999999889999,
+        "new_start_seconds": 0.10999999999889999
+      }
+    ],
+    "legacy_pose_start_times_preserved": true,
+    "legacy_total_duration_preserved": true,
+    "new_source_grid": [
+      2,
+      2
+    ]
+  },
+  "poses": 6,
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "generation_request": {
+    "prompt": "TWILIGHT transform:176 경비병(창) 대장: author ONLY 4 missing SE HIT poses. The catalog portrait is identity authority; the additional unchanged legacy atlas establishes exact painted sprite style, small native sprite scale, facing and original hand/equipment. Existing 2 poses are preserved byte-for-byte and must NOT be redrawn: pose65 at final phase0, pose73 at final phase3. Their atlas coordinates are pose65 source rectangle x259 y64 w98 h157; pose73 source rectangle x262 y270 w84 h156. Create ONE transparent RGBA PNG with EXACTLY 2 equal columns and 2 equal rows, 4 new full-body poses in reading order. Every pose uses three-quarter FRONT-RIGHT view facing screen DOWN-RIGHT; no facing or camera changes. Keep the exact silver-white closed pointed helmet and armor, dark joints, deep dark-purple cape, one original lavender-bladed long polearm, original anatomical weapon hand, body proportions and ornament. Use the small native sprite scale of the preserved atlas, not an enlarged portrait. Keep all bodies, complete polearm blade and butt, hands, feet and cape inside their own cells with generous transparent gutters. Do not replace the original weapon or add a shield, facial skin, wings, tail or extra equipment. NEW CELLS ONLY: cell0: final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held; cell1: final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking; cell2: final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose; cell3: final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack. Articulate connected joints and equipment into different real poses; never copy, mirror, rotate, translate, recolor or interpolate a static sprite. No labels, grid, captions, extra figures, scenery, opaque background, ground, shadows, detached effects, large aura or long trails. Alpha-zero outside silhouettes. This is a brief nonfatal impact and recovery, distinct from attack and death. No weapon swing toward a target, firing, casting, wounds or blood.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/4954db6f65010804b3185b7a.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-1.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/4954db6f65010804b3185b7a.png": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+    "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-1.png": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7"
+  },
+  "status": "MIXED_REUSED_AND_NEW_DRAFT_NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "policy": "Follow caller production-stage order. Generate only missing poses; preserve source pixels, all old WALK/death views and old approvals. Scale/visual issues HOLD; no image resizing or final approval inferred.",
+  "schema": "pr122-legendary-generated-clip-v1",
+  "input_representation": "mixed_legacy_supplement_v1",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-hit-source-v01.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-hit-source-v01.png",
+  "source_sha256": "dd3fe4b41a93863e1bd9704632879c33371df92cec3c249ba56cf3a0f94d85ad",
+  "source_bytes": 847760,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/legacy-source-01520a092553b024.png",
+      "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+      "bytes": 1221849,
+      "source_kind": "reused",
+      "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-hit-source-v01.png",
+      "sha256": "dd3fe4b41a93863e1bd9704632879c33371df92cec3c249ba56cf3a0f94d85ad",
+      "bytes": 847760,
+      "source_kind": "new"
+    }
+  ],
+  "source_grid": [
+    2,
+    2
+  ],
+  "cell_size": [
+    631,
+    623
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      631,
+      1263
+    ],
+    "y": [
+      0,
+      623,
+      1246
+    ]
+  },
+  "integer_grid_rounding_hold": true,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/SE-hit-SpriteFrames.tres",
+  "output_spriteframes_sha256": "02e651f13fd58b79afb77c05cce2d61a028275a09801689fdf38c5c1153f4b64",
+  "new_poses": 4,
+  "newly_authored_poses": 4,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "reused",
+      "original_pose_id": 65,
+      "original_region": [
+        259,
+        64,
+        98,
+        157
+      ],
+      "original_margin": [
+        147,
+        87,
+        286,
+        227
+      ],
+      "original_source_anchor": [
+        304,
+        217
+      ],
+      "rgba_sha256": "f376f850880f879daf0ac2de846c21a6fe08143df5d6c864e5489284d414284b"
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        631,
+        623
+      ],
+      "rgba_sha256": "910e5af99244011a290cf6537f47c0fd77b9037d641b413d26bda9dd87924ff8"
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        631,
+        0,
+        632,
+        623
+      ],
+      "rgba_sha256": "2d5be8b93a170e7a51c8383a02ca196c3dddd5a719f9367b568c4ea4537d29cb"
+    },
+    {
+      "phase": 3,
+      "source_kind": "reused",
+      "original_pose_id": 73,
+      "original_region": [
+        262,
+        270,
+        84,
+        156
+      ],
+      "original_margin": [
+        150,
+        88,
+        300,
+        228
+      ],
+      "original_source_anchor": [
+        304,
+        422
+      ],
+      "rgba_sha256": "31e04e4c6da0a3683294ae15dac0387f7dec916babe2fb5c91bc9ac32c58d2d1"
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        0,
+        623,
+        631,
+        623
+      ],
+      "rgba_sha256": "61cb2c381aeaf2d455cf94a95c5438f1916747316fb556e47c1781998209add8"
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        631,
+        623,
+        632,
+        623
+      ],
+      "rgba_sha256": "7bb61d195c07d450c46e724aca0399a82dce1d22414ddc518c18181bef28b3e9"
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "reused",
+      "region": [
+        259,
+        64,
+        98,
+        157
+      ],
+      "rgba_sha256": "f376f850880f879daf0ac2de846c21a6fe08143df5d6c864e5489284d414284b",
+      "normalized_visible_sha256": "da88e173834b10e3b98521a0b3cd23c7e6f6374fd2ca3c0a09de10a5c916fb09",
+      "visible_pixels": 7395,
+      "visible_height": 157,
+      "visible_width": 98,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        98,
+        157
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        631,
+        623
+      ],
+      "rgba_sha256": "910e5af99244011a290cf6537f47c0fd77b9037d641b413d26bda9dd87924ff8",
+      "normalized_visible_sha256": "67d9240617994e925cbf172669692cfcb319e88d6dd665bfcbbd543e7b22cb78",
+      "visible_pixels": 78179,
+      "visible_height": 578,
+      "visible_width": 606,
+      "alpha_bbox_in_region": [
+        25,
+        37,
+        631,
+        615
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        631,
+        0,
+        632,
+        623
+      ],
+      "rgba_sha256": "2d5be8b93a170e7a51c8383a02ca196c3dddd5a719f9367b568c4ea4537d29cb",
+      "normalized_visible_sha256": "5db234f15aaa52eb4aa3fe36742ff6fb8875b2cd1112708d232de0c6db92a1f9",
+      "visible_pixels": 76035,
+      "visible_height": 600,
+      "visible_width": 618,
+      "alpha_bbox_in_region": [
+        0,
+        23,
+        618,
+        623
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "source_kind": "reused",
+      "region": [
+        262,
+        270,
+        84,
+        156
+      ],
+      "rgba_sha256": "31e04e4c6da0a3683294ae15dac0387f7dec916babe2fb5c91bc9ac32c58d2d1",
+      "normalized_visible_sha256": "37715e4962a637b0c0a7bf5d642f77be4edd24b71de94ba84b171ff4a2d62664",
+      "visible_pixels": 6901,
+      "visible_height": 156,
+      "visible_width": 84,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        84,
+        156
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        0,
+        623,
+        631,
+        623
+      ],
+      "rgba_sha256": "61cb2c381aeaf2d455cf94a95c5438f1916747316fb556e47c1781998209add8",
+      "normalized_visible_sha256": "c834fb8ff100c1e24b94fba6562b01001851d9c06f1d603492f7aaf1d334d6f7",
+      "visible_pixels": 83094,
+      "visible_height": 612,
+      "visible_width": 606,
+      "alpha_bbox_in_region": [
+        25,
+        11,
+        631,
+        623
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "source_kind": "new",
+      "region": [
+        631,
+        623,
+        632,
+        623
+      ],
+      "rgba_sha256": "7bb61d195c07d450c46e724aca0399a82dce1d22414ddc518c18181bef28b3e9",
+      "normalized_visible_sha256": "8daf2774ce2e66a85c0a2ed8bcc286c9fa8471d4cccbc11cce66d86e5072e705",
+      "visible_pixels": 73016,
+      "visible_height": 623,
+      "visible_width": 612,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        612,
+        623
+      ],
+      "border_alpha_pixels": 0
+    }
+  ],
+  "original_reused_regions_margins_rgba_unchanged": true,
+  "legacy_fps": 9.090909091,
+  "legacy_duration_seconds": 0.21999999999779998,
+  "legacy_nominal_duration_seconds": 0.22,
+  "legacy_pose_start_times_preserved": true,
+  "legacy_total_duration_preserved": true,
+  "duration_weights": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "animation_speed": 27.272727273,
+  "animation_duration_seconds": 0.21999999999779998,
+  "reused_pose_start_times": [
+    {
+      "legacy_pose_id": 65,
+      "final_phase": 0,
+      "legacy_start_seconds": 0.0,
+      "new_start_seconds": 0.0
+    },
+    {
+      "legacy_pose_id": 73,
+      "final_phase": 3,
+      "legacy_start_seconds": 0.10999999999889999,
+      "new_start_seconds": 0.10999999999889999
+    }
+  ],
+  "animation": "hit_1",
+  "loop": false,
+  "terminal_frame_hold": false,
+  "scale_comparison_hold": true,
+  "legacy_median_body_height": 156.5,
+  "clipped_cell_count": 0,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "request_file_sha256": "d192b98c236fd646748b2cf8186a26c1b5210aca7487a389a39b6a5fcc59d477",
+  "generation_service": "image_gen.imagegen",
+  "generation_request_sha256": "62316dffedaf5c38ec7030af8767bb85da805066522c69ebcc81cde827f8fc44",
+  "hold_reasons": [
+    "Mixed-source original appearance, camera, footing and motion continuity require later quality review",
+    "Complete integer source partitions differ by at most one pixel; display registration review pending",
+    "New-source body scale differs; no PNG resizing performed"
+  ],
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_real_mixed_source_frames_extractable": "PASS",
+    "reused_source_regions_margins_rgba_exact": "PASS",
+    "legacy_timing_preserved": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "production_connected": false,
+  "final_motion_approvals_added": 0
+}
