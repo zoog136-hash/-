@@ -1,0 +1,221 @@
+{
+  "key": "transform:191",
+  "name": "하딘의 영혼",
+  "grade": "전설",
+  "direction": "N",
+  "role": "idle",
+  "reference": "res://assets/catalog/fc02cba251d675d0d26277a0.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:191 하딘의 영혼. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body N IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use true rear-facing NORTH, screen UP, back of head and back of costume visible, never a front face, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH means directly AWAY toward the TOP screen edge: show the BACK of the head, shoulders and costume; no front face or chest view. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/fc02cba251d675d0d26277a0.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 207,
+  "reference_sha256": "6c9fe7082678728b28a2c5befd6cfada0be61512be3affe6c862c56bcb93dce8",
+  "schema": "pr122-legendary-generated-clip-v1",
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/N-idle-source-v01.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_191/draft001/N-idle-source-v01.png",
+  "source_sha256": "b178a1785f9491fef88ccf3a27e0f4b69c7164e848d029646a167a8c396cd879",
+  "source_bytes": 2319837,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_191/draft001/N-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "970262b8d41ff84f03b39c178826a7f5980de0c85607d2fd1b34bbd61cbd3d88",
+  "generated_original_path": "/workspace/generated_images/exec-45953d0b-f5e5-47b2-9938-f625626c2aa7.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_191-N-idle-v01.json",
+  "request_file_sha256": "ef5300bbb32712b76875638944cc123b828a27fc4792dd6726fd3d67646431b2",
+  "generation_request_sha256": "a7488aafea7b5e6688184d07d9d83124d8b80c129bbd9b52e17b85276ee6f131",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "idle_6",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "e95a4c8c727d28576966a65dd0914d81c30df3c66023b681ed79e3d0b2b73bd8",
+      "normalized_visible_sha256": "482f644288dafdc9a201cccc1064a7d2dc1406bb10be8b77b38ddee8a4d97b11",
+      "visible_pixels": 87359,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        512,
+        510
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "a0eb1e255f45e77565c56231f5d0a94ba4f94ca2cb26b286a9a89e5e98d6c3b5",
+      "normalized_visible_sha256": "f937d0418b95cea43b3b72cc4257a2dd761a735ef8b94e07b1906eee427edf40",
+      "visible_pixels": 87690,
+      "alpha_bbox_in_cell": [
+        0,
+        4,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "82329a15bc196a1efb07875f66475a0b9b5b510d6577ea27f700917c68a63f0a",
+      "normalized_visible_sha256": "11dbcce3b31136e14c17f68459c3814be0ef466b245a87acdafd21658fa3083d",
+      "visible_pixels": 90913,
+      "alpha_bbox_in_cell": [
+        0,
+        0,
+        498,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "c2be05beebb3f269c8ca86b52a62fcd1c5866677f0fc5555b98f8d675374db72",
+      "normalized_visible_sha256": "8ddadf6215d49c29f3e207d692c5d3d9c3be69b8743ee11b36128983169882b5",
+      "visible_pixels": 87165,
+      "alpha_bbox_in_cell": [
+        0,
+        1,
+        504,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "aee8fd1332c484e092a282b10c83c917f13e69971ffbad13c93213ac1e1c7226",
+      "normalized_visible_sha256": "2232ae953c239e2d61e45ffbf21cb9ae57806606998f76de9584699b6529c2af",
+      "visible_pixels": 88004,
+      "alpha_bbox_in_cell": [
+        15,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "49804a654520196c65d13038cd765d8e160edc8d701847bca01a9723a7e982a1",
+      "normalized_visible_sha256": "37554215a9b9b2aad094b92bc3f0500fb8cac78607d5c678fd128cb248782b80",
+      "visible_pixels": 85465,
+      "alpha_bbox_in_cell": [
+        3,
+        3,
+        490,
+        498
+      ],
+      "border_alpha_pixels": 0
+    }
+  ],
+  "clipped_cell_count": 0,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false
+}
