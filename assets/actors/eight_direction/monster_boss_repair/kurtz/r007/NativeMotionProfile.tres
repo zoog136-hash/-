@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+profile_id = "monster:커츠"
+frames_path = "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r007/SpriteFrames.tres"
+layout = "directional8"
+motion_style = "heavy"
+body_kind = "armored"
+movement_fps = 12.5
+reference_speed = 210.0
+pixel_scale = 1.166666666667
+sprite_offset = Vector2(0, -37.333333333333)
+authored_motion_weight = 0.0
+hit_recoil = 0.0
+embedded_shadow = false
+attack_hit_frame = 2
+action_hit_frames = {"attack": 2}
+death_duration = 0.8
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false
