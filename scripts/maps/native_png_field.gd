@@ -30,7 +30,7 @@ static func scale_source_geometry(value: Variant, factor: float, key: String="")
 	if value is Array:
 		var source: Array=value
 		var is_rect: bool=key in ["rect","bounds"] and source.size()==4
-		var is_point: bool=key in ["spawn","spawn_position","position","center","point","from","to","polygon","points","polygons","walk_polygons","route_checks","blocked_probes","waypoints","path","hunting_routes"] and source.size()==2
+		var is_point: bool=key in ["spawn","spawn_position","position","target_position","center","point","from","to","polygon","points","polygons","walk_polygons","route_checks","blocked_probes","waypoints","path","hunting_routes"] and source.size()==2
 		if is_rect or is_point:
 			var all_numeric: bool=true
 			for component: Variant in source:
