@@ -6,7 +6,7 @@
   "public_tower_png_delivery": "USER_AUTHORIZED_ACTUAL_TRACKED_RUNTIME_FILES_IN_DRAFT_PR_150",
   "android_device": "NOT_RUN",
   "whole_map_complete": false,
-  "import": "PASS_REUSED_IMPORTED_TEXTURE_CACHE_SCRIPT_PARSE_CURRENT",
+  "import": "PASS_CLEAN_GIT_CHECKOUT_OFFICIAL_ENGINE_EXISTING_IMPORTED_CHARACTER_TEXTURE_CACHE",
   "resource_integrity": {
     "atlases": 723,
     "frames": 41442,
@@ -26,7 +26,8 @@
     "tower_all_10_plus_domination": {
       "checks": 475,
       "failures": [],
-      "later_native_foot_guard": "LATEST_DOMINATION_85_CHECKS_PASS"
+      "latest_foot_guard_and_bundled_assets": "PASS_AGAIN_FROM_CLEAN_GIT_CHECKOUT",
+      "verified_commit": "7d29688f78df430b42d3dc642097f3e974cdd4ec"
     },
     "latest_30fps_actual_movie": {
       "checks": 73,
@@ -112,7 +113,14 @@
     "pr147_current_latest_checks": "83 checks snapshot: no failed conclusion; branch unmerged"
   },
   "legacy_release_audit": "check_resource_integrity --release-dir expects TWILIGHT-original-resources.zip and asset paths, not a map-only ZIP. Map archive separately verified with its hash-pinned installer; no global original-resource delivery claim.",
-  "ci": "PR_150_PENDING_REMOTE_CHECKS_NOT_CLAIMED_GREEN",
+  "ci": {
+    "status": "PENDING_NOT_CLAIMED_GREEN",
+    "snapshot_for_code_art_commit": "7d29688f78df430b42d3dc642097f3e974cdd4ec",
+    "pull_request": "https://github.com/zoog136-hash/-/pull/150",
+    "tower_workflow": "https://github.com/zoog136-hash/-/actions/runs/39939760558",
+    "github_autoload_workflow": "https://github.com/zoog136-hash/-/actions/runs/39939761050",
+    "tower_workflow_snapshot_status": "QUEUED"
+  },
   "authorization": "data/maps/tower_png_authorization.json",
   "public_delivery_manifest": "data/maps/tower_png_delivery_manifest.json",
   "public_evidence": "docs/png-runtime-correction-20261023/evidence/manifest.json",
@@ -126,5 +134,26 @@
     },
     "authorization": "data/maps/tower_png_authorization.json",
     "all_original_art_integrated": false
+  },
+  "clean_git_checkout": {
+    "verified_commit": "7d29688f78df430b42d3dc642097f3e974cdd4ec",
+    "method": "Remove QA-installed tower folders; Git checkout restores both packs; no installer, no PNG path environment variables, no review flags",
+    "git_tracked_tower_files": 428,
+    "git_worktree_clean_after_real_game": true,
+    "official_engine": "4.7.2.stable.official.ed1daf0bf",
+    "godot_import_script_parse": "PASS; existing imported character texture cache reused",
+    "github_autoload_checks": 66,
+    "ordinary_main_tower_checks": 475,
+    "ordinary_main_sample_checks": 76,
+    "failures": [],
+    "remote_git_asset_roundtrip": {
+      "source": "GITHUB_API_BRANCH_CONTENT",
+      "file": "external_map_packs/oman_png_v1/oman_01/ground-0-0.png",
+      "bytes": 660962,
+      "sha256": "1525a8185cf4373ab52167401bc6a15d0759d3c0d9cd8fac83653c5cdb997c25",
+      "status": "PASS"
+    },
+    "android_device": "NOT_RUN",
+    "whole_map_complete": false
   }
 }

@@ -59,4 +59,8 @@ python3 tools/map_restore/install_tower_png_pack.py /path/to/twilight-tower-png-
 
 실제 공식 엔진 `4.7.2.stable.official.ed1daf0bf`, Linux OpenGL llvmpipe에서 일반 실행을 검사했다. [기계 판독 검증 결과](VALIDATION.json)에 결과와 실패 이력을 기록한다. 실제 [아덴 1280×720](evidence/aden-world.png), [오만](evidence/oman-01.png), [111 지배](evidence/domination-111.png), [모바일 비율 Linux 창](evidence/aden-world-mobile-1560x720.png), [물리 충돌 디버그](evidence/aden_world-physics.png), [42.37초 Godot 실행 영상](evidence/actual-godot-play.mp4)을 Git에 포함한다. 영상은 실제 Main을 자동 조작해 이동·충돌·전경을 검사한 기록이다. Android 실기기 검증은 **NOT_RUN**이며 이번에 APK 빌드 완료를 주장하지 않는다.
 
+코드·아트 커밋 `7d29688f78df430b42d3dc642097f3e974cdd4ec`의 별도 검증 체크아웃에서 이전 설치 팩을 지운 다음 Git checkout만으로 복원했다. 428파일/SHA, 공식 Godot import·스크립트 파싱, 일반 실행 연결 66검사, 오만 10층+지배 실제 게임 475검사, 아덴·지배 샘플 76검사를 다시 통과했다. [깨끗한 Git 체크아웃 검증 기록](evidence/clean-git-verification.json). 기존 캐릭터 텍스처 import 캐시는 재사용했다. GitHub에서 실제 PNG 청크를 다시 내려받아 SHA가 일치하는 것도 검사했다. 원격 CI는 아직 대기 중이며 통과로 표시하지 않는다.
+
+현재 영상의 아덴 장애물 표본은 **분수와 나무**이고, 오만 표본은 원본 통행 제한 벽, 지배 표본은 수정 기둥이다. 이를 아덴 마을의 모든 건물 벽·출입구가 각 방향에서 검증된 것으로 계산하지 않는다. 검수되지 않은 성벽·건물 바닥·문·다리의 정합과 표본 확대는 미완료다.
+
 필요한 추가 작업은 아덴 전체/기란 마을 건물·출입구·다리의 원본 판본별 고유 기준점 3~5개 이상 확정, S32 오브젝트의 정확한 발/레이어 대조, 검수 바깥 충돌과 전경 확장, 111 서버 격자와 PNG의 같은 판본 대응표, 실제 Android 성능·터치·저장 검사다. 현재의 부분 구역을 전체 복원 완료로 표시하지 않는다.
