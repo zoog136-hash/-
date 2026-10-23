@@ -21,8 +21,7 @@ func _initialize() -> void:
 	check(REGISTRY.merge_review(base,invalid,base_hash).is_empty(),"out-of-source foreground anchor is rejected")
 	check(base.revision<plan.revision and not base.maps.balrog_temple.has("runtime_foreground"),"review does not mutate the immutable archive plan")
 	check(base.maps.size()==6,"immutable v5 retains three Albino, continuous Escaros and two temples")
-	check(plan.maps.size()==12,"five Aden/Faith fields and the selected 111 Domination join six native fields")
-	check(plan.maps.domination_summit.file=="111.png" and REGISTRY.plan_hash("domination_summit")==FileAccess.get_sha256(REGISTRY.DOMINATION_PLAN_PATH),"Domination uses its own selected source and authenticated plan")
+	check(plan.maps.size()==11,"five independently sourced Aden/Faith replacements join the six existing native fields")
 	var extra: Dictionary=REGISTRY.read_json(REGISTRY.EXTRA_PLAN_PATH)
 	for mid: String in ["aden_world","faith_01","faith_02","faith_03","faith_04"]:
 		check(plan.maps.has(mid) and extra.maps.has(mid),"existing persistent ID receives its own PNG: "+mid)
@@ -35,7 +34,7 @@ func _initialize() -> void:
 	var baseline: Array=JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v18.json"))
 	var ids: Array=baseline.map(func(row: Dictionary) -> String: return str(row.id))
 	check(ids.size()==25 and ids.has("albino_04"),"historical map data retained for save migration")
-	check(REGISTRY.canonical("albino_03")=="albino_02" and REGISTRY.canonical("albino_04")=="albino_02" and not REGISTRY.supports("albino_03") and not REGISTRY.supports("albino_04"),"retired Albino zones unavailable")
+	check(REGISTRY.canonical("albino_03")=="albino_02" and REGISTRY.canonical("albino_04")=="albino_02" and not REGISTRY.supports("albino_03") and not REGISTRY.supports("albino_04"),"retired Albino zones are not playable")
 	for prefix: String in ["albino_","escaros_"]:
 		for floor: int in range(1,5 if prefix=="albino_" else 6):
 			check(ids.has(prefix+"%02d"%floor),"legacy ID remains loadable: "+prefix+str(floor))
