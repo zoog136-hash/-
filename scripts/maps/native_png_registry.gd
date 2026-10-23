@@ -4,19 +4,14 @@ extends RefCounted
 ## until their legacy gameplay coordinates have a supported correspondence.
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
 const EXTRA_PLAN_PATH := "res://data/maps/aden_faith_png_plan.json"
-const ADEN_DISPLAY_REVIEW := "res://data/maps/aden_png_display_review.json"
 const BUNDLED_EXTRA_ROOT := "res://external_map_packs/aden_faith_png_v1"
 const EXTRA_RECEIPT_PATH := "res://data/maps/aden_faith_png_pack.json"
-const DOMINATION_PLAN_PATH := "res://data/maps/domination_png_plan.json"
-const DOMINATION_RECEIPT_PATH := "res://data/maps/domination_png_pack.json"
-const DOMINATION_ROOT := "res://external_map_packs/domination_png_v1"
 const REVIEW_PATH := "res://data/maps/native_png_review.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 const BUNDLED_ROOT := "res://external_map_packs/native_png_v5"
 const LEGACY_ROOT := "user://native_png_maps"
 # Accepted default packs keep their identity after on-disk removal.
 static var extra_pack_seen: bool=false
-static var domination_pack_seen: bool=false
 
 static func enabled() -> bool:
 	return "--native-png-maps" in OS.get_cmdline_user_args() and not "--legacy-map-layouts" in OS.get_cmdline_user_args()
@@ -38,22 +33,8 @@ static func plan() -> Dictionary:
 	value=merge_review(value,review,FileAccess.get_sha256(PLAN_PATH))
 	if value.is_empty(): return {}
 	var extra: Dictionary=read_json(EXTRA_PLAN_PATH)
-	var display_review: Dictionary=read_json(ADEN_DISPLAY_REVIEW)
-	if display_review.get("base_plan_sha256")!=FileAccess.get_sha256(EXTRA_PLAN_PATH) or display_review.get("source_sha256")!=extra.sources["Aden.png"].sha256:return {}
-	for cut: Dictionary in display_review.get("foreground",[]):
-		if not valid_polygon(cut.get("polygon_image"),extra.sources["Aden.png"].size) or not valid_point(cut.get("foot_image"),extra.sources["Aden.png"].size):return {}
-	extra.maps.aden_world["runtime_foreground"]=display_review.get("foreground",[])
-	for replacement: Dictionary in display_review.get("collision_replace",[]):
-		if replacement.get("shape")!="circle" or not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
-		var found: bool=false
-		for i: int in range(extra.maps.aden_world.collision.size()):
-			if extra.maps.aden_world.collision[i].id==replacement.id:extra.maps.aden_world.collision[i]=replacement;found=true;break
-		if not found:return {}
 	value.sources.merge(extra.get("sources",{}))
 	value.maps.merge(extra.get("maps",{}))
-	var domination: Dictionary=read_json(DOMINATION_PLAN_PATH)
-	value.sources.merge(domination.get("sources",{}))
-	value.maps.merge(domination.get("maps",{}))
 	return value
 
 static func valid_point(value: Variant, size: Array) -> bool:
@@ -112,24 +93,10 @@ static func extra_map(mid: String) -> bool:
 	return read_json(EXTRA_PLAN_PATH).get("maps",{}).has(mid)
 
 static func plan_hash(mid: String) -> String:
-	if mid=="domination_summit":return FileAccess.get_sha256(DOMINATION_PLAN_PATH)
 	return FileAccess.get_sha256(EXTRA_PLAN_PATH if extra_map(mid) else PLAN_PATH)
 
 static func review_hash(mid: String="") -> String:
-	if mid=="domination_summit":return plan_hash(mid)
-	if mid=="aden_world":return FileAccess.get_sha256(ADEN_DISPLAY_REVIEW)
 	return plan_hash(mid) if extra_map(mid) else FileAccess.get_sha256(REVIEW_PATH)
-
-static func domination_root() -> String:
-	var path: String=OS.get_environment("TWILIGHT_DOMINATION_PNG_PACK")
-	if not path.is_empty():return path.trim_suffix("/")
-	return DOMINATION_ROOT if FileAccess.file_exists(DOMINATION_ROOT+"/index.json") else "user://domination_png_maps"
-
-static func domination_installed() -> bool:
-	var path: String=domination_root()+"/index.json"
-	var valid: bool=FileAccess.file_exists(path) and FileAccess.get_sha256(path)==read_json(DOMINATION_RECEIPT_PATH).get("index_sha256","")
-	if valid:domination_pack_seen=true
-	return valid
 
 static func extra_root() -> String:
 	var configured: String=OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK")
@@ -162,6 +129,7 @@ static func bundled_enabled() -> bool:
 
 static func map_for_art(mid: String) -> String:
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
+	# Deprecated Albino 3/4 are never constructed, even via direct API callers.
 	if mid in ["albino_03","albino_04"]: return "albino_02"
 	return mid
 
@@ -171,6 +139,7 @@ static func installed() -> bool:
 	return FileAccess.file_exists(path) and FileAccess.get_sha256(path)==receipt.get("index_sha256","")
 
 static func canonical(mid: String) -> String:
+	# Redirect old save IDs in both normal and explicit PNG modes; no stale field.
 	if mid in ["albino_03","albino_04"]: return "albino_02"
 	if not enabled(): return mid
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
@@ -181,11 +150,6 @@ static func supports(mid: String) -> bool:
 	# Keep old map IDs in ordinary saves; Escaros 01–05 share source artwork
 	# but not the saved alias. Review mode keeps its original canonical names.
 	var art_id: String = map_for_art(canonical(mid))
-	if art_id=="domination_summit":
-		for flag: String in ["--legacy-map-layouts","--png-review","--no-native-png-auto"]:
-			if flag in OS.get_cmdline_user_args():return false
-		if bool(read_json(DOMINATION_RECEIPT_PATH).get("bundled_required",false)):return true
-		return domination_installed() or domination_pack_seen or FileAccess.file_exists(domination_root()+"/index.json") or not OS.get_environment("TWILIGHT_DOMINATION_PNG_PACK").is_empty()
 	if extra_map(art_id):
 		var configured: bool=not OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK").is_empty()
 		var args: PackedStringArray=OS.get_cmdline_user_args()
@@ -206,6 +170,7 @@ static func catalog_entries() -> Array[Dictionary]:
 	return entries
 
 static func menu_entries(records: Array) -> Array:
+	# Always remove Albino 3/4 from the visible catalog; do not depend on CLI mode.
 	var visible: Array=records.filter(func(record: Dictionary) -> bool:
 		return str(record.id) not in ["albino_03","albino_04"])
 	if not enabled(): return visible
@@ -226,7 +191,6 @@ static func load_field(mid: String) -> PlayableField:
 	if not specs.has(mid): return null
 	var local_root: String = extra_root() if extra_map(mid) else root_path()
 	var receipt: Dictionary = read_json(EXTRA_RECEIPT_PATH if extra_map(mid) else "res://data/maps/native_png_pack.json")
-	if mid=="domination_summit":local_root=domination_root();receipt=read_json(DOMINATION_RECEIPT_PATH)
 	if FileAccess.get_sha256(local_root+"/index.json") != receipt.get("index_sha256",""): return null
 	var index: Dictionary = read_json(local_root+"/index.json")
 	if index.get("schema") != 1 or index.get("plan_sha256") != plan_hash(mid): return null
@@ -263,6 +227,7 @@ static func load_field(mid: String) -> PlayableField:
 		if handle.get_32() != int(dimensions[0]) or handle.get_32() != int(dimensions[1]): return null
 	var field: NativePngField = FIELD.new()
 	field.configure_png(mid,spec_plan,manifest,local_root+"/"+mid)
-	if mid=="domination_summit" and (field.data.monster_spawn.size()!=5 or field.data.portal.size()!=5 or field.data.npc_spawn.size()!=1):return null
+	# The native PNG map can have a runtime artwork-to-world scale distinct
+	# from source pixels; validate the *world* spawn after conversion.
 	if not field.walkable(Vector2(field.data.spawn_position[0],field.data.spawn_position[1])): return null
 	return field
