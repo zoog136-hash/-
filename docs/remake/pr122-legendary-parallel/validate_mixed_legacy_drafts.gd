@@ -17,6 +17,7 @@ func _check(ok: bool, label: String, errors: Array[String]) -> bool:
 
 func _validate(record_path: String) -> Dictionary:
 	var errors: Array[String] = []
+	var timing_quality_errors: Array[String] = []
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(record_path))
 	if not _check(parsed is Dictionary, "record JSON unavailable", errors):
 		return {"record": record_path, "status": "FAIL", "errors": errors}
@@ -79,12 +80,12 @@ func _validate(record_path: String) -> Dictionary:
 		duration_weight += frames.get_frame_duration(anim, phase)
 	var actual_seconds: float = duration_weight / frames.get_animation_speed(anim)
 	if data.has("legacy_duration_seconds"):
-		_check(absf(actual_seconds - float(data.legacy_duration_seconds)) <= 0.000000001, "legacy total duration changed", errors)
+		_check(absf(actual_seconds - float(data.legacy_duration_seconds)) <= 0.000000001, "legacy total duration changed", timing_quality_errors)
 		for timing: Dictionary in data.get("reused_pose_start_times", []):
 			var phase: int = int(timing.get("final_phase", -1))
-			if _check(phase >= 0 and phase < 6, "legacy timing phase invalid", errors):
-				_check(absf(phase_starts[phase] - float(timing.get("legacy_start_seconds", -1.0))) <= 0.000000001, "legacy pose start time changed", errors)
-		_check(bool(data.get("legacy_pose_start_times_preserved", false)) and bool(data.get("legacy_total_duration_preserved", false)), "legacy timing metadata missing", errors)
+			if _check(phase >= 0 and phase < 6, "legacy timing phase invalid", timing_quality_errors):
+				_check(absf(phase_starts[phase] - float(timing.get("legacy_start_seconds", -1.0))) <= 0.000000001, "legacy pose start time changed", timing_quality_errors)
+		_check(bool(data.get("legacy_pose_start_times_preserved", false)) and bool(data.get("legacy_total_duration_preserved", false)), "legacy timing metadata missing", timing_quality_errors)
 	var sprite: AnimatedSprite2D = AnimatedSprite2D.new()
 	sprite.sprite_frames = frames
 	root.add_child(sprite)
@@ -114,6 +115,12 @@ func _validate(record_path: String) -> Dictionary:
 		"new_poses": int(data.get("new_poses", 6)), "reused_poses": int(data.get("reused_poses", 0)),
 		"frames_reached": reached.size(), "wraps": wraps, "loop": looped,
 		"animation_duration_seconds": actual_seconds, "legacy_timing_checked": data.has("legacy_duration_seconds"),
+		"minimum_checks": "PASS" if errors.is_empty() else "FAIL",
+		"quality_timing": "NOT_APPLICABLE" if not data.has("legacy_duration_seconds") else ("PASS" if timing_quality_errors.is_empty() else "HOLD"),
+		"quality_timing_errors": timing_quality_errors, "quality_timing_threshold_seconds": 0.000000001,
+		"legacy_expected_seconds": data.get("legacy_duration_seconds", null),
+		"legacy_total_duration_delta_seconds": actual_seconds - float(data.get("legacy_duration_seconds", actual_seconds)),
+		"phase_start_seconds": phase_starts,
 		"terminal_frame": terminal_frame, "raw_png_sha256": FileAccess.get_sha256(source_path),
 		"SpriteFrames_load_and_real_playback": "PASS" if errors.is_empty() else "FAIL",
 		"source_visual_status": "HOLD_NOT_REVIEWED", "actual_Main_Player": "NOT_RUN",
