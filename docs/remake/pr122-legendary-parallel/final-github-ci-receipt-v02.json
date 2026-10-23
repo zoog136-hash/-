@@ -1,0 +1,72 @@
+{
+  "schema": "legendary-final-github-ci-v01",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/pr122-legendary-parallel-20261023",
+  "workflow": "twilight-integration-validate.yml",
+  "commit": "a2dbbb01659e562980653c8d33898d3b7d761e58",
+  "started_UTC": "2026-10-23T19:51:24.869134+00:00",
+  "dispatch_attempts": 1,
+  "status": "OBSERVATION_BLOCKED",
+  "final_approvals_added": 0,
+  "updated_UTC": "2026-10-23T20:18:41.036368+00:00",
+  "run_id": 40014699342,
+  "url": "https://github.com/zoog136-hash/-/actions/runs/40014699342",
+  "createdAt": "2026-10-23T19:51:28Z",
+  "conclusion": "",
+  "jobs": [
+    {
+      "name": "godot-integration",
+      "status": "in_progress",
+      "conclusion": "",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out integration candidate",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Godot 4.7.2 and software GL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Full project regression, import, boot and all smoke tests",
+          "status": "in_progress",
+          "conclusion": ""
+        },
+        {
+          "name": "Floor-loot visual, manual pickup and live AUTO regression",
+          "status": "pending",
+          "conclusion": ""
+        },
+        {
+          "name": "Combat animation and world rendering regression",
+          "status": "pending",
+          "conclusion": ""
+        },
+        {
+          "name": "Monster-crowd and authored-state animation regression",
+          "status": "pending",
+          "conclusion": ""
+        },
+        {
+          "name": "Preserve Godot test evidence",
+          "status": "pending",
+          "conclusion": ""
+        },
+        {
+          "name": "Post Check out integration candidate",
+          "status": "pending",
+          "conclusion": ""
+        }
+      ]
+    }
+  ],
+  "last_status_read_error": "failed to get run: HTTP 401: Bad credentials (https://api.github.com/repos/zoog136-hash/-/actions/runs/40014699342?exclude_pull_requests=true)\nTry authenticating with:  gh auth login\n",
+  "error": "Three consecutive CI status reads failed; preserve the dispatched run receipt"
+}

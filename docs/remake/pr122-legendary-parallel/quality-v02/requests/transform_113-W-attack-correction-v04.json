@@ -1,0 +1,215 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "W",
+  "role": "attack",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+  "draft_guard_reuse": {
+    "key": "transform:113",
+    "direction": "W",
+    "idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-record.json",
+    "idle_record_sha256": "12049106cb7fe0aae58eb75e3c9f20857d125304dd59a9bf939f956ec31a27ef",
+    "idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-SpriteFrames.tres",
+    "idle_SpriteFrames_sha256": "b0c2c5c70d8564a9b2c2221773431647b505537f954a7c40a79e24c078b8130d",
+    "source_visual_status": "HOLD_NOT_REVIEWED",
+    "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+    "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+    "source_files": [
+      {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png",
+        "sha256": "7c339f4f0098ab4592d0d4c933195765efb8d26afbdec2a5ed14afd700ed8e59",
+        "bytes": 1973813
+      }
+    ],
+    "guards": [
+      {
+        "idle_phase": 0,
+        "action_phase": 0,
+        "original_pose_id": 0,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png",
+        "region": [
+          0,
+          0,
+          625,
+          644
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "115cac43d04b715bad66c975a54e832f26f1ec6cfc52a870cc690ca78ca42a6d"
+      },
+      {
+        "idle_phase": 5,
+        "action_phase": 5,
+        "original_pose_id": 5,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png",
+        "region": [
+          1250,
+          644,
+          625,
+          644
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "11c81258693395a0c862c0c17695f6b286e6612e785d3381c670eef1942bfb15"
+      }
+    ],
+    "reused_poses": 2,
+    "newly_authored_poses": 4,
+    "source_quality_approval_inherited": false
+  },
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc113",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-attack-source-v01.png",
+  "previous_source_sha256": "5c04406169b03cb8fa86cac343ff1797341cd3c2227d9d8b3f8de6f1b0104edd",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-attack-record-v01.json",
+  "previous_record_sha256": "6b82dd538136c924f477d1140d2503738283a9223015f5b5df6bd078aa653f96",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "correction_representation": "mixed_draft_guard_reuse_v1",
+  "correction_source_grid": [
+    2,
+    2
+  ],
+  "camera_reference": {
+    "actor": "113",
+    "direction": "W",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-run-source-v01.png",
+    "sha256": "8a1bdc0afc2bb4da3fbe32f0b4aa4c9db22ef4760485f8c273844f7dd2842bfd",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "113",
+      "direction": "W",
+      "role": "attack",
+      "cause": "identity_weapon_action",
+      "detail": "Original blue crescent energy bow is used as a raised/sweeping blade; the sequence lacks coherent nock/draw/arrow release seen in S ATTACK.",
+      "fix_kind": "source_equipment_action",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-attack-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-attack-record-v01.json",
+      "source_sha256": "5c04406169b03cb8fa86cac343ff1797341cd3c2227d9d8b3f8de6f1b0104edd",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0238",
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:113 달의 질리언, W ATTACK. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"identity_weapon_action\", \"detail\": \"Original blue crescent energy bow is used as a raised/sweeping blade; the sequence lacks coherent nock/draw/arrow release seen in S ATTACK.\"}]. MANDATORY CAMERA IN EVERY CELL: true LEFT-facing side profile, screen LEFT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1024x1024, 2 equal columns by 2 equal rows, 4 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. The six-frame clip preserves existing correct IDLE guards exactly as frames0 and5; do not redraw them. Output ONLY four middle poses: phase1 anticipation or first impact, phase2 loaded attack or maximal nonfatal stagger, phase3 correctly directed contact or non-attacking counterbalance, phase4 follow-through or recovery toward guard. Actual original-weapon attack: guard, anticipation, full windup/aim, active strike/shot/cast EXACTLY along the selected screen-facing direction, follow-through, living guard. Bow nock/draw/release; firearm aim/fire/recoil; real polearm thrust; blade cut; original magical cast. Never invent or replace weapons or use an unrelated attack type. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. WEAPON/ACTION IDENTITY CORRECTION: preserve the original BLUE CRESCENT ENERGY BOW. Perform coherent nock, connected-string draw, aim, arrow release exactly along the facing direction, and recovery. Never swing or thrust the bow as a sword, spear or crescent blade.  Preserved current healthy IDLE guards are frames0 and5 of the assembled action; do not redraw either. Generate ONLY four middle articulated action poses, in a 2x2 sheet. The appended current guard source is the accepted facing/identity reference. Preserve its exact camera, costume, equipment and body proportions. The old erroneous IDLE source is not a camera authority. No new guard, crop inference or middle-pose copying.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-run-source-v01.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-run-source-v01.png": "8a1bdc0afc2bb4da3fbe32f0b4aa4c9db22ef4760485f8c273844f7dd2842bfd",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png": "7c339f4f0098ab4592d0d4c933195765efb8d26afbdec2a5ed14afd700ed8e59"
+  },
+  "request_preparation_clarification": "Exact frozen identity finding resolves the action class before any tool call; earlier unexecuted prepared request remains preserved.",
+  "resume_guard_binding": {
+    "schema": "legendary-exact-active-guard-rebinding-v06",
+    "previous_guard_binding": {
+      "key": "transform:113",
+      "direction": "W",
+      "idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-idle-record-v01.json",
+      "idle_record_sha256": "02217176d0bbb3c0d020062e6fa08005573f496399829d1c682eaa264f83d323",
+      "idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-idle-SpriteFrames.tres",
+      "idle_SpriteFrames_sha256": "7d546381b0f0a5f2359874549960f6445612a418585f8763f814230f2fdd17b5",
+      "source_visual_status": "HOLD_NOT_REVIEWED",
+      "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+      "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+      "source_files": [
+        {
+          "path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-idle-source-v01.png",
+          "sha256": "327448eb78132c610f8c184a118a4e10bbc0129a6bfbe739ba90e41cfde4d887",
+          "bytes": 2528894
+        }
+      ],
+      "guards": [
+        {
+          "idle_phase": 0,
+          "action_phase": 0,
+          "original_pose_id": 0,
+          "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-idle-source-v01.png",
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "ce39989394bfb668a523772649b7c19a90fee1c9c7722e8d37785e7811148e5c"
+        },
+        {
+          "idle_phase": 5,
+          "action_phase": 5,
+          "original_pose_id": 5,
+          "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/draft001/W-idle-source-v01.png",
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "rgba_sha256": "aeb4d9dc07369c38a67f85461a91111a7c932537e868d8266a16e96ebb302bdc"
+        }
+      ],
+      "reused_poses": 2,
+      "newly_authored_poses": 4,
+      "source_quality_approval_inherited": false
+    },
+    "selected_record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-record.json",
+    "selected_record_sha256": "12049106cb7fe0aae58eb75e3c9f20857d125304dd59a9bf939f956ec31a27ef",
+    "guard_frames_preserved": [
+      0,
+      5
+    ],
+    "new_middle_poses_only": 4,
+    "resampled": false,
+    "recolored": false,
+    "intermediate_pose_inference": false,
+    "final_approvals_added": 0
+  },
+  "resume_camera_reference": {
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png",
+    "sha256": "7c339f4f0098ab4592d0d4c933195765efb8d26afbdec2a5ed14afd700ed8e59",
+    "scope": "Exact current healthy guard camera; no final approval inherited"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "legendary-final-github-ci-connected-followup-v01",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/pr122-legendary-parallel-20261023",
+  "workflow": "twilight-integration-validate.yml",
+  "commit": "a2dbbb01659e562980653c8d33898d3b7d761e58",
+  "run_id": 40014699342,
+  "url": "https://github.com/zoog136-hash/-/actions/runs/40014699342",
+  "dispatch_attempts_added": 0,
+  "original_observer_receipt": {
+    "path": "res://docs/remake/pr122-legendary-parallel/final-github-ci-receipt-v02.json",
+    "sha256": "d8a943110728f85eb12f97e39467b5a06cfee7b9ac7a6658e79b08dd97efb991",
+    "status": "OBSERVATION_BLOCKED",
+    "cause": "gh credential HTTP 401; the existing CI run continues, no redispatch"
+  },
+  "status": "in_progress",
+  "conclusion": "",
+  "updated_UTC": "2026-10-23T20:19:58.900Z",
+  "source": "GitHub connected github_fetch_workflow_run_jobs",
+  "jobs": [
+    {
+      "id": 120623650116,
+      "name": "godot-integration",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_id": 40014699342,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Check out integration candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Install Godot 4.7.2 and software GL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Full project regression, import, boot and all smoke tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 4
+        },
+        {
+          "name": "Floor-loot visual, manual pickup and live AUTO regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 5
+        },
+        {
+          "name": "Combat animation and world rendering regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 6
+        },
+        {
+          "name": "Monster-crowd and authored-state animation regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7
+        },
+        {
+          "name": "Preserve Godot test evidence",
+          "status": "pending",
+          "conclusion": null,
+          "number": 8
+        },
+        {
+          "name": "Post Check out integration candidate",
+          "status": "pending",
+          "conclusion": null,
+          "number": 16
+        }
+      ]
+    }
+  ],
+  "final_approvals_added": 0
+}
