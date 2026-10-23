@@ -1,0 +1,352 @@
+{
+  "key": "transform:282",
+  "name": "젠",
+  "grade": "전설",
+  "direction": "NE",
+  "role": "idle",
+  "reference": "res://assets/catalog/cc539d33b082378a103df80c.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:282 젠. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body NE IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter rear NORTH-EAST, screen UP-RIGHT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH-EAST means diagonally AWAY toward the TOP-RIGHT screen corner: show the BACK of the head and costume plus the RIGHT side, not the face or chest front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/cc539d33b082378a103df80c.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 236,
+  "recovery": {
+    "original_request": "docs/remake/pr122-legendary-parallel/requests/transform_282-NE-idle-v01.json",
+    "original_request_sha256": "cf25bb844dc1cc01ad8bdf81dce8151240701f76e3320a99132813da0f6a1e35",
+    "original_failed_receipt": "docs/remake/pr122-legendary-parallel/generation-receipts/transform_282-NE-idle-v01.json",
+    "original_failed_receipt_sha256": "3f7bdd0f434c67bef8f52956757283884181b2492caf21a0896ad317cd1652af",
+    "original_error": "Image tool returned no PNG",
+    "cause": "unknown no-PNG tool result; other raw fields not captured",
+    "recovery_attempt_limit": 1,
+    "recovery_attempt_index": 1,
+    "normal_clips_regenerated": 0,
+    "authorized_scope": "First successful missing NE clip only; preserve old blocked request/receipt and existing original guard pixels",
+    "connection_recovery_evidence": "Same original catalog reference later produced a normal NE RUN PNG",
+    "recovery_batch": 266,
+    "expected_newly_authored_poses": 6,
+    "expected_reused_prior_draft_poses": 0,
+    "preceding_ne_attack_hit_delivery": {
+      "source_batches_remote_saved": 16,
+      "source_attempts": 80,
+      "successful_source_rows": 78,
+      "blocked_source_rows": 2,
+      "blocked_source_members": [
+        {
+          "id": "274",
+          "direction": "NE",
+          "role": "attack",
+          "request": "docs/remake/pr122-legendary-parallel/requests/transform_274-NE-attack-guard-supplement-v01.json",
+          "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 98a06eb4-2386-4a72-91e4-0259e1a97b37. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+        },
+        {
+          "id": "338",
+          "direction": "NE",
+          "role": "hit",
+          "request": "docs/remake/pr122-legendary-parallel/requests/transform_338-NE-hit-guard-supplement-v01.json",
+          "error": "Image tool returned no PNG"
+        }
+      ],
+      "success_count_requirement": "No hardcoded success count; preserved normal or individually blocked source rows both pass the delivery gate."
+    },
+    "created_at_utc": "2026-10-23T17:47:01.404857+00:00"
+  },
+  "reference_sha256": "07da8d10395f3a056978b03736a707b02a858bd7602ee2d39dc04172ba4ea0dd",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+  "source_sha256": "9750f10b00aea1ad0b788969f22f469765cec496a64dfd67a325b0eeeb677854",
+  "source_bytes": 1659975,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "8b0dccbb474a1adcfc655d500aaf930d9ddf3fa8c214a726006614620d4f03bd",
+  "generated_original_path": "/workspace/generated_images/exec-3dbc20e4-cf10-4e09-bd1a-a8153ebac08e.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_282-NE-idle-recovery-v02.json",
+  "request_file_sha256": "bfb73e1e648fc6a7c71ceff6d952183785099593ecbf32537f0aa7a11ee95002",
+  "generation_request_sha256": "292957703ab728fe666140f9c517edfc87cd092d10219a289e4feb0832710f04",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "idle_7",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        709,
+        628
+      ],
+      "rgba_sha256": "130dac46d8d3ba5c419b3107148659cf7fb365d5e21c51caf6ac865ef37893f2"
+    },
+    {
+      "index": 1,
+      "region": [
+        709,
+        0,
+        709,
+        628
+      ],
+      "rgba_sha256": "d85d66b8e84044ac7e24b645d4949826c80f1c97cb65d263bcf58f2ef53460bb"
+    },
+    {
+      "index": 2,
+      "region": [
+        1418,
+        0,
+        709,
+        628
+      ],
+      "rgba_sha256": "6201fd452c76777e90a87746a860e1393fde26808d4e3900180f7531e950ff68"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        628,
+        709,
+        628
+      ],
+      "rgba_sha256": "661a0f1aeee2575a554a9ebe1aa1a3fe271587b6520d60816ceb13d9aef3e219"
+    },
+    {
+      "index": 4,
+      "region": [
+        709,
+        628,
+        709,
+        628
+      ],
+      "rgba_sha256": "458662032e8e039c478d4270696a2975d64ab6cd496752efe4c0683b3ee5604c"
+    },
+    {
+      "index": 5,
+      "region": [
+        1418,
+        628,
+        709,
+        628
+      ],
+      "rgba_sha256": "329210a0f96134cdc45270b7cbcf8a317a07b7e0d8724cf48bcb8de934c73c75"
+    }
+  ],
+  "clipped_cell_count": 2,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-idle-record-v01.json",
+  "revision_parent_sha256": "ab511348ff4905966584e9d7135a952f7d442579922fb0ee2ebd5231a70181d0",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-idle-source-v01.png",
+  "raw_authored_source_sha256": "a3dfa21d1117409f7b7ca1bed00f61f223a0ffd8228dddd6bf263c0a7b017af0",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        709,
+        628
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "region": [
+        709,
+        0,
+        709,
+        628
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "region": [
+        1418,
+        0,
+        709,
+        628
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        628,
+        709,
+        628
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "region": [
+        709,
+        628,
+        709,
+        628
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "region": [
+        1418,
+        628,
+        709,
+        628
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    709,
+    628
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      709,
+      1418,
+      2127
+    ],
+    "y": [
+      0,
+      628,
+      1256
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/NE-idle-source-v01-isolated.png",
+      "sha256": "9750f10b00aea1ad0b788969f22f469765cec496a64dfd67a325b0eeeb677854",
+      "bytes": 1659975,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
