@@ -13510,11 +13510,10 @@
       "id": "monster:커츠",
       "kind": "boss",
       "quality_tier": "mythic_transform",
-      "new_source_poses": 12,
-      "native_pose_count": 70,
-      "native_track_count": 20,
+      "new_source_poses": 16,
+      "native_pose_count": 74,
+      "native_track_count": 21,
       "missing_required_tracks": [
-        "attack_4",
         "attack_5",
         "attack_6",
         "attack_7",
@@ -13544,10 +13543,10 @@
         "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
         "kind": "existing_project_reference_only"
       },
-      "frames": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r006/SpriteFrames.tres",
-      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r006/NativeMotionProfile.tres",
-      "frames_sha256": "37150c27e4fe17c56d1a658a79a4e694ec1bc9dd7895f568a388c9a8966a0a82",
-      "native_profile_sha256": "c575623a305f41d2272c636547808cec6976ee9bce57d7bb155c8948afb7a3a7",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r007/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r007/NativeMotionProfile.tres",
+      "frames_sha256": "8a13311be5d9b4eefd6a7ea9f9c5214fe84988b44f2a8e416726d45cab670fe5",
+      "native_profile_sha256": "809370a639429e7e594ba0e1b3a91f32e48f02dd460d7dc3388b7d1521ae2131",
       "tracks": [
         {
           "direction": "E",
@@ -16085,10 +16084,187 @@
           },
           "source_review": "PENDING_ACCUMULATED_VISUAL_REVIEW",
           "production_connected": false
+        },
+        {
+          "direction": "W",
+          "role": "attack",
+          "animation": "attack_4",
+          "multi_source": true,
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase0.png",
+          "source_sha256": "916bd98d163da8b6421c324f26aa45c3a2596b7bfc9aab2dc04f08fd452269d5",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase0.png",
+          "source_sheets": [
+            {
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase0.png",
+              "sha256": "916bd98d163da8b6421c324f26aa45c3a2596b7bfc9aab2dc04f08fd452269d5",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase0.png"
+            },
+            {
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase1.png",
+              "sha256": "4d1a8ddc07f924b2b1da579bc8530a79ef304e4ff64c2b4c2b09fb9dfe8516df",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase1.png"
+            },
+            {
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase2.png",
+              "sha256": "a515fe602e188c6b235b6bc22b5c9a8ea89c5f92ead3c3f1754d6c155e2e33b3",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase2.png"
+            },
+            {
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase3.png",
+              "sha256": "4467a920448d426c665f0785f4277343343596bb5303bffa84823a43b809a7c1",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase3.png"
+            }
+          ],
+          "geometry": {
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  176,
+                  61,
+                  1055,
+                  1103
+                ],
+                "margin": [
+                  936,
+                  731,
+                  1873,
+                  1825
+                ],
+                "source_anchor": [
+                  704,
+                  1160
+                ],
+                "rgba_sha256": "3a402bd6dba6b3f2c65452251338c9ef34798e6f40399b7ad0a70a451b9df701",
+                "canvas_size": [
+                  2928,
+                  2928
+                ],
+                "foot": [
+                  1464,
+                  1830
+                ],
+                "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase0.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase0.png",
+                "source_sha256": "916bd98d163da8b6421c324f26aa45c3a2596b7bfc9aab2dc04f08fd452269d5",
+                "physical_source_row": 0,
+                "source_canvas_size": [
+                  2928,
+                  2928
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  117,
+                  41,
+                  1117,
+                  1110
+                ],
+                "margin": [
+                  913,
+                  734,
+                  1827,
+                  1834
+                ],
+                "source_anchor": [
+                  676,
+                  1147
+                ],
+                "rgba_sha256": "838ca01a1d1f18f95b869d4803d0b39d349a4e0f98b10146bc7b343f12bc980f",
+                "canvas_size": [
+                  2944,
+                  2944
+                ],
+                "foot": [
+                  1472,
+                  1840
+                ],
+                "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase1.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase1.png",
+                "source_sha256": "4d1a8ddc07f924b2b1da579bc8530a79ef304e4ff64c2b4c2b09fb9dfe8516df",
+                "physical_source_row": 0,
+                "source_canvas_size": [
+                  2944,
+                  2944
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  8,
+                  296,
+                  1238,
+                  705
+                ],
+                "margin": [
+                  313,
+                  464,
+                  626,
+                  1159
+                ],
+                "source_anchor": [
+                  627,
+                  997
+                ],
+                "rgba_sha256": "8ffd1f4a34dc18689cd8c3a0efd8ed74817331f4ca9ddf3790aa6de589cf18b3",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase2.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase2.png",
+                "source_sha256": "a515fe602e188c6b235b6bc22b5c9a8ea89c5f92ead3c3f1754d6c155e2e33b3",
+                "physical_source_row": 0,
+                "source_canvas_size": [
+                  1864,
+                  1864
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  50,
+                  192,
+                  1190,
+                  864
+                ],
+                "margin": [
+                  549,
+                  570,
+                  1098,
+                  1424
+                ],
+                "source_anchor": [
+                  645,
+                  1052
+                ],
+                "rgba_sha256": "28466a1973d86a88abd482c428acbb87ec97362ed09de135bfb04a3145705394",
+                "canvas_size": [
+                  2288,
+                  2288
+                ],
+                "foot": [
+                  1144,
+                  1430
+                ],
+                "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/production-r003/sources/W-attack-phase3.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/single-W/raw/W-attack-phase3.png",
+                "source_sha256": "4467a920448d426c665f0785f4277343343596bb5303bffa84823a43b809a7c1",
+                "physical_source_row": 0,
+                "source_canvas_size": [
+                  2288,
+                  2288
+                ]
+              }
+            ]
+          },
+          "source_review": "PENDING_ACCUMULATED_VISUAL_REVIEW",
+          "production_connected": false
         }
       ],
       "prior_revision_source_poses_reused": 58,
-      "new_source_track_count": 3,
+      "new_source_track_count": 4,
       "prior_revision_tracks_reused": 17,
       "excluded_prior_tracks": [
         {
@@ -16253,11 +16429,11 @@
           "observation": "Technical region/canvas/PNG checks do not grant mythic identity, gait, weapon-contact or final production approval."
         }
       ],
-      "distinct_source_pose_count": 70,
+      "distinct_source_pose_count": 74,
       "replaces_previous_staging_selection": true,
       "source_candidate": {
-        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/r006/candidate.json",
-        "sha256": "f7cf7367ce83f2bf72b8663c94af4add0a9d90a9d58a16c22db98fa95581a831"
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/kurtz-attack/r007/candidate.json",
+        "sha256": "550eeb42cea27485dabd3c3b4e6eff0b81897a4a7a7391e32691fe179c267513"
       }
     }
   },
