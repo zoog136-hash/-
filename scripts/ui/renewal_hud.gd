@@ -48,6 +48,8 @@ const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
 var equipment_collection_button: Button
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
+const EnhancementReveal = preload("res://scripts/ui/enhancement_reveal.gd")
+var enhancement_reveal: Control
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
@@ -259,6 +261,7 @@ func set_character_state(value: Dictionary) -> void:
 	if is_instance_valid(status_view): status_view.refresh(value)
 
 func blocks_keyboard_input() -> bool:
+	if is_enhancement_presenting(): return true
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused is LineEdit or focused is TextEdit: return true
 	if pointer_transfer != null and pointer_transfer.pointer != -2: return true
@@ -267,6 +270,7 @@ func blocks_keyboard_input() -> bool:
 	return false
 
 func blocks_world_input(point: Vector2) -> bool:
+	if is_enhancement_presenting(): return true
 	# Native ScreenTouch may reach _unhandled_input on passive panel areas.
 	# Use the same canvas and clipping coordinates as the real controls so
 	# responsive shelves and dragged windows cannot issue a world destination.
@@ -668,6 +672,8 @@ func append_log(value: String) -> void:
 		combat_log_view.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if is_enhancement_presenting():
+		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		if is_instance_valid(detail_window) and detail_window.visible:
 			detail_window.hide()
@@ -1806,6 +1812,29 @@ func _open_enhance_chooser() -> void:
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_scrolls(self)
+
+func is_enhancement_presenting() -> bool:
+	return is_instance_valid(enhancement_reveal) and not enhancement_reveal.is_queued_for_deletion()
+
+func show_enhancement_result(result_type: String, item_name: String, from_level: int, to_level: int) -> void:
+	# The authoritative transaction has already rolled. This screen only presents it.
+	if is_enhancement_presenting(): return
+	var layer := CanvasLayer.new()
+	layer.name = "EnhancementRevealLayer"
+	layer.layer = 110
+	add_child(layer)
+	var stage: Control = EnhancementReveal.new()
+	var settings: Dictionary = get_parent().presentation_settings
+	stage.reduced_motion = bool(settings.get("reduced_motion",false))
+	stage.intensity = clampf(float(settings.get("impact_intensity",0.85)),0.0,1.5)
+	stage.low_detail = str(settings.get("effect_detail","full")) == "low"
+	enhancement_reveal = stage
+	layer.add_child(stage)
+	var record: Dictionary = get_parent()._find_catalog_item_record(item_name)
+	stage.present(result_type,item_name,from_level,to_level,UI.item_icon(record,item_name,item_image_index.get("아이템",{})))
+	stage.finished.connect(func() -> void:
+		enhancement_reveal = null
+		layer.queue_free())
 
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	enhancement_scroll_name = scroll_name

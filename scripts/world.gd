@@ -3347,6 +3347,8 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")):
+		return
 	var selected: Dictionary = _parse_enhancement_target(target_name)
 	var item_id: String = str(selected.get("id", ""))
 	target_name = str(selected.get("name", target_name))
@@ -3394,36 +3396,39 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 
 	var result_type: String = "maintain"
 	var result_level: int = current_level
+	var result_message: String = "강화 실패 · 장비 변화 없음"
 	var roll: float = rng.randf_range(0.0, 100.0)
 	if roll < success_chance:
 		var gain: int = _roll_enhancement_gain(mode, current_level)
 		result_level = mini(21, current_level + gain)
 		item_instances[item_id]["level"] = result_level
 		result_type = "success"
-		hud.show_message("강화 성공! +%d %s" % [result_level, target_name])
+		result_message = "강화 성공! +%d %s" % [result_level, target_name]
 		hud.append_log("강화 성공 · +%d %s" % [result_level, target_name])
 	elif roll < success_chance + no_change_chance:
-		hud.show_message("강화 실패 · 장비 변화 없음")
 		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
 	elif roll < success_chance + no_change_chance + decrease_chance:
 		result_level = maxi(0, current_level - 1)
 		item_instances[item_id]["level"] = result_level
 		result_type = "decrease"
-		hud.show_message("강화 실패 · +%d → +%d 하락" % [current_level, result_level])
+		result_message = "강화 실패 · +%d → +%d 하락" % [current_level, result_level]
 		hud.append_log("강화 실패(하락) · %s +%d → +%d" % [target_name, current_level, result_level])
 	else:
 		_destroy_enhancement_target(target_name, item_id)
 		result_type = "destroy"
 		result_level = 0
-		hud.show_message("강화 실패 · %s 소실" % target_name)
+		result_message = "강화 실패 · %s 소실" % target_name
 		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
 
-	if hud.has_method("show_enhancement_result"):
-		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	hp = mini(hp, _effective_max_hp())
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	_save_game(true)
+	# Persist first. Presentation/skip/close must never commit or reroll a result.
+	if hud.has_method("show_enhancement_result"):
+		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
+	else:
+		hud.show_message(result_message)
 
 	if int(inventory.get(scroll_name, 0)) > 0:
 		var remaining_candidates: Array = _enhancement_candidates(kind, mode)

@@ -72,6 +72,13 @@ func _run() -> void:
 	await process_frame
 	_check(int(inventory_ui.call("_enhance_level", first)) == 1, "First sword reflects +1 after world enhancement")
 	_check(int(inventory_ui.call("_enhance_level", second)) == 0, "Second sword remains +0")
+	# A player acknowledges the committed result before starting another upgrade.
+	var reveal: Control = hud.get("enhancement_reveal") as Control
+	_check(reveal != null,"Committed enhancement opens a result screen")
+	if reveal != null:
+		reveal.call("skip_to_result")
+		reveal.call("close_reveal")
+	await process_frame
 	inventory_ui.call("_select_item", second)
 	_check(str(inventory_ui.get("selected_item")) == second, "Selected equipment keeps exact instance reference")
 	var detail_name: Label = inventory_ui.get("detail_name") as Label
