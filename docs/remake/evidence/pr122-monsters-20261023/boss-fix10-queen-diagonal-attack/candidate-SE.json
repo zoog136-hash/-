@@ -1,0 +1,169 @@
+{
+  "schema": "pr122-queen-diagonal-attack-partial-replacement-v1",
+  "actors": {
+    "monster:얼음 여왕": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/SpriteFrames.tres",
+      "frames_sha256": "3052cbd38482aad076fb47fd52d5a8e1824a87676411717a29291cecd33bf575",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/NativeMotionProfile.tres",
+      "native_profile_sha256": "8b3052f43414f47b4b26087e9fe2f92b7fa60ea66fea1f74625ef9bfd014ecf8",
+      "native_track_count": 1,
+      "native_pose_count": 3,
+      "tracks": [
+        {
+          "role": "attack",
+          "direction": "SE",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SE-attack3-v01.png",
+          "source_sha256": "f80afa75c8193731f907e60b529a2ddc82e7016b36776b788d0d05de4b81d95e",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/queen-SE-attack3-v01.png",
+          "geometry": {
+            "image_size": [
+              2172,
+              724
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  13,
+                  20,
+                  707,
+                  671
+                ],
+                "margin": [
+                  187,
+                  3,
+                  365,
+                  401
+                ],
+                "source_anchor": [
+                  362,
+                  687
+                ],
+                "rgba_sha256": "ae0768cb342954ba902f07a161491108323073716bf2880d7d8aa6c7cb07f92a"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  737,
+                  72,
+                  780,
+                  644
+                ],
+                "margin": [
+                  187,
+                  30,
+                  292,
+                  428
+                ],
+                "source_anchor": [
+                  1086,
+                  712
+                ],
+                "rgba_sha256": "b8f9d20b988542a1ebda285e4dea7f79bb2d45fd2603eb5ef1e9deee9685163e"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1531,
+                  75,
+                  617,
+                  624
+                ],
+                "margin": [
+                  257,
+                  50,
+                  455,
+                  448
+                ],
+                "source_anchor": [
+                  1810,
+                  695
+                ],
+                "rgba_sha256": "9253313667dccf660812966a5cbd5607c3c894a7bb819a94791d5980eb3eeea8"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 641.5,
+            "canvas_size": [
+              1072,
+              1072
+            ],
+            "foot": [
+              536,
+              670
+            ]
+          },
+          "frame_count": 3,
+          "contact_index": 1,
+          "animation_fps": 8.0,
+          "loop": false,
+          "frame_durations": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "pixel_scale": 0.6142857142857143,
+      "sprite_offset": [
+        0,
+        -19.65714285714286
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "correction_precheck": "PASS_SOURCE_GEOMETRY_DIRECTION_LEFT_STAFF_NATIVE1X",
+      "confirmed_source_defects": [],
+      "unreviewed": [
+        "Detailed Main target/projectile contact has not been reviewed and is not a rejection."
+      ],
+      "native1x_test": {
+        "engine": "Godot4.7.2",
+        "renderer": "llvmpipe/X11",
+        "speed_scale": 1,
+        "reference_speed": 66,
+        "attack_interval": 1.56,
+        "all3source_frames_seen": true,
+        "captures": 5,
+        "authoritative_release_frame": 1,
+        "source_direction": "down-right/front-diagonal",
+        "left_staff_identity": "retained"
+      }
+    }
+  },
+  "replacement_only": true,
+  "replace_animations": [
+    "attack_1"
+  ],
+  "preserved_existing_other_poses": 57,
+  "new_poses": 3,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "normalization": {
+    "original_strict_canvas": 2048,
+    "body_crown_sole_annotations_y": [
+      [
+        126,
+        687
+      ],
+      [
+        105,
+        695
+      ]
+    ],
+    "body_height_median": 575.5,
+    "desired_canvas": 1056,
+    "minimum_complete_canvas": 1072,
+    "source_canvas": 1072,
+    "world_body_preview_height": 84.42302771855012
+  },
+  "failed_attempts_preserved": [
+    "queen-SW-attack3-v01: contact switches to RIGHT arm",
+    "queen-SW-attack3-v02: actual foreign body pixels in both first AABB regions; held, not cropped"
+  ]
+}
