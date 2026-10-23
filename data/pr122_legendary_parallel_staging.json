@@ -35464,6 +35464,26 @@
               "generated_source_sha256": "bcd3a0b0262fce7720e5caa985df14e931cfaefc35aa5fa696e94be173a642ea",
               "kind": "bounded_quality_source",
               "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:176",
+                "NW",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v03/NW-idle-record.json",
+              "record_sha256": "2702d1b45baf17113f07d63a62d31cd85bbb197f1c7687945c46fcf6410164e2",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "2ce4c68c915ab49b8ed36fb99bb1cf7c80d1c9a83d3eb143c4f20e2689ceea90",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v03/NW-idle-registration.json",
+              "registration_sha256": "ad3aac9f4b59467e0eb8bd995643d7942ade02da437b1d302c08b4b77189c1c1",
+              "registration_status": "REVIEWED_ANCHORS_AND_SCALE",
+              "correction_candidate_id": "qc081",
+              "newly_authored_correction_poses": 4,
+              "reused_poses": 2,
+              "generated_source_sha256": "bcd3a0b0262fce7720e5caa985df14e931cfaefc35aa5fa696e94be173a642ea",
+              "kind": "new_native_quality_registration",
+              "quality_status": "HOLD"
             }
           ]
         },
@@ -36300,6 +36320,26 @@
               "reused_poses": 2,
               "generated_source_sha256": "8033e88e1d9c43772e2106725e35c5bd4768cc9baf59add023cdc60291a72184",
               "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:176",
+                "W",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v03/W-idle-record.json",
+              "record_sha256": "f4cc5609f418fb46780f4116a51deeaa1724f717ea311d1c56838b2781fe0998",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/W-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "8764b362e29edd4a10a07da77c14052263aa972eb102ada97b3d4c58962fd39b",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v03/W-idle-registration.json",
+              "registration_sha256": "d4d611ce0abdda58aa4f2b7a4c9cc381c907ece098619d725cebc01f36b569bd",
+              "registration_status": "REVIEWED_ANCHORS_AND_SCALE",
+              "correction_candidate_id": "qc080",
+              "newly_authored_correction_poses": 4,
+              "reused_poses": 2,
+              "generated_source_sha256": "8033e88e1d9c43772e2106725e35c5bd4768cc9baf59add023cdc60291a72184",
+              "kind": "new_native_quality_registration",
               "quality_status": "HOLD"
             }
           ]
@@ -48763,8 +48803,8 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch302-v02.json",
-    "active_revision_library_sha256": "5349656d446c6fb1ec3b4ec750d7e5654ae9cd902e01fd3b5308aaf45107426c",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v03/revision-library-with-native-registration-v03.json",
+    "active_revision_library_sha256": "a952dc1034c111c9784eed2cfea3c4fcd8c728fe964e31b1cf45e41cbd63a6a2",
     "final_approved": 0,
     "ownership_isolation": {
       "batches": [
@@ -49461,6 +49501,25 @@
       "original_source_mutations": 0,
       "newly_authored_poses_added": 0,
       "camera_identity_action_approvals_added": 0,
+      "quality_status": "HOLD",
+      "final_approved": 0
+    },
+    "new_native_quality_registration": {
+      "versions": [
+        {
+          "version": "registration-v03",
+          "manifest": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v03-library.json",
+          "manifest_sha256": "55573904358a9be31e33ffde409cd0ab2b383bc43a6b0da91d63535b5ad977a1",
+          "validation": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v03-affected-validation-v01.json",
+          "validation_sha256": "f466355e8f3894e08bd0005830b1e8ca16bde19e609818a971f8fbb42ac1f448",
+          "registered_clips": 2,
+          "native_frames_preserved_in_scope": 4,
+          "input": "res://docs/remake/pr122-legendary-parallel/transform_176-quality-registration-review-input-v03.json",
+          "input_sha256": "673a62b6bb08b04a31a626ebd59fed3d65c190413ccf4804a2669ea56d11cb02",
+          "camera_HOLD_retained": true,
+          "new_PNGs": 0
+        }
+      ],
       "quality_status": "HOLD",
       "final_approved": 0
     }
