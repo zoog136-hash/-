@@ -107,6 +107,11 @@ func _apply_frame_registration() -> void:
 		sprite.scale = Vector2.ONE
 		sprite.offset = Vector2.ZERO
 		sprite.position = Vector2.ZERO
+		var current_texture: Texture2D = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+		if current_texture != null and sprite.sprite_frames.has_meta("twilight_canvas_size"):
+			var reference: Vector2 = sprite.sprite_frames.get_meta("twilight_canvas_size")
+			if reference.x > 0.0 and reference.y > 0.0 and current_texture.get_width() > 0 and current_texture.get_height() > 0:
+				sprite.scale = reference / current_texture.get_size()
 		return
 	var entries: Array = _registration.get("frames", [])
 	if sprite.frame >= entries.size():
@@ -165,6 +170,9 @@ func _finished() -> void:
 
 func is_terminal_held() -> bool:
 	return _terminal_held
+
+func get_origin_policy() -> String:
+	return "REVIEWED_SEMANTIC_ORIGIN" if str(_registration.get("status", "")) == "REVIEWED_ANCHORS_AND_SCALE" else "BASELINE_SPRITE_CENTER"
 
 func frame_anchor_in_parent() -> Vector2:
 	if _registration.is_empty() or sprite.sprite_frames == null:
