@@ -1,0 +1,62 @@
+{
+  "key": "transform:225",
+  "name": "불패의 군터",
+  "grade": "전설",
+  "direction": "NW",
+  "role": "idle",
+  "reference": "res://assets/catalog/8fc0f2ecb85ac19833812ad9.png",
+  "reference_sha256": "46a91c9185953adb6bfe2dc5027a2ca2e6c28f983db9078f6a6557f97473d888",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc034",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NW-idle-source-v01.png",
+  "previous_source_sha256": "124ccabc81306d5e0fd481d45601da1defb1972809ffc1fa99cba1a7a9e5b14c",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NW-idle-record-v01.json",
+  "previous_record_sha256": "e1c330f537695dc1eae3ecf9c60da0958863b48df8d73a258cf71143bbdd2176",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": null,
+  "frozen_error_findings": [
+    {
+      "actor": "225",
+      "direction": "NW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Torso/face remain front-facing; attack contact points screen-right instead of up-left.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NW-idle-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/NW-idle-record-v01.json",
+      "source_sha256": "124ccabc81306d5e0fd481d45601da1defb1972809ffc1fa99cba1a7a9e5b14c",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0003",
+      "slot": [
+        "transform:225",
+        "NW",
+        "idle"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:225 불패의 군터, NW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Torso/face remain front-facing; attack contact points screen-right instead of up-left.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter BACK-LEFT, screen UP-LEFT, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8fc0f2ecb85ac19833812ad9.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8fc0f2ecb85ac19833812ad9.png": "46a91c9185953adb6bfe2dc5027a2ca2e6c28f983db9078f6a6557f97473d888"
+  }
+}
