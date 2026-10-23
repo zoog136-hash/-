@@ -33147,6 +33147,1109 @@
         "actual_Main_S_run_prescribed_translation_contact": "PASS_MEASURED_SAME_ORIGINAL_GROUND_TEXELS",
         "actual_Main_S_run_proof": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-S-run-r048-staged-contact-20261023/r048.main-run-proof.json"
       }
+    },
+    "transform:412": {
+      "grade": "신화",
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_412/native001/SpriteFrames.tres",
+      "frames_sha256": "5a3946f474310b8a5b09b85f094d2c082b2c7d47ce3c1030ec99738c8a78639e",
+      "native_track_count": 5,
+      "native_pose_count": 30,
+      "canvas_size": [
+        1024,
+        1024
+      ],
+      "foot": [
+        512,
+        640
+      ],
+      "tracks": [
+        {
+          "direction": "NE",
+          "role": "idle",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-412/NE-idle-native-v01.png",
+          "source_sha256": "956c1da6971e927d7b12b0a23b98e3b6a875f512907df9d6f4b19160fc83c492",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_412/native001/NE-idle.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  23,
+                  15,
+                  470,
+                  489
+                ],
+                "margin": [
+                  279,
+                  165,
+                  554,
+                  535
+                ],
+                "source_anchor": [
+                  256,
+                  490
+                ],
+                "rgba_sha256": "dcac50b8e9648f3d3d24debcdca1169321775ad7361e9874c3a0522c6e6a18db"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  540,
+                  14,
+                  474,
+                  490
+                ],
+                "margin": [
+                  284,
+                  164,
+                  550,
+                  534
+                ],
+                "source_anchor": [
+                  768,
+                  490
+                ],
+                "rgba_sha256": "6afec46584d94641987f04c29ddfc40b1b5c025160e86e3717cc205791aa791f"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  15,
+                  527,
+                  471,
+                  489
+                ],
+                "margin": [
+                  271,
+                  165,
+                  553,
+                  535
+                ],
+                "source_anchor": [
+                  256,
+                  1002
+                ],
+                "rgba_sha256": "dabefbb5f8a8965014c3052021fb9af5bc0924d3a47d639749c03789e5657d09"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  529,
+                  531,
+                  482,
+                  472
+                ],
+                "margin": [
+                  273,
+                  169,
+                  542,
+                  552
+                ],
+                "source_anchor": [
+                  768,
+                  1002
+                ],
+                "rgba_sha256": "2d0f09c98f260f2f57731caa39baf95b896e70f2c1783072e17272f94932de95"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  21,
+                  1044,
+                  483,
+                  472
+                ],
+                "margin": [
+                  277,
+                  170,
+                  541,
+                  552
+                ],
+                "source_anchor": [
+                  256,
+                  1514
+                ],
+                "rgba_sha256": "6013de87629ca7a4e3a1db6b5ebbd49a6d0716d4a97d5f19c80256c9bd593e98"
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  522,
+                  1044,
+                  485,
+                  473
+                ],
+                "margin": [
+                  266,
+                  170,
+                  539,
+                  551
+                ],
+                "source_anchor": [
+                  768,
+                  1514
+                ],
+                "rgba_sha256": "dc287c2e573ecfdd60dfa965d274896fdc9cb1d9210eafa514f6aeafcaec9b2e"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 474.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "956c1da6971e927d7b12b0a23b98e3b6a875f512907df9d6f4b19160fc83c492",
+            "base_geometry_sha256": "dedf89f8019760e1de7587bac1c9f3d102fadd4bd3483485289b9048d008a8fb",
+            "derived_geometry_sha256": "4c39b5e05b527d68de0a0b750611ef92977dc4950a9fa2c69e6a2d666f13e0fb",
+            "review_sha256": "5171fabb520d399dd8b3c56532c32f80af2b38c57cd4ce50469c470fe565b0e0",
+            "review_basis": "Technical common artboard anchor within all six pose rectangles; same cell-relative anchor preserves authored displacement without per-frame bottom alignment. Anatomical contact, scale and visual quality NOT_REVIEWED.",
+            "direction": "NE",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                256,
+                490
+              ],
+              [
+                768,
+                490
+              ],
+              [
+                256,
+                1002
+              ],
+              [
+                768,
+                1002
+              ],
+              [
+                256,
+                1514
+              ],
+              [
+                768,
+                1514
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-412/S-run-native-v01.png",
+          "source_sha256": "600c1d12513ee5771632f24b7363db461dd876bc844f9e71a86a4bd08ad80294",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_412/native001/S-run.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  38,
+                  20,
+                  460,
+                  472
+                ],
+                "margin": [
+                  294,
+                  191,
+                  564,
+                  552
+                ],
+                "source_anchor": [
+                  256,
+                  469
+                ],
+                "rgba_sha256": "ef79edaa4979af97c8ea02da835b032aff08f34d2af605e038f16b69a3fc1336"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  541,
+                  10,
+                  432,
+                  484
+                ],
+                "margin": [
+                  285,
+                  181,
+                  592,
+                  540
+                ],
+                "source_anchor": [
+                  768,
+                  469
+                ],
+                "rgba_sha256": "f5ee15d7a859ca03c2deb948db932a3b35c10ccb442f7312883ccd6affbce36a"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  0,
+                  521,
+                  479,
+                  491
+                ],
+                "margin": [
+                  256,
+                  180,
+                  545,
+                  533
+                ],
+                "source_anchor": [
+                  256,
+                  981
+                ],
+                "rgba_sha256": "f286c2e14732e74efb1bf2341ad6b2e0449421ef69e352db54d30f48ddd14aa7"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  542,
+                  531,
+                  462,
+                  470
+                ],
+                "margin": [
+                  286,
+                  190,
+                  562,
+                  554
+                ],
+                "source_anchor": [
+                  768,
+                  981
+                ],
+                "rgba_sha256": "bf508f48dc42cf514b174c17ebe6cafaadcafda2718584a783e5df19b6599e1f"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  22,
+                  1032,
+                  456,
+                  462
+                ],
+                "margin": [
+                  278,
+                  179,
+                  568,
+                  562
+                ],
+                "source_anchor": [
+                  256,
+                  1493
+                ],
+                "rgba_sha256": "733e7aa882c02db88e3112901f02b64a1ba4551a1c08c1dfb7d9b4b2a3b412c7"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  524,
+                  1037,
+                  475,
+                  478
+                ],
+                "margin": [
+                  268,
+                  184,
+                  549,
+                  546
+                ],
+                "source_anchor": [
+                  768,
+                  1493
+                ],
+                "rgba_sha256": "cf8e116c3b6d59b045beef6b62e24f8e6cf5c194fe6f24220187e5702451349e"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 465.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "600c1d12513ee5771632f24b7363db461dd876bc844f9e71a86a4bd08ad80294",
+            "base_geometry_sha256": "4e47d08fa2904847cfcb684b69b509b9d4ebac58955521fc8ec34e13164ea24b",
+            "derived_geometry_sha256": "f4ee5c078f102ff1cf1d7d45d29f8da9cb3df788484ab4f740ff4bcd2f3c1446",
+            "review_sha256": "c1f18f29db4350d72fcda876391abc0410e7f94ebbe466903efce960f6632c56",
+            "review_basis": "Technical common artboard anchor within all six pose rectangles; same cell-relative anchor preserves authored displacement without per-frame bottom alignment. Anatomical contact, scale and visual quality NOT_REVIEWED.",
+            "direction": "S",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                256,
+                469
+              ],
+              [
+                768,
+                469
+              ],
+              [
+                256,
+                981
+              ],
+              [
+                768,
+                981
+              ],
+              [
+                256,
+                1493
+              ],
+              [
+                768,
+                1493
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "hit",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-412/SE-hit-native-v01.png",
+          "source_sha256": "9a081778bdd87ac9f83b1103cd16372431cad0c90feee9912328719042dd2077",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_412/native001/SE-hit.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  18,
+                  5,
+                  466,
+                  479
+                ],
+                "margin": [
+                  274,
+                  172,
+                  558,
+                  545
+                ],
+                "source_anchor": [
+                  256,
+                  473
+                ],
+                "rgba_sha256": "ccfe1e81c09a85f50965eea9342e61eadeb86fef4f3a91189a6123df951bafc5"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  535,
+                  62,
+                  475,
+                  422
+                ],
+                "margin": [
+                  279,
+                  229,
+                  549,
+                  602
+                ],
+                "source_anchor": [
+                  768,
+                  473
+                ],
+                "rgba_sha256": "ae04937187519e55de612dc79286fa797f3865b51a015659230a29c51539a318"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  17,
+                  594,
+                  462,
+                  394
+                ],
+                "margin": [
+                  273,
+                  249,
+                  562,
+                  630
+                ],
+                "source_anchor": [
+                  256,
+                  985
+                ],
+                "rgba_sha256": "76cf2520f90c62f9efca2dae37f1dd71086946a2bdeea2c0a5a1125309a4458c"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  547,
+                  537,
+                  467,
+                  449
+                ],
+                "margin": [
+                  291,
+                  192,
+                  557,
+                  575
+                ],
+                "source_anchor": [
+                  768,
+                  985
+                ],
+                "rgba_sha256": "0288f011e040840ef9810c31c49ce5febfe394a3443077e28d6162a29a305095"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  23,
+                  1061,
+                  475,
+                  442
+                ],
+                "margin": [
+                  279,
+                  204,
+                  549,
+                  582
+                ],
+                "source_anchor": [
+                  256,
+                  1497
+                ],
+                "rgba_sha256": "007b240974f86c0cc10341c54f8ddc88774363a194e3471831e470b24ce1dbf3"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  523,
+                  1026,
+                  467,
+                  473
+                ],
+                "margin": [
+                  267,
+                  169,
+                  557,
+                  551
+                ],
+                "source_anchor": [
+                  768,
+                  1497
+                ],
+                "rgba_sha256": "e5f38219293c08a47ffd32d44c83b4be36a8217717d6878b951b5209fb53b087"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 458.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "9a081778bdd87ac9f83b1103cd16372431cad0c90feee9912328719042dd2077",
+            "base_geometry_sha256": "e39fd029f9c4ff34c5b919f830eff98ba88b15633541513d858dabd208d3bcc5",
+            "derived_geometry_sha256": "b8e4af99428a04202e21f1a8447cc95c5f832b0efd5cfdd1c830b75fd3e441c8",
+            "review_sha256": "95e147227f2e03c1267c69a60929e79dc3fd56b34bf18564229681be282bd42d",
+            "review_basis": "Technical common artboard anchor within all six pose rectangles; same cell-relative anchor preserves authored displacement without per-frame bottom alignment. Anatomical contact, scale and visual quality NOT_REVIEWED.",
+            "direction": "SE",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                256,
+                473
+              ],
+              [
+                768,
+                473
+              ],
+              [
+                256,
+                985
+              ],
+              [
+                768,
+                985
+              ],
+              [
+                256,
+                1497
+              ],
+              [
+                768,
+                1497
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "idle",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-412/SE-idle-native-v01.png",
+          "source_sha256": "7365bc1d5a27004096786761ed50acccc1b859af59d147e6412464a2f31b673f",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_412/native001/SE-idle.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  37,
+                  15,
+                  461,
+                  495
+                ],
+                "margin": [
+                  293,
+                  175,
+                  563,
+                  529
+                ],
+                "source_anchor": [
+                  256,
+                  480
+                ],
+                "rgba_sha256": "eae7b4f4dcdfbf9ba89f19c80977525e7d2925d17f4a68a1abe629fa48b0b99c"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  545,
+                  23,
+                  440,
+                  485
+                ],
+                "margin": [
+                  289,
+                  183,
+                  584,
+                  539
+                ],
+                "source_anchor": [
+                  768,
+                  480
+                ],
+                "rgba_sha256": "ae684871b73b2aed075c10a3a2b42e0a31eec8b22da554a3d95acadb861a28ad"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  19,
+                  522,
+                  452,
+                  501
+                ],
+                "margin": [
+                  275,
+                  170,
+                  572,
+                  523
+                ],
+                "source_anchor": [
+                  256,
+                  992
+                ],
+                "rgba_sha256": "b82b0cf954099abef1fb08796ca87b72e2808e8e37ee623e9f580d88f8ddedc5"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  556,
+                  526,
+                  459,
+                  467
+                ],
+                "margin": [
+                  300,
+                  174,
+                  565,
+                  557
+                ],
+                "source_anchor": [
+                  768,
+                  992
+                ],
+                "rgba_sha256": "ac316e3ac3004ff19031a421e68b0c85a8c5da32cbc4ee7de9515ac748b91cd1"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  27,
+                  1037,
+                  454,
+                  469
+                ],
+                "margin": [
+                  283,
+                  173,
+                  570,
+                  555
+                ],
+                "source_anchor": [
+                  256,
+                  1504
+                ],
+                "rgba_sha256": "cb064f123b8deb194bd11567b6a5a1c5bdf07737d910e83859138e8a3b28b939"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  528,
+                  1043,
+                  449,
+                  467
+                ],
+                "margin": [
+                  272,
+                  179,
+                  575,
+                  557
+                ],
+                "source_anchor": [
+                  768,
+                  1504
+                ],
+                "rgba_sha256": "cead4ff679f58b0bcad9564176713e666770f3eb77bbbd8428b6eb0b7b9649d6"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 475.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "7365bc1d5a27004096786761ed50acccc1b859af59d147e6412464a2f31b673f",
+            "base_geometry_sha256": "b47d1ef9b158e3e00f7c211f1120adfac27a78b1d01dd287aa8c09994dd070cc",
+            "derived_geometry_sha256": "109005a09d5fcef27ca764a899265b4524688b4d96ca15795348661ee37b5e1e",
+            "review_sha256": "3f3b96524d5bb506902e7ff90efee7b3fbe835c6e35d61d7fac57a03bf28fc8e",
+            "review_basis": "Technical common artboard anchor within all six pose rectangles; same cell-relative anchor preserves authored displacement without per-frame bottom alignment. Anatomical contact, scale and visual quality NOT_REVIEWED.",
+            "direction": "SE",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                256,
+                480
+              ],
+              [
+                768,
+                480
+              ],
+              [
+                256,
+                992
+              ],
+              [
+                768,
+                992
+              ],
+              [
+                256,
+                1504
+              ],
+              [
+                768,
+                1504
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "idle",
+          "animation": "idle_3",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-412/SW-idle-native-v01.png",
+          "source_sha256": "fa639921f4d8f87c790f270f6988c709bb6625a159c1560368523a8199d15d20",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_412/native001/SW-idle.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  32,
+                  39,
+                  494,
+                  460
+                ],
+                "margin": [
+                  288,
+                  209,
+                  530,
+                  564
+                ],
+                "source_anchor": [
+                  256,
+                  470
+                ],
+                "rgba_sha256": "aad96c7bb64a2f2dcaff51a0aaae6e8353c207ef477e93ddfa434281fbfd8d7f"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  543,
+                  31,
+                  450,
+                  464
+                ],
+                "margin": [
+                  287,
+                  201,
+                  574,
+                  560
+                ],
+                "source_anchor": [
+                  768,
+                  470
+                ],
+                "rgba_sha256": "42dba61d17fef05bda0c49cad1acc36947aeb98feec62b5b66748398f5558e87"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  9,
+                  542,
+                  480,
+                  472
+                ],
+                "margin": [
+                  265,
+                  200,
+                  544,
+                  552
+                ],
+                "source_anchor": [
+                  256,
+                  982
+                ],
+                "rgba_sha256": "b03d1eebfd4316fb04917f8d55f71698f06afce104b085e277adedf43f973d6a"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  547,
+                  538,
+                  450,
+                  449
+                ],
+                "margin": [
+                  291,
+                  196,
+                  574,
+                  575
+                ],
+                "source_anchor": [
+                  768,
+                  982
+                ],
+                "rgba_sha256": "05f1ce1428886ef5aa0e9f10616bfac813ef72380fbe91d9268d083755134db4"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  12,
+                  1061,
+                  480,
+                  440
+                ],
+                "margin": [
+                  268,
+                  207,
+                  544,
+                  584
+                ],
+                "source_anchor": [
+                  256,
+                  1494
+                ],
+                "rgba_sha256": "cb85df7b2a8cb3fac4e9ce9a9eb49993628dc10d5ce95a84d45308d727937722"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  520,
+                  1036,
+                  467,
+                  459
+                ],
+                "margin": [
+                  264,
+                  182,
+                  557,
+                  565
+                ],
+                "source_anchor": [
+                  768,
+                  1494
+                ],
+                "rgba_sha256": "24c92e2da666f352779919b7325377954b3915bb60c2706f921a7985633d72f6"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 448.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "fa639921f4d8f87c790f270f6988c709bb6625a159c1560368523a8199d15d20",
+            "base_geometry_sha256": "6ef83cab702e5c59d1e76a68d6eeedfd2af092dc935545ec08869003ba17f275",
+            "derived_geometry_sha256": "5d8240e40b5675ef8dc527a55b32d3bc573cdd77470838e4dbb48ef3ed768daa",
+            "review_sha256": "6185722448d86ebbe5a3fe0fbc8c30efd27e753bb67396ba6e819031c6ed81a8",
+            "review_basis": "Technical common artboard anchor within all six pose rectangles; same cell-relative anchor preserves authored displacement without per-frame bottom alignment. Anatomical contact, scale and visual quality NOT_REVIEWED.",
+            "direction": "SW",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                256,
+                470
+              ],
+              [
+                768,
+                470
+              ],
+              [
+                256,
+                982
+              ],
+              [
+                768,
+                982
+              ],
+              [
+                256,
+                1494
+              ],
+              [
+                768,
+                1494
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              1024,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false
+          }
+        }
+      ],
+      "missing_locomotion": [
+        "run_0",
+        "run_1",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "missing_dedicated_roles": [
+        "idle",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "missing_dedicated_by_direction": {
+        "idle": [
+          "idle_0",
+          "idle_2",
+          "idle_4",
+          "idle_5",
+          "idle_6"
+        ],
+        "attack": [
+          "attack_0",
+          "attack_1",
+          "attack_2",
+          "attack_3",
+          "attack_4",
+          "attack_5",
+          "attack_6",
+          "attack_7"
+        ],
+        "hit": [
+          "hit_0",
+          "hit_2",
+          "hit_3",
+          "hit_4",
+          "hit_5",
+          "hit_6",
+          "hit_7"
+        ],
+        "death": [
+          "death_2"
+        ]
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "completed_added": 0,
+      "status": "NATIVE_TRACKS_STAGED; incomplete character HOLD",
+      "visual_review": "NOT_RUN; image tools authorized for production, no chat image attachments",
+      "timing_review": "HOLD; 12.5fps staging baseline from existing 0.48s six-pose walk; run cadence unapproved",
+      "integration": "Godot SpriteFrames contract only; production catalogs and profiles unchanged",
+      "motion_requirements": {
+        "scope": "USER_TRANSFORM_NEW_DEATH_S_AND_WALK_SCOPE",
+        "required_roles": [
+          "attack",
+          "death",
+          "hit",
+          "idle",
+          "run"
+        ],
+        "required_native_track_count": 33,
+        "required_death_directions": [
+          "S"
+        ],
+        "retained_death_tracks": 0,
+        "retained_walk_tracks": 0,
+        "policy_sha256": "2e6ce7e718f85d41c3694368937c874dffa9fd649cb6bf2f744bbd0756020882",
+        "omission_grants_approval": false
+      }
     }
   },
   "history": {
