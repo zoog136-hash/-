@@ -1,0 +1,40 @@
+{
+  "schema": "legendary-targeted-runtime-capture-environment-hold-v02",
+  "frozen_review_modified": false,
+  "finding_scope": "QA render timing/capture; character-art fault not established; raw FAIL retained",
+  "asset_commit": "0fe2882e594dedd30b5ce74f172edf4aed545122",
+  "staging_sha256": "cba956f72e441a282542e45f24d4c5ab299a54853657ea7e2e2a7df80efbcfca",
+  "manifest_sha256": "e26aa7d12d916f6164e71e48c523f0b2c5688efe026b3f0b89bc3b5fdfacd22b",
+  "findings": [
+    {
+      "slot": [
+        "transform:177",
+        "NW",
+        "hit"
+      ],
+      "cause": "capture_environment",
+      "status": "HOLD",
+      "finding_type": "QA_ENVIRONMENT_HOLD",
+      "detail": "Actual X11/llvmpipe playback captured only phases [3, 4, 5] after the six-phase static GPU warmup; early phases [0, 1, 2] were not sampled. Six SpriteFrames entries/source SHA and terminal hold passed. Timing or readback latency is suspected; its root cause is not proven. The raw integration result remains FAIL. Do not retry the recurrent capture error or regenerate art.",
+      "frames": [
+        0,
+        1,
+        2
+      ],
+      "active_record": "assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/NW-hit-record-v02.json",
+      "active_record_sha256": "bf692ba1c6fb399337181da112cb2b5bae38ae9926f87d3ad396d4c9790ca08d",
+      "rendered_evidence": {
+        "path": "docs/remake/pr122-legendary-parallel/final-correction-render-integration-v01.json",
+        "sha256": "e79c44ec3192f1189cbf3140252a16a1c46c242e091c8b9e751e3c7319050948"
+      },
+      "rendered_contact_sheet": {
+        "local_path": "/workspace/legendary_runtime/final-correction-delta-v01/rendered/transform_177-NW-hit.png",
+        "sha256": "43f49eba442c1dec98aff5c407e7df76be8766c560e71d9adbda2edad9dc828c"
+      },
+      "source_or_resource_load_error": false,
+      "root_cause_confirmed": false,
+      "new_source_generation_attempts": 0,
+      "further_capture_retries": 0
+    }
+  ]
+}
