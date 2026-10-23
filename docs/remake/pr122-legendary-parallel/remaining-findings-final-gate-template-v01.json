@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-legendary-final-reconciliation-gate-v1",
+  "all_possible_corrections_complete": false,
+  "local_integration_checks_complete": false,
+  "repository_head": "ROOT_TO_SET_FULL_40_CHARACTER_COMMIT",
+  "repository_root": "/workspace/legendary_repo",
+  "frozen": {
+    "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
+    "sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6"
+  },
+  "technical_review": {
+    "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+    "sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51"
+  },
+  "targeted_technical_artifacts": [],
+  "ownership_batches": [],
+  "visual_issue_adjudications": [],
+  "quality": {
+    "review": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/changed-source-visual-review-v01.json",
+      "sha256": null
+    },
+    "exact_receipt": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/changed-source-visual-review-receipt-v01.json",
+      "sha256": null
+    },
+    "quota_checkpoint": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/tool-quota-checkpoint-v01.json",
+      "sha256": null
+    },
+    "batches": []
+  },
+  "native176": null,
+  "integration_receipts": [],
+  "output_stem": "remaining-findings-final-v01",
+  "instruction": "Root fills only final completed evidence. Each ownership/quality batch has manifest:{path,sha256},validations:[{path,sha256}],remote_receipt:{path,sha256}. Native176 has library,review_input,validations,remote_receipt. No pending receipt is admissible. Optional visual_issue_adjudications artifacts contain claims:[{issue_id,source,source_sha256,proof_sha256,affected_phases,resolution_scope:TECHNICAL_OWNERSHIP_ONLY}]."
+}

@@ -1,0 +1,109 @@
+{
+  "first_pass": {
+    "path": "docs/remake/pr122-legendary-parallel/final-render-full-pass-v01.json",
+    "sha256": "f1354f0f7689536597b3798d63217dbf67f0cdebccd14223a233e18e13e59e60"
+  },
+  "first_pass_sha256": "f1354f0f7689536597b3798d63217dbf67f0cdebccd14223a233e18e13e59e60",
+  "original_harness_sha256": "29ea6f3a15555ca50105a3e19b706a8b135974ead2c2c0b9ac5a1de198d3be86",
+  "failed_slots": [
+    [
+      "transform:402",
+      "E",
+      "attack"
+    ],
+    [
+      "transform:402",
+      "E",
+      "hit"
+    ],
+    [
+      "transform:402",
+      "SE",
+      "attack"
+    ],
+    [
+      "transform:402",
+      "SE",
+      "hit"
+    ],
+    [
+      "transform:339",
+      "NE",
+      "hit"
+    ],
+    [
+      "transform:213",
+      "W",
+      "hit"
+    ],
+    [
+      "transform:213",
+      "NW",
+      "hit"
+    ],
+    [
+      "transform:213",
+      "NE",
+      "attack"
+    ],
+    [
+      "transform:193",
+      "N",
+      "attack"
+    ],
+    [
+      "transform:193",
+      "NE",
+      "attack"
+    ],
+    [
+      "transform:166",
+      "S",
+      "attack"
+    ],
+    [
+      "transform:166",
+      "SW",
+      "attack"
+    ],
+    [
+      "transform:143",
+      "NW",
+      "attack"
+    ],
+    [
+      "transform:143",
+      "NW",
+      "hit"
+    ],
+    [
+      "transform:143",
+      "N",
+      "attack"
+    ],
+    [
+      "transform:143",
+      "N",
+      "hit"
+    ],
+    [
+      "transform:122",
+      "S",
+      "death"
+    ]
+  ],
+  "passed_slots_will_not_be_replayed": 1302,
+  "failure_cause": "GPU readback/startup scheduling missed rendered phases in eight concurrent clips; no source load/SHA/loop/terminal errors",
+  "maximum_targeted_attempts_per_slot": 1,
+  "new_source_poses": 0,
+  "targeted_recheck": {
+    "path": "docs/remake/pr122-legendary-parallel/final-render-targeted-recheck-v01.json",
+    "sha256": "f49e9abd930ca37b157c836ec41d0c5b275f3d9ce86b369752f4de54c382f3b0"
+  },
+  "final_harness_sha256": "96b3a35ccac40e7e743f54bc93c9f1a6af7b5caadeaa3362f8b5ba974e79dd56",
+  "common_harness_fix": "Render each of six textures while paused, wait three settled frames, recheck failed clips individually at original animation speed.",
+  "targeted_attempts_per_slot": 1,
+  "all_targeted_passed": true,
+  "healthy_slots_replayed": 0,
+  "production_file_changes": 0
+}

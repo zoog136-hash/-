@@ -1,0 +1,2245 @@
+{
+	"EXPECTED_BLOCKED": 0,
+	"FAIL": 0,
+	"GPU_warmup_frames": 9,
+	"PASS": 17,
+	"adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"commit": "d8aefaeb3c47c211fa66d76d1950cbda3130ba1b",
+	"complete": true,
+	"display_server": "X11",
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"errors": [],
+	"expected_configurations": 17,
+	"final_approvals_added": 0,
+	"manifest": "res://docs/remake/pr122-legendary-parallel/revision-library-ownership-delta-through-batch013-v01.json",
+	"manifest_sha256": "05dc2159db8cea02e4c9bdfe860eea62757db4b186281db06feb998756acfa9c",
+	"new_poses_generated": 0,
+	"parallel_clips": 1,
+	"real_render": true,
+	"rendering_driver": "opengl3",
+	"rendering_method": "gl_compatibility",
+	"rows": [
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.431652,
+			"frame_transforms": {
+				"0": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_402-E-attack.png",
+			"rendered_contact_sheet_sha256": "e5490cd01507507832ad686fe901557d88613b24216cd70ebe4536ede8b5bfdc",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:402",
+				"E",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.219597,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						34.5,
+						-3.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						34.5,
+						-3.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						34.5,
+						-3.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						34.5,
+						-3.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_402-E-hit.png",
+			"rendered_contact_sheet_sha256": "2543ed6e75aeb76083d89dfdbf3b051a05f757ff08a6ac4193b075f968707e95",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:402",
+				"E",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.487519,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						98.0,
+						20.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						98.0,
+						20.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						98.0,
+						20.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						98.0,
+						20.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_402-SE-attack.png",
+			"rendered_contact_sheet_sha256": "fc1fdb80d97dbbfcefac1c700e1886b91a7a3f106268bc9f79c185b30e7c61aa",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:402",
+				"SE",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.256311,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						1.5,
+						23.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						1.5,
+						23.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						1.5,
+						23.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						1.5,
+						23.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_402-SE-hit.png",
+			"rendered_contact_sheet_sha256": "86e1cef3cfec10a865d9b475d3776d674dacebcd96f18f4b4610e87f6910932b",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:402",
+				"SE",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.23463,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						37.5,
+						24.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.406349211931229,
+						0.410914927721024
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						37.0,
+						24.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.405705243349075,
+						0.410914927721024
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						37.5,
+						24.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.406349211931229,
+						0.410256415605545
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						37.0,
+						24.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.405705243349075,
+						0.410256415605545
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_339-NE-hit.png",
+			"rendered_contact_sheet_sha256": "e4b27eb0c1daccff907a42815fd65d197ecb3d25f117fea1857552dd992e7a8b",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:339",
+				"NE",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.23217,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						15.5,
+						20.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						6.0,
+						31.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						6.0,
+						31.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						6.0,
+						31.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						6.0,
+						31.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						15.5,
+						20.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_213-W-hit.png",
+			"rendered_contact_sheet_sha256": "496b7e01537bb361bef92869c4d9b5756224da1c9c41843322749029eeb01579",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:213",
+				"W",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.235617,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						11.5,
+						16.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						32.5,
+						9.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						32.5,
+						9.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						32.5,
+						9.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						32.5,
+						9.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						11.5,
+						16.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_213-NW-hit.png",
+			"rendered_contact_sheet_sha256": "66d14c862f0313d921da4f294dd56ec8da5f29bb1f0fd8eab9723cea18fde9ad",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:213",
+				"NW",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.436323,
+			"frame_transforms": {
+				"0": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_213-NE-attack.png",
+			"rendered_contact_sheet_sha256": "89fff63e99dc06724b2ad116b7423a67533b9822930840e3b08f35b6867ed33a",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:213",
+				"NE",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.433624,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						71.5,
+						34.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						71.5,
+						34.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						71.5,
+						34.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						71.5,
+						34.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_193-N-attack.png",
+			"rendered_contact_sheet_sha256": "2b6ddb0ec7916dda0fa3225a37635b4e6bc3c6a2014cad7679d2bb036a909e6c",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:193",
+				"N",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.433961,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						47.5,
+						20.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						72.0,
+						32.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						72.0,
+						32.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						72.0,
+						32.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						72.0,
+						32.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						47.5,
+						20.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_193-NE-attack.png",
+			"rendered_contact_sheet_sha256": "c2b6b7f7db2fc92e9115eef7c45971914c931cbd511718a0b4d1b607ba31dddc",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:193",
+				"NE",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.433162,
+			"frame_transforms": {
+				"0": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"2": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"3": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"4": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"5": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_166-S-attack.png",
+			"rendered_contact_sheet_sha256": "0173eae7e63429b8313de7b9577d0fcb0f96cbf0d6acf2294595c9e30b89ca9b",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:166",
+				"S",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.432976,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						29.5,
+						10.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						29.5,
+						10.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_166-SW-attack.png",
+			"rendered_contact_sheet_sha256": "413912a10d31d8bab2b2a69a63d171a7a278c828843c1f83f7c176d9d7359a1b",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:166",
+				"SW",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.432752,
+			"frame_transforms": {
+				"0": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"2": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"3": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"4": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"5": {
+					"anchor": [],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_143-NW-attack.png",
+			"rendered_contact_sheet_sha256": "251c20e7bb46387556a3c47f0555ca20b4e5c4dad862faa31b3d4bd55b620716",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:143",
+				"NW",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.233676,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						-12.5,
+						41.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						-12.5,
+						41.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						-12.5,
+						41.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						-12.5,
+						41.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						-12.5,
+						41.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						-12.5,
+						41.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_143-NW-hit.png",
+			"rendered_contact_sheet_sha256": "7a698520ba5eb937187aaf69eb323a69c0bd89aa80571c02749728cf5be8e25a",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:143",
+				"NW",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.4199999999916,
+			"errors": [],
+			"first_complete_seconds": 0.433112,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						41.5,
+						30.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						41.5,
+						30.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						41.5,
+						30.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						41.5,
+						30.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_143-N-attack.png",
+			"rendered_contact_sheet_sha256": "8737376adfa5be294dbe1bfe2756548017f6287ade7e618208f9997fd4ff7726",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:143",
+				"N",
+				"attack"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.2199999999978,
+			"errors": [],
+			"first_complete_seconds": 0.233222,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						2.0,
+						17.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						2.0,
+						17.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						2.0,
+						17.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						2.0,
+						17.5
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.408293455839157,
+						0.408293455839157
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						0.0,
+						0.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_143-N-hit.png",
+			"rendered_contact_sheet_sha256": "c9daa7136da5a35ba3d3343271706b81168075325b250930c6ead4e565a5ab75",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:143",
+				"N",
+				"hit"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		},
+		{
+			"duration_seconds": 0.64999999998375,
+			"errors": [],
+			"first_complete_seconds": 0.847185,
+			"frame_transforms": {
+				"0": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						8.5,
+						65.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"1": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						8.5,
+						65.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"2": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						8.5,
+						65.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"3": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						8.5,
+						65.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"4": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						8.5,
+						65.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				},
+				"5": {
+					"anchor": [
+						0.0,
+						0.0
+					],
+					"offset": [
+						8.5,
+						65.0
+					],
+					"position": [
+						0.0,
+						0.0
+					],
+					"scale": [
+						0.5,
+						0.5
+					]
+				}
+			},
+			"loop_observed": false,
+			"origin_policy": "BASELINE_SPRITE_CENTER",
+			"rendered_contact_sheet": "/workspace/legendary_runtime/final-render-targeted-v01/rendered/transform_122-S-death.png",
+			"rendered_contact_sheet_sha256": "a12738aedc4895401142b33c77f7d3e084136bcbacdf6d2c519d72356ca299fb",
+			"seen_phases": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"slot": [
+				"transform:122",
+				"S",
+				"death"
+			],
+			"status": "PASS",
+			"terminal_held": true
+		}
+	],
+	"schema": "legendary-final-render-integration-v01",
+	"source_PNG_mutations": 0,
+	"staging_sha256": "1d64457811204c04f2ab9014b74d46158774fede412ebaf0199f1ec18c05f32b",
+	"started_UTC": "2026-10-23T19:12:51",
+	"targeted_recovery_selection": "/workspace/legendary_runtime/final-render-targeted-slots-v01.json",
+	"updated_UTC": "2026-10-23T19:13:06"
+}

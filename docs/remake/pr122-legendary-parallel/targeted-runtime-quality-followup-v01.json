@@ -1,0 +1,31 @@
+{
+  "schema": "legendary-targeted-runtime-quality-followup-v01",
+  "asset_commit": "d8aefaeb3c47c211fa66d76d1950cbda3130ba1b",
+  "frozen_review_modified": false,
+  "review_scope": "Only changed transform:176 S DEATH at final actual GPU playback; healthy clips not visually re-reviewed",
+  "generation_attempts_added": 0,
+  "additional_pose_reorders_attempted": 0,
+  "findings": [
+    {
+      "slot": [
+        "transform:176",
+        "S",
+        "death"
+      ],
+      "cause": "articulation",
+      "status": "HOLD",
+      "detail": "The corrected final frame is a lying corpse and once/hold passes. At index4 (preserved original phase5), the torso rises relative to the preceding falling pose; mid-sequence continuity/ground contact remains visually uncertain. Preserve all source art and record HOLD; no speculative further reordering or regeneration.",
+      "frames": [
+        4
+      ],
+      "active_record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-record.json",
+      "active_record_sha256": "6834956c92eaccfbe2c7d114d45b73481a9acf22b54a1ac40e03a9889daffaf0",
+      "rendered_evidence": {
+        "path": "/workspace/legendary_runtime/final-render-v01/rendered/transform_176-S-death.png",
+        "sha256": "b1f1df4bf665210c7bad5f9449ea547f27941ca52b2a15ca6334038a3cc39708"
+      },
+      "technical_playback_status": "PASS",
+      "final_terminal_held": true
+    }
+  ]
+}

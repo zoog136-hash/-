@@ -1,0 +1,350 @@
+{
+  "schema": "legendary-native-registration-remote-receipt-v1",
+  "status": "REMOTE_SAVED",
+  "remote_sha": "d8aefaeb3c47c211fa66d76d1950cbda3130ba1b",
+  "remote_branch": "feature/pr122-legendary-parallel-20261023",
+  "registered_clips": 33,
+  "registered_poses": 198,
+  "native_poses_preserved": 59,
+  "manifest": {
+    "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-library.json",
+    "sha256": "52a10060e4e05b454641aeecb22ef486f3ea39ac542daa898adbbf26e88c94a5"
+  },
+  "review_input": {
+    "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-review-input-v01.json",
+    "sha256": "baa8b23a27ee4c340ad72f58ef82e1ae0b06cb7d238688be9fda2e685cf443a5"
+  },
+  "validations": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-v01.json",
+      "sha256": "3245ed1c817a3b555d335dd011510bf03b9f651fcb7c33c4166ffb81992ffffa"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-recovery-v02.json",
+      "sha256": "2ee379e5d8d4f5bcdc0d77f384ebd91b6367b2ca7f1c3c34e75daaf165071cc1"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-reconciled-v01.json",
+      "sha256": "deca41ff17031f50b6596d0d0ccc2455fa923379c33929f4b04263a64d2fab11"
+    }
+  ],
+  "validation_reconciliation": {
+    "initial_pass": 31,
+    "initial_failed_slots_preserved": [
+      [
+        "transform:176",
+        "S",
+        "run"
+      ],
+      [
+        "transform:176",
+        "W",
+        "run"
+      ]
+    ],
+    "targeted_recovery_pass": 2,
+    "remaining_failures": 0
+  },
+  "published_artifact_verification": "git show exact verified remote commit bytes equal work bytes",
+  "verified_artifacts": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-library.json",
+      "sha256": "52a10060e4e05b454641aeecb22ef486f3ea39ac542daa898adbbf26e88c94a5"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-reconciled-v01.json",
+      "sha256": "deca41ff17031f50b6596d0d0ccc2455fa923379c33929f4b04263a64d2fab11"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-review-input-v01.json",
+      "sha256": "baa8b23a27ee4c340ad72f58ef82e1ae0b06cb7d238688be9fda2e685cf443a5"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-death-targeted-followup-v01.json",
+      "sha256": "9fa249a659e4449e56d15152c5a4098708d87cf0cf93c73a79c79f9a25de0fd7"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-v01.json",
+      "sha256": "3245ed1c817a3b555d335dd011510bf03b9f651fcb7c33c4166ffb81992ffffa"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-recovery-subset-v01.json",
+      "sha256": "4298d63ba735045cf51937d8691f23d81f45841e734ee74447a1a18a60fafaa2"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-recovery-v02.json",
+      "sha256": "2ee379e5d8d4f5bcdc0d77f384ebd91b6367b2ca7f1c3c34e75daaf165071cc1"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-run-registration.json",
+      "sha256": "81afa4a2bdbce3c9c8f05a3fd6289769bb775f1d638b9cdf034b780fbd2583ef"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-run-registration.json",
+      "sha256": "5487c66a36607fdbd2134108048d0478d613d90b52848e8580371d8d18d5db6b"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-attack-record.json",
+      "sha256": "5b688670005d6096626787e419c7e96530f0b2977367659ed382f3374ebcb633"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-idle-record.json",
+      "sha256": "bbd51946b194c510c39fc89d657e3d3bb060d6d9bab0051e882536b2cc1f7ab3"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-attack-record.json",
+      "sha256": "fbb9548ff1f0008133af7928b99902bef502d73fc7505fe38f46b3fbcb7fea4d"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-hit-record.json",
+      "sha256": "2c36c1b6ad281b73d0fc3441b4e32eb7baaefae51e07f536bf760fcb1dc7738a"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-hit-record.json",
+      "sha256": "b85d98881e8252a08055f29ba85b94b6d68c822a6ab106e91d5549e5bf2e8bf5"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-hit-registration.json",
+      "sha256": "08e51df92ec69607de47b1694bd6657059c8affec5b1f38c0a1478fa6c0c736b"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-hit-record.json",
+      "sha256": "3c1b75db06b9b5cc341e08bf8c7547e758f67a1293793ac48af7c8f00463529b"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-run-record.json",
+      "sha256": "fc657db6b6f448e58a3a2b199ded9f4290120b2fefb0d608c5507d1522c08b82"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-run-record.json",
+      "sha256": "988d3ba9df355a34310de3718366c38faece0c31536d067b3df4008e0db4bb84"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-attack-record.json",
+      "sha256": "d2bfd37b6e8144b6eb4368c6e071f23c27eb89b47e17fd4b50dc87642b0b6996"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-hit-record.json",
+      "sha256": "39b5821b3a90d8ba4de25c986a8a00924a2db46c141bf3ce002c2f76653d2d51"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-attack-registration.json",
+      "sha256": "f9d8d9a088f121fccf011051cba2f382dd854e459fe2cc78610b46175d89ebd9"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-run-registration.json",
+      "sha256": "f8f5311a4974f332c377fc080b61f0120e129734a9c16805147019cc530817df"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-attack-record.json",
+      "sha256": "49639ed40d5a71a67546c3dfc964172bb82412e067b7e03cb5844e6cd0a06bfb"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-hit-registration.json",
+      "sha256": "270f389ef6d5beb2058f4bff129fc95e02173be61d2d3f4563ef0d462337c3e8"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-idle-record.json",
+      "sha256": "d1bd23ffced556a7338e739d9ccd75f7d2da8b3965239163b3d289ba8a19327c"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-attack-record.json",
+      "sha256": "58d8a130fa79547c7e97a1e73a08ed6c93f63ab2e710d9a3a6d8a859efd87d25"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-idle-record.json",
+      "sha256": "16d66f189122e97a140d3ef36732edfb82dcf06ca0d337204f842f62c7ddfc3a"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-hit-record.json",
+      "sha256": "48bc160d802759df469db131f56ca590fc8aa1f528ed66fe3b3f82ebb233e6df"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-attack-registration.json",
+      "sha256": "57a53b2647931203afdf5f899fe5b014e69e97519b6691b304aa07775d872a2a"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-idle-record.json",
+      "sha256": "79ba3e52eb50bafe6562febe513284fc554dfa006261583d720ee229a7fb78d2"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-idle-record.json",
+      "sha256": "4a371b5bcba476c1e06e6770eb979699b658fd775a19e2c6efe7365aa8451d54"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-run-registration.json",
+      "sha256": "4fca366e47fdefce7602ce86e6f3894247c4866992c7abb908cec913b9dfb54d"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-idle-registration.json",
+      "sha256": "aac13345677d2a16239765f3fbec02849168198994c4f45b49563f33eb7896b4"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-run-record.json",
+      "sha256": "2b7804309c55054a63c774f040d47b3f1e9979321f4e020c9ad7ee7e299dad6f"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-idle-registration.json",
+      "sha256": "aff089f4553f08fe156f47a530037a195068f2d515f468b763ad47cb6d291de9"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-hit-registration.json",
+      "sha256": "4f8be51f91601fd56d12c7e6c54fc08410e69fd786e479c63fcdc80fb50745b2"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-attack-registration.json",
+      "sha256": "d20d8a94f0a8758bc9b1a961b6f89a8ac5ca01ceb665ba22b2de4e45852f7131"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-attack-registration.json",
+      "sha256": "69d9cdf0cec8ecff35463adfc58834c2aea238c3b476bf8e0d67b6eba400c14a"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-attack-registration.json",
+      "sha256": "cfae08daa610e47b265ea9d41a1b8aa95bcf32d6053bcd9cc16c93fe7e9809a8"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-run-registration.json",
+      "sha256": "7cc3ce6550376bf66cfe995c12345087979f1b78b0a81f331f66fe0f42056006"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-run-record.json",
+      "sha256": "7333bec8231d8922c29a207895cb00edee1ce2064d086ac0b3eb1e3bd91e7ca0"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-idle-record.json",
+      "sha256": "e578d9fa436d18076111eb8cd5482c3c628134916b05c8982da6b53c7ad12d4c"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-attack-record.json",
+      "sha256": "dfb2e34ad3973c62274fa84d6df0d00a80f55088cb6371ecdde802730b49314b"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-attack-record.json",
+      "sha256": "29fd10af518616a0212a14d895f88923bfaffaab3472fc9a5ac72dd18052b6b2"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-run-record.json",
+      "sha256": "ca2fdef1f58b1f64dc0a86523ba017195103a03bcea592f92117a8104b5bb513"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-hit-registration.json",
+      "sha256": "0b1b12d102390523f2fc8d5e7773c5340614234b46b5b77373e0902131a643ba"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-idle-record.json",
+      "sha256": "1b0f9e88c35de2f39befd763978ed5d36996489843878f1448ab9868bb234261"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-hit-record.json",
+      "sha256": "9a928d61946e32f2fe644f3be54b71cddfd0e0532dcdc80ed2a47396223541ea"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-run-record.json",
+      "sha256": "aeb81cccb019323f38dba03eeed01a611bf1832aee36621d0ff5794ffff94645"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-registration.json",
+      "sha256": "3387efeced826c821847441afb20636b5c5040e23fa1047a361bbb76862865e6"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-hit-registration.json",
+      "sha256": "a423f28a259ec701a1f418f7e98c542127ca2c968bbdbbf6681cb85d767d6ba1"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-idle-registration.json",
+      "sha256": "bf8f2d094ed9fe9b026ec69c48f52c4eb1949e5e9a90947e3ae1dde1f0dd7c6d"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-run-record.json",
+      "sha256": "5ac224440be465c15d5b54dc4556eef269a2e45d0145b6a36074804fd9c99541"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-hit-record.json",
+      "sha256": "bca702d6fec58a211cd90c17694ce439b6711b96fed300b0ec597c3ff2456f10"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-run-registration.json",
+      "sha256": "dfa447221a6ac873b39e6f315e234206fcea29205397c691fb929a376c62b817"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-attack-record.json",
+      "sha256": "d42d49894523bdcfa9c804d2d35527d2bd1d4d3014785d24e51f8ed8db46db14"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-hit-record.json",
+      "sha256": "2b464ad52eac431199dca89f5a758cc9d88687ec157ba6cc92f2a5ea2a7a7036"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-idle-registration.json",
+      "sha256": "1f4827f4ffe032bdf4da75c92e715756d10051d75973b7a90defce612da1baa4"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-idle-registration.json",
+      "sha256": "1b4118795df51ea834b57d01372655ad77bee24c4ade584d80d388e7ca852c87"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-run-registration.json",
+      "sha256": "2aea74897d041b09a37d9d4f7cdd80435287f6b559aa7e85cf270182a379fb08"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/N-hit-registration.json",
+      "sha256": "8f10174e87a155286be6a70ebdba0f032b0d812583060443139977ffed85de1e"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-record.json",
+      "sha256": "6834956c92eaccfbe2c7d114d45b73481a9acf22b54a1ac40e03a9889daffaf0"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SW-attack-registration.json",
+      "sha256": "f73d27d0fa9c475e89a429c093a87361552714d35b0e51a75beadc60ffb37c20"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-idle-registration.json",
+      "sha256": "c4068a8aaf9fc51d716fc396d85ab7c4dfcf975b2064179b6a2043742bace03f"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-run-registration.json",
+      "sha256": "4136ad904197ad1056da131e90133d6f8e62cbe06862dcaa5e91d57104d3b9bd"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/E-idle-registration.json",
+      "sha256": "035250ed6c78a77c054ffc37068f966e1b8199cddfe859756d35bbf756b26af0"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-hit-registration.json",
+      "sha256": "ba8db7acaa80e5a78039c98c46713905679e5d611d14955e390a391837c861c5"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-idle-record.json",
+      "sha256": "ffcc4d89899366329c52b528ac53e0b926a9220d184c8fa10e3e6f0692897566"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/W-idle-registration.json",
+      "sha256": "2c5950cc3f984353ea950cc38c7911da5e31eb105d4e157a8fbad9218f3ad44f"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/S-death-SpriteFrames.tres",
+      "sha256": "943ca17acaea47cf94a234060ed48a1b7eb04a1ff0bc5e67d34cfe0e20ef219e"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NW-attack-registration.json",
+      "sha256": "b0384cc7952c0ac715c9a087f6acfd12937b7eb6db2e8da9b7c943c25b7d2d9d"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-hit-registration.json",
+      "sha256": "3393e4329ee71b7ce2bf0a13b3bc6f87ff89d1eb66c448007c710b3da0f5e529"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/NE-run-record.json",
+      "sha256": "54007772e000e9491c7d5fb678c8f9d6fcff13a9b76e6e090105291c1c8ae9a8"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v02/SE-attack-registration.json",
+      "sha256": "2f4e287891828dc9fea892298d7a79ec26f701ea33a35025d463bef2beed4fbf"
+    }
+  ],
+  "quality_status": "HOLD",
+  "camera_approvals_added": 0,
+  "final_approved": 0
+}

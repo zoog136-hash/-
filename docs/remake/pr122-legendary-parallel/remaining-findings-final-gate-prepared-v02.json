@@ -1,0 +1,775 @@
+{
+  "schema": "pr122-legendary-final-reconciliation-gate-v2",
+  "all_possible_corrections_complete": false,
+  "local_integration_checks_complete": false,
+  "repository_head": "ROOT_TO_SET_FULL_40_CHARACTER_COMMIT",
+  "repository_root": "/workspace/legendary_repo",
+  "frozen": {
+    "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
+    "sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6"
+  },
+  "technical_review": {
+    "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/technical-single-review-v01.json",
+    "sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51"
+  },
+  "targeted_technical_artifacts": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/changed-source-technical-index-v01.json",
+      "sha256": "cf6d387e854e93000f66daa6f76529b0a4c5dd0c5151d7dc23f7bb6ac439be02"
+    }
+  ],
+  "ownership_batches": [
+    {
+      "kind": "ownership_isolation",
+      "batch": 1,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v01.json",
+        "sha256": "75d7e0319bbfddbc90e88cc56a5ebbb1cf4262c75de169cd69248e75b331d6e2"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch001-affected-validation-v01.json",
+          "sha256": "f33b64c763e0a5fd30d8c0b25cad370e97d32b1babcf495f6ce8b4987f8568e4"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch001-remote-saved-v01.json",
+        "sha256": "dec6ae73da7a49a67f52281197c511922fda895d0818e96da29556d657a9849a"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 2,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v02.json",
+        "sha256": "7fac2c0601ce9d9b3a14ea668001e1116c20a15ee63499dc4150f32c3fb9b6ee"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch002-affected-validation-v01.json",
+          "sha256": "44fbb2537e76fd2049d2709b844e1e79bbd334a0496211bbdee900bdf9d76cd0"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch002-remote-saved-v01.json",
+        "sha256": "84e5d7cfd7083b831f4df20518985bf215c8dfbb0152703f6d79edd1f1a2fa3d"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 3,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v03.json",
+        "sha256": "30e216e6a27baf8172f569b79bdfc41bf5a6e859e874745fc9b196af75cf9f7a"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch003-affected-validation-v01.json",
+          "sha256": "bd31e8ec1596e7fb6798601e5e30ee265032aeb419fac12874ce530e159df59b"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch003-remote-saved-v01.json",
+        "sha256": "e02a1ad6430dc450432669e62241dc6d4e1cde5b6ce4ef298026bc11fff1a428"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 4,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v04.json",
+        "sha256": "08fc2fcb205673115723fd6c4c53a2493c940baf798d57ffc9cc51367fffc585"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch004-affected-validation-v01.json",
+          "sha256": "faf450ab0e7b04c7af253de9f3cdc619b6f4182bb9e5630e67bbbd4f98935078"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch004-remote-saved-v01.json",
+        "sha256": "91e3af69db14d939ac7b6e9550d9dc0fc932d2677474415c9104baf55893e05f"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 5,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v05.json",
+        "sha256": "1d9ab88ee2de648527ed36c098435558a3e11915830c03df48bcb2b667367442"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch005-affected-validation-v01.json",
+          "sha256": "dbbe83d3841fb201deaf577190b6071e764c0cacf00b66ce3020906f551cbd98"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch005-remote-saved-v01.json",
+        "sha256": "105ede201b8598036eca151f387b1b9ec92949408c362a8dfc35e99f55c0d3de"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 6,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v06.json",
+        "sha256": "d22a4e9a478f2f4c27fa466239dd5e8a1eb2558c78bbec1056a8ede1f39a532e"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch006-affected-validation-v01.json",
+          "sha256": "f07b79a3e4f831fed9551af8e6bfecddc405c193bb5a364cdf673f6970593697"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch006-remote-saved-v01.json",
+        "sha256": "3527e7b667835842bb5d23e8f1b6168f92641681c718137153897a3f9922ca5e"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 7,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v07.json",
+        "sha256": "74c4e235835a3af6d6bc15b0f1bc64f6950bd0628010f87d263e4eae6f41abd6"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch007-affected-validation-v01.json",
+          "sha256": "c9e50f74ad14f6c4687d57424be9958adbccba173d1a6afcfeb482eeb254a24f"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch007-remote-saved-v01.json",
+        "sha256": "11e7ffd000b8e6cac7ca123a53db2fe4a6ed57af09db9461e31a89133064b35f"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 8,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v08.json",
+        "sha256": "c5a2d47a3ca6cbe7f6d25cdc6629b5130288ccaa8d7cf16e65d61789190d5782"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch008-affected-validation-v01.json",
+          "sha256": "ebafe7687c130f9ddd2ca62b7d7f776d81fc4bcf0ab8a75086235188adf1d086"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch008-remote-saved-v01.json",
+        "sha256": "80cbc7b39906214357cede6a9cf0507a7273485d847a67f12402f89525b9e226"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 9,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v09.json",
+        "sha256": "5c4fa9c910768e9dafccaf56a6d040cf39d83893486001ac77f314bfcf9f2e8d"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch009-affected-validation-v01.json",
+          "sha256": "ead854caf5f5de24d16f153e7a32837210788841ba8eeacf6bff371e36b0b69a"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch009-remote-saved-v01.json",
+        "sha256": "9963510f4fe5edf5aed891cad3d2437f08210443295921637f6789d5558919fe"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 10,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v10.json",
+        "sha256": "b75d7e01fac2a544154dfc5e2a98b79cfc60cde53b462e28489d0e899b683f51"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch010-affected-validation-v01.json",
+          "sha256": "179866461265178cc2368b22e1cb71d615a57dd92e85fa665df8c60858cc8f87"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch010-remote-saved-v01.json",
+        "sha256": "1c853fbc651ed94c67c435480f3875fd127b7931a90ddd6b6f1ca96f4814ff84"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 11,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v11.json",
+        "sha256": "3cd06dc815a8da1bfbcb6d58edc328172ca0e512de2a338f0df087bd69f29252"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch011-affected-validation-v01.json",
+          "sha256": "7946b312d7d18df1b7ea7068447ef2aedf17f0292fb1eeccc16fb29cfa9a7b14"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch011-remote-saved-v01.json",
+        "sha256": "3c05058dc0a6fb8ed9a274d4fa1b468bcc6f51804959b0b07d32dbb84e7d9e0b"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 12,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v12.json",
+        "sha256": "bc6018080bd3ad038d4236298fc308eee9f75e7c946c06340e33c855e21e1859"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch012-affected-validation-v01.json",
+          "sha256": "8e974353b3fc723ce24f939b34055ef8b74a729efb83eaf19886495c7bfaec86"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch012-remote-saved-v01.json",
+        "sha256": "6e3119f9494df94837d31e7f1dd85c99cc484230936abaf0f732b9b74882e85b"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 13,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v13.json",
+        "sha256": "a67a868956d12104475df411db5f629c15f8b301d991a9a28985d214d18561ff"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch013-affected-validation-v01.json",
+          "sha256": "1d8eca79a86e2a507ffc3f34c34c683f5f5331d0cc8b5575dbe1c41d535839fc"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch013-remote-saved-v01.json",
+        "sha256": "1ce8647b0d3aeccc5f65df1e2fdf34730496c85b432c70220a4a5726179399c2"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 14,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v14.json",
+        "sha256": "fafd69f28af0ef368ecce9dd4f0949e255aafd6b2ab14f92c63765f127b9021f"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch014-affected-validation-v01.json",
+          "sha256": "5d3e08387bb0ca922999f888e0288543460427fc72a042308ae40b77442c5576"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch014-remote-saved-v01.json",
+        "sha256": "17fe1f5b13616a8b151b2ac17366322a8171b3e3b4ae32f49710252073457dcd"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 15,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v15.json",
+        "sha256": "c173f365d2e2db1f6f19749a07a6a652b0083f3877b658d08e1d3723b378305f"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch015-affected-validation-v01.json",
+          "sha256": "db480fc7ed5449fae712e5194b749294a93083d6a36437d72977cedecabeb0a5"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch015-remote-saved-v01.json",
+        "sha256": "9b2f218830f26e92ae463a2184965af58cc70d759895f703342496d6faa4f14b"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 16,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v16.json",
+        "sha256": "1c24aa13ab87c0f05acae3635c30cc682ef1f184286fd535341eecb7f6b4d285"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch016-affected-validation-v01.json",
+          "sha256": "a51daf8dd287a8f907b3023097d892de07302ac0a9fbe37d206b3ab0b21fb411"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch016-remote-saved-v01.json",
+        "sha256": "c0889bc92d819942893217c32f68ed82fcb06df7eb554310ef7081b118f02320"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 17,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v17.json",
+        "sha256": "fe33499853535d19ccf228bf2bc6dc3073e1219e6db1b608b48e83692af61409"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch017-affected-validation-v01.json",
+          "sha256": "7fa66114673e7193185acc032d4ca3d6ceed9598d91cb3d95aad72179d0ea806"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch017-remote-saved-v01.json",
+        "sha256": "7d64cf2e33c0369ee50707eae279fe9ed8287986cca38a91d733f1b4f349178e"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 18,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v18.json",
+        "sha256": "291dd01fd161fcb49605f4323db3672b77fe1ffb2abac349afb216bda8e1e242"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch018-affected-validation-v01.json",
+          "sha256": "3df33fdee72ef1b99b3f3d9647dbb4b7a392a878ad3f4f88f05bac0307f2618a"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch018-remote-saved-v01.json",
+        "sha256": "c7e57f55717660945c58388e84a446430c415e1d1aeffa21310d69537e885f66"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 19,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v19.json",
+        "sha256": "459140970a179397db67236857889543115c28048de0021d7d039f679946299e"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch019-affected-validation-v01.json",
+          "sha256": "66f3ee47ca2d1a6d85d2b52b92f1487f192f7efb4ef813bb215570872bf1d5bb"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch019-remote-saved-v01.json",
+        "sha256": "4bfa87c1134e4a9d984d9323114649c63a491d91c0c49340de6d22377671c059"
+      }
+    },
+    {
+      "kind": "ownership_isolation",
+      "batch": 20,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v20.json",
+        "sha256": "f0516d56ada952e41d3618a87a588c48f6291a3dea80fbac5d1557a0ea429ac2"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/isolation-batch020-affected-validation-v01.json",
+          "sha256": "d152fd052d7108063df196b462afacc015878c9f27dc6627d55d49ded61a6f7f"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/isolation-batch020-remote-saved-v01.json",
+        "sha256": "87f50392eeaa0ca8e302f53737621983d78d9b1db613afd71d9fc07b6a2c5cb2"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 1,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch001-library-v01.json",
+        "sha256": "199588460490a3c6a7f1598801acd2eb95bb73af91a050aa7bbe09254bb3bd49"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch001-affected-validation-v01.json",
+          "sha256": "c5134cb547dfaad9a8942cb19dd555040fa4fb4cb138ad87e06bf9373351b6fb"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch001-remote-saved-v01.json",
+        "sha256": "325df8b11d3e81890bceb0d38d46bc9d315f1737bcc59377c1b8f2c93081522b"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 2,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch002-library-v01.json",
+        "sha256": "6651bfc1b1b8d712e5f67780be7a91b68357930481132ef91e0ff4876e3083ef"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch002-affected-validation-v01.json",
+          "sha256": "191fa62df187ecd9ed851e005a93e11d31df4dfaa4e5c0d05a95a241370ca522"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch002-remote-saved-v01.json",
+        "sha256": "0bd85303a5fe8a6c74ca1714eeceb4fd24c6544b7ced6127466f3c03cb955bd3"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 3,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch003-library-v01.json",
+        "sha256": "ddde7eacd9414c91636f057999fb828d58c4ef93659543960de197768f22392c"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch003-affected-validation-v01.json",
+          "sha256": "aef7915f8c25ada60b2e2afdfda01aceccfc92732a61e58deef9665a5ca8f88c"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch003-remote-saved-v01.json",
+        "sha256": "88b14826fc91c6b840c1a87b7c1d3fbc88a747e0fa297a711b1f30969452da1c"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 4,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch004-library-v01.json",
+        "sha256": "e4d6040a86fdb607adc3026fad787f71d42f6d44cc47f2800f2340b7c59b440c"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch004-affected-validation-v01.json",
+          "sha256": "9bc6a60fbbbd38502aa3a0618b60fc58295e65e4b2c94eb1985de198a172b463"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch004-remote-saved-v01.json",
+        "sha256": "02d1ae53c29e458af267a2bc610b3fece1d82c670f55f3f322607c311d6ff2ef"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 5,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch005-library-v01.json",
+        "sha256": "58f0dc957d6755d3bc9a890c682c0fc47b1f47a0ab47a7067a892b9046ecd2c9"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch005-affected-validation-v01.json",
+          "sha256": "ac1e9d772d8773628703de0e8553c0e9526a4958a13dbe6bcf6ad7e6b32b2f53"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch005-remote-saved-v01.json",
+        "sha256": "96e392ffacd088e7f0bcdaab7fdd82f6bd764650fda597ec0234953f81614775"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 6,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-library-v01.json",
+        "sha256": "d50806698ad8bb08cf18604cc9195604b10dbaae3e45f997b02740166ea31b8d"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch006-affected-validation-v01.json",
+          "sha256": "7db7e7f3332f487193d4fa4899ef864f44c064abcf625550170ac9032fb8daa2"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch006-remote-saved-v01.json",
+        "sha256": "afadb6481a3104a119df6a0555463e3e35c91eb8762a45173dc838ecc6b6aef4"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 7,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch007-library-v01.json",
+        "sha256": "12afafd3952b30cb43fcf4163cea648a024dd212419290d14cc09a6dd03120cc"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch007-affected-validation-v01.json",
+          "sha256": "d58589c9925b0335821f113ec000ce0c5120db20ff3ac3de23fd3205a47361c1"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch007-remote-saved-v01.json",
+        "sha256": "d504cf09a2199e7d21ed1ca94c5fd0a054596c281ca576cb0e4929f0656c74b3"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 8,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch008-library-v01.json",
+        "sha256": "0a5576855234c2ccd9571b026b7e1cae8a6ccf7057a45fe19e186cdadf2517ce"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch008-affected-validation-v01.json",
+          "sha256": "91c59b8e0c10c3d22c760040602a5bccd0c580a50497257048d64b79803b9b0e"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch008-remote-saved-v01.json",
+        "sha256": "c3f3f8cccc6bf90226ab994947a8d3b6d4be9dfe225134185eed2d6355fa2773"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 9,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch009-library-v01.json",
+        "sha256": "0773fc1c7af96534b27bb3ef341942c25e1f20ff91bfe9d51da561724c8bf773"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch009-affected-validation-v01.json",
+          "sha256": "27c34a52ce00b3a4703ace24646c2861b33a5d176238a2925b79b7b7e6a69d32"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch009-remote-saved-v01.json",
+        "sha256": "d4e642f45ed3ea965e9b0770eca2c582702928abf76865598ae3cb33337670a0"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 10,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch010-library-v01.json",
+        "sha256": "f234a57c1e590d60c39424a786e697b1753c5ed40341f3d49174a7262817ac0c"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch010-affected-validation-v01.json",
+          "sha256": "0a8033a8b37d119fc620b78b7b4dface93cf8073be933100803631fc76cbc072"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch010-remote-saved-v01.json",
+        "sha256": "ff4eb624cf81de4f7860f056e40d6a1037999a3ff2eed929a7172b551539c011"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 11,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch011-library-v01.json",
+        "sha256": "cdeb6fae4ec6e4c8753b455080ae8da6d352c53084bdc79d9ff6500e2de18f16"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch011-affected-validation-v01.json",
+          "sha256": "e29b47805547ec133546f8b2c2a57f7ca248163b64e7fb700243fa7b5c84989f"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch011-remote-saved-v01.json",
+        "sha256": "ac454a9d0e2968a5e44977a65ef906842ca30886851c885b2ce3243c9820f275"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 12,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch012-library-v01.json",
+        "sha256": "ed17655d9256539fe01d2594581e4a11370d82187d5d38cb7421a58bc2173cc9"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch012-affected-validation-v01.json",
+          "sha256": "91ff99d255d8a178483895ba25a2214993860fef40b6e1b485547cc5669c3377"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch012-remote-saved-v01.json",
+        "sha256": "1001f691f744fa3688eac3a87948d1868c943253317d4343928ab7d4c9b1b1f4"
+      }
+    },
+    {
+      "kind": "ownership_execution_delta",
+      "batch": 13,
+      "manifest": {
+        "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch013-library-v01.json",
+        "sha256": "24efb249d0b87c2b5cfb3becab87253365f7facae51260c3478072e385b9a2f8"
+      },
+      "validations": [
+        {
+          "path": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch013-affected-validation-v01.json",
+          "sha256": "c2cb73cd39cb78ad8deb61aa350774ef5037fdd569bf268a02838dd5212a7d08"
+        }
+      ],
+      "remote_receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/ownership-delta-batch013-remote-saved-v01.json",
+        "sha256": "595301a0454b9b76d345ba47f9cea68e146011340ef129002acf1221e8aab4e3"
+      }
+    }
+  ],
+  "visual_issue_adjudications": [],
+  "quality": {
+    "review": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/changed-source-visual-review-v01.json",
+      "sha256": "5295b853fe163bee4fd8d3f1d3e35b66ae37e4a49c993a9c940ca9af74bfc9ca"
+    },
+    "exact_receipt": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/changed-source-visual-review-receipt-v01.json",
+      "sha256": "b471bfa8c5cb905f1747fc4fcc65185aefd51f970be52db7bfba52f7ad8e9c23"
+    },
+    "quota_checkpoint": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v02/tool-quota-checkpoint-v01.json",
+      "sha256": "ebac8b962830b51860ac1441c5f0378e9dc74035323d47560b900bb6c8c853ca"
+    },
+    "batches": [
+      {
+        "kind": "quality_source_correction",
+        "batch": 267,
+        "manifest": {
+          "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch267-revision-library-v02.json",
+          "sha256": "83a2ad0f239ff4e8fa5cbcb3d3c000688d8ae3b53e937e446afd75c21c8e385b"
+        },
+        "validations": [
+          {
+            "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch267-affected-validation-v02.json",
+            "sha256": "c39c9063206ea91796458b94de2cb396d39c93590139e7d7b4a9839abee72ce8"
+          }
+        ],
+        "remote_receipt": {
+          "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/quality-batch267-remote-saved-v01.json",
+          "sha256": "a2ca1098390f722f4f0005770d5bb4cc76893c679904152734d7d4213bd985a0"
+        }
+      },
+      {
+        "kind": "quality_source_correction",
+        "batch": 268,
+        "manifest": {
+          "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch268-revision-library-v02.json",
+          "sha256": "2a104d3cc27693e7471e249c89e08e6f97739ead94d2c2a66edcc633bdb8bd9f"
+        },
+        "validations": [
+          {
+            "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch268-affected-validation-v02.json",
+            "sha256": "43efe5415215b63755cc9bee163492251faff52b5b27dbbab603644523585988"
+          }
+        ],
+        "remote_receipt": {
+          "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/quality-batch268-remote-saved-v01.json",
+          "sha256": "a98a3d4e6191504ffffe79fc0ccdf0cfd1547b7501d8eec5963590938e682b6f"
+        }
+      },
+      {
+        "kind": "quality_source_correction",
+        "batch": 269,
+        "manifest": {
+          "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch269-revision-library-v02.json",
+          "sha256": "631680231fbce138254fcc4bbcf2959656d30318cfb5e64e0782a16c9e5e2df1"
+        },
+        "validations": [
+          {
+            "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch269-affected-validation-v02.json",
+            "sha256": "183a4b5c25e7181458859bcac23adaa345592746deda8b4aa6abe2b1108f9230"
+          }
+        ],
+        "remote_receipt": {
+          "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/quality-batch269-remote-saved-v01.json",
+          "sha256": "efe3d552da8267074a441d113e81fbb672651db20cd6b2464105aa759506dacd"
+        }
+      },
+      {
+        "kind": "quality_source_correction",
+        "batch": 270,
+        "manifest": {
+          "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch270-revision-library-v02.json",
+          "sha256": "ee3300f12512734bc6f7f90962d42acf8a28a8526103cca6cd5e91e050c40b0c"
+        },
+        "validations": [
+          {
+            "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch270-affected-validation-v02.json",
+            "sha256": "af8cc0b0669080bcd300aedfd53354831784a5857d4a14fb107884c3d450deff"
+          }
+        ],
+        "remote_receipt": {
+          "path": "res://docs/remake/pr122-legendary-parallel/delivery-receipts/quality-batch270-remote-saved-v01.json",
+          "sha256": "c207250f0180e981cf7f28b418608968ef77af387a41db37d9f685902034803c"
+        }
+      }
+    ]
+  },
+  "native176": {
+    "library": {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-library.json",
+      "sha256": "52a10060e4e05b454641aeecb22ef486f3ea39ac542daa898adbbf26e88c94a5"
+    },
+    "review_input": {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-review-input-v01.json",
+      "sha256": "baa8b23a27ee4c340ad72f58ef82e1ae0b06cb7d238688be9fda2e685cf443a5"
+    },
+    "validations": [
+      {
+        "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-v01.json",
+        "sha256": "3245ed1c817a3b555d335dd011510bf03b9f651fcb7c33c4166ffb81992ffffa"
+      },
+      {
+        "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-recovery-v02.json",
+        "sha256": "2ee379e5d8d4f5bcdc0d77f384ebd91b6367b2ca7f1c3c34e75daaf165071cc1"
+      },
+      {
+        "path": "res://docs/remake/pr122-legendary-parallel/transform_176-registration-v02-affected-validation-reconciled-v01.json",
+        "sha256": "deca41ff17031f50b6596d0d0ccc2455fa923379c33929f4b04263a64d2fab11"
+      }
+    ],
+    "remote_receipt": {
+      "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/native-registration-remote-saved-v01.json",
+      "sha256": "fb929159115347b58a891e0b23c270f1708964d7dabcf750182aeeaa72583f4d"
+    }
+  },
+  "integration_receipts": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/final-runtime-integration-reconciled-v01.json",
+      "sha256": "4d713adf5d96512bf677cd134d6aa01798cf99f5836bd8889573adb6e3a65f7e"
+    }
+  ],
+  "output_stem": "remaining-findings-final-v02",
+  "instruction": "Root must supply the final full repository HEAD, exact final runtime/CI integration_receipts, and explicitly set both completion booleans only after those checks finish. Active staging/manifest SHA are frozen at the asset head. Pending remote is inadmissible. No active residual or resolved count is computed by preparation. Historical findings stay separate from active cause/severity/slot-deduplicated residuals. Native176 remains technical registration only.",
+  "asset_staging_freeze_head": "d8aefaeb3c47c211fa66d76d1950cbda3130ba1b",
+  "delivery_evidence": {
+    "path": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/final-correction-delivery-evidence-v01.json",
+    "sha256": "77bda3bdb5a35940bb123300e5b9dd9a645d160862ad9cbdbdcf3d6e4c6fd4c5"
+  },
+  "active_staging": {
+    "path": "res://data/pr122_legendary_parallel_staging.json",
+    "sha256": "1d64457811204c04f2ab9014b74d46158774fede412ebaf0199f1ec18c05f32b"
+  },
+  "active_manifest": {
+    "path": "res://docs/remake/pr122-legendary-parallel/revision-library-ownership-delta-through-batch013-v01.json",
+    "sha256": "05dc2159db8cea02e4c9bdfe860eea62757db4b186281db06feb998756acfa9c"
+  },
+  "preparation_status": "PREPARED_ONLY_FINAL_EXECUTIONS_0",
+  "generation_calls": 0,
+  "PNG_reads": 0,
+  "excluded_pending_batches": [],
+  "prepared_remote_batch_counts": {
+    "ownership": 33,
+    "quality": 4,
+    "native_registration": 1
+  },
+  "targeted_active_quality_followups": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/targeted-runtime-quality-followup-v01.json",
+      "sha256": "3a190285b61dd8d1f94b345cda3a9197ceba3828a39f0a926dbb61f92220e329"
+    }
+  ],
+  "pending_final_inputs": [
+    "Root final repository HEAD after docs commit",
+    "Wholegame CI final result JSON and exact SHA",
+    "Root explicit both completion booleans true"
+  ]
+}
