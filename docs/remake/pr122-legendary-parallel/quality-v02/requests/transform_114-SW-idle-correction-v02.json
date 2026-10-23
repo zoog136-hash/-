@@ -1,0 +1,71 @@
+{
+  "key": "transform:114",
+  "name": "다크스타 조우",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "idle",
+  "reference": "res://assets/catalog/a230694e0604ca7344709834.png",
+  "reference_sha256": "a6811adec96892e22e5d48a315ed4a4e6c80167d5034ba942e00119a0d35fff2",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc099",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-idle-source-v01.png",
+  "previous_source_sha256": "f20b3276269728906f9b934eb08cbd0008952b81cef7b9227f3725d7f3f78bbd",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-idle-record-v01.json",
+  "previous_record_sha256": "fa9355724c129889ba837235ced314f71f3191a766d10b35367ee48afcd7ff33",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "114",
+    "direction": "SW",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-run-source-v01.png",
+    "sha256": "3c2cdf29ba82319625b9a26cb40e261a5a77f782561e3f06f228526140552102",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "114",
+      "direction": "SW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Guard retains frontal/source portrait orientation instead of down-left/rear-left.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-idle-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-idle-record-v01.json",
+      "source_sha256": "f20b3276269728906f9b934eb08cbd0008952b81cef7b9227f3725d7f3f78bbd",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0223",
+      "slot": [
+        "transform:114",
+        "SW",
+        "idle"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:114 다크스타 조우, SW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Guard retains frontal/source portrait orientation instead of down-left/rear-left.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-LEFT, screen DOWN-LEFT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/a230694e0604ca7344709834.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/a230694e0604ca7344709834.png": "a6811adec96892e22e5d48a315ed4a4e6c80167d5034ba942e00119a0d35fff2",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_114/draft001/SW-run-source-v01.png": "3c2cdf29ba82319625b9a26cb40e261a5a77f782561e3f06f228526140552102"
+  }
+}
