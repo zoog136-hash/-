@@ -1,0 +1,160 @@
+{
+  "actors": [
+    {
+      "cases": [
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 0,
+          "runtime_track": "death_0",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 1,
+          "runtime_track": "death_1",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 2,
+          "runtime_track": "death_2",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 3,
+          "runtime_track": "death_3",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 4,
+          "runtime_track": "death_4",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 5,
+          "runtime_track": "death_5",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 6,
+          "runtime_track": "death_6",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        },
+        {
+          "frame_resets": 0,
+          "held_final_frame": 5,
+          "hold_seconds": 30,
+          "input_direction": 7,
+          "runtime_track": "death_7",
+          "shared_s_source": true,
+          "source_passes": 1,
+          "unique_phases_played": 6
+        }
+      ],
+      "frames_sha256": "fb26ee13ef28e8f926d3d794076e1a01d6c86f155630fd3d5dd2438eb6a8cc59",
+      "id": "transform:406",
+      "native_profile_sha256": "e04d529e9281679fcafa6d1e6152934e2e3addb1743148fdb9dea5e52acbb928",
+      "original_authored_death_hold_control": "PASS",
+      "shared_s_only_new_art": true
+    }
+  ],
+  "authoritative_upstream_runtime": true,
+  "checks": 26279,
+  "default_game_connections": 0,
+  "display": "X11",
+  "engine": "4.7.2-stable (official)",
+  "input_cases": 8,
+  "local_opt_in_patch_superseded": true,
+  "main_rendered_phase_references": 48,
+  "new_death_source_directions": 1,
+  "new_death_source_directions_per_new_actor": 1,
+  "new_death_unique_source_poses": 6,
+  "new_final_approvals": 0,
+  "non_authored_fade_control": "PASS",
+  "runtime_scope": "FEATURE_BRANCH_UPSTREAM_ALIGNED_RUNTIME",
+  "runtime_source_sha256": "a1b215e2ac05b38d00b4cc9adcc7631dbc2ebb1d92aab5d6b2704099ccb1f1bb",
+  "schema": "hero-death-policy-main-v2",
+  "single_track_south_input_cases": [
+    {
+      "input_direction": 0,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 1,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 2,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 3,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 4,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 5,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 6,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    },
+    {
+      "input_direction": 7,
+      "last_frame": 5,
+      "runtime_track": "death_2",
+      "unique_phases": 6
+    }
+  ],
+  "status": "TECHNICAL_PASS_QUALITY_HOLD"
+}

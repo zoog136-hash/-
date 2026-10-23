@@ -1,0 +1,932 @@
+{
+  "schema": "hero-parallel-raster-review-v1",
+  "revision": "r005",
+  "integrity": "PASS",
+  "unique_run_poses": 48,
+  "exact_registered_action_frames": 192,
+  "unique_registered_source_poses": 142,
+  "new_death_authored_directions": 1,
+  "source_body_and_weapon_above_hip_exact": true,
+  "alpha_threshold": 16,
+  "component_pixels_threshold": 12,
+  "connectivity_checks": [
+    "4-neighbor",
+    "8-neighbor"
+  ],
+  "frames_with_major_detached_components_8_neighbor": 14,
+  "quality": "HOLD",
+  "raster_connectivity": "HOLD",
+  "anatomical_and_original_identity_approval": false,
+  "reason": "Detached source-material components require repair. Joint-model support labels are not measured shoe contact; original hero identity still requires review.",
+  "new_final_approvals": 0,
+  "frames": [
+    {
+      "direction": 0,
+      "phase": 0,
+      "rgba_sha256": "d482a6281774cc4c6045d57e28999457c4c0f96a3bff1e85c718e8a26e4055ed",
+      "bbox": [
+        115,
+        46,
+        148,
+        178
+      ],
+      "components_4": [
+        865,
+        87
+      ],
+      "components_8": [
+        970
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 0,
+      "phase": 1,
+      "rgba_sha256": "3168beb123f07936525f6d1629e84985890b10aee44e7eaf50d69538167efc1b",
+      "bbox": [
+        117,
+        47,
+        148,
+        173
+      ],
+      "components_4": [
+        815,
+        83
+      ],
+      "components_8": [
+        919
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 0,
+      "phase": 2,
+      "rgba_sha256": "e76ef287dbca1621baed0fdf357d248f02e36630c5578f264c2cc00d42b57731",
+      "bbox": [
+        118,
+        43,
+        148,
+        171
+      ],
+      "components_4": [
+        901,
+        83,
+        20
+      ],
+      "components_8": [
+        1016
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 0,
+      "phase": 3,
+      "rgba_sha256": "e65cb34da600f183cbec297a0dacc337e6923e38c42cf9e9205453ea7570dd6b",
+      "bbox": [
+        116,
+        47,
+        148,
+        178
+      ],
+      "components_4": [
+        939,
+        87,
+        15
+      ],
+      "components_8": [
+        1056
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 0,
+      "phase": 4,
+      "rgba_sha256": "70aa2292be1f2e049a0d791603dc788861bb1be3321595a71110da8d43bd0e12",
+      "bbox": [
+        118,
+        48,
+        149,
+        178
+      ],
+      "components_4": [
+        900,
+        88
+      ],
+      "components_8": [
+        1022
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 0,
+      "phase": 5,
+      "rgba_sha256": "eaaaefef3d9ff58f915ae86bbdcb7dc8506b063396891549100f8561d089664e",
+      "bbox": [
+        117,
+        43,
+        149,
+        176
+      ],
+      "components_4": [
+        861,
+        88,
+        25
+      ],
+      "components_8": [
+        984
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 1,
+      "phase": 0,
+      "rgba_sha256": "9f3d045ebb748b43f4d9cbc5831b316d3b883771d6d817445b37e998295c9347",
+      "bbox": [
+        108,
+        48,
+        164,
+        177
+      ],
+      "components_4": [
+        2092
+      ],
+      "components_8": [
+        2092
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 1,
+      "phase": 1,
+      "rgba_sha256": "d07eaaf30e3b10247425cdad85433cafc6a3731d54496e5a6e20c568b67e1d0d",
+      "bbox": [
+        105,
+        49,
+        164,
+        171
+      ],
+      "components_4": [
+        2088
+      ],
+      "components_8": [
+        2088
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 1,
+      "phase": 2,
+      "rgba_sha256": "a2b41b1b10439391cd5bd90ae516864c283c6d30b189ca384ea00dc4eb705b76",
+      "bbox": [
+        103,
+        45,
+        164,
+        167
+      ],
+      "components_4": [
+        2108
+      ],
+      "components_8": [
+        2108
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 1,
+      "phase": 3,
+      "rgba_sha256": "e4223e0f5423c6e86837dd2a8ca4eb6ebaa9b1ba922a3bc029f5167a5504aeb4",
+      "bbox": [
+        102,
+        47,
+        164,
+        172
+      ],
+      "components_4": [
+        2125
+      ],
+      "components_8": [
+        2125
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 1,
+      "phase": 4,
+      "rgba_sha256": "ee358d9edc6f162895ee0c882a8be27990f6a5c997af2d2f743ffb71455829cc",
+      "bbox": [
+        104,
+        49,
+        165,
+        173
+      ],
+      "components_4": [
+        2110
+      ],
+      "components_8": [
+        2110
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 1,
+      "phase": 5,
+      "rgba_sha256": "d5442ae7405d21b4954ce1097c484751afee8cc3ab583aac58d0612cb263f3d3",
+      "bbox": [
+        109,
+        45,
+        165,
+        174
+      ],
+      "components_4": [
+        2123
+      ],
+      "components_8": [
+        2123
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 2,
+      "phase": 0,
+      "rgba_sha256": "12d152dd8d57890733c47c3662a44ca80d5a0055c70d01887148f374a990d372",
+      "bbox": [
+        93,
+        54,
+        163,
+        170
+      ],
+      "components_4": [
+        2533
+      ],
+      "components_8": [
+        2533
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 2,
+      "phase": 1,
+      "rgba_sha256": "4975fc70ceed772cf24c53924df24caf0398b1fb0488e028873436b87b29651b",
+      "bbox": [
+        94,
+        55,
+        163,
+        167
+      ],
+      "components_4": [
+        2561
+      ],
+      "components_8": [
+        2561
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 2,
+      "phase": 2,
+      "rgba_sha256": "561bb93172a3f307dbf10c4e9aa70869e72349fefbd512172e875af61584c111",
+      "bbox": [
+        94,
+        50,
+        163,
+        169
+      ],
+      "components_4": [
+        2555
+      ],
+      "components_8": [
+        2555
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 2,
+      "phase": 3,
+      "rgba_sha256": "16b04e4f7649dcf03a84bd80d7b3d10a3dd8f47ee9f46e3c81cad77b869d84b8",
+      "bbox": [
+        93,
+        52,
+        163,
+        173
+      ],
+      "components_4": [
+        2210,
+        332
+      ],
+      "components_8": [
+        2542
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 2,
+      "phase": 4,
+      "rgba_sha256": "1f2a560fe2b8c99e35e742c69c5392c45e3d448043c2b0a743d1cdc7ac486bdb",
+      "bbox": [
+        91,
+        53,
+        164,
+        166
+      ],
+      "components_4": [
+        2227,
+        356
+      ],
+      "components_8": [
+        2227,
+        359
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 2,
+      "phase": 5,
+      "rgba_sha256": "58b17d2a3e96f8ebdcee9b59359f568312ff85ac21a926b2b189add668f5a098",
+      "bbox": [
+        91,
+        50,
+        164,
+        167
+      ],
+      "components_4": [
+        2195,
+        377
+      ],
+      "components_8": [
+        2195,
+        380
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 3,
+      "phase": 0,
+      "rgba_sha256": "29b74e899cae0c28004ac058f6f97400167a8c0c61c82136df87b1270f0b158d",
+      "bbox": [
+        89,
+        57,
+        156,
+        174
+      ],
+      "components_4": [
+        1414,
+        266,
+        146
+      ],
+      "components_8": [
+        1415,
+        266,
+        146
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 3,
+      "phase": 1,
+      "rgba_sha256": "4138b6a5cbc9071c7d95b41afc535c9753bcb83502f0dedca7a049444c92a41a",
+      "bbox": [
+        91,
+        58,
+        155,
+        175
+      ],
+      "components_4": [
+        1800
+      ],
+      "components_8": [
+        1803
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 3,
+      "phase": 2,
+      "rgba_sha256": "7c705d3286d01b83f871657aed12b6480baaa02de2cde3d09426e52a640ece55",
+      "bbox": [
+        91,
+        53,
+        151,
+        176
+      ],
+      "components_4": [
+        1805
+      ],
+      "components_8": [
+        1808
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 3,
+      "phase": 3,
+      "rgba_sha256": "433e4e12da85ce27235ded23ff0d3760d0a2df782aacff0304e53b1abe5de2b1",
+      "bbox": [
+        89,
+        55,
+        150,
+        179
+      ],
+      "components_4": [
+        1436,
+        390
+      ],
+      "components_8": [
+        1437,
+        390
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 3,
+      "phase": 4,
+      "rgba_sha256": "036e09918cebf390935ae7a5194f04375d349e76b11a42b13904f074d0b365f3",
+      "bbox": [
+        87,
+        56,
+        154,
+        173
+      ],
+      "components_4": [
+        1421,
+        265,
+        135
+      ],
+      "components_8": [
+        1421,
+        269,
+        135
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 3,
+      "phase": 5,
+      "rgba_sha256": "83202bbc6f611205d16726a5621b8060492ec882d6eb7d5c3b68a1e15bb83114",
+      "bbox": [
+        87,
+        54,
+        156,
+        168
+      ],
+      "components_4": [
+        1413,
+        265,
+        149
+      ],
+      "components_8": [
+        1414,
+        269,
+        149
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 4,
+      "phase": 0,
+      "rgba_sha256": "40ede5d6cc13b95caef9bd727da69fcd7d577ec84000ef59bafc246dda5707ff",
+      "bbox": [
+        108,
+        55,
+        140,
+        180
+      ],
+      "components_4": [
+        1099
+      ],
+      "components_8": [
+        1100
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 4,
+      "phase": 1,
+      "rgba_sha256": "18f2405696aad9f833f8f660e0bdb1c3ec551e27fc2a2a1fb2573cdb391d17aa",
+      "bbox": [
+        108,
+        56,
+        139,
+        180
+      ],
+      "components_4": [
+        1052
+      ],
+      "components_8": [
+        1053
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 4,
+      "phase": 2,
+      "rgba_sha256": "14ce260b9fd8e187f03b8852fad885c6af202905f803b6d7d3eb1286248cd02a",
+      "bbox": [
+        108,
+        51,
+        139,
+        177
+      ],
+      "components_4": [
+        1023
+      ],
+      "components_8": [
+        1023
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 4,
+      "phase": 3,
+      "rgba_sha256": "36c1c9545119844aa3e04aa0038e33d04d60e97d0b0b87ad4016e6fe5dc3e879",
+      "bbox": [
+        108,
+        54,
+        139,
+        179
+      ],
+      "components_4": [
+        1025
+      ],
+      "components_8": [
+        1025
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 4,
+      "phase": 4,
+      "rgba_sha256": "1ebf03c4e0890a20f76b9f6a00e85bb50fcff27587f66c66a2b6e7d08429c455",
+      "bbox": [
+        107,
+        55,
+        139,
+        174
+      ],
+      "components_4": [
+        1012
+      ],
+      "components_8": [
+        1012
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 4,
+      "phase": 5,
+      "rgba_sha256": "95782ad9c5149eb01a46ed9bbe416928d6a9f267a99da91f5cc36e7667661f23",
+      "bbox": [
+        107,
+        52,
+        139,
+        173
+      ],
+      "components_4": [
+        1078
+      ],
+      "components_8": [
+        1078
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 5,
+      "phase": 0,
+      "rgba_sha256": "57b99defbdf210cc3a2e17f5beb4f6e2cc931e13cd5bdaca1ad567aa112cf297",
+      "bbox": [
+        92,
+        57,
+        148,
+        179
+      ],
+      "components_4": [
+        2019
+      ],
+      "components_8": [
+        2025
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 5,
+      "phase": 1,
+      "rgba_sha256": "d8fb0945b0a6f59f4763ae91bb3f7ef9a8b7f7e7196e62657da998ef4518bfa9",
+      "bbox": [
+        92,
+        58,
+        150,
+        178
+      ],
+      "components_4": [
+        2074
+      ],
+      "components_8": [
+        2074
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 5,
+      "phase": 2,
+      "rgba_sha256": "39d532651d599ab90eb568831d0a306ed5e631b7dfa41d07f1832e93a14d1bb3",
+      "bbox": [
+        92,
+        53,
+        152,
+        172
+      ],
+      "components_4": [
+        2093
+      ],
+      "components_8": [
+        2093
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 5,
+      "phase": 3,
+      "rgba_sha256": "625510aebf267282e1c5bab4ba50f424f62503b8fc79cf2fdefa701dd30f94ad",
+      "bbox": [
+        92,
+        55,
+        152,
+        172
+      ],
+      "components_4": [
+        2100
+      ],
+      "components_8": [
+        2100
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 5,
+      "phase": 4,
+      "rgba_sha256": "3ffae95216d7b822fd69333cc7c1d330918b72329bbeb640c75becfca704a202",
+      "bbox": [
+        91,
+        56,
+        151,
+        169
+      ],
+      "components_4": [
+        2062
+      ],
+      "components_8": [
+        2062
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 5,
+      "phase": 5,
+      "rgba_sha256": "62437ba6f8c2636cf94ecd82ac46ffb7e835a6e01415a11a4dbb159dfc64653a",
+      "bbox": [
+        91,
+        53,
+        147,
+        171
+      ],
+      "components_4": [
+        2019
+      ],
+      "components_8": [
+        2019
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 6,
+      "phase": 0,
+      "rgba_sha256": "468712735bd4035a5936770b1a9fd84d4b183cd3f7947cb7f006fda415a60fb9",
+      "bbox": [
+        93,
+        53,
+        163,
+        173
+      ],
+      "components_4": [
+        2486
+      ],
+      "components_8": [
+        2496
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 6,
+      "phase": 1,
+      "rgba_sha256": "7319bc07f9b342198f932c6207047441a14bb7c8b1401bed17e2e0ba827287a8",
+      "bbox": [
+        93,
+        54,
+        162,
+        171
+      ],
+      "components_4": [
+        2515
+      ],
+      "components_8": [
+        2515
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 6,
+      "phase": 2,
+      "rgba_sha256": "fe275533d36db8aad09ab627f1bf2ca4e65bcbc382407654c66efe0782b84dbe",
+      "bbox": [
+        93,
+        49,
+        162,
+        164
+      ],
+      "components_4": [
+        2490
+      ],
+      "components_8": [
+        2490
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 6,
+      "phase": 3,
+      "rgba_sha256": "1cab40675bed723ea898a21b5583823fefa4b6b995cc0aa34183b805bef94d8a",
+      "bbox": [
+        93,
+        51,
+        163,
+        170
+      ],
+      "components_4": [
+        2469
+      ],
+      "components_8": [
+        2480
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 6,
+      "phase": 4,
+      "rgba_sha256": "123552a77ca77eb83ca4cf7bceb4b865d952a5765aa5cfc99500eca2c8377049",
+      "bbox": [
+        92,
+        52,
+        165,
+        168
+      ],
+      "components_4": [
+        2328,
+        188
+      ],
+      "components_8": [
+        2339,
+        188
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 6,
+      "phase": 5,
+      "rgba_sha256": "43fbc9d66c1925d8e99f574044100d8bf9ccb37920ec3789cc684b9a9d3d1ce4",
+      "bbox": [
+        92,
+        49,
+        165,
+        164
+      ],
+      "components_4": [
+        2316,
+        188
+      ],
+      "components_8": [
+        2325,
+        188
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 7,
+      "phase": 0,
+      "rgba_sha256": "2bee741d4cbbbc26b50ffb0bb2d648f1314443909de4c7bd42675db6909b074f",
+      "bbox": [
+        99,
+        47,
+        167,
+        172
+      ],
+      "components_4": [
+        1523,
+        215
+      ],
+      "components_8": [
+        1535,
+        215
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 7,
+      "phase": 1,
+      "rgba_sha256": "6ffc7df180798ce1e0e9018c0b089739753d23659ea4a3d472d7778974a6548b",
+      "bbox": [
+        100,
+        48,
+        165,
+        168
+      ],
+      "components_4": [
+        1507,
+        208
+      ],
+      "components_8": [
+        1517,
+        210
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 7,
+      "phase": 2,
+      "rgba_sha256": "24bff262ff4495a680208db23a21387ddd1f204b8e8e4767c92a7c1c62ee97ca",
+      "bbox": [
+        104,
+        44,
+        165,
+        169
+      ],
+      "components_4": [
+        1469,
+        208
+      ],
+      "components_8": [
+        1478,
+        210
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 7,
+      "phase": 3,
+      "rgba_sha256": "f016827ed1bb76046afeb396226cc456825dc0923c62036aafeebc43c212803b",
+      "bbox": [
+        106,
+        47,
+        167,
+        177
+      ],
+      "components_4": [
+        1471,
+        215
+      ],
+      "components_8": [
+        1482,
+        215
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 7,
+      "phase": 4,
+      "rgba_sha256": "b198bee970a395aedc2e3a75256e7bdb7481d5465ad038070202e1fae9338183",
+      "bbox": [
+        102,
+        48,
+        169,
+        176
+      ],
+      "components_4": [
+        1499,
+        210
+      ],
+      "components_8": [
+        1511,
+        215
+      ],
+      "head_torso_weapon_exact": true
+    },
+    {
+      "direction": 7,
+      "phase": 5,
+      "rgba_sha256": "c73ed87311bb0c5455c4270262c9161eadbb18636d977680683ab5dab73475c9",
+      "bbox": [
+        100,
+        44,
+        169,
+        171
+      ],
+      "components_4": [
+        1521,
+        210
+      ],
+      "components_8": [
+        1533,
+        215
+      ],
+      "head_torso_weapon_exact": true
+    }
+  ]
+}

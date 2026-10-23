@@ -1,0 +1,365 @@
+extends SceneTree
+## Original Nerupa portrait parts, grounded two-bone leg IK and articulated claws.
+## File-only production; no game catalog, physics or shared runtime writes.
+const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+const DEATH = preload("res://docs/remake/pr122-hero-parallel/shared_death_policy.gd")
+const SOURCE := "res://assets/catalog/09aec526b6598da31fe8706e.png"
+const LEG_BIND := {
+	"left": [Vector2(43,84), Vector2(29,95), Vector2(28,112)],
+	"right": [Vector2(57,88), Vector2(61,110), Vector2(74,117)],
+}
+var out: String
+var source: Image
+var parts: Array[Dictionary] = []
+var lineage: Dictionary = {}
+var run_proof: Array = []
+var verify: bool
+
+func _json(path: String, data: Variant) -> void:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	assert(file != null)
+	file.store_string(JSON.stringify(data, "  ") + "\n")
+
+func _hash(image: Image) -> String:
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(image.get_data())
+	return hash.finish().hex_encode()
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _part(name: String, polygon: Array, anchor: Vector2, kind: String, side: float) -> void:
+	var uv := PackedVector2Array()
+	for p: Array in polygon: uv.append(Vector2(p[0], p[1]))
+	var triangles := Geometry2D.triangulate_polygon(uv)
+	assert(not triangles.is_empty())
+	if kind == "body":
+		# Sample the curved surface inside the UV polygon, not just its outline.
+		# Outline-only projection made the torso a nearly edge-on flat panel.
+		var refined := PackedInt32Array()
+		for i: int in range(0, triangles.size(), 3):
+			var a: int = triangles[i]
+			var b: int = triangles[i+1]
+			var c: int = triangles[i+2]
+			var center := uv.size()
+			uv.append((uv[a]+uv[b]+uv[c])/3.0)
+			refined.append_array(PackedInt32Array([a,b,center,b,c,center,c,a,center]))
+		triangles = refined
+	parts.append({"name": name, "uv": uv, "triangles": triangles, "anchor": anchor, "kind": kind, "side": side})
+
+func _leg_bind(side: float) -> Array:
+	return LEG_BIND.left if side < 0 else LEG_BIND.right
+
+func _bind(uv: Vector2) -> Vector3:
+	return Vector3(uv.x - 51.0, 0.0, 115.0 - uv.y)
+
+func _surface_depth(x: float) -> float:
+	return -sqrt(maxf(0.0, 12.0*12.0 - x*x)) * .6
+
+func _leg(side: float, pose: Dictionary) -> Dictionary:
+	var bind := _leg_bind(side)
+	var hip_uv: Vector2 = bind[0]
+	var knee_uv: Vector2 = bind[1]
+	var foot_uv: Vector2 = bind[2]
+	var hip := _bind(hip_uv) + Vector3(0,0,-pose.root_down)
+	hip.y = _surface_depth(hip.x)
+	var phase: float = pose.leg_phase + (0.0 if side < 0 else PI)
+	var stride: float = pose.stride * cos(phase)
+	var lift: float = pose.lift * maxf(0.0, sin(phase))
+	var foot := _bind(foot_uv) + Vector3(0,stride,lift)
+	# Both painted feet share one world ground; no image translation masquerades as a stride.
+	foot.z = lift + float(pose.flight)
+	var upper := hip_uv.distance_to(knee_uv)
+	var lower := knee_uv.distance_to(foot_uv)
+	# Keep the hip on the torso. Clamp only the forward stride if this splayed
+	# portrait leg cannot reach it; moving the hip independently opened a seam.
+	var reach_limit := upper + lower - .15
+	var max_stride := sqrt(maxf(0.0, reach_limit*reach_limit - pow(foot.x-hip.x,2.0) - pow(foot.z-hip.z,2.0)))
+	foot.y = hip.y + clampf(foot.y-hip.y,-max_stride,max_stride)
+	var delta := foot - hip
+	var reach := delta.length()
+	var axis := delta / reach
+	var a := (upper*upper - lower*lower + reach*reach) / (2.0*reach)
+	var normal := Vector3(side,0,0)
+	normal = (normal - axis * normal.dot(axis)).normalized()
+	var knee := hip + axis*a + normal*sqrt(maxf(0.0,upper*upper-a*a))
+	return {"hip":hip, "knee":knee, "foot":foot}
+
+func _vertex(uv: Vector2, part: Dictionary, pose: Dictionary) -> Vector3:
+	var point: Vector3
+	var side: float = part.side
+	if part.kind in ["upper_leg", "lower_leg"]:
+		var leg := _leg(side,pose)
+		var bind := _leg_bind(side)
+		var a: Vector2 = bind[0]
+		var b: Vector2 = bind[1]
+		var c: Vector2 = bind[2]
+		var start := a if part.kind == "upper_leg" else b
+		var finish := b if part.kind == "upper_leg" else c
+		var fraction := (uv-start).dot(finish-start) / start.distance_squared_to(finish)
+		point = (leg.hip as Vector3).lerp(leg.knee, fraction) if part.kind == "upper_leg" else (leg.knee as Vector3).lerp(leg.foot, fraction)
+	elif part.kind == "body":
+		point = _bind(uv)
+		# Curved volume avoids a flat cutout disappearing at side headings.
+		point.y = _surface_depth(point.x)
+		point.z -= pose.root_down
+	else:
+		var delta: Vector2 = uv - part.anchor
+		var angle: float = pose.claw_swing * side if part.kind == "claw" else pose.antenna_sway * side
+		delta = delta.rotated(angle)
+		point = _bind(part.anchor + delta)
+		point.y = _surface_depth(part.anchor.x-51.0) + (absf(delta.x) * .65 + maxf(0.0,delta.y) * .3 if part.kind == "claw" else -sin(delta.y / 35.0 * PI / 2.0) * 8.0)
+		point.z -= pose.root_down
+	point.y += pose.lunge
+	if pose.is_death:
+		point = point.rotated(Vector3.RIGHT, pose.fall)
+		point.z = maxf(0.0, point.z)
+	return point.rotated(Vector3.BACK, pose.yaw)
+
+func _project(point: Vector3, height: float) -> Vector2:
+	return Vector2(128.0 + point.x, 164.0 + point.y * .5 - point.z - height)
+
+func _triangle(image: Image, uv: Array[Vector2], positions: Array[Vector2], shade: float) -> void:
+	var scale := float(image.get_width()) / 256.0
+	var a: Vector2 = positions[0] * scale
+	var b: Vector2 = positions[1] * scale
+	var c: Vector2 = positions[2] * scale
+	var det: float = (b - a).cross(c - a)
+	if absf(det) < .00001: return
+	var bounds := Rect2(a, Vector2.ZERO).expand(b).expand(c).grow(1)
+	var area := Rect2i(bounds).intersection(Rect2i(Vector2i.ZERO, image.get_size()))
+	for y: int in range(area.position.y, area.end.y):
+		for x: int in range(area.position.x, area.end.x):
+			var relative := Vector2(x + .5, y + .5) - a
+			var u := relative.cross(c - a) / det
+			var v := (b - a).cross(relative) / det
+			if u < -.0001 or v < -.0001 or u + v > 1.0001: continue
+			var sample := Vector2i((uv[0] * (1.0 - u - v) + uv[1] * u + uv[2] * v).floor())
+			if sample.x < 0 or sample.y < 0 or sample.x >= source.get_width() or sample.y >= source.get_height(): continue
+			var color := source.get_pixelv(sample)
+			# Portrait-only outer black matte is excluded from derived part layers.
+			if color.a <= 0.0 or maxf(color.r, maxf(color.g, color.b)) <= .10: continue
+			color.r *= shade
+			color.g *= shade
+			color.b *= shade
+			var old := image.get_pixel(x, y)
+			var alpha: float = color.a + old.a * (1.0 - color.a)
+			image.set_pixel(x, y, Color((color.r * color.a + old.r * old.a * (1.0 - color.a)) / alpha, (color.g * color.a + old.g * old.a * (1.0 - color.a)) / alpha, (color.b * color.a + old.b * old.a * (1.0 - color.a)) / alpha, alpha))
+
+func _pose(role: String, direction: int, phase: int) -> Dictionary:
+	var pose := {"yaw": (direction-2)*PI/4.0, "leg_phase":phase*TAU/6.0, "stride":0.0, "lift":0.0, "root_down":0.0, "flight":0.0, "height":0.0, "claw_swing":0.0, "antenna_sway":0.0, "lunge":0.0, "fall":0.0, "shade":1.0, "body_shade":.85 + .15*cos((direction-2)*PI/4.0), "is_death":role=="death"}
+	match role:
+		"idle":
+			pose.antenna_sway = [.0,.035,-.025][phase]
+			pose.claw_swing = [.0,.015,-.02][phase]
+		"run":
+			pose.stride = 7.0
+			pose.lift = 5.0
+			pose.root_down = [2.0,3.0,-1.0,2.0,3.0,-1.0][phase]
+			pose.flight = 2.0 if phase % 3 == 2 else 0.0
+			pose.claw_swing = .1*sin(pose.leg_phase)
+			pose.antenna_sway = .07*cos(pose.leg_phase-.4)
+		"attack":
+			pose.claw_swing = [.18,-.65,-.4,-.1,.04,.0][phase]
+			pose.lunge = [0.0,-9.0,-5.0,-2.0,1.0,0.0][phase]
+			pose.antenna_sway = [.03,-.1,-.04,.02,.03,.0][phase]
+		"hit":
+			pose.lunge = [3.0,6.0,2.0][phase]
+			pose.claw_swing = [.1,.2,.05][phase]
+		"death":
+			pose.fall = [.0,.25,.6,1.0,1.4,PI/2.0][phase]
+			pose.claw_swing = [.0,.12,.3,.5,.6,.6][phase]
+			pose.antenna_sway = [.0,.0,.05,.1,.15,.15][phase]
+			pose.shade = [1.0,1.0,.98,.95,.9,.9][phase]
+	return pose
+
+func _render(pose: Dictionary) -> Image:
+	var image := Image.create(1024, 1024, false, Image.FORMAT_RGBA8)
+	var drawing: Array = []
+	for part: Dictionary in parts:
+		var points: Array[Vector2] = []
+		var depth := 0.0
+		for uv: Vector2 in part.uv:
+			var transverse := 0.0
+			var ribbon_normal := Vector2.ZERO
+			var sample := uv
+			if part.kind in ["upper_leg", "lower_leg"]:
+				var bind := _leg_bind(part.side)
+				var a: Vector2 = bind[0]
+				var b: Vector2 = bind[1]
+				var c: Vector2 = bind[2]
+				var start := a if part.kind == "upper_leg" else b
+				var finish := b if part.kind == "upper_leg" else c
+				var axis := (finish-start).normalized()
+				transverse = axis.cross(uv-start)
+				sample = start + axis*axis.dot(uv-start)
+				var screen_axis := (_project(_vertex(finish,part,pose),pose.height) - _project(_vertex(start,part,pose),pose.height)).normalized()
+				ribbon_normal = Vector2(-screen_axis.y,screen_axis.x)
+			var point := _vertex(sample, part, pose)
+			var projected := _project(point, pose.height)
+			projected += ribbon_normal * transverse * .9 # Perpendicular painted width follows the projected bone.
+			points.append(projected)
+			depth += point.y
+		drawing.append({"part": part, "points": points, "depth": depth / part.uv.size()})
+	drawing.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.depth < b.depth)
+	for item: Dictionary in drawing:
+		var part: Dictionary = item.part
+		for index: int in range(0, part.triangles.size(), 3):
+			var uv: Array[Vector2] = []
+			var points: Array[Vector2] = []
+			for offset: int in range(3):
+				var vertex: int = part.triangles[index + offset]
+				uv.append(part.uv[vertex])
+				points.append(item.points[vertex])
+			_triangle(image, uv, points, pose.shade * (pose.body_shade if part.kind == "body" else 1.0))
+	image.generate_mipmaps()
+	image.resize(256, 256, Image.INTERPOLATE_TRILINEAR)
+	image.clear_mipmaps()
+	return image
+
+func _part_preflight() -> void:
+	var key := FileAccess.get_sha256(SOURCE) + ":" + FileAccess.get_sha256("res://docs/remake/pr122-hero-parallel/bake_fire_nerupa.gd")
+	var receipt := out + "part-preflight.json"
+	if FileAccess.file_exists(receipt):
+		var previous: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(receipt))
+		assert(previous.cache_key == key and FileAccess.get_sha256(out+"part-preflight.png") == previous.png_sha256)
+		print("HERO_NERUPA_PART_PREFLIGHT_REUSED poses=8 writes=0")
+		return
+	var sheet := Image.create(512,1024,false,Image.FORMAT_RGBA8)
+	var rows: Array = []
+	var front_width := 0
+	var side_width := 0
+	for direction: int in [2,0,4,6]:
+		for phase: int in [0,2]:
+			var pose := _pose("run",direction,phase)
+			var image := _render(pose)
+			var box := image.get_used_rect()
+			assert(box.position.x > 0 and box.position.y > 0 and box.end.x < 256 and box.end.y < 256)
+			if direction == 2: front_width = maxi(front_width,box.size.x)
+			if direction in [0,4]: side_width = box.size.x if side_width == 0 else mini(side_width,box.size.x)
+			for side: float in [-1.0,1.0]:
+				var bind := _leg_bind(side)
+				var leg := _leg(side,pose)
+				assert(absf((leg.hip as Vector3).distance_to(leg.knee)-(bind[0] as Vector2).distance_to(bind[1])) < .02)
+				assert(absf((leg.knee as Vector3).distance_to(leg.foot)-(bind[1] as Vector2).distance_to(bind[2])) < .02)
+				assert(leg.foot.z >= 0.0)
+				var bind_hip := _bind(bind[0]) + Vector3(0,0,-pose.root_down)
+				assert(absf(leg.hip.z-bind_hip.z) < .001)
+			var index := rows.size()
+			sheet.blit_rect(image,Rect2i(0,0,256,256),Vector2i((index%2)*256,(index/2)*256))
+			rows.append({"direction":direction,"phase":phase,"rgba_sha256":_hash(image),"bbox":[box.position.x,box.position.y,box.size.x,box.size.y]})
+	assert(side_width >= 20 and float(side_width)/front_width >= .28)
+	assert(sheet.save_png(out+"part-preflight.png") == OK)
+	_json(receipt,{"cache_key":key,"status":"PASS_BIND_LENGTHS_FIXED_HIPS_NO_EDGE_CLIPPING_SIDE_VOLUME","poses":rows,"front_width":front_width,"minimum_side_width":side_width,"png_sha256":FileAccess.get_sha256(out+"part-preflight.png"),"final_approved":false})
+	print("HERO_NERUPA_PART_PREFLIGHT_PASS poses=8 front_width=%d side_width=%d" % [front_width,side_width])
+
+func _run() -> void:
+	assert(Engine.get_version_info().string.begins_with("4.7.2"))
+	var revision := OS.get_environment("TWILIGHT_HERO_NERUPA_REVISION")
+	if revision.is_empty(): revision = "r001"
+	assert(revision.begins_with("r") and revision.substr(1).is_valid_int())
+	out = "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/" + revision + "/"
+	verify = OS.get_environment("TWILIGHT_HERO_VERIFY_BAKE") == "1"
+	assert(verify or not FileAccess.file_exists(out + "SpriteFrames.tres"))
+	var scope: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	assert(verify or not scope.actors["transform:406"].final_approved)
+	DirAccess.make_dir_recursive_absolute(out)
+	source = Image.new()
+	assert(source.load_png_from_buffer(FileAccess.get_file_as_bytes(SOURCE)) == OK)
+	_part("antenna_left", [[46,33],[37,15],[30,14],[29,19],[35,34],[31,39],[23,18],[26,11],[37,9],[42,14],[51,32]], Vector2(49,35), "antenna", -1.0)
+	_part("antenna_right", [[48,34],[49,12],[54,3],[63,1],[69,3],[71,11],[66,13],[64,7],[60,7],[55,18],[55,34]], Vector2(51,35), "antenna", 1.0)
+	_part("claw_upper_left", [[44,36],[43,47],[32,52],[19,62],[18,67],[34,73],[44,76],[42,83],[32,79],[14,72],[12,65],[16,57],[34,43]], Vector2(46,43), "claw", -1.0)
+	_part("claw_upper_right", [[58,32],[68,33],[81,39],[88,46],[87,52],[81,54],[78,47],[67,43],[59,43]], Vector2(58,39), "claw", 1.0)
+	_part("claw_lower_right", [[60,50],[69,54],[78,65],[80,73],[77,79],[71,76],[72,70],[67,65],[57,61]], Vector2(59,55), "claw", 1.0)
+	_part("upper_left_leg", [[42,79],[47,86],[33,98],[24,99],[24,93],[32,86]], Vector2(43,84), "upper_leg", -1.0)
+	_part("lower_left_leg", [[24,91],[33,94],[31,107],[35,111],[30,117],[24,113],[21,106]], Vector2(29,95), "lower_leg", -1.0)
+	_part("upper_right_leg", [[53,84],[61,86],[65,109],[61,114],[56,112],[52,101]], Vector2(57,88), "upper_leg", 1.0)
+	_part("lower_right_leg", [[56,106],[65,105],[67,112],[77,114],[79,119],[76,123],[64,120],[59,116]], Vector2(61,110), "lower_leg", 1.0)
+	_part("body", [[47,27],[56,27],[62,35],[61,44],[64,54],[60,65],[62,74],[59,87],[55,100],[50,105],[46,99],[43,88],[44,76],[40,68],[43,58],[42,47],[42,35]], Vector2(51,67), "body", 0.0)
+	if not verify:
+		_part_preflight()
+		if OS.get_environment("TWILIGHT_HERO_PREFLIGHT_ONLY") == "1":
+			quit()
+			return
+	var row: Dictionary = {}
+	for record: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))["변신"]:
+		if str(record.sourceId) == "406": row = record
+	assert(not row.is_empty() and row.grade == "영웅")
+	var profile: Resource = CATALOG.for_record("transform", row, row.image_path)
+	var donor: String = profile.frames_path
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+	var south := SpriteFrames.new()
+	south.remove_animation("default")
+	var hashes: Dictionary = {SOURCE: FileAccess.get_sha256(SOURCE)}
+	for sheet_name: String in ["run", "attack", "support", "death"]:
+		var rows := 1 if sheet_name == "death" else 8
+		var atlas := Image.create(1536, rows * 256, false, Image.FORMAT_RGBA8)
+		var registrations: Array = []
+		for heading: int in range(rows):
+			var direction: int = 2 if sheet_name == "death" else heading
+			var roles: Array = ["idle", "hit"] if sheet_name == "support" else [sheet_name]
+			for role: String in roles:
+				var count := 3 if role in ["idle", "hit"] else 6
+				var start := 3 if role == "hit" else 0
+				var track := role + "_" + str(direction)
+				lineage[track] = []
+				var target: SpriteFrames = south if role == "death" else frames
+				target.add_animation(track)
+				target.set_animation_loop(track, role in ["idle", "run"])
+				target.set_animation_speed(track, 18.0 if role == "run" else (6.0 / profile.death_duration if role == "death" else 9.0))
+				for phase: int in range(count):
+					var pose := _pose(role, direction, phase)
+					var image := _render(pose)
+					var region := Rect2i((start + phase) * 256, heading * 256, 256, 256)
+					atlas.blit_rect(image, Rect2i(0, 0, 256, 256), region.position)
+					registrations.append({"target": target, "track": track, "region": region})
+					var reference := {"atlas": out + sheet_name + ".png", "region": [region.position.x, region.position.y, 256, 256], "margin_position": [0,0]}
+					var signature := _hash(image)
+					lineage[track].append({"source_reference": reference, "canvas_rgba_sha256": signature, "articulation": pose})
+					if role == "run": run_proof.append({"direction": direction, "phase": phase, "rgba_sha256": signature, "source_reference": reference, "root_down": 0, "source_partition": {"hip_y": 256, "review": "ORIGINAL_PARTS_PROJECTED_RIG_NOT_FAKE_LEG_BIND"}})
+		var path := out + sheet_name + ".png"
+		if verify:
+			var old := Image.new()
+			assert(old.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) == OK and old.get_data() == atlas.get_data())
+		else: assert(atlas.save_png(path) == OK)
+		hashes[path] = FileAccess.get_sha256(path)
+		var texture := ImageTexture.create_from_image(atlas)
+		texture.take_over_path(path)
+		for registration: Dictionary in registrations:
+			var view := AtlasTexture.new()
+			view.atlas = texture
+			view.region = registration.region
+			view.filter_clip = true
+			registration.target.add_frame(registration.track, view)
+	if verify:
+		print("HERO_FIRE_NERUPA_REPRO_PASS unique_rig_poses=150 writes=0")
+		quit()
+		return
+	var result := DEATH.install_new_south_death(frames, south, out + "DeathSouth.tres")
+	for direction: int in range(8): lineage["death_" + str(direction)] = lineage.death_2
+	frames.set_meta("twilight_native_locomotion_staging", true)
+	frames.set_meta("hero_parallel_candidate", true)
+	frames.set_meta("final_approved", false)
+	assert(ResourceSaver.save(south, out + "DeathSouth.tres") == OK)
+	assert(ResourceSaver.save(frames, out + "SpriteFrames.tres") == OK)
+	profile.frames_path = out + "SpriteFrames.tres"
+	profile.movement_fps = 18.0
+	profile.color_tint = Color.WHITE
+	profile.floating = false
+	profile.set_meta("hero_parallel_candidate", true)
+	profile.set_meta("final_approved", false)
+	assert(ResourceSaver.save(profile, out + "NativeMotionProfile.tres") == OK)
+	var part_definitions: Array = []
+	for part: Dictionary in parts:
+		var coordinates: Array = []
+		for uv: Vector2 in part.uv: coordinates.append([uv.x, uv.y])
+		part_definitions.append({"name":part.name, "kind":part.kind, "side":part.side, "anchor":[part.anchor.x,part.anchor.y], "uv_polygon":coordinates, "triangles":Array(part.triangles)})
+	_json(out + "rig-proof.json", {"schema":"hero-unique-full-atlas-v1", "engine":Engine.get_version_info().string, "source":SOURCE, "source_sha256":FileAccess.get_sha256(SOURCE), "source_hashes":hashes, "frames":run_proof, "track_sources":lineage, "unique_authored_poses":150, "runtime_phase_references":192, "preserved_donor_frames":donor, "death_policy":result, "visual_overrides":{"color_tint":"ffffff","floating":false}, "method":"Existing insectoid portrait UV parts, two-bone grounded leg IK, three visible claw parts and two antennae, 3D yaw, curved body projection; candidate needs visual contact and seam review", "source_part_definitions":part_definitions, "authoring_script_sha256":FileAccess.get_sha256("res://docs/remake/pr122-hero-parallel/bake_fire_nerupa.gd"), "source_paintings_reused":1, "new_hand_painted_sources":0, "portrait_matte_max_rgb_excluded":.10, "final_approved":false})
+	var staging: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_hero_parallel_staging.json"))
+	assert(staging.actors.has("transform:406") and not staging.actors["transform:406"].final_approved)
+	staging.actors["transform:406"].merge({"status":"ORIGINAL_PARTS_RIG_CANDIDATE_QUALITY_HOLD", "frames":out+"SpriteFrames.tres", "native_profile":out+"NativeMotionProfile.tres", "rig":out+"rig-proof.json", "source_donor":SOURCE, "source_frames_sha256":FileAccess.get_sha256(SOURCE), "new_run_poses":48, "new_unique_authored_poses":150, "new_death_authored_directions":["S"], "new_death_unique_poses":6, "death_policy_scope":"NEW_S_ONLY_SHARED_AT_RESOURCE_LEVEL", "death_reuse_assessment":"Existing generic donor does not represent the insectoid portrait. All existing death resources stay read-only. This candidate authors only S death.", "independent_validation":"NOT_RUN", "quality_holds":["INSECTOID_SOURCE_PART_SEAMS_AND_EIGHT_VIEW_VISUAL_REVIEW","ACTUAL_MAIN_GROUNDED_CONTACT_AND_DEATH_REVIEW"], "production_connected":false, "final_approved":false}, true)
+	_json("res://data/pr122_hero_parallel_staging.json", staging)
+	print("HERO_FIRE_NERUPA_BUILD_PASS baked_rig_poses=150 reused_paintings=1 new_death_directions=1 approvals=0")
+	quit()

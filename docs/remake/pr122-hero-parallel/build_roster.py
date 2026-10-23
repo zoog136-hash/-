@@ -77,7 +77,8 @@ def build():
                       'death_reuse_assessment', 'new_unique_authored_poses',
                       'new_death_authored_directions', 'new_death_unique_poses', 'death_hold_review_source',
                       'death_validation_report', 'visual_review_state', 'visual_review_report',
-                      'approval_receipt', 'source_paintings_reused', 'baked_rig_pose_count']:
+                      'approval_receipt', 'source_paintings_reused', 'baked_rig_pose_count',
+                      'image_generation_recovery', 'accepted_minor_pixels']:
             if field in old:
                 actors[key][field] = old[field]
     for key, actor in actors.items():

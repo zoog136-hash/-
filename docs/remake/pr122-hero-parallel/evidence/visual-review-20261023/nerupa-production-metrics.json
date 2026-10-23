@@ -1,0 +1,38 @@
+{
+  "schema": "hero-production-metrics-v1",
+  "actor": "transform:406",
+  "new_source_paintings": 0,
+  "reused_source_paintings": 1,
+  "new_final_approved_actions": [
+    "idle",
+    "run",
+    "attack",
+    "hit",
+    "death"
+  ],
+  "character_draft_reworked": 1,
+  "duplicate_leg_bind_coordinate_definitions_before": 3,
+  "after": 1,
+  "source_specific_root_causes": [
+    "outline-only_half_body_projection",
+    "hip_moved_off_torso_under_IK_reach_limit",
+    "left_antenna_UV_omitted_painted_root",
+    "dark_source_limb_paint_rejected_as_background"
+  ],
+  "final_first_main_pass_after_source_alpha_fix": true,
+  "final_pose_cells": 150,
+  "distinct_final_rgba_poses": 142,
+  "representative_pose_cells_reused": 12,
+  "full_sheet_new_render_calls": 138,
+  "final_run_connection_warnings": 0,
+  "historical_run_connection_warnings": {
+    "r001": 35,
+    "r002": 34,
+    "r005": 14,
+    "r006": 2
+  },
+  "unchanged_other_approved_characters": 3,
+  "remaining_scope": 21,
+  "default_game_connections": 0,
+  "savings_rate_claimed": false
+}

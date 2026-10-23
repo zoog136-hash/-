@@ -10,6 +10,23 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def require_approved_connectivity(detached, accepted=None):
+    """Raw findings stay strict; accept only individually reviewed pixel bytes."""
+    if not detached:
+        return
+    assert accepted and accepted.get('status') == 'APPROVED_MINOR_PIXEL_GAPS'
+    findings = accepted['findings']
+    assert len(findings) == len(detached)
+    by_pose = {(int(r['direction']), int(r['phase'])): r for r in findings}
+    assert len(by_pose) == len(findings)
+    for row in detached:
+        finding = by_pose[(int(row['direction']), int(row['phase']))]
+        assert finding['rgba_sha256'] == row['rgba_sha256']
+        assert finding['component_sizes'] == row['components_8']
+        assert 0 < finding['empty_grid_gap_pixels'] <= 2
+        assert finding['accepted_by_latest_user_policy'] is True
+
+
 def components(image, neighbors):
     points = {i for i, alpha in enumerate(image.getchannel('A').get_flattened_data()) if alpha > 16}
     sizes = []
@@ -138,7 +155,14 @@ def main():
         receipt = json.loads((ROOT / entry['approval_receipt'].removeprefix('res://')).read_text())
         assert receipt['frames_sha256'] == hashlib.sha256((ROOT / entry['frames'].removeprefix('res://')).read_bytes()).hexdigest()
         assert receipt['rig_sha256'] == hashlib.sha256((folder / 'rig-proof.json').read_bytes()).hexdigest()
-        assert not detached
+        acceptance = None
+        if detached:
+            seal = receipt['accepted_minor_pixels']
+            path = ROOT / seal['report'].removeprefix('res://')
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == seal['sha256']
+            acceptance = json.loads(path.read_text())
+            assert acceptance['source_atlas_sha256'] == hashlib.sha256((folder / 'run.png').read_bytes()).hexdigest()
+        require_approved_connectivity(detached, acceptance)
         print('HERO_APPROVED_RESOURCE_RECHECK_PASS source_and_approval_unchanged=true writes=0')
         return 0
     output.parent.mkdir(parents=True, exist_ok=True)

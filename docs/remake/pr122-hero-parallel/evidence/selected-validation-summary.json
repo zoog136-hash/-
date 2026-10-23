@@ -1,13 +1,14 @@
 {
-  "schema": "hero-selected-validation-summary-v4",
+  "schema": "hero-selected-validation-summary-v6",
   "target_scope_total": 25,
-  "new_final_approvals": 3,
+  "new_final_approvals": 4,
   "approved_for_integration": [
     "transform:352",
     "transform:405",
+    "transform:406",
     "transform:407"
   ],
-  "pending_total": 22,
+  "pending_total": 21,
   "default_game_connections": 0,
   "selected_resource_sets": [
     "transform:11",
@@ -19,6 +20,7 @@
     "transform:276",
     "transform:352",
     "transform:405",
+    "transform:406",
     "transform:407",
     "transform:7",
     "transform:9"
@@ -34,12 +36,12 @@
     "transform:231",
     "transform:276"
   ],
-  "main_checks": 14194,
-  "rendered_native_phase_references": 1872,
-  "unique_main_report_count": 10,
-  "physics_compared_ticks": 576,
+  "main_checks": 15409,
+  "rendered_native_phase_references": 2064,
+  "unique_main_report_count": 11,
+  "physics_compared_ticks": 624,
   "source_reuse_approvals": 2,
-  "original_part_rig_approvals": 1,
+  "original_part_rig_approvals": 2,
   "new_fairy_source_death_directions": 1,
   "new_fairy_source_death_poses": 6,
   "full_ci_rerun": false,
@@ -53,6 +55,25 @@
     "docs/remake/pr122-hero-parallel/evidence/transform_11-r001-visible-main-hold_beres/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_179-r001-visible-main-hold_lance/validation-opengl.json",
     "docs/remake/pr122-hero-parallel/evidence/transform_276-r001-visible-main-hold_anna/validation-opengl.json",
-    "docs/remake/pr122-hero-parallel/evidence/transform_7-r001-visible-main-hold_baphomet/validation-opengl.json"
-  ]
+    "docs/remake/pr122-hero-parallel/evidence/transform_7-r001-visible-main-hold_baphomet/validation-opengl.json",
+    "docs/remake/pr122-hero-parallel/evidence/fire_nerupa_406-r007-visible-main-nerupa_r007_20261023/validation-opengl.json"
+  ],
+  "unapproved_new_original_part_candidates": [],
+  "image_generation_recovery": {
+    "unit_tests_passed": 7,
+    "live_api_requests_sent": 0,
+    "live_generated_source_pngs": 0,
+    "status": "BLOCKED_CREDENTIAL_NOT_CONFIGURED"
+  },
+  "latest_new_final_approved_actions": {
+    "transform:406": [
+      "idle",
+      "run",
+      "attack",
+      "hit",
+      "death"
+    ]
+  },
+  "source_painting_or_native_frame_reuse_characters": 4,
+  "live_new_source_paintings": 0
 }

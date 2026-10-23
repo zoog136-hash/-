@@ -27,8 +27,8 @@
   "historical_approved_excluded": 84,
   "historical_short_frame_excluded": 11,
   "target_scope_total": 25,
-  "pending_total": 22,
-  "new_final_approvals": 3,
+  "pending_total": 21,
+  "new_final_approvals": 4,
   "default_game_connections": 0,
   "actors": {
     "transform:7": {
@@ -475,7 +475,8 @@
       "quality_holds": [
         "REJECTED_LOWER_BODY_MATERIAL_CONNECTIONS_40_OF_48",
         "ORIGINAL_IDENTITY_NOT_APPROVED",
-        "NEW_UNIQUE_ART_TOOL_HTTP400_UNKNOWN_REASONING_PARAMETER"
+        "NEW_UNIQUE_ART_TOOL_HTTP400_UNKNOWN_REASONING_PARAMETER",
+        "DIRECT_IMAGE_API_CREDENTIAL_NOT_CONFIGURED"
       ],
       "unique_art_candidates": [
         {
@@ -492,7 +493,14 @@
       ],
       "death_policy_scope": "PRESERVE_EXISTING_DONOR_EIGHT_DEATH_DIRECTIONS_NO_NEW_ART",
       "new_death_authored_directions": [],
-      "new_death_unique_poses": 0.0
+      "new_death_unique_poses": 0.0,
+      "image_generation_recovery": {
+        "http_requests": 0.0,
+        "new_source_files": 0.0,
+        "prompt_preserved": true,
+        "receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/image-compat-single-probe.json",
+        "status": "BLOCKED_CREDENTIAL_NOT_CONFIGURED"
+      }
     },
     "transform:197": {
       "name": "사단장 하퍼",
@@ -918,16 +926,16 @@
       "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_fairy_405-r003-visible-main-fairy_visual_20261023/validation-opengl.json",
       "prior_candidates": [
         {
+          "final_approved": false,
           "path": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r001/",
-          "status": "SUPERSEDED_SOURCE_LEG_EXTRACTION_REVIEW",
           "selected": false,
-          "final_approved": false
+          "status": "SUPERSEDED_SOURCE_LEG_EXTRACTION_REVIEW"
         },
         {
+          "final_approved": false,
           "path": "res://assets/actors/eight_direction/hero_parallel/fire_fairy_405/r002/",
-          "status": "SUPERSEDED_SOURCE_LEG_EXTRACTION_REVIEW",
           "selected": false,
-          "final_approved": false
+          "status": "SUPERSEDED_SOURCE_LEG_EXTRACTION_REVIEW"
         }
       ],
       "death_policy_scope": "NEW_S_ONLY_SHARED_AT_RESOURCE_LEVEL",
@@ -941,8 +949,8 @@
       "visual_review_state": "APPROVED_AFTER_DIRECT_INTERNAL_AND_MAIN_REVIEW",
       "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/review.json",
       "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-405.json",
-      "source_paintings_reused": 1,
-      "baked_rig_pose_count": 150
+      "source_paintings_reused": 1.0,
+      "baked_rig_pose_count": 150.0
     },
     "transform:406": {
       "name": "화염의 네루파",
@@ -955,10 +963,64 @@
       "attack_family": "melee",
       "priority": 4,
       "classification_is_art_approval": false,
-      "status": "NOT_STARTED",
+      "status": "APPROVED_HERO_ASSET_READY_FOR_INTEGRATION",
       "production_connected": false,
-      "independent_validation": "NOT_RUN",
-      "final_approved": false
+      "independent_validation": "RESOURCE_MAIN_INPUT_DEATH_VISUAL_PASS",
+      "final_approved": true,
+      "frames": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r007/SpriteFrames.tres",
+      "native_profile": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r007/NativeMotionProfile.tres",
+      "rig": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r007/rig-proof.json",
+      "quality_holds": [],
+      "source_donor": "res://assets/catalog/09aec526b6598da31fe8706e.png",
+      "source_frames_sha256": "827ff749efd4af6105d43b9a69acb6474ed4f2634197980258630c4931da5db5",
+      "new_run_poses": 48.0,
+      "raster_review": "res://docs/remake/pr122-hero-parallel/evidence/fire_nerupa_406-r007/raster-review.json",
+      "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_nerupa_406-r007-visible-main-nerupa_r007_20261023/validation-opengl.json",
+      "prior_candidates": [
+        {
+          "failure": "RASTER_LIMB_CONNECTIONS_35_OF_48_FRAMES",
+          "frames": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r001/SpriteFrames.tres",
+          "frames_sha256": "bb7f3de4d88755fc3e0e8607690dbcbc4c6d6493ccd4c49ec51a217842485555",
+          "main_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/fire_nerupa_406-r001-visible-main-nerupa_visual_20261023/validation-opengl.json",
+          "rig": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r001/rig-proof.json",
+          "source_files_preserved": true,
+          "status": "TECHNICAL_MAIN_PASS_QUALITY_HOLD"
+        },
+        {
+          "frames": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r002/SpriteFrames.tres",
+          "frames_sha256": "fb26ee13ef28e8f926d3d794076e1a01d6c86f155630fd3d5dd2438eb6a8cc59",
+          "status": "SUPERSEDED_QUALITY_HOLD",
+          "run_detached_frame_findings": 34,
+          "source_files_preserved": true
+        },
+        {
+          "frames": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r005/SpriteFrames.tres",
+          "frames_sha256": "d464022848965eae8845e61b1ecf00bc802e4244646770108e0d262efd1bbb5d",
+          "status": "SUPERSEDED_QUALITY_HOLD",
+          "run_detached_frame_findings": 14,
+          "source_files_preserved": true
+        },
+        {
+          "frames": "res://assets/actors/eight_direction/hero_parallel/fire_nerupa_406/r006/SpriteFrames.tres",
+          "frames_sha256": "c1960619fca4638e71f750d4d3bbe6fb39b0866156d02fb696de85ac8bf3760b",
+          "status": "SUPERSEDED_QUALITY_HOLD",
+          "run_detached_frame_findings": 2,
+          "source_files_preserved": true
+        }
+      ],
+      "death_policy_scope": "NEW_S_ONLY_SHARED_AT_RESOURCE_LEVEL",
+      "death_reuse_assessment": "Existing generic donor does not represent the insectoid portrait. All existing death resources stay read-only. This candidate authors only S death.",
+      "new_unique_authored_poses": 150.0,
+      "new_death_authored_directions": [
+        "S"
+      ],
+      "new_death_unique_poses": 6.0,
+      "death_validation_report": "res://docs/remake/pr122-hero-parallel/evidence/nerupa_r007_20261023/feature-main-death-policy-opengl.json",
+      "visual_review_state": "APPROVED_ORIGINAL_PARTS_MINOR_PIXEL_POLICY",
+      "visual_review_report": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/nerupa-review.json",
+      "approval_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/approval-406.json",
+      "source_paintings_reused": 1,
+      "baked_rig_pose_count": 150
     },
     "transform:407": {
       "name": "화염의 엔트",
@@ -1162,6 +1224,35 @@
     "final_completion_requires_approval": true,
     "hit_directions": 8.0,
     "idle_directions": 8.0,
+    "image_generation_recovery": {
+      "builtin_adapter": "NOT_EDITABLE_IN_REPOSITORY",
+      "caller": "tools/pr122_image_generation_compat.py:generate",
+      "http_requests": 0.0,
+      "new_generated_source_files": 0.0,
+      "other_hero_work_continues": true,
+      "same_builtin_failure_retried": false,
+      "single_probe_receipt": "res://docs/remake/pr122-hero-parallel/evidence/visual-review-20261023/image-compat-single-probe.json",
+      "single_probe_status": "BLOCKED_CREDENTIAL_NOT_CONFIGURED",
+      "unsupported_text_fields": "REMOVED_AT_HTTP_BOUNDARY",
+      "wire_fields": [
+        "model",
+        "prompt",
+        "n",
+        "size",
+        "quality",
+        "background",
+        "output_format"
+      ],
+      "latest_user_route_policy": "BUILTIN_PREFERRED_NO_IDENTICAL_RETRY_NO_UNAUTHENTICATED_API_FALLBACK"
+    },
+    "integration_review": {
+      "latest_pr_head_read_only": "ffd856e9f49e6c580797c9a3672aa083828d2a7a",
+      "merge_authorized": false,
+      "pr_branch_modified": false,
+      "pre_final_hero_commit_merge_preview": "CLEAN",
+      "shared_runtime_matches": true,
+      "state": "OPEN_DRAFT"
+    },
     "internal_image_review": {
       "allowed": true,
       "chat_image_attachments_allowed": false,
@@ -1177,6 +1268,14 @@
     "run_directions": 8.0,
     "scope": "ONLY_DEATH_ART_AUTHORED_AFTER_THIS_POLICY",
     "south_direction_index": 2.0,
-    "walk": "NO_NEW_AUTHORING"
+    "walk": "NO_NEW_AUTHORING",
+    "minor_pixel_error_policy": {
+      "user_instruction": "영웅급은 픽셀단위 미세 오류는 무시한다 작은 오류는 승인해",
+      "date_client": "2026-10-23 Asia/Seoul",
+      "allow_individually_reviewed_minor_pixel_gaps": true,
+      "retain_original_identity_contact_attack_and_death_requirements": true,
+      "automatic_raster_thresholds_changed": false,
+      "approval_requires_actual_main_review": true
+    }
   }
 }

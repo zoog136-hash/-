@@ -1,5 +1,47 @@
 # PR122 hero art generator — HTTP 400 recovery (2026-10-23)
 
+## Latest executed recovery (2026-10-23)
+
+The remote compatibility commits were preserved through a normal merge into
+the hero branch after committing the three verified hero rigs. Neither PR122
+nor its mythic/legendary branch was changed.
+
+`generate()` now filters the actual HTTP request body immediately before
+serialization, allowing only `model`, `prompt`, `n`, `size`, `quality`,
+`background`, and `output_format`. This also removes injected `reasoning`,
+`temperature`, `text`, and token controls when another caller passes them.
+The Work service implementation is not present in this editable repository;
+this fixes the owned compatibility caller, not the upstream service.
+
+The latest saved Death155 run prompt is supported without changing its text.
+The run default now selects that reviewed 3 × 2 S-only probe and 1536 × 1024,
+rather than accidentally sending the earlier, visually rejected armor prompt
+with an eight-heading sheet size. The historical four requests remain intact.
+
+Seven local tests pass, including inspection of the serialized HTTP body,
+one-call-only handling of HTTP 400, missing-credential behavior, and decoding
+and saving a mocked PNG response. Mocked test images are temporary fixtures,
+not generated artwork or evidence of API success.
+
+One execution preflight was made for Death155 using the corrected prompt and
+explicit execution flags. It stopped **before sending any HTTP request**:
+`OPENAI_API_KEY` is not configured. The environment reports no configured
+secrets or runtime variables. The receipt is
+`evidence/visual-review-20261023/image-compat-single-probe.json`.
+Actual new API-generated PNGs: **0**. PNG/SHA/frame-split/Godot verification
+of that API result is **not available**. No identical failing built-in request
+was repeated. The latest user instruction authorizes this compatibility
+execution; it does not supply the missing credential.
+
+The source-reuse work continued independently: 352, 405 and 407 passed direct
+visual review and actual Main/Player validation. Nerupa406 now has an original
+insectoid portrait-part rig candidate, rather than a different humanoid proxy;
+its latest r007 version now passes direct Main review and is approved after
+preserving the source dark limb ink and correcting shared bind/surface settings.
+Earlier seam/contact HOLD revisions remain intact. The authoritative scope
+remains 25, independently approved 4, pending 21;
+default game integration remains 0.
+
 ## Confirmed failure
 
 Saved evidence: `docs/remake/pr122-hero-parallel/evidence/next-unique-20261022/image-tool-failure.json`.

@@ -136,3 +136,42 @@ PR HEAD는 작업 중 `dc867da691e20fa72b96b960c6c6b4176c8e5a74`까지 진행됐
 3종은 독립 제작/실제 Main 검증/직접 시각 검토를 승인한 **통합 준비 자산**이다. 정식 기본 카탈로그 적용0, PR122 병합0이며 기존 승인84종과 원래405종 공통 원장은 변경하지 않았다. 최종 승인은 staging의 `final_approved`와 바이트 SHA가 고정된 별도 approval receipt를 기준으로 한다. 제작 시점의 리소스 WIP 메타데이터는 원본 보존을 위해 그대로 두며 그 메타데이터만으로 승인하지 않는다. 자동 검사·리깅 도구는 승인 자산을 재제작하거나 재승인하지 못하도록 보호했다. `pending_total`은 이제 실제 남은22종이며 `target_scope_total=25`는 최초 작업 범위를 보존한다.
 
 새 고유 원화 생성 도구는 여전히 HTTP400 `Unknown parameter: reasoning`으로 실패한다. 실제 기준 이미지로 재시도한 요청/오류를 남겼고 생성 성공으로 계산하지 않았다. 승인3종은 이 오류와 독립적으로 기존 원화의 적절한 재사용·새 관절 제작으로 완성했다. 전체CI33은 반복하지 않았다.
+
+### 2026-10-23 — HTTP payload recovery and continued insectoid production
+
+The compatibility Images caller now filters its serialized HTTP body to the seven
+image fields, even if a caller injects reasoning/text controls. Seven tests pass.
+The reviewed Death155 3 × 2 run prompt remains byte-for-byte unchanged. Its single
+execution preflight stopped before HTTP because OPENAI_API_KEY is not configured;
+zero API-generated source PNGs are claimed. See IMAGE_TOOL_HTTP400_RECOVERY_20261023.md
+and evidence/visual-review-20261023/image-compat-single-probe.json.
+
+Source reuse continued with Nerupa406: insectoid portrait-part rig, grounded leg IK,
+three visible claw parts and antennae, 8-heading idle/run/attack/hit and one S death
+shared across all death inputs. Revisions r001/r002 and r001 authoring source are
+preserved. R002 has 150 baked articulated poses; its 192 runtime phase references
+pass actual Main (1,215 checks), keyboard displacement comparison (48 physics ticks),
+and S-death/last-pose hold checks (26,279 checks). Material connections in 34 of
+48 run poses and rear/contact completeness remain HOLD. It is not approved.
+
+Approved for later integration: 352, 405, 407 (3). Pending: 22 of the original 25.
+Default catalog/game connections: 0. No PR122 merge was performed. All 286 previously
+tracked hero PNG/WebP/TRES/JSON files still match the pre-session Git blobs exactly.
+The shared motion runtime matches read-only PR122 head ffd856e9; that branch and its
+mythic/legendary production were left untouched. No full CI rerun.
+
+### Latest result after the user’s minor-pixel instruction
+
+Nerupa406 r007 is now independently approved for all five actions after source-specific
+dark-ink preservation, one shared leg-bind setting, and a closed body shell using
+one UV definition. Twelve contact/bend/peak-attack previews passed before full
+baking and were reused; the full sheet rendered 138 additional cells (150 total,
+142 distinct RGBA poses). Final run connection warnings: 0. Actual Main/Player,
+8-input shared S death/30-second corpse hold, keyboard physics and read-only bake
+reproduction passed. Old failed/superseded resources and logs remain preserved.
+
+New source paintings: 0. Existing source reuse: 4 characters. Latest additional
+approval: Nerupa’s idle/run/attack/hit/death (5 actions); total independently ready
+characters: 4 (352/405/406/407), pending: 21. Formal game connections: 0. The built-in
+image tool’s saved HTTP400 reasoning failure remains unresolved; no identical
+retry or further unauthenticated API fallback was made after the latest instruction.

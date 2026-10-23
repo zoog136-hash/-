@@ -1,0 +1,52 @@
+{
+  "status": "ACCEPTABLE_MINOR_PIXEL_GAPS_PENDING_FINAL_MAIN_REVIEW",
+  "source_atlas_sha256": "15dd4ee3b9c52170cf023d386e4724c56bbb5fdc64d678e9f04d7f0929b97d91",
+  "findings": [
+    {
+      "direction": 6,
+      "phase": 4,
+      "component_sizes": [
+        2469,
+        188
+      ],
+      "nearest_endpoints": [
+        [
+          138,
+          124
+        ],
+        [
+          135,
+          124
+        ]
+      ],
+      "euclidean_endpoint_distance": 3.0,
+      "empty_grid_gap_pixels": 2,
+      "classification": "MINOR_SOURCE_PIXEL_SEAM",
+      "accepted_by_latest_user_policy": true
+    },
+    {
+      "direction": 6,
+      "phase": 5,
+      "component_sizes": [
+        2456,
+        188
+      ],
+      "nearest_endpoints": [
+        [
+          141,
+          96
+        ],
+        [
+          139,
+          94
+        ]
+      ],
+      "euclidean_endpoint_distance": 2.8284271247461903,
+      "empty_grid_gap_pixels": 1,
+      "classification": "MINOR_SOURCE_PIXEL_SEAM",
+      "accepted_by_latest_user_policy": true
+    }
+  ],
+  "automatic_checker_thresholds_changed": false,
+  "art_pixels_patched_or_bridged": false
+}
