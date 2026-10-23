@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 805,
-    "minimally_validated_configurations": 805,
-    "newly_authored_poses": 4328,
-    "reused_existing_poses": 502,
+    "new_draft_configurations": 810,
+    "minimally_validated_configurations": 810,
+    "newly_authored_poses": 4348,
+    "reused_existing_poses": 512,
     "reused_legacy_poses": 36,
-    "reused_prior_draft_poses": 466,
-    "quality_held_configurations": 805,
+    "reused_prior_draft_poses": 476,
+    "quality_held_configurations": 810,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 515
+    "remaining_draft_configurations": 510
   },
   "actors": [
     {
@@ -622,6 +622,31 @@
         {
           "key": "transform:402",
           "direction": "W",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/W-hit-source-v01.png",
+          "source_sha256": "69a65ff805a938eb639a7c647642c6318bcc0e8866d25023137bbe9ae26566d2",
+          "source_bytes": 1762315,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/W-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "33bb43b8ec06cd55b0bb8fe2cce85a0dfdd20de89869b277c3d48e382eaa7b7d",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/W-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch162-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:402",
+          "direction": "W",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/W-idle-source-v01.png",
           "source_sha256": "f361f39d9fe68006e8fd6413e0d8c6a337dcebd3be56b2c39e90ffbd9ec75ace",
@@ -667,7 +692,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 13,
+      "remaining_draft_configurations": 12,
       "precision_final_approved": false
     },
     {
@@ -1115,6 +1140,31 @@
         {
           "key": "transform:387",
           "direction": "W",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-hit-source-v01.png",
+          "source_sha256": "23188f0b4e04cb6e87f7a1154e0d3779b732f8b708fcd5ea93e4e0f5008f1c87",
+          "source_bytes": 1498575,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "5eb352046fad0fb39ba015e013d17c9960bd782143872891e906fcf03fdab0dd",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch162-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:387",
+          "direction": "W",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-idle-source-v01.png",
           "source_sha256": "b0a1e7bffbc6f4aea2b60c746b66a73aace0a2feb7ea4e20116f9625716a6926",
@@ -1160,7 +1210,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 13,
+      "remaining_draft_configurations": 12,
       "precision_final_approved": false
     },
     {
@@ -1607,6 +1657,31 @@
         {
           "key": "transform:375",
           "direction": "W",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_375/draft001/W-hit-source-v01.png",
+          "source_sha256": "019f4432f047ed8b61335924c3656c55897a185ab9bd36b4f5474bdaeba74221",
+          "source_bytes": 1129845,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_375/draft001/W-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "9023d127b1096386687ef1a23726761ad2c8fb8f21aa69c347b50b4f0823a476",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_375/draft001/W-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch162-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New-source body scale differs; no PNG resizing performed",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes"
+          ]
+        },
+        {
+          "key": "transform:375",
+          "direction": "W",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_375/draft001/W-idle-source-v01.png",
           "source_sha256": "cf583163bd04500f7d0b4ee35755406aa361eacd4aeb6ba4f375c2c40a26a57b",
@@ -1651,7 +1726,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 13,
+      "remaining_draft_configurations": 12,
       "precision_final_approved": false
     },
     {
@@ -2099,6 +2174,31 @@
         {
           "key": "transform:368",
           "direction": "W",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/W-hit-source-v01.png",
+          "source_sha256": "20c5262b130658efba8b92bc41eee4030a3ad10e5bbe3146faeb3cda92c234f7",
+          "source_bytes": 1267713,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_368/draft001/W-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "4a7aa4d7a3e2c1882b1f1bacbf4ddf5eac9d70a61a09bf372be2c9d94a44b691",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/W-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch162-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:368",
+          "direction": "W",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_368/draft001/W-idle-source-v01.png",
           "source_sha256": "9762d2838f048cf9840f129bcd288b6dbe6aaf97497f57f734af8a0dff447fb9",
@@ -2143,7 +2243,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 13,
+      "remaining_draft_configurations": 12,
       "precision_final_approved": false
     },
     {
@@ -2591,6 +2691,31 @@
         {
           "key": "transform:339",
           "direction": "W",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/W-hit-source-v01.png",
+          "source_sha256": "0855b5dc518efd4d47dc2cafc78348db9b5218218e21e1a0b5d97e4d808eb0e1",
+          "source_bytes": 1802001,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_339/draft001/W-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "6ffa99a0c60349d1b9a09829fc0668867e389e52c35d86d47aa1b270a574c12c",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/W-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch162-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:339",
+          "direction": "W",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/W-idle-source-v01.png",
           "source_sha256": "19dced8e97113d5bc351a939455236bfdbf6eb0c8a85babfc492a4dcf9d652fb",
@@ -2636,7 +2761,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 13,
+      "remaining_draft_configurations": 12,
       "precision_final_approved": false
     },
     {
