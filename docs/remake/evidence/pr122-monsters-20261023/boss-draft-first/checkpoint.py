@@ -20,6 +20,7 @@ def main():
     for actor in plan['actors']:
         folder=HERE/actor['slug']
         paths.update(folder.glob('requests/*.json'))
+        paths.update(folder.glob('structural-checks/*.json'))
         paths.update(folder.glob('*hold*.json'))
         if (folder/'draft-queue.json').exists():paths.add(folder/'draft-queue.json')
         records=[]
