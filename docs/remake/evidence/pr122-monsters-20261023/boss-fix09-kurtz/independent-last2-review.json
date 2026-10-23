@@ -1,0 +1,50 @@
+{
+  "schema": "pr122-kurtz-independent-last-two-sheets-v1",
+  "date": "2026-10-23",
+  "method": "Actual private full-sheet vision; no generation or source/Git edits.",
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "E_v02": {
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v02.png",
+      "sha256": "8ae4dad2afcbf156a0586b7f8dd0fcacfbf4b21a39356a33f5c9776ead69f061",
+      "visible_boundary_pixels": 0
+    },
+    "examined_poses": 4,
+    "roles": [
+      "idle2",
+      "hit2"
+    ],
+    "source_first_static_review": "PASS_WITHIN_EXAMINED_E_SCOPE",
+    "observations": [
+      "All4 figures read as right-facing/E side camera: one helmet side, overlapping near/far shoulders, narrow chest side rather than a broad frontal chest/buckle. The skull clasp/front buckle presentation seen in E-v01 is mostly occluded/foreshortened. Recoil opens the upper chest slightly but the body remains substantially lateral.",
+      "The same near anatomical RIGHT shoulder/elbow/wrist holds the sword grip in all4; the far LEFT hand is mostly occluded, with no transfer or second weapon observed.",
+      "Reference spiked heavy armor, horned closed helm, broad blade and ragged red cape are retained. No obvious edge truncation or severe limb collapse observed."
+    ]
+  },
+  "requested_SW_v01": {
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-SW-idle-hit4-v01.png",
+      "sha256": "aee4c6fb1b959747830bc621e8fcd7512583632c3ec8e3e973275eb3c7679a03",
+      "visible_boundary_pixels": 0
+    },
+    "examined_poses": 4,
+    "roles": [
+      "idle2",
+      "hit2"
+    ],
+    "as_SW": "HOLD_DO_NOT_SELECT_AS_SW",
+    "observed_direction": "S_TO_SE_FRONT_OR_FRONT_RIGHT",
+    "observations": [
+      "All4 expose broad front chest/skull clasp/front buckle and mostly front/right helmet presentation. They do not turn snout, shoulders and feet toward down-left as required by SW.",
+      "This is an actual wrong-camera result for the requested SW, not a frame-count or quality-threshold dispute. Do not count these four poses as SW or silently fill the missing direction.",
+      "The frontal/near-front RIGHT sword hand remains SCREEN LEFT with continuous grip and the opposite hand empty; hand continuity does not fix the incorrect SW camera. A precise new SE assignment is not required or approved here.",
+      "No obvious boundary truncation or severe body/limb collapse observed."
+    ]
+  },
+  "unseen_not_reviewed": [
+    "Other directions and roles",
+    "Timed playback/transition/ground behavior",
+    "Full mythic/release approval"
+  ]
+}
