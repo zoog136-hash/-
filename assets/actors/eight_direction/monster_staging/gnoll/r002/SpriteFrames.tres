@@ -1,0 +1,76 @@
+[gd_resource type="SpriteFrames" load_steps=12 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/gnoll/r002/E-run.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/gnoll/r002/E-attack.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="pose_0_0"]
+atlas = ExtResource("1")
+region = Rect2(40, 78, 480, 378)
+margin = Rect2(520, 546, 992, 1094)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_1"]
+atlas = ExtResource("1")
+region = Rect2(540, 76, 408, 383)
+margin = Rect2(508, 541, 1064, 1089)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_2"]
+atlas = ExtResource("1")
+region = Rect2(1023, 70, 485, 355)
+margin = Rect2(479, 569, 987, 1117)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_3"]
+atlas = ExtResource("1")
+region = Rect2(30, 565, 505, 372)
+margin = Rect2(510, 552, 967, 1100)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_4"]
+atlas = ExtResource("1")
+region = Rect2(573, 569, 402, 383)
+margin = Rect2(541, 541, 1070, 1089)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_0_5"]
+atlas = ExtResource("1")
+region = Rect2(1042, 570, 467, 362)
+margin = Rect2(498, 562, 1005, 1110)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_0"]
+atlas = ExtResource("2")
+region = Rect2(96, 11, 501, 528)
+margin = Rect2(432, 546, 1211, 1184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_1"]
+atlas = ExtResource("2")
+region = Rect2(120, 618, 886, 401)
+margin = Rect2(456, 673, 826, 1311)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1_2"]
+atlas = ExtResource("2")
+region = Rect2(148, 1069, 744, 434)
+margin = Rect2(484, 640, 968, 1278)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("pose_0_0")},
+{"duration": 1.0, "texture": SubResource("pose_0_1")},
+{"duration": 1.0, "texture": SubResource("pose_0_2")},
+{"duration": 1.0, "texture": SubResource("pose_0_3")},
+{"duration": 1.0, "texture": SubResource("pose_0_4")},
+{"duration": 1.0, "texture": SubResource("pose_0_5")}], "loop": true, "name": &"run_0", "speed": 12.500000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("pose_1_0")},
+{"duration": 1.0, "texture": SubResource("pose_1_1")},
+{"duration": 1.0, "texture": SubResource("pose_1_2")}], "loop": false, "name": &"attack_0", "speed": 7.142857143}
+]
+metadata/twilight_canvas_size = Vector2(256, 256)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false
