@@ -32,7 +32,8 @@ func rows_in_view(camera: Camera2D, margin: float) -> Dictionary:
 	var view:=Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(margin)
 	var wanted: Dictionary={}
 	for row: Dictionary in native_field.png_manifest.chunks+native_field.png_manifest.get("foreground",[]):
-		var box:=Rect2(Vector2(row.position[0],row.position[1]),Vector2(row.size[0],row.size[1]))
+		var scale_value: float=native_field.artwork_scale
+		var box:=Rect2(Vector2(row.position[0],row.position[1])*scale_value,Vector2(row.size[0],row.size[1])*scale_value)
 		if box.intersects(view): wanted[str(row.file)]=row
 	return wanted
 
@@ -68,9 +69,10 @@ func forecast_pixels(rows: Dictionary) -> int:
 
 func add_image(key: String, source_file: String, row: Dictionary, image: Image) -> void:
 	var sprite:=Sprite2D.new()
-	sprite.centered=false;sprite.position=Vector2(row.position[0],row.position[1]);sprite.z_index=-20
+	sprite.centered=false;sprite.position=Vector2(row.position[0],row.position[1])*native_field.artwork_scale;sprite.z_index=-20
+	sprite.scale=Vector2.ONE*native_field.artwork_scale
 	if row.has("foot_image"):
-		sprite.z_index=0;sprite.position=Vector2(row.foot_image[0],row.foot_image[1])
+		sprite.z_index=0;sprite.position=Vector2(row.foot_image[0],row.foot_image[1])*native_field.artwork_scale
 		sprite.offset=Vector2(row.position[0],row.position[1])-sprite.position
 		sprite.set_meta("native_foreground",row.id)
 	var pixels: int=image.get_width()*image.get_height()
@@ -97,13 +99,17 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		label.text=str(portal.name);label.position=ring.position+Vector2(-28,-40)
 		label.add_theme_font_size_override("font_size",14);markers.add_child(label)
 	refresh_visible()
-	# Entry may decode synchronously before the first displayed field. Moving
-	# refreshes never decode PNGs or masks on the rendering thread.
+	# Only the chunk directly beneath the entering player may decode on the
+	# render thread. Large Escaros views no longer upload every tile at entry.
+	# Other visible chunks and prefetches are decoded on the existing worker.
+	var source_position: Vector2=player.global_position/native_field.artwork_scale
 	for filename: String in visible_files:
-		if chunks.has(filename): continue
 		var row: Dictionary=visible_files[filename]
+		var source_rect:=Rect2(Vector2(row.position[0],row.position[1]),Vector2(row.size[0],row.size[1]))
+		if not source_rect.has_point(source_position) or row.has("foot_image"): continue
 		synchronous_decodes+=1
 		commit_chunk(filename,decode_chunk(native_field.png_root+"/"+filename,row,field.data.get("runtime_foreground",[])))
+		break
 
 func set_visual_mode(_mode: String) -> void:
 	# Preserve original source RGBA in both UI display modes.
@@ -148,6 +154,19 @@ func commit_chunk(filename: String, result: Dictionary) -> void:
 	for piece: Dictionary in result.pieces: add_image(filename+"#"+str(piece.id),filename,piece,piece.image)
 	access_serial+=1;last_used[filename]=access_serial;upload_count+=1
 
+func can_decode_without_thrash(filename: String, row: Dictionary) -> bool:
+	var need: int=forecast_pixels({filename:row})
+	var evictable: int=0
+	for cached_name: String in last_used:
+		if visible_files.has(cached_name): continue
+		for key: String in chunks:
+			var sprite: Sprite2D=chunks[key]
+			if str(sprite.get_meta("source_file"))==cached_name:
+				evictable+=int(sprite.get_meta("pixels"))
+	# Do not decode a PNG repeatedly when all existing textures are visible
+	# and the result cannot be admitted to the bounded texture cache.
+	return decoded_pixels+need-evictable<=texture_pixel_budget
+
 func pump_stream() -> void:
 	if shutting_down: return
 	# At most one bounded source chunk is uploaded per displayed frame.
@@ -158,6 +177,7 @@ func pump_stream() -> void:
 		if wanted_rows.has(worker_file): commit_chunk(worker_file,result)
 	for filename: String in wanted_rows:
 		if chunks.has(filename): continue
+		if not can_decode_without_thrash(filename,wanted_rows[filename]): continue
 		worker_file=filename;worker=Thread.new();decode_count+=1
 		var job: Callable=decode_chunk.bind(native_field.png_root+"/"+filename,wanted_rows[filename].duplicate(true),field.data.get("runtime_foreground",[]).duplicate(true))
 		var error: Error=worker.start(job,Thread.PRIORITY_LOW)
