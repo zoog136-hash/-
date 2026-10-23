@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 515,
-    "minimally_validated_configurations": 515,
-    "newly_authored_poses": 2788,
-    "reused_existing_poses": 302,
+    "new_draft_configurations": 520,
+    "minimally_validated_configurations": 520,
+    "newly_authored_poses": 2808,
+    "reused_existing_poses": 312,
     "reused_legacy_poses": 24,
-    "reused_prior_draft_poses": 278,
-    "quality_held_configurations": 515,
+    "reused_prior_draft_poses": 288,
+    "quality_held_configurations": 520,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 805
+    "remaining_draft_configurations": 800
   },
   "actors": [
     {
@@ -5344,6 +5344,32 @@
         {
           "key": "transform:245",
           "direction": "SE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_245/draft001/SE-hit-source-v01.png",
+          "source_sha256": "64d172f3c140e068c3b56edc1fd1c0dda47fbcbca65004bd49869c8e411d6fdf",
+          "source_bytes": 1792015,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/SE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "5c52a4895b14161ab1a1b27bfb114fd949b781068f6e885a663e37fd62125b07",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_245/draft001/SE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch101-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New-source body scale differs; no PNG resizing performed",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:245",
+          "direction": "SE",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_245/draft001/SE-idle-source-v01.png",
           "source_sha256": "e166c890bd7beb8e2d1bafa1802cdba67cdccf5666b91a7461f3bb054b4247a9",
@@ -5389,7 +5415,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 21,
+      "remaining_draft_configurations": 20,
       "precision_final_approved": false
     },
     {
@@ -5652,6 +5678,31 @@
         {
           "key": "transform:244",
           "direction": "SE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-hit-source-v01.png",
+          "source_sha256": "9e0d71977835d87e0b357d41aea9b1746e1141473c07af1a78ea6978fbc6944e",
+          "source_bytes": 1614209,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "79f1d34f54b07df6b70b09ef40dce7d82f5f86d3788e40bd5e3a89582771b193",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch101-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:244",
+          "direction": "SE",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-idle-source-v01.png",
           "source_sha256": "e2e9eecb02af7a19cd4f45ec660216eed398dd8945e2e4fd840665cf08c0cd5c",
@@ -5698,7 +5749,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 21,
+      "remaining_draft_configurations": 20,
       "precision_final_approved": false
     },
     {
@@ -5957,6 +6008,31 @@
         {
           "key": "transform:243",
           "direction": "SE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-hit-source-v01.png",
+          "source_sha256": "923dcde6d34910fb675c08a66ac6d055d6b196b401df8f782c82fcb1a0fb422f",
+          "source_bytes": 1727411,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "b874a75f81ae72bd1066f5ae3e0e8b48327719247aacdaf797f35f534c632a7f",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch101-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:243",
+          "direction": "SE",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-idle-source-v01.png",
           "source_sha256": "c683e98cd1511f8ead3633c1c0241691af0812a26db11c2de5d7f6aa46d6254f",
@@ -6002,7 +6078,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 21,
+      "remaining_draft_configurations": 20,
       "precision_final_approved": false
     },
     {
@@ -6265,6 +6341,30 @@
         {
           "key": "transform:227",
           "direction": "SE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_227/draft001/SE-hit-source-v01.png",
+          "source_sha256": "e5a63ed13d4b1c5241f2a68af7b0cfde136d8289f263d90b948c65b5536e6e68",
+          "source_bytes": 1518140,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/SE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "e4977f55a46f125d38c15d9d3296886dba8c1da99da59013cde5da9f8a71b8d2",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_227/draft001/SE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch101-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes"
+          ]
+        },
+        {
+          "key": "transform:227",
+          "direction": "SE",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_227/draft001/SE-idle-source-v01.png",
           "source_sha256": "df9b2dd99ab1c1693346e0de295f18387af67a62455473c833354ac5a5a38946",
@@ -6310,7 +6410,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 21,
+      "remaining_draft_configurations": 20,
       "precision_final_approved": false
     },
     {
@@ -6567,6 +6667,30 @@
         {
           "key": "transform:226",
           "direction": "SE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_226/draft001/SE-hit-source-v01.png",
+          "source_sha256": "3ae0acf24458a205874a90a780b384af456cc1c0d909b34099ebcea7ce6c5eb0",
+          "source_bytes": 1560509,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_226/draft001/SE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "548005d520acd582424eb2bda54150d269863ff6f35e9bde088d56995b9da01b",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_226/draft001/SE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch101-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes"
+          ]
+        },
+        {
+          "key": "transform:226",
+          "direction": "SE",
           "role": "idle",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_226/draft001/SE-idle-source-v01.png",
           "source_sha256": "68441dcac3cad86408c5c55caa12881c70dfa2a1525f9a87b761d6132577b394",
@@ -6612,7 +6736,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 21,
+      "remaining_draft_configurations": 20,
       "precision_final_approved": false
     },
     {
