@@ -1,0 +1,590 @@
+{
+  "base_main": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
+  "pr122_head_before_after": "edf9b86be5cab9cafd60d382b767c2c42e2d1ae4",
+  "pr122_changed_file_count": 100,
+  "overlap": [],
+  "protected_files_byte_identical": [
+    "data/skills/master.json",
+    "data/skills/balance.json",
+    "data/skills/relations.json",
+    "data/skills/status_rules.json",
+    "data/skills/external_spx_name_bindings.json",
+    "data/skills/vfx.json",
+    "scripts/player.gd",
+    "project.godot",
+    "data/resource_delivery_ledger.json"
+  ],
+  "private_sources_staged": [],
+  "new_binary_delivery": [
+    {
+      "path": "assets/skills/authored_vfx/lm_00d9f77d3ff9315a.png",
+      "bytes": 223165,
+      "sha256": "14ac79bcf18b27bfef8efa766d1322bf6ba5765636c8141d59c45721a9c57900",
+      "git_blob": "1e14018a11f325d567cba1e3571cb13bd978f526"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_01141f56509e111e.png",
+      "bytes": 307302,
+      "sha256": "3c03d87ec49a8383b61ba0dfd4c32e0fc0a56a53f25db41496ca1d5e9205f33d",
+      "git_blob": "1e5b3bed3444e3d0fddab188ea0cdff8aaa53df1"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_024a0e845c280295.png",
+      "bytes": 336040,
+      "sha256": "574ec310609883fc97754b2692457bef44f7ceb74fdb9009abe41845298deacc",
+      "git_blob": "c7932908b914aa3abf7456ebbf3f40f60b650177"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_051ed12dad8a2421.png",
+      "bytes": 325987,
+      "sha256": "e5819aed861865d04c2ecebe8478bff660cc1d58edf6d5a5c76b1061652f7a8a",
+      "git_blob": "2f102b2c7b404fdcca6db9a80b125e99321096f4"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_06640b26b09a5bc8.png",
+      "bytes": 329530,
+      "sha256": "6e322ab2c10efebbebbc564fdeeb306052dc35a1260fbddd0efd3ee4a2c430bd",
+      "git_blob": "0e5d12940d00fe99f1da09ab2531820aa70daf8a"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_08706dec751c5272.png",
+      "bytes": 267533,
+      "sha256": "639841b09ba74af093e9f17b6aab81034df679289bbd29d2cd424fe2ff3f4b88",
+      "git_blob": "26bc4b6dba5d8c7068c3b2bb554f4a8b7336dc1f"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_09a971bf26507878.png",
+      "bytes": 299505,
+      "sha256": "7d4450a8bb42e40ebdf0c603cfa74a3ab50244135aa102562bdc43aa4d1eca7d",
+      "git_blob": "a05a4162f5a9c0f52fb2a9cb54039b4ae250a50a"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_0f78dd70d9994d34.png",
+      "bytes": 269319,
+      "sha256": "1621a8f25ff74959531a22e28951c29fcd09cc346a7980ef6fab0edb14c3dc27",
+      "git_blob": "f957213f96611927fa79113cfc21697bd49ddc86"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_0fa8b37f33c7f9d6.png",
+      "bytes": 321868,
+      "sha256": "d7fff5cc99a927e0370a0679d70d15c621a2cb3fed81a43e10ff6bfc5d28b81a",
+      "git_blob": "77c3eb81b114efef050e00224f871746613406fe"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_11ab17290e72e63f.png",
+      "bytes": 359000,
+      "sha256": "6bec1e58b8c6b555d1af560ab06711c1e9d2f17f343ec37fa589ca27e4a2a3ca",
+      "git_blob": "a0ddac2b218634de11f93c8b5a4a2de51055c33f"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_19edb16ff7370abe.png",
+      "bytes": 324265,
+      "sha256": "50e3f5d15dd617d56fd5890d5c838972110e59f3b821853c6236a3902e62840a",
+      "git_blob": "38d4c9edcb88de63920889f94db8438cf93d07b5"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_1b64099d7f5fa562.png",
+      "bytes": 363468,
+      "sha256": "3a6aeeaf71043d6083d958ea163c351a87f029db32b19169252b13e865d3bda5",
+      "git_blob": "a954ac70fdb94ab59212b150b2edb8bc7740a27f"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_1ec7e7edbce9ac29.png",
+      "bytes": 286800,
+      "sha256": "f3e77ba5ae5b5263f465be481c4cb75d55a1ae8a09753b937e1d7e08e7aee875",
+      "git_blob": "3c9c70f0943f4924cc279bae50566b5144d9de62"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_1fb2fb45ca7bb6e5.png",
+      "bytes": 282954,
+      "sha256": "67e05a6af7be44d1986d82ec81a5fb9badf3147f9af2eeb9fdc4d1d515663a4b",
+      "git_blob": "c1434901527bae3b8a2a8e7b532d7f7b668ae662"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_2b058c083f711c56.png",
+      "bytes": 285968,
+      "sha256": "1061a9fb404ff47b981491b8a2b90fdda2ac1a37a05c198a9510cc4f82a7e9ca",
+      "git_blob": "fbe19bcd82cdcde5d3a85a7ca926138bb5f50be2"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_310e7f51a839530f.png",
+      "bytes": 202841,
+      "sha256": "b616a6adbe71c6a085b7bf50f5212022975a90e749e87ed11698c0ccdee5193f",
+      "git_blob": "70eb77110aaec7dbbae667d60769612f7bf922ef"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_333c37f7ef5e166e.png",
+      "bytes": 359398,
+      "sha256": "852fde95874866ca8289de507ae8ae6d0d7056bbecdfb95c77a932daa6d14c7d",
+      "git_blob": "1976ba53027581d222b84ab695cbe21c393ba5b1"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_340e4a181238773c.png",
+      "bytes": 327373,
+      "sha256": "18376d4da00ec1787cfb1db98a9a01491cd617500cf759ae482b2bc84763f7b3",
+      "git_blob": "b8cf44b79f32aef7bac5b8a9053ef2795cc9098c"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_36641c582649e3a0.png",
+      "bytes": 333873,
+      "sha256": "011633108f6983b822a16dc78f65206f263b477adbbeb337d8faee2629454e4a",
+      "git_blob": "ee718596a981ec250a8976be11eb2ce314dcf2b8"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_3e85ef069e985c91.png",
+      "bytes": 203043,
+      "sha256": "a7f85368d34e07d86a8d406a95eafff185aa9baa975d4ed9100ea0147b39058f",
+      "git_blob": "b1e604a28bf7faec238e4613e8d6260974bd3954"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_43e9715d967ef3cb.png",
+      "bytes": 246358,
+      "sha256": "218f827ba9f61dd004ae282732e3c796e25c0ed7f47bb0b7d854e497b8a8f582",
+      "git_blob": "96413a43c33da6c984bed9e5a4c038258b7c5548"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_44e63d3719e2f526.png",
+      "bytes": 262547,
+      "sha256": "b06dbfc6390ee8663733a4abe74b603ddd6bf8424bdaf6aa437ebe54a89f6f54",
+      "git_blob": "eabb9e6a354586b7fb0dcce56348acbf3d853fe7"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_4577052891abbbc4.png",
+      "bytes": 326822,
+      "sha256": "b18348e61382d86f60884d3e5bf368f0f0367d97a557fa0bd94c75abd37d2316",
+      "git_blob": "da9c56265e4667f3a33edde411341605e5fa68d6"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_45cdacd8a42d0e5a.png",
+      "bytes": 308573,
+      "sha256": "3dedcea2c95934d9e040cbd36a0f55f34ce9ccecd84aa932f2e005ec3bb8e5f6",
+      "git_blob": "e0c05f3ab8127c86bdabf35c1db09fbd9497fe8d"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_45d35daedfc527c9.png",
+      "bytes": 219446,
+      "sha256": "121fe1e3ffe5d7fd73f389918f14a181f93283a9be97d0190986ac769bc6af58",
+      "git_blob": "857f2b02438c193f44052099b00eb28170cd176e"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_4e78c9f1a828730a.png",
+      "bytes": 297796,
+      "sha256": "eb8637d5055a731c6b9211be73f9f57175aa777ec65d766d3812349e9826f413",
+      "git_blob": "79a7d1b771f2d545a8dad54c6e10a341e7e8718f"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_4f90e0d7ce272c1f.png",
+      "bytes": 202565,
+      "sha256": "343688c29a399bf36632295fe69a6d85f5de8299717fd970343e73b8d1b6d13d",
+      "git_blob": "4cba1214c3b68a685287bce7807e5d7214be1881"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_5050c9dd5325eaa6.png",
+      "bytes": 361817,
+      "sha256": "77a9d5a0c160e1793b1a83bca89cc13403da3a0f124d8c9d2696239a8e6014a6",
+      "git_blob": "fb78adf0855db2a9c9100a1b4ac7795c59117467"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_50e70d4996958fe4.png",
+      "bytes": 412506,
+      "sha256": "544255594127e2817d042c331e038626b292b51811420ecc4a6435e42be71bfc",
+      "git_blob": "54cb6775575ae7b767d23600293448108f0067a3"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_517ca31126a31b45.png",
+      "bytes": 386786,
+      "sha256": "b1095ecbb77264c2cba9e19bf960ccb4d88421678cb8c6aa9d0e23076f2ef943",
+      "git_blob": "9509bc2352d210411a7792ebd29e4a7f0a4195a0"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_57fedb578e5ba9de.png",
+      "bytes": 260705,
+      "sha256": "fd4dc15a944c45ae70079a05c30efb7235e7aa43f004c1fad47778608dec1821",
+      "git_blob": "1ab475a9785eefa26b8e404c9232f302b9a3436b"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_6180fb91c86cccfc.png",
+      "bytes": 203288,
+      "sha256": "e17ac1971dfb3a0702a7d70d1a6370f792372ac985821c35dcd218e406a44838",
+      "git_blob": "c1fd31ae6882bb870c746ac50dead91e1400dd17"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_62bee07ed64c92aa.png",
+      "bytes": 283570,
+      "sha256": "0223c8b8af7cbf84860276885ce0fc236d22e4330890997d5181c92882708d35",
+      "git_blob": "9f8a186db6a8a9ef2122a909d9e97238975cd285"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_66e64468fd21c8c6.png",
+      "bytes": 282867,
+      "sha256": "c4d7c762794b4d67ddb8b5157bce22b59a78b50d9a767803dc85ba5d28904a07",
+      "git_blob": "76d1a30bae6a77abf2283831d727a1dfeee9c07b"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_78adb9ff02d926d2.png",
+      "bytes": 282624,
+      "sha256": "887200e2b50fcd7da07dbc9a50dd5f349f2956e7e50d107d8cd0f195987775ac",
+      "git_blob": "9ef1ed3bed50dedcf3d408c850baf2fdf5738b46"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_795059827558bc19.png",
+      "bytes": 207827,
+      "sha256": "b4f64e22bfb9c9c6c8d38cbb1ee4d1f1578b179617cf5b0902e663cd45580cc5",
+      "git_blob": "20789b1c37b5e25678e80b8a8f52f93d53a95665"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_7b6bd6ce56189fbc.png",
+      "bytes": 331071,
+      "sha256": "8af6d84451c2a048a84206e79a4058a753fb98fa9ef0b417da67d6572f1b7c46",
+      "git_blob": "a219565cf692fb94bf0c034b7d6b0a2fc7ad2ef4"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_7d4f31d336a3441f.png",
+      "bytes": 323140,
+      "sha256": "e9dc95bbb77729dc1b683fd0cf911f961abb85239add03c8e279eb95964b1715",
+      "git_blob": "785caa23d907747f4a5a5c1751b66973bc21acc8"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_8187ff2de29d3853.png",
+      "bytes": 328664,
+      "sha256": "96cd59110e05d9ad81c98327b0d36351807e848d05db525b9464042b84f2ed38",
+      "git_blob": "4637bbcebd90d66158b38f8653b9eaf2c9f6fbc8"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_81c8985fec94cf55.png",
+      "bytes": 269911,
+      "sha256": "6bef3ddb60bd8cd02180b592e2cd49097c78a44f9c984fa240c595f0e452de3e",
+      "git_blob": "390df7c6d03fba5ce8713d10fb41a93c987d2f64"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_82baa209008667a5.png",
+      "bytes": 326084,
+      "sha256": "67d9132aa5a763123f22974a11aaa8368a34c256bc15896ce48baa02a00edba9",
+      "git_blob": "0d12615c9e1b0a3116cf9a2b433a49f0e744534c"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_8a8cc8a1b79e85f5.png",
+      "bytes": 276860,
+      "sha256": "7ad68f261a0204a03752ef948be30adfa913df5a0d6cae8d5c78e907af191c86",
+      "git_blob": "0339c98baa9652c20f0f1002c1bcaf66c0c42ced"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_8be1b9f26137e4ce.png",
+      "bytes": 327712,
+      "sha256": "4e95dd7daed49b84a8cbda4558416fa1d653ff70e4147631fda004661216dd43",
+      "git_blob": "22ce85b2ef8741e60e678623670718b0ada72774"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_8e2c8c76c068ae0e.png",
+      "bytes": 270392,
+      "sha256": "4f10c00be7ab4fb63e36322891be8a4be130c91c2c6d57b36e97f2fd3f7e9dbf",
+      "git_blob": "03970b636f70a22b8997069bcc7879f13cb41052"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_9f340db69e8b2702.png",
+      "bytes": 308669,
+      "sha256": "e6a9619e7cf7294643afdccea501ae0a75c3a8dc96429a1c6467a5a7101f4426",
+      "git_blob": "98b9cc24fbb9e7f828a65080097b8133112f4aa5"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_9f4be293cf774c31.png",
+      "bytes": 267762,
+      "sha256": "7afa9b00cb69274a924d517b410651ef19e85dad0349bfbe09c2dfe53814a35b",
+      "git_blob": "d85017a03f307e85c2c17133f8583be3a42921b7"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_a0a768c51a6b7838.png",
+      "bytes": 267884,
+      "sha256": "fdaabcf23d31dc96d4f1c7bc053e6ebc369471f37f0310886474ef8e04663e07",
+      "git_blob": "538491004981bf9960ea906386c4114101ccd2af"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_a67097404fc5663e.png",
+      "bytes": 270126,
+      "sha256": "bffb87b540407860d5195658512e2d7ea82be4931e59f9f9524fd2e26ceb19ef",
+      "git_blob": "6586566aafe447c7c2ea014e66277a2894285ec2"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_a67dae07b4f0608a.png",
+      "bytes": 225897,
+      "sha256": "2bc77f54de7f121322c93ac84659b05b8f67ba68e1e3299d2b3c839ba0ac882f",
+      "git_blob": "ccc763b0113316ce21311f83c520ef9cd85d06a2"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_ad6488f0cedbc544.png",
+      "bytes": 263809,
+      "sha256": "7074bbcc15b070785623d46009cd23cb8218d6017d9f740845576ac6a01e3da4",
+      "git_blob": "06bbc429b05b319dc49b87beba60ced77f2d95fa"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_b08f206fe97abc83.png",
+      "bytes": 404084,
+      "sha256": "c652facc5d4024c3c98168be76566d4c92bb851027c359354c913ed6b6d69831",
+      "git_blob": "dabf267cc0133387520e0a898cac9003f58e6f1b"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_b1922663d36bc890.png",
+      "bytes": 313740,
+      "sha256": "b17624d3090faef65e49c3d2ead8b67d76e43c3f3dbc5ec8b45c3190fc718cff",
+      "git_blob": "a29528bc9a0d83447fc9ad35e9ebec22f706fa8b"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_b39dbcf394503410.png",
+      "bytes": 248670,
+      "sha256": "32df367adaa0a232c2f2bce3a93c0144d2d4bf6a6db807cbf24f2ba0b0065222",
+      "git_blob": "d3c0b0908b2d840d278c1372cf87c93eaf2e8c0f"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_b6e46e806faf7eac.png",
+      "bytes": 324995,
+      "sha256": "9d5ba61dc2c323881879df07288a1a411082f6c298df50d76bd61260fa50bf56",
+      "git_blob": "cea9d80d9d5a168f41a6f9433e94422030ef4abd"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_b9f1605d690c64f7.png",
+      "bytes": 207592,
+      "sha256": "2d2e37591a5ff57f6d2ec198df0381802c116dc1e1a795da525b547153b2f834",
+      "git_blob": "31dae57d957fa0472c7395c04508977acc6472ec"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_d23194d0b63ee4e1.png",
+      "bytes": 338610,
+      "sha256": "07c608e5a2855aa1d90e6a86e3097f53b744ec23186abd618e2b004a809fbcf1",
+      "git_blob": "355af27507801279ae3e551589c6ea2d980252a7"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_d44e85981c877135.png",
+      "bytes": 267542,
+      "sha256": "3255f1d3fe8b8badc939f2c7377944fceb9903271d76d0503224db76fd3222ad",
+      "git_blob": "6e7733f639618e0b1ac09306e32e0bb928201b52"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_dbd7171c47b097a1.png",
+      "bytes": 282662,
+      "sha256": "2e4f5404786115660e70f172cfc9f0b126274c57b0408556170755a18dea8d98",
+      "git_blob": "ad23eba275eacb4079fc4bacb34c2d4bbb44d794"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_dcb006041216f9c6.png",
+      "bytes": 395634,
+      "sha256": "d2cffd3297b3072926eef7b9611d671cb51bad19d9efde7d297a8e491210bd64",
+      "git_blob": "05aa9ab9065d6433bf7c6f516a3cd8a50990f1cd"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_df2656bb3d14d806.png",
+      "bytes": 362849,
+      "sha256": "68a479de1b304d6b58bb657a7c53d060dd37010709686710d41f2807be1eb97e",
+      "git_blob": "94c7cdc2345909d4b0e756a8619b9ed28150e7ba"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_e2abc3ddcf8d7cfb.png",
+      "bytes": 245466,
+      "sha256": "26a512b4655dd2443944fb6bf82128ab05b01fa85fffde273b44bf14bdfd8443",
+      "git_blob": "b63a339cc6b53a84b29eb962cdd92cf1e48e6118"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_e35a5e1482fc0950.png",
+      "bytes": 307119,
+      "sha256": "8f501d061987eb80fcab1dc12caabc2a95f1b4917c47d661ad146b95ddedfb13",
+      "git_blob": "cd26fefd89b0d8f7e33e9420601403ccd14aacdd"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_e8236ca60328dd0a.png",
+      "bytes": 245832,
+      "sha256": "29bdc508cf58c749ba097b1b55d797b953a12d2a7ab40dbaec8fd03ef30551c8",
+      "git_blob": "bbc9fa98d5277ecb23549825ea83b52705b3a4e1"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_ea8ce04ed942acae.png",
+      "bytes": 313961,
+      "sha256": "90fa84f2d3471da581f63731bf783b6e1ab5ca2cb0b8766e2c82cbc778b5e1a0",
+      "git_blob": "821cdc75544ba853de7b844ad1323cbc3c266337"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_eb050c341381a33f.png",
+      "bytes": 386335,
+      "sha256": "9c18ebc60e55f8b3cedd8e532e238db71c0ac49927ba98b1d9ae64aee4618e11",
+      "git_blob": "9d15ad6159a787e71f0b8742f536a0147a1db111"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_ec6fd92ac55c73e9.png",
+      "bytes": 340113,
+      "sha256": "f3a584b710d226449f3b6a9f3e16f57996607111a1154aa664155ff46ccfa428",
+      "git_blob": "6ba0ede3763f739c245a0336a4412ba784e1741f"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_f3e3300d0862d21a.png",
+      "bytes": 325395,
+      "sha256": "cce671642a11626d8a5f06adc16841e12c17ec5154711c00a6f4c4f3bcddb313",
+      "git_blob": "4b6b5a0586486925c204eb907d4f6111609ba6eb"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_f4de23ba3ed83d50.png",
+      "bytes": 269612,
+      "sha256": "5f73cb47071bcd20123aead4789bc643e8e9cf38361a2bd61c289d6499a5ab02",
+      "git_blob": "d277260cf5c934d9f0ea33d6655df9eb1559921a"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_f5125fc718ebf071.png",
+      "bytes": 241025,
+      "sha256": "1e07fdbf7bc08ba252a60207f214f9b2be43226b627bf2fee6a282e92410896c",
+      "git_blob": "db013c1e2485c8c5b6c278dfde372759f6547ec8"
+    },
+    {
+      "path": "assets/skills/authored_vfx/lm_f5a081bdcc706114.png",
+      "bytes": 274838,
+      "sha256": "1c2159b3ecb97095226f86e614f9668ca6bdaa889e64b2628608b5b065ab4fba",
+      "git_blob": "e4bfa546bd89415596b6fa419150b5ca370a3b51"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/authored-studies.mp4",
+      "bytes": 221730,
+      "sha256": "8c425f8bd0fe41b79951f7dec464413ab4d8d65ddef2e3d5d9db00cecf507ea7",
+      "git_blob": "34480155c450c8f4e7b9595df6d3faf22c570b6d"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/controlled-auto-contact.png",
+      "bytes": 2165260,
+      "sha256": "118b818bd775c36435bf301ec624c9428e1b618d6cc07eef3fb0cd3e53e7537d",
+      "git_blob": "953cd95dcaf734205922be2238a1caad4c2e7c33"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_0.png",
+      "bytes": 51933,
+      "sha256": "5492f7caf28d9ed67857ef98ed239e60a656164f103e1480f3e2b6362066cfdd",
+      "git_blob": "b5b612388162ed946203e3a276a8ffdb753e8533"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_1.png",
+      "bytes": 53555,
+      "sha256": "465c21062bab0d9bb7e0b05c4eab86ce1657f1fd5714e5230ff8aad41343c536",
+      "git_blob": "04a65af766b11b046bc8d8ac6f73ce003f462e02"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_2.png",
+      "bytes": 50190,
+      "sha256": "3fcf32ab2e352a4260f0551e9c9b7b27762ef0e6042be489dbdf2a60631f1102",
+      "git_blob": "4d8646a07193160c25b4e81528bd7b21be894dae"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_3.png",
+      "bytes": 52593,
+      "sha256": "ba491e08d243c2fce50c2b6a6cd53830398dbcecae762f06996d59acd6e2da38",
+      "git_blob": "9bcb3199cdf1622cdc73718dd27dcd9d35a64e34"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_4.png",
+      "bytes": 51877,
+      "sha256": "6d0c72db7bb1dec2819cf8130e189cc472b24d9bebb01ff4aa12cccfb6032392",
+      "git_blob": "5fb6b3c8544ca185100122f1feb08557748105c5"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_5.png",
+      "bytes": 53910,
+      "sha256": "f100253b2214fa0fa77f5d5fa2ff4943d913c7d81c1afb7d49108bb455d69450",
+      "git_blob": "c59b633457391203be8bc719fc2353d2803f803d"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_6.png",
+      "bytes": 51460,
+      "sha256": "5d52cb147f6a5603f306ef26181916b9eb20f6c1b3aa5987c9d3cd1dba002a20",
+      "git_blob": "fe32901e11b5aef76af58a8fd38c2582485ed7b6"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/direction_7.png",
+      "bytes": 54216,
+      "sha256": "b62ffa04039ac269e7946db8ecac38416f5affee83c963946166918e1ec45dde",
+      "git_blob": "2dd909663f0afbaa6764e1bec8969387b248b2c3"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/escaros_120.png",
+      "bytes": 2169562,
+      "sha256": "52797acebe29cc4aee4a4921c8a7166d629acdff97f12eebeb5a5a6a949d344a",
+      "git_blob": "d0c6d4263e0f30f2856a24fa666b1ac78effb48f"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/escaros_480.png",
+      "bytes": 2169504,
+      "sha256": "6054ddeb276871fa6efeef23088bf5165daacf6bc8e62aa72dd6a4ba4b3ce28e",
+      "git_blob": "f9587965c071f0542f0e66583eba8b4beee5c5d3"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/escaros_720.png",
+      "bytes": 1741045,
+      "sha256": "2ef40caf74cb81b49a1dc0ca9b67c70281ee9a03c3bf717b6de675b9f51dacab",
+      "git_blob": "5a6dbdeb7446f87b3f30d518c2d3f48fdcc729a8"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_00.png",
+      "bytes": 48718,
+      "sha256": "9d6a7de1e5ff94402550ddfbf64a4a78f2bd29291973ef5eb3a63e5141f10533",
+      "git_blob": "48ce6e8c57513a89152d2e00fc60a9c31f7fd6c1"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_01.png",
+      "bytes": 50962,
+      "sha256": "373f71b89d1feb6f1202aba0ff6c36567b5bef0f532d5bace95fd0787973454f",
+      "git_blob": "9d740aea0c5668873c90240eb4a5d9ffbca9bc55"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_02.png",
+      "bytes": 46425,
+      "sha256": "6da76b1d669a46507d58b0bb70386c7802db05bff0c8a419828bf9d616e344ec",
+      "git_blob": "10b48b72132dbf632abafb0e0f8f2717877e4962"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_03.png",
+      "bytes": 49855,
+      "sha256": "c318809134f5f6739d6551637b7c3f2b4e5b0c7f50918268cc4fdb916aa4738b",
+      "git_blob": "ab95174a388766f70cfdce8bb2477885816fcb4c"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_04.png",
+      "bytes": 53533,
+      "sha256": "43091adc75ba1bcd73dededba6e720c11675101084b804196d0bdc0457e0bbd9",
+      "git_blob": "f46f2e9d0c52d7e7bc7bb7b14d60bff7458880a9"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_05.png",
+      "bytes": 47564,
+      "sha256": "590d40329ea5f554b3d4805e6456a8d82f28f577b8d04fdaf953dc59989484f1",
+      "git_blob": "773d42e89d00397b4ecb0f81c33476751ba34ae3"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_06.png",
+      "bytes": 51340,
+      "sha256": "38b6072ceda4e1c10e0ab6423946b481ec1a8c2143d319ace255f97777ff840a",
+      "git_blob": "946ce132676ddc228c8a07b38a6fc6ed833f64f7"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_07.png",
+      "bytes": 54134,
+      "sha256": "fbddc2b5cf1be21e25e5602feeee0862accbe0bc87c47efbb94f2f5d3aac22e9",
+      "git_blob": "44e3028d4e23169bdee737a58df03600b8cd4f55"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_08.png",
+      "bytes": 49186,
+      "sha256": "063ae81333fbc976156993a335e21515efa8e2c3e6764240760efae9124b7d3b",
+      "git_blob": "4ee1ff8a8b0f79efd3046890203c99c8205c5cb3"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_09.png",
+      "bytes": 51041,
+      "sha256": "c1a3ce4dc67eb841a1cd1a70b4119794e70492ce0ff2286328e2d3a897876643",
+      "git_blob": "bbb25b06f4cadc81096ddb0b1ff71caa37a07cfa"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_10.png",
+      "bytes": 46190,
+      "sha256": "17059c734ec85b1a793f6d573daa995c7722be739e75ca482cafc1a74b037072",
+      "git_blob": "d5be132dc23da7c960fa353b016c413df8725d11"
+    },
+    {
+      "path": "docs/skills/vfx-20261023/previews/sample_11.png",
+      "bytes": 47927,
+      "sha256": "ba932cf6a92ff4929c94354a8140004e2d8225bda38d7b1da3e10e237819ed7a",
+      "git_blob": "80eb758cdeb2e14317a514cdac26397b20b05654"
+    }
+  ]
+}

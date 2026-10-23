@@ -50,6 +50,7 @@ func clear() -> void:
 	if is_instance_valid(vfx): vfx.clear()
 
 func tick(delta: float) -> void:
+	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
 	status.tick(delta)
 	summons.tick(delta)
 	combat_elapsed += delta
@@ -196,7 +197,7 @@ func cast(record: Dictionary) -> bool:
 	world.skill_cooldowns[str(skill.name)] = maxf(0, cooldown)
 	world.skill_global_cooldown = float(skill.get("global_cooldown", .3))
 	world._break_invisibility()
-	vfx.emit_skill(presentation_id(skill), "cast", world.player.global_position)
+	vfx.begin_cast(presentation_id(skill), world.player, target)
 	match mode:
 		"attack", "status", "turn_undead":
 			if str(skill.get("shape", "single")) == "self_circle":
@@ -214,7 +215,9 @@ func cast(record: Dictionary) -> bool:
 			heal(skill, amount)
 			if bool(skill.get("stealth_after", false)): apply_buff(skill, true)
 		"cleanse": Status.cleanse(world.player, skill.get("statuses", []))
-		"convert": world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
+		"convert":
+			world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
+			vfx.emit_skill(id, "impact", world.player.global_position)
 		"teleport":
 			world._clear_combat_actions()
 			world.player.global_position = teleport_landing
@@ -244,11 +247,14 @@ func launch_at_marker(action: Dictionary, target: TwilightMonster) -> void:
 		shot_action["callback"] = impact.bind(skill, target, target_life)
 		var kind := str(action.kind) if str(action.kind) in ["magic","ranged"] else "timed"
 		var visual_id := presentation_id(skill)
-		world.combat_flights.launch(world.player.combat_projectile_origin(), target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, {"color":vfx.color_for(visual_id),"motif":vfx.presets.get(visual_id, {}).get("motif", ""),"obstruction":world._has_line_of_sight_world})
+		var visual_options := vfx.flight_options(visual_id)
+		visual_options.merge({"color":vfx.color_for(visual_id),"motif":vfx.presets.get(visual_id, {}).get("motif", ""),"obstruction":world._has_line_of_sight_world})
+		world.combat_flights.launch(world.player.combat_projectile_origin(), target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, visual_options)
 
 func area_marker(skill: Dictionary, generation: int) -> void:
 	if not is_instance_valid(world) or world.hp <= 0 or generation != world.combat_generation: return
 	if world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced(): return
+	vfx.emit_skill(presentation_id(skill), "release", world.player.global_position)
 	impact(skill, null)
 
 func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonster]:
@@ -280,14 +286,20 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			resolve_turn_undead(skill, target)
 			continue
 		if str(skill.mode) == "status":
-			if status.apply(skill, target, world): vfx.emit_skill(str(skill.id), "status", target.combat_hit_position())
+			if status.apply(skill, target, world):
+				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position())
+				vfx.maintain_status(presentation_id(skill), target, str(skill.get("status", "")))
+			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 			continue
 		var hit := hit_chance(skill, target)
 		if world.rng.randf() >= hit:
 			target.show_miss()
+			vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 			continue
 		deal_damage(skill, target)
-		if not target.dead and skill.has("status") and status.apply(skill, target, world): vfx.emit_skill(str(skill.id), "status", target.combat_hit_position())
+		if not target.dead and skill.has("status"):
+			if status.apply(skill, target, world): vfx.maintain_status(presentation_id(skill), target, str(skill.status))
+			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 		if not target.dead: trigger("on_hit", target, skill)
 	if skill.has("self_stacks"):
 		var config: Dictionary = skill.self_stacks
@@ -342,7 +354,8 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
 	world._deal_successful_player_hit(target, maxi(1, amount), critical)
-	vfx.emit_skill(str(skill.id), "impact", target.combat_hit_position(), link_from)
+	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), link_from,
+		{"direction":world.player.global_position.direction_to(target.global_position), "critical":critical})
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 
 func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
@@ -497,6 +510,8 @@ func counter(attacker: TwilightMonster, kind: String, amount: int) -> bool:
 		if float(skill.counter_chance) > float(best.get("counter_chance", 0)): best = skill
 	if best.is_empty() or not roll_counter(world.rng, float(best.counter_chance)): return false
 	counter_depth += 1
+	vfx.emit_skill(presentation_id(best), "release", world.player.combat_projectile_origin(), Vector2.INF,
+		{"direction":world.player.global_position.direction_to(attacker.global_position)})
 	var id := str(best.id)
 	var count := int(counter_counts.get(id, 0)) + 1
 	if count >= int(best.get("counter_evades", 1)):
