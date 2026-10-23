@@ -264,12 +264,11 @@ func run() -> void:
 	# authored map as well, instead of treating a stale Aden expectation as a
 	# production regression.
 	check(world.field_map is RemakePlayableField and world.player.get_node("CollisionShape2D").shape is CircleShape2D and world.player.get_node("CollisionShape2D").shape.radius == 4.0,"Aden source foot retained on source-to-source return")
-	# Domination is now an intentional native PNG map with a 4px foot. Use
-	# the existing unmapped Albino 4 to verify restoring the authored capsule.
+	# Retired Albino 3/4 must not resurrect an authored region or capsule.
 	world._set_map("albino_04",false)
 	await frames(2)
-	check(world.active_map_id=="albino_04" and not world.field_map is OriginalPlayableField and not world.field_map is NativePngField,"authored map restoration exercised")
-	check(world.player.get_node("CollisionShape2D").shape is CapsuleShape2D,"legacy foot collider restored")
+	check(world.active_map_id=="albino_02" and world.field_map is NativePngField,"retired Albino zone redirects to native area 2")
+	check(world.player.get_node("CollisionShape2D").shape is CircleShape2D and world.player.get_node("CollisionShape2D").shape.radius==4.0,"native 4px foot retained after retirement")
 	var report: Dictionary = {"checks":checks,"failures":failures,"maps":reports,"display":DisplayServer.get_name(),
 		"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN","boss_combat":combat_reports,"services_and_travel":service_reports}
 	var file := FileAccess.open(output+"/runtime.json",FileAccess.WRITE)
