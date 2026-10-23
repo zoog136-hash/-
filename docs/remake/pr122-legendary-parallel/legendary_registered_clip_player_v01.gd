@@ -70,8 +70,9 @@ func configure(record_path: String, registration_path: String = "") -> bool:
 		var path: String = _uri(str(source.get("path", "")))
 		if not path.begins_with(ALLOWED_ASSETS) or FileAccess.get_sha256(path) != str(source.get("sha256", "")):
 			return _fail("Source path/SHA mismatch: " + path)
-		var image: Image = Image.load_from_file(path)
-		if image == null or image.is_empty():
+		var image := Image.new()
+		var image_error: Error = image.load_png_from_buffer(FileAccess.get_file_as_bytes(path))
+		if image_error != OK or image.is_empty():
 			return _fail("Source PNG cannot load")
 		var texture: ImageTexture = ImageTexture.create_from_image(image)
 		texture.take_over_path(path)

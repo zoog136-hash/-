@@ -1,0 +1,284 @@
+{
+  "key": "transform:114",
+  "name": "다크스타 조우",
+  "grade": "전설",
+  "direction": "S",
+  "role": "attack",
+  "reference": "res://assets/catalog/a230694e0604ca7344709834.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:114 다크스타 조우. Attached catalog PNG is authoritative. Create ONE transparent PNG, exactly SIX new full-body SOUTH ATTACK poses in THREE equal columns by TWO equal rows, reading order0..5. All six face DOWN, true front SOUTH, at one fixed slightly elevated isometric game camera. 다크스타 조우 is the original long brown-haired male wizard in black/gold and flowing white robes, holding the exact original long thin purple/gold staff/focus. Cast an articulated SOUTH spell, purple-white discharge at frame3, preserve hairstyle, cape, staff and robe ornament. The image overrides verbal ambiguity. Preserve original face, hair, costume, skin, proportions, colors, exact equipment, and anatomical weapon hand. Phases:0 guard;1 preparation and weight shift;2 full windup/charge;3 actual SOUTH strike, shot or spell;4 follow-through;5 recovery. Six distinct articulated joint poses, connected hands and grip, natural planted feet and coherent weapon movement with contact at frame3. Match original detailed painted fantasy RPG sprite style. No generic replacements, image rotation, mirroring, translated still, invented accessories or new weapons. Entire full body, head ornaments, feet and COMPLETE weapon must fit inside each equal cell with generous transparent margins, no clipping/overlap. ZERO alpha outside figure and original small effects. No opaque/gradient backdrop, ground, scenery, grid, text, labels or extra figures. Output only the six-frame sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/a230694e0604ca7344709834.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "reference_sha256": "a6811adec96892e22e5d48a315ed4a4e6c80167d5034ba942e00119a0d35fff2",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+  "source_sha256": "9b4bbd245621341f2f61f04e93f03eea9d590127078189b63cd57d682ad1a9df",
+  "source_bytes": 1937672,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-SpriteFrames.tres",
+  "output_spriteframes_sha256": "d10991f092a829b23af653262dc0fd7d43d69d53f919dfda3107e6cbcdc78efb",
+  "generated_original_path": "/workspace/generated_images/exec-997a401f-7381-4d84-95fe-2c78a5aa6e70.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_114-S-attack-v01.json",
+  "request_file_sha256": "9601acec435e7f0d0d9fc75e8afc06f9888f4b531ec266c5592c62f1fc0d3aa1",
+  "generation_request_sha256": "ace5d1b6c375c59ef3c1d593363dbf92bb335121f50ce0d48b8677a66bee29ef",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "attack_2",
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        593,
+        613
+      ],
+      "rgba_sha256": "9f4efebc940e6269e22f1faef25e479cd1f56247b3807ca5e484ace7749ca6b5"
+    },
+    {
+      "index": 1,
+      "region": [
+        593,
+        0,
+        593,
+        613
+      ],
+      "rgba_sha256": "04f5098faaf46ad17f4b010099623a3d601587752021dce7f4900d77d90fa9ef"
+    },
+    {
+      "index": 2,
+      "region": [
+        1186,
+        0,
+        593,
+        613
+      ],
+      "rgba_sha256": "93c24a1e94c95fd09941cca98b0b5daa11da5006e318d9b42d8cb0cc6f32c413"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        613,
+        593,
+        613
+      ],
+      "rgba_sha256": "597e61415785a4b04a8d9ae93409b4e4f7e921645dd8fc9ffaeeb405598ef00b"
+    },
+    {
+      "index": 4,
+      "region": [
+        593,
+        613,
+        593,
+        613
+      ],
+      "rgba_sha256": "80a2261a1f9c45dc23136c5a13d9da99ffceefa1c9f75e0936d25aa8878be23a"
+    },
+    {
+      "index": 5,
+      "region": [
+        1186,
+        613,
+        593,
+        613
+      ],
+      "rgba_sha256": "ae51aa58cdeeb7eaa3b2bbb7893b9e2bad6a56a51fda77cd84823f636d1ce896"
+    }
+  ],
+  "clipped_cell_count": 3,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_114/draft001/S-attack-record-v01.json",
+  "revision_parent_sha256": "0a69db0808e018d87d2df19b4fe4365f66892023fd4c8dab1e0899155696c6d9",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/S-attack-source-v01.png",
+  "raw_authored_source_sha256": "f67c8f9bd599d0e534e299f4611bc458e72226fa9311ef9e2f5ed7dc213eb3dd",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        593,
+        613
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "region": [
+        593,
+        0,
+        593,
+        613
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "region": [
+        1186,
+        0,
+        593,
+        613
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "region": [
+        0,
+        613,
+        593,
+        613
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "region": [
+        593,
+        613,
+        593,
+        613
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "region": [
+        1186,
+        613,
+        593,
+        613
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_grid": [
+    3,
+    2
+  ],
+  "cell_size": [
+    593,
+    613
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      593,
+      1186,
+      1779
+    ],
+    "y": [
+      0,
+      613,
+      1226
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_114/corrections/isolation-v02/S-attack-source-v01-isolated.png",
+      "sha256": "9b4bbd245621341f2f61f04e93f03eea9d590127078189b63cd57d682ad1a9df",
+      "bytes": 1937672,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
