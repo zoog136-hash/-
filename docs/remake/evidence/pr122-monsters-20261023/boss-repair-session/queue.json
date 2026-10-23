@@ -1,0 +1,34 @@
+{
+  "schema": "pr122-boss-repair-queue-v1",
+  "review_source_commit": "88516cfcb303b9c8f288abf72d1cc477aed62ebf",
+  "quality_tier": "mythic_transform",
+  "work_queue": [
+    {
+      "key": "monster:얼음 여왕",
+      "status": "IN_PROGRESS",
+      "reason": "Fix anatomical alternating support, NE camera and unify scale before other dedicated roles.",
+      "batch": "boss-fix01-queen"
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "status": "IN_PROGRESS",
+      "reason": "Restore huge belly/chains/body weight from project reference.",
+      "batch": "boss-fix02-zombie-lord"
+    },
+    {
+      "key": "monster:알비노 데몬",
+      "status": "IN_PROGRESS",
+      "reason": "Replace lava-golem proxy with dedicated horned axe demon anatomy.",
+      "batch": "boss-fix03-albino-demon"
+    },
+    {
+      "key": "monster:커츠",
+      "status": "IN_PROGRESS",
+      "reason": "Restore massive spiked armor/red cape/greatsword identity.",
+      "batch": "boss-fix04-kurtz"
+    }
+  ],
+  "source_authoring_does_not_grant_approval": true,
+  "default_catalog_switches": 0,
+  "new_approvals": 0
+}
