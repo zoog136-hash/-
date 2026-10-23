@@ -1,0 +1,26 @@
+{
+  "schema": "legendary-final-reconciliation-precondition-attempt-v02",
+  "attempt": 2,
+  "session_id": 70519,
+  "exit_code": 1,
+  "gate": {
+    "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-completion-gate-v06.json",
+    "sha256": "f02868b0f9979f71c9d3fad7d546f6bae06f36a97dff449083129cd70f313230"
+  },
+  "runner": {
+    "path": "res://docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py",
+    "sha256": "59dca99804c7b2a1e9407e74f2fd9944301a482f41dcc9a2b8b1a13e2b62b10e"
+  },
+  "stage": "Active selected texture source SHA projection; native176 original/copy alias",
+  "stderr_traceback": "Traceback (most recent call last):\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py\", line 266, in <module>\n    finalize(args.gate)\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v05.py\", line 242, in finalize\n    clips, selection = active.build_active_index(evidence, gate, ownership)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/active_findings_projection_v04.py\", line 27, in build_active_index\n    clips, selection = previous.build_active_index(evidence, gate, ownership)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/active_findings_projection_v02.py\", line 105, in build_active_index\n    poses = selected_poses(record)\n            ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/legendary_work/docs/remake/pr122-legendary-parallel/active_findings_projection_v02.py\", line 52, in selected_poses\n    raise ValueError(\"Selected texture has no exact source metadata SHA: \" + source)\nValueError: Selected texture has no exact source metadata SHA: assets/actors/eight_direction/original_based/spear_captain/poses-1.png\n",
+  "stderr_origin": "Copied from original exec result session70519, no exception rerun",
+  "cause": "New native corrected records list SHA-identical preserved copies without original_path aliases; earliest S ATTACK uses explicit original-source header rather than existing_pose_metadata. A projector metadata schema limitation, not missing/changed PNGs.",
+  "precondition_attempts_started_total": 2,
+  "completed_final_reports": 0,
+  "automatic_retry": 0,
+  "PNG_reads": 0,
+  "source_record_or_staging_mutations": 0,
+  "whole_visual_reviews": 0,
+  "Godot_replays": 0,
+  "bounded_fix_scope": "Only native176 original/copy source identity from pinned59-pose inventory; no region/margin/RGBA/anchor mutation"
+}
