@@ -1,0 +1,366 @@
+{
+  "key": "transform:166",
+  "name": "다크 하딘",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "idle",
+  "reference": "res://assets/catalog/8f548bbfb547f0acb2e157af.png",
+  "reference_sha256": "49690ae0bfbfaa565665a19c6041da859f42301af2a5a92aeb763d3f1d2c287d",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc088",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-idle-source-v01.png",
+  "previous_source_sha256": "75bcfa0dc1bab89c98676b2ffa127c875cc36aa7d7e6679d7ff8617da0e45e6d",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-idle-record-v01.json",
+  "previous_record_sha256": "7fdd5ebbe652856cd6927e5393c47f1e96a88319a1dc7aa95b2687324ce91587",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "CORRECTED_SOURCE_DRAFT_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "166",
+    "direction": "SW",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-run-source-v01.png",
+    "sha256": "2bc40648ff5f35d4b4128bb509467909a1a2e9f9f9b12028c8037c0353dcd45c",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "166",
+      "direction": "SW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Guard remains frontal instead of facing down-left.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-idle-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-idle-record-v01.json",
+      "source_sha256": "75bcfa0dc1bab89c98676b2ffa127c875cc36aa7d7e6679d7ff8617da0e45e6d",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0158",
+      "slot": [
+        "transform:166",
+        "SW",
+        "idle"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:166 다크 하딘, SW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Guard remains frontal instead of facing down-left.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-LEFT, screen DOWN-LEFT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8f548bbfb547f0acb2e157af.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8f548bbfb547f0acb2e157af.png": "49690ae0bfbfaa565665a19c6041da859f42301af2a5a92aeb763d3f1d2c287d",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_166/draft001/SW-run-source-v01.png": "2bc40648ff5f35d4b4128bb509467909a1a2e9f9f9b12028c8037c0353dcd45c"
+  },
+  "schema": "pr122-legendary-bounded-quality-correction-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/SW-idle-source-v02.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "bfdd95af52e55285586ada6565426eb36cb96cad9c71388a29b5b8e55855ca63",
+  "source_bytes": 2421387,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/SW-idle-source-v02.png",
+      "sha256": "bfdd95af52e55285586ada6565426eb36cb96cad9c71388a29b5b8e55855ca63",
+      "bytes": 2421387,
+      "source_kind": "new_bounded_correction"
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "08ea2fb594001dedf6cbca5e7890a68c1f34a8259038fe4e673ce91c6d482769",
+      "normalized_visible_sha256": "0538a16775c0cc00f933a8cf4d8aa605ac9e39bc796e2d83a2e55d2063734e1c",
+      "visible_pixels": 85386,
+      "visible_height": 498,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        14,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "ebb50372a8079a3a318898e5cdbd6b32de7602f1bbcc4b55835e5934174b56bf",
+      "normalized_visible_sha256": "626ecd148e8baaf17e41a382ba148ef2651abbd7afa149a9bdd3bbb9b3909d3b",
+      "visible_pixels": 85636,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "5bfba6604a3f5b20e55fe9624fb04f2a5dd27abab4360a38545eb28494a60315",
+      "normalized_visible_sha256": "e4ad343000eb4b43e91acbf9b5a5cf61bb15b45c6907b939ff68c3df97aef5b7",
+      "visible_pixels": 88089,
+      "visible_height": 503,
+      "visible_width": 497,
+      "alpha_bbox_in_region": [
+        3,
+        9,
+        500,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "source_kind": "new",
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "99818ce46741b224a4acecdea38ef925a2742ec1861617e5769d10330411fe60",
+      "normalized_visible_sha256": "46b5276c45d29f5db110da742a8c72893b718433ed50bda35bf3d98e62a692fc",
+      "visible_pixels": 88732,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 24,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "e343295a2e950564d6694cc516284bde33fa824d4f232e80d89dc0d68fd2a295",
+      "normalized_visible_sha256": "1eef6c759ec3c0614a0ae60850a6fcab6d207716973e1b98e234dfc6c5c0260b",
+      "visible_pixels": 84190,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 7,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "source_kind": "new",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "9706a3db04812332eb58e5e436aadc280b670a6cd079d0385beb7c95c798a3f9",
+      "normalized_visible_sha256": "e245ed3d45404f241c3ea10702ff4738e1a77062d8e151eeff4fb65284897494",
+      "visible_pixels": 85901,
+      "visible_height": 512,
+      "visible_width": 497,
+      "alpha_bbox_in_region": [
+        1,
+        0,
+        498,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "cell_size": [
+    512,
+    512
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/SW-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "09ed164c8317a967ef2e96cc0ceaff12e5df55387cb0ccbe6883831e67f0965b",
+  "animation": "idle_3",
+  "loop": true,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/SW-idle-raster-registration-v02.json",
+  "request_file_sha256": "779466eee4fa19d92158b0addb046129e5e0574a22cf17f97887ef2e44be2f7e",
+  "generation_request_sha256": "d7af32da073114aca70edee8f937251d9e8a53d11005bf764e330e7148efcb21",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-edbf5092-62d4-4ae5-a4c5-3c301c42ac68.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED"
+}
