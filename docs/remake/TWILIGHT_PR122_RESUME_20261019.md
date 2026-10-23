@@ -527,10 +527,22 @@
 - First-pass production checkpoint: 412,411 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 2/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:412", "poses": 6, "clipped_cells": 1}, {"key": "transform:411", "poses": 6, "clipped_cells": 0}]. Continue transform:399 without draft polishing.
 
 
-## 2026-10-23 몬스터 제작 재개 — 일반=영웅 / 보스=신화
+- First-pass production checkpoint: 399 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 3/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:399", "poses": 6, "clipped_cells": 6}]. Continue transform:346 without draft polishing.
 
-- 최신 몬스터 지시가 이전 몬스터 WALK 필수 규칙보다 우선한다. 신규 idle/run/attack/hit는 8방향, death는 S 우선33클립. 기존 WALK·다방향 DEATH·승인·브랜치·커밋은 보존한다. 변신 제작 범위는 변경하지 않는다.
-- `data/pr122_monster_production_scope.json`: monster318 전수 DB/보스 배치 대조. 일반258(기존완료221/잔여37), 보스60(기존완료43/잔여17). 기존 완료 중 다중 바인딩 보스30을 품질 재검토 후보로 분리했다. 메타데이터318종 점검은 새 시각 승인이 아니다.
-- `data/pr122_monster_animation_staging.json`: 놀 E run6·attack3, 얼음 여왕 E/S run 각6 = 새4클립21자세. PNG6장 전부 원본 그대로 보존, 선택4/HOLD2. 놀 통합16/가로공격3은 body bbox 교차로 HOLD, 세로공격3 재제작과 run6 및 여왕run12는 엄격 기하 PASS. 신원/지지발/접촉/소스 평면 앵커·완전8방향/기본Main 검토는 HOLD. 상세완료/새승인 추가0. 기존 runtime proxy는 실제 새 자산 승인을 뜻하지 않는다.
-- Godot4.7.2 official ed1daf0bf 실제 ActorMotion:4클립21자세/전체 프레임/방향/발 캔버스/무미러 PASS. 전용SpriteFrames·NativeMotionProfile은 `assets/actors/eight_direction/monster_staging/{gnoll,ice_queen}/r002/`. r001 로더 실패 metadata와 원화는 보존했다. 기본 카탈로그 교체0.
-- 증거/요청/PNG/SHA/작은검증 로그: `docs/remake/evidence/pr122-monsters-20261023/batch01/`. scope4+transform8 검사PASS; 기존death회귀1건은 transform413 장부6에 과거기대5가 남은 실패로 별도기록. 전체CI 반복실행하지 않았다. 다음: 일반 NOT_AUTHORED 실제원화와8방향 클립을 계속 만들고, 보스는 별도 고유 원화로 보완한다. 채팅 이미지/Base64 출력 금지.
+- First-pass production checkpoint: 346,242 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 5/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:346", "poses": 6, "clipped_cells": 2}, {"key": "transform:242", "poses": 6, "clipped_cells": 3}]. Continue transform:224 without draft polishing.
+
+- First-pass production checkpoint: 224,212 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 7/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:224", "poses": 6, "clipped_cells": 6}, {"key": "transform:212", "poses": 6, "clipped_cells": 2}]. Continue transform:189 without draft polishing.
+
+- First-pass production checkpoint: 189,174 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 9/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:189", "poses": 6, "clipped_cells": 2}, {"key": "transform:174", "poses": 6, "clipped_cells": 1}]. Continue transform:141 without draft polishing.
+
+- First-pass production checkpoint: 141,139 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 11/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:141", "poses": 6, "clipped_cells": 0}, {"key": "transform:139", "poses": 6, "clipped_cells": 5}]. Continue transform:137 without draft polishing.
+
+- First-pass production checkpoint: 137,135 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 13/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:137", "poses": 6, "clipped_cells": 5}, {"key": "transform:135", "poses": 6, "clipped_cells": 2}]. Continue transform:133 without draft polishing.
+
+- First-pass production checkpoint: 133,130 SE HIT six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SE HIT drafts 15/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:133", "poses": 6, "clipped_cells": 2}, {"key": "transform:130", "poses": 6, "clipped_cells": 0}]. Continue None without draft polishing.
+
+- First-pass production checkpoint: 412,411 SW IDLE six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW IDLE drafts 2/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:412", "poses": 6, "clipped_cells": 2}, {"key": "transform:411", "poses": 6, "clipped_cells": 0}]. Continue transform:399 without draft polishing.
+
+- First-pass production checkpoint: 399,367 SW IDLE six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW IDLE drafts 4/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:399", "poses": 6, "clipped_cells": 6}, {"key": "transform:367", "poses": 6, "clipped_cells": 0}]. Continue transform:346 without draft polishing.
+
+- First-pass production checkpoint: 346,242 SW IDLE six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new SW IDLE drafts 6/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:346", "poses": 6, "clipped_cells": 5}, {"key": "transform:242", "poses": 6, "clipped_cells": 0}]. Continue transform:224 without draft polishing.
