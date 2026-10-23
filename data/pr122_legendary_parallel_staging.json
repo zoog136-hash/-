@@ -36484,7 +36484,7 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch269-v02.json",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch270-v02.json",
     "active_revision_library_sha256": "7a580017e9c5a7699c9d3cefeecae0506bbd58468fbf19fbfebb77ee193b9ac5",
     "final_approved": 0,
     "ownership_isolation": {
@@ -36602,12 +36602,20 @@
           "successful_sources": 3,
           "blocked_sources": 2,
           "generation_retries": 0
+        },
+        {
+          "batch": 270,
+          "manifest": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch270-revision-library-v02.json",
+          "validation": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch270-affected-validation-v02.json",
+          "successful_sources": 0,
+          "blocked_sources": 5,
+          "generation_retries": 0
         }
       ],
       "successful_sources": 13,
-      "blocked_sources": 2,
+      "blocked_sources": 7,
       "newly_authored_correction_poses": 78,
-      "unattempted_sources": 111,
+      "unattempted_sources": 106,
       "final_approved": 0
     }
   }
