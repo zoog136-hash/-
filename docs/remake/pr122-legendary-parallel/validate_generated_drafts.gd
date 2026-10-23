@@ -41,10 +41,20 @@ func _validate(record_path: String) -> Dictionary:
 	var image: Image = Image.load_from_file(source_path)
 	if not _check(image != null and not image.is_empty(), "PNG image load failed", errors):
 		return {"key": key, "record": record_path, "status": "FAIL", "errors": errors}
-	_check(image.get_width() % 3 == 0 and image.get_height() % 2 == 0, "3x2 extraction unavailable", errors)
-	var texture: ImageTexture = ImageTexture.create_from_image(image)
-	retained.append(texture)
-	texture.take_over_path(source_path)
+	var source_grid: Array = data.get("source_grid", [3, 2])
+	_check(source_grid.size() == 2 and int(source_grid[0]) == 3 and int(source_grid[1]) in [1, 2], "source grid invalid", errors)
+	_check(image.get_width() % 3 == 0 and image.get_height() % int(source_grid[1]) == 0, "source cells cannot be extracted", errors)
+	var source_files: Array = data.get("source_files", [{"path": source_path, "sha256": data.get("source_sha256", "")}])
+	for source_info: Dictionary in source_files:
+		var texture_path: String = str(source_info.get("path", ""))
+		if not _check(FileAccess.file_exists(texture_path) and FileAccess.get_sha256(texture_path) == str(source_info.get("sha256", "")), "mixed source PNG SHA mismatch", errors):
+			return {"key": key, "record": record_path, "status": "FAIL", "errors": errors}
+		var texture_image: Image = Image.load_from_file(texture_path)
+		if not _check(texture_image != null and not texture_image.is_empty(), "mixed PNG image load failed", errors):
+			return {"key": key, "record": record_path, "status": "FAIL", "errors": errors}
+		var texture: ImageTexture = ImageTexture.create_from_image(texture_image)
+		retained.append(texture)
+		texture.take_over_path(texture_path)
 	var resource_path: String = str(data.get("output_spriteframes", ""))
 	if not _check(FileAccess.get_sha256(resource_path) == str(data.get("output_spriteframes_sha256", "")), "SpriteFrames SHA mismatch", errors):
 		return {"key": key, "record": record_path, "status": "FAIL", "errors": errors}
@@ -84,6 +94,7 @@ func _validate(record_path: String) -> Dictionary:
 	sprite.queue_free()
 	return {"key": key, "record": record_path, "direction": direction, "role": role,
 		"status": "PASS" if errors.is_empty() else "FAIL", "errors": errors,
+		"new_poses": int(data.get("new_poses", 6)), "reused_poses": int(data.get("reused_poses", 0)),
 		"frames_reached": reached.size(), "wraps": wraps, "loop": looped,
 		"terminal_frame": terminal_frame, "raw_png_sha256": FileAccess.get_sha256(source_path),
 		"SpriteFrames_load_and_real_playback": "PASS" if errors.is_empty() else "FAIL",

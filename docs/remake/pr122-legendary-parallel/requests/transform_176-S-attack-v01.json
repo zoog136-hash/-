@@ -1,0 +1,20 @@
+{
+  "key": "transform:176",
+  "name": "경비병(창) 대장",
+  "grade": "전설",
+  "direction": "S",
+  "role": "attack",
+  "reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+  "generation_request": {
+    "prompt": "TWILIGHT transform:176 경비병(창) 대장. Produce ONLY THREE missing articulated SOUTH ATTACK poses to supplement three preserved existing frames. The first catalog portrait is identity authority; the second existing 8-column by 8-row atlas establishes exact sprite rendering, scale, South camera, weapon hand and silhouette. In that second atlas the third column is SOUTH. Its row6 (zero-based row5) is preserved windup, row7 is preserved full-contact thrust, row8 is preserved recovery. DO NOT redraw those three preserved poses and do not output a complete six-frame sequence.\n\nCreate ONE transparent RGBA PNG with EXACTLY THREE equal columns and ONE row, left to right. Exactly one complete small painted RPG sprite in each cell. All face SOUTH/screen DOWN in the identical elevated front camera. Keep the closed silver-white pointed helmet and armor, dark joints, deep dark-purple cape and ONE original lavender-bladed long polearm in its established anatomical hand. Preserve exactly the original head, body proportions, ornament and weapon geometry; no exposed face, new shield, wings, tail or substitute weapon. Use the existing atlas rendered sprite size (about 106-114 native pixels high including equipment); avoid the scale of an enlarged portrait. Leave generous transparent empty space around every entire figure, full polearm blade and butt, hands and feet. Identical overall scale and ground level in all three cells.\n\nNEW CELL0, final sequence frame1: between preserved windup and launch. Lower the knees into a visibly loaded compression, retain firm original grip, draw elbows and polearm back with shoulders loading the downward-directed thrust. Keep face and chest in the same SOUTH camera and retain stable foot support. This must be a new joint pose, not the preserved upright windup.\nNEW CELL1, final sequence frame2: forward acceleration immediately BEFORE the preserved contact. Extend shoulders and arms partially toward screen DOWN, send the same polearm tip toward the downward target without reaching full extension yet. Rear foot drives and forward foot supports; maintain connected hands and shaft. Clear intermediate extension distinct from both compression and full contact.\nNEW CELL2, final sequence frame4: immediate follow-through AFTER preserved full contact, before preserved upright recovery. Keep the original polearm aligned along the same SOUTH thrust, briefly overextend the shoulders and torso then begin drawing the shaft inward, knees counterbalance and cape settles. Distinct partial retraction, neither a fresh attack nor an upright clone.\n\nThe final animation will be: existing windup, NEW cell0 compression, NEW cell1 pre-contact, existing contact, NEW cell2 follow-through, existing recovery. Only the three NEW cells belong in this output. Newly articulate joints and equipment without rotating, translating, mirroring, recoloring or cloning an existing sprite. No sideways axe chop, spinning attack, injury/death, detached effects, aura clouds, gore, scenery, ground, labels, grids, captions or extra figures. Alpha-zero outside silhouettes. Preserve all equipment tips inside each cell. Output only the one three-pose supplemental sheet.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/legendary_repo/assets/catalog/4954db6f65010804b3185b7a.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-0.png"
+    ]
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "new_poses_requested": 3,
+  "preserved_existing_poses": 3,
+  "reference_sha256": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610"
+}
