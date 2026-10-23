@@ -18325,6 +18325,26 @@
               "kind": "ownership_execution_delta",
               "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch010-library-v01.json",
               "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:245",
+                "NE",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/NE-idle-record-v02.json",
+              "record_sha256": "cc08802b9cd2f1ee13929d04082440538dd542925703cf51a5936cc489c6ef1a",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/NE-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "cffdfe1bb39ff137eeb631aa9464751328e18f1736918008b46eedb7cbad98c8",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/NE-idle-raster-registration-v02.json",
+              "registration_sha256": "8c08421263fbca4aec25a881b160ddbd4e63958edb712d7deb4ed0b9c9cddf91",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc026",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "bd7aba015041e0045eb4c5a43a5f56303a3850d1bf375d4978f006261aa1c65e",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
             }
           ]
         },
@@ -22790,6 +22810,26 @@
               "kind": "ownership_execution_delta",
               "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch009-library-v01.json",
               "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:227",
+                "SW",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_227/quality-v02/SW-idle-record-v02.json",
+              "record_sha256": "d88981087885b9229f6f7847e75c9c1988fc6b9c821b17f69de8c3d97bce4f02",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_227/quality-v02/SW-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "352768cee43a1364bbcd7ebc132bedd40fa69fed65700691ada3f639f08449a5",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_227/quality-v02/SW-idle-raster-registration-v02.json",
+              "registration_sha256": "de8cce84d6b50fcb51397c18180273cdf21b71fd522210d2c6f31dcb1cf2e0ae",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc031",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "d428d2b4b7946503d0a47a23dd240658e012a07c86738cfee4f2384f2512a890",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
             }
           ]
         },
@@ -23862,6 +23902,28 @@
           "actor_final_approval": false,
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:226",
+                "SW",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_226/quality-v02/SW-idle-record-v02.json",
+              "record_sha256": "3fe8b6fcdfcd44067c75e592ab245e5cbece901ee3abda454fcf9606ef8998ec",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_226/quality-v02/SW-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "4cb7754d6a98cc69c90917632690e1a5db92bf35655f63b0555f649c1289d848",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_226/quality-v02/SW-idle-raster-registration-v02.json",
+              "registration_sha256": "eb007e6058ecc047503e0707a4edaa33040c03970b323a568b19e716cdaf0df2",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc032",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "c574e3f146c9e067b2513533fda34d478d7d0a1cec57990e9c5000cdd72a6f92",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -50647,8 +50709,8 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch311-v02.json",
-    "active_revision_library_sha256": "0ed0ed2cdc406742d81d046d63cb0747f549c0a75b9c75eb3ddcb734480dc695",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch312-v02.json",
+    "active_revision_library_sha256": "c568012e271fca32357070f36926932034f0c359a8f4c9ad946341f1a51ccf6f",
     "final_approved": 0,
     "ownership_isolation": {
       "batches": [
@@ -51099,21 +51161,32 @@
           "successful_sources": 4,
           "blocked_sources": 0,
           "generation_retries": 0
+        },
+        {
+          "batch": 312,
+          "manifest": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch312-revision-library-v02.json",
+          "validation": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch312-affected-validation-v02.json",
+          "successful_sources": 3,
+          "blocked_sources": 0,
+          "generation_retries": 0
         }
       ],
-      "successful_sources": 98,
+      "successful_sources": 101,
       "blocked_sources": 7,
-      "newly_authored_correction_poses": 554,
+      "newly_authored_correction_poses": 572,
       "unattempted_sources": 25,
       "final_approved": 0,
-      "successful_unique_candidates": 98,
+      "successful_unique_candidates": 101,
       "historical_blocked_attempts": 7,
-      "current_blocked_sources": 3,
+      "current_blocked_sources": 0,
       "recovered_previously_blocked_candidates": [
         "qc021",
         "qc023",
         "qc024",
-        "qc025"
+        "qc025",
+        "qc026",
+        "qc031",
+        "qc032"
       ],
       "counting_policy": "Unique correction candidate status; historical blocked attempts preserved separately"
     },
