@@ -15,6 +15,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--label',required=True);p.add_argument('--corrections',action='store_true');a=p.parse_args()
     plan=json.loads((HERE/'plan.json').read_text())
     paths={v for v in HERE.glob('*.py')}|{HERE/'plan.json'}
+    paths.update(HERE.glob('*.json'))
     rows=[]
     for actor in plan['actors']:
         folder=HERE/actor['slug']
