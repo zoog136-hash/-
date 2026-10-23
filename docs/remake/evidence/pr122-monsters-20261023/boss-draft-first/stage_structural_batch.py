@@ -26,11 +26,12 @@ def put(p,data):
     else:p.write_bytes(data)
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('slug');p.add_argument('--revision',required=True);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('slug');p.add_argument('--revision',required=True);p.add_argument('--reviewed-inventory',action='store_true');a=p.parse_args()
     actor=next(v for v in json.loads((HERE/'plan.json').read_text())['actors'] if v['slug']==a.slug)
     folder=HERE/a.slug
     importer_sha=sha(ROOT/'tools/import_original_based_motion.py')
     tracks,holds=[],[]
+    inventory={r['clip']:r for r in json.loads((HERE/'whole-review-v01/structural-inventory.json').read_text())['clips'] if r['slug']==a.slug} if a.reviewed_inventory else {}
     receipts=sorted(v for v in folder.glob('*-receipt.json') if v.name!='canonical-v01-receipt.json')
     for receipt in receipts:
         record=json.loads(receipt.read_text());source=ROOT/record['source']
@@ -38,7 +39,15 @@ def main():
         clip=receipt.stem.removesuffix('-receipt')
         job=json.loads((folder/'requests'/f'{clip}.json').read_text())
         check=folder/'structural-checks'/f'{clip}.json'
-        if check.exists():
+        if a.reviewed_inventory:
+            row=inventory[clip];assert row['source_sha256']==record['sha256']
+            repair=HERE/'whole-review-v01/owned-parts-repair'/a.slug/(clip+'.json')
+            if row['status']=='STRUCTURAL_PASS':result=dict(status='STRICT_WHOLE_POSE_PASS',geometry=row['geometry'])
+            elif repair.exists() and (fixed:=json.loads(repair.read_text()))['status']=='LOSSLESS_OWNED_PARTS_PASS':
+                assert fixed['source_sha256']==record['sha256'] and sha(ROOT/fixed['texture'])==fixed['texture_sha256']
+                result=dict(status='STRICT_WHOLE_POSE_PASS',geometry=fixed['geometry'],owned_texture=fixed['texture'],ownership_proof=repair.relative_to(ROOT).as_posix())
+            else:result=dict(status='SOURCE_HOLD',reason=json.loads(repair.read_text())['reason'] if repair.exists() else row['reason'])
+        elif check.exists():
             result=json.loads(check.read_text());assert result['source_sha256']==record['sha256'] and result['importer_sha256']==importer_sha
         else:
             result=dict(source=record['source'],source_sha256=record['sha256'],importer_sha256=importer_sha,layout='phase_grid3',visual_review='DEFERRED_UNTIL_ALL_DRAFTS')
@@ -57,10 +66,11 @@ def main():
             check.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
         if result['status']!='STRICT_WHOLE_POSE_PASS':
             holds.append(dict(clip=clip,reason=result['reason']));continue
-        texture=ROOT/'assets/actors/eight_direction/boss_draft_first'/a.slug/'sources'/source.name
-        put(texture,source.read_bytes())
+        texture=ROOT/result['owned_texture'] if 'owned_texture' in result else ROOT/'assets/actors/eight_direction/boss_draft_first'/a.slug/'sources'/source.name
+        if 'owned_texture' not in result:put(texture,source.read_bytes())
         track=dict(role=job['role'],direction=job['direction'],animation=f'{job["role"]}_{COMPASS.index(job["direction"])}',source=record['source'],source_sha256=record['sha256'],texture=texture.relative_to(ROOT).as_posix(),geometry=deepcopy(result['geometry']),quality_review='FIRST_DRAFT_ONLY; full review deferred',production_connected=False)
         tracks.append(track)
+        if 'ownership_proof' in result:track['lossless_source_ownership_proof']=result['ownership_proof']
     assert tracks,'No safely separated six-pose clips for playback; keep raw sources and continue other bosses'
     assets=ROOT/'assets/actors/eight_direction/boss_draft_first'/a.slug/a.revision
     paths={t['texture']:str(i+1) for i,t in enumerate(tracks)}

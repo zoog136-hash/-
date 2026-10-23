@@ -105,7 +105,8 @@ def main():
             if not Path(executable).is_file():
                 raise RuntimeError('Xvfb unavailable. Supply an Xvfb binary or use headless diagnostics without --render.')
             Path('/tmp/.X11-unix').mkdir(exist_ok=True)
-            display = next(i for i in range(117, 130) if not Path('/tmp/.X11-unix/X' + str(i)).exists())
+            display_start = int(env.get('BOSS_FIX_QA_DISPLAY_START', '117'))
+            display = next(i for i in range(display_start, display_start + 13) if not Path('/tmp/.X11-unix/X' + str(i)).exists())
             display_log = (out / 'xvfb-run.txt').open('w')
             server = subprocess.Popen([executable, ':' + str(display), '-screen', '0', '960x640x24',
                 '-nolisten', 'tcp', '-ac', '-noreset'], stdout=display_log, stderr=subprocess.STDOUT)

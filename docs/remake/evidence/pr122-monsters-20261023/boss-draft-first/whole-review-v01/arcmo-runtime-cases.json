@@ -1,0 +1,93 @@
+[
+  {
+    "key": "monster:아크모",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed002/NativeMotionProfile.tres",
+    "slug": "arcmo-idle",
+    "directions": [
+      "E",
+      "N",
+      "NE",
+      "NW",
+      "S",
+      "SE",
+      "SW",
+      "W"
+    ],
+    "roles": [
+      "idle"
+    ],
+    "run_seconds": 0.8,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:아크모",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed002/NativeMotionProfile.tres",
+    "slug": "arcmo-run",
+    "directions": [
+      "E",
+      "N",
+      "NW",
+      "S",
+      "SE",
+      "SW",
+      "W"
+    ],
+    "roles": [
+      "run"
+    ],
+    "run_seconds": 0.8,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:아크모",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed002/NativeMotionProfile.tres",
+    "slug": "arcmo-attack",
+    "directions": [
+      "E",
+      "N",
+      "NE",
+      "NW",
+      "S",
+      "SE",
+      "SW"
+    ],
+    "roles": [
+      "attack"
+    ],
+    "run_seconds": 0.8,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:아크모",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed002/NativeMotionProfile.tres",
+    "slug": "arcmo-hit",
+    "directions": [
+      "E",
+      "N",
+      "NE",
+      "NW",
+      "S",
+      "SE",
+      "SW",
+      "W"
+    ],
+    "roles": [
+      "hit"
+    ],
+    "run_seconds": 0.8,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:아크모",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed002/NativeMotionProfile.tres",
+    "slug": "arcmo-death",
+    "directions": [
+      "S"
+    ],
+    "roles": [
+      "death"
+    ],
+    "run_seconds": 0.8,
+    "idle_seconds": 1.25
+  }
+]

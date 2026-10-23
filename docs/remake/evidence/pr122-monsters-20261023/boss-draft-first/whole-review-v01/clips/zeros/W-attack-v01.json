@@ -1,0 +1,25 @@
+{
+  "actor": "monster:제로스",
+  "slug": "zeros",
+  "clip": "W-attack-v01",
+  "role": "attack",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-attack-v01.png",
+  "source_sha256": "81f37e4611879a54c14f935f6bebdb92fb622e8a0661481e9620d306378ca0cd",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      82016,
+      71814,
+      68929,
+      67660,
+      66855,
+      64158
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

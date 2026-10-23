@@ -1,0 +1,247 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/SW-idle-v01.png",
+  "source_sha256": "181149f6611be29adb22e919c3f78d364aef4e51e59709de1bdceb796686f158",
+  "texture": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SW-idle-v01.png",
+  "texture_sha256": "dc587faab9b5328e16db605d349eb69dc2a464150cb0f14441bb3087c3a98061",
+  "geometry": {
+    "image_size": [
+      1824,
+      1216
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SW",
+        "region": [
+          3,
+          3,
+          521,
+          599
+        ],
+        "margin": [
+          519,
+          421,
+          967,
+          889
+        ],
+        "source_anchor": [
+          228,
+          512
+        ],
+        "rgba_sha256": "e80a52414856c97aa604f488854c14de4d605a2680bb90827cce7da3a18f3732",
+        "original_source_region": [
+          31,
+          5,
+          521,
+          599
+        ],
+        "original_source_anchor": [
+          256,
+          514
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "SW",
+        "region": [
+          611,
+          3,
+          523,
+          600
+        ],
+        "margin": [
+          475,
+          416,
+          965,
+          888
+        ],
+        "source_anchor": [
+          880,
+          517
+        ],
+        "rgba_sha256": "e83e3e0745bc62083d9c15c83482b4e36e87cdb17aa3ca8b60564cb2bc0a1c7c",
+        "original_source_region": [
+          499,
+          0,
+          523,
+          600
+        ],
+        "original_source_anchor": [
+          768,
+          514
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "SW",
+        "region": [
+          1219,
+          3,
+          538,
+          596
+        ],
+        "margin": [
+          448,
+          416,
+          950,
+          892
+        ],
+        "source_anchor": [
+          1515,
+          517
+        ],
+        "rgba_sha256": "38369ccc4ceb37a241e46b953131beac67c8a858386111163798caa029c92ab4",
+        "original_source_region": [
+          984,
+          0,
+          538,
+          596
+        ],
+        "original_source_anchor": [
+          1280,
+          514
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "SW",
+        "region": [
+          3,
+          611,
+          525,
+          516
+        ],
+        "margin": [
+          517,
+          422,
+          963,
+          972
+        ],
+        "source_anchor": [
+          230,
+          1119
+        ],
+        "rgba_sha256": "fb1e1fdb9707884acf37374c0dda2000ae79bd521d8907b20d651a24a3906bbb",
+        "original_source_region": [
+          29,
+          508,
+          525,
+          516
+        ],
+        "original_source_anchor": [
+          256,
+          1016
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "SW",
+        "region": [
+          611,
+          611,
+          519,
+          516
+        ],
+        "margin": [
+          489,
+          421,
+          969,
+          972
+        ],
+        "source_anchor": [
+          866,
+          1120
+        ],
+        "rgba_sha256": "f306697953c05d3bb2e739f3d48ca19f370e4072354e9689cba3d6884c50d097",
+        "original_source_region": [
+          513,
+          508,
+          519,
+          516
+        ],
+        "original_source_anchor": [
+          768,
+          1017
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "SW",
+        "region": [
+          1219,
+          611,
+          517,
+          514
+        ],
+        "margin": [
+          469,
+          424,
+          971,
+          974
+        ],
+        "source_anchor": [
+          1494,
+          1117
+        ],
+        "rgba_sha256": "f89c5dbdae595518adde64e5d5a6772b74746095071692936fdecca81a6d8b23",
+        "original_source_region": [
+          1005,
+          510,
+          517,
+          514
+        ],
+        "original_source_anchor": [
+          1280,
+          1016
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 557.5,
+    "canvas_size": [
+      1488,
+      1488
+    ],
+    "foot": [
+      744,
+      930
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 754118,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "2161a6cb50b1ba6c3bb58f60ae94330a68c780c00ed0b15a245b5df2fa44ccc3",
+    "foreground_owner_sha256": "039cab32f72b205cdfca78c7b20c692401f08d57253040323ca04aba58224b0b",
+    "detached_pixels": 1,
+    "detached_fragments": [
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          252,
+          567,
+          253,
+          568
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 97.0,
+        "owner_margin_min": 94.76393202250021
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 187220,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:질투의 공주 이자벨",
+  "slug": "isabelle",
+  "clip": "SW-idle-v01",
+  "role": "idle",
+  "direction": "SW",
+  "original_cause": "foreign_body_rectangle"
+}

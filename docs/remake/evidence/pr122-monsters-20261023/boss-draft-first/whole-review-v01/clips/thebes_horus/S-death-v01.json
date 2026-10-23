@@ -1,0 +1,293 @@
+{
+  "actor": "monster:테베 호루스",
+  "slug": "thebes_horus",
+  "clip": "S-death-v01",
+  "role": "death",
+  "direction": "S",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/S-death-v01.png",
+  "source_sha256": "e1ccb173f72633d931a01aab0b96a9b54f63ccc147d429b5c8e554495fa585d7",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      82974,
+      76154,
+      65866,
+      64655,
+      58752,
+      52681
+    ]
+  },
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "S",
+        "region": [
+          133,
+          9,
+          299,
+          550
+        ],
+        "margin": [
+          449,
+          169,
+          845,
+          594
+        ],
+        "source_anchor": [
+          256,
+          555
+        ],
+        "rgba_sha256": "7d0e921a86e68eccee0018bd3a47833fcc458372f7baa85531174153c26a434b",
+        "canvas_size": [
+          1144,
+          1144
+        ],
+        "foot": [
+          572,
+          715
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "S",
+        "region": [
+          629,
+          70,
+          311,
+          490
+        ],
+        "margin": [
+          433,
+          229,
+          833,
+          654
+        ],
+        "source_anchor": [
+          768,
+          556
+        ],
+        "rgba_sha256": "36a779854c0a492053ba87ca43452b44db24b567b3b7d06ab10d06eafb5d011f",
+        "canvas_size": [
+          1144,
+          1144
+        ],
+        "foot": [
+          572,
+          715
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "S",
+        "region": [
+          1115,
+          184,
+          329,
+          375
+        ],
+        "margin": [
+          407,
+          344,
+          815,
+          769
+        ],
+        "source_anchor": [
+          1280,
+          555
+        ],
+        "rgba_sha256": "c0d5c50188dcbcc9c15a6da83336d2acd95fb35d68b2f940670307ed9fd06c9c",
+        "canvas_size": [
+          1144,
+          1144
+        ],
+        "foot": [
+          572,
+          715
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "S",
+        "region": [
+          24,
+          650,
+          466,
+          321
+        ],
+        "margin": [
+          340,
+          398,
+          678,
+          823
+        ],
+        "source_anchor": [
+          256,
+          967
+        ],
+        "rgba_sha256": "89830c10db27aef663cf6d29d63211b720f3c225c858b935bc0003ba64d1d467",
+        "canvas_size": [
+          1144,
+          1144
+        ],
+        "foot": [
+          572,
+          715
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "S",
+        "region": [
+          529,
+          744,
+          488,
+          224
+        ],
+        "margin": [
+          333,
+          495,
+          656,
+          920
+        ],
+        "source_anchor": [
+          768,
+          964
+        ],
+        "rgba_sha256": "c47d147d76f6a2ed9cfd98397054001a6b5ad55e4f96377bef0a116857540a2e",
+        "canvas_size": [
+          1144,
+          1144
+        ],
+        "foot": [
+          572,
+          715
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "S",
+        "region": [
+          1051,
+          771,
+          485,
+          184
+        ],
+        "margin": [
+          343,
+          535,
+          659,
+          960
+        ],
+        "source_anchor": [
+          1280,
+          951
+        ],
+        "rgba_sha256": "5bb169f836a58c467acb82cae64e1b7acc97e39f2f08b60fd075e2db5e46a93a",
+        "canvas_size": [
+          1144,
+          1144
+        ],
+        "foot": [
+          572,
+          715
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 429.5,
+    "canvas_size": [
+      1144,
+      1144
+    ],
+    "foot": [
+      572,
+      715
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "foreground_ownership": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "9781b1aa2dde638f4d28ae4ae8017c90b8fa3590356518b1c7e367ebb930d263",
+    "foreground_owner_sha256": "17eef7c7db7e494a6bb52cdf292fc24fe2a80c0ca9bc70ebae0af4d380e3fdf7",
+    "detached_pixels": 5,
+    "detached_fragments": [
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          169,
+          827,
+          170,
+          828
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 272.26457720386617,
+        "owner_margin_min": 270.0285092263664
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1089,
+          873,
+          1090,
+          874
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 86.53900854527974,
+        "owner_margin_min": 84.30294056777996
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1363,
+          912,
+          1364,
+          913
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 361.24783736376884,
+        "owner_margin_min": 358.4194102390226
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          269,
+          925,
+          270,
+          926
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 267.3443472377899,
+        "owner_margin_min": 264.3443472377899
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          479,
+          931,
+          480,
+          932
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 66.88796603276258,
+        "owner_margin_min": 64.88796603276258
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "omitted_pixels": 0,
+    "foreign_owner_pixels": 0
+  },
+  "status": "STRUCTURAL_PASS",
+  "visual_review": "AWAITING_SINGLE_WHOLE_SCOPE_VISUAL_PASS"
+}

@@ -1,0 +1,332 @@
+{
+  "actor": "monster:공포의 뱀파이어",
+  "slug": "dread_vampire",
+  "clip": "E-idle-v01",
+  "role": "idle",
+  "direction": "E",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/E-idle-v01.png",
+  "source_sha256": "55c114b642c9fb39eefc3e618f58a0df0a9b93509a89eb5da77fb38c27a50031",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      86240,
+      85254,
+      83959,
+      78357,
+      78093,
+      77300
+    ]
+  },
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "E",
+        "region": [
+          110,
+          4,
+          403,
+          503
+        ],
+        "margin": [
+          514,
+          326,
+          917,
+          817
+        ],
+        "source_anchor": [
+          256,
+          503
+        ],
+        "rgba_sha256": "ec7398e04dc232f18edae9ee3da1443f78b8b924e249a46cc37deecc0238a70f",
+        "canvas_size": [
+          1320,
+          1320
+        ],
+        "foot": [
+          660,
+          825
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "E",
+        "region": [
+          583,
+          7,
+          412,
+          500
+        ],
+        "margin": [
+          475,
+          329,
+          908,
+          820
+        ],
+        "source_anchor": [
+          768,
+          503
+        ],
+        "rgba_sha256": "36da67e31b44261d5559208fb4a2e8675f93269145cd063b49412c2d8889d519",
+        "canvas_size": [
+          1320,
+          1320
+        ],
+        "foot": [
+          660,
+          825
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "E",
+        "region": [
+          1063,
+          5,
+          435,
+          502
+        ],
+        "margin": [
+          443,
+          327,
+          885,
+          818
+        ],
+        "source_anchor": [
+          1280,
+          503
+        ],
+        "rgba_sha256": "b4d8bce9a786fee4fcfb7cc8d2474902af600776e1a8b5ac6441fde2ebb99087",
+        "canvas_size": [
+          1320,
+          1320
+        ],
+        "foot": [
+          660,
+          825
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "E",
+        "region": [
+          70,
+          518,
+          451,
+          500
+        ],
+        "margin": [
+          474,
+          329,
+          869,
+          820
+        ],
+        "source_anchor": [
+          256,
+          1014
+        ],
+        "rgba_sha256": "cf1e5b281b12163de7bef40294708e1a2d8dce3d0fd4b4169d0bdd218c05bee1",
+        "canvas_size": [
+          1320,
+          1320
+        ],
+        "foot": [
+          660,
+          825
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "E",
+        "region": [
+          581,
+          520,
+          421,
+          498
+        ],
+        "margin": [
+          473,
+          331,
+          899,
+          822
+        ],
+        "source_anchor": [
+          768,
+          1014
+        ],
+        "rgba_sha256": "5e074b42b5dd25e44afb4650002d7909ba1dc7c5e9456377c1fb70878169324f",
+        "canvas_size": [
+          1320,
+          1320
+        ],
+        "foot": [
+          660,
+          825
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "E",
+        "region": [
+          1100,
+          518,
+          403,
+          500
+        ],
+        "margin": [
+          480,
+          329,
+          917,
+          820
+        ],
+        "source_anchor": [
+          1280,
+          1014
+        ],
+        "rgba_sha256": "cbc06cbb38e0330cd679006f695e5c5b4a5adbac276721f3f63a6f001856d45c",
+        "canvas_size": [
+          1320,
+          1320
+        ],
+        "foot": [
+          660,
+          825
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 495.5,
+    "canvas_size": [
+      1320,
+      1320
+    ],
+    "foot": [
+      660,
+      825
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "foreground_ownership": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "a5c2031aad3c747c29acd032d901ca4d49ded5ef18c50887177bd5de620fee13",
+    "foreground_owner_sha256": "d8bd4e8f17be043412d0443787e70a7406b04e353b27291589f01eb01c0b2ed9",
+    "detached_pixels": 8,
+    "detached_fragments": [
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1253,
+          41,
+          1254,
+          42
+        ],
+        "nearest_max": 7.615773105863909,
+        "second_nearest_min": 401.14336589304327,
+        "owner_margin_min": 393.52759278717934
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1245,
+          67,
+          1246,
+          68
+        ],
+        "nearest_max": 4.47213595499958,
+        "second_nearest_min": 381.9214578941592,
+        "owner_margin_min": 377.4493219391596
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          274,
+          81,
+          275,
+          82
+        ],
+        "nearest_max": 6.4031242374328485,
+        "second_nearest_min": 433.5862082677446,
+        "owner_margin_min": 427.18308403031176
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1261,
+          95,
+          1262,
+          96
+        ],
+        "nearest_max": 5.0990195135927845,
+        "second_nearest_min": 384.94804844290354,
+        "owner_margin_min": 379.84902892931075
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1246,
+          97,
+          1247,
+          98
+        ],
+        "nearest_max": 8.54400374531753,
+        "second_nearest_min": 370.3079799302197,
+        "owner_margin_min": 361.76397618490216
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          769,
+          567,
+          770,
+          568
+        ],
+        "nearest_max": 5.0,
+        "second_nearest_min": 70.51950084905593,
+        "owner_margin_min": 65.51950084905593
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          273,
+          593,
+          274,
+          594
+        ],
+        "nearest_max": 8.54400374531753,
+        "second_nearest_min": 97.71898484941399,
+        "owner_margin_min": 89.17498110409646
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          274,
+          595,
+          275,
+          596
+        ],
+        "nearest_max": 8.48528137423857,
+        "second_nearest_min": 99.29753269845128,
+        "owner_margin_min": 90.81225132421271
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "omitted_pixels": 0,
+    "foreign_owner_pixels": 0
+  },
+  "status": "STRUCTURAL_PASS",
+  "visual_review": "AWAITING_SINGLE_WHOLE_SCOPE_VISUAL_PASS"
+}

@@ -1,0 +1,25 @@
+{
+  "actor": "monster:잔혹한 아이리스",
+  "slug": "iris",
+  "clip": "NE-hit-v01",
+  "role": "hit",
+  "direction": "NE",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/NE-hit-v01.png",
+  "source_sha256": "1263a1c61d850c3fe5f5a0d0031ffca7ce66ee6b3bcc7f4cd5ae9cf0f5ac6100",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      93441,
+      91749,
+      91284,
+      90280,
+      87305,
+      82314
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}
