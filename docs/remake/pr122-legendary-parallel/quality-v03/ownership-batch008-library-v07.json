@@ -1,0 +1,104 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "batch": 8,
+  "actors": [
+    "transform:244",
+    "transform:330",
+    "transform:387"
+  ],
+  "revisions": [
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/quality-isolation-v07-008/N-hit-record.json",
+      "record_sha256": "ae2671fb560fa6e30ecb97190ccc1b78513f3605514ad5d80df02df77fc9bf76",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/quality-isolation-v07-008/N-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "d0cce74a14b736afebd06bcb86527225cc4c98bc7304ccdca5ea6db1d219693f",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/quality-isolation-v07-008/N-hit-registration.json",
+      "registration_sha256": "7c90b58554b164aed228319972f16a5013a2f48607ae0ae80880a5e06c29f9cf",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    },
+    {
+      "slot": [
+        "transform:330",
+        "SW",
+        "run"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/quality-isolation-v07-008/SW-run-record.json",
+      "record_sha256": "79854352cbd93c6afafbd2365cacb3bbe331b8b499076e3ab5a93313201a5636",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/quality-isolation-v07-008/SW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "e748883926b1e53ab9eabda8847c8108a3ce89b051e69e4b2bf2286b852a7035",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/quality-isolation-v07-008/SW-run-registration.json",
+      "registration_sha256": "bfc8680751ae16abe3761410dbf7ddaea757763c12d21b77aaa328c1b3c4d7b7",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    },
+    {
+      "slot": [
+        "transform:387",
+        "N",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/quality-isolation-v07-008/N-attack-record.json",
+      "record_sha256": "9661c171d2d14169f247148893aaf62b5cf1ad72018d3a9879b880d6dafa7b8e",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/quality-isolation-v07-008/N-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "8b590defe2e7cc87754ffdd0e45a59e27153f1c3cfb09d8332bacd8dce517995",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/quality-isolation-v07-008/N-attack-registration.json",
+      "registration_sha256": "ff7981d3bf038e76439f5a5b2bc421bfcfb9df3bf58e5cd43ff6e98104414f15",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION"
+    }
+  ],
+  "dependency_required_slots": [
+    [
+      "transform:244",
+      "N",
+      "hit"
+    ],
+    [
+      "transform:330",
+      "SW",
+      "run"
+    ],
+    [
+      "transform:387",
+      "N",
+      "attack"
+    ]
+  ],
+  "excluded_slots": [],
+  "source_outcomes": [
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_330/quality-v02/SW-run-source-v02.png",
+      "source_sha256": "f821f1ff8c443cae18d755038092a007648e268f2b731f2149c34d5fea1c504f",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/quality-isolation-v07-008/SW-run-source-v02-isolated.proof.json",
+      "proof_sha256": "124dbeea1637d2a7f70acd46ac8089f7fae5335ad3024efcccd0553b35d7af56",
+      "atlas_sha256": "ee32f302e0d4a8b9a66aa8ade525db96c4e8d13afc5d72f9b1b7b194a3678cad"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_387/quality-v02/N-attack-source-v02.png",
+      "source_sha256": "20f549253c03f984b72b3fb9e7e4b409c712d718f7e4124a2e4e1009e7729d2f",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/quality-isolation-v07-008/N-attack-source-v02-isolated.proof.json",
+      "proof_sha256": "b3fed728ce3c0a28019b85b9b60ccd56dae84480c5117263240ef68b72202909",
+      "atlas_sha256": "8c3ea3a8100aca382bab2f518eb3009628449119ffd5982d158ac501729a6dd7"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-source-v02.png",
+      "source_sha256": "98a2d3f54a0d78b838db7b4dc08dd95b020be295fe6469ec363e4d069df8cf63",
+      "status": "INTEGER_TRANSLATION_PROOF_PASS",
+      "proof": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/quality-isolation-v07-008/N-hit-source-v02-isolated.proof.json",
+      "proof_sha256": "4d50f511814e40be815d8f757fbad476b889ec25c413009926decb362345d115",
+      "atlas_sha256": "1472372d44dfba3a3771d8f8585f8cc5f9bd77431cbf754419f8a2c08ef94e43"
+    }
+  ],
+  "held_dependencies": [],
+  "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch008-v07.json",
+  "selection_sha256": "b0e30200beb495f85ef1a19256a2f73f031448bed37502e2a037da0197fcb791",
+  "newly_authored_poses_added": 0,
+  "final_approved": 0,
+  "quality_status": "HOLD"
+}
