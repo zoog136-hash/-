@@ -1,0 +1,23 @@
+{
+  "checkpoint": "SW RUN source production finished before SW ATTACK",
+  "previous_controller_cell": "88",
+  "previous_controller_state": "TERMINATED_WHILE_WAITING_FOR_REMOTE_SAVE_ONLY",
+  "observed_before_termination": {
+    "returned_source_receipts": 40,
+    "active_image_requests": 0,
+    "SW_ATTACK_claims": 0,
+    "SW_RUN_remote_receipts": 7,
+    "last_pending_remote_batch": 117
+  },
+  "termination_output": {
+    "source_complete": 40,
+    "blocked": 0,
+    "maps": 8
+  },
+  "normal_image_requests_cancelled": 0,
+  "existing_png_request_record_tres_modified": 0,
+  "next_controller": "continuous_all_directions_resume_sw_v02.js",
+  "next_normal_launcher": "normal_six_pose_launcher_v02.js",
+  "existing_request_behavior": "Resume exact existing requests and PNG receipts; v02 camera reinforcement only applies to future requests not yet prepared.",
+  "final_approval": false
+}
