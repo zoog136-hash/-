@@ -1,0 +1,89 @@
+{
+  "schema": "legendary-final-metadata-reconciliation-completion-v01",
+  "status": "COMPLETED_REPORT_ONLY",
+  "recorded_UTC": "2026-10-23T22:11:28.755854+00:00",
+  "session_id": 26729,
+  "exit_code": 0,
+  "runner": {
+    "path": "res://docs/remake/pr122-legendary-parallel/reconcile_remaining_findings_v06.py",
+    "sha256": "6ae6c4e16199389a46f3fd32e19fba5926a7fb63384eef321ff4852af9748507"
+  },
+  "completion_gate": {
+    "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-completion-gate-v07.json",
+    "sha256": "4940b3918c1d45815f783259797b92236aa452f4a6c9ebee1fdf4dbe35286584"
+  },
+  "repository_head": "36e947bb5ed4e26a362918b998ce4bb2880208cf",
+  "asset_freeze_commit": "0fe2882e594dedd30b5ce74f172edf4aed545122",
+  "completed_final_reports": 1,
+  "precondition_attempts_failed_before_output": 2,
+  "precondition_logs": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-precondition-attempt1-v01.json",
+      "sha256": "aaf234b32ea3caf9ed74beb628d52699f3b276c97462f4b3c930acb0b570a050"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-precondition-attempt2-v01.json",
+      "sha256": "2764fbb0d120dd063df74243a0d192a569f677aba14fdc1cca3f1ef745c46013"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-v05.json",
+      "sha256": "9fdf227783c9ac2d3d9fe67010011daf645aeb7c1cd93363366cf6bc448d9ba7"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-v05-KO.md",
+      "sha256": "4bd4d51ba4cace6f06f00540fe35c6befea29d1ab6056369c721917b35747d39"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-v06-KO.md",
+      "sha256": "679423186249502ea5ce92ca033fb518a22099d3ddb51dcb6a10db22ea591b46"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-v05-presentation-clarification-v06.json",
+      "sha256": "54a37201c643ef1eb89a4af3118fdf3fb9d99e77b4194d1b39afcdc69e5a537e"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-active-clips-final-v05.tsv",
+      "sha256": "6131d49da23a019af055e14c0f27de7aea27dd0ad34470cfe13d2b9217bc8c2e"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-QA-environment-clips-final-v05.tsv",
+      "sha256": "c712de5e5007ebb44536dc11283a9d3004efb0bb797e5ced036d7b11629f8b92"
+    }
+  ],
+  "proven_unique_ownership_sources": 721,
+  "verified_correction_sources": 109,
+  "verified_new_pose_occurrences": 604,
+  "active_projection_units": {
+    "projected_issue_occurrences": 4666,
+    "unique_active_or_missing_clips": 972,
+    "unique_clips_by_highest_severity": {
+      "HOLD": 591,
+      "ERROR": 380,
+      "BLOCKED": 1
+    },
+    "cause_severity_clip_rows": 2596,
+    "unique_referenced_active_source_files": 1120,
+    "source_count_scope": "Source files referenced by residual/uncertain clips; not a count of confirmed defective artwork"
+  },
+  "QA_environment_projection_units": {
+    "projected_issue_occurrences": 2,
+    "unique_active_or_missing_clips": 2,
+    "unique_clips_by_highest_severity": {
+      "HOLD": 2
+    },
+    "cause_severity_clip_rows": 2,
+    "unique_referenced_active_source_files": 4,
+    "source_count_scope": "Source files referenced by residual/uncertain clips; not a count of confirmed defective artwork"
+  },
+  "new_corpus_runs_for_presentation_export": 0,
+  "source_PNG_reads": 0,
+  "visual_reviews": 0,
+  "Godot_replays": 0,
+  "source_or_staging_mutations": 0,
+  "new_art_approvals": 0,
+  "CI_GPU_FAILs_reclassified_as_PASS": 0,
+  "rejected_evidence_count": 0,
+  "scope": "Exact JSON/SHA/remote/Godot evidence reconciliation only; projected severity is inherited evidence plus uncertainty, not a new whole-corpus visual review."
+}
