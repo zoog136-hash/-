@@ -1,0 +1,312 @@
+{
+  "key": "transform:330",
+  "name": "암흑룡 아툰",
+  "grade": "전설",
+  "direction": "SE",
+  "role": "idle",
+  "reference": "res://assets/catalog/ede9289f86f16b5125bcbf52.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:330 암흑룡 아툰. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body SE IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter front SOUTH-EAST, screen DOWN-RIGHT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/ede9289f86f16b5125bcbf52.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 75,
+  "reference_sha256": "1b14c597aa83fce500c0afb8b27bb8b99779e1db29d3be1c2c15685662d15770",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+  "source_sha256": "91b0e6e89ba384c284e4c8a9176f4b182250e24f32265bb4a38071362697f5d1",
+  "source_bytes": 1928165,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "46415d5d2f2b3c734cb1f04ca6c8e48494b0f3881428d4f1838a7e5211dbe8f5",
+  "generated_original_path": "/workspace/generated_images/exec-49cb942e-972c-4cac-aa81-e93d27561d22.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_330-SE-idle-v01.json",
+  "request_file_sha256": "28f3f45f0e337ff10a533a6040220f1dea48c02ce84a5cdfd0c0490ea18da83e",
+  "generation_request_sha256": "8cc3c9f18665f9dffed5c5faa79bc6e570d3faa1e77e456517a9164ed80b8cd3",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "idle_1",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        655,
+        614
+      ],
+      "rgba_sha256": "ab2f8940be0a4b45c050342ec7b5750b3943b145886a4e82994187574d60115a"
+    },
+    {
+      "index": 1,
+      "region": [
+        655,
+        0,
+        655,
+        614
+      ],
+      "rgba_sha256": "cbe27f6d55bdfcf308b7876a9f77c5b205cbc0888a3baf987206ce6f815bbc12"
+    },
+    {
+      "index": 2,
+      "region": [
+        1310,
+        0,
+        655,
+        614
+      ],
+      "rgba_sha256": "c646c4a85a5ab19111cee40e529d24f817d1daa98f02b7168415701b2ba514e4"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        614,
+        655,
+        614
+      ],
+      "rgba_sha256": "6867bbf7e1a64aec4cd309a719e20c19f0c045450429d9795c22fbf2c09e2038"
+    },
+    {
+      "index": 4,
+      "region": [
+        655,
+        614,
+        655,
+        614
+      ],
+      "rgba_sha256": "8d4e570c0b490847cba69b835dbace3a061f962039812adf2d413b1872a40421"
+    },
+    {
+      "index": 5,
+      "region": [
+        1310,
+        614,
+        655,
+        614
+      ],
+      "rgba_sha256": "30cf10d893481aa0fb5d3c86077e1fcf2c406ade8be1211603b71679ae86342f"
+    }
+  ],
+  "clipped_cell_count": 4,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_330/draft001/SE-idle-record-v01.json",
+  "revision_parent_sha256": "cfc1b06d8bda60c77a1536d3c83a68541ab311afe4c5e33c5c8a74be43a61195",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_330/draft001/SE-idle-source-v01.png",
+  "raw_authored_source_sha256": "dac1284a4db772787dec6a92e8a369f1c3975563f1fb7eb86625cd206eaeb7ef",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        655,
+        614
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "region": [
+        655,
+        0,
+        655,
+        614
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "region": [
+        1310,
+        0,
+        655,
+        614
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        614,
+        655,
+        614
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "region": [
+        655,
+        614,
+        655,
+        614
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "region": [
+        1310,
+        614,
+        655,
+        614
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    655,
+    614
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      655,
+      1310,
+      1965
+    ],
+    "y": [
+      0,
+      614,
+      1228
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/SE-idle-source-v01-isolated.png",
+      "sha256": "91b0e6e89ba384c284e4c8a9176f4b182250e24f32265bb4a38071362697f5d1",
+      "bytes": 1928165,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
