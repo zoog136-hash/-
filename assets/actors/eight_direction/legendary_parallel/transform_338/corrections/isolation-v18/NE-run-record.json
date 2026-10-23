@@ -1,0 +1,312 @@
+{
+  "key": "transform:338",
+  "name": "그랑카인의 역린",
+  "grade": "전설",
+  "direction": "NE",
+  "role": "run",
+  "reference": "res://assets/catalog/fe823245b3bb47d25032af5d.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:338 그랑카인의 역린. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body NE RUN poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter rear NORTH-EAST, screen UP-RIGHT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Genuine articulated RUNNING CYCLE, never walking or attacking: frame0 anatomical LEFT foot contacts ground while RIGHT leg recovers; frame1 LEFT support compression and RIGHT knee forward swing; frame2 flight transition with RIGHT foot reaching; frame3 anatomical RIGHT foot contacts ground while LEFT leg recovers; frame4 RIGHT support compression and LEFT forward swing; frame5 flight transition with LEFT reaching toward frame0. Natural alternating support, real hip/knee/ankle changes and opposite arm counter-swing. Preserve original carried equipment safely, no weapon attack or casting. Same camera/body scale and common ground plane. If the original is inherently hovering, preserve that anatomy and create a genuine articulated forward flight cycle; do not invent limbs, wings, or feet hidden by the original garment. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH-EAST means diagonally AWAY toward the TOP-RIGHT screen corner: show the BACK of the head and costume plus the RIGHT side, not the face or chest front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/fe823245b3bb47d25032af5d.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 243,
+  "reference_sha256": "9fd4e015ee61eac96c7573428d6a59e5a242a3eb2520312965f5667eb8b6ed29",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+  "source_sha256": "a8a14eb74b60b87b82668e43221b2d78948e6ce565553f677c63b14e5f2ce022",
+  "source_bytes": 1739662,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-SpriteFrames.tres",
+  "output_spriteframes_sha256": "af5256d2b768cacbf3e1351025f4a34023e6376ab18ba427730449ea35ba4af8",
+  "generated_original_path": "/workspace/generated_images/exec-791bc074-0bb1-4083-a024-5e9d73db759f.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_338-NE-run-v01.json",
+  "request_file_sha256": "0180e69e60ee23b9bc729f2420e5c509bfe6774e981c1a01f6a995cb05ce2c83",
+  "generation_request_sha256": "cd88dcf70da1664a690e0928b3dc55310274f829dabab103ee425b7cc3e77164",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "run_7",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        691,
+        668
+      ],
+      "rgba_sha256": "69ff7ae3611a1cfbeea7aea81136b37db61f494bef11b8d150bb048b9795293a"
+    },
+    {
+      "index": 1,
+      "region": [
+        691,
+        0,
+        691,
+        668
+      ],
+      "rgba_sha256": "cb4d1f4e25751dbf19f4214f39e90d36aab9de813c30549a912657c2577fe911"
+    },
+    {
+      "index": 2,
+      "region": [
+        1382,
+        0,
+        691,
+        668
+      ],
+      "rgba_sha256": "9b93518a6948a8a0f1d62e73faf856ddefbef62aaec65d6967ac4048491634d3"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        668,
+        691,
+        668
+      ],
+      "rgba_sha256": "0340f1c5f18a273b0c7857ca5bc23736b0a7b45db1045413a18d82e3cf78e550"
+    },
+    {
+      "index": 4,
+      "region": [
+        691,
+        668,
+        691,
+        668
+      ],
+      "rgba_sha256": "a4c41720c0ac8234c5063e14df2178c0dd197c0b92a8b779ebeaa09f4a4de52f"
+    },
+    {
+      "index": 5,
+      "region": [
+        1382,
+        668,
+        691,
+        668
+      ],
+      "rgba_sha256": "f7b8f9a95c30dc49232ea450ee631bf83a33de2cfa74f3628ca40a0d0fc8f580"
+    }
+  ],
+  "clipped_cell_count": 3,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/NE-run-record-v01.json",
+  "revision_parent_sha256": "d0d7e68aa775d8f83dd404dffa613452b3c8a1a8c11d17318563f93b4bc5e033",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_338/draft001/NE-run-source-v01.png",
+  "raw_authored_source_sha256": "7a0b5f0c78ce83640a880380a66eb081f213682f9564a5c0e71467eba51c56c1",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        691,
+        668
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "region": [
+        691,
+        0,
+        691,
+        668
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "region": [
+        1382,
+        0,
+        691,
+        668
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "region": [
+        0,
+        668,
+        691,
+        668
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "region": [
+        691,
+        668,
+        691,
+        668
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "region": [
+        1382,
+        668,
+        691,
+        668
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    691,
+    668
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      691,
+      1382,
+      2073
+    ],
+    "y": [
+      0,
+      668,
+      1336
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_338/corrections/isolation-v18/NE-run-source-v01-isolated.png",
+      "sha256": "a8a14eb74b60b87b82668e43221b2d78948e6ce565553f677c63b14e5f2ce022",
+      "bytes": 1739662,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
