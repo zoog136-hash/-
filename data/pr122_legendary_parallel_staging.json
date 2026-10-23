@@ -45312,6 +45312,26 @@
               "kind": "ownership_execution_delta",
               "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch002-library-v01.json",
               "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:113",
+                "NE",
+                "attack"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-record-v02.json",
+              "record_sha256": "8e9ef41871e6dffbd76b7bc164d9cc1de7228d149fd4ea20507bb21825ce426a",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-SpriteFrames.tres",
+              "SpriteFrames_sha256": "05e4571da70a9bbecea504e1bc819b4ce070ce90d02cfc76a44784eac692af9e",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-raster-registration-v02.json",
+              "registration_sha256": "2e82232fc780521f8de5f6c1998293e2a6fc6fcc6c14ed256678a731371f7474",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc116",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "e9755a1c68d5eb41be18a01dd18e7e819048dc89d8c8e2635853d3f87c266a03",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
             }
           ]
         },
@@ -46137,6 +46157,26 @@
               "registration_sha256": "95abb0840f253d297db688a365443b66ae74d2ca1d26a592b534ed29d64090f8",
               "kind": "ownership_isolation",
               "manifest": "res://docs/remake/pr122-legendary-parallel/revision-library-isolation-v02.json",
+              "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:113",
+                "W",
+                "attack"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-record-v02.json",
+              "record_sha256": "4e0b0c3bc9727b58430ea8d898ddc658fa15422f1aeba200af8e739c790fafa0",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-SpriteFrames.tres",
+              "SpriteFrames_sha256": "647697768ab5fdc9bae29a153191d16c8e638802c7a5ed5651b4ebd2306fae71",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-raster-registration-v02.json",
+              "registration_sha256": "63d2bf24ae2022839095c33bada21471ea619d3ea73fde24bec0fd593f574d58",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc113",
+              "newly_authored_correction_poses": 4,
+              "reused_poses": 2,
+              "generated_source_sha256": "2a32f02f1eb18a72c3cafebbff37c8f86b039989f1a8d379b9873f5de1dd4985",
+              "kind": "bounded_quality_source",
               "quality_status": "HOLD"
             }
           ]
@@ -48384,6 +48424,26 @@
               "kind": "ownership_execution_delta",
               "manifest": "res://docs/remake/pr122-legendary-parallel/ownership-delta-batch001-library-v01.json",
               "quality_status": "HOLD"
+            },
+            {
+              "slot": [
+                "transform:1",
+                "S",
+                "attack"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-record-v02.json",
+              "record_sha256": "3690900e42658e67325658ebb210adf35925a5bd207b0a7e0cb679bd9e89b741",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-SpriteFrames.tres",
+              "SpriteFrames_sha256": "26ce9126cbfa4db759cd3668d1573e45021c6d3bb7767f7a28a022aca55dab26",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-raster-registration-v02.json",
+              "registration_sha256": "ce901f30351e2c222e494a60348bf745407cb2e5705aded70ca4fbd2acf9d10c",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc126",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "2e0c683d4ed9c75f02640c9f36f7636abdbb215adcc9b14c35454bbc645dd991",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
             }
           ]
         },
@@ -49011,8 +49071,8 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch305-v02.json",
-    "active_revision_library_sha256": "396a281be29fac573197be234791146a893f4207be0ce7b288460cbe99ef8a92",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch307-v02.json",
+    "active_revision_library_sha256": "273b41ac7e6fe4240cec176959768261ed3379e9e579f9774ba3914818238dc8",
     "final_approved": 0,
     "ownership_isolation": {
       "batches": [
@@ -49415,12 +49475,20 @@
           "successful_sources": 5,
           "blocked_sources": 0,
           "generation_retries": 0
+        },
+        {
+          "batch": 307,
+          "manifest": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch307-revision-library-v02.json",
+          "validation": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch307-affected-validation-v02.json",
+          "successful_sources": 3,
+          "blocked_sources": 0,
+          "generation_retries": 0
         }
       ],
-      "successful_sources": 73,
+      "successful_sources": 76,
       "blocked_sources": 7,
-      "newly_authored_correction_poses": 434,
-      "unattempted_sources": 46,
+      "newly_authored_correction_poses": 450,
+      "unattempted_sources": 43,
       "final_approved": 0
     },
     "semantic_registration": {

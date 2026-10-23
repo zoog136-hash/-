@@ -1,0 +1,72 @@
+{
+  "key": "transform:1",
+  "name": "드래곤 슬레이어",
+  "grade": "전설",
+  "direction": "S",
+  "role": "attack",
+  "reference": "res://assets/catalog/1438e0d431040e79f73ef780.png",
+  "reference_sha256": "c5a8a907f090a012e7043c5689be93cfe15e4f8730cda5c4d73efb94531b3747",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc126",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-source-v01.png",
+  "previous_source_sha256": "f9d0898d323a7f3c2253c13742e3f1f53496c882596ee2d7dfd4bdc25764ab79",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-record-v01.json",
+  "previous_record_sha256": "f3aa9a0d91de01f0afdf617b633b7097fa6e98c0ff10f9f90f69433682d9a790",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "1",
+    "direction": "S",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-run-source-v01.png",
+    "sha256": "ad93b80b2b1f6c07ddbefe5454be132692da4ee6a443ca8fdf9a49a772dd7029",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "1",
+      "direction": "S",
+      "role": "attack",
+      "cause": "identity_weapon_action",
+      "detail": "S request asserts an enormous greatsword and the generated clip adds it; E request identifies the original actor as unarmed and no enormous sword appears in the catalog reference. Preserve the catalog identity and use the verified unarmed attack class.",
+      "fix_kind": "source_equipment_action",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-attack-record-v01.json",
+      "source_sha256": "f9d0898d323a7f3c2253c13742e3f1f53496c882596ee2d7dfd4bdc25764ab79",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0272",
+      "slot": [
+        "transform:1",
+        "S",
+        "attack"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:1 드래곤 슬레이어, S ATTACK. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"identity_weapon_action\", \"detail\": \"S request asserts an enormous greatsword and the generated clip adds it; E request identifies the original actor as unarmed and no enormous sword appears in the catalog reference. Preserve the catalog identity and use the verified unarmed attack class.\"}]. MANDATORY CAMERA IN EVERY CELL: full FRONT, screen DOWN. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Actual original-weapon attack: guard, anticipation, full windup/aim, active strike/shot/cast EXACTLY along the selected screen-facing direction, follow-through, living guard. Bow nock/draw/release; firearm aim/fire/recoil; real polearm thrust; blade cut; original magical cast. Never invent or replace weapons or use an unrelated attack type. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. WEAPON/ACTION IDENTITY CORRECTION: preserve exactly the catalog original weapon and its real attack system; never replace it with a generic magic cast or unrelated weapon. Original transform:1 is UNARMED. Do not invent an enormous greatsword or any weapon. Use original connected unarmed strikes with the same catalog anatomy and armor. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/1438e0d431040e79f73ef780.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/1438e0d431040e79f73ef780.png": "c5a8a907f090a012e7043c5689be93cfe15e4f8730cda5c4d73efb94531b3747",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_1/draft001/S-run-source-v01.png": "ad93b80b2b1f6c07ddbefe5454be132692da4ee6a443ca8fdf9a49a772dd7029"
+  },
+  "request_preparation_clarification": "Exact frozen identity finding resolves the action class before any tool call; earlier unexecuted prepared request remains preserved."
+}

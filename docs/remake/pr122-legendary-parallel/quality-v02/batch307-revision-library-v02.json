@@ -1,0 +1,80 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "revisions": [
+    {
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-record-v02.json",
+      "record_sha256": "4e0b0c3bc9727b58430ea8d898ddc658fa15422f1aeba200af8e739c790fafa0",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "647697768ab5fdc9bae29a153191d16c8e638802c7a5ed5651b4ebd2306fae71",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-raster-registration-v02.json",
+      "registration_sha256": "63d2bf24ae2022839095c33bada21471ea619d3ea73fde24bec0fd593f574d58",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION",
+      "correction_candidate_id": "qc113",
+      "newly_authored_correction_poses": 4,
+      "reused_poses": 2,
+      "generated_source_sha256": "2a32f02f1eb18a72c3cafebbff37c8f86b039989f1a8d379b9873f5de1dd4985"
+    },
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-record-v02.json",
+      "record_sha256": "8e9ef41871e6dffbd76b7bc164d9cc1de7228d149fd4ea20507bb21825ce426a",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "05e4571da70a9bbecea504e1bc819b4ce070ce90d02cfc76a44784eac692af9e",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-raster-registration-v02.json",
+      "registration_sha256": "2e82232fc780521f8de5f6c1998293e2a6fc6fcc6c14ed256678a731371f7474",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION",
+      "correction_candidate_id": "qc116",
+      "newly_authored_correction_poses": 6,
+      "reused_poses": 0,
+      "generated_source_sha256": "e9755a1c68d5eb41be18a01dd18e7e819048dc89d8c8e2635853d3f87c266a03"
+    },
+    {
+      "slot": [
+        "transform:1",
+        "S",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-record-v02.json",
+      "record_sha256": "3690900e42658e67325658ebb210adf35925a5bd207b0a7e0cb679bd9e89b741",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "26ce9126cbfa4db759cd3668d1573e45021c6d3bb7767f7a28a022aca55dab26",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-raster-registration-v02.json",
+      "registration_sha256": "ce901f30351e2c222e494a60348bf745407cb2e5705aded70ca4fbd2acf9d10c",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION",
+      "correction_candidate_id": "qc126",
+      "newly_authored_correction_poses": 6,
+      "reused_poses": 0,
+      "generated_source_sha256": "2e0c683d4ed9c75f02640c9f36f7636abdbb215adcc9b14c35454bbc645dd991"
+    }
+  ],
+  "dependency_required_slots": [
+    [
+      "transform:113",
+      "W",
+      "attack"
+    ],
+    [
+      "transform:113",
+      "NE",
+      "attack"
+    ],
+    [
+      "transform:1",
+      "S",
+      "attack"
+    ]
+  ],
+  "excluded_slots": [],
+  "quality_status": "HOLD",
+  "final_approved": 0
+}
