@@ -1,0 +1,366 @@
+{
+  "key": "transform:113",
+  "name": "달의 질리언",
+  "grade": "전설",
+  "direction": "N",
+  "role": "run",
+  "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+  "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc109",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-run-source-v01.png",
+  "previous_source_sha256": "8aac5cc78fee23144c828ef1ca9606cd1c0f61bdb1e7cb4448f2532b75a35c22",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-run-record-v01.json",
+  "previous_record_sha256": "6a393a3decfbb2afea1c0b685b126d74307a48851002dd6945acb3e891fb4e0c",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "CORRECTED_SOURCE_DRAFT_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "113",
+    "direction": "N",
+    "role": "attack",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-attack-source-v01.png",
+    "sha256": "a0e519a89edcd062c784943049768bf5507beef20378e259194b356a46c7c802",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "113",
+      "direction": "N",
+      "role": "run",
+      "cause": "camera",
+      "detail": "Face/chest frontal poses persist in a rear-facing slot; HIT changes camera between its endpoints and middle.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-run-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-run-record-v01.json",
+      "source_sha256": "8aac5cc78fee23144c828ef1ca9606cd1c0f61bdb1e7cb4448f2532b75a35c22",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0234",
+      "slot": [
+        "transform:113",
+        "N",
+        "run"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:113 달의 질리언, N RUN. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Face/chest frontal poses persist in a rear-facing slot; HIT changes camera between its endpoints and middle.\"}]. MANDATORY CAMERA IN EVERY CELL: full BACK, screen UP, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six genuinely articulated RUN poses: LEFT contact, LEFT support compression/RIGHT forward swing, flight/RIGHT reaching, RIGHT contact, RIGHT compression/LEFT forward swing, flight/LEFT reaching. Alternate anatomical legs with real hip/knee/ankle changes, stable ground contact and opposite arm counter-swing. No walking, attack or translated still. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-attack-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8e92f489ef86a806894b9855.png": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_113/draft001/N-attack-source-v01.png": "a0e519a89edcd062c784943049768bf5507beef20378e259194b356a46c7c802"
+  },
+  "schema": "pr122-legendary-bounded-quality-correction-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-run-source-v02.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-run-source-v02.png",
+  "source_sha256": "812490ab31a36ad50ffb9210abef4e9bb38217c2af38acbd7018388bbe951b9e",
+  "source_bytes": 2069194,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-run-source-v02.png",
+      "sha256": "812490ab31a36ad50ffb9210abef4e9bb38217c2af38acbd7018388bbe951b9e",
+      "bytes": 2069194,
+      "source_kind": "new_bounded_correction"
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "7d916617c80ddb42179b22700e03d72344097da9b84d2af63d77f9dca45c215b",
+      "normalized_visible_sha256": "790921a55f4622beae560c937e608b0e27f30382e9eb23056530e77ed90158e0",
+      "visible_pixels": 50529,
+      "visible_height": 485,
+      "visible_width": 455,
+      "alpha_bbox_in_region": [
+        57,
+        9,
+        512,
+        494
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "9b0ac2801a8815aad3ecdf1555ddd8bc5960de0bf05410649250bb8fbae8d7e6",
+      "normalized_visible_sha256": "5ee2d86c48c8733f847b07fc0a9ba6f4015bddb92e75e3765ed2b81b040b76a5",
+      "visible_pixels": 52248,
+      "visible_height": 491,
+      "visible_width": 511,
+      "alpha_bbox_in_region": [
+        1,
+        21,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "061d40e5327b61e121e617038609f702e3c4891bf1da4ec6d9eaca93dd18edd0",
+      "normalized_visible_sha256": "d6b4ccd1e70b5616d97f698c8682382409d3cad217431c9f6288d3915d04efee",
+      "visible_pixels": 57026,
+      "visible_height": 487,
+      "visible_width": 485,
+      "alpha_bbox_in_region": [
+        13,
+        23,
+        498,
+        510
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "source_kind": "new",
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "9fbc0bbef8a9b6def9c81f553cd77a6e27ce3af82753ef28e2fc7417dd9bdd54",
+      "normalized_visible_sha256": "7c812858e584faf24c6ccc6f7db12af151eb93f0576d3d44639591a38e9af136",
+      "visible_pixels": 50550,
+      "visible_height": 465,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        1,
+        512,
+        466
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "6ed4421feb03ec811af871e0b7581d535263acea565ac1d6eb47db155d6d182b",
+      "normalized_visible_sha256": "abc404e79c00184f304a18eeebbde1cc4092b18b029427fe6e070e8ea924b6a6",
+      "visible_pixels": 56072,
+      "visible_height": 493,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        493
+      ],
+      "border_alpha_pixels": 44,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "source_kind": "new",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "e5937855977b7001256376ddc3a164125821fa7cfee16c227e8213e07987c582",
+      "normalized_visible_sha256": "d29fb2a245bae15b8fade95cf6a0d28514b80df4b00a088dd9612d5125fb67b9",
+      "visible_pixels": 53365,
+      "visible_height": 511,
+      "visible_width": 508,
+      "alpha_bbox_in_region": [
+        0,
+        1,
+        508,
+        512
+      ],
+      "border_alpha_pixels": 37,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "cell_size": [
+    512,
+    512
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-run-SpriteFrames.tres",
+  "output_spriteframes_sha256": "bdeaf17a7eb6e49a0c8c61b1142f0c9bfd331aa69ff3cea24645fea76e80e7d8",
+  "animation": "run_6",
+  "loop": true,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-run-raster-registration-v02.json",
+  "request_file_sha256": "c87b2b5e432d9dcaed05d80d329ccbf01670e20df7b6d2c878c1480fdc280ad9",
+  "generation_request_sha256": "4c4c8c4e180956a4f73fdc4f2b010337971119588ed19f0c0b5915a6764497be",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-8fc9a5ef-4edc-4e35-88b5-1f8aa08be0d1.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED"
+}
