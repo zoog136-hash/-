@@ -3,7 +3,7 @@ extends SceneTree
 const REVEAL = preload("res://scripts/ui/option_awakening_reveal.gd")
 const BORDER = preload("res://scripts/ui/option_awakening_border.gd")
 const AURA = preload("res://scripts/animation/option_awakening_aura.gd")
-var failures: int = 0
+var failures: Array[String] = []
 var checks: int = 0
 var capture_dir: String = ""
 
@@ -16,7 +16,7 @@ func _initialize() -> void:
 func check(condition: bool, label: String) -> void:
 	checks += 1
 	if not condition:
-		failures += 1
+		failures.append(label)
 		push_error("OPTION_VFX_FAIL: " + label)
 
 func _capture(filename: String) -> void:
@@ -147,8 +147,10 @@ func _run() -> void:
 	status.queue_free()
 	await process_frame
 	await _check_field_anchors()
-	print("OPTION_AWAKENING_VFX checks=%d failures=%d" % [checks, failures])
-	quit(0 if failures == 0 else 1)
+	print("OPTION_AWAKENING_VFX checks=%d failures=%d" % [checks, failures.size()])
+	print("OPTION_AWAKENING_VFX_RESULT " + JSON.stringify({"checks":checks, "failures":failures}))
+	if failures.is_empty(): print("OPTION_AWAKENING_VFX_OK")
+	quit(0 if failures.is_empty() else 1)
 
 func _check_field_anchors() -> void:
 	var image := Image.create(40, 60, false, Image.FORMAT_RGBA8)

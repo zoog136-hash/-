@@ -75,6 +75,11 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
     if name == 'eight_interactions_test':
         # Real UI events plus repeated complete floor/inventory save-load cycles.
         return max(requested, 300)
+    if name == 'aden_faith_png_monster_spawns_test':
+        # All five real maps, nine boss save/death/respawn lifecycles and a
+        # fresh Main restart passed 1,261 assertions in 166.5 seconds. Keep
+        # every assertion while allowing this audit more than the 150s default.
+        return max(requested, 300)
     if name == 'ground_loot_system_test':
         # The unchanged 166-check full GUI/physics/save/loot suite completed
         # in ~112 seconds in its dedicated workflow, but exceeded the generic

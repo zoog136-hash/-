@@ -194,4 +194,6 @@ func _finish() -> void:
 	if is_instance_valid(world): world.queue_free()
 	await process_frame
 	print("OPTION_AWAKENING_FIELD: %d/%d passed" % [checks - failures.size(), checks])
+	print("OPTION_AWAKENING_FIELD_RESULT " + JSON.stringify({"checks":checks, "failures":failures}))
+	if failures.is_empty(): print("OPTION_AWAKENING_FIELD_OK")
 	quit(0 if failures.is_empty() else 1)

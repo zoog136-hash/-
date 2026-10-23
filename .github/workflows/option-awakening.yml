@@ -41,6 +41,7 @@ jobs:
           python3 tools/test_project.py \
             --godot "$PWD/Godot_v4.7.2-stable_linux.x86_64" \
             --logs option-awakening-results \
+            --no-ci-synthetic-fixtures \
             --only import,bake_navigation,boot,card_draw_fusion_test,card_pack_items_test,option_awakening_service_test,option_awakening_world_test,option_awakening_ui_test,option_awakening_vfx_test,option_awakening_field_render_test
       - name: Upload validation evidence
         if: always()
