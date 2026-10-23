@@ -1,3 +1,9 @@
+> **2026-10-23 보스 실제 보완 제작:** 일반258종은 현재 runtime 프레임 누락0(기존WALK→RUN재사용2,064건 포함), 프로필/분류행258개와 기존몬스터자산642개 SHA불변. 보스4종 전용 새원화98PNG(실패포함)를 실제생성하고 선택117클립/401고유RGBA포즈를연결했다. 알비노데몬33/107·좀비로드33/116·얼음여왕통합32/102·커츠19/76. 최신4종실제DB속도/scale의Godot4.7.2 llvmpipe정속재생117클립/612화면확인, 미완성15슬롯=여왕N RUN1+커츠14. 원형·방향·S지지교대·도끼손등보완했으나남은camera/반복지지/무기접촉결함은HOLD, 신규승인/기본카탈로그교체0. 이전승인일반221/잔여37·보스43/잔여17보존. 새선택ledger는 `data/pr122_monster_boss_repair_staging.json`; 이전불량N을자동혼합하지않는다. 전체결과: `docs/remake/PR122_BOSS_REPAIR_20261023.md`, `docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/session-summary.json`. 다음은보스의확인된HOLD를보완하며일반외형재심사는하지않는다.**
+
+> **2026-10-23 최신 검토 지시(기승인 포함): 일반258종은 프레임 누락만 재확인한다. 일반의 외형·접지·동작 품질을 재심사하거나 과거 시각 HOLD로 이번 프레임 검사를 막지 않는다. 보스60종은 기승인43종을 포함해 신화 수준 품질을 실제 원형/프레임으로 재점검한다. 기존 승인·자산은 보존하고 재점검 판정은 별도로 기록한다. 채팅 이미지/Base64 출력 금지는 유지한다. 정책: `data/pr122_monster_review_scope.json`.**
+
+> **재점검 완료:** 일반258종(기승인221 포함) runtime 필수8,514요청 누락/프레임오류0 — 기존WALK→RUN재사용2,064건 포함. 별도 신규staging10항목은 필수33클립을 갖췄으며 놀31·알비노몽크32클립은 아직 미제작이다. 보스60종(기승인43 포함) 시각 재점검은 재제작후보48/HOLD9/시각통과3이며, 기승인43종만 보면 후보31/HOLD9/통과3이다. 기존승인·제작상태 변경0, 신규승인0. 보스 Godot 필수1,980요청 누락0/가속headless 실제재생2,400건 실패0이며 실제Main 타격접촉·타이밍 최종승인과 구분한다. 새 얼음여왕RUN48포즈는 반대발지지·NE카메라가 미확정으로 별도HOLD. 상세: `docs/remake/PR122_MONSTER_RECHECK_20261023.md`, `docs/remake/evidence/pr122-monsters-20261023/review-summary.json`.
+
 # TWILIGHT PR #122 새 대화 인계 — 이미지 출력 절대 금지
 
 > **최신 활성 제작 범위 (2026-10-23): 19종 = 유일2 + 신화17. 상세 승인2/19, 잔여17종.** 기존 31종/2·31/29종 표기는 제외 12종이 들어 있던 과거 기록이며 현재 제작 분모로 사용하지 않는다. `docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json`을 19종으로 갱신했다. 기존 사망 원화·인증·SHA 전부 보존. 제외 12종의 게임 카탈로그 필터는 별도 브랜치에 있어 아직 이 PR 런타임에 미통합이다. 정확한 범위는 `docs/remake/PR122_ACTIVE_DETAILED_SCOPE_19.md`를 따른다.
@@ -776,3 +782,7 @@
 - First-pass production checkpoint: 399,367 N ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new N ATTACK drafts 4/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:399", "poses": 6, "clipped_cells": 4}, {"key": "transform:367", "poses": 6, "clipped_cells": 4}]. Continue transform:346 without draft polishing.
 
 - First-pass production checkpoint: 346,242 N ATTACK six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new N ATTACK drafts 6/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:346", "poses": 6, "clipped_cells": 3}, {"key": "transform:242", "poses": 6, "clipped_cells": 5}]. Continue transform:224 without draft polishing.
+- 몬스터 batch06: 로머/에스카로스치프 동일원화·region·body·전투/신장근거확인. 새로운공용오크대장5PNG91고유자세/33클립과무색변경2프로필 제작. 두profile Godot4.7.2 각33클립91자세/NPC124 RUN/Sdeath8방향끝자세PASS. 공유후보를고유원화·신규승인으로중복계산하지않음, identity/support/contact/Main HOLD.
+- 몬스터 batch07: 알비노몽크SW RUN6 신규1PNG/1클립6자세 strict기하/whole-source 및Godot실재생/발캔버스/무미러PASS. 기존128원화·WALK/다방향DEATH유지. 실제지지교대·방향·원형·groundplane/Main미검토HOLD, 추가승인0.
+
+- 몬스터 batch05: 같은원화공용일반악마4종(오만의탑공포의악마/마계악마전사/교만제노사이더/탐욕코아쿡) 새9PNG 전부보존, 선택8/실패1(E/SE전투bbox;방향별재제작해소). 공용33클립91고유자세, base1+무색변경adapter3. Godot4.7.2 각4바인딩×33클립 actualActorMotion/NPC124/전체프레임/Sdeath8헤딩종단PASS. 개별identity/hand/direction/support/contact/Main은HOLD, 공유후보를개별고유원화·신규승인으로중복계산하지않음.

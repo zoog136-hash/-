@@ -1,0 +1,84 @@
+{
+  "schema": "pr122-boss-repair-queue-v1",
+  "review_source_commit": "88516cfcb303b9c8f288abf72d1cc477aed62ebf",
+  "quality_tier": "mythic_transform",
+  "work_queue": [
+    {
+      "key": "monster:얼음 여왕",
+      "status": "SOURCE_QUALITY_HOLD",
+      "reason": "Fix anatomical alternating support, NE camera and unify scale before other dedicated roles.",
+      "batch": "boss-fix01-queen",
+      "selected_clips": 32,
+      "selected_unique_poses": 102,
+      "missing_required_tracks": [
+        "run_6"
+      ],
+      "hold_reason": "N RUN 미선택. N 의상/slit 좌우 연속성, 일부 사선 카메라·실제 지지/접촉 검토 잔여.",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r001/NativeMotionProfile.tres",
+      "production_connected": false
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "status": "SOURCE_QUALITY_HOLD",
+      "reason": "Restore huge belly/chains/body weight from project reference.",
+      "batch": "boss-fix02-zombie-lord",
+      "selected_clips": 33,
+      "selected_unique_poses": 116,
+      "missing_required_tracks": [],
+      "hold_reason": "S 지지 교대는 보완. E 등 일부 RUN의 같은 다리 반복/가려진 지지 교대가 남음.",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/NativeMotionProfile.tres",
+      "production_connected": false
+    },
+    {
+      "key": "monster:알비노 데몬",
+      "status": "SOURCE_QUALITY_HOLD",
+      "reason": "Replace lava-golem proxy with dedicated horned axe demon anatomy.",
+      "batch": "boss-fix03-albino-demon",
+      "selected_clips": 33,
+      "selected_unique_poses": 107,
+      "missing_required_tracks": [],
+      "hold_reason": "S 지지·NW 오른손 도끼 보완. E의 SE성 몸통/같은 지지발, NW 공격 접촉·일부 방향 검토 잔여.",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/NativeMotionProfile.tres",
+      "production_connected": false
+    },
+    {
+      "key": "monster:커츠",
+      "status": "SOURCE_QUALITY_HOLD",
+      "reason": "Restore massive spiked armor/red cape/greatsword identity.",
+      "batch": "boss-fix04-kurtz",
+      "selected_clips": 19,
+      "selected_unique_poses": 76,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3"
+      ],
+      "hold_reason": "필수14클립 미제작. W/NW 카메라 및 일부 공격손·지지/접촉 검토 잔여.",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r002/NativeMotionProfile.tres",
+      "production_connected": false
+    }
+  ],
+  "source_authoring_does_not_grant_approval": true,
+  "default_catalog_switches": 0,
+  "new_approvals": 0,
+  "selected_clips": 117,
+  "selected_unique_poses": 401,
+  "actual_new_raw_PNGs_including_failures": 98,
+  "next_focus": [
+    "monster:얼음 여왕 N RUN 및N 의상좌우",
+    "monster:커츠 미제작14클립 및W/NW카메라",
+    "monster:알비노 데몬 E 카메라·지지반복",
+    "monster:죽음의 좀비 로드 E 등RUN 지지반복"
+  ]
+}

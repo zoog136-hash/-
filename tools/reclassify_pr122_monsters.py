@@ -57,7 +57,12 @@ def build(root):
             table = read(ledger)
             actors = table.get('actors', {})
             for key, actor in actors.items():
-                staged_parts.setdefault(key, []).append(actor)
+                if actor.get('replaces_previous_staging_selection') is True:
+                    # Old sources remain in their immutable ledgers. A reviewed
+                    # boss selection must not silently inherit a rejected view.
+                    staged_parts[key] = [actor]
+                else:
+                    staged_parts.setdefault(key, []).append(actor)
             for key, adapter in table.get('family_adapters', {}).items():
                 source = actors[adapter['source_actor']]
                 staged_parts.setdefault(key, []).append(dict(source, **{
@@ -107,7 +112,8 @@ def build(root):
             'spawn_evidence': spawn_evidence.get(name, []),
             'preserved_status': old['production_status'], 'production_status': production_status,
             'queue': queue, 'priority': 0 if old['production_status'] == 'IN_PROGRESS' else (1 if old['production_status'] == 'SOURCE_HOLD' else 2),
-            'reason': old['reason'], 'frames_path': profile.get('frames_path', ''),
+            'reason': staged[key]['quality_review'] if key in staged else old['reason'],
+            'historical_reason_preserved': old['reason'], 'frames_path': profile.get('frames_path', ''),
             'runtime_proxy': bool(profile.get('shared_visual_source')),
             'shared_visual_source': profile.get('shared_visual_source'),
             'shared_frames_binding_count': binding_counts[profile.get('frames_path')],
@@ -126,6 +132,16 @@ def build(root):
                          'statuses': dict(Counter(row['production_status'] for row in rows))}
     pins = [STATUS, COVERAGE, 'data/monsters/monster_world_catalog.json',
             'data/monsters/world_spawn_profiles.json', 'data/catalog_v19.json']
+    review_scope_path = root / 'data/pr122_monster_review_scope.json'
+    review_scope = json.loads(review_scope_path.read_text()) if review_scope_path.is_file() else None
+    if review_scope is not None:
+        assert review_scope['include_previously_approved'] is True
+        assert review_scope['normal']['review'] == 'frame_integrity_only'
+        assert review_scope['boss']['review'] == 'mythic_quality'
+        pins.append(review_scope_path.relative_to(root).as_posix())
+        for row in result:
+            row['current_review_requirement'] = 'frame_integrity_only' if row['kind'] == 'normal' else 'mythic_quality'
+            row['historical_visual_holds_block_current_review'] = row['kind'] == 'boss'
     if index_path.is_file():
         pins.append(index_path.relative_to(root).as_posix())
         pins.extend(json.loads(index_path.read_text())['staging_ledgers'])
@@ -141,6 +157,7 @@ def build(root):
         'summary': summary, 'monsters': result,
         'evidence_pins': [{'path': path, 'sha256': hashlib.sha256((root / path).read_bytes()).hexdigest()} for path in pins],
         'quality_audit_limit': 'DB/spawn and runtime binding screen only. Existing approvals are preserved; no new visual approval is inferred.',
+        'current_review_scope': review_scope,
     }
 
 

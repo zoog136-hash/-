@@ -1,0 +1,519 @@
+{
+  "schema": "pr122-demon-E-original-2D-joint-guide-v1",
+  "guide_is_new_code_drawn_diagram": true,
+  "source_art_pixels_edited": false,
+  "image_size": [
+    1536,
+    1024
+  ],
+  "layout": [
+    2,
+    3
+  ],
+  "camera": "exact RIGHT-facing side profile; all head/shoulder/pelvis projections fixed",
+  "near_RIGHT": "blue skeleton, owns axe",
+  "far_LEFT": "red skeleton, empty claw",
+  "playback_source_slots": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "poses": [
+    {
+      "source_slot": 0,
+      "support": "anatomical_RIGHT_near",
+      "stage": "toeplant",
+      "root": [
+        350,
+        190
+      ],
+      "ground_y": 303,
+      "near_RIGHT_blue_joints": {
+        "hip": [
+          350,
+          190
+        ],
+        "knee": [
+          387,
+          242
+        ],
+        "ankle": [
+          409,
+          293
+        ],
+        "heel": [
+          394,
+          303
+        ],
+        "toe": [
+          436,
+          303
+        ]
+      },
+      "far_LEFT_red_joints": {
+        "hip": [
+          350,
+          190
+        ],
+        "knee": [
+          300,
+          234
+        ],
+        "ankle": [
+          273,
+          259
+        ],
+        "heel": [
+          264,
+          263
+        ],
+        "toe": [
+          302,
+          270
+        ]
+      },
+      "near_RIGHT_axe_arm": [
+        [
+          361,
+          120
+        ],
+        [
+          404,
+          163
+        ],
+        [
+          455,
+          163
+        ]
+      ],
+      "far_LEFT_empty_arm": [
+        [
+          352,
+          120
+        ],
+        [
+          317,
+          155
+        ],
+        [
+          307,
+          190
+        ]
+      ]
+    },
+    {
+      "source_slot": 1,
+      "support": "anatomical_LEFT_far",
+      "stage": "toeplant",
+      "root": [
+        1118,
+        190
+      ],
+      "ground_y": 303,
+      "near_RIGHT_blue_joints": {
+        "hip": [
+          1118,
+          190
+        ],
+        "knee": [
+          1068,
+          234
+        ],
+        "ankle": [
+          1041,
+          259
+        ],
+        "heel": [
+          1032,
+          263
+        ],
+        "toe": [
+          1070,
+          270
+        ]
+      },
+      "far_LEFT_red_joints": {
+        "hip": [
+          1118,
+          190
+        ],
+        "knee": [
+          1155,
+          242
+        ],
+        "ankle": [
+          1177,
+          293
+        ],
+        "heel": [
+          1162,
+          303
+        ],
+        "toe": [
+          1204,
+          303
+        ]
+      },
+      "near_RIGHT_axe_arm": [
+        [
+          1129,
+          120
+        ],
+        [
+          1172,
+          163
+        ],
+        [
+          1223,
+          163
+        ]
+      ],
+      "far_LEFT_empty_arm": [
+        [
+          1120,
+          120
+        ],
+        [
+          1085,
+          155
+        ],
+        [
+          1075,
+          190
+        ]
+      ]
+    },
+    {
+      "source_slot": 2,
+      "support": "anatomical_RIGHT_near",
+      "stage": "midstance",
+      "root": [
+        350,
+        531
+      ],
+      "ground_y": 644,
+      "near_RIGHT_blue_joints": {
+        "hip": [
+          350,
+          531
+        ],
+        "knee": [
+          350,
+          587
+        ],
+        "ankle": [
+          344,
+          635
+        ],
+        "heel": [
+          325,
+          644
+        ],
+        "toe": [
+          368,
+          644
+        ]
+      },
+      "far_LEFT_red_joints": {
+        "hip": [
+          350,
+          531
+        ],
+        "knee": [
+          415,
+          548
+        ],
+        "ankle": [
+          389,
+          590
+        ],
+        "heel": [
+          380,
+          594
+        ],
+        "toe": [
+          420,
+          596
+        ]
+      },
+      "near_RIGHT_axe_arm": [
+        [
+          361,
+          461
+        ],
+        [
+          404,
+          504
+        ],
+        [
+          455,
+          504
+        ]
+      ],
+      "far_LEFT_empty_arm": [
+        [
+          352,
+          461
+        ],
+        [
+          317,
+          496
+        ],
+        [
+          307,
+          531
+        ]
+      ]
+    },
+    {
+      "source_slot": 3,
+      "support": "anatomical_LEFT_far",
+      "stage": "midstance",
+      "root": [
+        1118,
+        531
+      ],
+      "ground_y": 644,
+      "near_RIGHT_blue_joints": {
+        "hip": [
+          1118,
+          531
+        ],
+        "knee": [
+          1183,
+          548
+        ],
+        "ankle": [
+          1157,
+          590
+        ],
+        "heel": [
+          1148,
+          594
+        ],
+        "toe": [
+          1188,
+          596
+        ]
+      },
+      "far_LEFT_red_joints": {
+        "hip": [
+          1118,
+          531
+        ],
+        "knee": [
+          1118,
+          587
+        ],
+        "ankle": [
+          1112,
+          635
+        ],
+        "heel": [
+          1093,
+          644
+        ],
+        "toe": [
+          1136,
+          644
+        ]
+      },
+      "near_RIGHT_axe_arm": [
+        [
+          1129,
+          461
+        ],
+        [
+          1172,
+          504
+        ],
+        [
+          1223,
+          504
+        ]
+      ],
+      "far_LEFT_empty_arm": [
+        [
+          1120,
+          461
+        ],
+        [
+          1085,
+          496
+        ],
+        [
+          1075,
+          531
+        ]
+      ]
+    },
+    {
+      "source_slot": 4,
+      "support": "anatomical_RIGHT_near",
+      "stage": "toeoff",
+      "root": [
+        350,
+        873
+      ],
+      "ground_y": 986,
+      "near_RIGHT_blue_joints": {
+        "hip": [
+          350,
+          873
+        ],
+        "knee": [
+          316,
+          922
+        ],
+        "ankle": [
+          285,
+          965
+        ],
+        "heel": [
+          268,
+          966
+        ],
+        "toe": [
+          307,
+          986
+        ]
+      },
+      "far_LEFT_red_joints": {
+        "hip": [
+          350,
+          873
+        ],
+        "knee": [
+          423,
+          898
+        ],
+        "ankle": [
+          437,
+          944
+        ],
+        "heel": [
+          426,
+          952
+        ],
+        "toe": [
+          466,
+          953
+        ]
+      },
+      "near_RIGHT_axe_arm": [
+        [
+          361,
+          803
+        ],
+        [
+          404,
+          846
+        ],
+        [
+          455,
+          846
+        ]
+      ],
+      "far_LEFT_empty_arm": [
+        [
+          352,
+          803
+        ],
+        [
+          317,
+          838
+        ],
+        [
+          307,
+          873
+        ]
+      ]
+    },
+    {
+      "source_slot": 5,
+      "support": "anatomical_LEFT_far",
+      "stage": "toeoff",
+      "root": [
+        1118,
+        873
+      ],
+      "ground_y": 986,
+      "near_RIGHT_blue_joints": {
+        "hip": [
+          1118,
+          873
+        ],
+        "knee": [
+          1191,
+          898
+        ],
+        "ankle": [
+          1205,
+          944
+        ],
+        "heel": [
+          1194,
+          952
+        ],
+        "toe": [
+          1234,
+          953
+        ]
+      },
+      "far_LEFT_red_joints": {
+        "hip": [
+          1118,
+          873
+        ],
+        "knee": [
+          1084,
+          922
+        ],
+        "ankle": [
+          1053,
+          965
+        ],
+        "heel": [
+          1036,
+          966
+        ],
+        "toe": [
+          1075,
+          986
+        ]
+      },
+      "near_RIGHT_axe_arm": [
+        [
+          1129,
+          803
+        ],
+        [
+          1172,
+          846
+        ],
+        [
+          1223,
+          846
+        ]
+      ],
+      "far_LEFT_empty_arm": [
+        [
+          1120,
+          803
+        ],
+        [
+          1085,
+          838
+        ],
+        [
+          1075,
+          873
+        ]
+      ]
+    }
+  ],
+  "PNG_sha256": "d0c11e9f8a1247282188db6b785d4e5170e4d14f76e8b600c330f7bf4acde946"
+}

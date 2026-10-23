@@ -1,0 +1,47 @@
+{
+  "name": "queen-combat-N-v02",
+  "actor": "monster:얼음 여왕",
+  "direction": "N",
+  "rows": 7,
+  "axis": "phase_grid2",
+  "source_grid": [
+    2,
+    4
+  ],
+  "clips": {
+    "idle": [
+      0,
+      1
+    ],
+    "attack": [
+      2,
+      3,
+      4
+    ],
+    "hit": [
+      5,
+      6
+    ]
+  },
+  "reference_rows": [
+    0,
+    1
+  ],
+  "canvas_size": 2048,
+  "attack_contact_source_slot": 3,
+  "attack_contact_clip_index": 1,
+  "request": {
+    "prompt": "Create NEW dedicated MYTHIC-BOSS-quality hand-painted dark fantasy isometric RPG animation source for the SAME adult ICE QUEEN in the supplied exact project artwork and the supplied matching RUN source. Preserve her pale adult face, long SILVER HAIR, ornate SILVER CROWN, fitted BLACK-and-GOLD breastplate armor, long VIOLET-BLACK gown, exactly TWO enormous VIOLET feather wings solidly attached to her back, exactly ONE purple-and-gold staff gripped by anatomical LEFT hand. Anatomical RIGHT upper thigh alone is pale and exposed by the gown slit; LEFT thigh is covered by dark stocking/fabric. TWO arms and TWO clearly anatomically connected legs and boots. Same crown, feather structure, clothing ornamentation and mature proportions as reference, no redesign, extra wings, horn substitution or staff-side swap. Show full crown, both wings, entire staff head/shaft/foot, hem and both boots. Fine detailed painted sprite art. Exact NORTH rear view, show her back and both wing roots, crown back and silver hair; face/chest/boots point UP away from viewer. Anatomical LEFT staff hand on screen LEFT. Staff contact thrusts UP away from viewer, partially behind torso with plausible occlusion. Do not turn to front or reveal frontal breastplate. EXACTLY SEVEN newly articulated complete character figures in a TWO-COLUMN FOUR-ROW grid, reading left-to-right top-to-bottom. Slot0 top-left IDLE neutral grounded stance: feet planted, staff rests at her left side. Slot1 top-right IDLE inhale: subtle chest and shoulder lift, head and right fingers articulate, hair/wings settle differently while both boots remain planted. Slot2 row2-left ATTACK WINDUP: knees flex, hips load, torso twists, LEFT staff hand draws the staff back beside left shoulder, right empty hand counterbalances with fingers splayed; staff held throughout. Slot3 row2-right ATTACK CONTACT: hips and chest drive forward, LEFT arm thrusts the crowned purple staff head unmistakably FORWARD along the stated facing toward the enemy at chest height, full shaft physically joins gripping left hand; RIGHT empty hand follows forward open, front boot grounded and rear heel unloads. Slot4 row3-left ATTACK RECOVERY: left elbow bends to recover staff to flank after the forward thrust, shoulders untwist and weight settles; hair, gown and attached wings follow through. Slot5 row3-right HIT RECOIL: chest and head recoil back, knees compress, left hand keeps full staff, right empty hand lifts protectively. Slot6 row4-left HIT RECOVERY: low braced stagger, different torso/leg pose and right arm, staff lowers as shoulders settle; no duplicate neutral pose. Slot7 bottom-right is completely EMPTY alpha0. Each pose is a fresh anatomical articulated drawing, never a shifted/scaled/rotated copy. Two wings move naturally and retain back attachments. This is grounded queen movement, not levitation. Keep an identical fixed elevated orthographic 35degree isometric camera and identical facing across all seven figures.  The most important layout requirement is VERY SMALL WHOLE FIGURES in ENORMOUS TRANSPARENT GUTTERS: each ENTIRE silhouette including wings/staff fits inside the CENTER 40 percent of its cell width and CENTER 50 percent cell height, never larger than 250x250 pixels at a 1024x1536 sheet, leave a broad transparent margin around every figure. Equal 2x4 grid on a tall portrait sprite sheet. Do not let wide wings reach another cell's bounding rectangle. Invisible ground baseline near 75 percent cell height, both planted soles align consistently; lifted soles stay higher. ONE connected full-body silhouette per nonempty cell, weapon/hand always joined. TRUE RGBA alpha0 transparent background. No floor, cast shadow, effects, purple glow, particles, detached feathers, debris, loose specks, grid, text, numbers, labels, watermark or cropped appendages. Do not add RUN or DEATH figures. CORRECT THE PREVIOUS REFERENCE'S CONTACT DIRECTION: previous sheet attacks wrongly toward screen RIGHT. Keep BACK square to camera and both toes point UP away at every pose, including contact. Staff must extend UP away, foreshortened behind upper torso; no screen-right attack or right-facing profile. Anatomical LEFT staff stays screen LEFT, bare anatomical RIGHT slit thigh must stay screen RIGHT, not screen LEFT. Preserve the two attached wing roots, back hair and back-facing crown, never reveal the front breastplate.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/references/queen-project-canonical-crop.png",
+      "/workspace/generated_images/exec-407d934b-8be5-4ffd-a376-19ca8384a723.png"
+    ],
+    "transparent_background": true
+  },
+  "reference_source_sha256": [
+    "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9",
+    "6c5c0d54500cdfba0c85d9d32d777b40b9f3db3fea5c5d2dd29542b2a7f4db8d"
+  ],
+  "preserve_all_results": true,
+  "new_approvals": 0
+}

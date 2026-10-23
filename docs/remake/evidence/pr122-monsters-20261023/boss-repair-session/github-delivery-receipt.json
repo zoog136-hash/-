@@ -1,0 +1,56 @@
+{
+  "schema": "pr122-boss-repair-github-binary-receipt-v1",
+  "verified_source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+  "binary_samples": [
+    {
+      "key": "monster:얼음 여왕",
+      "direction": "E",
+      "role": "run",
+      "path": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/E-run.png",
+      "blob_sha": "ff4c0bbd98695be244c22e25f979c33d77825368",
+      "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+      "bytes": 1886838,
+      "sha256": "036614afe3bb8bc9cf661900cbf9e27b22131635cfd1d99a8d47ee06899a111f",
+      "binary_download_match": true
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "direction": "S",
+      "role": "run",
+      "path": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/zombie-lord-S-run6-support-columns-v02.png",
+      "blob_sha": "eff33f8b8366993a7fa3c40843995875d42e0a7d",
+      "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+      "bytes": 2697647,
+      "sha256": "b5df37652060618c65d3ab9a61b2c97b190320009484d02c681a9ec1c598a588",
+      "binary_download_match": true
+    },
+    {
+      "key": "monster:알비노 데몬",
+      "direction": "NW",
+      "role": "attack",
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_attack_NW_v01.png",
+      "blob_sha": "7b88c7a4a7626840ff9fdcc8d5acf120892139ae",
+      "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+      "bytes": 1807395,
+      "sha256": "7dfb9ef725d07b61993384ad2d6858720871a144e8957240c40f4e5e6f7a7b42",
+      "binary_download_match": true
+    },
+    {
+      "key": "monster:커츠",
+      "direction": "S",
+      "role": "run",
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r001/run-S6-v02.png",
+      "blob_sha": "9d8267d623b8ed53e01cf24d5d984698e20ba9c1",
+      "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+      "bytes": 2443158,
+      "sha256": "0cf2ac2bc90a52506d101a58be27f3a5f53163cb0e1638010260622de850883e",
+      "binary_download_match": true
+    }
+  ],
+  "sample_count": 4,
+  "bytes_downloaded": 8835038,
+  "binary_mismatches": 0,
+  "connector_binary_read_error": "UnicodeDecodeError interpreting PNG as UTF8",
+  "fallback": "GitHub CLI git/blobs API; actual base64 decoded locally, no binary/Base64 in chat",
+  "approval_changes": 0
+}

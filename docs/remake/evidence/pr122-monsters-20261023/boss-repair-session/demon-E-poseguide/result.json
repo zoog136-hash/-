@@ -1,0 +1,106 @@
+{
+  "schema": "pr122-demon-E-poseguide-single-experiment-v1",
+  "actor": "monster:알비노 데몬",
+  "direction": "E",
+  "role": "run",
+  "status": "QUALITY_HOLD_NOT_SELECTED",
+  "actual_imagegen_calls": 1,
+  "extra_geometry_retry_used": false,
+  "new_approvals": 0,
+  "selected_clips": 0,
+  "selected_poses": 0,
+  "nominal_generated_source_poses": 6,
+  "production_connected": false,
+  "detailed_completed": false,
+  "source": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/raw/demon-E-guide-run6-v01.png",
+    "bytes": 1967456,
+    "sha256": "77d4a5b32a208f0d466ff3f4dda407ba2fbe83eb98dddf294f40b65c24ea3200"
+  },
+  "guide": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/demon-E-run6-joint-guide.png",
+    "bytes": 36632,
+    "sha256": "d0c11e9f8a1247282188db6b785d4e5170e4d14f76e8b600c330f7bf4acde946"
+  },
+  "guide_joint_coordinates": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/joint-guide.json",
+    "bytes": 7886,
+    "sha256": "b23b26d6d1209f0145c88bc8fac04d7db78e318ef23e282c5ce6f6bad7ff522c"
+  },
+  "appearance_reference": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/albino-demon-canonical.png",
+    "bytes": 196146,
+    "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b"
+  },
+  "exact_request": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/requests/demon-E-guide-run6-v01.json",
+    "bytes": 4911,
+    "sha256": "8f9fca56f311b2b9fa77ec74c89154d29ac5e00d051f5b9b2f9b6cba97a12af8"
+  },
+  "result_receipt": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/requests/demon-E-guide-run6-v01-result.json",
+    "bytes": 552,
+    "sha256": "bd8edde713a063053ea63218f043ca4e1e62b0042749597d17de9e6ee50e5882"
+  },
+  "geometry_check": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/checks/demon-E-guide-run6-v01.json",
+    "bytes": 2954,
+    "sha256": "245a2b9c09ceef85aa910bcb3211bb8b725f402c14633d157eb25142bce68bfe"
+  },
+  "strict_geometry": "PASS_ONLY_NOT_QUALITY_APPROVAL",
+  "actual_private_vision": [
+    "appearance_reference",
+    "guide",
+    "source"
+  ],
+  "source_grid": [
+    2,
+    3
+  ],
+  "requested_playback_source_slots": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "visual_findings": [
+    {
+      "criterion": "species_identity",
+      "status": "OBSERVED_APPEARANCE_ONLY",
+      "observation": "Red muscular demon, swept horns, spiked dark armor, skull belt/chains, thick tail, axe and empty claw remain recognizable. No wings. This grants no motion approval."
+    },
+    {
+      "criterion": "exact_E_camera",
+      "status": "HOLD",
+      "observation": "Nose faces screen-right but front chest/pectoral and frontal skull belt remain visible; torso still reads SE/front-three-quarter rather than the guide exact narrow E profile."
+    },
+    {
+      "criterion": "near_RIGHT_far_LEFT_support",
+      "status": "HOLD",
+      "observation": "Top-left and top-right retain a similar foreground extended leading shin/foot with the other leg flexed behind. The requested near-RIGHT versus far-LEFT planted-leg depth reversal is not visibly established. Mid/toeoff stages also do not clearly preserve the guide limb identity."
+    },
+    {
+      "criterion": "RIGHT_axe_LEFT_empty",
+      "status": "HOLD",
+      "observation": "The closer forearm appears empty while the forward opposite arm grips the axe. Because torso remains three-quarter, exact anatomical ownership is not confidently proved, and the guide near RIGHT axe arm is not established."
+    },
+    {
+      "criterion": "background",
+      "status": "SAMPLED_ALPHA0_NOT_OPAQUE_BACKDROP",
+      "observation": "Brown-looking exterior RGB was sampled at350,80;350,330;750,300;750,550 and all alpha values were0. Do not falsely report an opaque brown background."
+    }
+  ],
+  "RGBA_alpha_counts": {
+    "alpha0": 1190072,
+    "alpha1to100": 83550,
+    "alpha101to255": 299242
+  },
+  "unseen_not_reviewed": [
+    "Timed Godot movement/contact because source visual gate failed",
+    "No NativeProfile/SpriteFrames registration; parent must not connect this source as a repaired E clip"
+  ],
+  "stop_reason": "Strict geometry passed but camera/limb-identity visual gate failed. Under one-call authorization no further art request was made. Original image, exact request and code-drawn guide are preserved.",
+  "existing_demon_and_queen_assets_ledgers_and_Git_unchanged": true
+}

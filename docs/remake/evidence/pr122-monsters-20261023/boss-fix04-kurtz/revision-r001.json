@@ -1,0 +1,62 @@
+{
+  "schema": "pr122-kurtz-boss-repair-r001-frozen-v1",
+  "id": "monster:커츠",
+  "revision": "r001",
+  "frozen": true,
+  "clips": 9,
+  "selected_unique_source_poses": 52,
+  "roles": {
+    "run": {
+      "directions": 8,
+      "poses": 48
+    },
+    "death": {
+      "directions": [
+        "S"
+      ],
+      "poses": 4
+    }
+  },
+  "missing_required_tracks": [
+    "attack_0",
+    "attack_1",
+    "attack_2",
+    "attack_3",
+    "attack_4",
+    "attack_5",
+    "attack_6",
+    "attack_7",
+    "hit_0",
+    "hit_1",
+    "hit_2",
+    "hit_3",
+    "hit_4",
+    "hit_5",
+    "hit_6",
+    "hit_7",
+    "idle_0",
+    "idle_1",
+    "idle_2",
+    "idle_3",
+    "idle_4",
+    "idle_5",
+    "idle_6",
+    "idle_7"
+  ],
+  "quality_review": "HOLD: W/NW baked camera turns within RUN; other RUN support/weight and Main contact remain unapproved; 24 idle/attack/hit clips are not authored in this revision",
+  "private_source_frame_review_performed": true,
+  "no_programmatic_mirroring_or_warping": true,
+  "baked_source_camera_turns_not_approved": [
+    "W",
+    "NW"
+  ],
+  "S_contact_exchange_partly_restored": true,
+  "all_selected_PNGs_byte_identical_to_raw": true,
+  "PNG_SpriteFrames_and_actual_Godot_ActorMotion_playback": "PASS",
+  "engine_AnimatedSprite2D_1x_progress": "PASS",
+  "default_Main": "NOT_RUN",
+  "new_approvals": 0,
+  "original_assets_and_approval_unchanged": true,
+  "candidate": "res://docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/candidate.json",
+  "next_revision_pending_imagegen_sources_only": true
+}
