@@ -1,0 +1,17 @@
+{
+  "slug": "prince_deus",
+  "actor": "monster:교만의 왕자 데우스",
+  "clip": "SE-idle-v01",
+  "direction": "SE",
+  "role": "idle",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "dbdb0ccbfd1b3911fb9c2c032a6ead07a48febdff0504b3a3e1885ae20474c26",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique regal male dark prince caster, long platinum hair, narrow gold crown with tall central purple gem, severe angular face, black/gold royal armor with high purple collar and broad gold shoulder ornaments, long plum split cape and intricate brocade robe with visible armored boots. One long black-gold STAFF topped by an enclosed violet orb in anatomical RIGHT hand, LEFT hand free for spell gesture. No sword or vampire cape collar.\nFixed camera throughout this sheet: SOUTHEAST front three-quarter facing DOWN-RIGHT. Anatomical RIGHT weapon hand is screenLEFT, LEFT empty hand screenRIGHT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/prince_deus/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  }
+}

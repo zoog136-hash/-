@@ -1,0 +1,17 @@
+{
+  "slug": "isabelle",
+  "actor": "monster:질투의 공주 이자벨",
+  "clip": "E-hit-v01",
+  "direction": "E",
+  "role": "hit",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "0783c3f56c37df760f45e0a096ce42c6a538b19e54fbae92be5cb87b8fd7c905",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique pale royal female duelist princess, long raven-black braided hair, small intricate gold thorn tiara, violet eyes, ornate gold/black fitted plate with a distinct high white lace throat, asymmetrical violet silk split overskirt over black armored legs and gold boots, long violet ribbon cape. One slender gold-hilted silver SWORD in anatomical RIGHT hand, LEFT gauntlet empty. Preserve tiara, black braid, lace collar and violet ribbons; no Iris winged helmet or red hair.\nFixed camera throughout this sheet: EAST pure right profile; nose and toes RIGHT; no front-facing chest. Anatomical RIGHT weapon arm is near/foreground, LEFT empty hand far.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  }
+}
