@@ -1,0 +1,53 @@
+{
+  "schema": "legendary-common-correction-preparation-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "production_artifact_mutations": 0,
+  "image_generation_calls": 0,
+  "whole_corpus_reviews": 1,
+  "isolation": {
+    "selection_only": true,
+    "supported_grids": [
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "original_PNGs_immutable": true,
+    "RGBA_and_visible_pixel_coverage": "EXACTLY_ONCE",
+    "integer_translation_only": true,
+    "unknown_ownership_or_actual_source_clipping": "HOLD",
+    "camera_identity_exclusions": true
+  },
+  "registration": {
+    "component": "legendary_registered_clip_player_v01.gd",
+    "scene": "legendary_registered_clip_player_v01.tscn",
+    "library": "legendary_revision_library_v01.gd",
+    "method": "AnimatedSprite2D.frame_changed applies child uniform scale and offset synchronously; caller root transform preserved",
+    "reviewed_anatomical_anchor_and_scale_required": true,
+    "native176_impact_scope": 33,
+    "actual_production_playback": "NOT_RUN"
+  },
+  "synthetic_tests": {
+    "isolation_all_three_grids": "PASS",
+    "RGBA_and_foreground_preservation": "PASS",
+    "bridge_ambiguous_clipped_source_HOLD": "PASS",
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "AnimatedSprite2D_all_six_frames": "PASS",
+    "100px_vs_600px_body_registration": "PASS",
+    "death_once_and_terminal_hold": "PASS",
+    "production_clips_tested": 0
+  },
+  "first_fixture_failure": {
+    "cause": "Detached-fragment fixture pixel initially touched a body at x100; moved fixture pixel to detached x107",
+    "production_impact": false,
+    "production_threshold_changes": 0
+  }
+}
