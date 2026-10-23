@@ -63390,6 +63390,321 @@
       "source_visual_quality": "NOT_REVIEWED",
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:412",
+      "direction": "N",
+      "role": "attack",
+      "version": "source-visual-repair-v01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/poses.png",
+      "sha256": "28f91d1167c7082778fb87138f3c31f2f93efacda2e18abeb14c895d568955d2",
+      "bytes": 2031844,
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "28f91d1167c7082778fb87138f3c31f2f93efacda2e18abeb14c895d568955d2",
+        "base_geometry_sha256": "ff4f1b80a4919bb9267ef540c24dd5135bd77d2defaca21f2745190b6100b206",
+        "direction": "N",
+        "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+        "regions": [
+          [
+            421,
+            414,
+            438,
+            454
+          ],
+          [
+            1694,
+            391,
+            452,
+            498
+          ],
+          [
+            430,
+            1663,
+            419,
+            514
+          ],
+          [
+            1652,
+            1674,
+            535,
+            491
+          ],
+          [
+            359,
+            2960,
+            561,
+            479
+          ],
+          [
+            1688,
+            2955,
+            463,
+            489
+          ]
+        ],
+        "nearest_owner_sha256": "f5bcbea2a6da80231173034b1540b4b2fe6b5c822b7d46e3cde389af4845a8db"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "28f91d1167c7082778fb87138f3c31f2f93efacda2e18abeb14c895d568955d2",
+        "source_RGBA_sha256": "18b9cf4c02a6ab2dc902606dcec94225decadc9336b7b96a092b02a255456597",
+        "base_geometry_sha256": "ff4f1b80a4919bb9267ef540c24dd5135bd77d2defaca21f2745190b6100b206",
+        "derived_geometry_sha256": "248347de899b981d295e2b197538fa8b53ba0ea3379cfcdb1bd5f2cd014a9530",
+        "review_sha256": "9b6ab4133211411956e927fd0667f167a0ab4aad331c809714ba89c0b7b956b1",
+        "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 611630,
+        "added_alpha_gt16_pixels": 347,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            421,
+            414,
+            438,
+            454
+          ],
+          [
+            1694,
+            391,
+            452,
+            498
+          ],
+          [
+            430,
+            1663,
+            419,
+            514
+          ],
+          [
+            1652,
+            1674,
+            535,
+            491
+          ],
+          [
+            359,
+            2960,
+            561,
+            479
+          ],
+          [
+            1688,
+            2955,
+            463,
+            489
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "f5bcbea2a6da80231173034b1540b4b2fe6b5c822b7d46e3cde389af4845a8db",
+        "foreground_owner_sha256": "84190e1df7e173e6620bc654e1b6c8834d2c2cb7ef6b0907b3c1262987bf20b1",
+        "detached_pixels": 10,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2120,
+              604,
+              2121,
+              605
+            ],
+            "nearest_max": 6.324555320336759,
+            "second_nearest_min": 1110.4773748257999,
+            "owner_margin_min": 1104.1528195054632
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              2124,
+              609,
+              2125,
+              610
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1106.1414918535513,
+            "owner_margin_min": 1103.1414918535513
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              678,
+              1724,
+              679,
+              1725
+            ],
+            "nearest_max": 3.1622776601683795,
+            "second_nearest_min": 863.9959490645775,
+            "owner_margin_min": 860.8336714044092
+          },
+          {
+            "row": 2,
+            "pixels": 2,
+            "bbox": [
+              582,
+              1802,
+              583,
+              1804
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 938.0767559213905,
+            "owner_margin_min": 934.4712046459265
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              575,
+              1912,
+              576,
+              1913
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1048.1722186740117,
+            "owner_margin_min": 1046.1722186740117
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              1727,
+              1920,
+              1728,
+              1921
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 887.5837988607047,
+            "owner_margin_min": 884.5837988607047
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              683,
+              3148,
+              684,
+              3149
+            ],
+            "nearest_max": 8.94427190999916,
+            "second_nearest_min": 981.2746812182611,
+            "owner_margin_min": 972.3304093082619
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              449,
+              3219,
+              450,
+              3220
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1066.4717530248984,
+            "owner_margin_min": 1063.6433259001521
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              755,
+              3266,
+              756,
+              3267
+            ],
+            "nearest_max": 12.041594578792296,
+            "second_nearest_min": 943.1192925605965,
+            "owner_margin_min": 931.0776979818041
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      },
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "28f91d1167c7082778fb87138f3c31f2f93efacda2e18abeb14c895d568955d2",
+        "canvas_size": 2048,
+        "review_basis": "Exact contour materials through existing reviewed-pose assembler, canonical2048/game1024, no source-raster scaling"
+      },
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/source-v02.png",
+      "original_source_sha256": "08e8e7f0fa0f41761525cb1d83e1f2a9a62ac461b8b3ae2464d481fc9c184181",
+      "authoring_dependencies": [
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/pose-map.json",
+          "sha256": "51c9e67fc9becf4cc04895ad67177e59a0cd326b4c7d2357aa827e4b4ccc188a"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/poses.assembly.json",
+          "sha256": "3384cb103d01a9099e3358f4ca48601e8d5d783e969f3a656a3e790b89a8342b"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/source-v02.json",
+          "sha256": "3c24c45bae036e440428d7711476f6871f4091b6a7b16a9b75d461ef7f16193a"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/source-v02.png",
+          "sha256": "08e8e7f0fa0f41761525cb1d83e1f2a9a62ac461b8b3ae2464d481fc9c184181"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/material-manifest.json",
+          "sha256": "3bf5952a1b613de4570d365d10976f52a1ca1fd7f899996034c66c71b2f8d5f7"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/evidence/assemble-contours.py",
+          "sha256": "8a8b45c8e5ff1ca2e2dd5b22d4543cc3ddcd5a38f3b615fdd575e84b046e152e"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/phase_0.png",
+          "sha256": "07e06610d132f872593db6bb66a299242ef0da923d5f36971c1d5f9d89278fbc"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/phase_1.png",
+          "sha256": "466a1a2fcf797bc97adc9967000a6d51961876a6c79f7f078051fb9f2442d5d0"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/phase_2.png",
+          "sha256": "eda0a18fe34025e5e1c5137ff69c890aed29b8523b650c79d71af10afb5f6127"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/phase_3.png",
+          "sha256": "d9935b21bec016cea3b3db9cb077b6dc0299afc98e68db49c7cab5bc515771ea"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/phase_4.png",
+          "sha256": "56442c6a13963c4fc4eed746a19529b124d26617ee0278b8e976a0b15f794b70"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/phase_5.png",
+          "sha256": "9527d82a7118391c5b519413ad945d74da25d3f59ec7156c5f6ff2152752812b"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/parts/unclassified_soft_residue.png",
+          "sha256": "ac884c2824411df44ceb26820f90926ca8de510c681e52b7a3bac6eaf48a8f7d"
+        }
+      ],
+      "source_material_RGBA_ownership": {
+        "original_visible_texels": 798338,
+        "missing": 0,
+        "duplicate": 0
+      },
+      "rendered_contour_nonzero_coverage": "exactly_once",
+      "unclassified_soft_residue_pixels": 3913,
+      "unclassified_soft_residue_max_alpha": 16,
+      "residue_status": "SEPARATE_SOURCE_LAYER_HOLD_NOT_RENDERED",
+      "source_visual_quality": "NOT_REVIEWED",
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "mythic_detail_total": 31,
@@ -63806,9 +64121,10 @@
     "transform:137:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_137/SW-attack/poses.png",
     "transform:137:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_137/W-attack/poses.png",
     "transform:135:E:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_135/E-attack/poses.png",
-    "transform:133:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_133/NE-idle/poses.png"
+    "transform:133:NE:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_133/NE-idle/poses.png",
+    "transform:412:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/poses.png"
   },
-  "selected_detailed_action_native_poses": 1656,
+  "selected_detailed_action_native_poses": 1662,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -79417,6 +79733,39 @@
         [
           1967,
           3428
+        ]
+      ],
+      "review_basis": "Original source artboard anchor mapped through exact per-pose contour translation. Preserve full selected RGBA and authored relative motion; anatomy/size/soft residual final quality HOLD."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/poses.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "28f91d1167c7082778fb87138f3c31f2f93efacda2e18abeb14c895d568955d2",
+      "direction": "N",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          602,
+          846
+        ],
+        [
+          1919,
+          870
+        ],
+        [
+          655,
+          2142
+        ],
+        [
+          1895,
+          2162
+        ],
+        [
+          606,
+          3438
+        ],
+        [
+          1895,
+          3422
         ]
       ],
       "review_basis": "Original source artboard anchor mapped through exact per-pose contour translation. Preserve full selected RGBA and authored relative motion; anatomy/size/soft residual final quality HOLD."
