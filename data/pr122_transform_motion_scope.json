@@ -135,10 +135,11 @@
     "transform:413": {
       "name": "신화-뇌신(여)",
       "grade": "신화",
-      "existing_connected_source_count": 5,
+      "existing_connected_source_count": 6,
       "existing_connected_directions": [
         "E",
         "SE",
+        "S",
         "NW",
         "N",
         "NE"
@@ -146,10 +147,8 @@
       "additional_new_source_directions": [],
       "additional_new_source_count": 0,
       "existing_approval_preserved": false,
-      "existing_unconnected_authored_directions": [
-        "S"
-      ],
-      "existing_unconnected_source_count": 1,
+      "existing_unconnected_authored_directions": [],
+      "existing_unconnected_source_count": 0,
       "preserved_S_source": {
         "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/mythic413-S-death-actual-six-native-v02-v03-and-final-boot-source-20261020/own-S-DEATH-six-actual-native-source-contract-v03.json",
         "sha256": "4d458a60b2f0739afb0e679d5ce781de1e29fa19253cbbb595be0fbc944fb49f",
@@ -158,7 +157,7 @@
       "remaining_source_completion_directions": [
         "S"
       ],
-      "source_completion_note": "Existing S art is preserved and needs pose/frame/physical-fit completion; this is not a completed animation.",
+      "source_completion_note": "Existing six-pose S source is now staged and passes actual Main/Player direction/terminal-hold checks; source visual approval remains HOLD, no final approval added.",
       "latest_unapproved_S_candidate": {
         "direction": "S",
         "poses": 6,
@@ -180,8 +179,25 @@
         "source_visual_status": "HOLD_NOT_REVIEWED",
         "full_animation_approved": false,
         "actor_approvals_added": 0,
-        "preserved_source_index": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json"
-      }
+        "preserved_source_index": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+        "staged_source": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png",
+          "sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc"
+        },
+        "staged_frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r045/SpriteFrames.tres",
+        "staged_runtime_status": "PASS_SOURCE_VISUAL_HOLD"
+      },
+      "prior_connected_snapshot": {
+        "count": 5,
+        "directions": [
+          "E",
+          "SE",
+          "NW",
+          "N",
+          "NE"
+        ]
+      },
+      "connection_scope": "UNAPPROVED_NATIVE_STAGING_ONLY"
     },
     "transform:412": {
       "name": "신화-사신(여)",

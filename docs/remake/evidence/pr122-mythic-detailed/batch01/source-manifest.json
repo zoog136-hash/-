@@ -27572,6 +27572,566 @@
         ],
         "minimum_required_owner_margin": 32.0
       }
+    },
+    {
+      "key": "transform:413",
+      "direction": "S",
+      "role": "death",
+      "version": "SdeathCapeNative09",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png",
+      "original_generated_file": "/workspace/scratch/pr122-death-s-only-20261022-v01/S-death-original-cape-v09-exact-packed-candidate-v01/thunder_female-S-death-original-cape-real-six-v09.png",
+      "bytes": 6664623,
+      "sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+        "canonical_preflight": {
+          "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+          "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+          "packing_proof_sha256": "f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c",
+          "direction": "S",
+          "canonical_canvas": 2048,
+          "physical_canvases": [
+            2560,
+            2560,
+            2560,
+            2560,
+            2560,
+            2560
+          ],
+          "root_float": [
+            655.0833333333334,
+            1017.9227375838406
+          ],
+          "root_integer": [
+            655,
+            1018
+          ],
+          "tile_size": 2304,
+          "storage_translations": [
+            [
+              384,
+              384
+            ],
+            [
+              384,
+              384
+            ],
+            [
+              384,
+              384
+            ],
+            [
+              384,
+              384
+            ],
+            [
+              384,
+              384
+            ],
+            [
+              384,
+              384
+            ]
+          ],
+          "atlas_origins": [
+            [
+              0,
+              0
+            ],
+            [
+              2304,
+              0
+            ],
+            [
+              0,
+              2304
+            ],
+            [
+              2304,
+              2304
+            ],
+            [
+              0,
+              4608
+            ],
+            [
+              2304,
+              4608
+            ]
+          ],
+          "source_anchors": [
+            [
+              1039,
+              1402
+            ],
+            [
+              3343,
+              1402
+            ],
+            [
+              1039,
+              3706
+            ],
+            [
+              3343,
+              3706
+            ],
+            [
+              1039,
+              6010
+            ],
+            [
+              3343,
+              6010
+            ]
+          ]
+        },
+        "canonical_preflight_sha256": "7a2ec5e2f695b024b25a25657fc9bc6e15de5732d70cde010b92019b27af6b72",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+        "base_geometry_sha256": "05b37a366b5a6e8bf1c8f2664192941623de6723c00266dc2859f9ecd2ed4921",
+        "direction": "S",
+        "regions": [
+          [
+            664,
+            146,
+            732,
+            1439
+          ],
+          [
+            2947,
+            175,
+            749,
+            1480
+          ],
+          [
+            487,
+            2788,
+            883,
+            1532
+          ],
+          [
+            2705,
+            3175,
+            1115,
+            1175
+          ],
+          [
+            387,
+            5791,
+            1169,
+            964
+          ],
+          [
+            2690,
+            5794,
+            1177,
+            970
+          ]
+        ],
+        "nearest_owner_sha256": "6d23a5d1500d7203ecf238564fe05a0380af57c56ba84a04af74dff8779d8d86",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+        "source_RGBA_sha256": "63f0163fa7b1f2403840c80ed618a14e5da717d9a12374f7ea6d622c7e0845ea",
+        "base_geometry_sha256": "05b37a366b5a6e8bf1c8f2664192941623de6723c00266dc2859f9ecd2ed4921",
+        "derived_geometry_sha256": "defdd603d4f3639bbfb6673d415b20d59119b044b40b970af8e4d8b8460e0beb",
+        "review_sha256": "788d46ad545f19b043e7fd1ffa29dd7cdbf95ed85b8f6f609f350b9b7e4980c5",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 2333557,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            664,
+            146,
+            732,
+            1439
+          ],
+          [
+            2947,
+            175,
+            749,
+            1480
+          ],
+          [
+            487,
+            2788,
+            883,
+            1532
+          ],
+          [
+            2705,
+            3175,
+            1115,
+            1175
+          ],
+          [
+            387,
+            5791,
+            1169,
+            964
+          ],
+          [
+            2690,
+            5794,
+            1177,
+            970
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "6d23a5d1500d7203ecf238564fe05a0380af57c56ba84a04af74dff8779d8d86",
+        "foreground_owner_sha256": "f74e1859f16f0f68101cc96509801e274585e4dbe3c53d6d83357ae12093b4a5",
+        "detached_pixels": 115,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              3383,
+              530,
+              3385,
+              532
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 2055.7548491977345,
+            "owner_margin_min": 2052.9264220729883
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3340,
+              541,
+              3341,
+              542
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 2011.3701797530955,
+            "owner_margin_min": 2008.3701797530955
+          },
+          {
+            "row": 0,
+            "pixels": 8,
+            "bbox": [
+              868,
+              566,
+              872,
+              571
+            ],
+            "nearest_max": 4.242640687119285,
+            "second_nearest_min": 2083.3785061769263,
+            "owner_margin_min": 2079.7729549014625
+          },
+          {
+            "row": 1,
+            "pixels": 9,
+            "bbox": [
+              3156,
+              694,
+              3160,
+              699
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 1797.4495820467398,
+            "owner_margin_min": 1794.2234172307174
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3150,
+              1359,
+              3151,
+              1360
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1787.8705210389257,
+            "owner_margin_min": 1780.254747933062
+          },
+          {
+            "row": 1,
+            "pixels": 2,
+            "bbox": [
+              3152,
+              1359,
+              3153,
+              1361
+            ],
+            "nearest_max": 9.848857801796104,
+            "second_nearest_min": 1789.8382608492868,
+            "owner_margin_min": 1780.16846055018
+          },
+          {
+            "row": 1,
+            "pixels": 4,
+            "bbox": [
+              3154,
+              1360,
+              3156,
+              1363
+            ],
+            "nearest_max": 9.433981132056603,
+            "second_nearest_min": 1791.984932972373,
+            "owner_margin_min": 1782.5509518403162
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              3146,
+              1384,
+              3147,
+              1385
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1788.588829217045,
+            "owner_margin_min": 1785.588829217045
+          },
+          {
+            "row": 1,
+            "pixels": 9,
+            "bbox": [
+              3229,
+              1413,
+              3235,
+              1418
+            ],
+            "nearest_max": 19.313207915827967,
+            "second_nearest_min": 1770.9680968329158,
+            "owner_margin_min": 1751.7556783785478
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              1011,
+              3068,
+              1012,
+              3069
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1496.051135489693,
+            "owner_margin_min": 1493.2227083649468
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              3208,
+              3355,
+              3210,
+              3357
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1705.3193249359488,
+            "owner_margin_min": 1702.4908978112026
+          },
+          {
+            "row": 3,
+            "pixels": 14,
+            "bbox": [
+              3357,
+              3480,
+              3363,
+              3484
+            ],
+            "nearest_max": 15.811388300841896,
+            "second_nearest_min": 1833.6728170532494,
+            "owner_margin_min": 1818.2125682651642
+          },
+          {
+            "row": 3,
+            "pixels": 9,
+            "bbox": [
+              3077,
+              3603,
+              3079,
+              3609
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 1721.2286309494157,
+            "owner_margin_min": 1716.9644733919724
+          },
+          {
+            "row": 3,
+            "pixels": 5,
+            "bbox": [
+              3405,
+              4079,
+              3410,
+              4080
+            ],
+            "nearest_max": 16.278820596099706,
+            "second_nearest_min": 1763.3198802259333,
+            "owner_margin_min": 1747.3198802259333
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              860,
+              5915,
+              861,
+              5916
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1609.0991268408543,
+            "owner_margin_min": 1607.0991268408543
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3161,
+              5924,
+              3162,
+              5925
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1578.345019316119,
+            "owner_margin_min": 1575.5165921913729
+          },
+          {
+            "row": 4,
+            "pixels": 14,
+            "bbox": [
+              1019,
+              5990,
+              1025,
+              5993
+            ],
+            "nearest_max": 18.973665961010276,
+            "second_nearest_min": 1670.9643921999057,
+            "owner_margin_min": 1652.5796158890555
+          },
+          {
+            "row": 5,
+            "pixels": 10,
+            "bbox": [
+              3321,
+              6000,
+              3327,
+              6002
+            ],
+            "nearest_max": 15.231546211727817,
+            "second_nearest_min": 1665.2222073945568,
+            "owner_margin_min": 1650.5775665019708
+          },
+          {
+            "row": 4,
+            "pixels": 3,
+            "bbox": [
+              997,
+              6595,
+              999,
+              6597
+            ],
+            "nearest_max": 9.219544457292887,
+            "second_nearest_min": 1828.1821572261338,
+            "owner_margin_min": 1820.1198994778351
+          },
+          {
+            "row": 4,
+            "pixels": 3,
+            "bbox": [
+              1000,
+              6595,
+              1003,
+              6596
+            ],
+            "nearest_max": 6.082762530298219,
+            "second_nearest_min": 1824.474170822925,
+            "owner_margin_min": 1820.2452474394333
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              993,
+              6596,
+              994,
+              6597
+            ],
+            "nearest_max": 9.0,
+            "second_nearest_min": 1833.1928431018925,
+            "owner_margin_min": 1824.1928431018925
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              995,
+              6596,
+              996,
+              6597
+            ],
+            "nearest_max": 9.219544457292887,
+            "second_nearest_min": 1831.3383084509535,
+            "owner_margin_min": 1822.1187639936607
+          },
+          {
+            "row": 5,
+            "pixels": 12,
+            "bbox": [
+              3297,
+              6604,
+              3306,
+              6606
+            ],
+            "nearest_max": 9.055385138137417,
+            "second_nearest_min": 1755.398815084481,
+            "owner_margin_min": 1746.3434299463436
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              3434,
+              6621,
+              3435,
+              6622
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1893.291842268381,
+            "owner_margin_min": 1890.4634151436348
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      },
+      "authoring_dependencies": [
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+          "sha256": "fbbbb85ff8f066be19ba328a80930d46e237fe3b557cba90c24c96dc7c82b847"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-six-native-v09-original-cape-root-20261022/own-S-DEATH-six-actual-native-source-contract-v09.json",
+          "sha256": "36eb9df30c4e598ca1a1b44850dbed224ad5a9779ee6de6c6687406d8cf21a71"
+        }
+      ],
+      "source_visual_status": "HOLD_NOT_REVIEWED",
+      "staging_only": true
     }
   ],
   "mythic_detail_total": 31,
@@ -27722,9 +28282,10 @@
     "transform:413:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-idle-WidleSixActualRig01.png",
     "transform:413:W:hit": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-hit-WhitSixActualRig01.png",
     "transform:413:S:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-attack-SattackSixActualRig01.png",
-    "transform:413:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png"
+    "transform:413:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png",
+    "transform:413:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png"
   },
-  "selected_detailed_action_native_poses": 552,
+  "selected_detailed_action_native_poses": 558,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -34196,6 +34757,151 @@
         2816,
         2816
       ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+      "direction": "S",
+      "role": "death",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          1039,
+          1402
+        ],
+        [
+          3343,
+          1402
+        ],
+        [
+          1039,
+          3706
+        ],
+        [
+          3343,
+          3706
+        ],
+        [
+          1039,
+          6010
+        ],
+        [
+          3343,
+          6010
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2560,
+        2560,
+        2560,
+        2560,
+        2560,
+        2560
+      ],
+      "canonical_preflight": {
+        "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+        "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+        "packing_proof_sha256": "f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c",
+        "direction": "S",
+        "canonical_canvas": 2048,
+        "physical_canvases": [
+          2560,
+          2560,
+          2560,
+          2560,
+          2560,
+          2560
+        ],
+        "root_float": [
+          655.0833333333334,
+          1017.9227375838406
+        ],
+        "root_integer": [
+          655,
+          1018
+        ],
+        "tile_size": 2304,
+        "storage_translations": [
+          [
+            384,
+            384
+          ],
+          [
+            384,
+            384
+          ],
+          [
+            384,
+            384
+          ],
+          [
+            384,
+            384
+          ],
+          [
+            384,
+            384
+          ],
+          [
+            384,
+            384
+          ]
+        ],
+        "atlas_origins": [
+          [
+            0,
+            0
+          ],
+          [
+            2304,
+            0
+          ],
+          [
+            0,
+            2304
+          ],
+          [
+            2304,
+            2304
+          ],
+          [
+            0,
+            4608
+          ],
+          [
+            2304,
+            4608
+          ]
+        ],
+        "source_anchors": [
+          [
+            1039,
+            1402
+          ],
+          [
+            3343,
+            1402
+          ],
+          [
+            1039,
+            3706
+          ],
+          [
+            3343,
+            3706
+          ],
+          [
+            1039,
+            6010
+          ],
+          [
+            3343,
+            6010
+          ]
+        ]
+      },
+      "canonical_preflight_sha256": "7a2ec5e2f695b024b25a25657fc9bc6e15de5732d70cde010b92019b27af6b72",
       "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
     }
   },
