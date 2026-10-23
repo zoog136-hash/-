@@ -1,0 +1,23 @@
+{
+  "PNG_mutations": 0,
+  "comparison_policy": "Exact GPU image bytes and AtlasTexture regions/margins; resource_path may be cleared by take_over_path cache replacement",
+  "engine": "4.7.2-stable (official)",
+  "failures": 0,
+  "final_approved": 0,
+  "guard_parent_checks": [
+    {
+      "compared_parent_guards": 2,
+      "errors": [],
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "guards_only": true,
+  "healthy_action_replays": 0,
+  "records": [],
+  "scope": "Only revised guard-action playback and exact two-parent-frame transforms"
+}

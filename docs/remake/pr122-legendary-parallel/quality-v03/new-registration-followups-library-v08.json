@@ -1,0 +1,159 @@
+{
+  "schema": "legendary-registration-followups-v08",
+  "revisions": [
+    {
+      "slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v04/NW-hit-record.json",
+      "record_sha256": "523e29f122ad3c3d75447011a0399e7feca809f839620052ef5e5590d12f5fb1",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "8955dfe59e40941e6bb40a6fec57d058c69a5d134b176d830383915da694edd7",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v04/NW-hit-registration.json",
+      "registration_sha256": "cab685e90fe08db2f1d35fd62f81d1de240c9f87cbde0a38b4a9b9c78937f584",
+      "registration_status": "REVIEWED_ANCHORS_AND_SCALE",
+      "correction_candidate_id": "qc082",
+      "newly_authored_correction_poses": 4,
+      "reused_poses": 2,
+      "generated_source_sha256": "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6"
+    },
+    {
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/guard-registration-v07/W-attack-record.json",
+      "record_sha256": "9c7bfaa0bd1333f68e3b01f0c246ad09082a912f6ef31a093362c82b4e618ed6",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/quality-isolation-v07-001/W-attack-SpriteFrames.tres",
+      "SpriteFrames_sha256": "acc355e9ca2f5d8f705aaf7c401ff6935a96c0eeaa7db84b24a64da18d944aa3",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/guard-registration-v07/W-attack-registration.json",
+      "registration_sha256": "de7058b3d102151d59b462c8be7d5306c7a9e9a49a873494832ceca93f04d808",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION",
+      "inherited_guard_checks": [
+        {
+          "action_phase": 0,
+          "idle_phase": 0,
+          "parent_record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-record.json",
+          "parent_record_sha256": "12049106cb7fe0aae58eb75e3c9f20857d125304dd59a9bf939f956ec31a27ef",
+          "parent_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-SpriteFrames.tres",
+          "parent_SpriteFrames_sha256": "b0c2c5c70d8564a9b2c2221773431647b505537f954a7c40a79e24c078b8130d",
+          "parent_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-raster-registration.json",
+          "parent_registration_sha256": "bf2c1a24868f37124f05356023a102a554bd77ec35a9415c626f53b114ea7635",
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png",
+          "region": [
+            0,
+            0,
+            625,
+            644
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "before_transform": {
+            "anchor": [
+              312.5,
+              322.0
+            ],
+            "target": [
+              0.0,
+              0.0
+            ],
+            "effective_scale": [
+              0.4096,
+              0.39751552795031053
+            ]
+          },
+          "inherited_transform": {
+            "anchor": [
+              271.0,
+              279.0
+            ],
+            "target": [
+              0.0,
+              0.0
+            ],
+            "effective_scale": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "action_phase": 5,
+          "idle_phase": 5,
+          "parent_record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-record.json",
+          "parent_record_sha256": "12049106cb7fe0aae58eb75e3c9f20857d125304dd59a9bf939f956ec31a27ef",
+          "parent_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-SpriteFrames.tres",
+          "parent_SpriteFrames_sha256": "b0c2c5c70d8564a9b2c2221773431647b505537f954a7c40a79e24c078b8130d",
+          "parent_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-raster-registration.json",
+          "parent_registration_sha256": "bf2c1a24868f37124f05356023a102a554bd77ec35a9415c626f53b114ea7635",
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/isolation-v02/W-idle-source-v01-isolated.png",
+          "region": [
+            1250,
+            644,
+            625,
+            644
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "before_transform": {
+            "anchor": [
+              312.5,
+              322.0
+            ],
+            "target": [
+              0.0,
+              0.0
+            ],
+            "effective_scale": [
+              0.4096,
+              0.39751552795031053
+            ]
+          },
+          "inherited_transform": {
+            "anchor": [
+              271.0,
+              279.0
+            ],
+            "target": [
+              0.0,
+              0.0
+            ],
+            "effective_scale": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "dependency_required_slots": [
+    [
+      "transform:176",
+      "NW",
+      "hit"
+    ],
+    [
+      "transform:113",
+      "W",
+      "attack"
+    ]
+  ],
+  "excluded_slots": [],
+  "PNG_mutations": 0,
+  "frame_binding_mutations": 0,
+  "existing_healthy_clips_changed": 0,
+  "final_approved": 0,
+  "quality_status": "HOLD"
+}

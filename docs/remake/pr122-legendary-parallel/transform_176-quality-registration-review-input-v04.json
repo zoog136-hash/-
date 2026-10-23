@@ -1,0 +1,183 @@
+{
+  "schema": "legendary-new-native-correction-static-registration-input-v04",
+  "actor": "transform:176",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "status": "STATIC_REGISTRATION_PROPOSED_PENDING_CHANGED_ONLY_ENGINE_CHECK",
+  "scale_by_source_sha256": {
+    "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6": 0.24,
+    "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7": 0.6666666666666666
+  },
+  "clips": [
+    {
+      "slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "baseline_record": "assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-record-v02.json",
+      "baseline_record_sha256": "811982aab186f564f93d8c7b24db87924eca356a5cf5558f68caa7ff529e6153",
+      "source_sha256": "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6",
+      "frames": [
+        {
+          "index": 0,
+          "anchor_in_baseline_texture": [
+            192.0,
+            240.0
+          ],
+          "evidence_type": "static_semantic_anchor_review",
+          "source_kind": "native",
+          "review_scale": 0.6666666666666666,
+          "semantic_anchor_kind": "projected_ground_origin",
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        {
+          "index": 1,
+          "anchor_in_baseline_texture": [
+            379.0,
+            532.0
+          ],
+          "evidence_type": "static_semantic_anchor_review",
+          "source_kind": "new",
+          "review_scale": 0.24,
+          "semantic_anchor_kind": "projected_ground_origin",
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.24,
+            0.24
+          ]
+        },
+        {
+          "index": 2,
+          "anchor_in_baseline_texture": [
+            390.0,
+            530.0
+          ],
+          "evidence_type": "static_semantic_anchor_review",
+          "source_kind": "new",
+          "review_scale": 0.24,
+          "semantic_anchor_kind": "projected_ground_origin",
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.24,
+            0.24
+          ]
+        },
+        {
+          "index": 3,
+          "anchor_in_baseline_texture": [
+            192.0,
+            240.0
+          ],
+          "evidence_type": "static_semantic_anchor_review",
+          "source_kind": "native",
+          "review_scale": 0.6666666666666666,
+          "semantic_anchor_kind": "projected_ground_origin",
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        {
+          "index": 4,
+          "anchor_in_baseline_texture": [
+            355.0,
+            519.0
+          ],
+          "evidence_type": "static_semantic_anchor_review",
+          "source_kind": "new",
+          "review_scale": 0.24,
+          "semantic_anchor_kind": "projected_ground_origin",
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.24,
+            0.24
+          ]
+        },
+        {
+          "index": 5,
+          "anchor_in_baseline_texture": [
+            395.0,
+            523.0
+          ],
+          "evidence_type": "static_semantic_anchor_review",
+          "source_kind": "new",
+          "review_scale": 0.24,
+          "semantic_anchor_kind": "projected_ground_origin",
+          "target_anchor": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.24,
+            0.24
+          ]
+        }
+      ],
+      "camera_quality_status": "HOLD_NEW_SUPPLEMENT_CAMERA_SINGLE_CORRECTION_NO_RETRY",
+      "native_pose_checks_preserved": [
+        {
+          "phase": 0,
+          "original_pose_id": 69,
+          "original_region": [
+            1041,
+            71,
+            86,
+            152
+          ],
+          "original_margin": [
+            151,
+            92,
+            298,
+            232
+          ],
+          "rgba_sha256": "f4dfbc9220dbae40db74f30fbac17a0ee99dfd55e09c14bffadb1a857fcdf640"
+        },
+        {
+          "phase": 3,
+          "original_pose_id": 77,
+          "original_region": [
+            1037,
+            269,
+            90,
+            158
+          ],
+          "original_margin": [
+            147,
+            86,
+            294,
+            226
+          ],
+          "rgba_sha256": "4db951cc8440d8f51cac38f3fe7638e0f53fbb81c5267832f49192292811daba"
+        }
+      ]
+    }
+  ],
+  "scale_policy": "ONE_POSITIVE_CONSTANT_PER_SOURCE_SHA_NO_PNG_RESAMPLE",
+  "scope": "ONLY_NEW_NW_HIT_SOURCE; previous W/NW IDLE and native33 registration are not rechecked",
+  "manual_review_basis": "Native152px halberd/body height times2/3 is about101px; new complete halberd-to-boot span about420px times0.24 is about101px. Projected boot-contact midpoint anchors selected from this new source only.",
+  "native_pixels_regions_margins_anchors_unchanged": true,
+  "prior_registration_input_v01_changed": false,
+  "previous_33_clips_reaudited": 0,
+  "new_image_calls": 0,
+  "actor_final_approval": 0
+}

@@ -1,0 +1,57 @@
+{
+  "PNG_mutations": 0,
+  "engine": "4.7.2-stable (official)",
+  "failures": 1,
+  "final_approved": 0,
+  "guard_parent_checks": [
+    {
+      "compared_parent_guards": 2,
+      "errors": [
+        "Guard source/region/margin differs from pinned parent",
+        "Guard source/region/margin differs from pinned parent"
+      ],
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "status": "FAIL"
+    }
+  ],
+  "healthy_action_replays": 0,
+  "records": [
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/corrections/registration-v04/NW-hit-record.json",
+      "registration": "REVIEWED_ANCHORS_AND_SCALE",
+      "semantic_scale_registration": "REVIEWED_INPUT",
+      "slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    },
+    {
+      "errors": [],
+      "frames_reached": 6,
+      "quality_status": "HOLD",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/corrections/guard-registration-v07/W-attack-record.json",
+      "registration": "RASTER_COORDINATE_PRESERVATION",
+      "semantic_scale_registration": "HOLD",
+      "slot": [
+        "transform:113",
+        "W",
+        "attack"
+      ],
+      "status": "PASS",
+      "terminal_frame": 5,
+      "wraps": 0
+    }
+  ],
+  "scope": "Only revised guard-action playback and exact two-parent-frame transforms"
+}
