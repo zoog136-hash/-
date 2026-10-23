@@ -161,15 +161,15 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 100,
-    "minimally_validated_configurations": 100,
-    "newly_authored_poses": 597,
+    "new_draft_configurations": 105,
+    "minimally_validated_configurations": 105,
+    "newly_authored_poses": 627,
     "reused_existing_poses": 3,
-    "quality_held_configurations": 100,
+    "quality_held_configurations": 105,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 1220
+    "remaining_draft_configurations": 1215
   },
   "actors": [
     {
@@ -1834,6 +1834,28 @@
         {
           "key": "transform:225",
           "direction": "S",
+          "role": "death",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/S-death-source-v01.png",
+          "source_sha256": "0f4583a5489ee2136dc17531b5ef4114b51e3887dea3a3b21fad9b1baaa60d46",
+          "source_bytes": 2399697,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_225/draft001/S-death-SpriteFrames.tres",
+          "SpriteFrames_sha256": "e65e7138d96448c71c59ddcc2793ed37294d3979277f9454972954f03fd58b7f",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/S-death-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch22-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:225",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/S-run-source-v01.png",
           "source_sha256": "c89b17039f1e3ef25bfdc8d5ff209c7e618002037ac4104f1299579b6b1dfe9f",
@@ -1853,7 +1875,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 31,
+      "remaining_draft_configurations": 30,
       "precision_final_approved": false
     },
     {
@@ -1893,6 +1915,28 @@
         {
           "key": "transform:213",
           "direction": "S",
+          "role": "death",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/S-death-source-v01.png",
+          "source_sha256": "4640a278b4a0e7729146a4fa72b1d885a201e8f2c730e94eab92eb7312b48891",
+          "source_bytes": 2167709,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_213/draft001/S-death-SpriteFrames.tres",
+          "SpriteFrames_sha256": "3559cc56b3084b8be4008441a733e782f3933399443319f048537b925247bb79",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/S-death-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch22-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:213",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_213/draft001/S-run-source-v01.png",
           "source_sha256": "82bc03e8e759a3f684f894c6269d88abeb18b1d2f71059e20b5923a836383433",
@@ -1913,7 +1957,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 31,
+      "remaining_draft_configurations": 30,
       "precision_final_approved": false
     },
     {
@@ -1953,6 +1997,28 @@
         {
           "key": "transform:194",
           "direction": "S",
+          "role": "death",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-death-source-v01.png",
+          "source_sha256": "4d49ccafebc7dbb2e64736cac3b5186aced3492f3896be2313a06b23ded4ca8a",
+          "source_bytes": 2338233,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-death-SpriteFrames.tres",
+          "SpriteFrames_sha256": "7d461f121c87b7d4a485677b5cda7fe679f50a5b934b42a3b26ebadb365e4e53",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-death-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch22-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:194",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_194/draft001/S-run-source-v01.png",
           "source_sha256": "1f222978e5f30a83323425e9083ef188abc478425f18bbcff91dfeeca9e65f15",
@@ -1973,7 +2039,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 31,
+      "remaining_draft_configurations": 30,
       "precision_final_approved": false
     },
     {
@@ -2012,6 +2078,28 @@
         {
           "key": "transform:193",
           "direction": "S",
+          "role": "death",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-death-source-v01.png",
+          "source_sha256": "803021cbfe92e87fa4435b5f5ba77a01bbf835f058e809370dca78cda3333ad6",
+          "source_bytes": 2190770,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-death-SpriteFrames.tres",
+          "SpriteFrames_sha256": "75cc5977c18e0d5602324aed3541f31b5c04e556c6731aeabeda22ff97a95186",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-death-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch22-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:193",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/S-run-source-v01.png",
           "source_sha256": "9a7e092695c9814708a98cd8cbc12a0a83b1a620e023c99dfffec0c8929789cd",
@@ -2032,7 +2120,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 31,
+      "remaining_draft_configurations": 30,
       "precision_final_approved": false
     },
     {
@@ -2072,6 +2160,28 @@
         {
           "key": "transform:192",
           "direction": "S",
+          "role": "death",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-death-source-v01.png",
+          "source_sha256": "3299ca129acf43768fc0ef54b84431151aadbda179a6064f7d687c704df4c0c6",
+          "source_bytes": 1972144,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-death-SpriteFrames.tres",
+          "SpriteFrames_sha256": "3d2dfc17b9db7aa4d09d7cd8226262ccde5934ee8c7ca5f5763531db158879b5",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-death-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch22-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:192",
+          "direction": "S",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-run-source-v01.png",
           "source_sha256": "aacbb6081fcadcf424fe0c27522e0953f95fcc7e517ccd1fb9ba664125f33314",
@@ -2092,7 +2202,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 31,
+      "remaining_draft_configurations": 30,
       "precision_final_approved": false
     },
     {
