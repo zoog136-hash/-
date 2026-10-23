@@ -1,0 +1,94 @@
+{
+  "actor": "monster:죽음의 좀비 로드",
+  "revision": "r003",
+  "status": "HOLD",
+  "approval_preserved": true,
+  "approval_mutated": false,
+  "new_approval": false,
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/candidate.json",
+    "bytes": 123378,
+    "sha256": "77c9d41d0b2e881e68f404f1356b3cb287c4a8f8bc15c78b6d26ee3e55ad0f88"
+  },
+  "previous_candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/candidate-r002.json",
+    "bytes": 96375,
+    "sha256": "b8369dc32069356b65238fde87b20995115ae4eacec8da912b5da9c8c8b77550"
+  },
+  "new_generated_raw_PNGs": 3,
+  "new_generated_pose_slots_including_failed_trials": 10,
+  "selected_new_source_poses": 3,
+  "reused_r002_source_poses": 113,
+  "unmodified_other_110_pose_RGBA": true,
+  "actual_examined_new_sources": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-far-left-plant-single-v01.png",
+      "bytes": 2001410,
+      "sha256": "6e01d0488c3dc7eb9c34035348656693df0840db2cd9949e27898ee49ac82a32"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-far-left-support3-guide-v01.png",
+      "bytes": 1449343,
+      "sha256": "19d1ea1c69d6b46dd563f7f084f0ff1ca74456befe8ddb280c706db027e2d5aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-run6-structural-final-v01.png",
+      "bytes": 2389491,
+      "sha256": "fba05c84ca0e8e9a54035c6e6f215dace724cba7e143e4b025c39f3efef9fe6a"
+    }
+  ],
+  "actual_examined_E_playback_phases": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "observed_support_sequence": [
+    "near_RIGHT",
+    "near_RIGHT",
+    "near_RIGHT",
+    "far_LEFT",
+    "far_LEFT",
+    "far_LEFT"
+  ],
+  "selected_source_rows": [
+    "r002_E0",
+    "r002_E1",
+    "r002_E4",
+    "guide1",
+    "guide2",
+    "final4"
+  ],
+  "actual_before_after": "Original r002 E0/E3 both near support. Selected r003 phase0 is nearRIGHT grounded; phase3 is nearRIGHT airborne/farLEFT grounded, independently confirmed.",
+  "identity_camera_findings": "Large belly, chains, shoulder/back nails, empty fists, gray mottled skin and right-facing body retained. Source-plane support improvement does not establish final mythic quality.",
+  "remaining_holds": [
+    "Near half lacks a complete forward swing arc and far half repeats a bent-under support pose at3/5; timing/gait continuity remains incomplete.",
+    "Cross-source head/torso size and pivot continuity need root in-game rendering; phase3 appears slightly smaller to independent reviewer.",
+    "Low-alpha brown halo visible in source previews; no alpha cleanup performed. New whole-source low-alpha fraction4.3% is comparable to r002 E4.52%, but actual ground compositing needs review.",
+    "Actual gameplay weight, contact target synchronization and default Main not reviewed here."
+  ],
+  "reference_height": 96,
+  "profile_pixel_scale": 1.3333333333333333,
+  "nominal_display_height": 128,
+  "metadata_change_only": "All previous PNG/crop RGBA remains unchanged. Virtual margins/canvases rebase64→96 with compensating profile scale; whole-source phase groups share a canvas.",
+  "new_walk_sources": 0,
+  "source_pixel_edits": 0,
+  "source_mirror_operations": 0,
+  "source_frame_duplicates": 0,
+  "actual_loaded_RGBA_proof": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/godot-playback.json",
+    "bytes": 669,
+    "sha256": "ac7acc8528e222f2b25138c0ecf7d8b82e998f5a8ac4208a49a869c63071bed4"
+  },
+  "Godot": "4.7.2 actual ActorMotion playback33clips/116poses, DBboss speed107, mixed per-frame textures and116loaded RGBA SHA verified.",
+  "independent_review": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/independent-source-review.json",
+    "bytes": 2018,
+    "sha256": "12835145260436d3a3d125fe212fb02e959be99efc2488bdea8e92d9945f0cfe"
+  },
+  "default_Main": "NOT_RUN_BY_THIS_AGENT",
+  "new_runtime_switches": 0,
+  "further_generation": "STOPPED_AFTER_3_TARGETED_ATTEMPTS; no extra direction attempted because full E gait still HOLD."
+}
