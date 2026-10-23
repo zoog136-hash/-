@@ -1,0 +1,33 @@
+{
+  "source_clips_reviewed": 321,
+  "existing_drafts_repaired": 2,
+  "repaired": [
+    {
+      "key": "transform:135",
+      "direction": "S",
+      "role": "death"
+    },
+    {
+      "key": "transform:346",
+      "direction": "N",
+      "role": "hit"
+    }
+  ],
+  "new_frame_sources_generated": 4,
+  "new_frames_generated": 24,
+  "new_frame_source_holds": 4,
+  "normal_clips_preserved": 204,
+  "remaining_source_holds": 319,
+  "existing_missing_generation_holds": 3,
+  "technical_integration": {
+    "actors": 2,
+    "clips": 39,
+    "death_input_direction_cases": 16,
+    "status": "PASS_CANDIDATE_ONLY"
+  },
+  "final_quality_approvals_added": 0,
+  "approved_active_actors": 2,
+  "active_total": 19,
+  "unapproved_actors": 17,
+  "limitations": "All alpha>16 owned foreground retained by existing reviewed-pose assembler. Low-alpha residual source pixels14,564 and2,806 (alpha<=16) remain in the immutable original sheets and are explicitly recorded, not rendered as reviewed-body regions. Semantic joints, facing, foot contacts and physical scale remain unreviewed."
+}

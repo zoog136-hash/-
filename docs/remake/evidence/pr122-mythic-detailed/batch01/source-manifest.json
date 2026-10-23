@@ -41780,6 +41780,557 @@
       "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-NW-idle-draft-v01.png",
       "original_source_sha256": "c1f3f736b41645f61f7274ae234a01debc09e4c4eba61266d6ae1d8e0001eb3d",
       "original_request_sha256": "95e97c755c9d7f676eafbed78c7b545ea9642627a43afe4250ddb2c5b9e17cb4"
+    },
+    {
+      "key": "transform:135",
+      "direction": "S",
+      "role": "death",
+      "version": "spacing-repair-v01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_135/S-death.png",
+      "sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+      "bytes": 1939232,
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+        "canvas_size": 2048,
+        "review_basis": "Existing exact reviewed-pose assembly uses 2048 canonical virtual canvas; game layout retains 1024 reference without raster resampling. Technical proposal only."
+      },
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-S-death-draft-v01.png",
+      "original_source_sha256": "a4cbb9689be22eba29025a9d3b76b9bb1e423c608c6e907788c83b107144a584",
+      "source_assembly_proof": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_135/S-death.assembly.json",
+      "source_assembly_proof_sha256": "df400bdb5f595e4668f85a29721aea77d2755b6edf47d503b01d7ed05735f99d",
+      "unselected_original_alpha_le16_pixels": 14564,
+      "low_alpha_residual_preserved_in_original_source": true,
+      "visual_quality": "NOT_REVIEWED",
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+        "base_geometry_sha256": "c705efb13f12703b8d2599efdfe50f862135c8ea66bc806a08ada0ec61fe536d",
+        "direction": "S",
+        "review_basis": "Explicit topology-owned full alpha16 regions on the same immutable spaced atlas; importer and ownership thresholds unchanged",
+        "regions": [
+          [
+            394,
+            416,
+            491,
+            447
+          ],
+          [
+            1678,
+            432,
+            481,
+            415
+          ],
+          [
+            410,
+            1740,
+            459,
+            360
+          ],
+          [
+            1656,
+            1772,
+            527,
+            296
+          ],
+          [
+            401,
+            3064,
+            478,
+            270
+          ],
+          [
+            1665,
+            3093,
+            509,
+            213
+          ]
+        ],
+        "nearest_owner_sha256": "de04505bdf62fbf0fd0fc9f3d69a7076c4af8d71477b360602721f1bebe0c80f"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+        "source_RGBA_sha256": "97ec73889be22b66bf4af31b0213963c5ab36e6c6cc0b6e32c854904d49ee04c",
+        "base_geometry_sha256": "c705efb13f12703b8d2599efdfe50f862135c8ea66bc806a08ada0ec61fe536d",
+        "derived_geometry_sha256": "ce01ba483898e0cc8df1b84b4d1b7dc72288018cc8408ad8a4b3d47fb35a302d",
+        "review_sha256": "ade61afe4652f8b21f8b5c63b2fc1b30755d12600e4a07fde6ddf21b4331cb7c",
+        "review_basis": "Explicit topology-owned full alpha16 regions on the same immutable spaced atlas; importer and ownership thresholds unchanged",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 493040,
+        "added_alpha_gt16_pixels": 5,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            394,
+            416,
+            491,
+            447
+          ],
+          [
+            1678,
+            432,
+            481,
+            415
+          ],
+          [
+            410,
+            1740,
+            459,
+            360
+          ],
+          [
+            1656,
+            1772,
+            527,
+            296
+          ],
+          [
+            401,
+            3064,
+            478,
+            270
+          ],
+          [
+            1665,
+            3093,
+            509,
+            213
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "de04505bdf62fbf0fd0fc9f3d69a7076c4af8d71477b360602721f1bebe0c80f",
+        "foreground_owner_sha256": "254632efb78bc53c6cbf62b723ddfd026330472549585e252cd1a5d620b74b8d",
+        "detached_pixels": 13,
+        "detached_fragments": [
+          {
+            "row": 1,
+            "pixels": 6,
+            "bbox": [
+              1988,
+              685,
+              1991,
+              688
+            ],
+            "nearest_max": 8.0,
+            "second_nearest_min": 1096.2207806824317,
+            "owner_margin_min": 1088.4670537686027
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              1985,
+              688,
+              1986,
+              689
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 1094.8652885172678,
+            "owner_margin_min": 1091.8652885172678
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              780,
+              1927,
+              781,
+              1928
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 880.478279118798,
+            "owner_margin_min": 877.478279118798
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2080,
+              1960,
+              2081,
+              1961
+            ],
+            "nearest_max": 3.1622776601683795,
+            "second_nearest_min": 1121.4673423689162,
+            "owner_margin_min": 1118.3050647087478
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              2078,
+              1961,
+              2079,
+              1962
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 1122.2869508285303,
+            "owner_margin_min": 1118.6813995530663
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              711,
+              1989,
+              712,
+              1990
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 948.0258435295949,
+            "owner_margin_min": 944.0258435295949
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              496,
+              3167,
+              497,
+              3168
+            ],
+            "nearest_max": 3.1622776601683795,
+            "second_nearest_min": 1087.8979731574098,
+            "owner_margin_min": 1084.7356954972413
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              490,
+              3171,
+              491,
+              3172
+            ],
+            "nearest_max": 2.8284271247461903,
+            "second_nearest_min": 1092.9016424180174,
+            "owner_margin_min": 1090.0732152932712
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
+    },
+    {
+      "key": "transform:346",
+      "direction": "N",
+      "role": "hit",
+      "version": "spacing-repair-v01",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_346/N-hit.png",
+      "sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+      "bytes": 2303919,
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+        "canvas_size": 2048,
+        "review_basis": "Existing exact reviewed-pose assembly uses 2048 canonical virtual canvas; game layout retains 1024 reference without raster resampling. Technical proposal only."
+      },
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-N-hit-draft-v01.png",
+      "original_source_sha256": "920d8121594bb54e8df66760f19d72dc03e014143ae9a6480cdab866fa2152d5",
+      "source_assembly_proof": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_346/N-hit.assembly.json",
+      "source_assembly_proof_sha256": "2b2263df940069e575134154df6a1abb8bf9420f4ab451b23560e032a07b9f7e",
+      "unselected_original_alpha_le16_pixels": 2806,
+      "low_alpha_residual_preserved_in_original_source": true,
+      "visual_quality": "NOT_REVIEWED",
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+        "base_geometry_sha256": "e7f84f3f8ae81d1899fd44dbaec52e72579d4d9ee768ec74d163f2ddf90777ce",
+        "direction": "N",
+        "review_basis": "Explicit topology-owned full alpha16 regions on the same immutable spaced atlas; importer and ownership thresholds unchanged",
+        "regions": [
+          [
+            423,
+            418,
+            434,
+            445
+          ],
+          [
+            1676,
+            419,
+            485,
+            443
+          ],
+          [
+            388,
+            1687,
+            503,
+            468
+          ],
+          [
+            1659,
+            1696,
+            521,
+            450
+          ],
+          [
+            385,
+            2977,
+            508,
+            447
+          ],
+          [
+            1713,
+            2975,
+            413,
+            453
+          ]
+        ],
+        "nearest_owner_sha256": "37036f46bcffcba9c6d088f40bb3e6b5b4b0961f80f5f7c245cf30de72147b0d"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+        "source_RGBA_sha256": "deebe8a5d044e501d48fa39ef5d8f34d59738b7a61e2ca770859edf49c4a8e9c",
+        "base_geometry_sha256": "e7f84f3f8ae81d1899fd44dbaec52e72579d4d9ee768ec74d163f2ddf90777ce",
+        "derived_geometry_sha256": "05d39be3206701c6d88bb29357d1e23407a745be6e2b3e11b3132bb6dc685533",
+        "review_sha256": "9383e3b135a3eeee430ceeed4bd83f81cdfe8e4fd0c4f06728a980ff51be8036",
+        "review_basis": "Explicit topology-owned full alpha16 regions on the same immutable spaced atlas; importer and ownership thresholds unchanged",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 571215,
+        "added_alpha_gt16_pixels": 14,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            423,
+            418,
+            434,
+            445
+          ],
+          [
+            1676,
+            419,
+            485,
+            443
+          ],
+          [
+            388,
+            1687,
+            503,
+            468
+          ],
+          [
+            1659,
+            1696,
+            521,
+            450
+          ],
+          [
+            385,
+            2977,
+            508,
+            447
+          ],
+          [
+            1713,
+            2975,
+            413,
+            453
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "37036f46bcffcba9c6d088f40bb3e6b5b4b0961f80f5f7c245cf30de72147b0d",
+        "foreground_owner_sha256": "d5b3b0bdd8e042dfc42b1a30d609d4c59c7098eae7cb674d1f9bf931fa9eacd5",
+        "detached_pixels": 14,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              497,
+              518,
+              498,
+              519
+            ],
+            "nearest_max": 8.246211251235321,
+            "second_nearest_min": 1178.526622524922,
+            "owner_margin_min": 1170.2804112736867
+          },
+          {
+            "row": 1,
+            "pixels": 1,
+            "bbox": [
+              1973,
+              579,
+              1974,
+              580
+            ],
+            "nearest_max": 4.0,
+            "second_nearest_min": 1128.28409542987,
+            "owner_margin_min": 1124.28409542987
+          },
+          {
+            "row": 3,
+            "pixels": 1,
+            "bbox": [
+              1811,
+              1737,
+              1812,
+              1738
+            ],
+            "nearest_max": 3.0,
+            "second_nearest_min": 879.8210045230791,
+            "owner_margin_min": 876.8210045230791
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              1967,
+              1768,
+              1968,
+              1770
+            ],
+            "nearest_max": 6.324555320336759,
+            "second_nearest_min": 910.0197800048085,
+            "owner_margin_min": 904.1888281099632
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              676,
+              1802,
+              677,
+              1803
+            ],
+            "nearest_max": 14.560219778561036,
+            "second_nearest_min": 947.0005279829574,
+            "owner_margin_min": 932.4403082043963
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              680,
+              1804,
+              681,
+              1805
+            ],
+            "nearest_max": 17.72004514666935,
+            "second_nearest_min": 949.0131716683388,
+            "owner_margin_min": 931.2931265216695
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              702,
+              1831,
+              703,
+              1832
+            ],
+            "nearest_max": 4.123105625617661,
+            "second_nearest_min": 962.6962137663159,
+            "owner_margin_min": 958.5731081406982
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              714,
+              1848,
+              715,
+              1849
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 949.5941238234365,
+            "owner_margin_min": 947.5941238234365
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              751,
+              3133,
+              752,
+              3134
+            ],
+            "nearest_max": 6.708203932499369,
+            "second_nearest_min": 975.5265244984372,
+            "owner_margin_min": 968.8183205659378
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              1925,
+              3181,
+              1926,
+              3182
+            ],
+            "nearest_max": 4.123105625617661,
+            "second_nearest_min": 1041.094135993475,
+            "owner_margin_min": 1036.9710303678573
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              1927,
+              3181,
+              1928,
+              3182
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 1040.96925987274,
+            "owner_margin_min": 1035.96925987274
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              733,
+              3195,
+              734,
+              3196
+            ],
+            "nearest_max": 5.0,
+            "second_nearest_min": 986.414213198492,
+            "owner_margin_min": 981.414213198492
+          },
+          {
+            "row": 4,
+            "pixels": 1,
+            "bbox": [
+              474,
+              3261,
+              475,
+              3262
+            ],
+            "nearest_max": 2.0,
+            "second_nearest_min": 1110.328329819608,
+            "owner_margin_min": 1108.328329819608
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -42138,9 +42689,11 @@
     "transform:242:W:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/W-idle-expanded-source.png",
     "transform:346:N:attack": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/N-attack-expanded-source.png",
     "transform:346:SW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/SW-idle-expanded-source.png",
-    "transform:411:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_411/NW-idle-expanded-source.png"
+    "transform:411:NW:idle": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_411/NW-idle-expanded-source.png",
+    "transform:135:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_135/S-death.png",
+    "transform:346:N:hit": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_346/N-hit.png"
   },
-  "selected_detailed_action_native_poses": 1452,
+  "selected_detailed_action_native_poses": 1464,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -42151,6 +42704,74 @@
       "reason": "service output not returned across session interruption; no image bytes received",
       "resolved_by": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v02iso01.png",
       "original_unreturned_request_preserved": true
+    },
+    {
+      "key": "transform:242",
+      "direction": "N",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/boundary-source-v02/transform_242-N-attack.png",
+      "sha256": "15f645fe6344b5fae8ca5cb3b9a886db4386df16a1eace0391264a3228c14814",
+      "status": "HOLD",
+      "geometry": {
+        "status": "HOLD"
+      },
+      "reason": "Expected exactly 6 separated poses, found 14; review/re-author, never invent slots",
+      "generation_request_sha256": "40a5859d1e970b00b80664b0597bad53aaf5219b534c2050a9b962e9f0b8c70e",
+      "attempted_once": true,
+      "retry_stopped": true,
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:399",
+      "direction": "E",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/boundary-source-v02/transform_399-E-run.png",
+      "sha256": "1f166cf0d8064870562fad7ec776cade6c0499c64870ee57cdc9ff8770008fea",
+      "status": "HOLD",
+      "geometry": {
+        "status": "HOLD"
+      },
+      "reason": "Expected exactly 6 separated poses, found 18; review/re-author, never invent slots",
+      "generation_request_sha256": "7c8a31dcee744adc0c5317834ad23c082af904bb4e62d69e6e0b2a4476f95da2",
+      "attempted_once": true,
+      "retry_stopped": true,
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:412",
+      "direction": "N",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/boundary-source-v02/transform_412-N-idle.png",
+      "sha256": "cb3b8d095665380951d3d48b943750b9a9840d50d3eee9347bc29d22771f0037",
+      "status": "HOLD",
+      "geometry": {
+        "status": "HOLD"
+      },
+      "reason": "Expected exactly 6 separated poses, found 8; review/re-author, never invent slots",
+      "generation_request_sha256": "0baeefcee4d332cc95db440d2b51cf729bf4ab544d04367beafac3f4dab03f3a",
+      "attempted_once": true,
+      "retry_stopped": true,
+      "production_connected": false,
+      "detailed_completed": false
+    },
+    {
+      "key": "transform:412",
+      "direction": "W",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/boundary-source-v02/transform_412-W-run.png",
+      "sha256": "973a5264c2a51a95f0deb3c9e712dd6caae08c88a72734b8457448d78e0829a0",
+      "status": "HOLD",
+      "geometry": {
+        "status": "HOLD"
+      },
+      "reason": "A pose rectangle includes another body; cannot safely crop",
+      "generation_request_sha256": "eaffd92bc8fc11d3000f8a53226940bd50b38025dd512e11e886c464b9c0e281",
+      "attempted_once": true,
+      "retry_stopped": true,
+      "production_connected": false,
+      "detailed_completed": false
     }
   ],
   "visual_quality_holds": [
@@ -55770,6 +56391,72 @@
           975
         ]
       ]
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_135/S-death.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+      "direction": "S",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          621,
+          788
+        ],
+        [
+          1885,
+          771
+        ],
+        [
+          612,
+          1989
+        ],
+        [
+          1899,
+          2053
+        ],
+        [
+          633,
+          3323
+        ],
+        [
+          1921,
+          3303
+        ]
+      ],
+      "review_basis": "Existing reviewed-pose assembler: source physical bodies/whole alpha16 foreground validated, exact crop RGBA retained, no resampling, translation pinned. Map the same source artboard root through each exact assembly translation. Physical scale, anatomy and final visual quality NOT_REVIEWED."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_346/N-hit.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+      "direction": "N",
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          618,
+          834
+        ],
+        [
+          1894,
+          831
+        ],
+        [
+          637,
+          2108
+        ],
+        [
+          1885,
+          2143
+        ],
+        [
+          590,
+          3415
+        ],
+        [
+          1876,
+          3419
+        ]
+      ],
+      "review_basis": "Existing reviewed-pose assembler: source physical bodies/whole alpha16 foreground validated, exact crop RGBA retained, no resampling, translation pinned. Map the same source artboard root through each exact assembly translation. Physical scale, anatomy and final visual quality NOT_REVIEWED."
     }
   },
   "runtime_layout_attempt_holds": [
