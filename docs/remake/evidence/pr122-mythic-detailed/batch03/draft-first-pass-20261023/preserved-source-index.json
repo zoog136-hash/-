@@ -9288,7 +9288,11 @@
   "new_S_run_drafts": 16,
   "next_role": "hit",
   "new_S_death_drafts": 15,
-  "generation_holds": [],
+  "generation_holds": [
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_367-SE-hit-generation-HOLD-v01.json",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-death-generation-HOLD-v01.json",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-NW-hit-generation-HOLD-v01.json"
+  ],
   "new_S_hit_drafts": 16,
   "new_S_idle_drafts": 16,
   "new_E_idle_drafts": 16,
@@ -9319,5 +9323,56 @@
   "new_NE_idle_drafts": 16,
   "new_NE_run_drafts": 16,
   "new_NE_attack_drafts": 16,
-  "new_NE_hit_drafts": 16
+  "new_NE_hit_drafts": 16,
+  "draft_complete_actor_keys": [
+    "transform:412",
+    "transform:346",
+    "transform:242",
+    "transform:224",
+    "transform:212",
+    "transform:189",
+    "transform:174",
+    "transform:141",
+    "transform:139",
+    "transform:137",
+    "transform:135",
+    "transform:133",
+    "transform:130"
+  ],
+  "draft_incomplete_actors": [
+    {
+      "key": "transform:411",
+      "missing": [
+        {
+          "direction": "NW",
+          "role": "hit",
+          "hold": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-NW-hit-generation-HOLD-v01.json"
+        }
+      ]
+    },
+    {
+      "key": "transform:399",
+      "missing": [
+        {
+          "direction": "S",
+          "role": "death",
+          "hold": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-death-generation-HOLD-v01.json"
+        }
+      ]
+    },
+    {
+      "key": "transform:367",
+      "missing": [
+        {
+          "direction": "SE",
+          "role": "hit",
+          "hold": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_367-SE-hit-generation-HOLD-v01.json"
+        }
+      ]
+    }
+  ],
+  "all_unheld_required_sources_saved": true,
+  "new_first_pass_clip_count": 525,
+  "native_geometry_review": "Only 412 S idle/run preflight PASS; remaining native geometry not yet run",
+  "next_production_stage": "existing native staging and actual Main/Player integration; retain visual HOLD"
 }
