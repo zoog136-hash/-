@@ -24,9 +24,9 @@ func _initialize() -> void:
 	verify(OMAN.pack_root() == OMAN.BUNDLED_ROOT, "Oman source from the updated GitHub checkout")
 	verify(OMAN.installed("oman_01") and OMAN.installed("oman_10"), "all original Oman pack IDs available")
 	verify(PNG.catalog_entries().size() == 2, "new temples enter ordinary region list")
-	for mid: String in ["albino_01","albino_02","albino_03","escaros_01","escaros_05","yahee_temple","balrog_temple"]:
+	for mid: String in ["albino_01","albino_02","escaros_01","escaros_05","yahee_temple","balrog_temple"]:
 		verify(PNG.supports(mid), "new image automatically selected for "+mid)
-	verify(not PNG.supports("albino_04"), "unmapped legacy Albino 4 remains untouched")
+	verify(not PNG.supports("albino_03") and not PNG.supports("albino_04") and PNG.canonical("albino_03")=="albino_02" and PNG.canonical("albino_04")=="albino_02", "retired Albino zones redirect to area 2")
 	verify(PNG.canonical("escaros_05") == "escaros_05", "existing save map ID does not change")
 	var index: Dictionary = PNG.read_json(PNG.root_path()+"/index.json")
 	for mid: String in ["albino_01","escaros_world","yahee_temple","balrog_temple"]:
