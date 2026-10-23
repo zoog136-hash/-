@@ -1,0 +1,49 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc082",
+  "actor": "176",
+  "direction": "NW",
+  "role": "hit",
+  "slot": [
+    "transform:176",
+    "NW",
+    "hit"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-source-v02.png",
+  "source_sha256": "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-record-v02.json",
+  "record_sha256": "811982aab186f564f93d8c7b24db87924eca356a5cf5558f68caa7ff529e6153",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-SpriteFrames.tres",
+  "SpriteFrames_sha256": "8955dfe59e40941e6bb40a6fec57d058c69a5d134b176d830383915da694edd7",
+  "remote_commit": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc082-review-v01.json",
+    "sha256": "dcf5fcfd2fc3cafabc56cee007d3bb1bfb254f5b7b0b38c81abf5852e9ead4b7"
+  },
+  "visual_board": "quality-v03/visual-boards/qc082-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "motion_role_result": "DISTINCT_RECOIL_HIT_STATIC_SEQUENCE",
+  "detail": "Only the four new supplement poses were inspected. The first/last new poses show front/right chest/helmet while the middle new poses show back-right, rather than a consistent back-left NW camera. Recoil/crouch and the purple halberd/armor identity remain distinct from attack; native0/3 are preserved.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "detail": "New HIT supplement changes between front/right and back/right instead of fixed back-left NW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ]
+}

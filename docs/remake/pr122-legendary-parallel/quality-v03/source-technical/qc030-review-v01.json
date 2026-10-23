@@ -1,0 +1,158 @@
+{
+  "sha256": "98a2d3f54a0d78b838db7b4dc08dd95b020be295fe6469ec363e4d069df8cf63",
+  "grid": [
+    3,
+    2
+  ],
+  "findings": [
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 2,
+      "pixels_alpha_gt16": 107,
+      "strong_pixels": 30,
+      "bbox_in_frame": [
+        0,
+        390,
+        8,
+        410
+      ],
+      "physical_owner_rows": {
+        "1": 107
+      },
+      "source_grid": [
+        3,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    },
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 4,
+      "pixels_alpha_gt16": 255,
+      "strong_pixels": 113,
+      "bbox_in_frame": [
+        0,
+        385,
+        14,
+        414
+      ],
+      "physical_owner_rows": {
+        "3": 255
+      },
+      "source_grid": [
+        3,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    }
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-source-v02.png",
+  "authored_slot": [
+    "transform:244",
+    "N",
+    "hit"
+  ],
+  "dependents": [
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "phase": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "phase": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "phase": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "phase": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "phase": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-record-v02.json",
+  "record_sha256": "4df1e17aadc8d91bba3add4890ede9c88b12598e2a46d71fc92aceb128702bea",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-SpriteFrames.tres",
+  "SpriteFrames_sha256": "f076df89546dd828ae9b3713ffe325ba524b985dbebaf4f396da8ac21e47da49",
+  "correction_candidate_id": "qc030",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/N-hit-source-v01.png",
+  "previous_source_sha256": "430ac16630e227b2c0de0ae6e5df9f0124800595fbe9dd18374aba7d9fe66d73",
+  "batch": 308,
+  "remote_commit": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+  "remote_receipt_sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283",
+  "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+  "final_approved": 0
+}

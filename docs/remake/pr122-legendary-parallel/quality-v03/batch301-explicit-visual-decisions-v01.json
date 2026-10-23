@@ -1,0 +1,62 @@
+{
+  "qc100": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Back-left/up-left mage guard with matching white hair, red-black feathered collar, gold robes and purple staff. Six planted restrained torso/cloth changes remain living NW IDLE.",
+    "remaining_issues": []
+  },
+  "qc101": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Back-right/up-right mage guard with matching white hair, red-black collar, gold robes and purple staff. Planted stance and small cloth changes remain living NE IDLE.",
+    "remaining_issues": []
+  },
+  "qc104": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left guard with matching blond hair, silver/black/gold armor, blue energy ribbons and blade. Sword is held across the body in a resting ready stance; six small planted changes remain IDLE.",
+    "remaining_issues": []
+  },
+  "qc105": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "HOLD",
+    "detail": "Rear-left camera and costume match, but the character keeps the sword arm raised above/behind the head in a deep attack-like wind-up rather than a restrained living guard. Do not treat endpoints as a verified idle guard.",
+    "remaining_issues": [
+      {
+        "cause": "idle_role",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Rear-left camera and costume match, but the character keeps the sword arm raised above/behind the head in a deep attack-like wind-up rather than a restrained living guard. Do not treat endpoints as a verified idle guard.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc106": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "HOLD",
+    "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+    "remaining_issues": [
+      {
+        "cause": "idle_role",
+        "status": "HOLD",
+        "frames": [
+          3
+        ],
+        "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  }
+}

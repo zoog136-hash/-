@@ -1,0 +1,51 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc015",
+  "actor": "337",
+  "direction": "NW",
+  "role": "run",
+  "slot": [
+    "transform:337",
+    "NW",
+    "run"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-source-v02.png",
+  "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-record-v02.json",
+  "record_sha256": "9915c1f7ed677453a79ae3094dd6c622c134e4c8d9ee35aab01a33e4274c258d",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-SpriteFrames.tres",
+  "SpriteFrames_sha256": "034496741528b1c209fd96c19a0728edc048ce853df1c48a8641d3afb137705a",
+  "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc015-review-v01.json",
+    "sha256": "0e7974e49198ec5b12cb6a50eb6a02e91c8c387738739a130d6997974c810fac"
+  },
+  "visual_board": "quality-v03/visual-boards/qc015-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "motion_role_result": "RUN_POSES_PRESENT",
+  "detail": "The first row runs left/back-left with the staff on screen-right, while the second row turns right/back-right with the staff on screen-left. Direction changes within one requested NW run. White/gold mage identity is retained.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Run camera reverses left-to-right between the two sheet rows.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ]
+}

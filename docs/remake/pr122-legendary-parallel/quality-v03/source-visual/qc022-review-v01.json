@@ -1,0 +1,46 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc022",
+  "actor": "274",
+  "direction": "SW",
+  "role": "run",
+  "slot": [
+    "transform:274",
+    "SW",
+    "run"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-source-v02.png",
+  "source_sha256": "cf2918b53e3db4fec598d11d0493ba033e39f847ceb282a2bc0d4d4458ba0ba7",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-record-v02.json",
+  "record_sha256": "50dc7748ab5e8a780ed7164e3b65a8fdcb4d7edfad338442f48bcef9ae9c2bd2",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-SpriteFrames.tres",
+  "SpriteFrames_sha256": "f720cacd47f4fa050d2cc52612b932422d4ae6e96cb5fb6d6eaad4b824c330dc",
+  "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc022-review-v01.json",
+    "sha256": "999af27e237f4764bd70d2e5036bb283732395c9e0635c6684a179db280c1a33"
+  },
+  "visual_board": "quality-v03/visual-boards/qc022-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "motion_role_result": "RUN_POSES_PRESENT",
+  "detail": "Most poses run left/down-left, but phase2 faces and lunges screen-right with a different torso/leg orientation. Matching white hair, black armor and blue curved weapon remain; one consistent SW run camera is not achieved.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        2
+      ],
+      "detail": "Phase2 reverses the run facing relative to the five left-facing poses.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ]
+}

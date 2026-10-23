@@ -1,0 +1,251 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-review-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "batch": 303,
+  "changed_sources_reviewed_once": 5,
+  "results": [
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc125",
+      "actor": "1",
+      "direction": "N",
+      "role": "idle",
+      "slot": [
+        "transform:1",
+        "N",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-source-v02.png",
+      "source_sha256": "c69ebd2db23475d62d2d23bbd45491bb651f53cdb94e95714fb3c4765f62bbc5",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "f9c47af0c7a6c7ee0fa1478a4c17833a4ede5681c78a62e3e7a98abcf51383e4",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "b3878e91a13c8467ee7961a8ffc167b8cdb4ebd1ae4f9c890e8695242b8a1cbc",
+      "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc125-review-v01.json",
+        "sha256": "100c01b98150a4dc619159b681a7a4c5c46136278a03a45b9c24ffaa25ebdd2d"
+      },
+      "visual_board": "quality-v03/visual-boards/qc125-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "detail": "All six poses show the gold facial/chevron mask, front breastplate and frontal knee/torso surfaces toward the viewer instead of a rear-facing N view. Matching dark body and gold star armor remain.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Frontal facial mask/chest remain in the N idle slot.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+      "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc011",
+      "actor": "338",
+      "direction": "N",
+      "role": "run",
+      "slot": [
+        "transform:338",
+        "N",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_338/quality-v02/N-run-source-v02.png",
+      "source_sha256": "873b825429a133f9d35c8adcb37a1d0f1a9f11e44ce50456dcf71d619ade9874",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_338/quality-v02/N-run-record-v02.json",
+      "record_sha256": "b61d5590e40d229d90a0f3bc4681e7afb47da8885d9c7dc3c31773eed9471d8c",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_338/quality-v02/N-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "daddf395d150217f845e238fefb5735ef21a99c12059928eacb67e16300e5e59",
+      "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc011-review-v01.json",
+        "sha256": "b04ccbf574a12b1cf157a50cd67b76bb7cf7bcb90823e3a3b6f468bb6e9e8f75"
+      },
+      "visual_board": "quality-v03/visual-boards/qc011-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "All six poses show a rear-facing N run with matching black/red/gold horned mage and two colored orbs. Distinct lower-leg/knee and robe phases support a run rather than a translated still image; dynamic contact quality remains unapproved.",
+      "remaining_issues": []
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc015",
+      "actor": "337",
+      "direction": "NW",
+      "role": "run",
+      "slot": [
+        "transform:337",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "9915c1f7ed677453a79ae3094dd6c622c134e4c8d9ee35aab01a33e4274c258d",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "034496741528b1c209fd96c19a0728edc048ce853df1c48a8641d3afb137705a",
+      "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc015-review-v01.json",
+        "sha256": "0e7974e49198ec5b12cb6a50eb6a02e91c8c387738739a130d6997974c810fac"
+      },
+      "visual_board": "quality-v03/visual-boards/qc015-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "RUN_POSES_PRESENT",
+      "detail": "The first row runs left/back-left with the staff on screen-right, while the second row turns right/back-right with the staff on screen-left. Direction changes within one requested NW run. White/gold mage identity is retained.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Run camera reverses left-to-right between the two sheet rows.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ]
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc017",
+      "actor": "330",
+      "direction": "SW",
+      "role": "run",
+      "slot": [
+        "transform:330",
+        "SW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_330/quality-v02/SW-run-source-v02.png",
+      "source_sha256": "f821f1ff8c443cae18d755038092a007648e268f2b731f2149c34d5fea1c504f",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_330/quality-v02/SW-run-record-v02.json",
+      "record_sha256": "8acda691adc75536b682716c01cd623d2429430adf7998f2bc111cb8a4d8eaa2",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_330/quality-v02/SW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "bacffdd73544c0b0cdb9c3f2c6cb008fd8dae9fcab25bf31025460bb3fd2b969",
+      "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc017-review-v01.json",
+        "sha256": "3ae40a2906b034a9dcfc2acc7881af68e7f3b2995a4b12b6b0122e567f5f4eb1"
+      },
+      "visual_board": "quality-v03/visual-boards/qc017-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "All six poses retain front-left/down-left SW camera, matching black/red armor, red cape and jagged red blade. Distinct knee/leg and arm joint phases are present; dynamic grounding remains unapproved.",
+      "remaining_issues": []
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc022",
+      "actor": "274",
+      "direction": "SW",
+      "role": "run",
+      "slot": [
+        "transform:274",
+        "SW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-source-v02.png",
+      "source_sha256": "cf2918b53e3db4fec598d11d0493ba033e39f847ceb282a2bc0d4d4458ba0ba7",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-record-v02.json",
+      "record_sha256": "50dc7748ab5e8a780ed7164e3b65a8fdcb4d7edfad338442f48bcef9ae9c2bd2",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "f720cacd47f4fa050d2cc52612b932422d4ae6e96cb5fb6d6eaad4b824c330dc",
+      "remote_commit": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc022-review-v01.json",
+        "sha256": "999af27e237f4764bd70d2e5036bb283732395c9e0635c6684a179db280c1a33"
+      },
+      "visual_board": "quality-v03/visual-boards/qc022-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "RUN_POSES_PRESENT",
+      "detail": "Most poses run left/down-left, but phase2 faces and lunges screen-right with a different torso/leg orientation. Matching white hair, black armor and blue curved weapon remain; one consistent SW run camera is not achieved.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            2
+          ],
+          "detail": "Phase2 reverses the run facing relative to the five left-facing poses.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "camera_results": {
+      "HOLD": 3,
+      "RESOLVED_STATIC": 2
+    },
+    "identity_results": {
+      "PRESERVED_STATIC": 5
+    },
+    "idle_guard_results": {
+      "HOLD_CAMERA_IDENTITY_OR_ROLE": 1,
+      "NOT_IDLE": 4
+    }
+  },
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "final_approved": 0
+}

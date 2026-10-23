@@ -1,0 +1,231 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-review-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "batch": 304,
+  "changed_sources_reviewed_once": 5,
+  "results": [
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc029",
+      "actor": "245",
+      "direction": "N",
+      "role": "run",
+      "slot": [
+        "transform:245",
+        "N",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/N-run-source-v02.png",
+      "source_sha256": "24426bbb277069904ba79bf387d49afe8717adb53c0d026fcba7261f1542cb36",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/N-run-record-v02.json",
+      "record_sha256": "6a99064ebd6459142147bd9ceb473977c484c7f964a8d007fe8b81706692f726",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/N-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "ddfbace1ca208de504dc3b075868978af43b8233e681bf211c37d1cd4730ed98",
+      "remote_commit": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc029-review-v01.json",
+        "sha256": "b923579c74d8c60b5a7f3d28c4ff79e97c865a0c696a0e777dbe33a061493249"
+      },
+      "visual_board": "quality-v03/visual-boards/qc029-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "Straight rear N run with matching black/gold armor, purple hair/cape, horn-like shoulder arcs, shield and blade. Six knee/boot and cloth phases articulate the stride without changing camera.",
+      "remaining_issues": []
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc035",
+      "actor": "225",
+      "direction": "NW",
+      "role": "run",
+      "slot": [
+        "transform:225",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "adcd5a7ee76f755d08c09310027f3d44fa4522a7845a9c63f08ea01468d6c254",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "20c49bdf27b4468a2f73eb982bf08d71130ba68e0fef3b7237fee785b4361d89",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "d410d54266577de98920a73933c2f621a7dbb82887cad189cf1495bb96512efc",
+      "remote_commit": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc035-review-v01.json",
+        "sha256": "352fd74ad0f28d96427e32e34aa8e60643a960ef2939aa115cb5d5b8f1081c31"
+      },
+      "visual_board": "quality-v03/visual-boards/qc035-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "HOLD",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "Back-left NW run camera is established with distinct articulated strides, gold armor and bright sword/shield. The prominent catalog horned/gold helmet is absent, exposing bare blond hair in every pose.",
+      "remaining_issues": [
+        {
+          "cause": "identity_weapon_action",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Back-left NW run camera is established with distinct articulated strides, gold armor and bright sword/shield. The prominent catalog horned/gold helmet is absent, exposing bare blond hair in every pose.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ]
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc042",
+      "actor": "213",
+      "direction": "NW",
+      "role": "run",
+      "slot": [
+        "transform:213",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "b970143ce02433a0b5adc0f1b1550498f23e08687f939a883840c86b781623ca",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "d50fa7aabfddb1eb11b6bc6be6ae69123a9f274178a3c72fd01d3144653fb31d",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "63e5b57b65e5f23daf30a2040c21b75859b56e589a1e8e7fbec74486c477a698",
+      "remote_commit": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc042-review-v01.json",
+        "sha256": "e0177a9a060565d0f2eeb848141528ab4a4b01a75bd09aefaf8511f4315b83f0"
+      },
+      "visual_board": "quality-v03/visual-boards/qc042-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "HOLD",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "Matching gold/black knight, white/teal cape and axe run back-left in phases0..3, but phases4..5 reverse to back-right and move the axe to the opposite screen side. Camera continuity remains HOLD.",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            4,
+            5
+          ],
+          "detail": "Matching gold/black knight, white/teal cape and axe run back-left in phases0..3, but phases4..5 reverse to back-right and move the axe to the opposite screen side. Camera continuity remains HOLD.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ]
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc047",
+      "actor": "193",
+      "direction": "NW",
+      "role": "run",
+      "slot": [
+        "transform:193",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "79d81e75d68f3e25d4a00bbb40705de314322676619ba66bd32dcc59be822eed",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "e3e5f5ce53435c509fd9cec20e61dfeded2573675a6655707fedb9ef7cbee97e",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "cfd1611abd46b1ce1fe594b336c06ffc749b041567193b5792a66511eb05e648",
+      "remote_commit": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc047-review-v01.json",
+        "sha256": "f31ecfa3dbf870f98d274cc3728ed8151ff7687a25598e6a10b56f1ee8ec273b"
+      },
+      "visual_board": "quality-v03/visual-boards/qc047-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "Consistent back-left/up-left NW run with matching black/gold armor, halo ornament and blue-white blade. Distinct knee/boot and arm/cloth phases are present.",
+      "remaining_issues": []
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc065",
+      "actor": "178",
+      "direction": "N",
+      "role": "run",
+      "slot": [
+        "transform:178",
+        "N",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/N-run-source-v02.png",
+      "source_sha256": "6515a3c06013e77a8a5b8a4c35153397e1fcfb9f7721d81d83e842502ddfde23",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/N-run-record-v02.json",
+      "record_sha256": "9a50e5a923cae8c2f68706c806bf890c237235b95fe2d59ee4a66fc7cd692c28",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/N-run-SpriteFrames.tres",
+      "SpriteFrames_sha256": "7bcd6662bbd2f8d8c0db92488e051c8f4dd613ca59d4f887cc90864b2df41484",
+      "remote_commit": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc065-review-v01.json",
+        "sha256": "aa8472aa2d199b5eeb05714f6c2a3b98a7b95479c9cc94cb1615820293f4ec61"
+      },
+      "visual_board": "quality-v03/visual-boards/qc065-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+      "detail": "Consistent straight rear N run with matching gold/black armor, blue-white crest, shield and sword. Six different leg/joint phases articulate a rearward stride.",
+      "remaining_issues": []
+    }
+  ],
+  "summary": {
+    "camera_results": {
+      "RESOLVED_STATIC": 4,
+      "HOLD": 1
+    },
+    "identity_results": {
+      "PRESERVED_STATIC": 4,
+      "HOLD": 1
+    },
+    "idle_guard_results": {
+      "NOT_IDLE": 5
+    }
+  },
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "final_approved": 0
+}

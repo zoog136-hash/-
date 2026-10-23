@@ -1,0 +1,36 @@
+{
+  "qc030": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_HIT_STATIC_SEQUENCE",
+    "detail": "All six poses retain rear N camera, matching white hair, black/gold armor, red cloak and red blade. Recoil, torso lean, low crouch and recovery hold the weapon away from an active attack.",
+    "remaining_issues": []
+  },
+  "qc082": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_HIT_STATIC_SEQUENCE",
+    "detail": "Only the four new supplement poses were inspected. The first/last new poses show front/right chest/helmet while the middle new poses show back-right, rather than a consistent back-left NW camera. Recoil/crouch and the purple halberd/armor identity remain distinct from attack; native0/3 are preserved.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "detail": "New HIT supplement changes between front/right and back/right instead of fixed back-left NW.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc111": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_HIT_STATIC_SEQUENCE",
+    "detail": "All six poses retain back-right/up-right NE camera and matching blond blue-energy archer outfit. Torso recoil, raised defensive arm, low crouch and recovery remain distinct from firing the bow.",
+    "remaining_issues": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc121",
+  "actor": "112",
+  "direction": "N",
+  "role": "run",
+  "slot": [
+    "transform:112",
+    "N",
+    "run"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-source-v02.png",
+  "source_sha256": "48907874e998039e783e26b54716396ca6b75b38e63c5935578f9fd96709a7b7",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-record-v02.json",
+  "record_sha256": "9f2c408c7b5b02b544f9739d0fc2a8896d157a190c4ae13c36d0db3b0e6ba333",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-SpriteFrames.tres",
+  "SpriteFrames_sha256": "d0b4283ba801a358efc53d34b076c1e4f2c1a1510595c7e04cef12a06b28ee7f",
+  "remote_commit": "959ecf5dfc763c48a202341e56e6966bfbe954f4",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc121-review-v01.json",
+    "sha256": "02d1a6eaeaa9eb998c9123e51e8665715322fd45437fb752734a62a917d02446"
+  },
+  "visual_board": "quality-v03/visual-boards/qc121-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "RESOLVED_STATIC",
+  "identity_result": "HOLD",
+  "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+  "detail": "All six poses establish rear N run camera and matching gold/white/blue knight equipment. The blade is carried on screen-left in phases0..2, but moves to the opposite hand/screen-right in phases3..5; equipment handedness continuity remains HOLD.",
+  "remaining_issues": [
+    {
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Blade switches hands/screen sides between sheet rows in the same rear-view run.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ]
+}

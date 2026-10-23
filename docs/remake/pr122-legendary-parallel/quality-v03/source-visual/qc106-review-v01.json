@@ -1,0 +1,52 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc106",
+  "actor": "113",
+  "direction": "N",
+  "role": "idle",
+  "slot": [
+    "transform:113",
+    "N",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-idle-source-v02.png",
+  "source_sha256": "63e0e39d62a9ab125e7a782e00c265b10778ed847e5a394f553830efbe37de26",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-idle-record-v02.json",
+  "record_sha256": "977d35c7d3b8fd744f6725d18ee96cb7dbeea2f88a63461318824298bd198d55",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "b91f3b5abc1e84e7ffdf8fab684ecbd01541d9fa4213a03c10ca93965c8378d2",
+  "remote_commit": "167d9e6cec48d712395ad435b4a8dbce375c127c",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc106-review-v01.json",
+    "sha256": "0a624a8f0535a6f17d773cf6a108bdaa506d6a17458459efc6e5d072fa640523"
+  },
+  "visual_board": "quality-v03/visual-boards/qc106-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "RESOLVED_STATIC",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "HOLD",
+  "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+  "remaining_issues": [
+    {
+      "cause": "idle_role",
+      "status": "HOLD",
+      "frames": [
+        3
+      ],
+      "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ],
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+  "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+}

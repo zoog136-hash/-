@@ -1,0 +1,634 @@
+{
+  "schema": "legendary-frozen-explicit-guard-only-adjudication-v07",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "historical_allowed106_unchanged": true,
+  "bounded_image_candidates_removed": [
+    "qc063",
+    "qc098"
+  ],
+  "ambiguous_qc110_middle_reuse_forbidden": true,
+  "selections": [
+    {
+      "candidate": "qc063",
+      "slot": [
+        "transform:178",
+        "NW",
+        "hit"
+      ],
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE_WAIT_HEALTHY_PARENT",
+      "frozen_issue_id": "visual-back20-0090",
+      "frozen_source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/NW-hit-source-v01.png",
+      "frozen_source_sha256": "5750a184e2b083f0e8b13823bb2fb3764461df85b43f78a4a3a717c57b1c822c",
+      "frozen_camera_detail": "First/last poses face front while middle poses show the rear; camera changes inside the clip.",
+      "current_record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/ownership-delta-v05/NW-hit-record.json",
+      "current_record_sha256": "ee0a7e3a84ab9bb8eb9988c9f20ba03fda46be5c1d7901b50ebf0f033ec7555c",
+      "current_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/ownership-delta-v05/NW-hit-SpriteFrames.tres",
+      "current_SpriteFrames_sha256": "8152fbf895b953efb3025b23de9775df4c987ac01ae8decada7d2d2489c88c25",
+      "current_guard_matches_current_idle_metadata": false,
+      "current_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-record-v02.json",
+      "explicit_corrected_guard_evidence_present": false,
+      "middle_frames_preserve_exact": [
+        {
+          "index": 1,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/ownership-delta-v05/NW-hit-source-v01-isolated.png",
+          "source_sha256": "918888f4d25b078e2bdd7e96ba37a3ab41c1895cdd3869c298ea6a354e1c3631",
+          "region": [
+            629,
+            0,
+            629,
+            597
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "2285a65466f12430d8e8607f0a349b0722d38cc5b6f56b9626dfe2428be4f4ac"
+        },
+        {
+          "index": 2,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/ownership-delta-v05/NW-hit-source-v01-isolated.png",
+          "source_sha256": "918888f4d25b078e2bdd7e96ba37a3ab41c1895cdd3869c298ea6a354e1c3631",
+          "region": [
+            1258,
+            0,
+            629,
+            597
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "c5e05b1d95c587b34e6b2126d0b00d110723719bf89c2667d3d6088865c4fc59"
+        },
+        {
+          "index": 3,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/ownership-delta-v05/NW-hit-source-v01-isolated.png",
+          "source_sha256": "918888f4d25b078e2bdd7e96ba37a3ab41c1895cdd3869c298ea6a354e1c3631",
+          "region": [
+            0,
+            597,
+            629,
+            597
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "dd67b265aa0db0362c16630b7cca609f1b1ecd3b43d4d8666d6d30bcd1dfb71d"
+        },
+        {
+          "index": 4,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/ownership-delta-v05/NW-hit-source-v01-isolated.png",
+          "source_sha256": "918888f4d25b078e2bdd7e96ba37a3ab41c1895cdd3869c298ea6a354e1c3631",
+          "region": [
+            629,
+            597,
+            629,
+            597
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "16556957aadb00ad35f7a82132ed8829eee0293b8b20a4522994c21e218ac869"
+        }
+      ],
+      "new_image_calls_allowed": 0,
+      "requires_exact_healthy_parent_remote_review_and_registration": true,
+      "preserve_other_frozen_holds": true,
+      "new_png_reads": 0,
+      "final_approved": 0
+    },
+    {
+      "candidate": "qc098",
+      "slot": [
+        "transform:122",
+        "NW",
+        "hit"
+      ],
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE_WAIT_HEALTHY_PARENT",
+      "frozen_issue_id": "visual-back20-0204",
+      "frozen_source": "assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-source-v01.png",
+      "frozen_source_sha256": "61eabf4a0241459444fca7ec21ba83ff86688fadee0bb207a3bc0df90d0b94b5",
+      "frozen_camera_detail": "Frontal first/last poses do not match the rear-left middle poses.",
+      "current_record": "assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-record-v01.json",
+      "current_record_sha256": "449547633d757ab654f1bac4c88aec272bad01958a0bdbc50f7749e97ec02b46",
+      "current_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-SpriteFrames.tres",
+      "current_SpriteFrames_sha256": "3b3982426966990faae365c4c9340ceea0ad1c8587bfdfc2c40d3b3fb98761ef",
+      "current_guard_matches_current_idle_metadata": false,
+      "current_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_122/quality-v02/NW-idle-record-v02.json",
+      "explicit_corrected_guard_evidence_present": false,
+      "middle_frames_preserve_exact": [
+        {
+          "index": 1,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-source-v01.png",
+          "source_sha256": "61eabf4a0241459444fca7ec21ba83ff86688fadee0bb207a3bc0df90d0b94b5",
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "32cf5c378189613b545ef91de2fe7b1ff2e802d0d74ea0ffbd3a9fffcd6654e4"
+        },
+        {
+          "index": 2,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-source-v01.png",
+          "source_sha256": "61eabf4a0241459444fca7ec21ba83ff86688fadee0bb207a3bc0df90d0b94b5",
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "67325317d369b4da5a4fb0c479a6030f68e19be817f1caaa56ae5e9c25b7bebd"
+        },
+        {
+          "index": 3,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-source-v01.png",
+          "source_sha256": "61eabf4a0241459444fca7ec21ba83ff86688fadee0bb207a3bc0df90d0b94b5",
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "4889ea787356762177a43b3c257245ffccb4e8509373cf63befa421d7dde6124"
+        },
+        {
+          "index": 4,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-hit-source-v01.png",
+          "source_sha256": "61eabf4a0241459444fca7ec21ba83ff86688fadee0bb207a3bc0df90d0b94b5",
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "513c22ad235adcf738735e84b1146e2c61e61e94e579482ed48bab5425895a56"
+        }
+      ],
+      "new_image_calls_allowed": 0,
+      "requires_exact_healthy_parent_remote_review_and_registration": true,
+      "preserve_other_frozen_holds": true,
+      "new_png_reads": 0,
+      "final_approved": 0
+    },
+    {
+      "candidate": null,
+      "slot": [
+        "transform:160",
+        "N",
+        "hit"
+      ],
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE_WAIT_HEALTHY_PARENT",
+      "frozen_issue_id": "visual-back20-0181",
+      "frozen_source": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-source-v01.png",
+      "frozen_source_sha256": "215e76d3cd5dfbb9b4a0a8ade5254ca67f10b619c759ba61f4a9bdac10eb0958",
+      "frozen_camera_detail": "First/last reused guards face forward while middle poses face away; the camera changes within one clip.",
+      "current_record": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-record-v01.json",
+      "current_record_sha256": "589f0eda23c15c5cecda8c176e128977e978b8c86f287ed9b813279933da642e",
+      "current_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-SpriteFrames.tres",
+      "current_SpriteFrames_sha256": "d23fd7867a335aae337187b15ba9de6b5174b4e7630140b626b69d57eecaf29c",
+      "current_guard_matches_current_idle_metadata": false,
+      "current_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_160/quality-v02/N-idle-record-v02.json",
+      "explicit_corrected_guard_evidence_present": false,
+      "middle_frames_preserve_exact": [
+        {
+          "index": 1,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-source-v01.png",
+          "source_sha256": "215e76d3cd5dfbb9b4a0a8ade5254ca67f10b619c759ba61f4a9bdac10eb0958",
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "03a323b7f44686b45bfd976bf9fd41c72356058cfcd7bbe1360f7b963b0f7b0c"
+        },
+        {
+          "index": 2,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-source-v01.png",
+          "source_sha256": "215e76d3cd5dfbb9b4a0a8ade5254ca67f10b619c759ba61f4a9bdac10eb0958",
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "45b01a830887c019b3b7b075c51090a4365114ea2ef3070e1864de4c79080a2c"
+        },
+        {
+          "index": 3,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-source-v01.png",
+          "source_sha256": "215e76d3cd5dfbb9b4a0a8ade5254ca67f10b619c759ba61f4a9bdac10eb0958",
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "f352e0123af6e3eaa980103aa8dba70a81c928f0922af30ace53af561cb61a9d"
+        },
+        {
+          "index": 4,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/N-hit-source-v01.png",
+          "source_sha256": "215e76d3cd5dfbb9b4a0a8ade5254ca67f10b619c759ba61f4a9bdac10eb0958",
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "41e4dc308da3e6b05651439328d140c8afb3251f7b02715b8bb92a1e2440897e"
+        }
+      ],
+      "new_image_calls_allowed": 0,
+      "requires_exact_healthy_parent_remote_review_and_registration": true,
+      "preserve_other_frozen_holds": true,
+      "new_png_reads": 0,
+      "final_approved": 0
+    },
+    {
+      "candidate": null,
+      "slot": [
+        "transform:1",
+        "NW",
+        "hit"
+      ],
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE_WAIT_HEALTHY_PARENT",
+      "frozen_issue_id": "visual-back20-0269",
+      "frozen_source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-source-v01.png",
+      "frozen_source_sha256": "1b96ed7cb02416cb0de997f85f45b5724f1fd0edd70f700aad45b975748dd7a2",
+      "frozen_camera_detail": "Reused first/last guards retain the frontal camera while middle poses turn away.",
+      "current_record": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-record-v01.json",
+      "current_record_sha256": "c87c6f8e9e785513b59f94b43762f15c3b37bdd592bbbc3657fe88cd7c911be6",
+      "current_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-SpriteFrames.tres",
+      "current_SpriteFrames_sha256": "7dead1c18733eaf5e51daf85c1364c8fb2aa760c0c8ba6db20e512ee4dc0e590",
+      "current_guard_matches_current_idle_metadata": true,
+      "current_idle_record": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-idle-record-v01.json",
+      "explicit_corrected_guard_evidence_present": false,
+      "middle_frames_preserve_exact": [
+        {
+          "index": 1,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-source-v01.png",
+          "source_sha256": "1b96ed7cb02416cb0de997f85f45b5724f1fd0edd70f700aad45b975748dd7a2",
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "20bf2d90315849c7043a94c338bfc9cbd8a700276230dd9cdf42b19c09c483ef"
+        },
+        {
+          "index": 2,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-source-v01.png",
+          "source_sha256": "1b96ed7cb02416cb0de997f85f45b5724f1fd0edd70f700aad45b975748dd7a2",
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "6b4c21a111efed9ec05702be54ee7ad250c2030e1a13f69eb17a37f096a20f59"
+        },
+        {
+          "index": 3,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-source-v01.png",
+          "source_sha256": "1b96ed7cb02416cb0de997f85f45b5724f1fd0edd70f700aad45b975748dd7a2",
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "e9dc3b55897b9f4b42d3c6adec239d7d3b76532e5532a93874b628a3f732ed19"
+        },
+        {
+          "index": 4,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/NW-hit-source-v01.png",
+          "source_sha256": "1b96ed7cb02416cb0de997f85f45b5724f1fd0edd70f700aad45b975748dd7a2",
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "f452869ad3e466b558ab082fcc5f579c5f6da727b0259efedc94f1ca09b56451"
+        }
+      ],
+      "new_image_calls_allowed": 0,
+      "requires_exact_healthy_parent_remote_review_and_registration": true,
+      "preserve_other_frozen_holds": true,
+      "new_png_reads": 0,
+      "final_approved": 0
+    },
+    {
+      "candidate": null,
+      "slot": [
+        "transform:1",
+        "N",
+        "attack"
+      ],
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE_WAIT_HEALTHY_PARENT",
+      "frozen_issue_id": "visual-back20-0270",
+      "frozen_source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-attack-source-v01.png",
+      "frozen_source_sha256": "b2aeca9166a5fd09177662c8ccbb8af39ef0eff34727be79641a656b155d10b5",
+      "frozen_camera_detail": "Reused guard endpoints retain the frontal camera; preserve healthy middle poses when rebinding corrected guards.",
+      "current_record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/isolation-v01/N-attack-record.json",
+      "current_record_sha256": "d06be67ec1ad4c3cc10e87776e160c59f4655c5909b6f5be6e60adf30ab4f034",
+      "current_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/isolation-v01/N-attack-SpriteFrames.tres",
+      "current_SpriteFrames_sha256": "09772f71b7b05c325e99af9b939bbab6a8493b2a066814ddef62e424b4dd28b4",
+      "current_guard_matches_current_idle_metadata": false,
+      "current_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-record-v02.json",
+      "explicit_corrected_guard_evidence_present": false,
+      "middle_frames_preserve_exact": [
+        {
+          "index": 1,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/isolation-v01/N-attack-source-v01-isolated.png",
+          "source_sha256": "a0b6983b5cb6a855d182a8eeaa50bea1d24951ac5e8a4c5bc75d5e29a4e311e6",
+          "region": [
+            0,
+            0,
+            762,
+            743
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "76c793319424ace95123b3293504c41121364d61a6ce72fc04dec3c6153122cb"
+        },
+        {
+          "index": 2,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/isolation-v01/N-attack-source-v01-isolated.png",
+          "source_sha256": "a0b6983b5cb6a855d182a8eeaa50bea1d24951ac5e8a4c5bc75d5e29a4e311e6",
+          "region": [
+            762,
+            0,
+            762,
+            743
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "922389b8c0ef51d87d3b544e7e1638d425c4a200c5c75491b18c1e090d840a2f"
+        },
+        {
+          "index": 3,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/isolation-v01/N-attack-source-v01-isolated.png",
+          "source_sha256": "a0b6983b5cb6a855d182a8eeaa50bea1d24951ac5e8a4c5bc75d5e29a4e311e6",
+          "region": [
+            0,
+            743,
+            762,
+            743
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "214d35de28c7170befa6662d01eb4c36833f013bf281adac274466bd9fa1eb50"
+        },
+        {
+          "index": 4,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/corrections/isolation-v01/N-attack-source-v01-isolated.png",
+          "source_sha256": "a0b6983b5cb6a855d182a8eeaa50bea1d24951ac5e8a4c5bc75d5e29a4e311e6",
+          "region": [
+            762,
+            743,
+            762,
+            743
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "0186b258d4f013457eff6083d9bcd81fe70a55a53e217d9de0a6f273798d9a1a"
+        }
+      ],
+      "new_image_calls_allowed": 0,
+      "requires_exact_healthy_parent_remote_review_and_registration": true,
+      "preserve_other_frozen_holds": true,
+      "new_png_reads": 0,
+      "final_approved": 0
+    },
+    {
+      "candidate": null,
+      "slot": [
+        "transform:1",
+        "N",
+        "hit"
+      ],
+      "state": "GUARD_REBIND_ONLY_NO_NEW_IMAGE_WAIT_HEALTHY_PARENT",
+      "frozen_issue_id": "visual-back20-0271",
+      "frozen_source": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-source-v01.png",
+      "frozen_source_sha256": "8730fb4f489d347c000ee744ad9d8232b8471c17125835696ebe6c9ac2e8daaf",
+      "frozen_camera_detail": "Reused guard endpoints retain the frontal camera; preserve healthy middle poses when rebinding corrected guards.",
+      "current_record": "assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-record-v01.json",
+      "current_record_sha256": "c70c8ef1c1fbccd5bbf64e2fc651906999b03328c8102809f9454641c7feebdc",
+      "current_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-SpriteFrames.tres",
+      "current_SpriteFrames_sha256": "742006678e3dcae5f08695e44d56ee0e8bcd53142bb5eb1f62974cfbebdda157",
+      "current_guard_matches_current_idle_metadata": false,
+      "current_idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-record-v02.json",
+      "explicit_corrected_guard_evidence_present": false,
+      "middle_frames_preserve_exact": [
+        {
+          "index": 1,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-source-v01.png",
+          "source_sha256": "8730fb4f489d347c000ee744ad9d8232b8471c17125835696ebe6c9ac2e8daaf",
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "e6ef8c3cc6e4067f0c178af14eac9b00a8fc2201ee96deae69d6160e869d25ad"
+        },
+        {
+          "index": 2,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-source-v01.png",
+          "source_sha256": "8730fb4f489d347c000ee744ad9d8232b8471c17125835696ebe6c9ac2e8daaf",
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "2d8927a9114f9a819cb7cc8f5c08017cceeff525545594cb828183b9cdc3c710"
+        },
+        {
+          "index": 3,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-source-v01.png",
+          "source_sha256": "8730fb4f489d347c000ee744ad9d8232b8471c17125835696ebe6c9ac2e8daaf",
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "58821942def0d4489ebe57003df4bfa2e6a7e9a0760c0ef3b883f5e5b7ae3695"
+        },
+        {
+          "index": 4,
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_1/draft001/N-hit-source-v01.png",
+          "source_sha256": "8730fb4f489d347c000ee744ad9d8232b8471c17125835696ebe6c9ac2e8daaf",
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ],
+          "margin": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": 1.0,
+          "rgba_sha256": "b7286f4ea7f0317479d540b88c4dc14de33eef98fe3f2957e4956bf7f25f6122"
+        }
+      ],
+      "new_image_calls_allowed": 0,
+      "requires_exact_healthy_parent_remote_review_and_registration": true,
+      "preserve_other_frozen_holds": true,
+      "new_png_reads": 0,
+      "final_approved": 0
+    }
+  ],
+  "source_inference": false,
+  "automatic_rebindings": 0,
+  "new_image_calls": 0,
+  "final_approved": 0
+}

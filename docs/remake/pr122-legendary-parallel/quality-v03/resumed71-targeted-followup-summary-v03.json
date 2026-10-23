@@ -1,0 +1,761 @@
+{
+  "schema": "legendary-resumed71-targeted-followup-summary-v03",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "scope": "ONLY_71_NEW_SOURCES_ONCE; original13/frozen/healthy sources not re-reviewed",
+  "new_sources_reviewed_once": 71,
+  "camera_results": {
+    "RESOLVED_STATIC": 55,
+    "HOLD": 16
+  },
+  "identity_results": {
+    "PRESERVED_STATIC": 66,
+    "HOLD": 5
+  },
+  "idle_guard_results": {
+    "NOT_IDLE": 25,
+    "HEALTHY_STATIC": 15,
+    "HOLD_CAMERA_OR_IDENTITY": 3,
+    "WAIT_TECHNICAL_OWNERSHIP": 15,
+    "HOLD_CAMERA": 4,
+    "HOLD_CAMERA_IDENTITY_OR_ROLE": 9
+  },
+  "technical_finding_counts": {
+    "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME": 45,
+    "DETACHED_FOREGROUND_OWNER_AMBIGUOUS": 1
+  },
+  "safe_ownership_sources": 29,
+  "ambiguous_ownership_sources": 1,
+  "safe_candidates": [
+    "qc004",
+    "qc017",
+    "qc030",
+    "qc040",
+    "qc045",
+    "qc056",
+    "qc058",
+    "qc061",
+    "qc064",
+    "qc065",
+    "qc071",
+    "qc083",
+    "qc088",
+    "qc089",
+    "qc092",
+    "qc093",
+    "qc094",
+    "qc097",
+    "qc099",
+    "qc100",
+    "qc104",
+    "qc109",
+    "qc112",
+    "qc113",
+    "qc116",
+    "qc117",
+    "qc118",
+    "qc120",
+    "qc121"
+  ],
+  "ambiguous_candidates": [
+    "qc054"
+  ],
+  "visual_residual_issue_occurrences": 26,
+  "visual_residual_unique_clips": 24,
+  "visual_remaining_issues": [
+    {
+      "candidate": "qc015",
+      "slot": [
+        "transform:337",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Run camera reverses left-to-right between the two sheet rows.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc022",
+      "slot": [
+        "transform:274",
+        "SW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-source-v02.png",
+      "source_sha256": "cf2918b53e3db4fec598d11d0493ba033e39f847ceb282a2bc0d4d4458ba0ba7",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        2
+      ],
+      "detail": "Phase2 reverses the run facing relative to the five left-facing poses.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc034",
+      "slot": [
+        "transform:225",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "5bc1f13f8504fe1a27efa4a08d9744a388f9e34ba51adb219ec3a44cc54cb268",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Rear-left camera is not established consistently: the bowed head exposes hair while frontal armor/shield surfaces persist. The prominent original horned gold helmet/crest is absent and the head appears bare blond.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc034",
+      "slot": [
+        "transform:225",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "5bc1f13f8504fe1a27efa4a08d9744a388f9e34ba51adb219ec3a44cc54cb268",
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Rear-left camera is not established consistently: the bowed head exposes hair while frontal armor/shield surfaces persist. The prominent original horned gold helmet/crest is absent and the head appears bare blond.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc035",
+      "slot": [
+        "transform:225",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "adcd5a7ee76f755d08c09310027f3d44fa4522a7845a9c63f08ea01468d6c254",
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Back-left NW run camera is established with distinct articulated strides, gold armor and bright sword/shield. The prominent catalog horned/gold helmet is absent, exposing bare blond hair in every pose.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc038",
+      "slot": [
+        "transform:225",
+        "NE",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NE-idle-source-v02.png",
+      "source_sha256": "089d43fec001a5054f950906676b425431d5707aa0a2c597a1c5d48fc5cd56f9",
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Back-right NE camera is established, but the original prominent gold horned helmet/crest is omitted in favor of exposed brown hair. Preserve this identity/helmet continuity HOLD.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc041",
+      "slot": [
+        "transform:213",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "06c6aa67810595ba86a278c5a825a1630a2e0b045c3541bca8f96c646cdebd52",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Readable frontal mask, breastplate and front waist ornament remain exposed in the requested rear-left NW slot; the head/torso do not establish a back-left camera.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc042",
+      "slot": [
+        "transform:213",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "b970143ce02433a0b5adc0f1b1550498f23e08687f939a883840c86b781623ca",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        4,
+        5
+      ],
+      "detail": "Matching gold/black knight, white/teal cape and axe run back-left in phases0..3, but phases4..5 reverse to back-right and move the axe to the opposite screen side. Camera continuity remains HOLD.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc045",
+      "slot": [
+        "transform:193",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "538ccc96c12237e96288547392f6bff170a7ddfc3d83c0a0dd8593f19415d94a",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Helmet/front face and torso still orient toward screen-right/front in all six poses, rather than down-left SW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc046",
+      "slot": [
+        "transform:193",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "8fdff5ccc94a5fceebef254e9372d16d1d626041533343c9cde5b6e5a58b3641",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "The back is visible, but head, torso profile and toes point up-right/right; this is NE rather than the requested up-left NW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc054",
+      "slot": [
+        "transform:191",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "8a585c41e226ba180c01aee0238a194f63f5eba4da5eaf5df8c20791d511a307",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "The bright face/helmet beak and torso remain front/right-oriented and reproduce the portrait-facing camera instead of down-left SW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc061",
+      "slot": [
+        "transform:178",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "02903d4e30d0f0df1923c07901be2a0a8f3abb2a5c938548b0c85977e167bdc1",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Helmet face opening and nose point screen-right/front while the breastplate remains frontal; all six poses retain a front/right portrait instead of the requested down-left SW camera.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc074",
+      "slot": [
+        "transform:177",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "ffdaa3adf998d94588c5b4acc5e5d568ca29d185bd1297d100b1fb5a57a7a7a0",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "The first row runs back-left with bow on screen-left, while the second row runs back-right with bow on screen-right. Purple/white archer identity and actual stride poses remain, but NW camera reverses.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc080",
+      "slot": [
+        "transform:176",
+        "W",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/W-idle-source-v02.png",
+      "source_sha256": "8033e88e1d9c43772e2106725e35c5bd4768cc9baf59add023cdc60291a72184",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "detail": "New supplement bodies face front/right, rather than left W.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc081",
+      "slot": [
+        "transform:176",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "bcd3a0b0262fce7720e5caa985df14e931cfaefc35aa5fa696e94be173a642ea",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "detail": "New supplement bodies retain back-right orientation instead of back-left NW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc082",
+      "slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-source-v02.png",
+      "source_sha256": "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "detail": "New HIT supplement changes between front/right and back/right instead of fixed back-left NW.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc093",
+      "slot": [
+        "transform:160",
+        "N",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_160/quality-v02/N-idle-source-v02.png",
+      "source_sha256": "1e7876b22a259cab262807e0abbc91967c253248f17d3cedd2d489c75985e8fc",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "A rear view is established, but phases0..2 and3..5 switch the horse/rider lean and the flaming chain from screen-right to screen-left. This creates a within-clip handedness/camera continuity hold instead of one consistent N guard.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc093",
+      "slot": [
+        "transform:160",
+        "N",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_160/quality-v02/N-idle-source-v02.png",
+      "source_sha256": "1e7876b22a259cab262807e0abbc91967c253248f17d3cedd2d489c75985e8fc",
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        3,
+        4,
+        5
+      ],
+      "detail": "Flaming chain hand/side changes between the two rows.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc095",
+      "slot": [
+        "transform:143",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_143/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "2fd0fe8d3c52db5fe29d9a5e844d605ccfcb0f801fb0da4aacfbac9894f38bdc",
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "The back-left camera is established, but the six new poses expose bare white hair and ear instead of the prominent red spiked/full-face helmet in the catalog and paired SW correction. Rear armor, red cape and blade otherwise match.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc097",
+      "slot": [
+        "transform:122",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_122/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "b055f681d00a0e8ffd1f0e9588a3583475f18c606cace578e537f818c5290e3e",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "A rear-left torso is shown, but the glowing red face/orbs still point toward the viewer from the hood across all six poses, rather than one consistent back-left NW head/camera. Gear and cloak otherwise match.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc105",
+      "slot": [
+        "transform:113",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "2a4130c5d9a5b473fdb1ae2a2f733d0799511c0dd203c5525c3b1e38696525bc",
+      "cause": "idle_role",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Rear-left camera and costume match, but the character keeps the sword arm raised above/behind the head in a deep attack-like wind-up rather than a restrained living guard. Do not treat endpoints as a verified idle guard.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc106",
+      "slot": [
+        "transform:113",
+        "N",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-idle-source-v02.png",
+      "source_sha256": "63e0e39d62a9ab125e7a782e00c265b10778ed847e5a394f553830efbe37de26",
+      "cause": "idle_role",
+      "status": "HOLD",
+      "frames": [
+        3
+      ],
+      "detail": "All six poses establish a straight rear camera and matching equipment, but phase3 sweeps the weapon/arm up across the left side between otherwise lowered-right resting poses. The idle-to-action change prevents healthy guard/role acceptance.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc107",
+      "slot": [
+        "transform:113",
+        "NW",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "f28049b93ce0e08d83f0aa0dca5356272483cb6e28021b9d2c1f987cc858a551",
+      "cause": "articulation",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "High carried sword arm needs changed-only motion assessment; no static camera defect or source retry inferred.",
+      "fix_kind": "PRESERVE_STATIC_HOLD_PENDING_CHANGED_ONLY_RUNTIME"
+    },
+    {
+      "candidate": "qc117",
+      "slot": [
+        "transform:112",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "a7f53d0f73a9a1a4cf0f4f69b376c2853c6d5513aa94da96b687c145054ed127",
+      "cause": "idle_role",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc121",
+      "slot": [
+        "transform:112",
+        "N",
+        "run"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-source-v02.png",
+      "source_sha256": "48907874e998039e783e26b54716396ca6b75b38e63c5935578f9fd96709a7b7",
+      "cause": "identity_weapon_action",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Blade switches hands/screen sides between sheet rows in the same rear-view run.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    },
+    {
+      "candidate": "qc125",
+      "slot": [
+        "transform:1",
+        "N",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-source-v02.png",
+      "source_sha256": "c69ebd2db23475d62d2d23bbd45491bb651f53cdb94e95714fb3c4765f62bbc5",
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Frontal facial mask/chest remain in the N idle slot.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch294-changed-source-technical-index-v01.json",
+      "sha256": "2c7088fb0204c2c37f3b2007d519bcc8eca5b41a57da7398d2d34a96293aa204"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch294-changed-source-visual-review-v01.json",
+      "sha256": "037f2b8c9649c7e48a7732f47a27733d26dadf5ab5e2d074fe6b0801286ed2d7"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch295-changed-source-technical-index-v01.json",
+      "sha256": "c4ef868b947fb64802dea8ade80469570bf77df5784eecd4c249504e1144d49c"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch295-changed-source-visual-review-v01.json",
+      "sha256": "b2e1402e9daf80f1ff6a7d416dcb804ad019868f7d97567d4a61612c951e0710"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch296-changed-source-technical-index-v01.json",
+      "sha256": "035b03f5d5a385431981fdcdf41bf49dc4a9ec6d8d84b341057a33e5282edf06"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch296-changed-source-visual-review-v01.json",
+      "sha256": "0228ad8c5aeb2bad3f7df15848c83242d4842923157a187b5307665c0b382362"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch297-changed-source-technical-index-v01.json",
+      "sha256": "5e83b485cd81fcb0ec595a665f08d96c90d783f9027983d2fdf5da24ffff2b8d"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch297-changed-source-visual-review-v01.json",
+      "sha256": "ca9a756c15bc739fe2ab944065786b799a4c3be229e41967c0e317070618d83c"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch298-changed-source-technical-index-v01.json",
+      "sha256": "070ff6a387fd40ab50612c12b29551a6e9813e26f6f2232f88fdb7b302aa9a42"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch298-changed-source-visual-review-v01.json",
+      "sha256": "e17f5a751f87e7621a4f3adbd046317f1c42314476416dcb819b287d08382033"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch299-changed-source-technical-index-v01.json",
+      "sha256": "8e9cbe32804ce789bb6efc054b229a5b723f16e4d245cf8ef583167c7c7c3345"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch299-changed-source-visual-review-v01.json",
+      "sha256": "5e8d00a12cd157b025391ec845936fcc6c81303a5e362917cc3e04dc876fb8c8"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch300-changed-source-technical-index-v01.json",
+      "sha256": "f0fdea74cfec0b73593270ebabb1c48830d91865bafa5c1dd07117fc45802111"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch300-changed-source-visual-review-v01.json",
+      "sha256": "1df4245d663a179e5320b66e8891a0e1ab17abcbf874aee32f7e5f486a300234"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch301-changed-source-technical-index-v01.json",
+      "sha256": "825f008b19361f304296ad9bee1454c2d717571fcb5e0b87975ecc21ef943c6e"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch301-changed-source-visual-review-v01.json",
+      "sha256": "0a0d63079cca732ec575f494ca158341f13e25720d87bfdf8c3135528359257c"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch302-changed-source-technical-index-v01.json",
+      "sha256": "ca029fbe117e3f9a58c96edfb3952d2e0cd3060a971fcbbdddce80e11a0b995a"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch302-changed-source-visual-review-v01.json",
+      "sha256": "22a40861495338be4da7702e1f67755c1018925e5bcc57bbbea3e0547816ea11"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch303-changed-source-technical-index-v01.json",
+      "sha256": "3f9d8a70c24495a696ae266156a73f94f271433684071b45a7770efb655bff4c"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch303-changed-source-visual-review-v01.json",
+      "sha256": "b97b6d7928252ff891e1033770d3380bea86a424a32f7870cdc63da83f1cea07"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch304-changed-source-technical-index-v01.json",
+      "sha256": "e130cc69c8dc61eae995cf0651e1d643dda020d3aa2ca08d9dc32d131f01921a"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch304-changed-source-visual-review-v01.json",
+      "sha256": "cc761bba009a15cb05bc858f5c4866f204c82c20391ffc380895c8b0b6cc0130"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch305-changed-source-technical-index-v01.json",
+      "sha256": "aa4569ff31d3dcaff804289e432718f5cc931a86b3be6b0e18376cd8b6a703c6"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch305-changed-source-visual-review-v01.json",
+      "sha256": "5f7015d21f19be16bb9f2a35b1c8b5ed4838ea3f42ed3d85b368a75acdea34d8"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch306-changed-source-technical-index-v01.json",
+      "sha256": "27d6e466da117e8111bad4866733c268baef3f8508ee9592679762a31c0da712"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch306-changed-source-visual-review-v01.json",
+      "sha256": "62daff975f6696c1ba4c2cb6bdf0f1c59f39d07e2e0091a5af085dcaea4405da"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch307-changed-source-technical-index-v01.json",
+      "sha256": "c564f77d0a3ef3e3d20fd86b631a39e178c1dfaad5845b15b52e9ac4c93bd3a6"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch307-changed-source-visual-review-v01.json",
+      "sha256": "5f700614e9b45cdc4cd4fc91c1053ea2aa6a31b5deda80e7903768ab2948b391"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch308-changed-source-technical-index-v01.json",
+      "sha256": "539b62e4892f8a37a03e272922334d95ceeb8f8f6f4080ed129ece29cbd1b98f"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch308-changed-source-visual-review-v01.json",
+      "sha256": "0385ec6c246519eeb345a61a1750f0d91e5beec47ca869e69cf4bb6a86327575"
+    }
+  ],
+  "new_tool_checkpoint": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/resumed71-tool-delivery-checkpoint-v03.json",
+    "sha256": "32a1e6b046bd303e8d04c79fffbfbc25b38403499d23304fe88e18e1202ac28e"
+  },
+  "native_registration_inputs": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-quality-registration-review-input-v03.json",
+      "sha256": "673a62b6bb08b04a31a626ebd59fed3d65c190413ccf4804a2669ea56d11cb02"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/transform_176-quality-registration-review-input-v04.json",
+      "sha256": "b0af21d9c83b20911e9330361673151cfdc710a858a8d3098e8d8251ac04ff99"
+    }
+  ],
+  "source_pixels_changed_by_review": 0,
+  "new_image_calls_by_review": 0,
+  "additional_whole_corpus_reviews": 0,
+  "final_corpus_audit_runs": 0,
+  "final_approved": 0,
+  "limitations": [
+    "Static camera/identity/role review does not replace changed-only runtime checks.",
+    "Safe ownership repair is still pending exact proof/remote receipt and is not counted resolved.",
+    "Existing frozen scale/footing/articulation HOLDs remain unless exact later proof resolves that cause."
+  ]
+}

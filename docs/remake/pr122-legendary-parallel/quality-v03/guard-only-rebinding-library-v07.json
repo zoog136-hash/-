@@ -1,0 +1,55 @@
+{
+  "schema": "legendary-isolation-revision-library-v1",
+  "revisions": [
+    {
+      "slot": [
+        "transform:178",
+        "NW",
+        "hit"
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/guard-only-v07/NW-hit-record.json",
+      "record_sha256": "dabda134cd0d93599ea2db25ac9180c01d86fee165838bdfdd25f62b05f9f50d",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/guard-only-v07/NW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "c376e1f67abb8af50254c2fe6fc8502d577a156a48cb43f7daabd01260f1f6a8",
+      "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_178/corrections/guard-only-v07/NW-hit-registration.json",
+      "registration_sha256": "f6e246bfdf252bdb5ee00e5f46d91d233fe876aa0d77e3573101e233bd1c8105",
+      "registration_status": "RASTER_COORDINATE_PRESERVATION",
+      "inherited_guard_checks": [
+        {
+          "action_phase": 0,
+          "idle_phase": 0,
+          "parent_record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-record-v02.json",
+          "parent_record_sha256": "67b28886bc6fb7e3fd713ad02862f3110042f6aed1f503577200ab12827a24d5",
+          "parent_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-SpriteFrames.tres",
+          "parent_SpriteFrames_sha256": "da886d05b6ab3693b75fc46508487ec730f7fe4ae14a1570f3a1fea6380f6f14",
+          "parent_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-raster-registration-v02.json",
+          "parent_registration_sha256": "dd42c346396181ddcf42bc33048b36551ef4b5746bf86deda15791f83bb44d6d"
+        },
+        {
+          "action_phase": 5,
+          "idle_phase": 5,
+          "parent_record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-record-v02.json",
+          "parent_record_sha256": "67b28886bc6fb7e3fd713ad02862f3110042f6aed1f503577200ab12827a24d5",
+          "parent_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-SpriteFrames.tres",
+          "parent_SpriteFrames_sha256": "da886d05b6ab3693b75fc46508487ec730f7fe4ae14a1570f3a1fea6380f6f14",
+          "parent_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-raster-registration-v02.json",
+          "parent_registration_sha256": "dd42c346396181ddcf42bc33048b36551ef4b5746bf86deda15791f83bb44d6d"
+        }
+      ]
+    }
+  ],
+  "dependency_required_slots": [
+    [
+      "transform:178",
+      "NW",
+      "hit"
+    ]
+  ],
+  "excluded_slots": [],
+  "selection": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/quality-v03/guard-only-ready-qc063-v07.json",
+  "selection_sha256": "2ec3abacb80ada10e0b0339696cf911a1194812c3950a2e6ee9489be1d03c07c",
+  "newly_authored_poses": 0,
+  "middle_four_RGBA_bindings_preserved": true,
+  "final_approved": 0,
+  "quality_status": "HOLD"
+}

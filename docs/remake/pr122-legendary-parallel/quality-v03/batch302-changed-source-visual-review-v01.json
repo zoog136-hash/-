@@ -1,0 +1,250 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-review-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "batch": 302,
+  "changed_sources_reviewed_once": 5,
+  "results": [
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc117",
+      "actor": "112",
+      "direction": "SW",
+      "role": "idle",
+      "slot": [
+        "transform:112",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "a7f53d0f73a9a1a4cf0f4f69b376c2853c6d5513aa94da96b687c145054ed127",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "7c08213d5bb27bb8a27aea06f839e132df74b5b68f70dde71a77d239ac8b4757",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "b901f27cac5c8b5c719d70f7e08de7b5ff664f8f5c03b9cbec1a3b9ca4cbf454",
+      "remote_commit": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc117-review-v01.json",
+        "sha256": "0b3209bd65cdbe0e3c7b72c84f0fdb4892756398a4071b4c7179a164a481f8f1"
+      },
+      "visual_board": "quality-v03/visual-boards/qc117-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "HOLD",
+      "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+      "remaining_issues": [
+        {
+          "cause": "idle_role",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+          "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+        }
+      ],
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+      "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc118",
+      "actor": "112",
+      "direction": "NW",
+      "role": "idle",
+      "slot": [
+        "transform:112",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "6faff9f043b49dc39bebadddb537f29237f3f2b905fd8bbf924b38021dc2bb0b",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "0aa2901856c4017b6012126a39390c721740600dc9db4c554c5fdb94039f93e5",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/NW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "86e40175b7d538aa8e09588cfa70edd234b183aa8fe3d5a22609b5d107f5bf06",
+      "remote_commit": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc118-review-v01.json",
+        "sha256": "4c8c94c131500f725798360925c28ea0a1c4045e903e59ec183bc6fdec1bd00b"
+      },
+      "visual_board": "quality-v03/visual-boards/qc118-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "detail": "Clear back-left/up-left view with matching gold armor, white/red cloth, blue shoulder gem and blue blade. Six small planted stance/cloth changes remain living NW IDLE.",
+      "remaining_issues": [],
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HEALTHY_STATIC",
+      "idle_guard_result": "WAIT_TECHNICAL_OWNERSHIP"
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc120",
+      "actor": "112",
+      "direction": "N",
+      "role": "idle",
+      "slot": [
+        "transform:112",
+        "N",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-idle-source-v02.png",
+      "source_sha256": "f450dca464974998eb06b844e8fad706a2bf6e7ba5778d06c3d1f6b2058524b0",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "04275ea2624f9be70d1e1a608239add330d2d997a2ceee99e9cb50fc13a4592f",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "f67187ddd3769557b9ffa48937b1090d6e4798908838c9c9b8f83bdc81b53aa9",
+      "remote_commit": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc120-review-v01.json",
+        "sha256": "7b4776013e44bcc02d6a1f655241b57c5a344ca62ee4a47a650f01b145e0d01e"
+      },
+      "visual_board": "quality-v03/visual-boards/qc120-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "detail": "Clear straight rear view with matching gold armor, white plume, red tabard and blue sword. Six planted small stance/breath variations retain N camera and living IDLE.",
+      "remaining_issues": [],
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HEALTHY_STATIC",
+      "idle_guard_result": "WAIT_TECHNICAL_OWNERSHIP"
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc123",
+      "actor": "1",
+      "direction": "SW",
+      "role": "idle",
+      "slot": [
+        "transform:1",
+        "SW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "089a54535117c610673198b7f167b4d56ca94fe483a3b8713697ce245a20b5ae",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "91749a006ba4ce657f9477d0bd233190d13aadd9f9ab0012d38328ad02608537",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/SW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "c400e5d45a001907be91c6cc16ed422f9765ac62ad5abbc351ecfce640ffd61c",
+      "remote_commit": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc123-review-v01.json",
+        "sha256": "5eed83a672db48de8ce0e44d7dc581ed120f69b3c88d7be1f2c50cb0fb72102a"
+      },
+      "visual_board": "quality-v03/visual-boards/qc123-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "detail": "Front-left/down-left guard retains dark body, gold star armor and masked helmet. Six small planted breathing/arm changes keep SW camera and living IDLE.",
+      "remaining_issues": [],
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HEALTHY_STATIC",
+      "idle_guard_result": "HEALTHY_STATIC"
+    },
+    {
+      "schema": "legendary-new-correction-targeted-visual-unit-v03",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "candidate": "qc124",
+      "actor": "1",
+      "direction": "NW",
+      "role": "idle",
+      "slot": [
+        "transform:1",
+        "NW",
+        "idle"
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/NW-idle-source-v02.png",
+      "source_sha256": "8a342c187e7e3312cee43e1f498c4d539fa5f23241e530575d1e59df2b52c6be",
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "d7d3b002422a649212b9c76278cf12078c30750da2fc9595bf52a47553f61a32",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/NW-idle-SpriteFrames.tres",
+      "SpriteFrames_sha256": "c1d415bc5fbd985c6e703724eb0167abf055a7a1fe4e285cecec6443c82f9f71",
+      "remote_commit": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "technical_review": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc124-review-v01.json",
+        "sha256": "a1ece57c3389e80484416cc7e0a7ae5de99082d2877fe553ca429ce334b150f9"
+      },
+      "visual_board": "quality-v03/visual-boards/qc124-source-v01.png",
+      "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+      "whole_corpus_rereviews": 0,
+      "new_image_calls": 0,
+      "second_generation_attempts": 0,
+      "final_approved": 0,
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "PRESERVED_STATIC",
+      "idle_role_result": "LIVING_IDLE_STATIC",
+      "detail": "Clear back-left/up-left guard exposes the rear armor/spine opening and matching dark body/gold star armor. Planted feet and six restrained stance variations retain NW camera and living IDLE.",
+      "remaining_issues": [],
+      "reviewed_guard_phases": [
+        0,
+        5
+      ],
+      "guard_body_result": "HEALTHY_STATIC",
+      "idle_guard_result": "HEALTHY_STATIC"
+    }
+  ],
+  "summary": {
+    "camera_results": {
+      "RESOLVED_STATIC": 5
+    },
+    "identity_results": {
+      "PRESERVED_STATIC": 5
+    },
+    "idle_guard_results": {
+      "HOLD_CAMERA_IDENTITY_OR_ROLE": 1,
+      "WAIT_TECHNICAL_OWNERSHIP": 2,
+      "HEALTHY_STATIC": 2
+    }
+  },
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "final_approved": 0
+}

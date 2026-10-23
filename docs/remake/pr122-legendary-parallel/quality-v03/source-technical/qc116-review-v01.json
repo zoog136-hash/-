@@ -1,0 +1,159 @@
+{
+  "sha256": "e9755a1c68d5eb41be18a01dd18e7e819048dc89d8c8e2635853d3f87c266a03",
+  "grid": [
+    3,
+    2
+  ],
+  "findings": [
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 4,
+      "pixels_alpha_gt16": 8576,
+      "strong_pixels": 6795,
+      "bbox_in_frame": [
+        0,
+        105,
+        124,
+        241
+      ],
+      "physical_owner_rows": {
+        "3": 8576
+      },
+      "source_grid": [
+        3,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    },
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 5,
+      "pixels_alpha_gt16": 3431,
+      "strong_pixels": 1459,
+      "bbox_in_frame": [
+        0,
+        0,
+        176,
+        291
+      ],
+      "physical_owner_rows": {
+        "2": 30,
+        "4": 3401
+      },
+      "source_grid": [
+        3,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    }
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-source-v02.png",
+  "authored_slot": [
+    "transform:113",
+    "NE",
+    "attack"
+  ],
+  "dependents": [
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "phase": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "phase": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "phase": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "phase": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "slot": [
+        "transform:113",
+        "NE",
+        "attack"
+      ],
+      "phase": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-record-v02.json",
+  "record_sha256": "8e9ef41871e6dffbd76b7bc164d9cc1de7228d149fd4ea20507bb21825ce426a",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-SpriteFrames.tres",
+  "SpriteFrames_sha256": "05e4571da70a9bbecea504e1bc819b4ce070ce90d02cfc76a44784eac692af9e",
+  "correction_candidate_id": "qc116",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-attack-source-v01.png",
+  "previous_source_sha256": "635fa1dafa0ae8124d94160e244b52d68f865f5132e6592c5e4b5e6609e89f1e",
+  "batch": 307,
+  "remote_commit": "006f37024ab5b492cb045be6d7ec5f170c454b02",
+  "remote_receipt_sha256": "0c21498ef5ad79968c3bc59cfa1c564d35f7e692719231589b148932d737f58f",
+  "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+  "final_approved": 0
+}

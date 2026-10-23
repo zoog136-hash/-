@@ -1,0 +1,77 @@
+{
+  "qc125": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "All six poses show the gold facial/chevron mask, front breastplate and frontal knee/torso surfaces toward the viewer instead of a rear-facing N view. Matching dark body and gold star armor remain.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Frontal facial mask/chest remain in the N idle slot.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc011": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "All six poses show a rear-facing N run with matching black/red/gold horned mage and two colored orbs. Distinct lower-leg/knee and robe phases support a run rather than a translated still image; dynamic contact quality remains unapproved.",
+    "remaining_issues": []
+  },
+  "qc015": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "RUN_POSES_PRESENT",
+    "detail": "The first row runs left/back-left with the staff on screen-right, while the second row turns right/back-right with the staff on screen-left. Direction changes within one requested NW run. White/gold mage identity is retained.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Run camera reverses left-to-right between the two sheet rows.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc017": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "All six poses retain front-left/down-left SW camera, matching black/red armor, red cape and jagged red blade. Distinct knee/leg and arm joint phases are present; dynamic grounding remains unapproved.",
+    "remaining_issues": []
+  },
+  "qc022": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "RUN_POSES_PRESENT",
+    "detail": "Most poses run left/down-left, but phase2 faces and lunges screen-right with a different torso/leg orientation. Matching white hair, black armor and blue curved weapon remain; one consistent SW run camera is not achieved.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          2
+        ],
+        "detail": "Phase2 reverses the run facing relative to the five left-facing poses.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  }
+}

@@ -1,0 +1,265 @@
+{
+  "schema": "legendary-changed-source-ownership-plan-v07",
+  "indices": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch294-changed-source-technical-index-v01.json",
+      "sha256": "2c7088fb0204c2c37f3b2007d519bcc8eca5b41a57da7398d2d34a96293aa204"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch295-changed-source-technical-index-v01.json",
+      "sha256": "c4ef868b947fb64802dea8ade80469570bf77df5784eecd4c249504e1144d49c"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch296-changed-source-technical-index-v01.json",
+      "sha256": "035b03f5d5a385431981fdcdf41bf49dc4a9ec6d8d84b341057a33e5282edf06"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch297-changed-source-technical-index-v01.json",
+      "sha256": "5e83b485cd81fcb0ec595a665f08d96c90d783f9027983d2fdf5da24ffff2b8d"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch298-changed-source-technical-index-v01.json",
+      "sha256": "070ff6a387fd40ab50612c12b29551a6e9813e26f6f2232f88fdb7b302aa9a42"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch299-changed-source-technical-index-v01.json",
+      "sha256": "8e9cbe32804ce789bb6efc054b229a5b723f16e4d245cf8ef583167c7c7c3345"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch300-changed-source-technical-index-v01.json",
+      "sha256": "f0fdea74cfec0b73593270ebabb1c48830d91865bafa5c1dd07117fc45802111"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch301-changed-source-technical-index-v01.json",
+      "sha256": "825f008b19361f304296ad9bee1454c2d717571fcb5e0b87975ecc21ef943c6e"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch302-changed-source-technical-index-v01.json",
+      "sha256": "ca029fbe117e3f9a58c96edfb3952d2e0cd3060a971fcbbdddce80e11a0b995a"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch303-changed-source-technical-index-v01.json",
+      "sha256": "3f9d8a70c24495a696ae266156a73f94f271433684071b45a7770efb655bff4c"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch304-changed-source-technical-index-v01.json",
+      "sha256": "e130cc69c8dc61eae995cf0651e1d643dda020d3aa2ca08d9dc32d131f01921a"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch305-changed-source-technical-index-v01.json",
+      "sha256": "aa4569ff31d3dcaff804289e432718f5cc931a86b3be6b0e18376cd8b6a703c6"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch306-changed-source-technical-index-v01.json",
+      "sha256": "27d6e466da117e8111bad4866733c268baef3f8508ee9592679762a31c0da712"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch307-changed-source-technical-index-v01.json",
+      "sha256": "c564f77d0a3ef3e3d20fd86b631a39e178c1dfaad5845b15b52e9ac4c93bd3a6"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch308-changed-source-technical-index-v01.json",
+      "sha256": "539b62e4892f8a37a03e272922334d95ceeb8f8f6f4080ed129ece29cbd1b98f"
+    }
+  ],
+  "sources_planned": 29,
+  "source_HOLD": [
+    {
+      "index": "res://docs/remake/pr122-legendary-parallel/quality-v03/batch295-changed-source-technical-index-v01.json",
+      "index_sha256": "c4ef868b947fb64802dea8ade80469570bf77df5784eecd4c249504e1144d49c",
+      "finding": {
+        "sha256": "8a585c41e226ba180c01aee0238a194f63f5eba4da5eaf5df8c20791d511a307",
+        "grid": [
+          3,
+          2
+        ],
+        "findings": [
+          {
+            "code": "DETACHED_FOREGROUND_OWNER_AMBIGUOUS",
+            "severity": "HOLD",
+            "pixels_alpha_gt16": 1,
+            "minimum_required_runner_up_margin": 32.0,
+            "source_grid": [
+              3,
+              2
+            ],
+            "basis": "Apply the mythic ownership rule without guessing or dropping foreground"
+          },
+          {
+            "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+            "severity": "ERROR",
+            "phase": 0,
+            "pixels_alpha_gt16": 3,
+            "strong_pixels": 0,
+            "bbox_in_frame": [
+              363,
+              511,
+              366,
+              512
+            ],
+            "physical_owner_rows": {
+              "3": 3
+            },
+            "source_grid": [
+              3,
+              2
+            ],
+            "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+          }
+        ],
+        "source": "assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-source-v02.png",
+        "authored_slot": [
+          "transform:191",
+          "SW",
+          "idle"
+        ],
+        "dependents": [
+          {
+            "slot": [
+              "transform:191",
+              "SW",
+              "idle"
+            ],
+            "phase": 0,
+            "region": [
+              0,
+              0,
+              512,
+              512
+            ]
+          },
+          {
+            "slot": [
+              "transform:191",
+              "SW",
+              "idle"
+            ],
+            "phase": 1,
+            "region": [
+              512,
+              0,
+              512,
+              512
+            ]
+          },
+          {
+            "slot": [
+              "transform:191",
+              "SW",
+              "idle"
+            ],
+            "phase": 2,
+            "region": [
+              1024,
+              0,
+              512,
+              512
+            ]
+          },
+          {
+            "slot": [
+              "transform:191",
+              "SW",
+              "idle"
+            ],
+            "phase": 3,
+            "region": [
+              0,
+              512,
+              512,
+              512
+            ]
+          },
+          {
+            "slot": [
+              "transform:191",
+              "SW",
+              "idle"
+            ],
+            "phase": 4,
+            "region": [
+              512,
+              512,
+              512,
+              512
+            ]
+          },
+          {
+            "slot": [
+              "transform:191",
+              "SW",
+              "idle"
+            ],
+            "phase": 5,
+            "region": [
+              1024,
+              512,
+              512,
+              512
+            ]
+          }
+        ],
+        "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-record-v02.json",
+        "record_sha256": "d94bd198981148a31d131247e6d132bd3fbe0f837ec7d4ad79153d7da22299e7",
+        "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-SpriteFrames.tres",
+        "SpriteFrames_sha256": "dc85e8d0e14fb97d4b801b378b68e6b1e2bc366a88101a627972f8c9cf8513eb",
+        "correction_candidate_id": "qc054",
+        "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/SW-idle-source-v01.png",
+        "previous_source_sha256": "18f96ff6e0da6eba75a1236993b35e06e8abd60f8476d39a62c2b4ecfc738d7c",
+        "batch": 295,
+        "remote_commit": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+        "remote_receipt_sha256": "14877df7b377a53e9604cf9b5fd2b6ec4679baa414872eca52bbb3e32dc657d4",
+        "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+        "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+        "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+        "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+        "final_approved": 0
+      }
+    }
+  ],
+  "batches": [
+    {
+      "batch": 1,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch001-v07.json",
+      "selection_sha256": "228f214f75b3f6e20c0676cc8a53a1866fd8bf4e4b59c2101a981bf961e66a37"
+    },
+    {
+      "batch": 2,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch002-v07.json",
+      "selection_sha256": "2768a8888cae81fae63e8b2d494caf42d581c4c5ab356dc8591d5bf84501d9fd"
+    },
+    {
+      "batch": 3,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch003-v07.json",
+      "selection_sha256": "4ec8b48cebb3c747f5f36206e6d3ab2f8d887295e2a44b775f1ebb55c0474253"
+    },
+    {
+      "batch": 4,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch004-v07.json",
+      "selection_sha256": "4bbbeb31f2d44e3e595a60fc0c23004959601098417a634083ecebbec450da06"
+    },
+    {
+      "batch": 5,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch005-v07.json",
+      "selection_sha256": "768d5bb7a90d1f05ab7ff580d4ab10c3648a63592d97fe26df32bc9e3de2bfbd"
+    },
+    {
+      "batch": 6,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch006-v07.json",
+      "selection_sha256": "2894ca36a375aadfb8962ca8bbad15560d6a380b79ac0928caccae535a074963"
+    },
+    {
+      "batch": 7,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch007-v07.json",
+      "selection_sha256": "1bd147ef452af23148e9f308f98b47ee07d943511e61fb8dea417fc9cd9a6339"
+    },
+    {
+      "batch": 8,
+      "selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch008-v07.json",
+      "selection_sha256": "b0e30200beb495f85ef1a19256a2f73f031448bed37502e2a037da0197fcb791"
+    }
+  ],
+  "previous_682_proof_mutations": 0,
+  "whole_reviews_added": 0,
+  "final_approved": 0
+}

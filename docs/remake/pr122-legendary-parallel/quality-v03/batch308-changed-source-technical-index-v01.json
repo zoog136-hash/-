@@ -1,0 +1,377 @@
+{
+  "schema": "legendary-targeted-technical-index-v3",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "cohort_plan_sha256": "044f43ada55205df75cc594f68a4c4901c4703121bef81c291cff538ad41692a",
+  "batch": 308,
+  "changed_sources_reviewed": 3,
+  "additional_whole_reviews": 0,
+  "source_findings": [
+    {
+      "sha256": "98a2d3f54a0d78b838db7b4dc08dd95b020be295fe6469ec363e4d069df8cf63",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 2,
+          "pixels_alpha_gt16": 107,
+          "strong_pixels": 30,
+          "bbox_in_frame": [
+            0,
+            390,
+            8,
+            410
+          ],
+          "physical_owner_rows": {
+            "1": 107
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        },
+        {
+          "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+          "severity": "ERROR",
+          "phase": 4,
+          "pixels_alpha_gt16": 255,
+          "strong_pixels": 113,
+          "bbox_in_frame": [
+            0,
+            385,
+            14,
+            414
+          ],
+          "physical_owner_rows": {
+            "3": 255
+          },
+          "source_grid": [
+            3,
+            2
+          ],
+          "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+        }
+      ],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-source-v02.png",
+      "authored_slot": [
+        "transform:244",
+        "N",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:244",
+            "N",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-record-v02.json",
+      "record_sha256": "4df1e17aadc8d91bba3add4890ede9c88b12598e2a46d71fc92aceb128702bea",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "f076df89546dd828ae9b3713ffe325ba524b985dbebaf4f396da8ac21e47da49",
+      "correction_candidate_id": "qc030",
+      "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/N-hit-source-v01.png",
+      "previous_source_sha256": "430ac16630e227b2c0de0ae6e5df9f0124800595fbe9dd18374aba7d9fe66d73",
+      "batch": 308,
+      "remote_commit": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+      "remote_receipt_sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283",
+      "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+      "final_approved": 0
+    },
+    {
+      "sha256": "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6",
+      "grid": [
+        2,
+        2
+      ],
+      "findings": [],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-source-v02.png",
+      "authored_slot": [
+        "transform:176",
+        "NW",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:176",
+            "NW",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:176",
+            "NW",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:176",
+            "NW",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        {
+          "slot": [
+            "transform:176",
+            "NW",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-record-v02.json",
+      "record_sha256": "811982aab186f564f93d8c7b24db87924eca356a5cf5558f68caa7ff529e6153",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "8955dfe59e40941e6bb40a6fec57d058c69a5d134b176d830383915da694edd7",
+      "correction_candidate_id": "qc082",
+      "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_176/draft001/NW-hit-source-v01.png",
+      "previous_source_sha256": "c7756c9ab98792f2436c80df12b6f38872dd400ac7c9abb1d96a28e1a6a5b868",
+      "batch": 308,
+      "remote_commit": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+      "remote_receipt_sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283",
+      "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+      "final_approved": 0
+    },
+    {
+      "sha256": "2ce1a674c88b15a12aff37de6dfdbbc1532b259075f7c4725e27a7754dc31507",
+      "grid": [
+        3,
+        2
+      ],
+      "findings": [],
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-hit-source-v02.png",
+      "authored_slot": [
+        "transform:113",
+        "NE",
+        "hit"
+      ],
+      "dependents": [
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "hit"
+          ],
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "hit"
+          ],
+          "phase": 1,
+          "region": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "hit"
+          ],
+          "phase": 2,
+          "region": [
+            1024,
+            0,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "hit"
+          ],
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "hit"
+          ],
+          "phase": 4,
+          "region": [
+            512,
+            512,
+            512,
+            512
+          ]
+        },
+        {
+          "slot": [
+            "transform:113",
+            "NE",
+            "hit"
+          ],
+          "phase": 5,
+          "region": [
+            1024,
+            512,
+            512,
+            512
+          ]
+        }
+      ],
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-hit-record-v02.json",
+      "record_sha256": "d7605133fa0a282ef51c837481ef78c4195e91489f9e68f45bad5465bdf2593e",
+      "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-hit-SpriteFrames.tres",
+      "SpriteFrames_sha256": "700629680aed9d4b1864729b862c7b2bf2be620f60aae2a93ae34b914a7e199a",
+      "correction_candidate_id": "qc111",
+      "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_113/draft001/NE-hit-source-v01.png",
+      "previous_source_sha256": "35965ae4913ea50edb8286fa935f951111b055c96d2b9e5a670beffd09184e13",
+      "batch": 308,
+      "remote_commit": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+      "remote_receipt_sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283",
+      "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+      "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+      "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+      "review_scope": "ONLY_NEW_READY71_CHANGED_SOURCE_ONCE",
+      "final_approved": 0
+    }
+  ],
+  "manifest": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch308-revision-library-v02.json",
+  "manifest_sha256": "4ce6f010ecc940ba59bcd3787964e64588d5ac1dd0d873523e1096411e6721a3",
+  "remote_commit": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+  "remote_receipt_sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283",
+  "quality_status": "HOLD",
+  "final_approved": 0
+}

@@ -1,0 +1,1946 @@
+{
+  "schema": "legendary-resumed71-tool-and-delivery-snapshot-v03",
+  "original20_checkpoint": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/tool-quota-checkpoint-v01.json",
+    "sha256": "ebac8b962830b51860ac1441c5f0378e9dc74035323d47560b900bb6c8c853ca",
+    "attempts": 20,
+    "png_successes": 13,
+    "quota_blocked": 7,
+    "unchanged": true
+  },
+  "new_cohort_plan": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/correction-plan-v06.json",
+    "sha256": "044f43ada55205df75cc594f68a4c4901c4703121bef81c291cff538ad41692a"
+  },
+  "cohort_total": 71,
+  "counts": {
+    "PNG_READY": 71
+  },
+  "remote_counts": {
+    "REMOTE_SAVED": 71
+  },
+  "candidates": [
+    {
+      "correction_candidate_id": "qc033",
+      "id": "225",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-SW-idle-correction-v02.json",
+      "request_sha256": "a8df3bcec2422d92fcab916b38d67a0499fb4fcccf6fd9d4be8cddd57f7e3583",
+      "previous_source_sha256": "e9dd4f32fee309af1d5ff644cced2e7ec77c9df8a9da8db5236b43fe49e902ae",
+      "batch": 294,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-SW-idle-correction-v02.json",
+        "sha256": "43c97739445fa73ff7fccfcad224af164a78c44b7037f87a322da7bd8816fe8a"
+      },
+      "generated": "/workspace/generated_images/exec-980f90ca-6beb-4f12-a463-6199ac4cfd20.png",
+      "error": null,
+      "remote_sha": "59787ef0bddfdf235401297ea74144a0a4976d7b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch294-delivery.json",
+        "sha256": "83d5bc29d88c7468a80770048c32e276ddc9d2ebeb0e50bf6df1620450836fa1"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "035322303eb2df4f729e5efd1a3f8b001818c7ea0483dea152f8a1e92b81db82",
+      "source_sha256": "6af3c040e1c0c279d1681f2f39fb744fcd0e28359e9fdea72ad90e67293f4686"
+    },
+    {
+      "correction_candidate_id": "qc034",
+      "id": "225",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NW-idle-correction-v02.json",
+      "request_sha256": "90a18079a6c41a664f7196242af56064d1e09e1fa60a53fe4bd2b4fd9f461277",
+      "previous_source_sha256": "124ccabc81306d5e0fd481d45601da1defb1972809ffc1fa99cba1a7a9e5b14c",
+      "batch": 294,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-NW-idle-correction-v02.json",
+        "sha256": "2c5faa17f07d7b1723e09b410b0699848fde6d297d0b42fb1263b91fb3f559c1"
+      },
+      "generated": "/workspace/generated_images/exec-7b78e5cf-e710-47fb-978c-1d005574481f.png",
+      "error": null,
+      "remote_sha": "59787ef0bddfdf235401297ea74144a0a4976d7b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch294-delivery.json",
+        "sha256": "83d5bc29d88c7468a80770048c32e276ddc9d2ebeb0e50bf6df1620450836fa1"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "0c92faea0ec268a12b556688c8c8789bc2b1979a65e4ccf769ca672129a074f8",
+      "source_sha256": "5bc1f13f8504fe1a27efa4a08d9744a388f9e34ba51adb219ec3a44cc54cb268"
+    },
+    {
+      "correction_candidate_id": "qc038",
+      "id": "225",
+      "direction": "NE",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NE-idle-correction-v02.json",
+      "request_sha256": "9c32dccecb21bd824bd6a8f0940f953be22c90a16e60a36cda230c7454578a5b",
+      "previous_source_sha256": "711b439b95e4c05a6fff486080c027a6168d6128c70adb90b6492888def8e1fd",
+      "batch": 294,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-NE-idle-correction-v02.json",
+        "sha256": "1d93b18cfce1aca1e81313711b259664b871b2e6b240ca3a9fe577e85a776422"
+      },
+      "generated": "/workspace/generated_images/exec-3d11bca2-30e9-42b9-a526-aa8dad6ce577.png",
+      "error": null,
+      "remote_sha": "59787ef0bddfdf235401297ea74144a0a4976d7b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch294-delivery.json",
+        "sha256": "83d5bc29d88c7468a80770048c32e276ddc9d2ebeb0e50bf6df1620450836fa1"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NE-idle-record-v02.json",
+      "record_sha256": "2fd313d56409493844d9972007eb6b56811cf77300fdda9d1f99be55458cc5b0",
+      "source_sha256": "089d43fec001a5054f950906676b425431d5707aa0a2c597a1c5d48fc5cd56f9"
+    },
+    {
+      "correction_candidate_id": "qc040",
+      "id": "213",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-SW-idle-correction-v02.json",
+      "request_sha256": "09d3398283b76549d66f2ef46af07b8b011bf407aa75bf73c7a09b0ea3afefd4",
+      "previous_source_sha256": "304705a179b54da62e6bb7544d98453bc1053b44f62f4750000e85a342b609c9",
+      "batch": 294,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_213-SW-idle-correction-v02.json",
+        "sha256": "7f16d70ef642c791fc040a18ffe27a593931f3e5e731b0a853b075232d026890"
+      },
+      "generated": "/workspace/generated_images/exec-204cc695-a4fc-4dd3-9a83-62a04d4310e7.png",
+      "error": null,
+      "remote_sha": "59787ef0bddfdf235401297ea74144a0a4976d7b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch294-delivery.json",
+        "sha256": "83d5bc29d88c7468a80770048c32e276ddc9d2ebeb0e50bf6df1620450836fa1"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "96eef93a2342c01ac648c9482ce9776c711da2f5d205d3065847b9dda61b8d13",
+      "source_sha256": "2deb5bba041e41c6ef218a12067d20a2539e506963f1df6f162bec207fc08501"
+    },
+    {
+      "correction_candidate_id": "qc041",
+      "id": "213",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-NW-idle-correction-v02.json",
+      "request_sha256": "791b3223d98528818a1570b7e772f1fab305d96d496dede82e57d7bfefef0a47",
+      "previous_source_sha256": "c8ba87e751c2dfb37e3000a09a1c5be8761b1badd1759f6f0ecf081658e875b2",
+      "batch": 294,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_213-NW-idle-correction-v02.json",
+        "sha256": "c105222bb664db71987bdb4dfedc7e587713e2a34f4945c35e26cf5b89f27afd"
+      },
+      "generated": "/workspace/generated_images/exec-5265e1a1-338f-4871-838d-7ed546dee051.png",
+      "error": null,
+      "remote_sha": "59787ef0bddfdf235401297ea74144a0a4976d7b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch294-delivery.json",
+        "sha256": "83d5bc29d88c7468a80770048c32e276ddc9d2ebeb0e50bf6df1620450836fa1"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "fcb8fabc8f8fe58290e9e971746189cda52a10206e7aedc35fb347636c13ac21",
+      "source_sha256": "06c6aa67810595ba86a278c5a825a1630a2e0b045c3541bca8f96c646cdebd52"
+    },
+    {
+      "correction_candidate_id": "qc045",
+      "id": "193",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-SW-idle-correction-v02.json",
+      "request_sha256": "b871598ce59b6fd5f16fcf5911e087b98351778ff6e3a410b934aa868e633994",
+      "previous_source_sha256": "ce063509eef16b57a7c340ad8043aebe2213e82f648b0f9ed79d0d991917dc09",
+      "batch": 295,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_193-SW-idle-correction-v02.json",
+        "sha256": "e456db0289e661153648bbd51a79cf97930ced8f16c9f08312287527f0261289"
+      },
+      "generated": "/workspace/generated_images/exec-ac81313b-e424-4191-8e65-2d4f755bc463.png",
+      "error": null,
+      "remote_sha": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch295-delivery.json",
+        "sha256": "14877df7b377a53e9604cf9b5fd2b6ec4679baa414872eca52bbb3e32dc657d4"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "930032ea3a02b38c9231fd332a6c1f9ee2c29db4f805f75bc06b2fcebc8be608",
+      "source_sha256": "538ccc96c12237e96288547392f6bff170a7ddfc3d83c0a0dd8593f19415d94a"
+    },
+    {
+      "correction_candidate_id": "qc046",
+      "id": "193",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-NW-idle-correction-v02.json",
+      "request_sha256": "3423f352f1da0d22542e20a4c1b9344d23b7ce3ffbdd303a2d9b6c7a21884969",
+      "previous_source_sha256": "5fd7a19d426a16cc4d92b930dfb1700a5ebe542eb78774b76a0d65a02334273a",
+      "batch": 295,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_193-NW-idle-correction-v02.json",
+        "sha256": "1100b3429283a00ea43bea9765ea6d2a7336c9209f3108b1c106a686f8e000b5"
+      },
+      "generated": "/workspace/generated_images/exec-e16a16af-2edb-4656-96b3-fe906717ac3a.png",
+      "error": null,
+      "remote_sha": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch295-delivery.json",
+        "sha256": "14877df7b377a53e9604cf9b5fd2b6ec4679baa414872eca52bbb3e32dc657d4"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "d7805ceef2a74687e043ce022f8dbe3ae02e330dda947fee1d191f5e16ad0868",
+      "source_sha256": "8fdff5ccc94a5fceebef254e9372d16d1d626041533343c9cde5b6e5a58b3641"
+    },
+    {
+      "correction_candidate_id": "qc051",
+      "id": "192",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_192-SW-idle-correction-v02.json",
+      "request_sha256": "bec11b0c85bc4a4bcc55dc1823a44391bb628906982bab07080afe48637df845",
+      "previous_source_sha256": "87157c2c672808ba01684799ad4851557ee5fa1c13277dcc83b8db2f9a1a2567",
+      "batch": 295,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_192-SW-idle-correction-v02.json",
+        "sha256": "59a543c076c6c10d09898222d2429efd15b3632f9ec575a6602c9bd952481116"
+      },
+      "generated": "/workspace/generated_images/exec-8e3bca57-668f-4a52-9f47-643a7f11090f.png",
+      "error": null,
+      "remote_sha": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch295-delivery.json",
+        "sha256": "14877df7b377a53e9604cf9b5fd2b6ec4679baa414872eca52bbb3e32dc657d4"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "67f0a7c57bd7f87ec1ebbcc925131c8ddbf85de96e014ea0fa0ab67113a2c8b8",
+      "source_sha256": "1b806f1b5215777d1b2e324d8c5a774abfcdb37501582616208485cda39bf721"
+    },
+    {
+      "correction_candidate_id": "qc052",
+      "id": "192",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_192-NW-idle-correction-v02.json",
+      "request_sha256": "3dddf05a4b6062b4e4f086d3bb0a11ae660ca8c17280397e46401192c32eb20a",
+      "previous_source_sha256": "ad9710acf9c3c57001f838a42f8412e5b0b97ed1a7399abeb81fc9cb0ee9b26a",
+      "batch": 295,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_192-NW-idle-correction-v02.json",
+        "sha256": "f249eceecfcd064ed47fe0ff08ff05edcc9388dac172814fcc94722368b9c7df"
+      },
+      "generated": "/workspace/generated_images/exec-e926ea18-dfe3-44f1-bf8d-471bcb5bb2d4.png",
+      "error": null,
+      "remote_sha": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch295-delivery.json",
+        "sha256": "14877df7b377a53e9604cf9b5fd2b6ec4679baa414872eca52bbb3e32dc657d4"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_192/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "876c1e9166962b0ed816dea9c44b14390505ed4ba10a8d8f76d035aba4e866e8",
+      "source_sha256": "fdace8c4b48d399224579191a57ffdf3af7f744cf7c34ca66fa0aca3394208ab"
+    },
+    {
+      "correction_candidate_id": "qc054",
+      "id": "191",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-SW-idle-correction-v02.json",
+      "request_sha256": "4aee68c247b44e6462662127979fac655577284c5dfc6b7a198d15994475ba87",
+      "previous_source_sha256": "18f96ff6e0da6eba75a1236993b35e06e8abd60f8476d39a62c2b4ecfc738d7c",
+      "batch": 295,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_191-SW-idle-correction-v02.json",
+        "sha256": "356c0c54c1dbbd4250ed60577b6645e07370bf3a74c0589c08d1e31a5a27ee4a"
+      },
+      "generated": "/workspace/generated_images/exec-e9997d36-fa81-47e3-9648-ab0bb2e83e12.png",
+      "error": null,
+      "remote_sha": "89d90c24699a2e4afddd417e22afd8939a29f6d0",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch295-delivery.json",
+        "sha256": "14877df7b377a53e9604cf9b5fd2b6ec4679baa414872eca52bbb3e32dc657d4"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "d94bd198981148a31d131247e6d132bd3fbe0f837ec7d4ad79153d7da22299e7",
+      "source_sha256": "8a585c41e226ba180c01aee0238a194f63f5eba4da5eaf5df8c20791d511a307"
+    },
+    {
+      "correction_candidate_id": "qc055",
+      "id": "191",
+      "direction": "W",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-W-idle-correction-v02.json",
+      "request_sha256": "81e71945453bcec565b898c6078049821c6e670d0a8f778e735c4018db6bc2ee",
+      "previous_source_sha256": "724c63b8af07957ad0cd9deecc62f7c67c16d89cd30155db2e3543bca8b673cb",
+      "batch": 296,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_191-W-idle-correction-v02.json",
+        "sha256": "1c87489c384c111f5eb627e5d6d73260520716733318b0832672e7fc12e9cdc3"
+      },
+      "generated": "/workspace/generated_images/exec-51fb9250-3154-4b19-86a4-dd7271378ea5.png",
+      "error": null,
+      "remote_sha": "25a1f645e072e528c54cc960aa19cdcd1edb9b73",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch296-delivery.json",
+        "sha256": "2c3d8f0e24ed254d501eec0ef876bc843233d7ce4b0815a1ee999727cc05a02c"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/W-idle-record-v02.json",
+      "record_sha256": "555a084b1d3eb6fe6c1128da2f18bb3abe9fb1106fe377a91eeea0f43c20a3a1",
+      "source_sha256": "9913291882e8d54e3cbfdeee39887945cbf8fc96b368b71fd452f462efd7f9cd"
+    },
+    {
+      "correction_candidate_id": "qc056",
+      "id": "191",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_191-NW-idle-correction-v02.json",
+      "request_sha256": "d6821b461360f30dcd787f1afd61d4c85a5a8d327b874c97ba9469607d2b979a",
+      "previous_source_sha256": "6dcf60ef58f7ccb2649954bc29c3cf5e99f0984e013b2b5ab509c529864828e6",
+      "batch": 296,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_191-NW-idle-correction-v02.json",
+        "sha256": "f883f5de184228261c2ac910b89f53c80aeab7166043b71f128968dcfacd0c83"
+      },
+      "generated": "/workspace/generated_images/exec-ca013d4b-9bef-4dbc-9c02-8d465a45e5ba.png",
+      "error": null,
+      "remote_sha": "25a1f645e072e528c54cc960aa19cdcd1edb9b73",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch296-delivery.json",
+        "sha256": "2c3d8f0e24ed254d501eec0ef876bc843233d7ce4b0815a1ee999727cc05a02c"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "70e223af655add249ee3fee7bc0fe68b0a0ba35206e11bf7379e516957cc52cd",
+      "source_sha256": "5d370964f02bbf4f1729131e01e0ab05b9905289fb19ea9ee353c13e5fd1af40"
+    },
+    {
+      "correction_candidate_id": "qc058",
+      "id": "190",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_190-SW-idle-correction-v02.json",
+      "request_sha256": "bcace32084b5c699bd9103d0abf374f6d3c065c0d048967501dafb36dfc460fe",
+      "previous_source_sha256": "b3e7e06aa77ee778949185e689695d29155a9f042158e251c64831fb54d04afe",
+      "batch": 296,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_190-SW-idle-correction-v02.json",
+        "sha256": "0ad9a7cc86c922690ab2b804fbc9b0479f3f9e5497d878d28b5032901ea5b0b7"
+      },
+      "generated": "/workspace/generated_images/exec-5d262520-958c-49a6-a93c-18f0da3fe0e9.png",
+      "error": null,
+      "remote_sha": "25a1f645e072e528c54cc960aa19cdcd1edb9b73",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch296-delivery.json",
+        "sha256": "2c3d8f0e24ed254d501eec0ef876bc843233d7ce4b0815a1ee999727cc05a02c"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_190/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "89df4d99e6402fd1f15fbe8efe543b0c043f414329bdafc95aab60b3313e2b03",
+      "source_sha256": "2c164b1ddad3a02deb5454563a98a6cd02ae8f0baa63adb506f484e84ba5f50a"
+    },
+    {
+      "correction_candidate_id": "qc059",
+      "id": "190",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_190-NW-idle-correction-v02.json",
+      "request_sha256": "e469a5de10b879dfe565e0893dc241087fe6e6d6dc274272f054f35574e6a9b9",
+      "previous_source_sha256": "bf003772bdc9e4df89cd1da7b8467336ca543215741891e16da28efdf5dddada",
+      "batch": 296,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_190-NW-idle-correction-v02.json",
+        "sha256": "ce84e277d75fddc701a3fbe0e960cb9baacfa52fd6ab3bb7fef229ca57bd7ad2"
+      },
+      "generated": "/workspace/generated_images/exec-08c70e2b-8708-4b15-a008-6f4afee255c0.png",
+      "error": null,
+      "remote_sha": "25a1f645e072e528c54cc960aa19cdcd1edb9b73",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch296-delivery.json",
+        "sha256": "2c3d8f0e24ed254d501eec0ef876bc843233d7ce4b0815a1ee999727cc05a02c"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_190/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "74dd2d1226fb9e3baa77ff2ad86c1437b68c2c848fb2aafd2c158bf377cdaa4f",
+      "source_sha256": "3e761c64763a3b1962fcb248542f12d918b089eb3cf15a2e62aafc40c6f380fa"
+    },
+    {
+      "correction_candidate_id": "qc061",
+      "id": "178",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-SW-idle-correction-v02.json",
+      "request_sha256": "f33fe42ed285e78a354a574560c660a6bbe7c64acec2c182f0b0014c4821959d",
+      "previous_source_sha256": "1677578d19f76237bc5105a36f6b2080ece12350a01540e8db45d45891d729df",
+      "batch": 296,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-SW-idle-correction-v02.json",
+        "sha256": "e550e57063baaab193549b1d7fd97e558bda0ebe81cd331253f556e53023b89f"
+      },
+      "generated": "/workspace/generated_images/exec-31a29129-94e1-4594-9ae3-f33d3dca42cc.png",
+      "error": null,
+      "remote_sha": "25a1f645e072e528c54cc960aa19cdcd1edb9b73",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch296-delivery.json",
+        "sha256": "2c3d8f0e24ed254d501eec0ef876bc843233d7ce4b0815a1ee999727cc05a02c"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "92e3e07cd2889ccf98cad79e80e7fa5d741f0e5ed57d2db4ce34bec5b3497f33",
+      "source_sha256": "02903d4e30d0f0df1923c07901be2a0a8f3abb2a5c938548b0c85977e167bdc1"
+    },
+    {
+      "correction_candidate_id": "qc062",
+      "id": "178",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NW-idle-correction-v02.json",
+      "request_sha256": "1ef401bf4b4ac0af77e1feffa83f66f6740e654bf218d25b83a96d772f5f5e63",
+      "previous_source_sha256": "0f73e651bf8245d4318db13750cf9350c00a0dde9902ae4a3a4d15bf924726a1",
+      "batch": 297,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NW-idle-correction-v02.json",
+        "sha256": "67cb4c18bccfbc0e3dad8d693393fb85125b932709e409c96288ee01198dbceb"
+      },
+      "generated": "/workspace/generated_images/exec-da0cec25-40e1-40a1-888c-e4966a2ceadc.png",
+      "error": null,
+      "remote_sha": "70887d0265418b7febf887ef40ce7df5efed3585",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch297-delivery.json",
+        "sha256": "c03bdb1246b4fc393c637f5b52b2d3d37562da5c21dcc2f4b020eb775228af4e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "67b28886bc6fb7e3fd713ad02862f3110042f6aed1f503577200ab12827a24d5",
+      "source_sha256": "eb7878b2e70df272ac1f35b4fa107a5efbf4b2987ab00c1d021d0ded51d92331"
+    },
+    {
+      "correction_candidate_id": "qc064",
+      "id": "178",
+      "direction": "N",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-N-idle-correction-v02.json",
+      "request_sha256": "97cfb1e05807570e91e170e6a49f062a1f76507fca29f569c06a6d6e6b3c46fe",
+      "previous_source_sha256": "499e94a0ee958914052a1ed40d7794a4b93c9d40d3c94bd0af422650aecb85a8",
+      "batch": 297,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-N-idle-correction-v02.json",
+        "sha256": "102003d630002aebb0603590a29ac8872e992220b6b14e56eb87dcaa44398fda"
+      },
+      "generated": "/workspace/generated_images/exec-cd4e4ccd-3014-4b41-90d7-6018c80051bc.png",
+      "error": null,
+      "remote_sha": "70887d0265418b7febf887ef40ce7df5efed3585",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch297-delivery.json",
+        "sha256": "c03bdb1246b4fc393c637f5b52b2d3d37562da5c21dcc2f4b020eb775228af4e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "45d95fc4234829084e01799448f65acb158dc688b16f8b6457125431142be37c",
+      "source_sha256": "936e1cbc5a53c5827295466a9024500a96ca812c3f453401f2679f41db86eed9"
+    },
+    {
+      "correction_candidate_id": "qc067",
+      "id": "178",
+      "direction": "NE",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NE-idle-correction-v02.json",
+      "request_sha256": "dfbb9c8b6fa6f25f6d6cc3f00d2b965cc1ab2b75f30e3588363b24d5d6c0a982",
+      "previous_source_sha256": "f9212b53485a9c437e36bc3c7448179e02bdb5e1054460e8b03647000d69eaaa",
+      "batch": 297,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NE-idle-correction-v02.json",
+        "sha256": "6263e4459e394fe517ba4ad07196ad7d7e15fb9bdaf54fd9631a63bb5dfc870d"
+      },
+      "generated": "/workspace/generated_images/exec-f2d38a68-d4b7-47d4-9856-b532268dc1bd.png",
+      "error": null,
+      "remote_sha": "70887d0265418b7febf887ef40ce7df5efed3585",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch297-delivery.json",
+        "sha256": "c03bdb1246b4fc393c637f5b52b2d3d37562da5c21dcc2f4b020eb775228af4e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NE-idle-record-v02.json",
+      "record_sha256": "cc05470f745e5250d7a940e112c647ff5187dc9250124f7c266c6951a7d61e73",
+      "source_sha256": "3f647ba241aeb21ce777f71a3d3e1d3efcb19c88c1ca8f4b21de89307056fb53"
+    },
+    {
+      "correction_candidate_id": "qc071",
+      "id": "177",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-SW-idle-correction-v02.json",
+      "request_sha256": "47808a37fa999b9b2f588bdc7d4d3043278555a5772e6cd79e007ba8d019a3f8",
+      "previous_source_sha256": "b0bc0fe1730d3e4c434c4c9a6a020e9f698b2e86acb432594ff16e55f4981a70",
+      "batch": 297,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-SW-idle-correction-v02.json",
+        "sha256": "f599167c7c87e458eb8040f3efff423aff2d35aae6f1a96c6f109962881cdb00"
+      },
+      "generated": "/workspace/generated_images/exec-3b0f6aaf-f479-46e7-8225-e4f90ae3e5c2.png",
+      "error": null,
+      "remote_sha": "70887d0265418b7febf887ef40ce7df5efed3585",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch297-delivery.json",
+        "sha256": "c03bdb1246b4fc393c637f5b52b2d3d37562da5c21dcc2f4b020eb775228af4e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "eff6453034ab3bf6fb31931b507d59a0483f0339d6caf148d2e7a9881210ec83",
+      "source_sha256": "9bd0238ebac99cea505c51859cc4ec7a5b30dde6a76051270fa97adfd58a6215"
+    },
+    {
+      "correction_candidate_id": "qc073",
+      "id": "177",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-NW-idle-correction-v02.json",
+      "request_sha256": "1b3446e76caef4b33297e1d43cb4229efb942a9b37a220fb386679e611425061",
+      "previous_source_sha256": "2444ddd7b394e38a5bbea1c20fb434007a37bd2c76aae55c637d5eb0434951cb",
+      "batch": 297,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-NW-idle-correction-v02.json",
+        "sha256": "a625744519863f6c5aaa04878003d29e5dfa78dd9fa2c159aa6e56bbdcb4072b"
+      },
+      "generated": "/workspace/generated_images/exec-03d4041c-7ad7-42de-9e8f-b4566678f7b7.png",
+      "error": null,
+      "remote_sha": "70887d0265418b7febf887ef40ce7df5efed3585",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch297-delivery.json",
+        "sha256": "c03bdb1246b4fc393c637f5b52b2d3d37562da5c21dcc2f4b020eb775228af4e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "57f8ddc769f2054bc5a40c314b8943bd388f4af01f447dffcfa522e093892746",
+      "source_sha256": "92243076e82aeda9e853c1b57c0248764e326f378dedb530a199b73c73ab6864"
+    },
+    {
+      "correction_candidate_id": "qc077",
+      "id": "177",
+      "direction": "N",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-N-idle-correction-v02.json",
+      "request_sha256": "34dad3412c389cce4a4e13b7dea5a62a348b710b67bdad16a2ddd49cc6c6b341",
+      "previous_source_sha256": "0e499a57c1519c28dee702dd317f3e0b73a28eb9e4ecd2e35d28cbe45240cf30",
+      "batch": 298,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-N-idle-correction-v02.json",
+        "sha256": "1bc8e3ee9fb3f350c08cdbc954e7270c43f98e45a8e050560ee3ee68f58526f6"
+      },
+      "generated": "/workspace/generated_images/exec-f7cb3fdb-37ca-4bef-bb95-42f341454693.png",
+      "error": null,
+      "remote_sha": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch298-delivery.json",
+        "sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "1ef63e08a691ec4d0ce279c67aa390de43259d171fca386a594be1caf4e9c169",
+      "source_sha256": "25136481d46e79702b68a93e61f74d104e8649382095a6174762fa4cc9fe6bc8"
+    },
+    {
+      "correction_candidate_id": "qc080",
+      "id": "176",
+      "direction": "W",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_176-W-idle-correction-v02.json",
+      "request_sha256": "33949060758cc6880587bf20adf04960eed20e9af58e5d9d797669abc366b73f",
+      "previous_source_sha256": "99686e56829099c6fd19c9dc53735dcf15a18eb4ab63c60e902c5e8f6d0ad594",
+      "batch": 298,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_176-W-idle-correction-v02.json",
+        "sha256": "dceeba2988b3e73936a983a061dcd44d00dfad44887826fa18868b5ed597131c"
+      },
+      "generated": "/workspace/generated_images/exec-c985809c-f158-4a66-b284-65656d0d6f3a.png",
+      "error": null,
+      "remote_sha": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch298-delivery.json",
+        "sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/W-idle-record-v02.json",
+      "record_sha256": "b20145cbe3b4fd78aaf1f34613b0c3d93cc985556091f8e51fe58ce4bc3572ff",
+      "source_sha256": "8033e88e1d9c43772e2106725e35c5bd4768cc9baf59add023cdc60291a72184"
+    },
+    {
+      "correction_candidate_id": "qc081",
+      "id": "176",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_176-NW-idle-correction-v02.json",
+      "request_sha256": "b96ab4607eba5c6772cc07cd686069fb8df1f672e9109e75925f8d0cbf799fe7",
+      "previous_source_sha256": "ddae331d7246b1a6b8428624e3823294448e87a0cdf071f90d49ddf561c6e20f",
+      "batch": 298,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_176-NW-idle-correction-v02.json",
+        "sha256": "eeceb631397513de1cfde7ebfb21e2f81fb263021884a693315f79fdda6b7956"
+      },
+      "generated": "/workspace/generated_images/exec-1ecbcf67-9af5-4f4a-9d60-3ecc4be39e83.png",
+      "error": null,
+      "remote_sha": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch298-delivery.json",
+        "sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "f3e969fa8b8b88cb623f1233a617f626ece20b7d4a1e4fb76fce175d8624c0ca",
+      "source_sha256": "bcd3a0b0262fce7720e5caa985df14e931cfaefc35aa5fa696e94be173a642ea"
+    },
+    {
+      "correction_candidate_id": "qc083",
+      "id": "175",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-SW-idle-correction-v02.json",
+      "request_sha256": "7ddfb15c6000e24b0ff075e7657ce3909199d9ea007799ebc1e1b4847f79a88f",
+      "previous_source_sha256": "7454c5373cea28a4bb2401397e9c2dd40d1528db376934497a4da6253ca3aafb",
+      "batch": 298,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-SW-idle-correction-v02.json",
+        "sha256": "605ad312bffd01d6e8fa1e261eb0a837f70bc06f430b96ad08ddd4d90049d353"
+      },
+      "generated": "/workspace/generated_images/exec-8d15df7e-930e-415f-920a-534b911f7634.png",
+      "error": null,
+      "remote_sha": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch298-delivery.json",
+        "sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "029ca6d4949efcadc062492a0ed810f43f32aaa4c6d10d0e3673e9a00a2aac99",
+      "source_sha256": "94996fa2e0c52ca158e02003a0b3e5d6858712a91d37c25fe20e3007ebf0457e"
+    },
+    {
+      "correction_candidate_id": "qc084",
+      "id": "175",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-NW-idle-correction-v02.json",
+      "request_sha256": "75c943535550e19902feb07496042bbd865f329b4b12ec073c9bef41e2277a2e",
+      "previous_source_sha256": "7431094dbfda71bbe7400abde631a5d607c5cfe566bfb90141fe0d3bbff15385",
+      "batch": 298,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-NW-idle-correction-v02.json",
+        "sha256": "09355675f9072e01ed47cf1ba0695a0eb079a9649f860345e5a3f3f9d539df60"
+      },
+      "generated": "/workspace/generated_images/exec-b5bde7d8-bdec-425e-8ffc-e1bae515d8ea.png",
+      "error": null,
+      "remote_sha": "6a2c628321aca269de104514cab579a4e1d8cf5a",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch298-delivery.json",
+        "sha256": "37f196d1404d5dd456a1b61f1f2dd66583af61362e1739a77ca661daa988b444"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "89724f3939929beb56fa985be72c1ba889c19709328499c807841a94021f4576",
+      "source_sha256": "1f0d0bbf185bac5945833767b226202a10bedd00264d2147070c0fed35a4ac42"
+    },
+    {
+      "correction_candidate_id": "qc088",
+      "id": "166",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_166-SW-idle-correction-v02.json",
+      "request_sha256": "779466eee4fa19d92158b0addb046129e5e0574a22cf17f97887ef2e44be2f7e",
+      "previous_source_sha256": "75bcfa0dc1bab89c98676b2ffa127c875cc36aa7d7e6679d7ff8617da0e45e6d",
+      "batch": 299,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_166-SW-idle-correction-v02.json",
+        "sha256": "9a5a504a28486ff0e25501696148ebc2662c718d9bbe8a57cc707c0c6f63b923"
+      },
+      "generated": "/workspace/generated_images/exec-edbf5092-62d4-4ae5-a4c5-3c301c42ac68.png",
+      "error": null,
+      "remote_sha": "3a8e3b6a46702a424e9993abc033bea201cbe58f",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch299-delivery.json",
+        "sha256": "af3dddc6f431c78595010651b71a90fec901658762e1639909c7a6ea56cadb1f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "61e8d437ca380b32118168b4f2e0e92c724fd184501762e421ff382e11ba37cd",
+      "source_sha256": "bfdd95af52e55285586ada6565426eb36cb96cad9c71388a29b5b8e55855ca63"
+    },
+    {
+      "correction_candidate_id": "qc089",
+      "id": "166",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_166-NW-idle-correction-v02.json",
+      "request_sha256": "ebf5d3c6822323e79ee1617e020859391a6f5239d7cb1de931570a0f704eb390",
+      "previous_source_sha256": "cdf6f014c964527f5e92a19fd64d0a68fab84ad5af7e3824430e4c76857cb504",
+      "batch": 299,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_166-NW-idle-correction-v02.json",
+        "sha256": "3ac4b958bcb04083e47aa4094dd6d406e7b45c93c9ca062a088859a1dc406724"
+      },
+      "generated": "/workspace/generated_images/exec-6389df1f-7933-4787-8ee0-17101cac2aa0.png",
+      "error": null,
+      "remote_sha": "3a8e3b6a46702a424e9993abc033bea201cbe58f",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch299-delivery.json",
+        "sha256": "af3dddc6f431c78595010651b71a90fec901658762e1639909c7a6ea56cadb1f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_166/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "aa059f6c5941b5eed428eac614522a60489b2cff35b6f419f687a6155a6e5384",
+      "source_sha256": "3e7264a7b3f41e8e211a7925df3851c7d28d41f9eba349dc03e07b0c3ca06078"
+    },
+    {
+      "correction_candidate_id": "qc091",
+      "id": "165",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_165-SW-idle-correction-v02.json",
+      "request_sha256": "765d4203d54a2d2839102e5963da622ca4d0f34cefcca56e8d9b0f4976feb0b3",
+      "previous_source_sha256": "28d0a4dcfa88551de5fd61c3b799708fb93a574a16601c01dd93270c43d4a48f",
+      "batch": 299,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_165-SW-idle-correction-v02.json",
+        "sha256": "035427e2a065ea686add6f05aafe3024b7fa85319b6f33ea0f285754414d8a4b"
+      },
+      "generated": "/workspace/generated_images/exec-651668b6-e517-4883-b8a5-4b5caeba02c1.png",
+      "error": null,
+      "remote_sha": "3a8e3b6a46702a424e9993abc033bea201cbe58f",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch299-delivery.json",
+        "sha256": "af3dddc6f431c78595010651b71a90fec901658762e1639909c7a6ea56cadb1f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_165/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "8d2e8a986e37432e2a7dc0eca08e7f32f06c96acf164b2abf688c6920aa47450",
+      "source_sha256": "edac278a8e102a1d0dd76e7ea5062cff5245e5afdb0560c1254959be42530dc9"
+    },
+    {
+      "correction_candidate_id": "qc092",
+      "id": "160",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_160-SW-idle-correction-v02.json",
+      "request_sha256": "9857ee63d3fa9599d6ff14e704c59b42acf2626631dc6f1f6b6907bb455e3119",
+      "previous_source_sha256": "2e20e6b7688dd8f6866e539e79885b2655b1a623fd3745a134cc0870784a925a",
+      "batch": 299,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_160-SW-idle-correction-v02.json",
+        "sha256": "697231f5b0b7b948a5f831e36afbcdb33ba2526160a2c7f18e04bece4841e0d5"
+      },
+      "generated": "/workspace/generated_images/exec-8b37c9b2-33e0-4530-9259-8e71d91d016d.png",
+      "error": null,
+      "remote_sha": "3a8e3b6a46702a424e9993abc033bea201cbe58f",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch299-delivery.json",
+        "sha256": "af3dddc6f431c78595010651b71a90fec901658762e1639909c7a6ea56cadb1f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_160/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "34b647627fd536c229dca917943a32df783142ca82fa5079e38ac5a588175906",
+      "source_sha256": "cd78168528fbdbc6e9c8d3ec31b54052de184a36c2141c13ec6194aa892a551d"
+    },
+    {
+      "correction_candidate_id": "qc093",
+      "id": "160",
+      "direction": "N",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_160-N-idle-correction-v02.json",
+      "request_sha256": "cc2aee868989c69580d9cf1001a8d2d63d5799be2500a20fbffc860a0c459fa2",
+      "previous_source_sha256": "cd9fb468ebe985e4f4a2d4b3666fbb1504010e47fa70985a1d3d743666d2d877",
+      "batch": 299,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_160-N-idle-correction-v02.json",
+        "sha256": "24a61438d3a098846d0a4c47ccf46309cb30321fbaaa50d4a66aa4ca4f6b124c"
+      },
+      "generated": "/workspace/generated_images/exec-55f707c3-a25e-41e2-906c-27de56912112.png",
+      "error": null,
+      "remote_sha": "3a8e3b6a46702a424e9993abc033bea201cbe58f",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch299-delivery.json",
+        "sha256": "af3dddc6f431c78595010651b71a90fec901658762e1639909c7a6ea56cadb1f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_160/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "729e9d671d514159b4173bb81af113b0125366945d471650bf56caf77e5cfa0b",
+      "source_sha256": "1e7876b22a259cab262807e0abbc91967c253248f17d3cedd2d489c75985e8fc"
+    },
+    {
+      "correction_candidate_id": "qc094",
+      "id": "143",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_143-SW-idle-correction-v02.json",
+      "request_sha256": "927dfdd28e6dc7e02386a179aeb4cc8297942eec80e1c36015d82bfb319f337c",
+      "previous_source_sha256": "9b06da5e3a6d43c692002f2731e08d163c4a19615861ded134faa7414eb98773",
+      "batch": 300,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_143-SW-idle-correction-v02.json",
+        "sha256": "ece38817e5d8c9ff902f12ba6639f51070dbb2fb38a699e79b33d5f721188804"
+      },
+      "generated": "/workspace/generated_images/exec-b6b81c7c-0ccb-4f32-9da7-c9a65aaf6d0d.png",
+      "error": null,
+      "remote_sha": "f6415c219ebea7e31b08320665df0184f3dfd756",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch300-delivery.json",
+        "sha256": "fe6973aa9ad9e80a7bc8763401ad013992c1901727a23581fc5d2b846069698e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_143/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "d72d0875397a29c375796c3282a0ad56d8f08b781d90c62689439d16e1970c0e",
+      "source_sha256": "13a9e40e756a06f3873b9172af5cf8417fc640b7a693bef7a9511e94a0b3b239"
+    },
+    {
+      "correction_candidate_id": "qc095",
+      "id": "143",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_143-NW-idle-correction-v02.json",
+      "request_sha256": "050bd87c8d71465ff758cb3b9a533905352ffead611c0d4fb19981249e311be3",
+      "previous_source_sha256": "e807a29561c7c62428790d651d30a2bd24e581321f33ea91f4f485135a7e05dc",
+      "batch": 300,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_143-NW-idle-correction-v02.json",
+        "sha256": "f6f15eb0ff7ba11f494a1c175455bdfc6b2e918411442cfc59a1a772a3b28f15"
+      },
+      "generated": "/workspace/generated_images/exec-80c95a78-256f-4e7f-b3af-00e2069df664.png",
+      "error": null,
+      "remote_sha": "f6415c219ebea7e31b08320665df0184f3dfd756",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch300-delivery.json",
+        "sha256": "fe6973aa9ad9e80a7bc8763401ad013992c1901727a23581fc5d2b846069698e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_143/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "85695f9083d4d89837b91002569f47fff1ae478dd87bb203f3aeea41ed79e0de",
+      "source_sha256": "2fd0fe8d3c52db5fe29d9a5e844d605ccfcb0f801fb0da4aacfbac9894f38bdc"
+    },
+    {
+      "correction_candidate_id": "qc096",
+      "id": "122",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_122-SW-idle-correction-v02.json",
+      "request_sha256": "c6a1f8404543598b670cc7cc3bb5d768e9ebe71bdc80545450d618e6fd5d9350",
+      "previous_source_sha256": "ad99784d23b647c587f0582072c5617e7cfda7140456b25335c03ea3491558a7",
+      "batch": 300,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_122-SW-idle-correction-v02.json",
+        "sha256": "5810ec563e4cdb989a6ac92555a8edcf66b9a7d4c2aa973399eeabc03e49ccda"
+      },
+      "generated": "/workspace/generated_images/exec-86b72555-f82c-4486-a80f-2d3f523f3c85.png",
+      "error": null,
+      "remote_sha": "f6415c219ebea7e31b08320665df0184f3dfd756",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch300-delivery.json",
+        "sha256": "fe6973aa9ad9e80a7bc8763401ad013992c1901727a23581fc5d2b846069698e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_122/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "285ed2ef464d8f5530df7b788b3b3a53e72c0a01e93b003af585a60bdedd3158",
+      "source_sha256": "f43d0cc84b6528141deeb301316baeb453ab12c58fdc69e816ca1afc311d5248"
+    },
+    {
+      "correction_candidate_id": "qc097",
+      "id": "122",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_122-NW-idle-correction-v02.json",
+      "request_sha256": "e42e7d18eee255529cfb0548152d0c705f3a3fb7826736b5222a769ab28710e8",
+      "previous_source_sha256": "e79fc0c8d601dbda268d6ce0c151e02042e7cbbe057983f4a86148763d2a9c2e",
+      "batch": 300,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_122-NW-idle-correction-v02.json",
+        "sha256": "3f6f70b9f872ae4b729be26032d7447aa22990e9ec74fb0b79f177b8f1893ba7"
+      },
+      "generated": "/workspace/generated_images/exec-2d1eaf8c-1cb9-43a9-86db-aaa9ed5404f5.png",
+      "error": null,
+      "remote_sha": "f6415c219ebea7e31b08320665df0184f3dfd756",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch300-delivery.json",
+        "sha256": "fe6973aa9ad9e80a7bc8763401ad013992c1901727a23581fc5d2b846069698e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_122/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "bf15ba6eeeb04b66959e4a23c8724933597532896deb76d4a957a7452578707b",
+      "source_sha256": "b055f681d00a0e8ffd1f0e9588a3583475f18c606cace578e537f818c5290e3e"
+    },
+    {
+      "correction_candidate_id": "qc099",
+      "id": "114",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-SW-idle-correction-v02.json",
+      "request_sha256": "aaaebd10ca09ef715065c7369bf2e745773e1da4b065fdf2f31e3e9cf3a4bda4",
+      "previous_source_sha256": "f20b3276269728906f9b934eb08cbd0008952b81cef7b9227f3725d7f3f78bbd",
+      "batch": 300,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_114-SW-idle-correction-v02.json",
+        "sha256": "2027ae453a04cfdadbf438ac6417fa44d726050932206ec31eebe126400f7cf8"
+      },
+      "generated": "/workspace/generated_images/exec-c71593c7-d261-44ef-b218-8dc7e4457f41.png",
+      "error": null,
+      "remote_sha": "f6415c219ebea7e31b08320665df0184f3dfd756",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch300-delivery.json",
+        "sha256": "fe6973aa9ad9e80a7bc8763401ad013992c1901727a23581fc5d2b846069698e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_114/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "f689a30610ba77ea5a04ea906e534cf6b21b12fb51e7e85b29582e3b6acd8989",
+      "source_sha256": "7e239eb7152f959893348f43e8001147644a268a4cb77a19a4cc3d54241c6549"
+    },
+    {
+      "correction_candidate_id": "qc100",
+      "id": "114",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NW-idle-correction-v02.json",
+      "request_sha256": "bd0f670b3ba47f0224286ef6bfb18d4a73711c8d43d6eacc433639c52c7ba5f8",
+      "previous_source_sha256": "eadea8ec65aa11e663671597712ddac020a58a99138cb70d940fcba4090a1e0a",
+      "batch": 301,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_114-NW-idle-correction-v02.json",
+        "sha256": "618c82c45043fa0fd5c5ea9116a4c962d21334419a8b1833235c5b877582db21"
+      },
+      "generated": "/workspace/generated_images/exec-6f3cec38-e040-4111-b303-3980a6e2ae99.png",
+      "error": null,
+      "remote_sha": "167d9e6cec48d712395ad435b4a8dbce375c127c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch301-delivery.json",
+        "sha256": "14383d297f9c0c9c9de1162a2e55c30d59117d21ed10a608d3a91bdc0177d883"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_114/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "24e7ffda23345a3bbb0491033f8d5dee0e33b3cef954efd547ae5fb13149b982",
+      "source_sha256": "715711d7bc8543a5564168957133632297f759e2938d96513d19f5e8c9765663"
+    },
+    {
+      "correction_candidate_id": "qc101",
+      "id": "114",
+      "direction": "NE",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_114-NE-idle-correction-v02.json",
+      "request_sha256": "92259a373c70586d8eabd76b780dcf0624a9804c1645d826f819c9f0ae4e03cf",
+      "previous_source_sha256": "da0832208f0ac35fd50da3c4aba430c52f87837062ee3308010451863442e3d4",
+      "batch": 301,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_114-NE-idle-correction-v02.json",
+        "sha256": "cf89f9fc82d6fcc370fe0ad32c7bf043cccde9969fa5f2c1e76f3ebe5a9d8c40"
+      },
+      "generated": "/workspace/generated_images/exec-9ee7f1c2-2f24-4e72-8314-1a12b8c02a57.png",
+      "error": null,
+      "remote_sha": "167d9e6cec48d712395ad435b4a8dbce375c127c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch301-delivery.json",
+        "sha256": "14383d297f9c0c9c9de1162a2e55c30d59117d21ed10a608d3a91bdc0177d883"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_114/quality-v02/NE-idle-record-v02.json",
+      "record_sha256": "3ee77a75b0c02a604b16307b0f4ac8ea215efcd2d96c517750cb65d81033fb3c",
+      "source_sha256": "f53d2fd9e56e2ae80e5f05ed9249f71650711ee08ec45189c8cc08e7a784d1cd"
+    },
+    {
+      "correction_candidate_id": "qc104",
+      "id": "113",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-SW-idle-correction-v02.json",
+      "request_sha256": "7db8ce0775a1b44d40453ef8e2d1bfd4565cf1d0cfce023d7efcc8931acdd1a6",
+      "previous_source_sha256": "6758e90e43a9d51376192c707d63cccb4749b9dbdb5dd31a1f1d6d2b9f77bd50",
+      "batch": 301,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-SW-idle-correction-v02.json",
+        "sha256": "d5677d7b046b8d6c8ed09c5c8f0e47f2beec1fb1e3502c9429376371fe0f27e5"
+      },
+      "generated": "/workspace/generated_images/exec-24b131d9-7ce6-4026-a487-0ff714a84f9a.png",
+      "error": null,
+      "remote_sha": "167d9e6cec48d712395ad435b4a8dbce375c127c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch301-delivery.json",
+        "sha256": "14383d297f9c0c9c9de1162a2e55c30d59117d21ed10a608d3a91bdc0177d883"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "04ddc78bfdcd8983f53bda6d0693e9e2032596424c22c41ad65d2a31e2f4cdec",
+      "source_sha256": "2affb42c693eebb382a720e6d78587bee894cded0e13c6c034da58c95b20d4fa"
+    },
+    {
+      "correction_candidate_id": "qc105",
+      "id": "113",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NW-idle-correction-v02.json",
+      "request_sha256": "f096bb5ce29297e4ffeebc4545f28145f6e2253cfbcbfd749330b45bfc3c28d5",
+      "previous_source_sha256": "2578b81a2c29496a16de64628121421ee80ba064af1d4316f669dbc7064f13f3",
+      "batch": 301,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-NW-idle-correction-v02.json",
+        "sha256": "2e05d5b69372d8a3f3b2f1559e826cfbad367316aa96650d4d5e4c46a15ac5f8"
+      },
+      "generated": "/workspace/generated_images/exec-ca7a5941-e879-4940-b5f9-f8df6d0854d0.png",
+      "error": null,
+      "remote_sha": "167d9e6cec48d712395ad435b4a8dbce375c127c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch301-delivery.json",
+        "sha256": "14383d297f9c0c9c9de1162a2e55c30d59117d21ed10a608d3a91bdc0177d883"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "40e6c9239cc33bba06254cb905a25f22fd4d816ab199036704df0fed2ef96aa0",
+      "source_sha256": "2a4130c5d9a5b473fdb1ae2a2f733d0799511c0dd203c5525c3b1e38696525bc"
+    },
+    {
+      "correction_candidate_id": "qc106",
+      "id": "113",
+      "direction": "N",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-N-idle-correction-v02.json",
+      "request_sha256": "785715f4198447d47521abbd5c16e73bd172848f44f72e7f95c77993a6bed1fc",
+      "previous_source_sha256": "ab0478aa8e0f056a330defb3ada5642f5da3fef499f23d14f46f643753eeff0e",
+      "batch": 301,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-N-idle-correction-v02.json",
+        "sha256": "c57eb7bb49700bb8ea471476b69a45615af86cfeb109693f58b2274885ce8dde"
+      },
+      "generated": "/workspace/generated_images/exec-624c53e5-4a42-4b76-a300-b54ce88cff98.png",
+      "error": null,
+      "remote_sha": "167d9e6cec48d712395ad435b4a8dbce375c127c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch301-delivery.json",
+        "sha256": "14383d297f9c0c9c9de1162a2e55c30d59117d21ed10a608d3a91bdc0177d883"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "977d35c7d3b8fd744f6725d18ee96cb7dbeea2f88a63461318824298bd198d55",
+      "source_sha256": "63e0e39d62a9ab125e7a782e00c265b10778ed847e5a394f553830efbe37de26"
+    },
+    {
+      "correction_candidate_id": "qc117",
+      "id": "112",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-SW-idle-correction-v02.json",
+      "request_sha256": "8c9033d85422b1a9cc9018cca915e7f6156828658508938461551465f5b16aee",
+      "previous_source_sha256": "4cfcedb83d29e8b3049506bab976aeb550e06dec39ee325b3b3527aa5059f27b",
+      "batch": 302,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-SW-idle-correction-v02.json",
+        "sha256": "c218984c99cd07788995c8319cd4b0b4e947248cf325e1f9fd1f3a9706883aa2"
+      },
+      "generated": "/workspace/generated_images/exec-c68202b0-0b9f-4b86-a997-b8c215aba464.png",
+      "error": null,
+      "remote_sha": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch302-delivery.json",
+        "sha256": "3c9cbb60bded1c4933595c424d5e1bba63b6ab5fb69ffc8db0ddc9f810682372"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "7c08213d5bb27bb8a27aea06f839e132df74b5b68f70dde71a77d239ac8b4757",
+      "source_sha256": "a7f53d0f73a9a1a4cf0f4f69b376c2853c6d5513aa94da96b687c145054ed127"
+    },
+    {
+      "correction_candidate_id": "qc118",
+      "id": "112",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-NW-idle-correction-v02.json",
+      "request_sha256": "0cde54bda364e73f5c429036b02d14844af7f96fc0739da3a9b1c7b93a00531b",
+      "previous_source_sha256": "fddd715fad1fd7a7af7705371a57458b53bffa301dbf6061e0d1f1d089c549fc",
+      "batch": 302,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-NW-idle-correction-v02.json",
+        "sha256": "93752ca281cc619c5cff306aa226fcb1830052e0b79ca8f06bfca10a67d95cb6"
+      },
+      "generated": "/workspace/generated_images/exec-548dd855-1fa8-4eb3-8f0b-e03956732d0d.png",
+      "error": null,
+      "remote_sha": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch302-delivery.json",
+        "sha256": "3c9cbb60bded1c4933595c424d5e1bba63b6ab5fb69ffc8db0ddc9f810682372"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "0aa2901856c4017b6012126a39390c721740600dc9db4c554c5fdb94039f93e5",
+      "source_sha256": "6faff9f043b49dc39bebadddb537f29237f3f2b905fd8bbf924b38021dc2bb0b"
+    },
+    {
+      "correction_candidate_id": "qc120",
+      "id": "112",
+      "direction": "N",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-N-idle-correction-v02.json",
+      "request_sha256": "555134292e550496903308b53605237a01be7314e9ecf0e51c6757db3d2fcfc3",
+      "previous_source_sha256": "631a673324190c80a1020d37eb40b9f55714b20e9f2c8f77a6443974f63424c6",
+      "batch": 302,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-N-idle-correction-v02.json",
+        "sha256": "bad48c56cc5a99b6c9e20236def0a5e20ef5b84ea78a7266104aa1437cc1ec90"
+      },
+      "generated": "/workspace/generated_images/exec-fa24aa29-91c4-4ce9-ae78-8135a877a112.png",
+      "error": null,
+      "remote_sha": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch302-delivery.json",
+        "sha256": "3c9cbb60bded1c4933595c424d5e1bba63b6ab5fb69ffc8db0ddc9f810682372"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "04275ea2624f9be70d1e1a608239add330d2d997a2ceee99e9cb50fc13a4592f",
+      "source_sha256": "f450dca464974998eb06b844e8fad706a2bf6e7ba5778d06c3d1f6b2058524b0"
+    },
+    {
+      "correction_candidate_id": "qc123",
+      "id": "1",
+      "direction": "SW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-SW-idle-correction-v02.json",
+      "request_sha256": "e356d55d797c64e34ad23474bf9d540f7e336474bf641b34e8936d97b5d259d9",
+      "previous_source_sha256": "b3e72d4f0cc4dd688a2804e512749b92a9c1370c2d2f343f87f69cf17a437d17",
+      "batch": 302,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-SW-idle-correction-v02.json",
+        "sha256": "30578dacbaa99bb127404808aa09fc818c50e7f2e60f1bb358923280279a1bb6"
+      },
+      "generated": "/workspace/generated_images/exec-488f2a8a-b122-4c7f-b461-43b4493dd270.png",
+      "error": null,
+      "remote_sha": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch302-delivery.json",
+        "sha256": "3c9cbb60bded1c4933595c424d5e1bba63b6ab5fb69ffc8db0ddc9f810682372"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/SW-idle-record-v02.json",
+      "record_sha256": "91749a006ba4ce657f9477d0bd233190d13aadd9f9ab0012d38328ad02608537",
+      "source_sha256": "089a54535117c610673198b7f167b4d56ca94fe483a3b8713697ce245a20b5ae"
+    },
+    {
+      "correction_candidate_id": "qc124",
+      "id": "1",
+      "direction": "NW",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-NW-idle-correction-v02.json",
+      "request_sha256": "5d799dfc4ff3b6a1bbbcaa39320ef8a61a2b9569f7b16ad86d5825ef970e5357",
+      "previous_source_sha256": "2e6c4ee767cea4b1422b87ec6d64a728216ab14edd063e807060af71462c0c13",
+      "batch": 302,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-NW-idle-correction-v02.json",
+        "sha256": "e784376973cd8aae33ac08eae2fc26ea3d14b72a2e4771a8526ffaebf8536d77"
+      },
+      "generated": "/workspace/generated_images/exec-41669ac9-2459-44d7-b085-41a6c8a1a17b.png",
+      "error": null,
+      "remote_sha": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch302-delivery.json",
+        "sha256": "3c9cbb60bded1c4933595c424d5e1bba63b6ab5fb69ffc8db0ddc9f810682372"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/NW-idle-record-v02.json",
+      "record_sha256": "d7d3b002422a649212b9c76278cf12078c30750da2fc9595bf52a47553f61a32",
+      "source_sha256": "8a342c187e7e3312cee43e1f498c4d539fa5f23241e530575d1e59df2b52c6be"
+    },
+    {
+      "correction_candidate_id": "qc125",
+      "id": "1",
+      "direction": "N",
+      "role": "idle",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-N-idle-correction-v02.json",
+      "request_sha256": "1059fa7c95aedab4918cb89ea4ed8e816859ee2f24bdc2f819fe37dd2e6b5bd5",
+      "previous_source_sha256": "8da52c7b45f0ba94fc9b44b77f391fbdf4ad570d86a0ce8cd1548b4ef873dce0",
+      "batch": 303,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-N-idle-correction-v02.json",
+        "sha256": "aca4ce18cfa0e8626050d911fc8649c36e9c47125bd031c7c3330af26af8b26d"
+      },
+      "generated": "/workspace/generated_images/exec-585f5f32-7b44-41f5-a71f-ee802295ea65.png",
+      "error": null,
+      "remote_sha": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch303-delivery.json",
+        "sha256": "38820b83cb9e103928ef5ca9c79b9658323a332f58ad5b3ae375bbb61f830d20"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/N-idle-record-v02.json",
+      "record_sha256": "f9c47af0c7a6c7ee0fa1478a4c17833a4ede5681c78a62e3e7a98abcf51383e4",
+      "source_sha256": "c69ebd2db23475d62d2d23bbd45491bb651f53cdb94e95714fb3c4765f62bbc5"
+    },
+    {
+      "correction_candidate_id": "qc011",
+      "id": "338",
+      "direction": "N",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_338-N-run-correction-v02.json",
+      "request_sha256": "84a7e2b1a633b5eb257684d8834accb0356192860c1e689d620b51fd70c26382",
+      "previous_source_sha256": "6ed0e819f90e2d656d5f79242a2678d3a3c48059c9d693fc66e2afe6a9f97c53",
+      "batch": 303,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_338-N-run-correction-v02.json",
+        "sha256": "02ebf35962926cbe23c833ad5f0cf16bc6c347ff72e4f6cf841f9d0ea4b13e42"
+      },
+      "generated": "/workspace/generated_images/exec-4468d2c4-aa9d-435b-8067-4baba6704c8c.png",
+      "error": null,
+      "remote_sha": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch303-delivery.json",
+        "sha256": "38820b83cb9e103928ef5ca9c79b9658323a332f58ad5b3ae375bbb61f830d20"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_338/quality-v02/N-run-record-v02.json",
+      "record_sha256": "b61d5590e40d229d90a0f3bc4681e7afb47da8885d9c7dc3c31773eed9471d8c",
+      "source_sha256": "873b825429a133f9d35c8adcb37a1d0f1a9f11e44ce50456dcf71d619ade9874"
+    },
+    {
+      "correction_candidate_id": "qc015",
+      "id": "337",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_337-NW-run-correction-v02.json",
+      "request_sha256": "f969336e13b2bf0cb8c1544f089cad891a009c7dd4c183bdf5c8a7bddf97bfbf",
+      "previous_source_sha256": "092fb30d1b951b5edb4f810c8067f3c36b987a58dec0e7a64b3ab9e98b255168",
+      "batch": 303,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_337-NW-run-correction-v02.json",
+        "sha256": "b0a23ae5d99040de8e1f7fb16e2b2ce88a6da5b652b60b37596f5958236bbedd"
+      },
+      "generated": "/workspace/generated_images/exec-fb57c187-32ab-4097-b72f-84e75eab1272.png",
+      "error": null,
+      "remote_sha": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch303-delivery.json",
+        "sha256": "38820b83cb9e103928ef5ca9c79b9658323a332f58ad5b3ae375bbb61f830d20"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "9915c1f7ed677453a79ae3094dd6c622c134e4c8d9ee35aab01a33e4274c258d",
+      "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98"
+    },
+    {
+      "correction_candidate_id": "qc017",
+      "id": "330",
+      "direction": "SW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_330-SW-run-correction-v02.json",
+      "request_sha256": "a1b2c78b12bb9a9585eaeca9f99741f87f66794dce6e64efb316afd51fa8c3a1",
+      "previous_source_sha256": "f399b03f6a61eec70985f06bf6a5064be24314ff410760caa993784df6a79603",
+      "batch": 303,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_330-SW-run-correction-v02.json",
+        "sha256": "71c4a30b5b8caa0cd2897c1da0ac4655d6574fdf1e717cfe0ad69d57692f32e6"
+      },
+      "generated": "/workspace/generated_images/exec-ae1a7862-ef23-45a1-9979-00aa7fa7c7d5.png",
+      "error": null,
+      "remote_sha": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch303-delivery.json",
+        "sha256": "38820b83cb9e103928ef5ca9c79b9658323a332f58ad5b3ae375bbb61f830d20"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_330/quality-v02/SW-run-record-v02.json",
+      "record_sha256": "8acda691adc75536b682716c01cd623d2429430adf7998f2bc111cb8a4d8eaa2",
+      "source_sha256": "f821f1ff8c443cae18d755038092a007648e268f2b731f2149c34d5fea1c504f"
+    },
+    {
+      "correction_candidate_id": "qc022",
+      "id": "274",
+      "direction": "SW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_274-SW-run-correction-v02.json",
+      "request_sha256": "0323297872ed51f8943bdbefa110fe9928b527cb10546f52b64ce0918708de77",
+      "previous_source_sha256": "c01c750dd79ef6bf2066e7a7ff43b943a49d897e8a205b8663698f323feee74c",
+      "batch": 303,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_274-SW-run-correction-v02.json",
+        "sha256": "6eefbeb58ee8911f7712fd78813d3e3b6230a27527019ca3c0fcc4733959c585"
+      },
+      "generated": "/workspace/generated_images/exec-2e93d0d8-f818-43d2-a2f1-96f9931edb6d.png",
+      "error": null,
+      "remote_sha": "ae0bc90fee7c783231c3fc4ea7d53c32e10e875c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch303-delivery.json",
+        "sha256": "38820b83cb9e103928ef5ca9c79b9658323a332f58ad5b3ae375bbb61f830d20"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-run-record-v02.json",
+      "record_sha256": "50dc7748ab5e8a780ed7164e3b65a8fdcb4d7edfad338442f48bcef9ae9c2bd2",
+      "source_sha256": "cf2918b53e3db4fec598d11d0493ba033e39f847ceb282a2bc0d4d4458ba0ba7"
+    },
+    {
+      "correction_candidate_id": "qc029",
+      "id": "245",
+      "direction": "N",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_245-N-run-correction-v02.json",
+      "request_sha256": "ab1a5144c81e06378b9b0a6c38828bc4bb5e51674b958929c925d556a4a1b7c4",
+      "previous_source_sha256": "6bfca60cc988d72abd1866597b5164164459edd6ae10cea8b5d09a08dc739635",
+      "batch": 304,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_245-N-run-correction-v02.json",
+        "sha256": "3d55a30e50a0fde288950f25ca0b771a4f238fb56a769de67c145bbc47581401"
+      },
+      "generated": "/workspace/generated_images/exec-9506814f-8951-4c55-8752-1939f06d51b3.png",
+      "error": null,
+      "remote_sha": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch304-delivery.json",
+        "sha256": "d12578f5ee29f6780d1a260c3d534b98fba7d5f4e925f01da908187dc3b0bdec"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_245/quality-v02/N-run-record-v02.json",
+      "record_sha256": "6a99064ebd6459142147bd9ceb473977c484c7f964a8d007fe8b81706692f726",
+      "source_sha256": "24426bbb277069904ba79bf387d49afe8717adb53c0d026fcba7261f1542cb36"
+    },
+    {
+      "correction_candidate_id": "qc035",
+      "id": "225",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_225-NW-run-correction-v02.json",
+      "request_sha256": "c2e95aea54124e7609ad43fadb7c5504ac83071b61f91823793fc138e8b7f4f3",
+      "previous_source_sha256": "b9d5f7f5a47cbc0db15c38435351157f940821c999057d32b111af2483a55d6a",
+      "batch": 304,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_225-NW-run-correction-v02.json",
+        "sha256": "764b779985ecbc97d929ae3d42986b96afaa3c542dd1620fb92571ec981162d3"
+      },
+      "generated": "/workspace/generated_images/exec-9d517f3c-b39a-489a-b951-5cc25a027348.png",
+      "error": null,
+      "remote_sha": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch304-delivery.json",
+        "sha256": "d12578f5ee29f6780d1a260c3d534b98fba7d5f4e925f01da908187dc3b0bdec"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_225/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "20c49bdf27b4468a2f73eb982bf08d71130ba68e0fef3b7237fee785b4361d89",
+      "source_sha256": "adcd5a7ee76f755d08c09310027f3d44fa4522a7845a9c63f08ea01468d6c254"
+    },
+    {
+      "correction_candidate_id": "qc042",
+      "id": "213",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_213-NW-run-correction-v02.json",
+      "request_sha256": "97a91c1aca073a342007a4e1c413ed965a9dd531c4f4951d1551745d0757cefe",
+      "previous_source_sha256": "a04b5f078df93a68b62e5a869419d656e40a6e9707c4a40c99ff6c5d9d28516f",
+      "batch": 304,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_213-NW-run-correction-v02.json",
+        "sha256": "0ab14180bebdf9ddb0a8b3a2f03ec78b23d8721d20f5813eb529f38f23bd8bb7"
+      },
+      "generated": "/workspace/generated_images/exec-cff4b994-a1ad-4fe1-98f0-4f1998caf05d.png",
+      "error": null,
+      "remote_sha": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch304-delivery.json",
+        "sha256": "d12578f5ee29f6780d1a260c3d534b98fba7d5f4e925f01da908187dc3b0bdec"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_213/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "d50fa7aabfddb1eb11b6bc6be6ae69123a9f274178a3c72fd01d3144653fb31d",
+      "source_sha256": "b970143ce02433a0b5adc0f1b1550498f23e08687f939a883840c86b781623ca"
+    },
+    {
+      "correction_candidate_id": "qc047",
+      "id": "193",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_193-NW-run-correction-v02.json",
+      "request_sha256": "d0cfdedaca0459db9509a2a86052a7a745aa04119310a347ae40bb60cdb2be94",
+      "previous_source_sha256": "36388a1815913b9d28e922eb8897c38de2b88748e1de2c23001798e3d74a923d",
+      "batch": 304,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_193-NW-run-correction-v02.json",
+        "sha256": "ad6d859f4f53d8de4e15c239ca99cfc869c8b13d0a319c6e537f9fffee5553b7"
+      },
+      "generated": "/workspace/generated_images/exec-e4cd1c68-e1f7-4684-9ff3-6be0b5d2b32f.png",
+      "error": null,
+      "remote_sha": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch304-delivery.json",
+        "sha256": "d12578f5ee29f6780d1a260c3d534b98fba7d5f4e925f01da908187dc3b0bdec"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "e3e5f5ce53435c509fd9cec20e61dfeded2573675a6655707fedb9ef7cbee97e",
+      "source_sha256": "79d81e75d68f3e25d4a00bbb40705de314322676619ba66bd32dcc59be822eed"
+    },
+    {
+      "correction_candidate_id": "qc065",
+      "id": "178",
+      "direction": "N",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-N-run-correction-v02.json",
+      "request_sha256": "0e3013ac88636224708d56e0f30f602a75832166f184d35785e1e83ebbda7634",
+      "previous_source_sha256": "0563361cf1afba709114b200d20f91a9eb9b630a479d31ee79a6f34f53b5b677",
+      "batch": 304,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-N-run-correction-v02.json",
+        "sha256": "79396d79f66ae68d631fc88fa9671f91b720bd20c943eeb233e2ffc9ea975f9b"
+      },
+      "generated": "/workspace/generated_images/exec-4d9569e0-26ca-4a34-bea9-a59dd0ce858f.png",
+      "error": null,
+      "remote_sha": "c6211656aa6a670b09b9ec690fd9e6bd4e64013c",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch304-delivery.json",
+        "sha256": "d12578f5ee29f6780d1a260c3d534b98fba7d5f4e925f01da908187dc3b0bdec"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/N-run-record-v02.json",
+      "record_sha256": "9a50e5a923cae8c2f68706c806bf890c237235b95fe2d59ee4a66fc7cd692c28",
+      "source_sha256": "6515a3c06013e77a8a5b8a4c35153397e1fcfb9f7721d81d83e842502ddfde23"
+    },
+    {
+      "correction_candidate_id": "qc068",
+      "id": "178",
+      "direction": "NE",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_178-NE-run-correction-v02.json",
+      "request_sha256": "ee28e73fb158b73921b652c1b609c6e02b26d7c52ddfdd09c781aace82078b59",
+      "previous_source_sha256": "016cf207a7fff9098220ff9acc27666356587a4828bc08be6c206512ef34e39b",
+      "batch": 305,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_178-NE-run-correction-v02.json",
+        "sha256": "6bb0869f3649f866433a342d3a9935307bf8b7556fdce3482704a12283c0a9bb"
+      },
+      "generated": "/workspace/generated_images/exec-f25be7d3-1139-4506-a157-3e96476c2752.png",
+      "error": null,
+      "remote_sha": "ef0ac14ba37623a86e916c315b47e8b4d817a07b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch305-delivery.json",
+        "sha256": "8594c4cf7895ddcbdbeb393219df5c2ea96a775d4ee5c16377899738d260be6e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_178/quality-v02/NE-run-record-v02.json",
+      "record_sha256": "dd20074233cfbd42c975cc9c6fc6b564c01e59fc5554edc6ab975138fa2c98ce",
+      "source_sha256": "608fd4b7bc7b1e092b477611250ec6939a81a83044c999e679d68aac69535793"
+    },
+    {
+      "correction_candidate_id": "qc074",
+      "id": "177",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_177-NW-run-correction-v02.json",
+      "request_sha256": "335f47fbec7224dd6ce2320a9bec891f7da0f5e290baaeb0935293af314c37c4",
+      "previous_source_sha256": "a77fc27464667e207b7b0da57d71e605ff02abc539178dafac6b9d5e04df7b54",
+      "batch": 305,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_177-NW-run-correction-v02.json",
+        "sha256": "48d3b4c1c56c692bbe16140b93178d850334d9154a7bfc861861e491ca9dce17"
+      },
+      "generated": "/workspace/generated_images/exec-7c2d269a-ae9e-4f05-9896-86f092c21102.png",
+      "error": null,
+      "remote_sha": "ef0ac14ba37623a86e916c315b47e8b4d817a07b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch305-delivery.json",
+        "sha256": "8594c4cf7895ddcbdbeb393219df5c2ea96a775d4ee5c16377899738d260be6e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "82ef8d37761f8df1dd0d86c2d424911b6aa1a7bf300c10013a24ccc64ea9416d",
+      "source_sha256": "ffdaa3adf998d94588c5b4acc5e5d568ca29d185bd1297d100b1fb5a57a7a7a0"
+    },
+    {
+      "correction_candidate_id": "qc085",
+      "id": "175",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_175-NW-run-correction-v02.json",
+      "request_sha256": "78b390a35c2af03adfe83511b79d9520b3bcf259bca33c4b84017d5e5d95805e",
+      "previous_source_sha256": "d5db124db66c5ed5c9402614d802a0e0e4dc6ffd544aed77552614d165a8e16d",
+      "batch": 305,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_175-NW-run-correction-v02.json",
+        "sha256": "143f234a6f268c9f7299d69d1a0a4cdbffcbd8ff98e2f559b228898d5811e9da"
+      },
+      "generated": "/workspace/generated_images/exec-18484154-31e7-4c69-abb8-fca422c34c8d.png",
+      "error": null,
+      "remote_sha": "ef0ac14ba37623a86e916c315b47e8b4d817a07b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch305-delivery.json",
+        "sha256": "8594c4cf7895ddcbdbeb393219df5c2ea96a775d4ee5c16377899738d260be6e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_175/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "fdb1069d242c42a4cd3eadf24d868f70cac4261f9efe6d0ad33d78f7308974a9",
+      "source_sha256": "73c68fccb829b903bb1d744d9ea30071c214c0cb347e232e55a2b195a334f1a5"
+    },
+    {
+      "correction_candidate_id": "qc107",
+      "id": "113",
+      "direction": "NW",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NW-run-correction-v02.json",
+      "request_sha256": "170fe2b4bf8062aceac84efdd94f4b5e9088d01f3364b06fc16f6d13f12af189",
+      "previous_source_sha256": "cc6af21e73abf3c6b0169326946374cb234951dfc0ede199e2abf011e7f4e23b",
+      "batch": 305,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-NW-run-correction-v02.json",
+        "sha256": "4edbae45e1f222f86fd9873d4594d713efe308917b7c13b9682565b1e770827e"
+      },
+      "generated": "/workspace/generated_images/exec-f270e168-4ee4-4dd3-9626-2205bcdbd627.png",
+      "error": null,
+      "remote_sha": "ef0ac14ba37623a86e916c315b47e8b4d817a07b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch305-delivery.json",
+        "sha256": "8594c4cf7895ddcbdbeb393219df5c2ea96a775d4ee5c16377899738d260be6e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NW-run-record-v02.json",
+      "record_sha256": "0c62d6e5776261f240037e2a22cebdbb49d9bae54f0a0ce95de84c7141bfc300",
+      "source_sha256": "f28049b93ce0e08d83f0aa0dca5356272483cb6e28021b9d2c1f987cc858a551"
+    },
+    {
+      "correction_candidate_id": "qc109",
+      "id": "113",
+      "direction": "N",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-N-run-correction-v02.json",
+      "request_sha256": "c87b2b5e432d9dcaed05d80d329ccbf01670e20df7b6d2c878c1480fdc280ad9",
+      "previous_source_sha256": "8aac5cc78fee23144c828ef1ca9606cd1c0f61bdb1e7cb4448f2532b75a35c22",
+      "batch": 305,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-N-run-correction-v02.json",
+        "sha256": "1485e3d619a3afe084218ca1505dd08a8bcf00d8d3a949a5ce13010ba2e6155c"
+      },
+      "generated": "/workspace/generated_images/exec-8fc9a5ef-4edc-4e35-88b5-1f8aa08be0d1.png",
+      "error": null,
+      "remote_sha": "ef0ac14ba37623a86e916c315b47e8b4d817a07b",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch305-delivery.json",
+        "sha256": "8594c4cf7895ddcbdbeb393219df5c2ea96a775d4ee5c16377899738d260be6e"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/N-run-record-v02.json",
+      "record_sha256": "01db98826c8491b13d62f094ea39a895234d5e0013f743a1d3654a2a8af087cc",
+      "source_sha256": "812490ab31a36ad50ffb9210abef4e9bb38217c2af38acbd7018388bbe951b9e"
+    },
+    {
+      "correction_candidate_id": "qc121",
+      "id": "112",
+      "direction": "N",
+      "role": "run",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_112-N-run-correction-v02.json",
+      "request_sha256": "51bd634201f4252bf64d4619ca2712988d118d9be1a8633eecc0bb69f0c87464",
+      "previous_source_sha256": "217ec93ba1ec919955c1a9c25325f5285fb4b486b2dc74373c818dfae8aab504",
+      "batch": 306,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_112-N-run-correction-v02.json",
+        "sha256": "14a5d47d60b81c581c426fd81e64e13ccf5007400e29681b0c406bbd7bb115a5"
+      },
+      "generated": "/workspace/generated_images/exec-9e01f36a-807e-4abc-b343-268303719fea.png",
+      "error": null,
+      "remote_sha": "959ecf5dfc763c48a202341e56e6966bfbe954f4",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch306-delivery.json",
+        "sha256": "f6adb1dd16d713ed77fef759df8d1d3fca92ff01f8699b4fb05ab355ff100f00"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-record-v02.json",
+      "record_sha256": "9f2c408c7b5b02b544f9739d0fc2a8896d157a190c4ae13c36d0db3b0e6ba333",
+      "source_sha256": "48907874e998039e783e26b54716396ca6b75b38e63c5935578f9fd96709a7b7"
+    },
+    {
+      "correction_candidate_id": "qc003",
+      "id": "402",
+      "direction": "N",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_402-N-attack-correction-v02.json",
+      "request_sha256": "9d32bc9162cf49e00e6b134daa002cfdd86d3ec89d9fad3b9819ebe0031a63e4",
+      "previous_source_sha256": "208702b9826b6855aa719994102e3b3d8f4589a92000c3b724482c406997cd13",
+      "batch": 306,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_402-N-attack-correction-v02.json",
+        "sha256": "f515d17f06ba3cbea3f7e6b67dfadb8c3d0506bafe270e2152e4ac1621c1080d"
+      },
+      "generated": "/workspace/generated_images/exec-a7d20ce1-491e-43a3-a51d-cd6c5e77f5d3.png",
+      "error": null,
+      "remote_sha": "959ecf5dfc763c48a202341e56e6966bfbe954f4",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch306-delivery.json",
+        "sha256": "f6adb1dd16d713ed77fef759df8d1d3fca92ff01f8699b4fb05ab355ff100f00"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_402/quality-v02/N-attack-record-v02.json",
+      "record_sha256": "8559f61ad2797c189565d38a1616601bd418ab6ca9756f773a2fabae452ee3dc",
+      "source_sha256": "e70ee5d4835b5ff0e2f4595e649acf3b599eab11b80fcb3679fff00b5c91169a"
+    },
+    {
+      "correction_candidate_id": "qc004",
+      "id": "387",
+      "direction": "N",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_387-N-attack-correction-v02.json",
+      "request_sha256": "250808d61bc050caec276ea69bf762b493ee6b9536bfbc3b38b68fb7ceb1a8e1",
+      "previous_source_sha256": "bb2a15bac5b2b17f2bdc7b559021c11ccbc8f88b9cc5587b7221c758a48d130b",
+      "batch": 306,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_387-N-attack-correction-v02.json",
+        "sha256": "bd32d27e1af44ff78c13cbb9b613a06ead6907bf89af2506c2bb4358ea6e53d6"
+      },
+      "generated": "/workspace/generated_images/exec-027fe7bb-8093-4fb5-a3a3-a468fa1c571a.png",
+      "error": null,
+      "remote_sha": "959ecf5dfc763c48a202341e56e6966bfbe954f4",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch306-delivery.json",
+        "sha256": "f6adb1dd16d713ed77fef759df8d1d3fca92ff01f8699b4fb05ab355ff100f00"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_387/quality-v02/N-attack-record-v02.json",
+      "record_sha256": "474e3b1df8e7e0952766a21215caf781cb97a5ea3a7bc9754214666c700f7329",
+      "source_sha256": "20f549253c03f984b72b3fb9e7e4b409c712d718f7e4124a2e4e1009e7729d2f"
+    },
+    {
+      "correction_candidate_id": "qc007",
+      "id": "375",
+      "direction": "N",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_375-N-attack-correction-v02.json",
+      "request_sha256": "395884be654c0b9271680eda71eb8cc24d096fa2986928cca0086fc364cb6d28",
+      "previous_source_sha256": "f73a0c7e7b4e6217e546b5429f6d85fc35c3d612df5caafbc00e5e0d5b882c18",
+      "batch": 306,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_375-N-attack-correction-v02.json",
+        "sha256": "c52187b18020d59daddf4ebc2134f5c2652010ee6ed8e457cca03b47405bbada"
+      },
+      "generated": "/workspace/generated_images/exec-9bc248ec-775c-4da3-97dc-2e93115a84ec.png",
+      "error": null,
+      "remote_sha": "959ecf5dfc763c48a202341e56e6966bfbe954f4",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch306-delivery.json",
+        "sha256": "f6adb1dd16d713ed77fef759df8d1d3fca92ff01f8699b4fb05ab355ff100f00"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_375/quality-v02/N-attack-record-v02.json",
+      "record_sha256": "c27c2a11bab2d74158d72e8cc8d1ef3c4119c27e027a683fe34d3d369daa0405",
+      "source_sha256": "f3630138f149ff6fdf401ddf1746734bcbbf2f94e8ba4e3fd7701ff493bf8e9e"
+    },
+    {
+      "correction_candidate_id": "qc112",
+      "id": "113",
+      "direction": "SE",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-SE-attack-correction-v03.json",
+      "request_sha256": "a5bcf2afa0f5e895e258bd8c8d002ccf25985f7ec9a42ba7fa7d84b49ed4e1ec",
+      "previous_source_sha256": "5fa7e945dbf7f5c8268f2e4b0c73714901fa16fb2f7d7cc432748ec825c941da",
+      "batch": 306,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-SE-attack-correction-v03.json",
+        "sha256": "437fb50500811f243f7310103dac340f9527484d6cfdc57deb5f305f54e16eb0"
+      },
+      "generated": "/workspace/generated_images/exec-4cdbd5b3-deb6-40e8-b705-993c5e817c32.png",
+      "error": null,
+      "remote_sha": "959ecf5dfc763c48a202341e56e6966bfbe954f4",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch306-delivery.json",
+        "sha256": "f6adb1dd16d713ed77fef759df8d1d3fca92ff01f8699b4fb05ab355ff100f00"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/SE-attack-record-v02.json",
+      "record_sha256": "0572d04be2b0e087cebebde600e93c126c9b7f92c1cc87645990800502d0af8a",
+      "source_sha256": "626b3ec2f45959c806b922b7db730838f68ec014fa680c34c9ee7588c61335e2"
+    },
+    {
+      "correction_candidate_id": "qc113",
+      "id": "113",
+      "direction": "W",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-W-attack-correction-v04.json",
+      "request_sha256": "addb6a70165fdf868d513fdb649ca75e53233d190e5fbdb3e8c8ba4a195b828a",
+      "previous_source_sha256": "5c04406169b03cb8fa86cac343ff1797341cd3c2227d9d8b3f8de6f1b0104edd",
+      "batch": 307,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-W-attack-correction-v04.json",
+        "sha256": "1eab29c264d9e03c8f00c7e8b2d1a40b2eb0f1025d2a6f5fb3655d52b59acace"
+      },
+      "generated": "/workspace/generated_images/exec-73d4de8a-6e8d-46da-981e-72a599b7b955.png",
+      "error": null,
+      "remote_sha": "006f37024ab5b492cb045be6d7ec5f170c454b02",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch307-delivery.json",
+        "sha256": "0c21498ef5ad79968c3bc59cfa1c564d35f7e692719231589b148932d737f58f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/W-attack-record-v02.json",
+      "record_sha256": "4e0b0c3bc9727b58430ea8d898ddc658fa15422f1aeba200af8e739c790fafa0",
+      "source_sha256": "2a32f02f1eb18a72c3cafebbff37c8f86b039989f1a8d379b9873f5de1dd4985"
+    },
+    {
+      "correction_candidate_id": "qc116",
+      "id": "113",
+      "direction": "NE",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NE-attack-correction-v03.json",
+      "request_sha256": "1e221d3519fbf6ea00bf028c5b7b4211bd03d585b2c930407b707d7900517708",
+      "previous_source_sha256": "635fa1dafa0ae8124d94160e244b52d68f865f5132e6592c5e4b5e6609e89f1e",
+      "batch": 307,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-NE-attack-correction-v03.json",
+        "sha256": "736bd3f1fe28b406bee295f0fc88c958dacdafd291bd72372106bb9f43d0dbc6"
+      },
+      "generated": "/workspace/generated_images/exec-99740a0d-5848-42fc-8e4c-3d4caf3a86f8.png",
+      "error": null,
+      "remote_sha": "006f37024ab5b492cb045be6d7ec5f170c454b02",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch307-delivery.json",
+        "sha256": "0c21498ef5ad79968c3bc59cfa1c564d35f7e692719231589b148932d737f58f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-attack-record-v02.json",
+      "record_sha256": "8e9ef41871e6dffbd76b7bc164d9cc1de7228d149fd4ea20507bb21825ce426a",
+      "source_sha256": "e9755a1c68d5eb41be18a01dd18e7e819048dc89d8c8e2635853d3f87c266a03"
+    },
+    {
+      "correction_candidate_id": "qc126",
+      "id": "1",
+      "direction": "S",
+      "role": "attack",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_1-S-attack-correction-v03.json",
+      "request_sha256": "7be19342ee171c71ce8f3b61eec65d3387f25d3edf8e2088cea70887d71953f9",
+      "previous_source_sha256": "f9d0898d323a7f3c2253c13742e3f1f53496c882596ee2d7dfd4bdc25764ab79",
+      "batch": 307,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_1-S-attack-correction-v03.json",
+        "sha256": "b29a8205508b8790ce2e8b4367d57ce936bf75190bfb04fe0763f73f0db45245"
+      },
+      "generated": "/workspace/generated_images/exec-cf5fdd5e-050d-43a9-80ad-6d10979481f6.png",
+      "error": null,
+      "remote_sha": "006f37024ab5b492cb045be6d7ec5f170c454b02",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch307-delivery.json",
+        "sha256": "0c21498ef5ad79968c3bc59cfa1c564d35f7e692719231589b148932d737f58f"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_1/quality-v02/S-attack-record-v02.json",
+      "record_sha256": "3690900e42658e67325658ebb210adf35925a5bd207b0a7e0cb679bd9e89b741",
+      "source_sha256": "2e0c683d4ed9c75f02640c9f36f7636abdbb215adcc9b14c35454bbc645dd991"
+    },
+    {
+      "correction_candidate_id": "qc030",
+      "id": "244",
+      "direction": "N",
+      "role": "hit",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_244-N-hit-correction-v02.json",
+      "request_sha256": "12090b12bfbdfa6646359686cb6d7bc4520ee500e09859ba049f365c523ffe72",
+      "previous_source_sha256": "430ac16630e227b2c0de0ae6e5df9f0124800595fbe9dd18374aba7d9fe66d73",
+      "batch": 308,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_244-N-hit-correction-v02.json",
+        "sha256": "adaecabe0f24263939b298b6bec2caa1af1e6c487aaeb353ae8b06e563e4c6d0"
+      },
+      "generated": "/workspace/generated_images/exec-d2bb76c0-58d2-4dd4-993c-04d9927bb8d3.png",
+      "error": null,
+      "remote_sha": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch308-delivery.json",
+        "sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_244/quality-v02/N-hit-record-v02.json",
+      "record_sha256": "4df1e17aadc8d91bba3add4890ede9c88b12598e2a46d71fc92aceb128702bea",
+      "source_sha256": "98a2d3f54a0d78b838db7b4dc08dd95b020be295fe6469ec363e4d069df8cf63"
+    },
+    {
+      "correction_candidate_id": "qc082",
+      "id": "176",
+      "direction": "NW",
+      "role": "hit",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_176-NW-hit-correction-v02.json",
+      "request_sha256": "bc62bc8a33c6b55c17bea9df8e3fcba9c7f5d61963b290aac10de8e391e95810",
+      "previous_source_sha256": "c7756c9ab98792f2436c80df12b6f38872dd400ac7c9abb1d96a28e1a6a5b868",
+      "batch": 308,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_176-NW-hit-correction-v02.json",
+        "sha256": "d2e5355d952a21d0108e4d0aa36e7af539015dcdb5f29a281ccdec311b41dfee"
+      },
+      "generated": "/workspace/generated_images/exec-cf7088c8-96e7-44a7-ba27-d7c040d1e6ef.png",
+      "error": null,
+      "remote_sha": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch308-delivery.json",
+        "sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_176/quality-v02/NW-hit-record-v02.json",
+      "record_sha256": "811982aab186f564f93d8c7b24db87924eca356a5cf5558f68caa7ff529e6153",
+      "source_sha256": "6263d643081c611b15a4d080b09d54fe2c9e5798499a79b1ea27c0c4a709d3a6"
+    },
+    {
+      "correction_candidate_id": "qc111",
+      "id": "113",
+      "direction": "NE",
+      "role": "hit",
+      "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_113-NE-hit-correction-v02.json",
+      "request_sha256": "7920b59da9371a742d0b94c4018e822540ef65306d0f3a77b2c16e9dba328d27",
+      "previous_source_sha256": "35965ae4913ea50edb8286fa935f951111b055c96d2b9e5a670beffd09184e13",
+      "batch": 308,
+      "status": "PNG_READY",
+      "remote_status": "REMOTE_SAVED",
+      "generation_attempts": 1,
+      "receipt": {
+        "path": "res://docs/remake/pr122-legendary-parallel/quality-v02/generation-receipts/transform_113-NE-hit-correction-v02.json",
+        "sha256": "bde3cd431d8a12f6b8712c1e1ecaa2f836fe9295117df30334da446b012a5847"
+      },
+      "generated": "/workspace/generated_images/exec-6f01ecad-c7cd-4a48-a543-36939ac47cb0.png",
+      "error": null,
+      "remote_sha": "16f2a0bf729b3c42bc35eff334bc43fce5e577ea",
+      "remote_receipt": {
+        "path": "/workspace/legendary_delivery_logs/quality-batch308-delivery.json",
+        "sha256": "1c0acb8b758e58fc114b700a1884213d10691f5790669f4fa4ed82cd16106283"
+      },
+      "record": "res://assets/actors/eight_direction/legendary_parallel/transform_113/quality-v02/NE-hit-record-v02.json",
+      "record_sha256": "d7605133fa0a282ef51c837481ef78c4195e91489f9e68f45bad5465bdf2593e",
+      "source_sha256": "2ce1a674c88b15a12aff37de6dfdbbc1532b259075f7c4725e27a7754dc31507"
+    }
+  ],
+  "no_source_retry": true,
+  "new_image_calls_by_this_script": 0,
+  "PNG_reads": 0,
+  "whole_corpus_audits": 0,
+  "final_approved": 0
+}

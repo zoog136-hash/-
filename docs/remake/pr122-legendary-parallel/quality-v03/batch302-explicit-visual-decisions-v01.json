@@ -1,0 +1,52 @@
+{
+  "qc117": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "HOLD",
+    "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+    "remaining_issues": [
+      {
+        "cause": "idle_role",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc118": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Clear back-left/up-left view with matching gold armor, white/red cloth, blue shoulder gem and blue blade. Six small planted stance/cloth changes remain living NW IDLE.",
+    "remaining_issues": []
+  },
+  "qc120": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Clear straight rear view with matching gold armor, white plume, red tabard and blue sword. Six planted small stance/breath variations retain N camera and living IDLE.",
+    "remaining_issues": []
+  },
+  "qc123": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Front-left/down-left guard retains dark body, gold star armor and masked helmet. Six small planted breathing/arm changes keep SW camera and living IDLE.",
+    "remaining_issues": []
+  },
+  "qc124": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Clear back-left/up-left guard exposes the rear armor/spine opening and matching dark body/gold star armor. Planted feet and six restrained stance variations retain NW camera and living IDLE.",
+    "remaining_issues": []
+  }
+}

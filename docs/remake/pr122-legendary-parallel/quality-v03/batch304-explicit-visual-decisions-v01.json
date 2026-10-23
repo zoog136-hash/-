@@ -1,0 +1,63 @@
+{
+  "qc029": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Straight rear N run with matching black/gold armor, purple hair/cape, horn-like shoulder arcs, shield and blade. Six knee/boot and cloth phases articulate the stride without changing camera.",
+    "remaining_issues": []
+  },
+  "qc035": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "HOLD",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Back-left NW run camera is established with distinct articulated strides, gold armor and bright sword/shield. The prominent catalog horned/gold helmet is absent, exposing bare blond hair in every pose.",
+    "remaining_issues": [
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Back-left NW run camera is established with distinct articulated strides, gold armor and bright sword/shield. The prominent catalog horned/gold helmet is absent, exposing bare blond hair in every pose.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc042": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Matching gold/black knight, white/teal cape and axe run back-left in phases0..3, but phases4..5 reverse to back-right and move the axe to the opposite screen side. Camera continuity remains HOLD.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          4,
+          5
+        ],
+        "detail": "Matching gold/black knight, white/teal cape and axe run back-left in phases0..3, but phases4..5 reverse to back-right and move the axe to the opposite screen side. Camera continuity remains HOLD.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc047": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Consistent back-left/up-left NW run with matching black/gold armor, halo ornament and blue-white blade. Distinct knee/boot and arm/cloth phases are present.",
+    "remaining_issues": []
+  },
+  "qc065": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Consistent straight rear N run with matching gold/black armor, blue-white crest, shield and sword. Six different leg/joint phases articulate a rearward stride.",
+    "remaining_issues": []
+  }
+}

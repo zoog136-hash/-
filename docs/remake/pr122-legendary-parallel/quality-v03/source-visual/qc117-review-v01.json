@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v03",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc117",
+  "actor": "112",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:112",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "a7f53d0f73a9a1a4cf0f4f69b376c2853c6d5513aa94da96b687c145054ed127",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "7c08213d5bb27bb8a27aea06f839e132df74b5b68f70dde71a77d239ac8b4757",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "b901f27cac5c8b5c719d70f7e08de7b5ff664f8f5c03b9cbec1a3b9ca4cbf454",
+  "remote_commit": "8df0a5349a6f3b7f7dbba72bcec4466c3c3e9b40",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v03/source-technical/qc117-review-v01.json",
+    "sha256": "0b3209bd65cdbe0e3c7b72c84f0fdb4892756398a4071b4c7179a164a481f8f1"
+  },
+  "visual_board": "quality-v03/visual-boards/qc117-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "RESOLVED_STATIC",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "HOLD",
+  "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+  "remaining_issues": [
+    {
+      "cause": "idle_role",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Front-left/down-left SW camera and gold/white/blue knight identity are retained, but all six poses lean into a stride with the trailing foot held off the ground. This is not a verified planted living idle guard.",
+      "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+    }
+  ],
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+  "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+}

@@ -1,0 +1,407 @@
+{
+  "key": "transform:112",
+  "name": "철의 아툰",
+  "grade": "전설",
+  "direction": "N",
+  "role": "run",
+  "reference": "res://assets/catalog/de40c7f81047c065e3b46e80.png",
+  "reference_sha256": "ee96d1abc33db3a5431ebd10f274c277d4e2490ed5bc127e7448827831a95508",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc121",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-run-source-v01.png",
+  "previous_source_sha256": "217ec93ba1ec919955c1a9c25325f5285fb4b486b2dc74373c818dfae8aab504",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-run-record-v01.json",
+  "previous_record_sha256": "935c47ad3cb1ac5640acd3ec1fbbbd48a91faf2d83e23999805f3e7651906a89",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "OWNERSHIP_REPAIRED_OTHER_QUALITY_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "112",
+    "direction": "N",
+    "role": "attack",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-attack-source-v01.png",
+    "sha256": "55a6d885b28c34034c32735b5b7bbeb86587b08b7b47ebe6c843e8fb2461bd7e",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "112",
+      "direction": "N",
+      "role": "run",
+      "cause": "camera",
+      "detail": "Frontal armor/tabard and visor orientation persists instead of the back view shown by N ATTACK.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-run-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-run-record-v01.json",
+      "source_sha256": "217ec93ba1ec919955c1a9c25325f5285fb4b486b2dc74373c818dfae8aab504",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0263",
+      "slot": [
+        "transform:112",
+        "N",
+        "run"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:112 철의 아툰, N RUN. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Frontal armor/tabard and visor orientation persists instead of the back view shown by N ATTACK.\"}]. MANDATORY CAMERA IN EVERY CELL: full BACK, screen UP, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six genuinely articulated RUN poses: LEFT contact, LEFT support compression/RIGHT forward swing, flight/RIGHT reaching, RIGHT contact, RIGHT compression/LEFT forward swing, flight/LEFT reaching. Alternate anatomical legs with real hip/knee/ankle changes, stable ground contact and opposite arm counter-swing. No walking, attack or translated still. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/de40c7f81047c065e3b46e80.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-attack-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/de40c7f81047c065e3b46e80.png": "ee96d1abc33db3a5431ebd10f274c277d4e2490ed5bc127e7448827831a95508",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_112/draft001/N-attack-source-v01.png": "55a6d885b28c34034c32735b5b7bbeb86587b08b7b47ebe6c843e8fb2461bd7e"
+  },
+  "schema": "legendary-changed-source-ownership-revision-v07",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+  "source_sha256": "4a877dad417ed6bba2fff91a5b9f460d415a967bbf02d962fb87497381c1be38",
+  "source_bytes": 1322397,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "sha256": "4a877dad417ed6bba2fff91a5b9f460d415a967bbf02d962fb87497381c1be38",
+      "bytes": 1322397
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      711,
+      1422,
+      2133
+    ],
+    "y": [
+      0,
+      631,
+      1262
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "d120b403c691aa854f9987b971e727805d1c6348b4a17b14d6783c1db2e93dc7"
+    },
+    {
+      "index": 1,
+      "region": [
+        711,
+        0,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "5ae5d27ea256e6003714edb042bad4a21225d13e3a037eb18069b56e880a6ba4"
+    },
+    {
+      "index": 2,
+      "region": [
+        1422,
+        0,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "0e6c8000d7e309180e704601999c733e04ce7bb1d2e8321b3a535da6ec0abb47"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        631,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "97dbe096ae9612b94ba50480b5b3b427271b84f0cd615729655867ca52d81ab7"
+    },
+    {
+      "index": 4,
+      "region": [
+        711,
+        631,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "3682c0d3f8a199b603ee7fc8e866b1ec8dd7b27ea3add9dc6f56e563188df2de"
+    },
+    {
+      "index": 5,
+      "region": [
+        1422,
+        631,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "1f6886836bb5f0d6d9ee6aa88d6090e63daefa83aea9a246630a38808909f217"
+    }
+  ],
+  "cell_size": [
+    711,
+    631
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-SpriteFrames.tres",
+  "output_spriteframes_sha256": "5911376a5ce4b2bc8b3971f7769bc7eaff763a874e2d870ac125c1888aa62ac1",
+  "animation": "run_6",
+  "loop": true,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-registration.json",
+  "request_file_sha256": "51bd634201f4252bf64d4619ca2712988d118d9be1a8633eecc0bb69f0c87464",
+  "generation_request_sha256": "60500f4c27eafc9dcb2073e3a5b9d2080c62c7cce608eb22e3b68a736199fb26",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-9e01f36a-807e-4abc-b343-268303719fea.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED",
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-record-v02.json",
+  "revision_parent_sha256": "9f2c408c7b5b02b544f9739d0fc2a8896d157a190c4ae13c36d0db3b0e6ba333",
+  "quality_ownership_selection": "res://docs/remake/pr122-legendary-parallel/quality-v03/ownership-selection-batch001-v07.json",
+  "newly_authored_correction_poses_added": 0,
+  "final_approved": false,
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.proof.json"
+  ],
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_112/quality-v02/N-run-source-v02.png",
+  "raw_authored_source_sha256": "48907874e998039e783e26b54716396ca6b75b38e63c5935578f9fd96709a7b7",
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "region": [
+        0,
+        0,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "region": [
+        711,
+        0,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "region": [
+        1422,
+        0,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "region": [
+        0,
+        631,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "region": [
+        711,
+        631,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_112/corrections/quality-isolation-v07-001/N-run-source-v02-isolated.png",
+      "region": [
+        1422,
+        631,
+        711,
+        631
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "qc068": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Consistent back-right/up-right NE run with matching gold/black armor, blue-white crest, blue shield and sword. Distinct stride/knee/boot phases and trailing cloth retain the requested camera.",
+    "remaining_issues": []
+  },
+  "qc074": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "The first row runs back-left with bow on screen-left, while the second row runs back-right with bow on screen-right. Purple/white archer identity and actual stride poses remain, but NW camera reverses.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "The first row runs back-left with bow on screen-left, while the second row runs back-right with bow on screen-right. Purple/white archer identity and actual stride poses remain, but NW camera reverses.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc085": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Consistent back-left/up-left NW run with matching gold/black armor, purple mane/cloak and purple blade. Six distinct articulated stride phases preserve camera and equipment.",
+    "remaining_issues": []
+  },
+  "qc107": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Consistent back-left/up-left NW run with matching blond hair, dark/silver/gold armor, blue ribbons and raised blade. Distinct knee/boot phases articulate the run; the high carried weapon remains a motion-quality HOLD unless later dynamic evidence confirms it.",
+    "remaining_issues": [
+      {
+        "cause": "articulation",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "High carried sword arm needs changed-only motion assessment; no static camera defect or source retry inferred.",
+        "fix_kind": "PRESERVE_STATIC_HOLD_PENDING_CHANGED_ONLY_RUNTIME"
+      }
+    ]
+  },
+  "qc109": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "Consistent straight rear N run with matching blond hair, dark/silver/gold armor, blue cloth and sword. Six actual lower-leg/knee and arm phases retain the rear view.",
+    "remaining_issues": []
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "qc121": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "HOLD",
+    "motion_role_result": "ARTICULATED_RUN_STATIC_SEQUENCE",
+    "detail": "All six poses establish rear N run camera and matching gold/white/blue knight equipment. The blade is carried on screen-left in phases0..2, but moves to the opposite hand/screen-right in phases3..5; equipment handedness continuity remains HOLD.",
+    "remaining_issues": [
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Blade switches hands/screen sides between sheet rows in the same rear-view run.",
+        "fix_kind": "KEEP_SINGLE_CORRECTION_OUTPUT_HOLD_NO_RETRY"
+      }
+    ]
+  },
+  "qc003": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Only four new middle poses were reviewed: consistent rear N camera, matching white/teal hair and gold/cream robes, and the original double-ended polearm. Distinct anticipation, overhead windup, extension/strike and return preserve an articulated attack. Existing guards are not redrawn.",
+    "remaining_issues": []
+  },
+  "qc004": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Only four new middle poses were reviewed: consistent rear N camera and matching short gray hair, black/gold/white outfit and blue electric double-ended spear. Clear overhead preparation, active extension and recovery distinguish attack from HIT. Existing guards remain unchanged.",
+    "remaining_issues": []
+  },
+  "qc007": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "Only four new middle poses were reviewed: consistent rear N camera, matching white/gold cap, coat and ornate long gold weapon. Distinct preparation, overhead windup, extension and return preserve an articulated attack while existing guards remain unchanged.",
+    "remaining_issues": []
+  },
+  "qc112": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "All six poses retain front-right/down-right SE camera and matching blond blue-energy archer. The blue crescent bow is nocked, drawn with a rightward arrow, released and returned to guard; the frozen blade-like attack interpretation is corrected in this static sequence.",
+    "remaining_issues": []
+  }
+}
