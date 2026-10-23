@@ -51,7 +51,7 @@ func inspect(mid: String, spec: Dictionary) -> void:
 		check(arrived,mid+" actual body reaches "+str(raw))
 		if not arrived: printerr("ADEN_FAITH_STUCK ",mid," at=",world.player.global_position," target=",target)
 		walked+=length;world.player.clear_click_path()
-	for raw: Array in field.data.get("blocked_probes",[]):
+	for raw: Array in field.data.blocked_probes:
 		check(not field.walkable(Vector2(raw[0],raw[1])),mid+" inspected wall/water/hole solid "+str(raw))
 	# Ray and actual CharacterBody collision agree at each hall boundary.
 	var spawn:=Vector2(field.data.spawn_position[0],field.data.spawn_position[1])
