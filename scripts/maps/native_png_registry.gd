@@ -146,6 +146,7 @@ static func canonical(mid: String) -> String:
 	return mid
 
 static func supports(mid: String) -> bool:
+	if mid in ["albino_03","albino_04"]: return false
 	# Keep old map IDs in ordinary saves; Escaros 01–05 share source artwork
 	# but not the saved alias. Review mode keeps its original canonical names.
 	var art_id: String = map_for_art(canonical(mid))
