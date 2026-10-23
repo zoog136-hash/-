@@ -16,6 +16,8 @@ static func requested(id: String) -> bool:
 	if not id in IDS:return false
 	for flag: String in ["--legacy-map-layouts","--png-review","--no-native-png-auto"]:
 		if flag in OS.get_cmdline_user_args():return false
+	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(RECEIPT))
+	if receipt is Dictionary and receipt.get("bundled_required",false)==true:return true
 	return seen or not OS.get_environment("TWILIGHT_OMAN_PNG_PACK").is_empty() or FileAccess.file_exists(root_path()+"/index.json")
 
 static func attach(field: RemakePlayableField) -> bool:

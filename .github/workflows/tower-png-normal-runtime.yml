@@ -9,6 +9,8 @@ on:
       - 'external_map_packs/oman_png_v1/**'
       - 'external_map_packs/domination_png_v1/**'
       - 'tools/map_restore/**'
+      - 'tools/check_tower_png_delivery.py'
+      - 'tests/github_update_autoload_maps_test.gd'
       - '.github/workflows/tower-png-normal-runtime.yml'
   workflow_dispatch:
 permissions:
@@ -35,6 +37,7 @@ jobs:
           mkdir -p tower-evidence
           python3 tools/check_resource_integrity.py --root .
           python3 tools/check_aden_world_delivery.py --root .
+          python3 tools/check_tower_png_delivery.py --root . | tee tower-evidence/delivery.json
           python3 -m unittest discover -s tools/map_restore -p test_native_png_maps.py
           python3 -m unittest discover -s tools/map_restore -p test_tower_png_installer.py
       - name: Import and actual Aden save migration
@@ -50,17 +53,17 @@ jobs:
           "$godot" --headless --path . --script res://tests/native_png_layer_ownership_test.gd 2>&1 | tee tower-evidence/ownership.log
           ! rg 'SCRIPT ERROR:|ERROR:' tower-evidence/ownership.log
           rg 'NATIVE_PNG_OWNERSHIP_RESULT.*"failures":\[\]' tower-evidence/ownership.log
-      - name: Ordinary tower gameplay when authorized PNG pack is present
+          "$godot" --headless --path . --script res://tests/github_update_autoload_maps_test.gd 2>&1 | tee tower-evidence/github-autoload.log
+          ! rg 'SCRIPT ERROR:|ERROR:|GITHUB_MAP_AUTOLOAD_FAIL' tower-evidence/github-autoload.log
+          rg 'GITHUB_MAP_AUTOLOAD_RESULT.*"failures":\[\]' tower-evidence/github-autoload.log
+      - name: Required ordinary tower PNG gameplay from Git checkout
         run: |
           set -o pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/tower-normal"
           LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/tower_png_normal_runtime_test.gd -- --output="$GITHUB_WORKSPACE/tower-evidence/runtime" 2>&1 | tee tower-evidence/tower.log
           ! rg 'SCRIPT ERROR:|ERROR:|TOWER_PNG_FAIL' tower-evidence/tower.log
-          if rg 'TOWER_PNG_SKIP:' tower-evidence/tower.log; then
-            echo 'Tower PNG art absent: public CI has NOT verified tower PNG gameplay.' | tee tower-evidence/TOWER_NOT_TESTED.txt
-          else
-            rg 'TOWER_PNG_RESULT.*"failures":\[\]' tower-evidence/tower.log
-          fi
+          ! rg 'TOWER_PNG_SKIP:' tower-evidence/tower.log
+          rg 'TOWER_PNG_RESULT.*"failures":\[\]' tower-evidence/tower.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

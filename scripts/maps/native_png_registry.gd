@@ -182,6 +182,7 @@ static func supports(mid: String) -> bool:
 	if art_id=="domination_summit":
 		for flag: String in ["--legacy-map-layouts","--png-review","--no-native-png-auto"]:
 			if flag in OS.get_cmdline_user_args():return false
+		if bool(read_json(DOMINATION_RECEIPT_PATH).get("bundled_required",false)):return true
 		return domination_installed() or domination_pack_seen or FileAccess.file_exists(domination_root()+"/index.json") or not OS.get_environment("TWILIGHT_DOMINATION_PNG_PACK").is_empty()
 	if extra_map(art_id):
 		var configured: bool=not OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK").is_empty()

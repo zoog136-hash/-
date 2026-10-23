@@ -43,18 +43,20 @@ NativePngField가 기존에는 raster solid cells만 물리화해 사선 기둥�
 
 ## 전달 상태와 일반 실행 방법
 
-**오만·지배 PNG는 아직 공개 Git에 추가하지 않았다.** main의 기존 공개 허용 기록은 9개 원본에 한정되고 101~111은 포함하지 않는다. 추가 공개 재배포 허용을 요청한 상태다. 허용 전에는 GitHub 코드 업데이트만으로 새 오만·지배 그림이 들어 있다고 보고하지 않는다. 이 브랜치는 개인 팩을 프로젝트에 설치한 상태에서 일반 실행으로 검사했다. 아덴 원본은 이미 main에 포함되어 있다.
+사용자가 **“재배포 권한 확보 — 공개 추가 허용”**이라고 명시 확인했다. 허용 범위인 101~111의 실행용 PNG 청크·전경·미니맵을 **PR #150 작업 브랜치의 실제 Git 파일**로 포함한다. 별도 개인 팩 설치 없이 해당 브랜치를 받아 Godot 4.7.2에서 Main.tscn을 실행한다. 아직 main에는 병합하지 않았다. 원본 전체 PNG를 중복 업로드하거나 다른 이미지의 권리까지 확대 주장하지 않는다.
 
-개인 팩 `twilight-tower-png-20261023.zip`: 553,535,530 bytes, SHA-256 `716105d740074fc59f1f7efd9dafbfdf8ac58e2c92166b08941574aef4f29328`. 360개 오만 바닥 청크+전경 6개, 지배 바닥 47개+전경 1개를 담는다. 공개 코드의 receipt가 index→manifest→414개 텍스처 SHA를 검증한다. 안전 설치기는 두 팩 모두 검증한 후 교체하고 실패하면 기존 설치를 복구한다.
+[권한 확인 기록](../../data/maps/tower_png_authorization.json), [428개 파일의 바이트·SHA-256 목록](../../data/maps/tower_png_delivery_manifest.json)을 구분한다. `python3 tools/check_tower_png_delivery.py --root .`는 실제 파일의 Git 추적·바이트·SHA와 index→manifest→414개 지형/전경 텍스처를 전수 검사한다. CI는 파일이 없거나 일반 실행 검사가 SKIP되면 실패한다. 아덴 원본은 이미 main에 포함되어 있다.
+
+동일 실행 자료의 선택적 보관 팩 `twilight-tower-png-20261023.zip`: 553,535,530 bytes, SHA-256 `716105d740074fc59f1f7efd9dafbfdf8ac58e2c92166b08941574aef4f29328`. 360개 오만 바닥 청크+전경 6개, 지배 바닥 47개+전경 1개를 담는다. GitHub 작업 브랜치를 받는 경우 이 ZIP은 필요하지 않다. 안전 설치기는 두 팩 모두 검증한 후 교체하고 실패하면 기존 설치를 복구한다.
 
 ```sh
 python3 tools/map_restore/install_tower_png_pack.py /path/to/twilight-tower-png-20261023.zip --project /path/to/TWILIGHT
 ```
 
-그 다음 Godot 4.7.2에서 해당 프로젝트의 Main.tscn을 실행한다. `--png-review` 또는 환경변수는 필요하지 않다. ZIP은 외부 실행 파일/스크립트를 설치하지 않는다. 개인 팩/실제 화면·영상은 별도 다운로드 산출물이며, 임시 개인 경로가 공개 Git 또는 main에 배포되었다는 의미가 아니다.
+선택적 ZIP 설치 후에도 Godot 4.7.2에서 해당 프로젝트의 Main.tscn을 실행한다. `--png-review` 또는 환경변수는 필요하지 않다. ZIP은 외부 실행 파일/스크립트를 설치하지 않는다. Git 전달 여부와 임시 로컬 보관 여부는 별도 검증한다.
 
 ## 검사와 한계
 
-실제 공식 엔진 `4.7.2.stable.official.ed1daf0bf`, Linux OpenGL llvmpipe에서 일반 실행을 검사했다. [기계 판독 검증 결과](VALIDATION.json)에 결과와 실패 이력을 기록한다. 실제 1280×720, 1560×720 Linux 창 화면과 Godot MovieWriter 동작 영상은 개인 증거 팩으로 분리한다. Android 실기기 검증은 **NOT_RUN**이며 이번에 APK 빌드 완료를 주장하지 않는다.
+실제 공식 엔진 `4.7.2.stable.official.ed1daf0bf`, Linux OpenGL llvmpipe에서 일반 실행을 검사했다. [기계 판독 검증 결과](VALIDATION.json)에 결과와 실패 이력을 기록한다. 실제 [아덴 1280×720](evidence/aden-world.png), [오만](evidence/oman-01.png), [111 지배](evidence/domination-111.png), [모바일 비율 Linux 창](evidence/aden-world-mobile-1560x720.png), [물리 충돌 디버그](evidence/aden_world-physics.png), [42.37초 Godot 실행 영상](evidence/actual-godot-play.mp4)을 Git에 포함한다. 영상은 실제 Main을 자동 조작해 이동·충돌·전경을 검사한 기록이다. Android 실기기 검증은 **NOT_RUN**이며 이번에 APK 빌드 완료를 주장하지 않는다.
 
 필요한 추가 작업은 아덴 전체/기란 마을 건물·출입구·다리의 원본 판본별 고유 기준점 3~5개 이상 확정, S32 오브젝트의 정확한 발/레이어 대조, 검수 바깥 충돌과 전경 확장, 111 서버 격자와 PNG의 같은 판본 대응표, 실제 Android 성능·터치·저장 검사다. 현재의 부분 구역을 전체 복원 완료로 표시하지 않는다.

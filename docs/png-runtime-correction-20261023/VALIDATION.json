@@ -3,7 +3,7 @@
   "engine": "4.7.2.stable.official.ed1daf0bf",
   "mode": "ORDINARY_MAIN_NO_PNG_REVIEW_FLAGS",
   "main_base": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
-  "public_tower_png_delivery": "PENDING_EXPLICIT_REDISTRIBUTION_AUTHORIZATION",
+  "public_tower_png_delivery": "USER_AUTHORIZED_ACTUAL_TRACKED_RUNTIME_FILES_IN_DRAFT_PR_150",
   "android_device": "NOT_RUN",
   "whole_map_complete": false,
   "import": "PASS_REUSED_IMPORTED_TEXTURE_CACHE_SCRIPT_PARSE_CURRENT",
@@ -87,6 +87,20 @@
     "native_catalog": {
       "checks": 52,
       "failures": []
+    },
+    "aden_faith_rendering_physics_saves_portals": {
+      "checks": 295,
+      "failures": []
+    },
+    "desktop_mobile_ratio_capture_and_occlusion": {
+      "checks": 76,
+      "failures": [],
+      "android_device": "NOT_RUN"
+    },
+    "github_update_png_autoload": {
+      "checks": 66,
+      "failures": [],
+      "maps": "all 10 Oman source PNG attachments plus 111 native field; no review flags or resource path overrides"
     }
   },
   "open_local_regression": null,
@@ -98,5 +112,19 @@
     "pr147_current_latest_checks": "83 checks snapshot: no failed conclusion; branch unmerged"
   },
   "legacy_release_audit": "check_resource_integrity --release-dir expects TWILIGHT-original-resources.zip and asset paths, not a map-only ZIP. Map archive separately verified with its hash-pinned installer; no global original-resource delivery claim.",
-  "ci": "DRAFT_PR_NOT_YET_PUSHED"
+  "ci": "PR_150_PENDING_REMOTE_CHECKS_NOT_CLAIMED_GREEN",
+  "authorization": "data/maps/tower_png_authorization.json",
+  "public_delivery_manifest": "data/maps/tower_png_delivery_manifest.json",
+  "public_evidence": "docs/png-runtime-correction-20261023/evidence/manifest.json",
+  "tracked_tower_delivery": {
+    "status": "PASS",
+    "tracked_files": 428,
+    "bytes": 553472728,
+    "textures": {
+      "oman_png_v1": 366,
+      "domination_png_v1": 48
+    },
+    "authorization": "data/maps/tower_png_authorization.json",
+    "all_original_art_integrated": false
+  }
 }
