@@ -1,0 +1,27 @@
+{
+  "schema": "pr122-legendary-source-snapshot-whitespace-preservation-v1",
+  "batch": 61,
+  "source_snapshot": "docs/remake/pr122-legendary-parallel/normal_six_pose_launcher.js",
+  "source_snapshot_sha256": "cdf6c55a36038d3ca935d3b70a4696e56ad9a5a4c10a6af6c90ed4013c3db21c",
+  "source_snapshot_bytes_unchanged": true,
+  "initial_check_error": "normal_six_pose_launcher.js:26: new blank line at EOF.",
+  "initial_failures": {
+    "61": {
+      "initial_log_sha256": "761d7a619b57f7d5c927d761c972798bec44bf6c97a63316fb891211e870e779",
+      "failure": "(most recent call last):\n  File \"/workspace/legendary_batch_delivery.py\", line 176, in <module>\n    main()\n  File \"/workspace/legendary_batch_delivery.py\", line 169, in main\n    run(['git','diff','--cached','--check'],cwd=REPO)\n  File \"/workspace/legendary_batch_delivery.py\", line 16, in run\n    return subprocess.run(args, check=True, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'diff', '--cached', '--check']' returned non-zero exit status 2."
+    },
+    "62": {
+      "initial_log_sha256": "3444842059b2c1f70ef79c6b2206955a1f361a783c007f1e63b70994cea9d32e",
+      "failure": "(most recent call last):\n  File \"/workspace/legendary_batch_delivery.py\", line 176, in <module>\n    main()\n  File \"/workspace/legendary_batch_delivery.py\", line 37, in main\n    assert not subprocess.check_output(['git','status','--porcelain'],cwd=REPO,text=True).strip(), 'Repo must be clean before a delivery batch'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Repo must be clean before a delivery batch"
+    },
+    "63": {
+      "initial_log_sha256": "3444842059b2c1f70ef79c6b2206955a1f361a783c007f1e63b70994cea9d32e",
+      "failure": "(most recent call last):\n  File \"/workspace/legendary_batch_delivery.py\", line 176, in <module>\n    main()\n  File \"/workspace/legendary_batch_delivery.py\", line 37, in main\n    assert not subprocess.check_output(['git','status','--porcelain'],cwd=REPO,text=True).strip(), 'Repo must be clean before a delivery batch'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Repo must be clean before a delivery batch"
+    }
+  },
+  "minimum_png_frames_spriteframes_id_sha": "PASS",
+  "normal_diff_check_scope": "Every changed path except exact launcher snapshot",
+  "launcher_diff_check_scope": "Same whitespace checks with only blank-at-eof disabled for this byte-preserved snapshot",
+  "generated_source_pixels_changed": 0,
+  "approvals_added": 0
+}
