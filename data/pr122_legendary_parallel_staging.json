@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 1228,
-    "minimally_validated_configurations": 1228,
-    "newly_authored_poses": 6538,
+    "new_draft_configurations": 1233,
+    "minimally_validated_configurations": 1233,
+    "newly_authored_poses": 6568,
     "reused_existing_poses": 830,
     "reused_legacy_poses": 54,
     "reused_prior_draft_poses": 776,
-    "quality_held_configurations": 1228,
+    "quality_held_configurations": 1233,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 92
+    "remaining_draft_configurations": 87
   },
   "actors": [
     {
@@ -7981,6 +7981,30 @@
         },
         {
           "key": "transform:282",
+          "direction": "NE",
+          "role": "run",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-run-source-v01.png",
+          "source_sha256": "9f217d63e4a8e3653af79bac57ce616d989a647936022e715a7004e67008b1a5",
+          "source_bytes": 2102851,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-run-SpriteFrames.tres",
+          "SpriteFrames_sha256": "d7135b660e9e14a2ae0050efd949d879034fdd13edf96d5932892e2ef7c608c2",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-run-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch244-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:282",
           "direction": "NW",
           "role": "attack",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NW-attack-source-v01.png",
@@ -8489,7 +8513,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 4,
+      "remaining_draft_configurations": 3,
       "precision_final_approved": false
     },
     {
@@ -8717,6 +8741,30 @@
           "actor_final_approval": false,
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:275",
+          "direction": "NE",
+          "role": "run",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-run-source-v01.png",
+          "source_sha256": "f55a7c55ecb851058ba8f3a111e8f6adc88e714f0869188d7e2fa4b0ce7a033b",
+          "source_bytes": 2117255,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-run-SpriteFrames.tres",
+          "SpriteFrames_sha256": "538e23a025fb90300058e0a09ff91c339f5d60dffa66a58aa955466fc1dba231",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-run-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch244-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
           ]
         },
         {
@@ -9224,7 +9272,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 3,
+      "remaining_draft_configurations": 2,
       "precision_final_approved": false
     },
     {
@@ -9447,6 +9495,29 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 0,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch236-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:274",
+          "direction": "NE",
+          "role": "run",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-run-source-v01.png",
+          "source_sha256": "5a57f68c1b08dbf7e621582d5530f9260484918f7f0156ab56d8542b2ef46423",
+          "source_bytes": 2261152,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-run-SpriteFrames.tres",
+          "SpriteFrames_sha256": "b8a0d471eabf44a21bf7bf7caa629380a3f574f8b67b260ec0e47e57efd45d77",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-run-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch244-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -9955,7 +10026,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 3,
+      "remaining_draft_configurations": 2,
       "precision_final_approved": false
     },
     {
@@ -10185,6 +10256,29 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:273",
+          "direction": "NE",
+          "role": "run",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-run-source-v01.png",
+          "source_sha256": "3701bf962e6b28c0218c032fb3cded0a3f501535a0898df463ef30258f282de9",
+          "source_bytes": 2207457,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-run-SpriteFrames.tres",
+          "SpriteFrames_sha256": "4dbe75d79ebb043c837a5f93e907a2f752808f00b6b0ea44712b9463587e0a9e",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-run-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch244-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
           ]
         },
         {
@@ -10691,7 +10785,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 3,
+      "remaining_draft_configurations": 2,
       "precision_final_approved": false
     },
     {
@@ -10916,6 +11010,30 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 0,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch236-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:259",
+          "direction": "NE",
+          "role": "run",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-run-source-v01.png",
+          "source_sha256": "a6e1444801649cc6d3ec321c7d45b226bde3626313b4565c9e0e2a46239112ba",
+          "source_bytes": 2365824,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-run-SpriteFrames.tres",
+          "SpriteFrames_sha256": "097a0c3189cd4a1971aeddf2a62102c390dda24aaaabaa0f919f92b0a73af595",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-run-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch244-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -11435,7 +11553,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 3,
+      "remaining_draft_configurations": 2,
       "precision_final_approved": false
     },
     {
