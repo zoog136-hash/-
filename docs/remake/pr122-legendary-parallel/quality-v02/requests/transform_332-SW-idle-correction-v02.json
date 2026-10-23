@@ -1,0 +1,71 @@
+{
+  "key": "transform:332",
+  "name": "암흑룡 조우",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "idle",
+  "reference": "res://assets/catalog/d9a87518deb538ff3667abc4.png",
+  "reference_sha256": "f8494733249dbc907ef2ba07468255662e268943046695d0b5345b0ed5a15ca9",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc016",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-idle-source-v01.png",
+  "previous_source_sha256": "26fe71aa6112ce1acff75d947eed12f2cbf87ec9bb14765c1f1916400e086a3f",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-idle-record-v01.json",
+  "previous_record_sha256": "42fdbec1be801c6db312fe9d365e389611d184d9e24d10e2bf14eeb172fd208e",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "332",
+    "direction": "SW",
+    "role": "run",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-run-source-v01.png",
+    "sha256": "8850059e72d511adf4574379e4aa0076239e2589b9ee01bc5d24c2347a36f15d",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "332",
+      "direction": "SW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "The six idle poses show the front/right face and chest rather than the required screen-left/down camera; the correctly leftward SW run makes the mismatch visible.",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-idle-source-v01.png",
+      "fix_kind": "hold_art_direction_fix",
+      "review_origin": "front20",
+      "issue_id": "visual-front20-0177",
+      "slot": [
+        "transform:332",
+        "SW",
+        "idle"
+      ],
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-idle-record-v01.json",
+      "source_sha256": "26fe71aa6112ce1acff75d947eed12f2cbf87ec9bb14765c1f1916400e086a3f"
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:332 암흑룡 조우, SW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"The six idle poses show the front/right face and chest rather than the required screen-left/down camera; the correctly leftward SW run makes the mismatch visible.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter FRONT-LEFT, screen DOWN-LEFT. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/d9a87518deb538ff3667abc4.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-run-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/d9a87518deb538ff3667abc4.png": "f8494733249dbc907ef2ba07468255662e268943046695d0b5345b0ed5a15ca9",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_332/draft001/SW-run-source-v01.png": "8850059e72d511adf4574379e4aa0076239e2589b9ee01bc5d24c2347a36f15d"
+  }
+}
