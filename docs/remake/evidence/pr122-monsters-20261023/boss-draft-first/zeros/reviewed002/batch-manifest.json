@@ -1,0 +1,1498 @@
+{
+  "schema": "pr122-boss-production-batch-v1",
+  "actor": "monster:제로스",
+  "clips": 30,
+  "poses": 180,
+  "missing_required_slots": 3,
+  "root_Godot_real_speed": "PASS",
+  "viewport_captures": 250,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/E-attack-v01.png",
+      "bytes": 1442671,
+      "sha256": "f31dfd911c5b03353047072888ff62f109cdfcb7a3d969bb9f30623936b56944"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/E-idle-v01.png",
+      "bytes": 1326058,
+      "sha256": "8a7fa22a26c1c1b2709b49a05e29cc449d5454d903b51fdaa68606da05c35bb4"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/E-run-v01.png",
+      "bytes": 1303553,
+      "sha256": "f5442b525c187c2b6256ea4aa0a97526edb04d4d15478dbe03e858bbef4aef1a"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/N-idle-v01.png",
+      "bytes": 1504695,
+      "sha256": "afb38503476dc46e87a495390f1d0a6a5dfca5b076e1a7d08ca022c9f088cd97"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/N-run-v01.png",
+      "bytes": 1372372,
+      "sha256": "f6577d3aa4be48adf8bfd021fdd9c9cc43771f8342c7eb7b79bfb9b1269a747c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NE-attack-v01.png",
+      "bytes": 1458757,
+      "sha256": "b977c1cc42a095fdc68a41b39bdf13dc2b6aeee516418bf1f847fad6723dc08c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NE-run-v01.png",
+      "bytes": 1569282,
+      "sha256": "141c28048386a2d67c990bd437fd84f9b9934e357cdef26bf86d191faf14907c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NW-attack-v01.png",
+      "bytes": 1435364,
+      "sha256": "cbd1b57f76adf1195d52f70ba451cea9ed5dae02c625423befbe0cf8f9ca7e38"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NW-hit-v01.png",
+      "bytes": 1451568,
+      "sha256": "aee0b3df764fc30e4bfc852a386e7d7661ac341e64bdb06a29c748f9959efb6f"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NW-idle-v01.png",
+      "bytes": 1563448,
+      "sha256": "c9136cf63add367e0e0429af7889a34147b4fd541eb2047979a2125ae4bac208"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/S-attack-v01.png",
+      "bytes": 1651547,
+      "sha256": "0245940e8b843cc4a5e1cf7bcbcc87cebb9756037522db12e439d3af6629c5fc"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/S-hit-v01.png",
+      "bytes": 1737106,
+      "sha256": "933558620ae0580bb007fa9b374c05fbc980bb9e9816b9fa6675099834056985"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/S-idle-v01.png",
+      "bytes": 1630603,
+      "sha256": "6c6e4ecee2f3c3b73b225a2adbecd5dc074c4c639d544e36c2aff69e90fea1a9"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/S-run-v01.png",
+      "bytes": 1580028,
+      "sha256": "c92615bd7fbf5e50908314a5bed7730671df22d3a26cbb6f2c61ecce34e88bd9"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SE-attack-v01.png",
+      "bytes": 1715573,
+      "sha256": "a2ff9059dc6e49935ed467fc8ff340a418bbd854bf7f5e53afde0c9236a465e6"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SE-hit-v01.png",
+      "bytes": 1851684,
+      "sha256": "204b8864d7d27047e179ebf9f58744b271442e7814da5d2b5cf1f51e484ae679"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SE-idle-v01.png",
+      "bytes": 1658770,
+      "sha256": "f3e2fd1629f55fd76b6b33b1bab195a7de54d7d04d18237ec3a210ee4b819a60"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SE-run-v01.png",
+      "bytes": 1677283,
+      "sha256": "766515d245cfc933ed0034b96a1ee4ee1af26d627e8811f68d2f6c13a92e3cb1"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SW-attack-v01.png",
+      "bytes": 1651516,
+      "sha256": "184d73c6972b103b8815d4379da72b3b5455097dddaba8f2b437ccd57746439e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SW-hit-v01.png",
+      "bytes": 1795455,
+      "sha256": "68be99c6bff51ba14263e530e490b65fec44d65e026930980b2a7c0e0eb18f30"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/SW-run-v01.png",
+      "bytes": 1642828,
+      "sha256": "947e2b550b2025466dfa003ab6f304a1c01a56214c89ab5408a108868c927edb"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/W-attack-v01.png",
+      "bytes": 1487532,
+      "sha256": "d009ad10c06d1ec927fa8b03b04bfc4d818778cb7ffda4850cf768d5a055ea89"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/W-hit-v01.png",
+      "bytes": 1677730,
+      "sha256": "b055ba15acce3ab26298bde512868eb46051636b978724308de0e1bc294b1cdf"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/W-idle-v01.png",
+      "bytes": 1334948,
+      "sha256": "8ff5af7fc8d00759bc9bb19dc652adffb3d6153924a98207c34004c5e06ff01c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed002/NativeMotionProfile.tres",
+      "bytes": 777,
+      "sha256": "f3db0aa196d40304a23868bc3aba774c3fa1e776912ba5667eb95a66300d7319"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed002/SpriteFrames.tres",
+      "bytes": 46372,
+      "sha256": "8176d62dd7b2451c391ccbe6b73db85d022b1fd7935a534616021ad2ec70ef22"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/sources/E-hit-v01.png",
+      "bytes": 2319895,
+      "sha256": "d54006e9a4dda778109bae35f822dbce9a576f8ce298505c5f631e2a82d04e7a"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/sources/N-attack-v01.png",
+      "bytes": 2225336,
+      "sha256": "1c022d60b08ce7b934c5509c3b4863cd05b077b80ebcf2e6dd8027a4425c6211"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/sources/NE-idle-v01.png",
+      "bytes": 2152727,
+      "sha256": "c3e74994cae39ef74ca66eb00334e936203f83b32eeddff0b0911747dfb2e75e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/sources/NW-run-v01.png",
+      "bytes": 2328916,
+      "sha256": "923fbdc627b59e9f11e071a7d8254b3a8474f2dce216d0d79396d4f9ddb0246e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/sources/SW-idle-v01.png",
+      "bytes": 2258783,
+      "sha256": "b1050ab3fbdeaf9e19b140f349a181f87a30bd6ce1b6b165697062b73ed5fd1c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/zeros/sources/W-run-v01.png",
+      "bytes": 2324754,
+      "sha256": "fb4596ed6456ea93029183b81406a9a8e7214197824e81a17588c29cc1b45714"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 1663038,
+      "sha256": "18aad9a930da5f5392191446112368d0f67790bf8fca0bf28e1f0c76dfee0fc9"
+    },
+    {
+      "path": "data/pr122_monster_production_scope.json",
+      "bytes": 907376,
+      "sha256": "3f81bdec4134f32026232903ba118a0ea65d08a8691ce1e197b6200de05208b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/candidate.json",
+      "bytes": 179411,
+      "sha256": "577489e1473490d7d42887a425277de26b43f462069225a4552769ba46e9c883"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/capture-manifest.json",
+      "bytes": 57401,
+      "sha256": "a951c21bcf0d2c826e737609c67a79248890ecab25f4c7fcee5f6282c711d9b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/command.json",
+      "bytes": 376,
+      "sha256": "abc59c3b5b765855f2627a51d6c777c2f82b6b787dd618b2aeb00782e1b2ebaa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/config.json",
+      "bytes": 2129,
+      "sha256": "7a8ba1ce5cfe2fdfea33e5879183e4645073dd53784bd2bb8fb226646fc33e48"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/godot-run.txt",
+      "bytes": 17274,
+      "sha256": "3ef1303da02f39bdaa6de02eb5bf0fa876405a0efc422da098a116c551b29b97"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/process.json",
+      "bytes": 246,
+      "sha256": "ff7d4c22993bcc69d4ac5133e9fdb50324aaf8f86beb4878a746fa63a3b74b14"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/report.json",
+      "bytes": 23180,
+      "sha256": "aa1b6eab711665b19897db7233eaea26ace8373a8cfaa53b2a67ecbcf305270f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-0.png",
+      "bytes": 34989,
+      "sha256": "0aa64e8faead644417a72e0fa94c1dfb3151fcf7a0d0efffe4476fa8b3dd9c25"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-1.png",
+      "bytes": 36651,
+      "sha256": "94cc017edeae4ba21ee62498e58e63c4c13ebdbdddbe32759c28e8cccf9c3705"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-2-strike.png",
+      "bytes": 36425,
+      "sha256": "010c6818970202e59fd2ac7a50b36cb8996612aaab23bb38d349b41654e468f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-2.png",
+      "bytes": 36567,
+      "sha256": "5532bda08520933b92375223ebe6d9350c7b47742599953d61f3c6e94dd461e0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-3.png",
+      "bytes": 38247,
+      "sha256": "f20f4fea17a7992e5e3e3df9e5acbd553c5425f42bfd97697471d69171854667"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-4.png",
+      "bytes": 35419,
+      "sha256": "2c665ba8f46f6de4ab98ac1a85b7f1d166a6f11f8c28924add9fced6fc02043b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-attack_0-5.png",
+      "bytes": 35229,
+      "sha256": "ac1855f9c8a60a4be60724aebea6ecbcaf53f33663de5ff80c9a28d2cab14d51"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-idle_0-0.png",
+      "bytes": 33513,
+      "sha256": "44e5e66e91f589bf587efceedbd7a7b4cc61d1384d56e7ad17dd678da798049e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-action-idle_0-1.png",
+      "bytes": 33532,
+      "sha256": "78c59c9b528cec908fbc7fe5496ff489789c174ef03f7d3f3cd3a68dc5ad5210"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-E-pre-idle-idle_0-0.png",
+      "bytes": 33512,
+      "sha256": "321ab36e2552e4710ca04b3fe71a2fd696cdddf1e725fc95db99d6f614b0019b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-0.png",
+      "bytes": 37870,
+      "sha256": "79b7b78b3adcfd448de9d4088840b18693bd03271f7823cdd790402a97cc1dc1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-1.png",
+      "bytes": 35967,
+      "sha256": "4e005bc8cc2ac315aa36d501ac2d8c8ee8516fc8045e26b9f5f71474a062644c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-2-strike.png",
+      "bytes": 36089,
+      "sha256": "5cdaef60395c9caee2d7980220128e6070a6aa096e9ddd01828172134e94e8a4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-2.png",
+      "bytes": 35982,
+      "sha256": "ef4fe6344f6b63a511f972b897f0e05450d9c9bb65714c20777a518b394c08f4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-3.png",
+      "bytes": 38872,
+      "sha256": "784817ab366056fa0b32e03594f01e4a0328c2a8cb32df8ccd6fa0cb1cac5628"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-4.png",
+      "bytes": 36360,
+      "sha256": "f3a73b074b68857c975a5e97e4ee418ae6d298a250406a9915420d41796bd2f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-attack_6-5.png",
+      "bytes": 37948,
+      "sha256": "7893c41144f40ac8883709fd6d83443a6ccb0845ba8fbc636f64189536a367c3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-idle_6-0.png",
+      "bytes": 34467,
+      "sha256": "6af3760ce91a9b39af14d38b40a2f3ca542e1e0f6e32192726ff0d68cce4cfce"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-action-idle_6-1.png",
+      "bytes": 34270,
+      "sha256": "b023b44e971839b1e1beda4e9b95dcd89d6461ac73ec4321c0ddb9fd243ae183"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-N-pre-idle-idle_6-0.png",
+      "bytes": 34723,
+      "sha256": "a8aef5e6dcb38ed30d0cd7a53897502fe7fffab9941238c82d18550e4d43a5d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-0.png",
+      "bytes": 34720,
+      "sha256": "829e7f7e556c5228f91fa3c90e6316054c1834eeba6ed043f1863a1c734e8574"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-1.png",
+      "bytes": 35510,
+      "sha256": "19d4bf8f5ea56edf199ad121ac36c6c08b57b7ed8f118711452ec965ab1fa057"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-2-strike.png",
+      "bytes": 35599,
+      "sha256": "1606a19960a41aabdcf7792a685f303e9aa0103fb281fffb195f8703dd26f398"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-2.png",
+      "bytes": 35494,
+      "sha256": "aa32aecf3b0fd8f9194b08ac348dee2099409664a0aa5e8db42c2c00596b7c53"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-3.png",
+      "bytes": 36324,
+      "sha256": "ccd482c6d3c259c589a467f14cb7a2f5b9333fb603c0fcd37daddd2ede152efd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-4.png",
+      "bytes": 34782,
+      "sha256": "4e8f1229841863941c67a4569e5d630f404b440d84260dd7e2efbe5645e5be85"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-attack_7-5.png",
+      "bytes": 34598,
+      "sha256": "b02a463b1106892f98cc9f00d7a8109864fec21703bba25750014405369bbde4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-idle_7-0.png",
+      "bytes": 35020,
+      "sha256": "e4f3419e662d7b42fc071fa47e26bff2d41d6060ba7a36f8d84ab8d5b29bfe0b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-action-idle_7-1.png",
+      "bytes": 35127,
+      "sha256": "3f901d9be0e651528e792d7b91e84e44caa51bda990e7955d61af71eb2a6f0a2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NE-pre-idle-idle_7-0.png",
+      "bytes": 35450,
+      "sha256": "5b6e1a0e1fb889b17851dafaa311cb27cb4f1aa1142c4f4585c18fc1e2d6d0da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-0.png",
+      "bytes": 36569,
+      "sha256": "e3dd38261cd5bc3384b6d8bfe55b1be9344845e0004fbed02d56b08c19be0602"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-1.png",
+      "bytes": 37010,
+      "sha256": "60e227ce207ab56741681b92588a1d804c9422c743afcb5ccbb345b8a7f6ba2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-2-strike.png",
+      "bytes": 37032,
+      "sha256": "7eb74470f436f5de9318f8e6af95278726a5fe8586dd96abd7d5d8a068ce08fc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-2.png",
+      "bytes": 36934,
+      "sha256": "79abb7e6b075945893be9fc0061f8f839e6c77229e8ea50d5af4a099bc7ee7cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-3.png",
+      "bytes": 38670,
+      "sha256": "01455dcdcd9db19c3c1ac3048e25d10bec400628f77da76ed29acd5cc1f38f1f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-4.png",
+      "bytes": 35925,
+      "sha256": "1ab0938e061ce6dcd4e602949cb44d231d2e985530f50c80ff401830b47c32e7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-attack_5-5.png",
+      "bytes": 36676,
+      "sha256": "61af25703b69a2cde3dc9b8fcfa509827d2d159b96ae46b120eddafa2594a72c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-idle_5-0.png",
+      "bytes": 35383,
+      "sha256": "2cc317c034eab5a52be6e97e558e23592c8fe40e2c42ee159aac47d409db1454"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-action-idle_5-1.png",
+      "bytes": 35155,
+      "sha256": "b37c1be5b4bcb6b695093f609bb571fe901d9b73ec61d7eee2d13a2e51d68020"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-NW-pre-idle-idle_5-0.png",
+      "bytes": 35124,
+      "sha256": "677c9c44b52b4ee330f263a48a6c10e1d259df9ea222ec398cf926b041137663"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-0.png",
+      "bytes": 37670,
+      "sha256": "08e37c363fa8e6dbfb496117e1a44fc91946989dee664820bd5e951cb8d65984"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-1.png",
+      "bytes": 37171,
+      "sha256": "7e00f6e27a4964c868498d8e954809c2d306923ebf65ecd418e0ef7f4de61fa8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-2-strike.png",
+      "bytes": 37662,
+      "sha256": "d00cb10d3d9353ca3f61409a05a453c311920d61aec5397d21873ab6a2602446"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-2.png",
+      "bytes": 37580,
+      "sha256": "d98231dab4f3e173a77dc6934ed072e424e1c8341d53469a1fcf0c7dde2791ee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-3.png",
+      "bytes": 39696,
+      "sha256": "6928cf394ef0620ec421d4f14b7f46b1b890e67ca1dfc75657aec5607082554e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-4.png",
+      "bytes": 37344,
+      "sha256": "50f1dfc3f0266f25049890f69887aa67263c84ffd0e9cb23dfb685ad285aba37"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-attack_2-5.png",
+      "bytes": 37651,
+      "sha256": "1926e2edd3ba6f0ce18cb763b5087030499f87e6a65c57cc1a74988a670964b7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-idle_2-0.png",
+      "bytes": 36370,
+      "sha256": "8fcf4fc314ad7b82d81577a43887657cb607e77e7093aebdda1fa6a71569a9a6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-action-idle_2-1.png",
+      "bytes": 36723,
+      "sha256": "9e157f35105645e93f1f9f3c86b6affe3d8bce60d2cd1fdd34c644582481951b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-pre-idle-idle_2-0.png",
+      "bytes": 36313,
+      "sha256": "9cdd5d37fda494582ecb25c66d5f43075d191328f17cc49c4c59c1b71309293c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-S-pre-idle-idle_2-1.png",
+      "bytes": 37200,
+      "sha256": "ef94d9e35ead7a064571deeb8b26039e0d9ad9bb1e7b788d363aa964b9511ba6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-0.png",
+      "bytes": 36416,
+      "sha256": "5f27d8babeaf95627c6bac1ada002ab3aaa512beb81166a882fa8dad601cdeb4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-1.png",
+      "bytes": 36955,
+      "sha256": "827df73ab675c82f4467dfb1c08e0ae28fb2d78afd562780cefc6438f56d0d67"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-2-strike.png",
+      "bytes": 36439,
+      "sha256": "eee6ad52cd2ace12a4382124135e56bc6522aa8ffcdcf5e7bd583a5222b7c864"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-2.png",
+      "bytes": 36346,
+      "sha256": "a79346320ca5c92cfbb5bda96d927e2082356630e75c010fbf81cec443b1ca3f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-3.png",
+      "bytes": 37664,
+      "sha256": "0a96acb3cc51c5dce2e31a48388eb0c957a7cb0795ec262372dee00d9c9a13a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-4.png",
+      "bytes": 35887,
+      "sha256": "3fd934fbf49af23b3b33e489eb23952f7ea4e2c1e4e8d18fd51ebadc78b7118b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-attack_1-5.png",
+      "bytes": 36526,
+      "sha256": "c81b88bd5f5acb3fe6cecb779c971a17dc18b4157c0c79200f44e274c1bcef84"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-idle_1-0.png",
+      "bytes": 35927,
+      "sha256": "ba8178daad76142eaa31eff9afb7d809e222063d999d4806d62904e39eef1557"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-action-idle_1-1.png",
+      "bytes": 35735,
+      "sha256": "c82eea0ce00e981ae0dec66cc925d46c32abbba32568e6a6a1523a979f8bd972"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SE-pre-idle-idle_1-0.png",
+      "bytes": 35699,
+      "sha256": "ce7b9710f87bb1f2e0b7bf03c91bfa8bb39cc9abd44c0d6372705af4ba3ec4cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-0.png",
+      "bytes": 37603,
+      "sha256": "a282cffb923e6e21750b4569d02fbb13cccedd6a3dd6d9f8ee40e5ee6342f31f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-1.png",
+      "bytes": 37583,
+      "sha256": "6cb2bc7cae1e5c7d4097f5c200523a232093f184086be9a7e19db4e457ffa925"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-2-strike.png",
+      "bytes": 37235,
+      "sha256": "4c6444846b8664b640ee4c9469b06260e3142806b4c020ad97c441c024c8caf9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-2.png",
+      "bytes": 37139,
+      "sha256": "48864096fe42eb89d98c321be5f530f9ff1a56f9613e11247d2cd5747638bdff"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-3.png",
+      "bytes": 37689,
+      "sha256": "8e34e72b2a22a5b62f1effe67c1f68e73c85840a7e9ce754fa12cb73117f47cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-4.png",
+      "bytes": 38192,
+      "sha256": "07e70f3d1917dc6704b6e76f221b0e3826140018243a02fa79fbe4036122b5b7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-attack_3-5.png",
+      "bytes": 37440,
+      "sha256": "2acf88eaad6cd718c301d54afe4183dbd9efcf4d2b33776a97d45e80c0a41859"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-idle_3-0.png",
+      "bytes": 37013,
+      "sha256": "6be383893e3271bf7c2c1ccc0bc6ec2bcfa1ca900fdff0b6cba023c09b0b99cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-action-idle_3-1.png",
+      "bytes": 37311,
+      "sha256": "4b37a6eddc7be6c8a4fbfe9ff51b0940e9c839a936e3c71e4c64093244d6e878"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-SW-pre-idle-idle_3-0.png",
+      "bytes": 37309,
+      "sha256": "fdc56f2df707fc1bbc4230ba0c9ed34c55d96720d997a437844be97ace4e16ea"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-0.png",
+      "bytes": 36538,
+      "sha256": "be3ad1e184c6016cad083253c2c2cc2ab2fc26ccae1f2936b70eddeae8d206c9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-1.png",
+      "bytes": 36907,
+      "sha256": "87dee59e5fc9364fcb0943eeb5a05826b60c720a822bbaed5761cee5e7c156f9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-2-strike.png",
+      "bytes": 36497,
+      "sha256": "d69bb99b1bde542281f0f0466913fd1dff0f762f75ce268d588193579400a07b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-2.png",
+      "bytes": 36414,
+      "sha256": "f6053a1a7ea0381ae35ecd6d713be9e0517821643391d6b5c03ddb93b4aa78b0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-3.png",
+      "bytes": 38446,
+      "sha256": "40f92acc8c69ae1c9e743da5e16a5d3951ec0de9702964a1994fd7f20707cfdd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-4.png",
+      "bytes": 36118,
+      "sha256": "a8366d211815fd732b271148114ed7914545027ff1ee8ad341b9300995dd5088"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-attack_4-5.png",
+      "bytes": 36330,
+      "sha256": "46642c9071baaf90234f96580d73eec9affabf539f540166331589b569bb408b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-idle_4-0.png",
+      "bytes": 33966,
+      "sha256": "e395c4ff8c6ad33b05c0ccf3ac375389cd6306479bcbeea5fa75d4d9d2c238e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-action-idle_4-1.png",
+      "bytes": 33885,
+      "sha256": "5e7beb68a7e3833cf6c778bbd5ea455d4d297dc11b274439e0a6be5a5fee11a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/captures/attack-W-pre-idle-idle_4-0.png",
+      "bytes": 34294,
+      "sha256": "c73f5b7638a848e69d2b9a711da1d30923d9abd97cf5a318df36da475a4dca8a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-attack/samples.json",
+      "bytes": 577189,
+      "sha256": "cfb2d7a699d20e2cf5e89198b17b62a554f46c08cfd18e633cb29d858136bd9d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-hit_0-1.png",
+      "bytes": 39106,
+      "sha256": "e017a691cc27cee7bc5223aee802edf743461df32ba5ce4161bf03a45fc6f7ee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-hit_0-2.png",
+      "bytes": 39017,
+      "sha256": "48ee90a920000ebf957000e1bc58825567f3259f464c6349c8530465e9eddb4b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-hit_0-3.png",
+      "bytes": 39551,
+      "sha256": "c7075100c04c1e1e78d9f6f2d9c40dd9fae0384db43a218e586196eb8da32ecd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-hit_0-4.png",
+      "bytes": 39129,
+      "sha256": "07371b71974caa9f84cff5f15d0182ec80b2d54a3f5c6c90aa972363782cf0d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-hit_0-5.png",
+      "bytes": 38376,
+      "sha256": "99515ebf753260d79711d55c8cc11065da78f9b59078d1218a4557caac1966b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-idle_0-0.png",
+      "bytes": 32939,
+      "sha256": "f814bd220dff632f7a35ab634bd0db925ceecd32220f9837438876f51d3ed989"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-idle_0-1.png",
+      "bytes": 33022,
+      "sha256": "de4e97851931cba449baf6f55f63aaa631ecdb56d2f2affe61e816094e32925c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-action-idle_0-2.png",
+      "bytes": 33816,
+      "sha256": "0cc4c5055dc2db5f3cf0d9134a9fe63622d28fc43ce788cda849835f225c3b1c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-E-pre-idle-idle_0-0.png",
+      "bytes": 32654,
+      "sha256": "b812f352a0f9a580a991380226548284846bae60dc41f36e26a4ea685b51fb76"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-hit_5-1.png",
+      "bytes": 35396,
+      "sha256": "2da8465fd9b21e303480242e993fdaacc314f41ef5f0bd8b03cb7245afd858ba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-hit_5-2.png",
+      "bytes": 35695,
+      "sha256": "ea378be7ba97f72f2a53041730a2b3bc2e1997d20b40bf854b110253b1c48551"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-hit_5-3.png",
+      "bytes": 35023,
+      "sha256": "b218411791aad47dbb87776b6ae41a6756750549bcfe34b7149b70f9cd581daa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-hit_5-4.png",
+      "bytes": 35045,
+      "sha256": "f529a861743abbbeb1c21db3c6a9da18a2e60adebd1e49cef24740edbcba8602"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-hit_5-5.png",
+      "bytes": 34962,
+      "sha256": "805ab1403a305161055b00d09bb594bca6d5de219f265b707482d1f9a1f92172"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-idle_5-0.png",
+      "bytes": 34921,
+      "sha256": "080a9813513b7039e5e4c95d62640ad113d2e146e5334dcc06369aec706f7729"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-idle_5-1.png",
+      "bytes": 34769,
+      "sha256": "5968b8c5f92e5b986f6a23d289318583436422d4b6821c3347c1b062ab380e17"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-action-idle_5-2.png",
+      "bytes": 35252,
+      "sha256": "18fc385a7b59bc3b8e0860b1f775f4b91a0b52c5cd5ce752985652fb0c4ab3e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-NW-pre-idle-idle_5-0.png",
+      "bytes": 34241,
+      "sha256": "89d0dc56b981256f5d8595d734a0741f927a13af55bf30f804bd83092d5f7921"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-hit_2-1.png",
+      "bytes": 36024,
+      "sha256": "da371fd306fd8e53174200ce10b81c346f79c3e6d54fcec178ad6429584f56ac"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-hit_2-2.png",
+      "bytes": 34777,
+      "sha256": "e5370bc67127ca3d37f828daca6c1272785c391f53d931b6c6ce348a141a10ca"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-hit_2-3.png",
+      "bytes": 37022,
+      "sha256": "0b1ded9cc49999b1dc30b73a7b9471dbfceae02fdb169e66fc3d83b9992614ca"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-hit_2-4.png",
+      "bytes": 36892,
+      "sha256": "e2e7d3a7ac88cf7c690fb140c653e3bd7baf99d2eef3a79ea77e11ef8e7932b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-hit_2-5.png",
+      "bytes": 36604,
+      "sha256": "5136acb5f24707750c014c4495f39f6ef1c68b0a840307ea92ac34bae2bb3d59"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-idle_2-0.png",
+      "bytes": 35611,
+      "sha256": "6928c739f69ed669dac57f5ba8182092eab836c0dcd7dab221059d5557f78702"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-idle_2-1.png",
+      "bytes": 36063,
+      "sha256": "a2827efad1857d516104111e8c2cefffeab2910ffee134478dc3b1df4206cf18"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-action-idle_2-2.png",
+      "bytes": 37130,
+      "sha256": "d1a3f7882c2c5fa168aba078db9fd36bf10584430d729fb051a0962075c89f5f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-pre-idle-idle_2-0.png",
+      "bytes": 35291,
+      "sha256": "b530165f2148caf329a0830e95517bcea56e759b7b5c9f39c8e7a54a4b3eaa06"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-S-pre-idle-idle_2-1.png",
+      "bytes": 36193,
+      "sha256": "2fe6763b70a104e8cfbe6438de8f0bebd1122e4e3be4ef8c9fc8c514b1819b27"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-hit_1-1.png",
+      "bytes": 36146,
+      "sha256": "0b5fa17deb784758f449ae6c9273b5ad314a42d92c143839a5a7cd3980bca5f4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-hit_1-2.png",
+      "bytes": 35787,
+      "sha256": "131fd0558430456623d7ac69e795b56e060b1eff7fad1fe64438f140b504f5b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-hit_1-3.png",
+      "bytes": 35353,
+      "sha256": "125cb6bff01379e7834fe24bd117d2983ded65e6673860d5824d06dbcb0c22f4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-hit_1-4.png",
+      "bytes": 34841,
+      "sha256": "ee6369df0cba065fc3396db7e2c7999ddc7842cb1eaebd8edec1160013518dcc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-hit_1-5.png",
+      "bytes": 34944,
+      "sha256": "ae64c643eb2ae23a19517ceb911e9bdad30ee6c573dff7d3f9b6dfa171fde52d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-idle_1-0.png",
+      "bytes": 35165,
+      "sha256": "389bd1909791df35f350141caef03b9b32f2618a377ac9fa8424a84cfb4f791c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-idle_1-1.png",
+      "bytes": 35069,
+      "sha256": "3fad9fa5615210a9e2380011a88e91a253703585c58a2d734379ba354031e655"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-action-idle_1-2.png",
+      "bytes": 36376,
+      "sha256": "1916aefd0dbb8211e618543e887381b14d79dc2a9646840f3c2c808e3c7e9bc2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SE-pre-idle-idle_1-0.png",
+      "bytes": 34759,
+      "sha256": "c23fc97e2909ae3c791e51d0372c82a21272d27848d561ced7e246c41048a511"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-hit_3-1.png",
+      "bytes": 36863,
+      "sha256": "13bdcb9e3bc7cffdc211cf0ee0ae0f3a52cc19c04140b2893592a7d25df49d92"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-hit_3-2.png",
+      "bytes": 36284,
+      "sha256": "36940259cc886c47c32eb528d052c237aa28c7e8f3c7e849aaaf907428284f92"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-hit_3-3.png",
+      "bytes": 36160,
+      "sha256": "d75f19c23fe0daf61575e25e38a186152df216c162810b21195eb74501eae992"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-hit_3-4.png",
+      "bytes": 36401,
+      "sha256": "7b1066f9e6b7e53d02310a7a3985bc5e63c0840f8dbfda64e24baad0251accd6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-hit_3-5.png",
+      "bytes": 35616,
+      "sha256": "f50501a0d0151c2220b1a8da258f5bcdac5b488ce64c96aeeee3cb06226d6346"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-idle_3-0.png",
+      "bytes": 36610,
+      "sha256": "9e76cbfae8ef1e482ef35db7e6fa59b65cc7868f4e00cbf028b9d4fc91073f20"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-idle_3-1.png",
+      "bytes": 37002,
+      "sha256": "4173046c0d77ab044e149d6c4d0c3ea512a8134ea76c09972daa7856c758da16"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-action-idle_3-2.png",
+      "bytes": 38345,
+      "sha256": "3ebc203645338053428e8acd31c35eba768517d6c1b385a1033ab2dc7749e350"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-SW-pre-idle-idle_3-0.png",
+      "bytes": 36273,
+      "sha256": "64f8f663cb545e6e5c371c9f8063687617077f00dd575b896eae430ca050cbee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-hit_4-1.png",
+      "bytes": 36065,
+      "sha256": "5f20b5b5fd3a69b727912f3af6ddae839e75154746a4b5075068b51c612511da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-hit_4-2.png",
+      "bytes": 36125,
+      "sha256": "da50e80d3f580e16df297f600f62f6f3a4a71786f25e8c67855c0b000204743a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-hit_4-3.png",
+      "bytes": 36099,
+      "sha256": "7f12a129576c65128eaac1050fb345f1677009a58fab13fd9b2ad2ff00f7baf8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-hit_4-4.png",
+      "bytes": 35937,
+      "sha256": "6723ff8dedb61544b156771d1837eeb9a7e173e85182e7afa20cb14040a5e50e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-hit_4-5.png",
+      "bytes": 35465,
+      "sha256": "ab7d5fc4c7eac8630ef3fb951b9be2cd61a5ebc39a59baad03be282ed6c72693"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-idle_4-0.png",
+      "bytes": 33925,
+      "sha256": "a233c98a3bec1845fde0e9d8b59a923d0555ac15cff6e5af43b8f6e490893911"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-idle_4-1.png",
+      "bytes": 33908,
+      "sha256": "a643da4ae5499da513ef0684ac24c91952de9c49023dd1bed92fe8df0ff98828"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-action-idle_4-2.png",
+      "bytes": 34665,
+      "sha256": "9c2bc7e498b11d7f39462dfb60c36cda00e9e3159167f16d0e44324d7c4948f9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/captures/hit-W-pre-idle-idle_4-0.png",
+      "bytes": 33612,
+      "sha256": "ab8d59e780cac4622716ce21c00d4bf54ec93a103629b83d0f3e1e1b935e2cf7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-hit/samples.json",
+      "bytes": 169655,
+      "sha256": "3599ad8c348552278a38519008bc8b1a459c60b9320084d1dd19c2117aea29c2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-action-idle_0-0.png",
+      "bytes": 32837,
+      "sha256": "547e15f51783a3978049cd2794ca03757b76e34d58f706fa44692d22400358c2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-action-idle_0-1.png",
+      "bytes": 33459,
+      "sha256": "a4f91277c7b73903df36e7dc6926ce739bc1dad2fc2047a118418c0796b2e466"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-action-idle_0-2.png",
+      "bytes": 34150,
+      "sha256": "2f4d1ac26aca1057dafb744e4f1bc2dd0cd2f81ab81c2a07b19c0ce41f0586fe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-action-idle_0-3.png",
+      "bytes": 34487,
+      "sha256": "d1e3ff7ede0cb296cffcd20f7aafa9a3261bb756237ab93a4d86bc040c640800"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-action-idle_0-4.png",
+      "bytes": 33939,
+      "sha256": "69eaa2410c37d935c28c674bf04880984d68c1702ecd5f28c71cbd20eb7a597e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-action-idle_0-5.png",
+      "bytes": 33413,
+      "sha256": "b3c27721bdfa971ccaffede61cab91503c80b4850581300a361e3c4ff6e2daea"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 32891,
+      "sha256": "3db3d6279f2e8aabca4405010a2d827e4b8c6bb21da7ec1e6d831a71cbdd1062"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-action-idle_6-0.png",
+      "bytes": 34112,
+      "sha256": "65ee88b88d89bdde91a7fcce8d06ef63b744b705161faadfecd5902c14505f9c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-action-idle_6-1.png",
+      "bytes": 34731,
+      "sha256": "1313697c17eed58a7d1a0163674b87e45614323f4f531f2b34499a0d99fa40f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-action-idle_6-2.png",
+      "bytes": 35416,
+      "sha256": "cdc74058b5a0487261017e9edced4dee5ab87a4e0a20c908ea0d46633dd4f5bc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-action-idle_6-3.png",
+      "bytes": 36243,
+      "sha256": "472e97321497d769c8d60ac0e351d512d3d056d95095a3c4b658f025a07d32a7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-action-idle_6-4.png",
+      "bytes": 35409,
+      "sha256": "0a061a3d4a3e83bac4b481c3253caa5bce26031988f711095504fc6f6fd1cd93"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-action-idle_6-5.png",
+      "bytes": 34898,
+      "sha256": "a4621cf3823a5b9e725af9e139b27f2c534fa63b8c88f4552570a082881a306f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-N-pre-idle-idle_6-0.png",
+      "bytes": 33868,
+      "sha256": "4c8db762bc6df654b87ad683269d16a593c799eafb040030a36509f577858088"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-action-idle_7-0.png",
+      "bytes": 34703,
+      "sha256": "5e66d690cca819bda2ba825d1c7c58ad0cfbec4ffc97d903e6a80aef63704b6f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-action-idle_7-1.png",
+      "bytes": 35540,
+      "sha256": "831965887896399e33531f89f96df741ade06bac0a5e1f8561cf8b2f689f21e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-action-idle_7-2.png",
+      "bytes": 36551,
+      "sha256": "21f834cd15dbca5135622f9e6a1df011975047402e6fc96dca87737dc177b820"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-action-idle_7-3.png",
+      "bytes": 37250,
+      "sha256": "f3f49f63cdaf1482009fb7c3cba49ea345dd50841f04fd6a292306e3d5f6e554"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-action-idle_7-4.png",
+      "bytes": 36904,
+      "sha256": "bd7d20aa909122229a3608526194b72c6b4a8e5bf143d328c8d6dc83d98d410c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-action-idle_7-5.png",
+      "bytes": 35880,
+      "sha256": "1842e354dfdab4f928a92a6c8ba12f91af5f6868a3e214414e0fa861b8b697ae"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NE-pre-idle-idle_7-0.png",
+      "bytes": 34342,
+      "sha256": "42d41cfcaba7218131ccff0b3bf0fd1de26b82dcbece904b1d71452004ea819b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-action-idle_5-0.png",
+      "bytes": 34208,
+      "sha256": "637341b39a25326c36dc613f65aa7a12489134b2873d1c638f2ba19eaa87e10a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-action-idle_5-1.png",
+      "bytes": 34716,
+      "sha256": "774cb10f87463a2b1ed99330d9ccfb84d2dbddd4ae20cbc07e8eb669fd44ff7d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-action-idle_5-2.png",
+      "bytes": 35043,
+      "sha256": "a4cad4bcbf72b9c61269603a9c5b429214a94320ef77f0b24dba27a4ab23e176"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-action-idle_5-3.png",
+      "bytes": 35858,
+      "sha256": "8b2cf36cd20434b951a843bb6a4e17e97fbd301fa7a3fd2570b8a8f4eb8bc16d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-action-idle_5-4.png",
+      "bytes": 35586,
+      "sha256": "f3042d6fae0fac61ce32f8503e98d80d6731f8ecb4005018242a4701f1244055"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-action-idle_5-5.png",
+      "bytes": 34503,
+      "sha256": "6b919943cc2c4e21240268163b85f32d6f585011a1216fd07dc2eafb4620b4d3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-NW-pre-idle-idle_5-0.png",
+      "bytes": 34189,
+      "sha256": "041d71f48fcb8d7b20c6e84f596018cdd50221b2c37394584c593597847a07a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-action-idle_2-0.png",
+      "bytes": 35482,
+      "sha256": "a1743d5dc34a28b3fbb29bfa78382d117057ed83ef2b3bce6610da64084ffc24"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-action-idle_2-1.png",
+      "bytes": 36007,
+      "sha256": "1da24d344e7479ac56537b8795fa04401ca1c9cba53aa188dfeb3e65445ed9e2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-action-idle_2-2.png",
+      "bytes": 37460,
+      "sha256": "de94e1335bc5b62e68658b40eeb10f47419ea873b69e671394e74fd4bba05142"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-action-idle_2-3.png",
+      "bytes": 37002,
+      "sha256": "228bdd194510eb7008f347152fcd204f6ffb85daddad2dcd1041c1eddaffb860"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-action-idle_2-4.png",
+      "bytes": 36904,
+      "sha256": "8aa2919f769331e3ec1ca6caf9666af426aa6aeb54e36268937f60713f897f58"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-action-idle_2-5.png",
+      "bytes": 36532,
+      "sha256": "36f7b741d7446b0652f859e4164f42d29fc441daf8a49687ca77744fd48598c3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 35563,
+      "sha256": "a63bc201691d2c12aa0b7cc7f8fb75d240b7d7af5a6c721b72f452659de7a07b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-S-pre-idle-idle_2-1.png",
+      "bytes": 36466,
+      "sha256": "5c2967f93c0d742143db430ba3126f466e13c284379f19c7dcef96f13cdaff4c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-action-idle_1-0.png",
+      "bytes": 34790,
+      "sha256": "bccdafee5f50fc3721d20d05eb50c9d3ad7297dda0c0883a13b1875422b06b82"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-action-idle_1-1.png",
+      "bytes": 35361,
+      "sha256": "4233890589630861317b21b2091331c0630e4dd657560afbc629c8c7a299c02b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-action-idle_1-2.png",
+      "bytes": 36513,
+      "sha256": "fd2c588c608142c6d429976939d82315bff4b119c8e78aa2a3bdf8f1c2cce344"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-action-idle_1-3.png",
+      "bytes": 35984,
+      "sha256": "7bb1b8802dab859bed227175c688e38439827e066360b3b254588881ee56dee4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-action-idle_1-4.png",
+      "bytes": 35393,
+      "sha256": "f44bc9a6bc02659ccf456d47802f0ec09ed1efb68e93ceb7eb37b602dd2ad4d0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-action-idle_1-5.png",
+      "bytes": 34677,
+      "sha256": "8465977b426c11dffbd7ee447c77fc2fffcb00ddc795d2aeab8d14c794e43e9b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SE-pre-idle-idle_1-0.png",
+      "bytes": 35001,
+      "sha256": "2437e2a379aefcbe52c73e70f67c4881f90b71c86b91f561f135953d92b3eee3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-action-idle_3-0.png",
+      "bytes": 36500,
+      "sha256": "52782d4bbc7f0c33f6ee1ea73651440f76556603fe4f929e6c77a6b133890e1b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-action-idle_3-1.png",
+      "bytes": 37505,
+      "sha256": "990b78bf72bcaf1e5439dc2a8aafa8b9e4b5d45c7e1d566963f59c487b80fbfa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-action-idle_3-2.png",
+      "bytes": 38702,
+      "sha256": "dd04e0ba30e7dacc68212f050bf48592ee3ec04152567c337c1a6f1ba98d213a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-action-idle_3-3.png",
+      "bytes": 37700,
+      "sha256": "030ad71ad669ca6e21ce38ad9146741b1226016fe2dbaea692c3874f7e93bb03"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-action-idle_3-4.png",
+      "bytes": 38071,
+      "sha256": "fbb409bb1d9e917d009a9829ecc55841563d445fd7b5e9ca5cf41ceab6b38da3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-action-idle_3-5.png",
+      "bytes": 36984,
+      "sha256": "36ed27cb8e9f289d7e8a736ad66b25ee65745adb00fea6a37ea9d2669a3925aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-SW-pre-idle-idle_3-0.png",
+      "bytes": 36484,
+      "sha256": "7b26b1a47404c77ffca36ba214face18cb58f5cb2531b54d5cdf77ce36f5f55b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-action-idle_4-0.png",
+      "bytes": 33561,
+      "sha256": "8701639f4dbf75ef7b5c12599ef35b3aa7a412daa339d8d3b0f8b94a9e620f35"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-action-idle_4-1.png",
+      "bytes": 34024,
+      "sha256": "f557e158c9c81a2293325294476969a0e0947c7aa5d9d50f084f4b3c3400b793"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-action-idle_4-2.png",
+      "bytes": 34663,
+      "sha256": "f24a150e7f3e1ea1de4046eef347b4aba4761848b5f5e06a5d575cce64ad339d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-action-idle_4-3.png",
+      "bytes": 34557,
+      "sha256": "22738016e70f906d43c8261572348afb1e7829b5f60fdf1455f869b368df864d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-action-idle_4-4.png",
+      "bytes": 34140,
+      "sha256": "c42472bb3c95ea2437bce8875704124c7062ea85aafba09b7f1eed91620acf2e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-action-idle_4-5.png",
+      "bytes": 33949,
+      "sha256": "04c7c524c656a7fc16036d5157724cca3201ec819e7c1a0e7b5c6aecf6151347"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 33683,
+      "sha256": "47ac759dcfbaeaa1f33be44c0acd05cf8017c5f336adcec19002ec12a8af8fa4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-idle/samples.json",
+      "bytes": 429509,
+      "sha256": "4e8eba30896589367d891f3435529efc74c8f7f49b9c0cc6afe1c6976777b88f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-action-run_0-0.png",
+      "bytes": 33935,
+      "sha256": "0bb3594b7aca29a8f1cc2b45b5495218305f0ed01936b789f50c45ad90473499"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-action-run_0-1.png",
+      "bytes": 34179,
+      "sha256": "e48092d774669ea972a1573a0ca0fc9ac979fc01073d84d1710b2dd9eb5e1c9a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-action-run_0-2.png",
+      "bytes": 35219,
+      "sha256": "e24497d3b2f01059d41787ae5a5c161c48bdfc7c72b94189c5c11f48df12e85f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-action-run_0-3.png",
+      "bytes": 35008,
+      "sha256": "c4f7bad828bde9cbb08281ecbeec3210856d9fef85a38e3f4e7a3ad710d6f285"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-action-run_0-4.png",
+      "bytes": 34827,
+      "sha256": "540a57f19dbf5ae52df271621fcdaf9abbb288bb32f4bd549aa0c22f9174c4a4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-action-run_0-5.png",
+      "bytes": 35110,
+      "sha256": "c687f6cb5068f09c5286ef43001fa2bbc5a3df777ef24d5d4c3dfd740a6285ac"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 32804,
+      "sha256": "5dc4e67610b494f9ffcdbd24aee25c596d6aa49928ffc9bdb73e3797ae37ac44"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-action-run_6-0.png",
+      "bytes": 35197,
+      "sha256": "7bf731cfe23ce8177a63809e12f9ac5a9f4afca365ad461b8db14fee4f31664e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-action-run_6-1.png",
+      "bytes": 35561,
+      "sha256": "e9137d1986f1c4ac58353b858f2d3e5bc997a58a3a6f74468b6adbe0f9abd50b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-action-run_6-2.png",
+      "bytes": 35284,
+      "sha256": "528f63abc915d18836e469ce4e15608b29fb429d785f6b66838e62f511f006e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-action-run_6-3.png",
+      "bytes": 35317,
+      "sha256": "9d7cee5b977df389836d4917b954cb0cdcfaa09a7ee82efb2950ecf3009897e3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-action-run_6-4.png",
+      "bytes": 34816,
+      "sha256": "f42eefaf236bb9582003c9e2b8a3b127bae86e144ce8d3825e1083f933d9ee31"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-action-run_6-5.png",
+      "bytes": 34218,
+      "sha256": "23021c802e0d26bb2d465829ac6a91ec498e42b68e66bd9e63efd5167cf87eba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-N-pre-idle-idle_6-0.png",
+      "bytes": 33853,
+      "sha256": "4a490951dd18f7a381a2cf5c56322d78b9d6ab3526e7de2528748a9b5d7972ee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-action-run_7-0.png",
+      "bytes": 33808,
+      "sha256": "48f4ca7a5911c6641b9c365cd770bb3ce2aeff10300fcd4e5fb3c8df544e7623"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-action-run_7-1.png",
+      "bytes": 33761,
+      "sha256": "06684fda12b6c6337c968294a241a2962551a58c893126f0faf91b6f4c8add19"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-action-run_7-2.png",
+      "bytes": 34793,
+      "sha256": "076a824064dd9ccbe17c55ba8760b47891cf9833531d50b4b4d32101f6406f32"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-action-run_7-3.png",
+      "bytes": 34613,
+      "sha256": "447633819e8c8919cb047b64f76fd78901ec26778f001787d5017b1ed885ec8f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-action-run_7-4.png",
+      "bytes": 33832,
+      "sha256": "1216b522f38edff1af53c652208892c0decd5f9a99ff92d108ef106e88428bef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-action-run_7-5.png",
+      "bytes": 34150,
+      "sha256": "0f995008d03035f20bb2e8e76d1495dafc7b4da12f39f7115f742e04d6277dfa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NE-pre-idle-idle_7-0.png",
+      "bytes": 34387,
+      "sha256": "089c9a84ff8f958a3779face9b8acb71c3f1050336c3b1709fe01c135814309a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-action-run_5-0.png",
+      "bytes": 37963,
+      "sha256": "81118313705afaa194b743996c1f63441a49bf6787ff5816c4ba5067cfeff8bb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-action-run_5-1.png",
+      "bytes": 38237,
+      "sha256": "d0c0eb4a7ff268c9de1e0bce0247e37f7937476ef7e53e3ebdfcd60c562dde9a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-action-run_5-2.png",
+      "bytes": 39118,
+      "sha256": "3f28e37043d7de2bba16511d68e1c907411fd7ba55452867dcf5162b9965850d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-action-run_5-3.png",
+      "bytes": 38279,
+      "sha256": "9ccba137a56e29100459aaacf6dc0e78c22355d58ff1abd9058466de119ca812"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-action-run_5-4.png",
+      "bytes": 37756,
+      "sha256": "292504080c05df233db327e81f1ccc6611773a51a5e1ce33501af94b0980a79c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-action-run_5-5.png",
+      "bytes": 37964,
+      "sha256": "ddbdfaed5bf1c1c2f4b472decbb4be9fd2cfcbad02633b9eccfbb7015eb1b238"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-NW-pre-idle-idle_5-0.png",
+      "bytes": 34169,
+      "sha256": "5815888793cdad14787f040728976b864fccec95457fb919681cabaef3bf0b1b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-action-run_2-0.png",
+      "bytes": 35007,
+      "sha256": "bbb4414827dbdb5f87639362d0088bc14e7284a1e7cf901d21bdeb1d2a8812dd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-action-run_2-1.png",
+      "bytes": 34759,
+      "sha256": "15f977dd2d4b9101b6e37d20fdae097fe96095196fa0b039080e29f932d83003"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-action-run_2-2.png",
+      "bytes": 35174,
+      "sha256": "b83f653afe94220a27f8445eb73c1966f6a42032b49190dae2bf989cc804345f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-action-run_2-3.png",
+      "bytes": 36357,
+      "sha256": "5f84c6ce369969318a9eb232b78b2152a96842b50e3181c9c5856dbf6a355b94"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-action-run_2-4.png",
+      "bytes": 35549,
+      "sha256": "4312ec635421b8d59e56c536e786d99fbfa8b61a4f193fcbbaf700c7345cbd80"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-action-run_2-5.png",
+      "bytes": 36141,
+      "sha256": "a29e3b2906413f9d441474e9e0ba6d169b175479d5438029ee192f0d98bf9915"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 35331,
+      "sha256": "01b26dfae4bd4741db51b2eeb112cc083a54f22d77f6e791733c204b3c55b42a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-S-pre-idle-idle_2-1.png",
+      "bytes": 36233,
+      "sha256": "24e5ebe33cc264fbd0f768e2efc56c39b43e6380e6c9cbff304e5957bee46a47"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-action-run_1-0.png",
+      "bytes": 36710,
+      "sha256": "ecfc062875cf510b618330903d40dc0442bfe3614c6d430c3ab7cd463b163e30"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-action-run_1-1.png",
+      "bytes": 35895,
+      "sha256": "1da146b0cca87109a0c6809beadaa47271034cc759d8522135fa105214ff6923"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-action-run_1-2.png",
+      "bytes": 37160,
+      "sha256": "86c5adcf2bfdab2a7f8fb8663cb5bbb8e129e80532d8b220581ba953290a847e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-action-run_1-3.png",
+      "bytes": 37305,
+      "sha256": "371987de1553259fbcc02f1590a860a3a25476bc2c91b7327b56c4db18fffe92"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-action-run_1-4.png",
+      "bytes": 37126,
+      "sha256": "add5e2189fb9c226aa747f1c10a6c34f8ab512a8b63aaf391743dd4244229543"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-action-run_1-5.png",
+      "bytes": 36997,
+      "sha256": "2b7a65757e42ff2b60e1f5184896760122fed7ec16a4c802052df4694d0273a8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SE-pre-idle-idle_1-0.png",
+      "bytes": 34778,
+      "sha256": "18ffe28a4c691e532054b86fbc34e8bd46e242520d5dc7fca916d25c14bf81f1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-action-run_3-0.png",
+      "bytes": 36218,
+      "sha256": "db8213031d338873862c3d59cdc427c830bbf75cac60cd5b085401dddf5894c4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-action-run_3-1.png",
+      "bytes": 35847,
+      "sha256": "01b8e617d2424507da9648df1eb5e90b6a1d11184d170d4ee6222769bdd28182"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-action-run_3-2.png",
+      "bytes": 36290,
+      "sha256": "f2aa5bf94239fa6d22e240d7796b24270b4f4b5845fb61e8bf2c0613e35504be"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-action-run_3-3.png",
+      "bytes": 36598,
+      "sha256": "0ccc7274eda4eed38626ef73ae2d36f356731250d67971b5bca5297d51ef491f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-action-run_3-4.png",
+      "bytes": 36087,
+      "sha256": "4f9619c0ce1edb6ebbe5f22cbe5d7e9c8d422d38544924a864cf03e77288b24e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-action-run_3-5.png",
+      "bytes": 36470,
+      "sha256": "fd44e72d033c2890c5e9809f53b1ac6000be598920d589251ac97d16c906a721"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-SW-pre-idle-idle_3-0.png",
+      "bytes": 36469,
+      "sha256": "a1b5f464d8c9a26d81b7a51af51d75aaccd821f1906d2aa7cbacbc8b5b9b9fe5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-action-run_4-0.png",
+      "bytes": 40517,
+      "sha256": "eb72d4f8b8482a4bdff2acdfc02ea08f1bffa2b341756fc5750f901802bfe21f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-action-run_4-1.png",
+      "bytes": 39000,
+      "sha256": "de22851eb010a68fe708f3faa28ee89404423005726fb55aff4c255c136c3098"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-action-run_4-2.png",
+      "bytes": 39791,
+      "sha256": "bd300cbe4cb970432bd7d1a6fc8f3b79f65d824654ebcc1fa7fe0919724fce1d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-action-run_4-3.png",
+      "bytes": 39571,
+      "sha256": "435c717cccf2f940cd585a2141b0ba02d70691f80b8052bcf48d9bc6094e914c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-action-run_4-4.png",
+      "bytes": 38795,
+      "sha256": "3c08409a317f2126d1ded564fdba9020d8488d7fead0ac5b2a938ee227862636"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-action-run_4-5.png",
+      "bytes": 39937,
+      "sha256": "9eecd6f63acaedcdb0accb9fdd4d5a4d2e2446e4903ccd07366c4b6c941166b1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/captures/run-W-pre-idle-idle_4-0.png",
+      "bytes": 33682,
+      "sha256": "ce3a7648645cfea723a74fd6adb1be566d4ad7dfb5e125d42a378e0fae8cae7a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed002/playback/zeros-run/samples.json",
+      "bytes": 313923,
+      "sha256": "551e1fb3b7dda5c7d4bbbc7afdc9748fa00ea5ec2dc126c47acb8b72d53d46b4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/save_batch.py",
+      "bytes": 4548,
+      "sha256": "f4194633e76dd92459a1c48ba959f9e2b5aded692f261377fd80f8cdfbb17ab2"
+    }
+  ]
+}
