@@ -1,0 +1,357 @@
+{
+  "key": "transform:193",
+  "name": "공작 마커스",
+  "grade": "전설",
+  "direction": "NW",
+  "role": "idle",
+  "reference": "res://assets/catalog/8eea146bc63c088334b96aba.png",
+  "reference_sha256": "7208b7a7d9c4880ac1ae30753641fa162019caa4df8fdd1c221215cd6c470e60",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc046",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-idle-source-v01.png",
+  "previous_source_sha256": "5fd7a19d426a16cc4d92b930dfb1700a5ebe542eb78774b76a0d65a02334273a",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-idle-record-v01.json",
+  "previous_record_sha256": "cbc89ba0b3a03e6deb9ec3851a4f6e4aeac4e0d19b492a24b96383e025a52b74",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "CORRECTED_SOURCE_DRAFT_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": null,
+  "frozen_error_findings": [
+    {
+      "actor": "193",
+      "direction": "NW",
+      "role": "idle",
+      "cause": "camera",
+      "detail": "Frontal/left profile appearance does not maintain a rear-left camera.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-idle-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-idle-record-v01.json",
+      "source_sha256": "5fd7a19d426a16cc4d92b930dfb1700a5ebe542eb78774b76a0d65a02334273a",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0038",
+      "slot": [
+        "transform:193",
+        "NW",
+        "idle"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:193 공작 마커스, NW IDLE. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Frontal/left profile appearance does not maintain a rear-left camera.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter BACK-LEFT, screen UP-LEFT, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six subtle articulated living breaths: neutral guard, inhale begins, fuller inhale, peak breath, exhale, settled guard. Keep feet planted and original equipment held. No locomotion or attack. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8eea146bc63c088334b96aba.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8eea146bc63c088334b96aba.png": "7208b7a7d9c4880ac1ae30753641fa162019caa4df8fdd1c221215cd6c470e60"
+  },
+  "schema": "pr122-legendary-bounded-quality-correction-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-source-v02.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-source-v02.png",
+  "source_sha256": "8fdff5ccc94a5fceebef254e9372d16d1d626041533343c9cde5b6e5a58b3641",
+  "source_bytes": 2194138,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-source-v02.png",
+      "sha256": "8fdff5ccc94a5fceebef254e9372d16d1d626041533343c9cde5b6e5a58b3641",
+      "bytes": 2194138,
+      "source_kind": "new_bounded_correction"
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "3e277dd7aae79ba54ec887c68c0067bf88a301126b81b74c3ff07fe631aa2119",
+      "normalized_visible_sha256": "3df9b470da18dedd4e68ccaa4afea015d47ee32a0de1a3be9589aac6af0ec446",
+      "visible_pixels": 65384,
+      "visible_height": 503,
+      "visible_width": 487,
+      "alpha_bbox_in_region": [
+        25,
+        9,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "7454cffc2ccd01df1e060e61b1843d40b479ee2185a4bd6460fdd9beffa6e329",
+      "normalized_visible_sha256": "aa6bbe9544e4e9c5fff8d1665aa355a93249f84c6fa334494eebe640a6a39e05",
+      "visible_pixels": 67361,
+      "visible_height": 504,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        8,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "496f8d7544f17dc9a0866621d98e3c6b57dc136a49018bd01ab67c7c8ec24012",
+      "normalized_visible_sha256": "91b3c53c9a1145d2444bef2a32c9abe101d9051afae890c0a5acc1fab2fb0b9d",
+      "visible_pixels": 67997,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "source_kind": "new",
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "4f4b4f191d1b9ff366cf8615985a9b4fb70ae77c055ba0ecf6dd61b7a48d5163",
+      "normalized_visible_sha256": "0094754fb93ecb2081d8cb319deaeb69c93c088bf79c8e4ae03c729494d191e2",
+      "visible_pixels": 70164,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "5255138812168696588006b196a5e29aeb47487ce1dc34e619011adbb6315013",
+      "normalized_visible_sha256": "5741dabaee26f1daa1535fee48285d89c1bc5f1b60881521bef6c84510d91ec5",
+      "visible_pixels": 67801,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "source_kind": "new",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "d76b56d827502bd2b22d66d8591d2151ce3ae8b0251c1cfec330eb0fbb88a736",
+      "normalized_visible_sha256": "88d7c7e7b11cb2a258d6ae140127b6e895bd7c8c8871a3197a40259ec96f4852",
+      "visible_pixels": 64828,
+      "visible_height": 512,
+      "visible_width": 497,
+      "alpha_bbox_in_region": [
+        1,
+        0,
+        498,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "cell_size": [
+    512,
+    512
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "96d5050d13feb1cf4f77c89f44912990ebaccea0995dfadb19dc8bba864b32f7",
+  "animation": "idle_5",
+  "loop": true,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-idle-raster-registration-v02.json",
+  "request_file_sha256": "3423f352f1da0d22542e20a4c1b9344d23b7ce3ffbdd303a2d9b6c7a21884969",
+  "generation_request_sha256": "de3756ecffc6d1d6b84e9faecefbad6a1a6091569fece59dd85fc7cb7c7362ee",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-e16a16af-2edb-4656-96b3-fe906717ac3a.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED"
+}
