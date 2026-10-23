@@ -1,0 +1,821 @@
+{
+  "schema": "pr122-legendary-parallel-staging-v1",
+  "base_PR": 122,
+  "base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "branch": "feature/pr122-legendary-parallel-20261023",
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "production_order": [
+    [
+      "S",
+      "attack"
+    ],
+    [
+      "S",
+      "run"
+    ],
+    [
+      "S",
+      "death"
+    ],
+    [
+      "S",
+      "hit"
+    ],
+    [
+      "S",
+      "idle"
+    ],
+    [
+      "E",
+      "idle"
+    ],
+    [
+      "E",
+      "run"
+    ],
+    [
+      "E",
+      "attack"
+    ],
+    [
+      "E",
+      "hit"
+    ],
+    [
+      "SE",
+      "idle"
+    ],
+    [
+      "SE",
+      "run"
+    ],
+    [
+      "SE",
+      "attack"
+    ],
+    [
+      "SE",
+      "hit"
+    ],
+    [
+      "SW",
+      "idle"
+    ],
+    [
+      "SW",
+      "run"
+    ],
+    [
+      "SW",
+      "attack"
+    ],
+    [
+      "SW",
+      "hit"
+    ],
+    [
+      "W",
+      "idle"
+    ],
+    [
+      "W",
+      "run"
+    ],
+    [
+      "W",
+      "attack"
+    ],
+    [
+      "W",
+      "hit"
+    ],
+    [
+      "NW",
+      "idle"
+    ],
+    [
+      "NW",
+      "run"
+    ],
+    [
+      "NW",
+      "attack"
+    ],
+    [
+      "NW",
+      "hit"
+    ],
+    [
+      "N",
+      "idle"
+    ],
+    [
+      "N",
+      "run"
+    ],
+    [
+      "N",
+      "attack"
+    ],
+    [
+      "N",
+      "hit"
+    ],
+    [
+      "NE",
+      "idle"
+    ],
+    [
+      "NE",
+      "run"
+    ],
+    [
+      "NE",
+      "attack"
+    ],
+    [
+      "NE",
+      "hit"
+    ]
+  ],
+  "minimum_frames_per_configuration": 6,
+  "new_death_directions": [
+    "S"
+  ],
+  "new_WALK_excluded": true,
+  "production_connected": false,
+  "mythic_files_changed": false,
+  "catalog_or_saves_changed": false,
+  "whole_game_and_Godot_4_7_2_QA": "NOT_RUN_DEFERRED_UNTIL_DRAFTS_COMPLETE",
+  "legacy_ledger_sha256": "6c8eb6246a86c1f873bc15aadbf2366bf007eaafd5c120af4d1ec4eb8b361e19",
+  "counts": {
+    "required_actors": 40,
+    "required_motion_configurations": 1320,
+    "minimum_pose_target": 7920,
+    "new_draft_configurations": 2,
+    "minimally_validated_configurations": 2,
+    "newly_authored_poses": 12,
+    "reused_existing_poses": 0,
+    "quality_held_configurations": 2,
+    "new_final_approved_actors": 0,
+    "new_final_approved_configurations": 0,
+    "verified_complete_existing_reuse_configurations": 0,
+    "remaining_draft_configurations": 1318
+  },
+  "actors": [
+    {
+      "key": "transform:402",
+      "name": "세계수의 현신",
+      "grade": "전설",
+      "reference": "res://assets/catalog/7dd4f1199ec22252e98f0112.png",
+      "reference_sha256": "43e8d9b1a7dde25b54ccf2c746d32ef26faf8db986738537d55e62afa0e245a2",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:402",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/S-attack-source-v01.png",
+          "source_sha256": "6399c3f521de1d5e6e6ff39f40f904c16a09a41efa1c78f8ac421cba294f4656",
+          "source_bytes": 2499076,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_402/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "3b9c0004d728ba9b23f58d4c6ca03f81cfac279f902c3e2147861a07633997c2",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_402/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch01-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:387",
+      "name": "벨라",
+      "grade": "전설",
+      "reference": "res://assets/catalog/f7cbcc65400165e3356b8d5a.png",
+      "reference_sha256": "fc4dcb2bbf7ad157c34f0e9aa280fde94556b1d693e47f67dd38ac96ac02bb97",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [
+        {
+          "key": "transform:387",
+          "direction": "S",
+          "role": "attack",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-attack-source-v01.png",
+          "source_sha256": "06bad6313a792f33681d6801089ed5d918aee22ecb2cff31a9667560d7ab5c02",
+          "source_bytes": 2147683,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-attack-SpriteFrames.tres",
+          "SpriteFrames_sha256": "d55d1bff8878c9b68cb7d477a7671a9d813853eb4d7096d797ef30f0256e8521",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-attack-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch01-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        }
+      ],
+      "remaining_draft_configurations": 32,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:375",
+      "name": "전설의 낚시왕 폴",
+      "grade": "전설",
+      "reference": "res://assets/catalog/be6f2f0c73cd7dffe54e98b6.png",
+      "reference_sha256": "0ad4f88dfd6540dc6d441c5ef0726908b6f6add0b8d353dede6499354d2f74ab",
+      "legacy_approval_preserved": false,
+      "legacy_production_status": "NOT_AUTHORED",
+      "legacy_frames_path": "",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:368",
+      "name": "대장로 폴카",
+      "grade": "전설",
+      "reference": "res://assets/catalog/cee4fc6adff94966c15e5f52.png",
+      "reference_sha256": "68427ad7f521fb7e47e849ccd8da73b6d7ad6f0d596271dab6e88925acdb1ce5",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:339",
+      "name": "실렌의 파수꾼",
+      "grade": "전설",
+      "reference": "res://assets/catalog/0e6c8d847abc53e0f210f938.png",
+      "reference_sha256": "401caa29182acec3478fae546407331156d03e511143075c4589afdbdebd2182",
+      "legacy_approval_preserved": false,
+      "legacy_production_status": "NOT_AUTHORED",
+      "legacy_frames_path": "",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:338",
+      "name": "그랑카인의 역린",
+      "grade": "전설",
+      "reference": "res://assets/catalog/fe823245b3bb47d25032af5d.png",
+      "reference_sha256": "9fd4e015ee61eac96c7573428d6a59e5a242a3eb2520312965f5667eb8b6ed29",
+      "legacy_approval_preserved": false,
+      "legacy_production_status": "NOT_AUTHORED",
+      "legacy_frames_path": "",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:337",
+      "name": "아인하사드의 그림자",
+      "grade": "전설",
+      "reference": "res://assets/catalog/44009d12cb049bf6f0344db9.png",
+      "reference_sha256": "ee3ee40af74c887888fa73231b5521d878ea6f9f0db0e95ca2f43d8005e8eb81",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:332",
+      "name": "암흑룡 조우",
+      "grade": "전설",
+      "reference": "res://assets/catalog/d9a87518deb538ff3667abc4.png",
+      "reference_sha256": "f8494733249dbc907ef2ba07468255662e268943046695d0b5345b0ed5a15ca9",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:331",
+      "name": "암흑룡 질리언",
+      "grade": "전설",
+      "reference": "res://assets/catalog/43a87b53160270d29e59cb0e.png",
+      "reference_sha256": "e6501c14aca50486d56432a5a27a2ea65f2a7e27b706539f6ca324d6cb447364",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:330",
+      "name": "암흑룡 아툰",
+      "grade": "전설",
+      "reference": "res://assets/catalog/ede9289f86f16b5125bcbf52.png",
+      "reference_sha256": "1b14c597aa83fce500c0afb8b27bb8b99779e1db29d3be1c2c15685662d15770",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:282",
+      "name": "젠",
+      "grade": "전설",
+      "reference": "res://assets/catalog/cc539d33b082378a103df80c.png",
+      "reference_sha256": "07da8d10395f3a056978b03736a707b02a858bd7602ee2d39dc04172ba4ea0dd",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:275",
+      "name": "Mr. 스모커",
+      "grade": "전설",
+      "reference": "res://assets/catalog/53f60478a8183d10bbe8a3cc.png",
+      "reference_sha256": "0487b228e29bbb218dcccfd2bb557cecc0ae8f7bc4dfb684a2bf51f3a2ba3f35",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:274",
+      "name": "암살의 아리아 울프",
+      "grade": "전설",
+      "reference": "res://assets/catalog/0982d61d21df5c8da880173f.png",
+      "reference_sha256": "86ff7a8495d3d0a465c23dadd8662d0515a9681840b4328836207b57bd46ff21",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_dagger/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:273",
+      "name": "과거의 나이트발드",
+      "grade": "전설",
+      "reference": "res://assets/catalog/4a375ed6dd091c6f4a19651e.png",
+      "reference_sha256": "b30ce40ba846864b9502056dec36642420bc5683aa629c5201bd6c5816d071f0",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:259",
+      "name": "국왕 에오딘",
+      "grade": "전설",
+      "reference": "res://assets/catalog/66570b9d7554be89555ddbdf.png",
+      "reference_sha256": "0527cd69d131c9544b71ca0a18785694043b7525cab4ca80749d8744434e3df7",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:245",
+      "name": "베리스",
+      "grade": "전설",
+      "reference": "res://assets/catalog/d150a52b72395862076428de.png",
+      "reference_sha256": "9f279725669eee3fccee4c628cb05541c7a8dc284a36abe542ef37b3ac6c714c",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:244",
+      "name": "로데마이",
+      "grade": "전설",
+      "reference": "res://assets/catalog/4f36ee819a5c001693ad85d1.png",
+      "reference_sha256": "43612ba2045e36a722bb873cb5d729001698906436ac838dae021ffd9c7fadf6",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:243",
+      "name": "화염의 데스나이트",
+      "grade": "전설",
+      "reference": "res://assets/catalog/d65d5733ab1238958c7ed4cb.png",
+      "reference_sha256": "4fe4f8f2df6babc34a9d0f20c03a424826fd6f32a280d763f762198f7339b5ec",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:227",
+      "name": "게렝",
+      "grade": "전설",
+      "reference": "res://assets/catalog/82777ade692014ab25c41dae.png",
+      "reference_sha256": "022aa93a8ff1112aa2347662c300e52c7603cca800aee88953e68fe5451722f4",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:226",
+      "name": "가드리아",
+      "grade": "전설",
+      "reference": "res://assets/catalog/a8cf01850758f21d5ffb77a0.png",
+      "reference_sha256": "88756be17a043503d223e0ad0f3ed843e820cdbebbb09c63c0bba5f75e308edb",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:225",
+      "name": "불패의 군터",
+      "grade": "전설",
+      "reference": "res://assets/catalog/8fc0f2ecb85ac19833812ad9.png",
+      "reference_sha256": "46a91c9185953adb6bfe2dc5027a2ca2e6c28f983db9078f6a6557f97473d888",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:213",
+      "name": "1세대 드루가",
+      "grade": "전설",
+      "reference": "res://assets/catalog/b3f4b6e8e775111f7a8b4c58.png",
+      "reference_sha256": "5c04a18658cd1513aeaa86a7166ba106869509cce6995be88b4935c841fdebb3",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:194",
+      "name": "군단장 엑스터",
+      "grade": "전설",
+      "reference": "res://assets/catalog/ec84780a737e6d839e4085ff.png",
+      "reference_sha256": "2d3bbb08c7f86ed2d1dad6294582dbd552a81d0b2b6add1b5a944f0c3bf45f8e",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:193",
+      "name": "공작 마커스",
+      "grade": "전설",
+      "reference": "res://assets/catalog/8eea146bc63c088334b96aba.png",
+      "reference_sha256": "7208b7a7d9c4880ac1ae30753641fa162019caa4df8fdd1c221215cd6c470e60",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:192",
+      "name": "칠흑의 데스나이트",
+      "grade": "전설",
+      "reference": "res://assets/catalog/ff7b9763a918aa21b919a245.png",
+      "reference_sha256": "61a88f0b29061d7b9bee38774cc73fadd252aa9bea149fb2596675c829726145",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:191",
+      "name": "하딘의 영혼",
+      "grade": "전설",
+      "reference": "res://assets/catalog/fc02cba251d675d0d26277a0.png",
+      "reference_sha256": "6c9fe7082678728b28a2c5befd6cfada0be61512be3affe6c862c56bcb93dce8",
+      "legacy_approval_preserved": false,
+      "legacy_production_status": "NOT_AUTHORED",
+      "legacy_frames_path": "",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:190",
+      "name": "백조의 로엔그린",
+      "grade": "전설",
+      "reference": "res://assets/catalog/8e64f6e658b71a667659ba97.png",
+      "reference_sha256": "81b9164683a72bba7b65229b8018f3efafb486b065f14fa16265c887e023c781",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:178",
+      "name": "디바인 크루세이더",
+      "grade": "전설",
+      "reference": "res://assets/catalog/b077ec983ab7362a833925d7.png",
+      "reference_sha256": "1c110851be227f051c46a342f6335440412f8b9e3f3b3ed65ad23f7ed2e8b58a",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:177",
+      "name": "경비병(활) 대장",
+      "grade": "전설",
+      "reference": "res://assets/catalog/21913f8a5b3c82ccb8f92416.png",
+      "reference_sha256": "bc4160b555f3a7feb943ba1c08d995f26086b2ffdb7a73f85879e61c880e08e4",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:176",
+      "name": "경비병(창) 대장",
+      "grade": "전설",
+      "reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+      "reference_sha256": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "FRAME_INSUFFICIENT",
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:175",
+      "name": "증오의 데스나이트",
+      "grade": "전설",
+      "reference": "res://assets/catalog/74a1b57396dd896edc6daadc.png",
+      "reference_sha256": "29946eb00d0ba196a7886ccbba18563af1c37ce8a0d9d5c50e4ccfa02f0e7e09",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:166",
+      "name": "다크 하딘",
+      "grade": "전설",
+      "reference": "res://assets/catalog/8f548bbfb547f0acb2e157af.png",
+      "reference_sha256": "49690ae0bfbfaa565665a19c6041da859f42301af2a5a92aeb763d3f1d2c287d",
+      "legacy_approval_preserved": false,
+      "legacy_production_status": "NOT_AUTHORED",
+      "legacy_frames_path": "",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:165",
+      "name": "팬텀 나이트",
+      "grade": "전설",
+      "reference": "res://assets/catalog/992da7f50873d50f8ec91d12.png",
+      "reference_sha256": "854cc39e5e1e2e4920188762bc4d16b54a79ec231fe156ae19c243b3aeb034e9",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:160",
+      "name": "지옥의 데스나이트",
+      "grade": "전설",
+      "reference": "res://assets/catalog/4452407b6d9c7f3f87e22887.png",
+      "reference_sha256": "053447166ab756bb08e973c38696f266aefd1c1ac68d0056d585075d634428c3",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:143",
+      "name": "나이트 슬레이셔",
+      "grade": "전설",
+      "reference": "res://assets/catalog/5198381d3a74e4724b7e2050.png",
+      "reference_sha256": "b1254d0ed0b44169e4f5818aed4c591209270e026e414cc0a95d9afcd91369de",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:122",
+      "name": "다크 슬레이어",
+      "grade": "전설",
+      "reference": "res://assets/catalog/6c6351f9f922f269b7950573.png",
+      "reference_sha256": "6f5738632d769d8d1d3e4e193731f719c5d6712d007adbdba964a4fafe54aaf6",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:114",
+      "name": "다크스타 조우",
+      "grade": "전설",
+      "reference": "res://assets/catalog/a230694e0604ca7344709834.png",
+      "reference_sha256": "a6811adec96892e22e5d48a315ed4a4e6c80167d5034ba942e00119a0d35fff2",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:113",
+      "name": "달의 질리언",
+      "grade": "전설",
+      "reference": "res://assets/catalog/8e92f489ef86a806894b9855.png",
+      "reference_sha256": "cb8c49024fc6d699a5cfd820e4b2ca24b8ab1a248376e61671b61396f61f379a",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:112",
+      "name": "철의 아툰",
+      "grade": "전설",
+      "reference": "res://assets/catalog/de40c7f81047c065e3b46e80.png",
+      "reference_sha256": "ee96d1abc33db3a5431ebd10f274c277d4e2490ed5bc127e7448827831a95508",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    },
+    {
+      "key": "transform:1",
+      "name": "드래곤 슬레이어",
+      "grade": "전설",
+      "reference": "res://assets/catalog/1438e0d431040e79f73ef780.png",
+      "reference_sha256": "c5a8a907f090a012e7043c5689be93cfe15e4f8730cda5c4d73efb94531b3747",
+      "legacy_approval_preserved": true,
+      "legacy_production_status": "VERIFIED_COMPLETED",
+      "legacy_frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/SpriteFrames.tres",
+      "existing_WALK_and_directional_DEATH_preserved": true,
+      "required_motion_configurations": 33,
+      "drafts": [],
+      "remaining_draft_configurations": 33,
+      "precision_final_approved": false
+    }
+  ]
+}
