@@ -1,0 +1,84 @@
+{
+  "name": "신화-기사(남)",
+  "grade": "신화",
+  "reference": "res://assets/catalog/03eab5585259d2481f22a503.png",
+  "key": "transform:130",
+  "reference_sha256": "49f4268ce542afb65f8dd522e993342a552c7d41f51a5a5b26d934666d7de02a",
+  "policy": "First drafts across all remaining actors before polish; no chat images; approved actors preserved; no new mythic walk; new death S only.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new game animation source for transform:130, 신화-기사(남). Create ONE transparent PNG with exactly SIX independently drawn SOUTH-facing ATTACK poses of the SAME character, using the supplied original catalog image as the authoritative identity and visual style reference. Preserve the exact face, hair, skin, costume, armor colors, ornaments, footwear, weapon, wings or other distinctive equipment actually present in that reference. Do not edit or replace the original reference. High-detail painted game-sprite quality and the reference camera angle; no generic substitute, palette-only edit, simplified silhouette, mirrored pose duplication, or static-body translation. Real articulated six-step attack: ready guard; clear wind-up; fully loaded anticipation; decisive active weapon strike; follow-through; recovery toward guard. Keep the hands gripping the original complete weapon and all limbs connected. Layout must be precisely THREE equal columns and TWO equal rows, six poses in reading order, one complete figure per cell. Use generous transparent margins of at least one fifth of each cell on every side, and visible transparent separation between cells. Uniform figure scale and floor height. EVERY weapon tip, wing, foot, hair ornament, cloth tail and motion effect must stay wholly inside its own cell, never touch a cell edge or cross a gutter; fit the entire pose consistently rather than clipping. No scenery, opaque background, text, labels, guide lines, grid drawing, logos or extra figures. This is a first animation draft, not a final quality approval. Return only ONE six-pose sprite-sheet image.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/03eab5585259d2481f22a503.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_130-S-attack-draft-v01.png",
+  "source_sha256": "10c205340fe1bab2cc8f877d4203b78676f9bb38af58675bae64035258c3780e",
+  "source_bytes": 2201488,
+  "generated_original_path": "/workspace/generated_images/exec-0a3b0edd-f82b-400b-bffc-fbc9fa6e2bff.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/draft001/SpriteFrames.tres",
+  "direction": "S",
+  "role": "attack",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "09003e8b8e02cf9065dac7c13d0b75b5236b59f4aca6669e7f172972d29b1c84",
+      "visible_pixels": 48744,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "fc4705a7b970bb705cacbd6ebf1d60ca89df053b40f739662cb45a057ce74646",
+      "visible_pixels": 68041,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "645087d73d331b7806c11279d7a47bbfdf88280e41b3c211a24b84f04135df18",
+      "visible_pixels": 81812,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "9fce24b887937d87184f5017006a6ceaa1de85efa6edc1a49178564522174bd6",
+      "visible_pixels": 101510,
+      "border_alpha_pixels": 310
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "3eeb253b24671f09a44411b9c311a33c0172d5f26ade1ab0989dc4fb76e131cd",
+      "visible_pixels": 74736,
+      "border_alpha_pixels": 486
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "b725afdd6a1b1955fa1055bbd20b758166f9567ae0819b17750bf9a2727b31e9",
+      "visible_pixels": 58006,
+      "border_alpha_pixels": 174
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "e98b295207966600566e0d655c6422803119c1ee13a8bcd1c06f6cf6a66a199f",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_once": "PASS"
+}
