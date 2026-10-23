@@ -161,17 +161,17 @@
     "required_actors": 40,
     "required_motion_configurations": 1320,
     "minimum_pose_target": 7920,
-    "new_draft_configurations": 1306,
-    "minimally_validated_configurations": 1306,
-    "newly_authored_poses": 6891,
-    "reused_existing_poses": 945,
+    "new_draft_configurations": 1311,
+    "minimally_validated_configurations": 1311,
+    "newly_authored_poses": 6913,
+    "reused_existing_poses": 953,
     "reused_legacy_poses": 59,
-    "reused_prior_draft_poses": 886,
-    "quality_held_configurations": 1306,
+    "reused_prior_draft_poses": 894,
+    "quality_held_configurations": 1311,
     "new_final_approved_actors": 0,
     "new_final_approved_configurations": 0,
     "verified_complete_existing_reuse_configurations": 0,
-    "remaining_draft_configurations": 14
+    "remaining_draft_configurations": 9
   },
   "actors": [
     {
@@ -8481,6 +8481,30 @@
         {
           "key": "transform:282",
           "direction": "NE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-hit-source-v01.png",
+          "source_sha256": "c3f3bce18b083b06cd5e16a84417aff964e2775694b083c0e636b2309c48b9b0",
+          "source_bytes": 1964567,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "95ed6fcad565d99c27d91ce7f0e86784e3bef1fbbbbec1eb9c4748dbff9a47f1",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 6,
+          "reused_poses": 0,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 0,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch260-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Full source identity, footing, camera, articulation and clipping review pending",
+            "Visible alpha reaches cell edge"
+          ]
+        },
+        {
+          "key": "transform:282",
+          "direction": "NE",
           "role": "run",
           "source": "assets/actors/eight_direction/legendary_parallel/transform_282/draft001/NE-run-source-v01.png",
           "source_sha256": "9f217d63e4a8e3653af79bac57ce616d989a647936022e715a7004e67008b1a5",
@@ -9012,7 +9036,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 2,
+      "remaining_draft_configurations": 1,
       "precision_final_approved": false
     },
     {
@@ -9235,6 +9259,31 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 2,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch252-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:275",
+          "direction": "NE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-hit-source-v01.png",
+          "source_sha256": "4e08095fce762125505dfdd4ce6f884d804e84a7571ea05cdc2c8400de578c41",
+          "source_bytes": 1431095,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "790c0790861db3a0988d9ecff5226f13dbc4b84ba0be33f055735b8e79ffe78d",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_275/draft001/NE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch260-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -9796,7 +9845,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 1,
+      "remaining_draft_configurations": 0,
       "precision_final_approved": false
     },
     {
@@ -10001,6 +10050,31 @@
           "actor_final_approval": false,
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending"
+          ]
+        },
+        {
+          "key": "transform:274",
+          "direction": "NE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-hit-source-v01.png",
+          "source_sha256": "28bb52d9a3755ee26bb8ccc81702700a15babfca43afbac2ab2ccc6c98c5ee30",
+          "source_bytes": 1542929,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "46beaa05d3c8f064aad025a25f959481ebfcc5ad8cc8884c14cac0d6ea3c406d",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch260-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
           ]
         },
         {
@@ -10550,7 +10624,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 2,
+      "remaining_draft_configurations": 1,
       "precision_final_approved": false
     },
     {
@@ -10774,6 +10848,31 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 2,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch252-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:273",
+          "direction": "NE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-hit-source-v01.png",
+          "source_sha256": "502c6a18fdea5950448d5c705903536f7eb8ba2a9258a20bf9bba7ce3be70015",
+          "source_bytes": 1521187,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "0664ae257fe89f8259ce9977f0f84e436b9ef2b1b4e8c23f70de029cf0249c57",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_273/draft001/NE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch260-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -11334,7 +11433,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 1,
+      "remaining_draft_configurations": 0,
       "precision_final_approved": false
     },
     {
@@ -11559,6 +11658,31 @@
           "reused_legacy_poses": 0,
           "reused_prior_draft_poses": 2,
           "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch252-minimal-validation.json",
+          "draft_status": "MINIMAL_CHECK_PASS",
+          "quality_status": "HOLD_NOT_REVIEWED",
+          "actor_final_approval": false,
+          "hold_reasons": [
+            "Reused IDLE guards remain unapproved; attack/hit transition, source identity, camera and registration require later review",
+            "New cell sizes differ from preserved guard cells; keep exact PNG bytes",
+            "Visible alpha reaches a selected cell edge"
+          ]
+        },
+        {
+          "key": "transform:259",
+          "direction": "NE",
+          "role": "hit",
+          "source": "assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-hit-source-v01.png",
+          "source_sha256": "f2f093187697bdd077e7250408dbc18d26888f96a60c67c71b67920abc160cad",
+          "source_bytes": 1885116,
+          "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-hit-SpriteFrames.tres",
+          "SpriteFrames_sha256": "5c042bd3d79893401731595fa58fae28f8fcc6b80b2de3646c50c12031c3c3d9",
+          "record": "assets/actors/eight_direction/legendary_parallel/transform_259/draft001/NE-hit-record-v01.json",
+          "poses": 6,
+          "newly_authored_poses": 4,
+          "reused_poses": 2,
+          "reused_legacy_poses": 0,
+          "reused_prior_draft_poses": 2,
+          "minimal_Godot_report": "docs/remake/pr122-legendary-parallel/batch260-minimal-validation.json",
           "draft_status": "MINIMAL_CHECK_PASS",
           "quality_status": "HOLD_NOT_REVIEWED",
           "actor_final_approval": false,
@@ -12127,7 +12251,7 @@
           ]
         }
       ],
-      "remaining_draft_configurations": 1,
+      "remaining_draft_configurations": 0,
       "precision_final_approved": false
     },
     {
