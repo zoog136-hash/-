@@ -1,0 +1,145 @@
+{
+  "key": "transform:176",
+  "name": "경비병(창) 대장",
+  "grade": "전설",
+  "direction": "SW",
+  "role": "hit",
+  "reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+  "reference_sha256": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+  "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+  "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+  "legacy_provenance_sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523",
+  "legacy_source_files": [
+    {
+      "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+      "bytes": 1221849
+    }
+  ],
+  "existing_pose_metadata": [
+    {
+      "ordinal": 0,
+      "original_pose_id": 67,
+      "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "duration": 1.0,
+      "start_seconds": 0.0,
+      "rgba_sha256": "544b7729dbb5dd124b3ee934642b8033b5f7fb3d4d8d107d74f70727b6aa8eba",
+      "source_anchor": [
+        704,
+        218
+      ],
+      "region": [
+        654,
+        65,
+        85,
+        157
+      ],
+      "margin": [
+        142,
+        87,
+        299,
+        227
+      ]
+    },
+    {
+      "ordinal": 1,
+      "original_pose_id": 75,
+      "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+      "duration": 1.0,
+      "start_seconds": 0.10999999999889999,
+      "rgba_sha256": "7368ad429c87182eea158d1a1801a4b52d286873fdf5729eba76be0fb3c113aa",
+      "source_anchor": [
+        704,
+        423
+      ],
+      "region": [
+        659,
+        266,
+        89,
+        161
+      ],
+      "margin": [
+        147,
+        83,
+        295,
+        223
+      ]
+    }
+  ],
+  "six_pose_config": {
+    "sequence": [
+      {
+        "kind": "reused",
+        "ordinal": 0
+      },
+      {
+        "kind": "new",
+        "ordinal": 0
+      },
+      {
+        "kind": "new",
+        "ordinal": 1
+      },
+      {
+        "kind": "reused",
+        "ordinal": 1
+      },
+      {
+        "kind": "new",
+        "ordinal": 2
+      },
+      {
+        "kind": "new",
+        "ordinal": 3
+      }
+    ],
+    "duration_weights": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "speed": 27.272727273,
+    "total_duration_seconds": 0.21999999999779998,
+    "reused_pose_start_times": [
+      {
+        "legacy_pose_id": 67,
+        "final_phase": 0,
+        "legacy_start_seconds": 0.0,
+        "new_start_seconds": 0.0
+      },
+      {
+        "legacy_pose_id": 75,
+        "final_phase": 3,
+        "legacy_start_seconds": 0.10999999999889999,
+        "new_start_seconds": 0.10999999999889999
+      }
+    ],
+    "legacy_pose_start_times_preserved": true,
+    "legacy_total_duration_preserved": true,
+    "new_source_grid": [
+      2,
+      2
+    ]
+  },
+  "poses": 6,
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "generation_request": {
+    "prompt": "TWILIGHT transform:176 경비병(창) 대장: author ONLY 4 missing SW HIT poses. The catalog portrait is identity authority; the additional unchanged legacy atlas establishes exact painted sprite style, small native sprite scale, facing and original hand/equipment. Existing 2 poses are preserved byte-for-byte and must NOT be redrawn: pose67 at final phase0, pose75 at final phase3. Their atlas coordinates are pose67 source rectangle x654 y65 w85 h157; pose75 source rectangle x659 y266 w89 h161. Create ONE transparent RGBA PNG with EXACTLY 2 equal columns and 2 equal rows, 4 new full-body poses in reading order. Every pose uses three-quarter FRONT-LEFT view facing screen DOWN-LEFT; no facing or camera changes. Keep the exact silver-white closed pointed helmet and armor, dark joints, deep dark-purple cape, one original lavender-bladed long polearm, original anatomical weapon hand, body proportions and ornament. Use the small native sprite scale of the preserved atlas, not an enlarged portrait. Keep all bodies, complete polearm blade and butt, hands, feet and cape inside their own cells with generous transparent gutters. Do not replace the original weapon or add a shield, facial skin, wings, tail or extra equipment. NEW CELLS ONLY: cell0: final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held; cell1: final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking; cell2: final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose; cell3: final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack. Articulate connected joints and equipment into different real poses; never copy, mirror, rotate, translate, recolor or interpolate a static sprite. No labels, grid, captions, extra figures, scenery, opaque background, ground, shadows, detached effects, large aura or long trails. Alpha-zero outside silhouettes. This is a brief nonfatal impact and recovery, distinct from attack and death. No weapon swing toward a target, firing, casting, wounds or blood.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/4954db6f65010804b3185b7a.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-1.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/4954db6f65010804b3185b7a.png": "ff26168ee1ad2fdd7a6f315fe994e6282dcc06e2e2b41fc9bad8d4b9598c3610",
+    "/workspace/legendary_repo/assets/actors/eight_direction/original_based/spear_captain/poses-1.png": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7"
+  },
+  "status": "REQUEST_TEMPLATE_NOT_GENERATED",
+  "actor_approvals_added": 0,
+  "policy": "Follow caller production-stage order. Generate only missing poses; preserve source pixels, all old WALK/death views and old approvals. Scale/visual issues HOLD; no image resizing or final approval inferred."
+}
