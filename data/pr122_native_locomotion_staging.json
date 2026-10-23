@@ -36929,6 +36929,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -38475,6 +38481,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -42267,15 +42279,21 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
     "transform:135": {
       "grade": "신화",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native004/SpriteFrames.tres",
-      "frames_sha256": "0ebe504a2f3919f33f7070f002e0f67350d097855ecda7fe2920f55232d960c8",
-      "native_track_count": 24,
-      "native_pose_count": 144,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native005/SpriteFrames.tres",
+      "frames_sha256": "5d317cf37b45c30b507925567c6bb774f8c333fc2be4a75f5c4af977b26139a3",
+      "native_track_count": 25,
+      "native_pose_count": 150,
       "canvas_size": [
         1024,
         1024
@@ -44314,6 +44332,210 @@
             "resampled": false,
             "approval_granted": false,
             "source_region_review_sha256": "4cc19445815f0991e3f5e5a616ffae2a7237afbfb1d84c0f265198f014462386"
+          }
+        },
+        {
+          "direction": "S",
+          "role": "death",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_135/S-death.png",
+          "source_sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_135/native005/S-death.png",
+          "geometry": {
+            "image_size": [
+              2560,
+              3840
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  394,
+                  416,
+                  491,
+                  447
+                ],
+                "margin": [
+                  285,
+                  268,
+                  533,
+                  577
+                ],
+                "source_anchor": [
+                  621,
+                  788
+                ],
+                "rgba_sha256": "f808614fb252fd575834bd31fe9847b375cad2e913f7d8b95af10d2390e19d2f"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  1678,
+                  432,
+                  481,
+                  415
+                ],
+                "margin": [
+                  305,
+                  301,
+                  543,
+                  609
+                ],
+                "source_anchor": [
+                  1885,
+                  771
+                ],
+                "rgba_sha256": "479167af3453066d362c7781e179724412856269a52561b004a813a381a6578e"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  410,
+                  1740,
+                  459,
+                  360
+                ],
+                "margin": [
+                  310,
+                  391,
+                  565,
+                  664
+                ],
+                "source_anchor": [
+                  612,
+                  1989
+                ],
+                "rgba_sha256": "aa23ce72626138e1887e3cecaea31e3a293cd426b68d73a8bdef4df36f8b78c4"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  1656,
+                  1772,
+                  527,
+                  296
+                ],
+                "margin": [
+                  269,
+                  359,
+                  497,
+                  728
+                ],
+                "source_anchor": [
+                  1899,
+                  2053
+                ],
+                "rgba_sha256": "1a6a0254126106e5fd22e99f9fd5167b1fc7b75260d5215ce8217579b47a12da"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  401,
+                  3064,
+                  478,
+                  270
+                ],
+                "margin": [
+                  280,
+                  381,
+                  546,
+                  754
+                ],
+                "source_anchor": [
+                  633,
+                  3323
+                ],
+                "rgba_sha256": "28e6fef035550f2a7d45bb9176ad1f010d3effd54a25c478c19222e492c20a72"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1665,
+                  3093,
+                  509,
+                  213
+                ],
+                "margin": [
+                  256,
+                  430,
+                  515,
+                  811
+                ],
+                "source_anchor": [
+                  1921,
+                  3303
+                ],
+                "rgba_sha256": "25bf35b5eee573415e6fe84ee532ec5ba98b1abc519139e5f58dd5ad19c33a64"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 365.5,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "6b992dfc50aad3e3364636bc25bf56c6cffce32c67dd6694f8431c09755c03e6",
+            "base_geometry_sha256": "ce01ba483898e0cc8df1b84b4d1b7dc72288018cc8408ad8a4b3d47fb35a302d",
+            "derived_geometry_sha256": "fbb1c43a0c63fa0a9a7ca287fdfdc75b2d3c86248c3165e632fea7990e76f288",
+            "review_sha256": "4f870256382e695f0c43c36482271a554ad8321062d047c2917ca72d6f58624a",
+            "review_basis": "Existing reviewed-pose assembler: source physical bodies/whole alpha16 foreground validated, exact crop RGBA retained, no resampling, translation pinned. Map the same source artboard root through each exact assembly translation. Physical scale, anatomy and final visual quality NOT_REVIEWED.",
+            "direction": "S",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                621,
+                788
+              ],
+              [
+                1885,
+                771
+              ],
+              [
+                612,
+                1989
+              ],
+              [
+                1899,
+                2053
+              ],
+              [
+                633,
+                3323
+              ],
+              [
+                1921,
+                3303
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              2048,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false,
+            "source_region_review_sha256": "ade61afe4652f8b21f8b5c63b2fc1b30755d12600e4a07fde6ddf21b4331cb7c"
           }
         },
         {
@@ -47166,8 +47388,7 @@
       "missing_dedicated_roles": [
         "idle",
         "attack",
-        "hit",
-        "death"
+        "hit"
       ],
       "missing_dedicated_by_direction": {
         "idle": [
@@ -47182,9 +47403,7 @@
         "hit": [
           "hit_7"
         ],
-        "death": [
-          "death_2"
-        ]
+        "death": []
       },
       "production_connected": false,
       "detailed_completed": false,
@@ -47206,13 +47425,13 @@
         "required_death_directions": [
           "S"
         ],
-        "retained_death_tracks": 0,
+        "retained_death_tracks": 1,
         "retained_walk_tracks": 0,
         "policy_sha256": "2e6ce7e718f85d41c3694368937c874dffa9fd649cb6bf2f744bbd0756020882",
         "omission_grants_approval": false
       },
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native004/NativeMotionProfile.tres",
-      "native_profile_sha256": "cde1bfcfa873a7e32f45cf042ac59e12aa2c1e44f90351d78c97ad76efcfbd59",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native005/NativeMotionProfile.tres",
+      "native_profile_sha256": "21f5edf5d98948797be95d24ef53c028cd6d15d7c0e488a6417e7d68d31f748f",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 464.5,
@@ -47273,14 +47492,19 @@
         "production_catalog_replaced": false
       },
       "verification": {
-        "actual_Main_Player_source_region_repair": {
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
+        },
+        "actual_Main_Player_spacing_repair": {
           "status": "PASS",
-          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/integration-main-player.log",
-          "frames_sha256": "0ebe504a2f3919f33f7070f002e0f67350d097855ecda7fe2920f55232d960c8",
-          "clips": 24,
-          "scope": "Injected candidate; all available tracks; no production catalog switch",
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/evidence/assembly-main-player.log",
+          "frames_sha256": "5d317cf37b45c30b507925567c6bb774f8c333fc2be4a75f5c4af977b26139a3",
+          "clips": 25,
+          "scope": "Injected candidate; unchanged production catalog",
           "visual_quality": "NOT_REVIEWED",
-          "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
         }
       }
@@ -51496,6 +51720,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -55693,6 +55923,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -61534,6 +61770,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -64515,6 +64757,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -67284,6 +67532,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -70069,15 +70323,21 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
     "transform:346": {
       "grade": "신화",
-      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native004/SpriteFrames.tres",
-      "frames_sha256": "3eacfdf7beba43c8ac3277869e05ed8d943bdbe21bf5b031600a788d05ace1cb",
-      "native_track_count": 13,
-      "native_pose_count": 78,
+      "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native005/SpriteFrames.tres",
+      "frames_sha256": "b5949c90b22d4e6f6c415ab48828801bf174218d3a70870c1cbf7cfdd1a5b661",
+      "native_track_count": 14,
+      "native_pose_count": 84,
       "canvas_size": [
         1024,
         1024
@@ -70492,6 +70752,210 @@
             "resampled": false,
             "approval_granted": false,
             "source_region_review_sha256": "790eef8f10029000f812774bf04ee18c635f85d5d2c1e5d53f1da0123b520d44"
+          }
+        },
+        {
+          "direction": "N",
+          "role": "hit",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/transform_346/N-hit.png",
+          "source_sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+          "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_346/native005/N-hit.png",
+          "geometry": {
+            "image_size": [
+              2560,
+              3840
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  423,
+                  418,
+                  434,
+                  445
+                ],
+                "margin": [
+                  317,
+                  224,
+                  590,
+                  579
+                ],
+                "source_anchor": [
+                  618,
+                  834
+                ],
+                "rgba_sha256": "a284cdb9575633a35fa600255e33310b76cde67574bf301c24697a8d88bed92d"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  1676,
+                  419,
+                  485,
+                  443
+                ],
+                "margin": [
+                  294,
+                  228,
+                  539,
+                  581
+                ],
+                "source_anchor": [
+                  1894,
+                  831
+                ],
+                "rgba_sha256": "77f2ccd3178a9ec9533a5b46e3fd893ff7dd0b652985dc414adb1e3113ee3f03"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  388,
+                  1687,
+                  503,
+                  468
+                ],
+                "margin": [
+                  263,
+                  219,
+                  521,
+                  556
+                ],
+                "source_anchor": [
+                  637,
+                  2108
+                ],
+                "rgba_sha256": "01bd13a9af63dca9fbf43d1c1b8a2016b71e983f2bb421fd832e6f32b06ab2a3"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  1659,
+                  1696,
+                  521,
+                  450
+                ],
+                "margin": [
+                  286,
+                  193,
+                  503,
+                  574
+                ],
+                "source_anchor": [
+                  1885,
+                  2143
+                ],
+                "rgba_sha256": "e96783153e9e026f5be15d389eacdc5821e16e1323e469606f7dd376fa6f3b10"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  385,
+                  2977,
+                  508,
+                  447
+                ],
+                "margin": [
+                  307,
+                  202,
+                  516,
+                  577
+                ],
+                "source_anchor": [
+                  590,
+                  3415
+                ],
+                "rgba_sha256": "28c433527eb792c69252261b845b9042f4cba0da518af2cca9cd4728ab4b216c"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1713,
+                  2975,
+                  413,
+                  453
+                ],
+                "margin": [
+                  349,
+                  196,
+                  611,
+                  571
+                ],
+                "source_anchor": [
+                  1876,
+                  3419
+                ],
+                "rgba_sha256": "3dbb975ff639016e3177daae04afd72fd0f6d1cbe9ab4a78afeff2f173011773"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 441.0,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ]
+          },
+          "runtime_layout_proof": {
+            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "source_sha256": "f3b68a2e730e57fd933679dd4f7913e5e5724be94e94dd9378d26dd9c54c6a5d",
+            "base_geometry_sha256": "05d39be3206701c6d88bb29357d1e23407a745be6e2b3e11b3132bb6dc685533",
+            "derived_geometry_sha256": "dbe37f2b7c611777e21d6385f2b091352ab3b9d6af48a1d8caffe76f4e73df23",
+            "review_sha256": "c19b093786c0b9d9a864fab0aa0ea9a865a6cbe48e5801ac6cd468e552865a8a",
+            "review_basis": "Existing reviewed-pose assembler: source physical bodies/whole alpha16 foreground validated, exact crop RGBA retained, no resampling, translation pinned. Map the same source artboard root through each exact assembly translation. Physical scale, anatomy and final visual quality NOT_REVIEWED.",
+            "direction": "N",
+            "pose_count": 6,
+            "canvas_size": [
+              1024,
+              1024
+            ],
+            "foot": [
+              512,
+              640
+            ],
+            "source_anchors": [
+              [
+                618,
+                834
+              ],
+              [
+                1894,
+                831
+              ],
+              [
+                637,
+                2108
+              ],
+              [
+                1885,
+                2143
+              ],
+              [
+                590,
+                3415
+              ],
+              [
+                1876,
+                3419
+              ]
+            ],
+            "runtime_pixel_scale_ratio": [
+              2048,
+              1024
+            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "approval_granted": false,
+            "source_region_review_sha256": "9383e3b135a3eeee430ceeed4bd83f81cdfe8e4fd0c4f06728a980ff51be8036"
           }
         },
         {
@@ -72760,7 +73224,6 @@
           "hit_3",
           "hit_4",
           "hit_5",
-          "hit_6",
           "hit_7"
         ],
         "death": []
@@ -72790,8 +73253,8 @@
         "policy_sha256": "2e6ce7e718f85d41c3694368937c874dffa9fd649cb6bf2f744bbd0756020882",
         "omission_grants_approval": false
       },
-      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native004/NativeMotionProfile.tres",
-      "native_profile_sha256": "4e23e589a1c7e82a0ffb4a1ca45876fe1a0b39b74babb0d25f943aa9b2ac7a93",
+      "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native005/NativeMotionProfile.tres",
+      "native_profile_sha256": "1210be8b70685591c364b36a938ed6112df453f90edd2316a76100859f26b50c",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 454.0,
@@ -72828,14 +73291,19 @@
         "production_catalog_replaced": false
       },
       "verification": {
-        "actual_Main_Player_source_region_repair": {
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
+        },
+        "actual_Main_Player_spacing_repair": {
           "status": "PASS",
-          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/integration-main-player.log",
-          "frames_sha256": "3eacfdf7beba43c8ac3277869e05ed8d943bdbe21bf5b031600a788d05ace1cb",
-          "clips": 13,
-          "scope": "Injected candidate; all available tracks; no production catalog switch",
+          "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/evidence/assembly-main-player.log",
+          "frames_sha256": "b5949c90b22d4e6f6c415ab48828801bf174218d3a70870c1cbf7cfdd1a5b661",
+          "clips": 14,
+          "scope": "Injected candidate; unchanged production catalog",
           "visual_quality": "NOT_REVIEWED",
-          "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
         }
       }
@@ -74400,6 +74868,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -74716,6 +75190,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "FRAME_FIXTURE_ONLY_NO_LOCOMOTION_REFERENCE",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -76265,6 +76745,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "NOT_VISUALLY_APPROVED",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     },
@@ -76573,6 +77059,12 @@
           "visual_quality": "NOT_REVIEWED",
           "physical_scale": "FRAME_FIXTURE_ONLY_NO_LOCOMOTION_REFERENCE",
           "final_approvals_added": 0
+        },
+        "source_sha256_and_saved_geometry": "PASS",
+        "source_geometry_verification_basis": {
+          "prior_204": "source-region-repair-v01/evidence: unchanged importer/checker pins, actual saved-geometry verification and exact track preservation",
+          "new_2": "spacing-repair-v01: immutable assembly proof and guarded staging fresh analysis",
+          "scope": "Technical source/saved geometry only; no visual or actor approval"
         }
       }
     }
@@ -102420,6 +102912,26 @@
         "native_profile_sha256": "8655229684a3385004ce5c8ff5b9be2b5908b82f7ace33a6d25192a2cd31b947",
         "native_track_count": 23,
         "native_pose_count": 138
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native004/SpriteFrames.tres",
+        "frames_sha256": "0ebe504a2f3919f33f7070f002e0f67350d097855ecda7fe2920f55232d960c8",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native004/NativeMotionProfile.tres",
+        "native_profile_sha256": "cde1bfcfa873a7e32f45cf042ac59e12aa2c1e44f90351d78c97ad76efcfbd59",
+        "native_track_count": 24,
+        "native_pose_count": 144,
+        "verification": {
+          "actual_Main_Player_source_region_repair": {
+            "status": "PASS",
+            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/integration-main-player.log",
+            "frames_sha256": "0ebe504a2f3919f33f7070f002e0f67350d097855ecda7fe2920f55232d960c8",
+            "clips": 24,
+            "scope": "Injected candidate; all available tracks; no production catalog switch",
+            "visual_quality": "NOT_REVIEWED",
+            "physical_scale": "NOT_VISUALLY_APPROVED",
+            "final_approvals_added": 0
+          }
+        }
       }
     ],
     "transform:137": [
@@ -102621,6 +103133,26 @@
         "native_profile_sha256": "3dd2e9cb232c36e86d7ca4a9c9c84f4d7ccc87b46658ea9db93e77c873eec918",
         "native_track_count": 11,
         "native_pose_count": 66
+      },
+      {
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native004/SpriteFrames.tres",
+        "frames_sha256": "3eacfdf7beba43c8ac3277869e05ed8d943bdbe21bf5b031600a788d05ace1cb",
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native004/NativeMotionProfile.tres",
+        "native_profile_sha256": "4e23e589a1c7e82a0ffb4a1ca45876fe1a0b39b74babb0d25f943aa9b2ac7a93",
+        "native_track_count": 13,
+        "native_pose_count": 78,
+        "verification": {
+          "actual_Main_Player_source_region_repair": {
+            "status": "PASS",
+            "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/integration-main-player.log",
+            "frames_sha256": "3eacfdf7beba43c8ac3277869e05ed8d943bdbe21bf5b031600a788d05ace1cb",
+            "clips": 13,
+            "scope": "Injected candidate; all available tracks; no production catalog switch",
+            "visual_quality": "NOT_REVIEWED",
+            "physical_scale": "NOT_VISUALLY_APPROVED",
+            "final_approvals_added": 0
+          }
+        }
       }
     ],
     "transform:367": [
