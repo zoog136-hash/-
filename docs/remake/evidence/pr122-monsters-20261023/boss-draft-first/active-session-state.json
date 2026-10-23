@@ -1,0 +1,68 @@
+{
+  "phase": "COMPLETE_ALL_FIRST_DRAFTS_BEFORE_WHOLE_REVIEW",
+  "saved_action_sheets_observed": 179,
+  "planned_sheets": 495,
+  "canonical_boss_sources": 15,
+  "generation_exec_cell": "409",
+  "generation_parallel_limit": 3,
+  "checkpoint_exec_session": 5832,
+  "do_not_start_duplicate_generation_workers": true,
+  "authoritative_progress": "Per-actor immutable receipts and checkpoints; running JS stores are not visible until their exec cell completes",
+  "review_scope": "All60bosses including prior43approved; normals258 omission-only",
+  "normal_runtime_required_requests": 8514,
+  "normal_runtime_missing": 0,
+  "normal_profile_pins": "scope-and-review-policy.json",
+  "source_staging_normal_note": "Separate unfinished Gnoll31 and AlbinoMonk32 source slots are not runtime omissions; do not conflate the two",
+  "minimum_playback_batches": [
+    {
+      "actors": [
+        "thebes_anubis",
+        "thebes_horus",
+        "thebes_osiris"
+      ],
+      "clips": 8,
+      "captures": 58,
+      "Main": false
+    },
+    {
+      "actors": [
+        "iris",
+        "isabelle",
+        "belial"
+      ],
+      "clips": 3,
+      "captures": 21,
+      "Main": false
+    }
+  ],
+  "current_staged_actors": "Four earlier dedicated bosses plus six new partial candidates; no default game profile switch or new approval yet",
+  "workflow": [
+    "Finish all495 first-draft attempts, keeping explicit HOLDs and continuing other bosses",
+    "Run gated full_source_review.py, then complete one coordinated semantic review of all60bosses and freeze confirmed errors",
+    "Fix by common cause; preserve valid clips and original PNGs; verify only changed and affected parts",
+    "Perform final actual-Main integration once; report exact remaining errors/causes and final SHA"
+  ],
+  "repair_guidance": [
+    "Use explicit actual phase_grid2/phase_grid3 agreement and whole-pose regions; preserve original source pixels",
+    "Apply reviewed source-part ownership, disjointness and source SHA proofs; never pad a genuinely clipped body into a false pass",
+    "Inspect all six poses and real playback before diagnosing gait: equal support in phase0/3 alone does not prove a broken cycle; prefer reviewed playback permutation when existing poses suffice",
+    "Treat automated alpha16 ownership flags as evidence for semantic review; distinguish genuine actor-part clipping from non-actor background before confirming errors",
+    "Correct root/ground/canvas registration through metadata where appropriate; actor-wide padding plus compensating profile scale can preserve physical body size",
+    "Draft attack/hit timings are provisional; compare existing gameplay clocks before installing final game profiles"
+  ],
+  "known_source_holds": [
+    "thebes_anubis:W-run-v01",
+    "thebes_horus:SW-run-v01",
+    "isabelle:W-run-v01"
+  ],
+  "runtime_recovery": "runtime-recovery-002.json",
+  "delivery_proof": "remote-save-batch002.json",
+  "latest_local_sha": "1b66c04fee4efb43830bb2513415bb76f7a953d8",
+  "preserve_assets_and_history": true,
+  "new_PR": false,
+  "force_push": false,
+  "full_CI_during_production": false,
+  "chat_images_or_Base64": false,
+  "logs": "Print compact counts only; never dump GitHub PR diff/structuredContent",
+  "agents": "No new subagents; production uses root tool calls only"
+}
