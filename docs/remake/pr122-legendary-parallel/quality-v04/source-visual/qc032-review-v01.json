@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v04",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc032",
+  "actor": "226",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:226",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_226/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "c574e3f146c9e067b2513533fda34d478d7d0a1cec57990e9c5000cdd72a6f92",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_226/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "3fe8b6fcdfcd44067c75e592ab245e5cbece901ee3abda454fcf9606ef8998ec",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_226/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "4cb7754d6a98cc69c90917632690e1a5db92bf35655f63b0555f649c1289d848",
+  "remote_commit": "7bdbce7461a10b2e8ac4fc72636527fd9bcd2f31",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v04/source-technical/qc032-review-v01.json",
+    "sha256": "67f7d45e4840a51026f491e239893f95f7c9812a279da11c990d4c2234441a6d"
+  },
+  "visual_board": "quality-v04/visual-boards/qc032-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "detail": "Matching brown-haired gold/white archer and gold bow remain, but face/chest point front/right in all six poses instead of requested down-left SW. Small standing motions remain living IDLE; camera HOLD is separate from phase4 foreign pixels.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Matching brown-haired gold/white archer and gold bow remain, but face/chest point front/right in all six poses instead of requested down-left SW. Small standing motions remain living IDLE; camera HOLD is separate from phase4 foreign pixels.",
+      "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+    }
+  ],
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+  "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+}

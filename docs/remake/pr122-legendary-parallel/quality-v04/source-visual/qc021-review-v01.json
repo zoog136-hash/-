@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v04",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc021",
+  "actor": "274",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:274",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "b0d62a782f6eb0569cc1253e38eb490d9f0b1f14b10d724cd9ed6e19747ae833",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "bd1110ed181827b5955328cb3107027de70449bbf934159cc238ab79e632dd81",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "be8e1a178f2ce04a739a7586d73ac90483b2c206b374a9a55a40c66fe551b09f",
+  "remote_commit": "b4334f161cc870f1409b555ba9ad5a550c5467e4",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v04/source-technical/qc021-review-v01.json",
+    "sha256": "36dba4604d209f04f0919855fc7daf63af23bc3706f0ab419887bb4ea263dce1"
+  },
+  "visual_board": "quality-v04/visual-boards/qc021-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "detail": "All six poses retain matching white hair, black armor and blue curved bow, but the face and torso point front/right rather than requested down-left SW. Planted living idle poses do not establish a healthy SW parent.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "All six poses retain matching white hair, black armor and blue curved bow, but the face and torso point front/right rather than requested down-left SW. Planted living idle poses do not establish a healthy SW parent.",
+      "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+    }
+  ],
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+  "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v04",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc031",
+  "actor": "227",
+  "direction": "SW",
+  "role": "idle",
+  "slot": [
+    "transform:227",
+    "SW",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_227/quality-v02/SW-idle-source-v02.png",
+  "source_sha256": "d428d2b4b7946503d0a47a23dd240658e012a07c86738cfee4f2384f2512a890",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_227/quality-v02/SW-idle-record-v02.json",
+  "record_sha256": "d88981087885b9229f6f7847e75c9c1988fc6b9c821b17f69de8c3d97bce4f02",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_227/quality-v02/SW-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "352768cee43a1364bbcd7ebc132bedd40fa69fed65700691ada3f639f08449a5",
+  "remote_commit": "7bdbce7461a10b2e8ac4fc72636527fd9bcd2f31",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v04/source-technical/qc031-review-v01.json",
+    "sha256": "9a5b4246160efba187f47a0adda3fdbdaa84f75ae2d229d39eb578990cb0e876"
+  },
+  "visual_board": "quality-v04/visual-boards/qc031-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "detail": "Matching white-bearded mage, green staff, book and white/teal robes remain, but all six poses retain a largely frontal portrait/chest view rather than a clear front-left/down-left SW camera.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Matching white-bearded mage, green staff, book and white/teal robes remain, but all six poses retain a largely frontal portrait/chest view rather than a clear front-left/down-left SW camera.",
+      "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+    }
+  ],
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+  "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+}

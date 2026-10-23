@@ -1,0 +1,57 @@
+{
+  "schema": "legendary-new-correction-targeted-visual-unit-v04",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "candidate": "qc024",
+  "actor": "273",
+  "direction": "SE",
+  "role": "idle",
+  "slot": [
+    "transform:273",
+    "SE",
+    "idle"
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_273/quality-v02/SE-idle-source-v02.png",
+  "source_sha256": "d6b99a0679427fbbf37a1d7450d3fb235fe11ac46b4f8d8a757573ba496c4ff7",
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_273/quality-v02/SE-idle-record-v02.json",
+  "record_sha256": "e3b0ecd70a7f8c1704fb8687ed45977c2842e133d02963acbb3ddcc1a0591124",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_273/quality-v02/SE-idle-SpriteFrames.tres",
+  "SpriteFrames_sha256": "d3c0a8b36a1ad5f582792ed2c3fccd0bef2b18d5e82da0361e18e8640c5171af",
+  "remote_commit": "b4334f161cc870f1409b555ba9ad5a550c5467e4",
+  "technical_review": {
+    "path": "res://docs/remake/pr122-legendary-parallel/quality-v04/source-technical/qc024-review-v01.json",
+    "sha256": "16ac27c3d72d15a1a9d7922dbfe5ae9fbe3b656aed391ca723b391a6680ffa12"
+  },
+  "visual_board": "quality-v04/visual-boards/qc024-source-v01.png",
+  "review_scope": "ONLY_THIS_NEW_CORRECTION_SOURCE_ONCE_CATALOG_REFERENCE_ONLY",
+  "whole_corpus_rereviews": 0,
+  "new_image_calls": 0,
+  "second_generation_attempts": 0,
+  "final_approved": 0,
+  "camera_result": "HOLD",
+  "identity_result": "PRESERVED_STATIC",
+  "idle_role_result": "LIVING_IDLE_STATIC",
+  "detail": "Matching white-haired gold/black knight and large sword remain, but the lowered face/profile and torso still point front-left/left rather than requested front-right/down-right SE. Camera remains HOLD.",
+  "remaining_issues": [
+    {
+      "cause": "camera",
+      "status": "HOLD",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "detail": "Matching white-haired gold/black knight and large sword remain, but the lowered face/profile and torso still point front-left/left rather than requested front-right/down-right SE. Camera remains HOLD.",
+      "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+    }
+  ],
+  "reviewed_guard_phases": [
+    0,
+    5
+  ],
+  "guard_body_result": "HOLD_CAMERA_IDENTITY_OR_ROLE",
+  "idle_guard_result": "HOLD_CAMERA_IDENTITY_OR_ROLE"
+}

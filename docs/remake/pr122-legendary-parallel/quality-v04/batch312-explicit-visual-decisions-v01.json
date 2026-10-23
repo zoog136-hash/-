@@ -1,0 +1,68 @@
+{
+  "qc026": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "HOLD",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "The six guards establish a back-right/up-right NE camera with planted living stance and matching purple/gold/black shield/weapon equipment. The new sealed horned helmet does not convincingly preserve the catalog head/short dark-purple hair, so identity and parent-guard acceptance remain HOLD despite camera improvement.",
+    "remaining_issues": [
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Sealed horned helmet does not give sufficient exact evidence for the catalog head/short dark-purple hair. New guard parent cannot be accepted.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      }
+    ]
+  },
+  "qc031": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Matching white-bearded mage, green staff, book and white/teal robes remain, but all six poses retain a largely frontal portrait/chest view rather than a clear front-left/down-left SW camera.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Matching white-bearded mage, green staff, book and white/teal robes remain, but all six poses retain a largely frontal portrait/chest view rather than a clear front-left/down-left SW camera.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      }
+    ]
+  },
+  "qc032": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Matching brown-haired gold/white archer and gold bow remain, but face/chest point front/right in all six poses instead of requested down-left SW. Small standing motions remain living IDLE; camera HOLD is separate from phase4 foreign pixels.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Matching brown-haired gold/white archer and gold bow remain, but face/chest point front/right in all six poses instead of requested down-left SW. Small standing motions remain living IDLE; camera HOLD is separate from phase4 foreign pixels.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      }
+    ]
+  }
+}

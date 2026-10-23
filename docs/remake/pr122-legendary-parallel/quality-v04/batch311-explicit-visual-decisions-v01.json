@@ -1,0 +1,89 @@
+{
+  "qc021": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "All six poses retain matching white hair, black armor and blue curved bow, but the face and torso point front/right rather than requested down-left SW. Planted living idle poses do not establish a healthy SW parent.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "All six poses retain matching white hair, black armor and blue curved bow, but the face and torso point front/right rather than requested down-left SW. Planted living idle poses do not establish a healthy SW parent.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      }
+    ]
+  },
+  "qc023": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Consistent right-profile E camera with matching white hair, gold/black armor, black cape and large blue-edged sword resting over the shoulder. Six small planted stance/cloth variations remain living IDLE.",
+    "remaining_issues": []
+  },
+  "qc024": {
+    "camera_result": "HOLD",
+    "identity_result": "PRESERVED_STATIC",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "Matching white-haired gold/black knight and large sword remain, but the lowered face/profile and torso still point front-left/left rather than requested front-right/down-right SE. Camera remains HOLD.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Matching white-haired gold/black knight and large sword remain, but the lowered face/profile and torso still point front-left/left rather than requested front-right/down-right SE. Camera remains HOLD.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      }
+    ]
+  },
+  "qc025": {
+    "camera_result": "HOLD",
+    "identity_result": "HOLD",
+    "idle_role_result": "LIVING_IDLE_STATIC",
+    "detail": "The six guards retain purple/gold/black shield-knight equipment, but the visible helmet face opening/front chest point left/front rather than clear rear-left NW. The new sealed horned helmet also does not provide enough identity evidence for the catalog head/short dark-purple hair. Camera and head-identity remain HOLD.",
+    "remaining_issues": [
+      {
+        "cause": "camera",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "The six guards retain purple/gold/black shield-knight equipment, but the visible helmet face opening/front chest point left/front rather than clear rear-left NW. The new sealed horned helmet also does not provide enough identity evidence for the catalog head/short dark-purple hair. Camera and head-identity remain HOLD.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      },
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "detail": "Sealed horned helmet does not give sufficient exact evidence for the catalog head/short dark-purple hair. New guard parent cannot be accepted.",
+        "fix_kind": "KEEP_BOUNDED_RESET_RECOVERY_OUTPUT_HOLD_NO_SECOND_RECOVERY"
+      }
+    ]
+  }
+}

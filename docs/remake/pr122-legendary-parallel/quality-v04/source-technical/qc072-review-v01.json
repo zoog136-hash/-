@@ -1,0 +1,109 @@
+{
+  "sha256": "51f043c04b1f965f5218081bb9798566940bf71c978254fb3760963bbc2062ea",
+  "grid": [
+    2,
+    2
+  ],
+  "findings": [
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 4,
+      "pixels_alpha_gt16": 2735,
+      "strong_pixels": 2441,
+      "bbox_in_frame": [
+        0,
+        190,
+        44,
+        379
+      ],
+      "physical_owner_rows": {
+        "2": 2735
+      },
+      "source_grid": [
+        2,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    }
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/SW-attack-source-v02.png",
+  "authored_slot": [
+    "transform:177",
+    "SW",
+    "attack"
+  ],
+  "dependents": [
+    {
+      "slot": [
+        "transform:177",
+        "SW",
+        "attack"
+      ],
+      "phase": 1,
+      "region": [
+        0,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:177",
+        "SW",
+        "attack"
+      ],
+      "phase": 2,
+      "region": [
+        627,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:177",
+        "SW",
+        "attack"
+      ],
+      "phase": 3,
+      "region": [
+        0,
+        627,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:177",
+        "SW",
+        "attack"
+      ],
+      "phase": 4,
+      "region": [
+        627,
+        627,
+        627,
+        627
+      ]
+    }
+  ],
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/SW-attack-record-v02.json",
+  "record_sha256": "55e4775ae160b13a78f1528ad44a0838b249e097c093b685e2725bd7bcd60813",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/SW-attack-SpriteFrames.tres",
+  "SpriteFrames_sha256": "067ea14156f4777c7df24e73356468e1a050c9a0d35645310ba92531c9d2fccc",
+  "correction_candidate_id": "qc072",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_177/draft001/SW-attack-source-v01.png",
+  "previous_source_sha256": "165ff63c466292b9eec2cd75666d8a92ba3e2c2259f704ff2cb856498c880a5e",
+  "batch": 314,
+  "remote_commit": "e8155c04d99d0a150eb820db5793db2432ce2f5f",
+  "remote_receipt_sha256": "4b4e7867e0ccebf16a15ebdfb2c70abba50ecd0211494e2fc4cf237a617fad7e",
+  "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "review_scope": "ONLY_NEW_FINAL_DEPENDENCY8_CHANGED_SOURCE_ONCE",
+  "final_approved": 0
+}

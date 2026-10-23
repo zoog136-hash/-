@@ -1,0 +1,42 @@
+{
+  "qc102": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "ARTICULATED_ORIGINAL_WEAPON_ATTACK_STATIC_SEQUENCE",
+    "detail": "NE rear-right view retained; original white hair, black/gold robe and purple staff retained. Four new poses lift/extend the original staff into a spell strike and recover. Detached alpha ownership ambiguity remains technical HOLD.",
+    "remaining_issues": []
+  },
+  "qc103": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_STATIC_SEQUENCE",
+    "detail": "NE rear-right view and original staff/robe retained; torso flinches backward and folds separately from attack motion.",
+    "remaining_issues": []
+  },
+  "qc119": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_STATIC_SEQUENCE",
+    "detail": "NW rear-left view retained with original gold/blue armor, white hair and blue sword. Recoil and folded recovery poses distinguish HIT.",
+    "remaining_issues": []
+  },
+  "qc122": {
+    "camera_result": "RESOLVED_STATIC",
+    "identity_result": "PRESERVED_STATIC",
+    "motion_role_result": "DISTINCT_RECOIL_STATIC_SEQUENCE",
+    "detail": "N rear camera and original gold/blue armor retained. The blue sword is screen-left in phases1-3 but screen-right in phase4, suggesting a weapon-hand continuity change; HOLD, no retry.",
+    "remaining_issues": [
+      {
+        "cause": "identity_weapon_action",
+        "status": "HOLD",
+        "detail": "Blue sword changes screen-side/likely holding hand in playback phase4 relative to phases1-3. Static camera is corrected; weapon continuity remains unresolved.",
+        "phases": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  }
+}

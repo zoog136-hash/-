@@ -1,0 +1,120 @@
+{
+  "sha256": "23efddfbba705f9033e4e17f96a200e8890b7b0fa065990815572dad99d369f8",
+  "grid": [
+    2,
+    2
+  ],
+  "findings": [
+    {
+      "code": "DETACHED_FOREGROUND_OWNER_AMBIGUOUS",
+      "severity": "HOLD",
+      "pixels_alpha_gt16": 473,
+      "minimum_required_runner_up_margin": 32.0,
+      "source_grid": [
+        2,
+        2
+      ],
+      "basis": "Apply the mythic ownership rule without guessing or dropping foreground"
+    },
+    {
+      "code": "FOREIGN_POSE_FOREGROUND_INSIDE_FRAME",
+      "severity": "ERROR",
+      "phase": 4,
+      "pixels_alpha_gt16": 8636,
+      "strong_pixels": 4142,
+      "bbox_in_frame": [
+        0,
+        141,
+        102,
+        338
+      ],
+      "physical_owner_rows": {
+        "2": 8636
+      },
+      "source_grid": [
+        2,
+        2
+      ],
+      "basis": "Pixels are topology-owned by another pose, or by one unambiguous >32px nearest owner"
+    }
+  ],
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_114/quality-v02/NE-attack-source-v02.png",
+  "authored_slot": [
+    "transform:114",
+    "NE",
+    "attack"
+  ],
+  "dependents": [
+    {
+      "slot": [
+        "transform:114",
+        "NE",
+        "attack"
+      ],
+      "phase": 1,
+      "region": [
+        0,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:114",
+        "NE",
+        "attack"
+      ],
+      "phase": 2,
+      "region": [
+        627,
+        0,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:114",
+        "NE",
+        "attack"
+      ],
+      "phase": 3,
+      "region": [
+        0,
+        627,
+        627,
+        627
+      ]
+    },
+    {
+      "slot": [
+        "transform:114",
+        "NE",
+        "attack"
+      ],
+      "phase": 4,
+      "region": [
+        627,
+        627,
+        627,
+        627
+      ]
+    }
+  ],
+  "record": "res://assets/actors/eight_direction/legendary_parallel/transform_114/quality-v02/NE-attack-record-v02.json",
+  "record_sha256": "c909dd0c8bcb5f2889dc166ab00930b0936c6d90bf7e37c2aeed6dcdc722e88c",
+  "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_114/quality-v02/NE-attack-SpriteFrames.tres",
+  "SpriteFrames_sha256": "3344e419ea7f8e8c9a48989eae93231eed8b0774f747616ce6467aab67c47bad",
+  "correction_candidate_id": "qc102",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/NE-attack-source-v01.png",
+  "previous_source_sha256": "589b859f92fc7cfb51efa301796b0f199ef5723ce9ab69565378994d6b506ad3",
+  "batch": 313,
+  "remote_commit": "ac31b39ba86b397fa586d6b63c07df9445cbed4e",
+  "remote_receipt_sha256": "0094ff884a430e17e034bfdfda4b7077e72cded39f80923989c43172c7a495c1",
+  "source_pose_phase_unit": "Author clip playback phase, not sheet-cell ordinal",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "review_scope": "ONLY_NEW_FINAL_DEPENDENCY8_CHANGED_SOURCE_ONCE",
+  "final_approved": 0
+}
