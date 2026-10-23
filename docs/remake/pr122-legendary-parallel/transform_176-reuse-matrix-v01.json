@@ -1,0 +1,3759 @@
+{
+  "schema": "pr122-legendary-176-exact-partial-reuse-matrix-v1",
+  "key": "transform:176",
+  "required_tracks": 33,
+  "required_poses": 198,
+  "actual_legacy_poses_eligible_for_reuse": 59,
+  "newly_authored_poses_required": 139,
+  "old_source_regions_margins_rgba_checked": "PASS",
+  "all_legacy_pose_start_times_and_total_duration_preserved": true,
+  "walk_and_eight_existing_death_views_preserved": true,
+  "new_death_direction": "S",
+  "source_quality_approval": "HOLD_NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "tracks": [
+    {
+      "key": "transform:176",
+      "direction": "S",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 42,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "ddad66bc1f3271247eefabf6e111a98468619139c5d32bb4be47c24730b79b3f",
+          "source_anchor": [
+            421,
+            912
+          ],
+          "region": [
+            383,
+            808,
+            64,
+            108
+          ],
+          "margin": [
+            90,
+            56,
+            192,
+            148
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 50,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "e90fb5f1786b3bd7fe36f0396cc0b90166888dd6a3e5d25b0236b119813bf8df",
+          "source_anchor": [
+            421,
+            1052
+          ],
+          "region": [
+            386,
+            942,
+            61,
+            114
+          ],
+          "margin": [
+            93,
+            50,
+            195,
+            142
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 58,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "dfda021df02a54772a5020afe01aa3a9545f535b00de89d86c7fd49df05994b2",
+          "source_anchor": [
+            421,
+            1170
+          ],
+          "region": [
+            386,
+            1069,
+            66,
+            105
+          ],
+          "margin": [
+            93,
+            59,
+            190,
+            151
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 42,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 50,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 58,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "S",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "S",
+      "role": "death",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.6500000000541667,
+      "legacy_nominal_duration_seconds": 0.65,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 82,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "97efe174c124e049d72d8e18fe4f025a32a4d0ccca120549d26571fdb05bec17",
+          "source_anchor": [
+            498,
+            621
+          ],
+          "region": [
+            456,
+            490,
+            93,
+            135
+          ],
+          "margin": [
+            150,
+            109,
+            291,
+            249
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 90,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.21666666668472223,
+          "rgba_sha256": "cf2c54902502108898f9d0353c102b5598ef29c1b30041eb84599a6c762d191a",
+          "source_anchor": [
+            498,
+            804
+          ],
+          "region": [
+            451,
+            707,
+            101,
+            101
+          ],
+          "margin": [
+            145,
+            143,
+            283,
+            283
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 98,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.43333333336944446,
+          "rgba_sha256": "7d9beca061de85a3851255f0a48166e588a3035d2778bbdf379f48db47ae783a",
+          "source_anchor": [
+            498,
+            958
+          ],
+          "region": [
+            449,
+            863,
+            98,
+            99
+          ],
+          "margin": [
+            143,
+            145,
+            286,
+            285
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 9.23076923,
+        "total_duration_seconds": 0.6500000000541667,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 82,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 90,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.21666666668472223,
+            "new_start_seconds": 0.21666666668472223
+          },
+          {
+            "legacy_pose_id": 98,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.43333333336944446,
+            "new_start_seconds": 0.43333333336944446
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: knees and hips sink further after preserved death-begin, grip and armor still connected, balance irreversibly failing",
+        "final phase2: actual body fall between collapse-begin and the preserved near-ground falling/impact frame; chest drops and knees fold naturally",
+        "final phase4: ground settling AFTER the preserved fall/impact and BEFORE the preserved final corpse; armor, original cape and polearm physically settle into the final pose"
+      ],
+      "loop": false,
+      "terminal_frame_hold": true,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "S",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 66,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "ef00929049de8439cb804bbf65c4cb2216b325f5e78b58a02438042f0edbacc4",
+          "source_anchor": [
+            498,
+            218
+          ],
+          "region": [
+            452,
+            64,
+            86,
+            158
+          ],
+          "margin": [
+            146,
+            86,
+            298,
+            226
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 74,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "1c9533e2290ac2e2d4437fbff9716f97d0433ba40e9841880ac0092ba1e7a0fe",
+          "source_anchor": [
+            498,
+            421
+          ],
+          "region": [
+            455,
+            267,
+            86,
+            158
+          ],
+          "margin": [
+            149,
+            86,
+            298,
+            226
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 66,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 74,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "S",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 2,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "0bf34f227bc82a68b128edfaffe82723a918ba7ef080a83967d8e07960ccc70a",
+          "source_anchor": [
+            421,
+            158
+          ],
+          "region": [
+            392,
+            56,
+            55,
+            106
+          ],
+          "margin": [
+            99,
+            58,
+            201,
+            150
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 10,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "066a220c1bb68dfd698286546825a2a140e79cfaee948fd34e570387bfaf7a2e",
+          "source_anchor": [
+            421,
+            310
+          ],
+          "region": [
+            391,
+            204,
+            62,
+            110
+          ],
+          "margin": [
+            98,
+            54,
+            194,
+            146
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 2,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 10,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "E",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 0,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "085e06292fff3ddca5c08d4ac436851a3f59d750e0d9091b143b7afa3dcb1902",
+          "source_anchor": [
+            96,
+            160
+          ],
+          "region": [
+            75,
+            55,
+            46,
+            109
+          ],
+          "margin": [
+            107,
+            55,
+            210,
+            147
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 8,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "c18c60d6d6470804d2ed2226a45a128794507b5e9e5b3d10ee9f5b32936a8bfe",
+          "source_anchor": [
+            96,
+            312
+          ],
+          "region": [
+            68,
+            208,
+            50,
+            108
+          ],
+          "margin": [
+            100,
+            56,
+            206,
+            148
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 0,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 8,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "E",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "E",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 40,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "5b5bc05d68a468b4420ef6ab270ed076153ded6ea73bedd9ba431c4b51591daa",
+          "source_anchor": [
+            96,
+            909
+          ],
+          "region": [
+            63,
+            809,
+            88,
+            104
+          ],
+          "margin": [
+            95,
+            60,
+            168,
+            152
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 48,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "f7d16da81ea691ad2b419d16da79a9600f1d8eec6f5cc340c9910854e07cc480",
+          "source_anchor": [
+            96,
+            1031
+          ],
+          "region": [
+            58,
+            962,
+            140,
+            73
+          ],
+          "margin": [
+            90,
+            91,
+            116,
+            183
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 56,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "c1a7bc4739eb7b565527674c601fc6a6e14a09dfd4d9b0faa818bcadac495a68",
+          "source_anchor": [
+            96,
+            1170
+          ],
+          "region": [
+            65,
+            1066,
+            63,
+            108
+          ],
+          "margin": [
+            97,
+            56,
+            193,
+            148
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 40,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 48,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 56,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "E",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 64,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "226a605a9bbdd092cc4b6f89a0510415385f884c570ed82966adcc358fbf8f84",
+          "source_anchor": [
+            105,
+            217
+          ],
+          "region": [
+            61,
+            64,
+            102,
+            157
+          ],
+          "margin": [
+            148,
+            87,
+            282,
+            227
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 72,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "574ea1aa72b5a671b72afdc3b9b30196a3fd2373fedd7606e465c9dccbb5b091",
+          "source_anchor": [
+            105,
+            421
+          ],
+          "region": [
+            65,
+            269,
+            80,
+            156
+          ],
+          "margin": [
+            152,
+            88,
+            304,
+            228
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 64,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 72,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "SE",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 1,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "64c4d72206ecb7b39f8d5e2981c2eee6fd246a26c02b43fb179caa17c38ab85f",
+          "source_anchor": [
+            256,
+            160
+          ],
+          "region": [
+            232,
+            57,
+            47,
+            107
+          ],
+          "margin": [
+            104,
+            57,
+            209,
+            149
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 9,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "dfc610233ec20556c29efc66452389a9d44af73337ca25418abd2fb40eabf723",
+          "source_anchor": [
+            256,
+            312
+          ],
+          "region": [
+            226,
+            207,
+            59,
+            109
+          ],
+          "margin": [
+            98,
+            55,
+            197,
+            147
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 1,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 9,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "SE",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "SE",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 41,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "8d80259e64a7e1f002905d1c6d65f66dff2133e7b9798b5bed7566f9e4951388",
+          "source_anchor": [
+            256,
+            910
+          ],
+          "region": [
+            211,
+            816,
+            119,
+            98
+          ],
+          "margin": [
+            83,
+            66,
+            137,
+            158
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 49,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "d042c05689411a9bd4d1702114dee2228d1d84e5cee56b5b7db4803ba41255f6",
+          "source_anchor": [
+            256,
+            1032
+          ],
+          "region": [
+            222,
+            962,
+            132,
+            74
+          ],
+          "margin": [
+            94,
+            90,
+            124,
+            182
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 57,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "0cf861947c2716e3cfee18f12166620eb6330e8566390485b9d01bf58f7784cb",
+          "source_anchor": [
+            256,
+            1170
+          ],
+          "region": [
+            224,
+            1066,
+            67,
+            108
+          ],
+          "margin": [
+            96,
+            56,
+            189,
+            148
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 41,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 49,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 57,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "SE",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 65,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "f376f850880f879daf0ac2de846c21a6fe08143df5d6c864e5489284d414284b",
+          "source_anchor": [
+            304,
+            217
+          ],
+          "region": [
+            259,
+            64,
+            98,
+            157
+          ],
+          "margin": [
+            147,
+            87,
+            286,
+            227
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 73,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "31e04e4c6da0a3683294ae15dac0387f7dec916babe2fb5c91bc9ac32c58d2d1",
+          "source_anchor": [
+            304,
+            422
+          ],
+          "region": [
+            262,
+            270,
+            84,
+            156
+          ],
+          "margin": [
+            150,
+            88,
+            300,
+            228
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 65,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 73,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "SW",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 3,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "96ad9ae924606ae507bccf9bf2bc0b2b34e99b15dbfb2792cb87d23180d3a36e",
+          "source_anchor": [
+            571,
+            159
+          ],
+          "region": [
+            545,
+            56,
+            53,
+            107
+          ],
+          "margin": [
+            102,
+            57,
+            203,
+            149
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 11,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "743d4dfa013294bcf4c7375c71a8aae790716c65d324e7a3a6a64baaff9363a8",
+          "source_anchor": [
+            571,
+            310
+          ],
+          "region": [
+            540,
+            207,
+            62,
+            107
+          ],
+          "margin": [
+            97,
+            57,
+            194,
+            149
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 3,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 11,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "SW",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "SW",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 43,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "0d8e5dc0e388488b9166e0edb3eb51ae57170172b548cb39dd3777380219ee18",
+          "source_anchor": [
+            571,
+            909
+          ],
+          "region": [
+            504,
+            818,
+            107,
+            95
+          ],
+          "margin": [
+            61,
+            69,
+            149,
+            161
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 51,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "d1efe0a5988ede126c1c98a491f43be7758356a6c8f1602c8bdfe2b06f44ecb1",
+          "source_anchor": [
+            571,
+            1033
+          ],
+          "region": [
+            475,
+            967,
+            132,
+            70
+          ],
+          "margin": [
+            32,
+            94,
+            124,
+            186
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 59,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "dccdac8bd14d8f67778e0559bd50df09e301338993a7497580cef358888184de",
+          "source_anchor": [
+            571,
+            1170
+          ],
+          "region": [
+            536,
+            1068,
+            65,
+            106
+          ],
+          "margin": [
+            93,
+            58,
+            191,
+            150
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 43,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 51,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 59,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "SW",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 67,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "544b7729dbb5dd124b3ee934642b8033b5f7fb3d4d8d107d74f70727b6aa8eba",
+          "source_anchor": [
+            704,
+            218
+          ],
+          "region": [
+            654,
+            65,
+            85,
+            157
+          ],
+          "margin": [
+            142,
+            87,
+            299,
+            227
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 75,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "7368ad429c87182eea158d1a1801a4b52d286873fdf5729eba76be0fb3c113aa",
+          "source_anchor": [
+            704,
+            423
+          ],
+          "region": [
+            659,
+            266,
+            89,
+            161
+          ],
+          "margin": [
+            147,
+            83,
+            295,
+            223
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 67,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 75,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "W",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 4,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "8cf24f44bfe15d166b7a79222a9f562c89525a93185861067ff12bf070d6fbbc",
+          "source_anchor": [
+            718,
+            160
+          ],
+          "region": [
+            693,
+            56,
+            51,
+            108
+          ],
+          "margin": [
+            103,
+            56,
+            205,
+            148
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 12,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "38f73639d4dec869186c709898043f20c90093554260205e42ce3f6fed555676",
+          "source_anchor": [
+            718,
+            312
+          ],
+          "region": [
+            692,
+            207,
+            52,
+            109
+          ],
+          "margin": [
+            102,
+            55,
+            204,
+            147
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 4,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 12,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "W",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "W",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 44,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "86b1a46935942e25736a64a81108f49fe797232ecc3ec8da085fabb0a8a387b1",
+          "source_anchor": [
+            718,
+            910
+          ],
+          "region": [
+            654,
+            809,
+            97,
+            105
+          ],
+          "margin": [
+            64,
+            59,
+            159,
+            151
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 52,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "a884930f16abdff4999022b48a4e4e4bf7c1dc7c6350c6cf185fb1935e171e59",
+          "source_anchor": [
+            718,
+            1031
+          ],
+          "region": [
+            625,
+            965,
+            125,
+            70
+          ],
+          "margin": [
+            35,
+            94,
+            131,
+            186
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 60,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "486350f0e7e8360873b42c980d97844bd7490c16383896200b2d4b034786794c",
+          "source_anchor": [
+            718,
+            1170
+          ],
+          "region": [
+            683,
+            1067,
+            64,
+            107
+          ],
+          "margin": [
+            93,
+            57,
+            192,
+            149
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 44,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 52,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 60,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "W",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 68,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "9a49ee7fcd4cab755a09a075700f7939b994dafea8c57f87e1c9d7e231698c7d",
+          "source_anchor": [
+            884,
+            218
+          ],
+          "region": [
+            848,
+            68,
+            81,
+            154
+          ],
+          "margin": [
+            156,
+            90,
+            303,
+            230
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 76,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "0fbc3c20b8051636ec42dbda4197ba17cc0b6f9435982878e2ce21cf7767c714",
+          "source_anchor": [
+            884,
+            422
+          ],
+          "region": [
+            843,
+            269,
+            83,
+            157
+          ],
+          "margin": [
+            151,
+            87,
+            301,
+            227
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 68,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 76,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "NW",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 5,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "b8e4967e75a353a0211929edb26b4224d9d184dbc6e7d1c03850fced7fa4f244",
+          "source_anchor": [
+            867,
+            157
+          ],
+          "region": [
+            839,
+            60,
+            53,
+            101
+          ],
+          "margin": [
+            100,
+            63,
+            203,
+            155
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 13,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "aeec3a0c892067a4362d3d71c4ac1ec98520e49781bb73750c889009771ca0d3",
+          "source_anchor": [
+            867,
+            308
+          ],
+          "region": [
+            839,
+            202,
+            58,
+            110
+          ],
+          "margin": [
+            100,
+            54,
+            198,
+            146
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 5,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 13,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "NW",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "NW",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 45,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "b16d7802b258ecb6614f235796c80d544bd0e34ba1101842adf55438bf622697",
+          "source_anchor": [
+            867,
+            909
+          ],
+          "region": [
+            833,
+            816,
+            76,
+            97
+          ],
+          "margin": [
+            94,
+            67,
+            180,
+            159
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 53,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "8eb7a392289bedf023f500c95bb7209f8e8ab087966f40b7b246fbedfe9d599e",
+          "source_anchor": [
+            867,
+            1032
+          ],
+          "region": [
+            795,
+            966,
+            131,
+            70
+          ],
+          "margin": [
+            56,
+            94,
+            125,
+            186
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 61,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "ea69ca1c54c3880ce50e27bf6a85301abb803eaeba27c45644df7777503ab2e7",
+          "source_anchor": [
+            867,
+            1168
+          ],
+          "region": [
+            841,
+            1065,
+            65,
+            107
+          ],
+          "margin": [
+            102,
+            57,
+            191,
+            149
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 45,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 53,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 61,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "NW",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 69,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "f4dfbc9220dbae40db74f30fbac17a0ee99dfd55e09c14bffadb1a857fcdf640",
+          "source_anchor": [
+            1082,
+            219
+          ],
+          "region": [
+            1041,
+            71,
+            86,
+            152
+          ],
+          "margin": [
+            151,
+            92,
+            298,
+            232
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 77,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "4db951cc8440d8f51cac38f3fe7638e0f53fbb81c5267832f49192292811daba",
+          "source_anchor": [
+            1082,
+            423
+          ],
+          "region": [
+            1037,
+            269,
+            90,
+            158
+          ],
+          "margin": [
+            147,
+            86,
+            294,
+            226
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 69,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 77,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "N",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 6,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "786d2ea910735b96ab4e6310193e5a33d6e49dc79a8b2a5f90e2013b56dc42bb",
+          "source_anchor": [
+            1026,
+            160
+          ],
+          "region": [
+            997,
+            56,
+            55,
+            108
+          ],
+          "margin": [
+            99,
+            56,
+            201,
+            148
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 14,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "7dd2126d2c325cca74699262d087f26860585dd0d5472f372663b984c96c840f",
+          "source_anchor": [
+            1026,
+            311
+          ],
+          "region": [
+            998,
+            202,
+            58,
+            113
+          ],
+          "margin": [
+            100,
+            51,
+            198,
+            143
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 6,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 14,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "N",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "N",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 46,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "2796e4a07ab390a64b70c8c9aaa8c7efb0584b86c22b519a9865a8aae7000b4d",
+          "source_anchor": [
+            1026,
+            912
+          ],
+          "region": [
+            999,
+            808,
+            58,
+            108
+          ],
+          "margin": [
+            101,
+            56,
+            198,
+            148
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 54,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "ef8879e22bffbcf12467f5c5acf3df2a561de28a1f90cc91f73e0d2aa2fab8a5",
+          "source_anchor": [
+            1026,
+            1042
+          ],
+          "region": [
+            997,
+            943,
+            60,
+            103
+          ],
+          "margin": [
+            99,
+            61,
+            196,
+            153
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 62,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "cdb01ef5d6f1d5f65aee4b3fbf36d16a7dfd06556d6708fbc836047b36a9b842",
+          "source_anchor": [
+            1026,
+            1169
+          ],
+          "region": [
+            994,
+            1065,
+            63,
+            108
+          ],
+          "margin": [
+            96,
+            56,
+            193,
+            148
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 46,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 54,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 62,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "N",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 70,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "fe95ffd50fe93a4caf7f0f0c7d58bd870025aeb8f510f871d4c858aed9504fec",
+          "source_anchor": [
+            1276,
+            217
+          ],
+          "region": [
+            1228,
+            68,
+            90,
+            153
+          ],
+          "margin": [
+            144,
+            91,
+            294,
+            231
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 78,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "cfebc297d3f388269c1f91759ec39dae3e37a3b35525439548b96d78286804c1",
+          "source_anchor": [
+            1276,
+            420
+          ],
+          "region": [
+            1234,
+            268,
+            83,
+            156
+          ],
+          "margin": [
+            150,
+            88,
+            301,
+            228
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 70,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 78,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "NE",
+      "role": "idle",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 1.19999999976,
+      "legacy_nominal_duration_seconds": 1.2,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 7,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "f7412652cd8bb1cdc107a20668a5159c771b64cbe0957095ad8a6474a54e9383",
+          "source_anchor": [
+            1185,
+            159
+          ],
+          "region": [
+            1151,
+            56,
+            61,
+            107
+          ],
+          "margin": [
+            94,
+            57,
+            195,
+            149
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 15,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.59999999988,
+          "rgba_sha256": "a47c596261e20c8cf00f431ac2823ad253d701807fb7904cffc4fcb72ee5facc",
+          "source_anchor": [
+            1185,
+            313
+          ],
+          "region": [
+            1157,
+            205,
+            64,
+            112
+          ],
+          "margin": [
+            100,
+            52,
+            192,
+            144
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 5.000000001,
+        "total_duration_seconds": 1.19999999976,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 7,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 15,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.59999999988,
+            "new_start_seconds": 0.59999999988
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: begin inhalation after preserved neutral breathing, stable planted feet and original weapon hand, slight real torso/equipment articulation",
+        "final phase2: continue inhalation toward the preserved second breathing frame, connected shoulders and cape react without walking or attacking",
+        "final phase4: exhale after the preserved second breathing frame, original cape and equipment settle while the root and feet remain planted",
+        "final phase5: complete exhalation toward preserved initial neutral for a seamless loop, a distinct subtle real pose rather than a translated duplicate"
+      ],
+      "loop": true,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "NE",
+      "role": "run",
+      "poses": 6,
+      "newly_authored_poses_required": 6,
+      "reused_poses": 0,
+      "status": "NO_LEGACY_RUN_USE_SIX_NEW_PIPELINE",
+      "legacy_walk_relabel_allowed": false
+    },
+    {
+      "key": "transform:176",
+      "direction": "NE",
+      "role": "attack",
+      "poses": 6,
+      "newly_authored_poses_required": 3,
+      "reused_poses": 3,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4",
+          "bytes": 1195751
+        }
+      ],
+      "legacy_duration_seconds": 0.41999999999160004,
+      "legacy_nominal_duration_seconds": 0.42,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 47,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "550addd031d26ca7d6eae1671f2a094fb69ddf24d91a58d305ccdfe63ae94240",
+          "source_anchor": [
+            1185,
+            909
+          ],
+          "region": [
+            1147,
+            814,
+            77,
+            99
+          ],
+          "margin": [
+            90,
+            65,
+            179,
+            157
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 55,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.1399999999972,
+          "rgba_sha256": "4101fcaaf4b5b106a9df67ea1adba7d76bfce3634ad97060179dbc2f91ff98b9",
+          "source_anchor": [
+            1185,
+            1039
+          ],
+          "region": [
+            1128,
+            967,
+            136,
+            76
+          ],
+          "margin": [
+            71,
+            88,
+            120,
+            180
+          ]
+        },
+        {
+          "ordinal": 2,
+          "original_pose_id": 63,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-0.png",
+          "duration": 1.0,
+          "start_seconds": 0.2799999999944,
+          "rgba_sha256": "995f828e2954ac50ac9a933f1a1b2cc177cce6bff18ec7c6004d0d2629578247",
+          "source_anchor": [
+            1185,
+            1171
+          ],
+          "region": [
+            1153,
+            1066,
+            76,
+            109
+          ],
+          "margin": [
+            96,
+            55,
+            180,
+            147
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "reused",
+            "ordinal": 2
+          }
+        ],
+        "duration_weights": [
+          0.6666666666666666,
+          0.6666666666666666,
+          0.6666666666666666,
+          1.0,
+          1.0,
+          2.0
+        ],
+        "speed": 14.285714286,
+        "total_duration_seconds": 0.41999999999160004,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 47,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 55,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.1399999999972,
+            "new_start_seconds": 0.1399999999972
+          },
+          {
+            "legacy_pose_id": 63,
+            "final_phase": 5,
+            "legacy_start_seconds": 0.2799999999944,
+            "new_start_seconds": 0.2799999999944
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          3,
+          1
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: loaded compression between the preserved windup and launch; knees and shoulders load the original polearm while its grip remains connected",
+        "final phase2: accelerating partial extension immediately BEFORE the preserved full-contact thrust, original polearm tip directed toward the facing target",
+        "final phase4: immediate thrust follow-through and beginning retraction AFTER the preserved contact and BEFORE the preserved recovery; maintain the same attack axis"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    },
+    {
+      "key": "transform:176",
+      "direction": "NE",
+      "role": "hit",
+      "poses": 6,
+      "newly_authored_poses_required": 4,
+      "reused_poses": 2,
+      "legacy_frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "legacy_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "legacy_source_files": [
+        {
+          "original_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7",
+          "bytes": 1221849
+        }
+      ],
+      "legacy_duration_seconds": 0.21999999999779998,
+      "legacy_nominal_duration_seconds": 0.22,
+      "existing_pose_metadata": [
+        {
+          "ordinal": 0,
+          "original_pose_id": 71,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.0,
+          "rgba_sha256": "a7a83aad02c0c9b7a3227717bca9d2030c46eb87105eb72a00b78585644d2805",
+          "source_anchor": [
+            1481,
+            219
+          ],
+          "region": [
+            1423,
+            65,
+            109,
+            158
+          ],
+          "margin": [
+            134,
+            86,
+            275,
+            226
+          ]
+        },
+        {
+          "ordinal": 1,
+          "original_pose_id": 79,
+          "source_path": "res://assets/actors/eight_direction/original_based/spear_captain/poses-1.png",
+          "duration": 1.0,
+          "start_seconds": 0.10999999999889999,
+          "rgba_sha256": "077b3e0b5c2b827cfee8dc384df168d10834fb4a98fbf5ed2b3e04015e119de5",
+          "source_anchor": [
+            1481,
+            423
+          ],
+          "region": [
+            1432,
+            267,
+            98,
+            160
+          ],
+          "margin": [
+            143,
+            84,
+            286,
+            224
+          ]
+        }
+      ],
+      "six_pose_config": {
+        "sequence": [
+          {
+            "kind": "reused",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 0
+          },
+          {
+            "kind": "new",
+            "ordinal": 1
+          },
+          {
+            "kind": "reused",
+            "ordinal": 1
+          },
+          {
+            "kind": "new",
+            "ordinal": 2
+          },
+          {
+            "kind": "new",
+            "ordinal": 3
+          }
+        ],
+        "duration_weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "speed": 27.272727273,
+        "total_duration_seconds": 0.21999999999779998,
+        "reused_pose_start_times": [
+          {
+            "legacy_pose_id": 71,
+            "final_phase": 0,
+            "legacy_start_seconds": 0.0,
+            "new_start_seconds": 0.0
+          },
+          {
+            "legacy_pose_id": 79,
+            "final_phase": 3,
+            "legacy_start_seconds": 0.10999999999889999,
+            "new_start_seconds": 0.10999999999889999
+          }
+        ],
+        "legacy_pose_start_times_preserved": true,
+        "legacy_total_duration_preserved": true,
+        "new_source_grid": [
+          2,
+          2
+        ]
+      },
+      "missing_pose_cells_template": [
+        "final phase1: intensify the preserved initial hit recoil into a distinct maximum nonfatal stagger, torso bends away from impact and original weapon stays safely held",
+        "final phase2: counterbalance the maximum recoil before the preserved recovery frame, knees brace and arms stabilize the original weapon without attacking",
+        "final phase4: after the preserved recovery, settle remaining shoulder, cape and weapon motion toward readiness with a new articulated pose",
+        "final phase5: regained living guard, still recognizably distinct from preserved recovery and the preceding settling pose; no injury, fall, cast or attack"
+      ],
+      "loop": false,
+      "terminal_frame_hold": false,
+      "status": "PARTIAL_ACTUAL_SOURCE_REUSE_ELIGIBLE_NOT_APPROVED"
+    }
+  ],
+  "already_produced_tracks_are_skipped_by_no_overwrite_compilers": true,
+  "request_preparation_is_not_generation_or_production_completion": true
+}
