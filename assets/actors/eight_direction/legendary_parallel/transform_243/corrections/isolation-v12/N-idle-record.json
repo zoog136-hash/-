@@ -1,0 +1,312 @@
+{
+  "key": "transform:243",
+  "name": "화염의 데스나이트",
+  "grade": "전설",
+  "direction": "N",
+  "role": "idle",
+  "reference": "res://assets/catalog/d65d5733ab1238958c7ed4cb.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:243 화염의 데스나이트. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body N IDLE poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use true rear-facing NORTH, screen UP, back of head and back of costume visible, never a front face, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Seamless living IDLE breathing cycle. Six distinct subtle articulated poses: relaxed guard, inhale beginning, fuller chest breath with clothing response, peak inhalation, exhale/settling, near-original guard for smooth loop. Feet stay planted on the common floor. Preserve original weapon grip, hair, cloth and armor with restrained secondary motion, no steps or attack. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH means directly AWAY toward the TOP screen edge: show the BACK of the head, shoulders and costume; no front face or chest view. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/d65d5733ab1238958c7ed4cb.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 205,
+  "reference_sha256": "4fe4f8f2df6babc34a9d0f20c03a424826fd6f32a280d763f762198f7339b5ec",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+  "source_sha256": "2da6c362c4d4c16a942167ce503c86ff2d862cf242d362e8f770428bcf81b5e8",
+  "source_bytes": 2160812,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-SpriteFrames.tres",
+  "output_spriteframes_sha256": "a081950206f4ca2d0bf9a9e6ee3d27bb847805867b49c721df36200802f253e2",
+  "generated_original_path": "/workspace/generated_images/exec-927bf598-5495-46f2-8236-87b905e5c02c.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_243-N-idle-v01.json",
+  "request_file_sha256": "cc63bddb0a712f214a7cc876416d32a6ce4679854888b319fcb1a34938d09b6f",
+  "generation_request_sha256": "00915f371a82b2048d34fe0ab819ea6be03935015be30f2531046892a499fdb7",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "idle_6",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        621,
+        627
+      ],
+      "rgba_sha256": "5df812669fc8ca3b2c996193e9bcdbacf61a0e75494c258df44da13c0f741087"
+    },
+    {
+      "index": 1,
+      "region": [
+        621,
+        0,
+        621,
+        627
+      ],
+      "rgba_sha256": "ce38ed929c314698140c8617ae3c90fe4a378b6477d8642a477a9b298cfcdf8d"
+    },
+    {
+      "index": 2,
+      "region": [
+        1242,
+        0,
+        621,
+        627
+      ],
+      "rgba_sha256": "db5cb75cbd3b584e191c905181b1822c5ad77bb06dfbf99ad6738deab635cfd8"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        627,
+        621,
+        627
+      ],
+      "rgba_sha256": "9d81dec483bf1647d141c02e1cc3251f1018a4a21d1e13372e842150f3a3ec5b"
+    },
+    {
+      "index": 4,
+      "region": [
+        621,
+        627,
+        621,
+        627
+      ],
+      "rgba_sha256": "20e14e10ec919069e9edd0cc3cd4e735907ee35090053f572a8f825ff5661bd1"
+    },
+    {
+      "index": 5,
+      "region": [
+        1242,
+        627,
+        621,
+        627
+      ],
+      "rgba_sha256": "78663c7e1309fa790e47f9d185bc94213b16c249ddba60bf799700b004105908"
+    }
+  ],
+  "clipped_cell_count": 6,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/N-idle-record-v01.json",
+  "revision_parent_sha256": "cd37c168febc04483e305fc284594e9e6dc05d19db2db69b66f7f85c11e4412b",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/N-idle-source-v01.png",
+  "raw_authored_source_sha256": "184a40440b9324ac22e76e048d869e4d9013e33c1ebf9c6fc5af81b5ce23e00c",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        621,
+        627
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "region": [
+        621,
+        0,
+        621,
+        627
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "region": [
+        1242,
+        0,
+        621,
+        627
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "region": [
+        0,
+        627,
+        621,
+        627
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "region": [
+        621,
+        627,
+        621,
+        627
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "region": [
+        1242,
+        627,
+        621,
+        627
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    621,
+    627
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      621,
+      1242,
+      1863
+    ],
+    "y": [
+      0,
+      627,
+      1254
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "sha256": "2da6c362c4d4c16a942167ce503c86ff2d862cf242d362e8f770428bcf81b5e8",
+      "bytes": 2160812,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}

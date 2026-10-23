@@ -1,0 +1,224 @@
+{
+  "schema": "legendary-isolation-selected-repair-v1",
+  "baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "version": "isolation-v12",
+  "actors": [
+    "transform:243",
+    "transform:244"
+  ],
+  "technical_review_sha256": "8a3ce30a6016a46490b484c8f10a7bfdd910f5f4da1e2a5a6caba89b6ae00d51",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "sources": [
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/E-attack-source-v01.png",
+      "source_sha256": "ed335e6268ea6a162e6f710e4e5fc6ac5fe7f3569cc4df895612dd438fe09d7a",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/E-idle-source-v01.png",
+      "source_sha256": "b3de62571c3a4a70d8f859c1ca7738d7d6133433e9d98e8f6cebb8292f7ddda8",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/N-attack-source-v01.png",
+      "source_sha256": "f21cec90339e94dfda61735f31bcb2def10163da2b8f2d64f3244d0bed6f4641",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/N-hit-source-v01.png",
+      "source_sha256": "2f6bd3b53e593e28e0aeb8db6a2de3f7b4b68d560eeeb230b6736af57ba69952",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/N-idle-source-v01.png",
+      "source_sha256": "184a40440b9324ac22e76e048d869e4d9013e33c1ebf9c6fc5af81b5ce23e00c",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-attack-source-v01.png",
+      "source_sha256": "618db1bf1f1f4565b33ec7a1ae98f9d65142aba23eb2f295f60c2a1747691038",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-hit-source-v01.png",
+      "source_sha256": "454a206ca29ba42aae967cc3bfbb936efeafecf04125627748fe999d3ee7ae6b",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-run-source-v01.png",
+      "source_sha256": "7e0a975e069bc5e43f32df2ea19746c36671b2ca762b513ff4559c430e3c1332",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NW-hit-source-v01.png",
+      "source_sha256": "dd54634410d273138bccc66d3a7bfca298569a073f732ed1bc11063db7dc4685",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NW-run-source-v01.png",
+      "source_sha256": "e610833c2350a006630d32d00036bc56f44e91d0778d7736308d0f597da5cc12",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-attack-source-v01.png",
+      "source_sha256": "cc2f9233165ff52400c3df79e89e0b75c7279ee218366c7a2bd9beee392bfdba",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-idle-source-v01.png",
+      "source_sha256": "c683e98cd1511f8ead3633c1c0241691af0812a26db11c2de5d7f6aa46d6254f",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SW-hit-source-v01.png",
+      "source_sha256": "1ad3978fba9a3208c22121ec52a56d5b9a1ce0f42f7f38f501246bd8e1144e2b",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SW-idle-source-v01.png",
+      "source_sha256": "71cbdb03f61e1894b4e7baa9163d6c12a32caf989fa23f5b7fa65dc01a0da12d",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SW-run-source-v01.png",
+      "source_sha256": "f9c67da24324d6e3305e7a2f5cbb7b820d7ffde89179c0f1f44a927cd9d6eb18",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-attack-source-v01.png",
+      "source_sha256": "17b57d33e4ece3e22047a17d2d8fa0031ca7206580f216d02bf23e874b6d1ad3",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-hit-source-v01.png",
+      "source_sha256": "5dea64df5940020789a6f7b1da894dbd12d9f2f75cc944d8995130e4fb8bc3e3",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/E-attack-source-v01.png",
+      "source_sha256": "743c999e011a04bcf197ccefeaaa05c1431740bfa30f5fb738e1baefe82aa328",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/E-idle-source-v01.png",
+      "source_sha256": "f94aeeac2a3b02dada4059babe7554bd2a60dc5720cbab88facfd6c9124b3162",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/N-attack-source-v01.png",
+      "source_sha256": "3d6a985f9fabe696148d1bebef3447845bd45e1648fa598a41a8a7cb28210761",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/N-idle-source-v01.png",
+      "source_sha256": "46f641a75427fbe8466fb987e2e2f911d583ad8cb940bb4ba3f350612484e0aa",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/N-run-source-v01.png",
+      "source_sha256": "019e287ec08b215ad54eff245e1670c2380a17c7072a6c1a0485ac49d509471f",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NE-attack-source-v01.png",
+      "source_sha256": "96caaa638c6b242d02ea05a21e8c8216bc20f84441cf08a68f9422b24e6a01f3",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NE-hit-source-v01.png",
+      "source_sha256": "bcf0e398648cde2fa217f6a235db3446680341bd46e2c4dd35c9d21b7a7f8c4c",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NE-idle-source-v01.png",
+      "source_sha256": "66fdb608e44b393a7e58afa02296b1ab1f374cdd171e9ba30d6ceb866513a6c0",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NE-run-source-v01.png",
+      "source_sha256": "4cc8674857e5c691cce90d5a132122f39bac5b7e3fff9fe33a94eca974414dfd",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NW-attack-source-v01.png",
+      "source_sha256": "4ccb9e3aa899360ced0c64f75eb4cd8cfee4b1f18195c6a3e05af25ad3761e8e",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NW-hit-source-v01.png",
+      "source_sha256": "7c3ac34639872965a7bdb89d7eb88ca0e0c99edd2fdcae1a948190fa11e2d022",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NW-idle-source-v01.png",
+      "source_sha256": "bb222610baed03335a97e17c7f806675f29f2e66547698f3b148cda40178703f",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/NW-run-source-v01.png",
+      "source_sha256": "6f7da44b688fa316dde9b916dbdeadabbd5a8cc7b968bea2f65232a648d573a2",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/S-attack-source-v01.png",
+      "source_sha256": "a4fa411f1a274f4b387f3d32cb9c4374067f8b1efd1bd471cbef842da6b3cb71",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/S-death-source-v01.png",
+      "source_sha256": "8688ac817ecc370dd4345d218f0434f2490d6653d1a1c7145d8bd7aafc8131c6",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/S-run-source-v01.png",
+      "source_sha256": "d077ac325e01edabff38eb0fa80603fa06d481e1cec6188cd6ba8f1859b7dc9e",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-attack-source-v01.png",
+      "source_sha256": "702d008728aedf73066f393c3ccfaba6407e634e958c7841e9020ae2c89e4585",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-hit-source-v01.png",
+      "source_sha256": "9e0d71977835d87e0b357d41aea9b1746e1141473c07af1a78ea6978fbc6944e",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-idle-source-v01.png",
+      "source_sha256": "e2e9eecb02af7a19cd4f45ec660216eed398dd8945e2e4fd840665cf08c0cd5c",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SE-run-source-v01.png",
+      "source_sha256": "69b1a73959ac182621fb8a2b82abc3d1eeb68674b189f84091752574639b78cc",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SW-hit-source-v01.png",
+      "source_sha256": "06b63fe318fa3735c5c4e71c281eb34fe3f073c8763670c3d64e3e3a7aeb4636",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SW-run-source-v01.png",
+      "source_sha256": "40678dbaa112de3f93fc694db1b9d4ea056563e6ead25f4b7c39915daec04cea",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/W-hit-source-v01.png",
+      "source_sha256": "7408dbc14742dcffedacf0e835f2730a63da33112492963c83156246d7fa1e54",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/W-idle-source-v01.png",
+      "source_sha256": "93b0877ce31e23bb825dfe6839e1f2142f7098867833e561a96881480d1f3946",
+      "decision": "ISOLATE"
+    },
+    {
+      "source": "assets/actors/eight_direction/legendary_parallel/transform_244/draft001/W-run-source-v01.png",
+      "source_sha256": "39ee190ca4980f767f2d9bf90a36533f4cc7289d046f20f2d8a19d585e9c1941",
+      "decision": "ISOLATE"
+    }
+  ],
+  "exclude_slots": []
+}
