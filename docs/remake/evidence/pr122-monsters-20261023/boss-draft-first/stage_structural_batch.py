@@ -26,13 +26,20 @@ def put(p,data):
     else:p.write_bytes(data)
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('slug');p.add_argument('--revision',required=True);p.add_argument('--reviewed-inventory',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('slug');p.add_argument('--revision',required=True);p.add_argument('--reviewed-inventory',action='store_true')
+    p.add_argument('--only-resume',action='store_true',help='Minimum playback checks only for the previously absent 210 sheets')
+    p.add_argument('--inventory-root',type=Path,help='Explicit frozen review directory for changed clips')
+    a=p.parse_args()
     actor=next(v for v in json.loads((HERE/'plan.json').read_text())['actors'] if v['slug']==a.slug)
     folder=HERE/a.slug
     importer_sha=sha(ROOT/'tools/import_original_based_motion.py')
     tracks,holds=[],[]
-    inventory={r['clip']:r for r in json.loads((HERE/'whole-review-v01/structural-inventory.json').read_text())['clips'] if r['slug']==a.slug} if a.reviewed_inventory else {}
+    review=a.inventory_root.resolve() if a.inventory_root else HERE/'whole-review-v01'
+    inventory={r['clip']:r for r in json.loads((review/'structural-inventory.json').read_text())['clips'] if r['slug']==a.slug} if a.reviewed_inventory else {}
     receipts=sorted(v for v in folder.glob('*-receipt.json') if v.name!='canonical-v01-receipt.json')
+    if a.only_resume:
+        selected={v['clip'] for v in json.loads((HERE/'resume210-v01/queue.json').read_text())['jobs'] if v['slug']==a.slug}
+        receipts=[v for v in receipts if v.stem.removesuffix('-receipt') in selected]
     for receipt in receipts:
         record=json.loads(receipt.read_text());source=ROOT/record['source']
         assert sha(source)==record['sha256']
@@ -41,7 +48,7 @@ def main():
         check=folder/'structural-checks'/f'{clip}.json'
         if a.reviewed_inventory:
             row=inventory[clip];assert row['source_sha256']==record['sha256']
-            repair=HERE/'whole-review-v01/owned-parts-repair'/a.slug/(clip+'.json')
+            repair=review/'owned-parts-repair'/a.slug/(clip+'.json')
             if row['status']=='STRUCTURAL_PASS':result=dict(status='STRICT_WHOLE_POSE_PASS',geometry=row['geometry'])
             elif repair.exists() and (fixed:=json.loads(repair.read_text()))['status']=='LOSSLESS_OWNED_PARTS_PASS':
                 assert fixed['source_sha256']==record['sha256'] and sha(ROOT/fixed['texture'])==fixed['texture_sha256']

@@ -18,6 +18,7 @@ def main():
     paths.update(HERE.glob('*.json'))
     resume=HERE/'resume210-v01'
     if resume.exists():
+        paths.update(resume.glob('.gitignore'))
         paths.update(resume.glob('*.py'))
         paths.update(resume.glob('*.js'))
         paths.update(resume.glob('queue.json'))
