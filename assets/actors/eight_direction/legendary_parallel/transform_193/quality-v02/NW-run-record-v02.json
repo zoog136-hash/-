@@ -1,0 +1,357 @@
+{
+  "key": "transform:193",
+  "name": "공작 마커스",
+  "grade": "전설",
+  "direction": "NW",
+  "role": "run",
+  "reference": "res://assets/catalog/8eea146bc63c088334b96aba.png",
+  "reference_sha256": "7208b7a7d9c4880ac1ae30753641fa162019caa4df8fdd1c221215cd6c470e60",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc047",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-run-source-v01.png",
+  "previous_source_sha256": "36388a1815913b9d28e922eb8897c38de2b88748e1de2c23001798e3d74a923d",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-run-record-v01.json",
+  "previous_record_sha256": "362407ceeb80d5f96d82cd4cfb614c2f1ba7192fd1d35879aa80ee5fc12e2d1a",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "CORRECTED_SOURCE_DRAFT_HOLD",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": null,
+  "frozen_error_findings": [
+    {
+      "actor": "193",
+      "direction": "NW",
+      "role": "run",
+      "cause": "camera",
+      "detail": "Frontal/left profile appearance does not maintain a rear-left camera.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-run-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/NW-run-record-v01.json",
+      "source_sha256": "36388a1815913b9d28e922eb8897c38de2b88748e1de2c23001798e3d74a923d",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0039",
+      "slot": [
+        "transform:193",
+        "NW",
+        "run"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:193 공작 마커스, NW RUN. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Frontal/left profile appearance does not maintain a rear-left camera.\"}]. MANDATORY CAMERA IN EVERY CELL: three-quarter BACK-LEFT, screen UP-LEFT, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six genuinely articulated RUN poses: LEFT contact, LEFT support compression/RIGHT forward swing, flight/RIGHT reaching, RIGHT contact, RIGHT compression/LEFT forward swing, flight/LEFT reaching. Alternate anatomical legs with real hip/knee/ankle changes, stable ground contact and opposite arm counter-swing. No walking, attack or translated still. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8eea146bc63c088334b96aba.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/8eea146bc63c088334b96aba.png": "7208b7a7d9c4880ac1ae30753641fa162019caa4df8fdd1c221215cd6c470e60"
+  },
+  "schema": "pr122-legendary-bounded-quality-correction-v2",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-source-v02.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-source-v02.png",
+  "source_sha256": "79d81e75d68f3e25d4a00bbb40705de314322676619ba66bd32dcc59be822eed",
+  "source_bytes": 2191643,
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-source-v02.png",
+      "sha256": "79d81e75d68f3e25d4a00bbb40705de314322676619ba66bd32dcc59be822eed",
+      "bytes": 2191643,
+      "source_kind": "new_bounded_correction"
+    }
+  ],
+  "source_grid": [
+    3,
+    2
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "source_pose_sequence": [
+    {
+      "phase": 0,
+      "source_kind": "new",
+      "new_sheet_cell": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "source_kind": "new",
+      "new_sheet_cell": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 2,
+      "source_kind": "new",
+      "new_sheet_cell": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "source_kind": "new",
+      "new_sheet_cell": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "source_kind": "new",
+      "new_sheet_cell": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 5,
+      "source_kind": "new",
+      "new_sheet_cell": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "source_kind": "new",
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "1f1e1f039df278f5c044fffa51abe0f5dbeec9031495d291ee3a5779a9235462",
+      "normalized_visible_sha256": "529379d688e9ed50bc739d25708e9e7bf6534af6fac973e8933145c74f14cc8d",
+      "visible_pixels": 57446,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "source_kind": "new",
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "6f664dd08ff4f6e7a792fbc236750806783f45105d6606b2c42332384522b23c",
+      "normalized_visible_sha256": "3b0f85b827c34a24c031cb766c09091d059ee0b3f90d850a8082b4a468dd1b45",
+      "visible_pixels": 54280,
+      "visible_height": 497,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        15,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "source_kind": "new",
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "rgba_sha256": "3e7c4efd9f1956857a169bf52c85500a36b6e74047c22607f2ca4c44b52c625c",
+      "normalized_visible_sha256": "c0459ad7e89cdd94b45cd4037dd1441edfc1d7b1263fc0fbe41276ff87150359",
+      "visible_pixels": 55727,
+      "visible_height": 503,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        9,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "source_kind": "new",
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "f7f3da3e735c508d056b7969e37f20da34603fe26be1692e5eb7a1686f76cc5c",
+      "normalized_visible_sha256": "87fc7a3eafafd3e2629bab00a1e60e65ecfcf0aa7ad02615f05d4b07ac005bf8",
+      "visible_pixels": 54416,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "source_kind": "new",
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "1474f0236bd6ed0268fa6c745c5b332bf4c429f3970bbf76964493115858a3b4",
+      "normalized_visible_sha256": "0bf5895414e9db118d810f6a132c5ad664eb48e92575d10c53e630a313ea3555",
+      "visible_pixels": 51859,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "source_kind": "new",
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "rgba_sha256": "17f29fb247498da7ef9e5e1a557cbb42330d768f566e7af2a203304466b0bcf8",
+      "normalized_visible_sha256": "225fe2c453f372b537f18e4e87e5aef7ee33a94399a758708ba22583b5c68c7d",
+      "visible_pixels": 56543,
+      "visible_height": 512,
+      "visible_width": 512,
+      "alpha_bbox_in_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "border_alpha_pixels": 0,
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "cell_size": [
+    512,
+    512
+  ],
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-SpriteFrames.tres",
+  "output_spriteframes_sha256": "cfd1611abd46b1ce1fe594b336c06ffc749b041567193b5792a66511eb05e648",
+  "animation": "run_5",
+  "loop": true,
+  "new_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_legacy_poses": 0,
+  "reused_prior_draft_poses": 0,
+  "source_visual_status": "HOLD_CHANGED_SOURCE_REVIEW_REQUIRED",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_193/quality-v02/NW-run-raster-registration-v02.json",
+  "request_file_sha256": "d0cfdedaca0459db9509a2a86052a7a745aa04119310a347ae40bb60cdb2be94",
+  "generation_request_sha256": "5e93de4525aa61ffd2eba3484bd1e5defba0745df7b70ba9893229bd8e7400f8",
+  "generation_service": "image_gen.imagegen",
+  "raw_generated_file": "/workspace/generated_images/exec-e4cd1c68-e1f7-4684-9ff3-6be0b5d2b32f.png",
+  "quality_compiler": {
+    "path": "preserve_legendary_quality_correction_v02.py",
+    "sha256": "246a4e62b7eff7b128d8b2346d33cca3b66748b7ea3f3c8eee9168ac53c18a71",
+    "reused_checks": "preserve_mixed_legacy_clip.frame_check/read_legacy_track/six_pose_config"
+  },
+  "actual_Main_Player": "NOT_RUN",
+  "full_CI": "NOT_RUN",
+  "scale_registration_status": "HOLD_SEMANTIC_SOURCE_CONSTANT_SCALE_REQUIRED"
+}

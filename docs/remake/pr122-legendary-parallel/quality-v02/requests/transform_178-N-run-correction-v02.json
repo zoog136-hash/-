@@ -1,0 +1,71 @@
+{
+  "key": "transform:178",
+  "name": "디바인 크루세이더",
+  "grade": "전설",
+  "direction": "N",
+  "role": "run",
+  "reference": "res://assets/catalog/b077ec983ab7362a833925d7.png",
+  "reference_sha256": "1c110851be227f051c46a342f6335440412f8b9e3f3b3ed65ad23f7ed2e8b58a",
+  "poses": 6,
+  "source_base_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "quality_version": "quality-v02",
+  "correction_candidate_id": "qc065",
+  "previous_source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-run-source-v01.png",
+  "previous_source_sha256": "0563361cf1afba709114b200d20f91a9eb9b630a479d31ee79a6f34f53b5b677",
+  "previous_record": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-run-record-v01.json",
+  "previous_record_sha256": "1b16254c165d4afad854293f3204144360a225cc546bb163486bceaf4d4d44e4",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "maximum_generation_calls": 1,
+  "original_failed_requests_preserved": true,
+  "actor_approvals_added": 0,
+  "final_motion_approvals_added": 0,
+  "status": "BOUNDED_CORRECTION_REQUEST_PREPARED_NOT_GENERATED",
+  "newly_authored_poses_requested": 6,
+  "reused_poses": 0,
+  "correction_representation": "six_new",
+  "correction_source_grid": [
+    3,
+    2
+  ],
+  "camera_reference": {
+    "actor": "178",
+    "direction": "N",
+    "role": "attack",
+    "path": "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-attack-source-v01.png",
+    "sha256": "178bbe92c90c4e8d3870e441c5be39b85527774bd28e7cb11656065ce81a2a93",
+    "selection": "No frozen camera finding; direction reference only, no motion copied"
+  },
+  "frozen_error_findings": [
+    {
+      "actor": "178",
+      "direction": "N",
+      "role": "run",
+      "cause": "camera",
+      "detail": "Frontal breastplate/tabard orientation is retained; N ATTACK separately shows the correct back view.",
+      "fix_kind": "source_camera",
+      "status": "ERROR_VISUAL",
+      "affected_source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-run-source-v01.png",
+      "record": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-run-record-v01.json",
+      "source_sha256": "0563361cf1afba709114b200d20f91a9eb9b630a479d31ee79a6f34f53b5b677",
+      "review_origin": "back20",
+      "issue_id": "visual-back20-0092",
+      "slot": [
+        "transform:178",
+        "N",
+        "run"
+      ]
+    }
+  ],
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 bounded quality correction transform:178 디바인 크루세이더, N RUN. Correct ONLY this frozen erroneous source once. Original catalog is the identity authority. Frozen error causes and exact observations: [{\"cause\": \"camera\", \"detail\": \"Frontal breastplate/tabard orientation is retained; N ATTACK separately shows the correct back view.\"}]. MANDATORY CAMERA IN EVERY CELL: full BACK, screen UP, back of head and costume visible, never the front face or chest. Fixed slightly elevated RPG camera. The head, torso, hips, toes and action trajectory must all agree with this facing, with no turn or mirror between cells. Do not retain a conflicting portrait camera. The second image is a separately saved same-character/same-direction source with no frozen camera error. Use only its correct camera, original costume and equipment as reference; do not copy its action into this requested action. Output ONE transparent RGBA PNG, exactly 1536x1024, 3 equal columns by 2 equal rows, 6 new full-body poses in reading order, one pose per512x512 cell. No labels or grid. Keep the ENTIRE body, hair, feet, every weapon tip and costume/effects at least48 pixels inside EACH cell; use a smaller complete figure instead of crossing any cell edge. Separate cells with ample alpha-zero gutters. No neighboring body parts, detached effects, long projectiles, floor, shadows, scenery or opaque backdrop. Six genuinely articulated RUN poses: LEFT contact, LEFT support compression/RIGHT forward swing, flight/RIGHT reaching, RIGHT contact, RIGHT compression/LEFT forward swing, flight/LEFT reaching. Alternate anatomical legs with real hip/knee/ankle changes, stable ground contact and opposite arm counter-swing. No walking, attack or translated still. Preserve exact original face/hair/skin, armor/costume, colors, anatomical equipment hand, weapon shape and number, and body proportions. Distinct articulated joint poses only; no generic model, static rotation/translation, copying, mirroring or tweened still. Background outside each figure is alpha zero. ",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/b077ec983ab7362a833925d7.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-attack-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/b077ec983ab7362a833925d7.png": "1c110851be227f051c46a342f6335440412f8b9e3f3b3ed65ad23f7ed2e8b58a",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_178/draft001/N-attack-source-v01.png": "178bbe92c90c4e8d3870e441c5be39b85527774bd28e7cb11656065ce81a2a93"
+  }
+}
