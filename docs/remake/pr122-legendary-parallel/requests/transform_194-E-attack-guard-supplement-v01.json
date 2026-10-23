@@ -1,0 +1,88 @@
+{
+  "key": "transform:194",
+  "name": "군단장 엑스터",
+  "grade": "전설",
+  "direction": "E",
+  "role": "attack",
+  "reference": "res://assets/catalog/ec84780a737e6d839e4085ff.png",
+  "reference_sha256": "2d3bbb08c7f86ed2d1dad6294582dbd552a81d0b2b6add1b5a944f0c3bf45f8e",
+  "draft_guard_reuse": {
+    "key": "transform:194",
+    "direction": "E",
+    "idle_record": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-record-v01.json",
+    "idle_record_sha256": "3bb20b4cd2d38b4ef1adbf68b44dec496d0cf3492773e56cf9e939285b35e40d",
+    "idle_SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-SpriteFrames.tres",
+    "idle_SpriteFrames_sha256": "b88495b14bc1a8408e99d5b0640785def74b7503963d4de2564a1a742cf9d817",
+    "source_visual_status": "HOLD_NOT_REVIEWED",
+    "reference": "res://assets/catalog/ec84780a737e6d839e4085ff.png",
+    "reference_sha256": "2d3bbb08c7f86ed2d1dad6294582dbd552a81d0b2b6add1b5a944f0c3bf45f8e",
+    "source_files": [
+      {
+        "path": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-source-v01.png",
+        "sha256": "a223dce490e9e11432fb44d4fd1c47f6649cabdc0111c49bb54487abf6f82fe3",
+        "bytes": 2574903
+      }
+    ],
+    "guards": [
+      {
+        "idle_phase": 0,
+        "action_phase": 0,
+        "original_pose_id": 0,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-source-v01.png",
+        "region": [
+          0,
+          0,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "2026ad77e00a07025239f25765419d8630a10a0fd2dc1bc24a65c96ab44f8cd9"
+      },
+      {
+        "idle_phase": 5,
+        "action_phase": 5,
+        "original_pose_id": 5,
+        "source_path": "res://assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-source-v01.png",
+        "region": [
+          1024,
+          512,
+          512,
+          512
+        ],
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rgba_sha256": "aea31a9b1f432e27bdc0aeabc0409d09e7ed4d300a532a82e0dd9828364c08f9"
+      }
+    ],
+    "reused_poses": 2,
+    "newly_authored_poses": 4,
+    "source_quality_approval_inherited": false
+  },
+  "poses": 6,
+  "newly_authored_poses_requested": 4,
+  "reused_poses": 2,
+  "generation_request": {
+    "prompt": "TWILIGHT transform:194, 군단장 엑스터: create ONLY FOUR NEW E ATTACK middle poses. The first original catalog PNG is identity authority. The second saved same-character/same-direction IDLE atlas is authoritative for the existing draft guard, body scale, camera, equipment hand, ground level and rendering. Its first top-left cell (IDLE frame0) and last bottom-right cell (IDLE frame5) will be reused EXACTLY as action frames0 and5. DO NOT redraw, output, mirror or modify these guards. Create ONE transparent RGBA source PNG, ideally 1024x1024, exactly TWO equal columns and TWO equal rows, reading order cell0..3. One complete full-body new pose per cell. All four face E at the same elevated game camera as the supplied E IDLE; newly articulate body parts without changing its orientation or substituting a front/back view. Match the existing 512x512 IDLE cell sprite scale and placement when possible; keep full head/hair, all feet, original costume and the entire original equipment inside every cell with generous transparent gutters. Preserve exact catalog identity, original weapon/armor silhouette, colors, face, anatomy and original anatomical equipment hand. No invented shield, wings, tail, new weapons or generic model. Only output these middle poses: cell0, phase1: articulated anticipation and backswing with coherent grip and weight shift; cell1, phase2: fully loaded torso and knees; original weapon, bow, firearm, rod or casting system ready for its own authentic attack; cell2, phase3: active contact/release/discharge exactly toward the requested facing direction; cell3, phase4: coherent follow-through and partial recovery that leads into the preserved final living guard. Preserve the original equipment's attack kind: do not swing a gun, replace a rod, turn casting into melee, or invent weapons. Use the exact original red-glowing bladed weapon system for a committed EAST cut and follow-through. Keep all original visible blades/armor and do not add weapons. Six-frame assembly will be: preserved IDLE0, new cell0, new cell1, new cell2, new cell3, preserved IDLE5. Four genuine different joint poses, not translated/rotated/recolored/cloned stills. No duplicate guard cells, text, labels, grids, scenery, ground, opaque/gradient background, extra characters, detached limbs or diffuse effects. Alpha zero outside the full figure. Output only the four-pose supplement.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/ec84780a737e6d839e4085ff.png",
+      "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-source-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_reference_sha256": {
+    "/workspace/legendary_work/assets/catalog/ec84780a737e6d839e4085ff.png": "2d3bbb08c7f86ed2d1dad6294582dbd552a81d0b2b6add1b5a944f0c3bf45f8e",
+    "/workspace/legendary_repo/assets/actors/eight_direction/legendary_parallel/transform_194/draft001/E-idle-source-v01.png": "a223dce490e9e11432fb44d4fd1c47f6649cabdc0111c49bb54487abf6f82fe3"
+  },
+  "motion_notes": "Use the exact original red-glowing bladed weapon system for a committed EAST cut and follow-through. Keep all original visible blades/armor and do not add weapons.",
+  "status": "REQUESTED_DRAFT_GUARD_SUPPLEMENT_NOT_APPROVED",
+  "policy": "Preserve IDLE0/5 pixels and their HOLD status. Reuse adds no approval. transform176 legacy source takes priority. RUN remains six new poses. Existing authored ATTACK/HIT outputs are skipped, never overwritten."
+}
