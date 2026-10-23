@@ -1,0 +1,29 @@
+{
+  "schema": "pr122-legendary-generation-controller-handoff-v1",
+  "observed_at_utc": "2026-10-23T15:18:10Z",
+  "observed_epoch": 1792768690.227932,
+  "source_phase": "NW hit",
+  "source_receipts": 40,
+  "active_image_requests": 0,
+  "next_direction_n_idle_claims": 0,
+  "remote_batches": [
+    194,
+    195,
+    197,
+    198,
+    199,
+    200,
+    201
+  ],
+  "remote_pending_batches": [
+    196
+  ],
+  "terminated_controller_cell": "132",
+  "termination_scope": "read-only wait for remote delivery after all source returns and all eight map writes",
+  "new_controller": "continuous_all_directions_resume_n_v03.js",
+  "new_queue": "continuous_generation_queue_v03.js",
+  "normal_image_requests_cancelled": 0,
+  "existing_png_request_receipt_record_resource_changes": 0,
+  "final_approval": false,
+  "HOLD": "Final complete-draft review and common-cause correction deferred until all1320 drafts."
+}
