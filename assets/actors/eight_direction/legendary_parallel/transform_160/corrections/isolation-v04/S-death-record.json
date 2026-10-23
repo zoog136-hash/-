@@ -1,0 +1,312 @@
+{
+  "key": "transform:160",
+  "name": "지옥의 데스나이트",
+  "grade": "전설",
+  "direction": "S",
+  "role": "death",
+  "reference": "res://assets/catalog/4452407b6d9c7f3f87e22887.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:160 지옥의 데스나이트. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body S DEATH poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use true front-facing SOUTH, screen DOWN, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. SOUTH-only one-shot DEATH collapse: frame0 fatal impact/start of collapse;1 knees buckle/torso loses support;2 descending fall with original weapon following naturally;3 ground contact/collapse;4 cloth and equipment settle;5 completely still final prone/fallen body with all original equipment, to remain held indefinitely. No recovery or resurrection, no blood, gore, dismemberment, costume damage or disappearance. All six remain in SOUTH camera. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/4452407b6d9c7f3f87e22887.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": "24",
+  "reference_sha256": "053447166ab756bb08e973c38696f266aefd1c1ac68d0056d585075d634428c3",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+  "source_sha256": "69b60ad8e7a67e0cba24895e8e12561c10ff9d6d49f0671a33e1170a9e81616d",
+  "source_bytes": 2032113,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-SpriteFrames.tres",
+  "output_spriteframes_sha256": "051341fb99f1896a60b54d632f7c48621929170607d2c40f122b5d1b76cc62c1",
+  "generated_original_path": "/workspace/generated_images/exec-6814356d-86f6-47dc-bb95-7b926bbdd7d1.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_160-S-death-v01.json",
+  "request_file_sha256": "64adbf37f912b23e1f1a598d13d275696fd80ffc38cdbd0fc97471ccb1564e8a",
+  "generation_request_sha256": "1e3b4082c8f6527a89e401c9a6ee8ea4d0bcdc238edf138ebef7c61ef2be7454",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "death_2",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        647,
+        696
+      ],
+      "rgba_sha256": "428d5d50b738f4f2a07d6e38093a9553a4dc7e011ad206e6dd3c432f301cc432"
+    },
+    {
+      "index": 1,
+      "region": [
+        647,
+        0,
+        647,
+        696
+      ],
+      "rgba_sha256": "d205c044300aede955bf7c284c1200077b18fb5219104be3b050431d12613c3d"
+    },
+    {
+      "index": 2,
+      "region": [
+        1294,
+        0,
+        647,
+        696
+      ],
+      "rgba_sha256": "58240331da367c2d009173ff43078c44dc8e9d6a5ccd56a657c5517afe524082"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        696,
+        647,
+        696
+      ],
+      "rgba_sha256": "d6a16587dfb77dfe8bdb5bc0f197ee2c62944d0f9f79ecd3a276f207186f70c6"
+    },
+    {
+      "index": 4,
+      "region": [
+        647,
+        696,
+        647,
+        696
+      ],
+      "rgba_sha256": "e965a8ae85ac37d8a8cd034e5902a4692918c6128da48d77847f9d59a96851ed"
+    },
+    {
+      "index": 5,
+      "region": [
+        1294,
+        696,
+        647,
+        696
+      ],
+      "rgba_sha256": "28ce793054aef44c104ce4045d310c43056c146af118e6b4ca8579931d1e3f14"
+    }
+  ],
+  "clipped_cell_count": 6,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_160/draft001/S-death-record-v01.json",
+  "revision_parent_sha256": "146197d665d1554be385ae362138ca9fe936549d3a9f31b937ea763187b16013",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/S-death-source-v01.png",
+  "raw_authored_source_sha256": "be0dc41e6114a6e84eeea3c846340aea5ecfad6e774863e563edcf61875b51d4",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        647,
+        696
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "region": [
+        647,
+        0,
+        647,
+        696
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "region": [
+        1294,
+        0,
+        647,
+        696
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "region": [
+        0,
+        696,
+        647,
+        696
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "region": [
+        647,
+        696,
+        647,
+        696
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "region": [
+        1294,
+        696,
+        647,
+        696
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    647,
+    696
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      647,
+      1294,
+      1941
+    ],
+    "y": [
+      0,
+      696,
+      1392
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_160/corrections/isolation-v04/S-death-source-v01-isolated.png",
+      "sha256": "69b60ad8e7a67e0cba24895e8e12561c10ff9d6d49f0671a33e1170a9e81616d",
+      "bytes": 2032113,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
