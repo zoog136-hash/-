@@ -16,6 +16,13 @@ def main():
     plan=json.loads((HERE/'plan.json').read_text())
     paths={v for v in HERE.glob('*.py')}|{HERE/'plan.json'}
     paths.update(HERE.glob('*.json'))
+    resume=HERE/'resume210-v01'
+    if resume.exists():
+        paths.update(resume.glob('*.py'))
+        paths.update(resume.glob('*.js'))
+        paths.update(resume.glob('queue.json'))
+        paths.update(resume.glob('requests/*/*.json'))
+        paths.update(resume.glob('attempts/*.json'))
     rows=[]
     for actor in plan['actors']:
         folder=HERE/actor['slug']
