@@ -1,0 +1,154 @@
+{
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_130-NW-run-draft-v01.png",
+  "source_sha256": "2c1a1d525bc921888403e7a50cf7387ea5bae686bb75ca453edfc481162fb08b",
+  "body_seeds": [
+    {
+      "region": [
+        37,
+        78,
+        1,
+        1
+      ],
+      "phase": 0,
+      "body_label": 3,
+      "body_area": 75180
+    },
+    {
+      "region": [
+        505,
+        66,
+        1,
+        1
+      ],
+      "phase": 1,
+      "body_label": 2,
+      "body_area": 77369
+    },
+    {
+      "region": [
+        1268,
+        61,
+        1,
+        1
+      ],
+      "phase": 2,
+      "body_label": 1,
+      "body_area": 81055
+    },
+    {
+      "region": [
+        27,
+        535,
+        1,
+        1
+      ],
+      "phase": 3,
+      "body_label": 29,
+      "body_area": 79520
+    },
+    {
+      "region": [
+        512,
+        540,
+        1,
+        1
+      ],
+      "phase": 4,
+      "body_label": 31,
+      "body_area": 76823
+    },
+    {
+      "region": [
+        991,
+        537,
+        1,
+        1
+      ],
+      "phase": 5,
+      "body_label": 30,
+      "body_area": 79085
+    }
+  ],
+  "foreground_ownership_proof": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "edf46facc8e9ee4b58c0cec155a9883790e925a722aa6279a25a432d95434366",
+    "foreground_owner_sha256": "b41ff5e4c61133a3372c2a9ca0624eaf536f75163e9c8d157baa06f5880b7c2a",
+    "detached_pixels": 2,
+    "detached_fragments": [
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          745,
+          111,
+          746,
+          112
+        ],
+        "nearest_max": 5.830951894845301,
+        "second_nearest_min": 229.68238939892626,
+        "owner_margin_min": 223.85143750408096
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1511,
+          307,
+          1512,
+          308
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 335.0373113550191,
+        "owner_margin_min": 332.8012433775193
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "RGBA_ownership": {
+    "original_visible_texels": 899362,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "parts": [
+    {
+      "name": "phase_0",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/phase_0.png",
+      "sha256": "4f7d882f66c9efe8ffc4fb4d0dfcc6a594ed4e191aeb9274c7b49f76027674bf"
+    },
+    {
+      "name": "phase_1",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/phase_1.png",
+      "sha256": "b1d3142ff6eb7b08f6af7b815307785d15860c991ba684238f3500b5ccb5b837"
+    },
+    {
+      "name": "phase_2",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/phase_2.png",
+      "sha256": "fab30a2c18056e1807853cb8889f162396be061fb859383a9bee638c34898712"
+    },
+    {
+      "name": "phase_3",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/phase_3.png",
+      "sha256": "46f929f164d432e67b9ea71518afc51058b7811d47a1fab9d3c7ad3149a90c1f"
+    },
+    {
+      "name": "phase_4",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/phase_4.png",
+      "sha256": "bf0cd04c530260ba665f49712271970eb87a5c4a594a36e5ce2e1c7b28ef70e0"
+    },
+    {
+      "name": "phase_5",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/phase_5.png",
+      "sha256": "988fd8226fb0078cc00005ade4fd7660242afb0d9b66b97dea96baad9a32add2"
+    },
+    {
+      "name": "unclassified_soft_residue",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_130/NW-run/parts/unclassified_soft_residue.png",
+      "sha256": "b6e3cc83312aa0c09138b309a865caff8bd488f65872da474570afcdd53234cd"
+    }
+  ],
+  "unclassified_soft_residue_pixels": 66981,
+  "unclassified_soft_residue_max_alpha": 2,
+  "residue_status": "PRESERVED_SEPARATE_NOT_RENDERED_FINAL_REVIEW_HOLD",
+  "motion": "Original whole-pose coordinates retained; contour extraction and rigid translation only",
+  "no_resampling": true
+}

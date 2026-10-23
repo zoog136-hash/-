@@ -1,0 +1,192 @@
+{
+  "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+  "source_sha256": "7cc5af9d5c5f267f07aabf74211574ab23544d179e36433035579af79bbcece9",
+  "source_RGBA_sha256": "1a1ce8d362772d9f5e326f11ad3d99e0e6d8bca83cac21269429563b57a7c27e",
+  "base_geometry_sha256": "4bb5b0e2ed5ba8bb7e68085dc82dafebee0370ae624feae12a97c33abca72e46",
+  "derived_geometry_sha256": "5904ef2aa4755538f724587b9f0a6f52dfadea1d07c7e8022fc32456a643ecd5",
+  "review_sha256": "46a9cb70cfb5bf92579668e440fa0ee5411859d0988706f217fc574135dd850f",
+  "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+  "source_unchanged": true,
+  "canonical_canvas_foot_anchors_unchanged": true,
+  "all_alpha_gt16_covered_exactly_once": true,
+  "foreign_foreground_pixels": 0,
+  "alpha_gt16_pixels": 500328,
+  "added_alpha_gt16_pixels": 0,
+  "all_alpha_positive_covered": true,
+  "expanded_regions": [
+    [
+      374,
+      407,
+      531,
+      466
+    ],
+    [
+      1677,
+      418,
+      484,
+      443
+    ],
+    [
+      388,
+      1698,
+      503,
+      443
+    ],
+    [
+      1656,
+      1696,
+      527,
+      447
+    ],
+    [
+      371,
+      2983,
+      537,
+      434
+    ],
+    [
+      1669,
+      2969,
+      501,
+      461
+    ]
+  ],
+  "default_importer_repacker_unchanged": true,
+  "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+  "nearest_owner_sha256": "eea96de5fe75870a82d920089390116f657c2484dac83445c3ab909590eb46eb",
+  "foreground_owner_sha256": "4814187318e969ff9128bae1ddd0dad671670e1f9feae8577661ec6b21761b89",
+  "detached_pixels": 11,
+  "detached_fragments": [
+    {
+      "row": 1,
+      "pixels": 1,
+      "bbox": [
+        2065,
+        570,
+        2066,
+        571
+      ],
+      "nearest_max": 5.830951894845301,
+      "second_nearest_min": 1140.0,
+      "owner_margin_min": 1134.1690481051546
+    },
+    {
+      "row": 1,
+      "pixels": 1,
+      "bbox": [
+        2066,
+        572,
+        2067,
+        573
+      ],
+      "nearest_max": 6.082762530298219,
+      "second_nearest_min": 1138.0,
+      "owner_margin_min": 1131.9172374697018
+    },
+    {
+      "row": 0,
+      "pixels": 1,
+      "bbox": [
+        829,
+        584,
+        830,
+        585
+      ],
+      "nearest_max": 2.23606797749979,
+      "second_nearest_min": 862.7659010415282,
+      "owner_margin_min": 860.5298330640284
+    },
+    {
+      "row": 0,
+      "pixels": 1,
+      "bbox": [
+        805,
+        643,
+        806,
+        644
+      ],
+      "nearest_max": 3.0,
+      "second_nearest_min": 878.9277558479992,
+      "owner_margin_min": 875.9277558479992
+    },
+    {
+      "row": 2,
+      "pixels": 1,
+      "bbox": [
+        720,
+        1790,
+        721,
+        1791
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 934.4800693433756,
+      "owner_margin_min": 931.6516422186294
+    },
+    {
+      "row": 2,
+      "pixels": 1,
+      "bbox": [
+        718,
+        1792,
+        719,
+        1793
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 936.2141848957427,
+      "owner_margin_min": 933.3857577709965
+    },
+    {
+      "row": 2,
+      "pixels": 2,
+      "bbox": [
+        589,
+        1860,
+        591,
+        1861
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 997.0180539990237,
+      "owner_margin_min": 994.1961462935823
+    },
+    {
+      "row": 2,
+      "pixels": 1,
+      "bbox": [
+        776,
+        1898,
+        777,
+        1899
+      ],
+      "nearest_max": 2.23606797749979,
+      "second_nearest_min": 891.2564165266919,
+      "owner_margin_min": 889.020348549192
+    },
+    {
+      "row": 5,
+      "pixels": 1,
+      "bbox": [
+        2065,
+        3155,
+        2066,
+        3156
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 1040.5772436489278,
+      "owner_margin_min": 1037.7488165241816
+    },
+    {
+      "row": 4,
+      "pixels": 1,
+      "bbox": [
+        763,
+        3201,
+        764,
+        3202
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 918.49060964171,
+      "owner_margin_min": 915.6621825169638
+    }
+  ],
+  "minimum_required_owner_margin": 32.0
+}
