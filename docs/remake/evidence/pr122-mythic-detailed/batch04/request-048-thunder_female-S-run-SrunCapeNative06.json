@@ -1,0 +1,136 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "S",
+  "role": "run",
+  "version": "SrunCapeNative06",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+    "base_geometry_sha256": "e6577809f78c9c6c734c48fc15ce12d5ca6dc5e341a4643d563c0c1cba31ffa0",
+    "direction": "S",
+    "regions": [
+      [
+        517,
+        276,
+        733,
+        1266
+      ],
+      [
+        2831,
+        339,
+        733,
+        1050
+      ],
+      [
+        549,
+        2585,
+        733,
+        1007
+      ],
+      [
+        2858,
+        2591,
+        733,
+        1256
+      ],
+      [
+        544,
+        4951,
+        733,
+        1023
+      ],
+      [
+        2826,
+        4872,
+        733,
+        1100
+      ]
+    ],
+    "nearest_owner_sha256": "5885aba9b588c259b4f14e6e5d73e4e451ff5b94aa0d6e0a9a8c2ece17628689",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 243af19bb5729b904284022d24502c1399ded2233610de5e4ecf4a02b54fe4fa"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+    "direction": "S",
+    "role": "run",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        911,
+        1274
+      ],
+      [
+        3215,
+        1274
+      ],
+      [
+        911,
+        3578
+      ],
+      [
+        3215,
+        3578
+      ],
+      [
+        911,
+        5882
+      ],
+      [
+        3215,
+        5882
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "243af19bb5729b904284022d24502c1399ded2233610de5e4ecf4a02b54fe4fa",
+  "authored_common_root_float": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "common_root_integer": [
+    655,
+    1018
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "authoring_dependencies": [
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+      "sha256": "fbbbb85ff8f066be19ba328a80930d46e237fe3b557cba90c24c96dc7c82b847"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v06-exact-latest-cape-root-20261022/S-RUN6-own-actual-new-native-full-actor-source-contract-v01.json",
+      "sha256": "c8efdcfac18d803406327478cff42617881a74e5228b24d4f09dbed37194d09a"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-SrunCapeNative06.png",
+  "output_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+  "output_bytes": 4902123
+}

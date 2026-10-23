@@ -28737,6 +28737,398 @@
       ],
       "source_visual_status": "HOLD_NOT_REVIEWED",
       "staging_only": true
+    },
+    {
+      "key": "transform:413",
+      "direction": "S",
+      "role": "run",
+      "version": "SrunCapeNative06",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-SrunCapeNative06.png",
+      "original_generated_file": "/workspace/scratch/pr122-death-s-only-20261022-v01/S-run-new-cape-root-six-exact-packed-candidate-v01/thunder_female-S-run-new-cape-root-real-six-v06.png",
+      "bytes": 4902123,
+      "sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "source_canvas_review": {
+        "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+        "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+        "canvas_size": 2048,
+        "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+      },
+      "source_region_review": {
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+        "base_geometry_sha256": "e6577809f78c9c6c734c48fc15ce12d5ca6dc5e341a4643d563c0c1cba31ffa0",
+        "direction": "S",
+        "regions": [
+          [
+            517,
+            276,
+            733,
+            1266
+          ],
+          [
+            2831,
+            339,
+            733,
+            1050
+          ],
+          [
+            549,
+            2585,
+            733,
+            1007
+          ],
+          [
+            2858,
+            2591,
+            733,
+            1256
+          ],
+          [
+            544,
+            4951,
+            733,
+            1023
+          ],
+          [
+            2826,
+            4872,
+            733,
+            1100
+          ]
+        ],
+        "nearest_owner_sha256": "5885aba9b588c259b4f14e6e5d73e4e451ff5b94aa0d6e0a9a8c2ece17628689",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 243af19bb5729b904284022d24502c1399ded2233610de5e4ecf4a02b54fe4fa"
+      },
+      "source_region_proof": {
+        "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+        "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+        "source_RGBA_sha256": "88a3fd5f386d4012758ea49c7267ea27299694b05ad695176075ca992ae7349e",
+        "base_geometry_sha256": "e6577809f78c9c6c734c48fc15ce12d5ca6dc5e341a4643d563c0c1cba31ffa0",
+        "derived_geometry_sha256": "72cf0a536a044c1a0554d84bd69dc3ec93304b0a5c33dda213538f5f2fad33ce",
+        "review_sha256": "f40a9bedc271966126f133e4568c6d49c24a0c46debc5f31eb7905e4e3cba84d",
+        "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 243af19bb5729b904284022d24502c1399ded2233610de5e4ecf4a02b54fe4fa",
+        "source_unchanged": true,
+        "canonical_canvas_foot_anchors_unchanged": true,
+        "all_alpha_gt16_covered_exactly_once": true,
+        "foreign_foreground_pixels": 0,
+        "alpha_gt16_pixels": 1814522,
+        "added_alpha_gt16_pixels": 0,
+        "all_alpha_positive_covered": true,
+        "expanded_regions": [
+          [
+            517,
+            276,
+            733,
+            1266
+          ],
+          [
+            2831,
+            339,
+            733,
+            1050
+          ],
+          [
+            549,
+            2585,
+            733,
+            1007
+          ],
+          [
+            2858,
+            2591,
+            733,
+            1256
+          ],
+          [
+            544,
+            4951,
+            733,
+            1023
+          ],
+          [
+            2826,
+            4872,
+            733,
+            1100
+          ]
+        ],
+        "default_importer_repacker_unchanged": true,
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+        "nearest_owner_sha256": "5885aba9b588c259b4f14e6e5d73e4e451ff5b94aa0d6e0a9a8c2ece17628689",
+        "foreground_owner_sha256": "80ab31d92b9c3494838193a18baaedbb628c05ab77f45930fe5b432e2d7ca919",
+        "detached_pixels": 108,
+        "detached_fragments": [
+          {
+            "row": 0,
+            "pixels": 12,
+            "bbox": [
+              731,
+              689,
+              737,
+              693
+            ],
+            "nearest_max": 8.602325267042627,
+            "second_nearest_min": 1926.3089056535039,
+            "owner_margin_min": 1918.69313254764
+          },
+          {
+            "row": 1,
+            "pixels": 16,
+            "bbox": [
+              3041,
+              724,
+              3047,
+              732
+            ],
+            "nearest_max": 5.656854249492381,
+            "second_nearest_min": 1841.3180062118547,
+            "owner_margin_min": 1836.760027799496
+          },
+          {
+            "row": 0,
+            "pixels": 1,
+            "bbox": [
+              608,
+              1176,
+              609,
+              1177
+            ],
+            "nearest_max": 9.433981132056603,
+            "second_nearest_min": 1441.9022158246378,
+            "owner_margin_min": 1432.468234692581
+          },
+          {
+            "row": 0,
+            "pixels": 2,
+            "bbox": [
+              610,
+              1177,
+              611,
+              1179
+            ],
+            "nearest_max": 10.295630140987,
+            "second_nearest_min": 1439.8340182118216,
+            "owner_margin_min": 1429.5383880708346
+          },
+          {
+            "row": 0,
+            "pixels": 4,
+            "bbox": [
+              612,
+              1178,
+              614,
+              1181
+            ],
+            "nearest_max": 8.94427190999916,
+            "second_nearest_min": 1437.7360675729046,
+            "owner_margin_min": 1430.2238719038437
+          },
+          {
+            "row": 0,
+            "pixels": 4,
+            "bbox": [
+              615,
+              1180,
+              617,
+              1183
+            ],
+            "nearest_max": 5.385164807134504,
+            "second_nearest_min": 1435.6441063160466,
+            "owner_margin_min": 1431.5749170496067
+          },
+          {
+            "row": 0,
+            "pixels": 4,
+            "bbox": [
+              676,
+              1236,
+              680,
+              1240
+            ],
+            "nearest_max": 10.63014581273465,
+            "second_nearest_min": 1378.1309807126463,
+            "owner_margin_min": 1368.2821229108501
+          },
+          {
+            "row": 2,
+            "pixels": 3,
+            "bbox": [
+              854,
+              2861,
+              857,
+              2862
+            ],
+            "nearest_max": 3.605551275463989,
+            "second_nearest_min": 1342.3699192100514,
+            "owner_margin_min": 1339.0772109584152
+          },
+          {
+            "row": 3,
+            "pixels": 2,
+            "bbox": [
+              3162,
+              2885,
+              3164,
+              2886
+            ],
+            "nearest_max": 2.23606797749979,
+            "second_nearest_min": 1514.6286673637205,
+            "owner_margin_min": 1512.3925993862208
+          },
+          {
+            "row": 2,
+            "pixels": 12,
+            "bbox": [
+              1057,
+              2995,
+              1062,
+              2999
+            ],
+            "nearest_max": 11.40175425099138,
+            "second_nearest_min": 1458.2143189531503,
+            "owner_margin_min": 1448.9854041292547
+          },
+          {
+            "row": 3,
+            "pixels": 12,
+            "bbox": [
+              3365,
+              3026,
+              3370,
+              3030
+            ],
+            "nearest_max": 14.317821063276353,
+            "second_nearest_min": 1667.0506890913666,
+            "owner_margin_min": 1655.706430257644
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              627,
+              3290,
+              628,
+              3291
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1674.2687956239286,
+            "owner_margin_min": 1666.6530225180647
+          },
+          {
+            "row": 2,
+            "pixels": 1,
+            "bbox": [
+              629,
+              3291,
+              630,
+              3292
+            ],
+            "nearest_max": 7.615773105863909,
+            "second_nearest_min": 1673.234293217779,
+            "owner_margin_min": 1665.6185201119151
+          },
+          {
+            "row": 5,
+            "pixels": 12,
+            "bbox": [
+              3038,
+              5264,
+              3044,
+              5272
+            ],
+            "nearest_max": 12.083045973594572,
+            "second_nearest_min": 1421.090074555445,
+            "owner_margin_min": 1409.0484799766527
+          },
+          {
+            "row": 4,
+            "pixels": 11,
+            "bbox": [
+              1055,
+              5369,
+              1060,
+              5372
+            ],
+            "nearest_max": 12.206555615733702,
+            "second_nearest_min": 1802.3595645708433,
+            "owner_margin_min": 1790.317969992051
+          },
+          {
+            "row": 5,
+            "pixels": 1,
+            "bbox": [
+              2917,
+              5744,
+              2918,
+              5745
+            ],
+            "nearest_max": 9.433981132056603,
+            "second_nearest_min": 1645.4160568075176,
+            "owner_margin_min": 1635.982075675461
+          },
+          {
+            "row": 5,
+            "pixels": 3,
+            "bbox": [
+              2919,
+              5745,
+              2921,
+              5747
+            ],
+            "nearest_max": 8.94427190999916,
+            "second_nearest_min": 1647.3933956405192,
+            "owner_margin_min": 1638.4491237305201
+          },
+          {
+            "row": 5,
+            "pixels": 3,
+            "bbox": [
+              2922,
+              5747,
+              2924,
+              5749
+            ],
+            "nearest_max": 5.385164807134504,
+            "second_nearest_min": 1650.3502658526766,
+            "owner_margin_min": 1644.965101045542
+          },
+          {
+            "row": 5,
+            "pixels": 4,
+            "bbox": [
+              2984,
+              5801,
+              2987,
+              5805
+            ],
+            "nearest_max": 16.401219466856727,
+            "second_nearest_min": 1712.116818444349,
+            "owner_margin_min": 1696.7274972383418
+          }
+        ],
+        "minimum_required_owner_margin": 32.0
+      },
+      "authoring_dependencies": [
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+          "sha256": "fbbbb85ff8f066be19ba328a80930d46e237fe3b557cba90c24c96dc7c82b847"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v06-exact-latest-cape-root-20261022/S-RUN6-own-actual-new-native-full-actor-source-contract-v01.json",
+          "sha256": "c8efdcfac18d803406327478cff42617881a74e5228b24d4f09dbed37194d09a"
+        }
+      ],
+      "source_visual_status": "HOLD_NOT_REVIEWED",
+      "staging_only": true
     }
   ],
   "mythic_detail_total": 31,
@@ -28890,9 +29282,10 @@
     "transform:413:SW:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png",
     "transform:413:S:death": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png",
     "transform:413:W:attack": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-attack-WattackCuffNative04.png",
-    "transform:413:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-WrunOwnNative06.png"
+    "transform:413:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-WrunOwnNative06.png",
+    "transform:413:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-SrunCapeNative06.png"
   },
-  "selected_detailed_action_native_poses": 570,
+  "selected_detailed_action_native_poses": 576,
   "authoring_holds": [
     {
       "key": "transform:267",
@@ -35583,6 +35976,48 @@
         [
           3334,
           5728
+        ]
+      ],
+      "authored_pose_canvas_sizes": [
+        2560,
+        2560,
+        2560,
+        2560,
+        2560,
+        2560
+      ],
+      "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+    },
+    "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-SrunCapeNative06.png": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+      "direction": "S",
+      "role": "run",
+      "canvas_size": 2048,
+      "source_anchors": [
+        [
+          911,
+          1274
+        ],
+        [
+          3215,
+          1274
+        ],
+        [
+          911,
+          3578
+        ],
+        [
+          3215,
+          3578
+        ],
+        [
+          911,
+          5882
+        ],
+        [
+          3215,
+          5882
         ]
       ],
       "authored_pose_canvas_sizes": [
