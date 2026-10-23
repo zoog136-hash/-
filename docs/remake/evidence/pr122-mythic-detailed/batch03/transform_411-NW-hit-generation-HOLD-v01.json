@@ -1,0 +1,32 @@
+{
+  "name": "신화-투사(여)",
+  "grade": "신화",
+  "reference": "res://assets/catalog/23ddcb3e1e4a9f3c6f48124e.png",
+  "key": "transform:411",
+  "direction": "NW",
+  "role": "hit",
+  "reference_sha256": "c83eb1dd8aab0fc7b726a6c44f9a7fed43b4bb82d273ca5f5f1405fdb0fe8e77",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-S-attack-draft-v01.png": "c16164e351af5ee0ed8658f2991e4f364007868d76480a38ea970a558d263f8e",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-NW-idle-draft-v01.png": "c1f3f736b41645f61f7274ae234a01debc09e4c4eba61266d6ae1d8e0001eb3d"
+  },
+  "policy": "First drafts across active19 before polishing; retain approved267/393 and all413 work. New death S only; no new mythic WALK; no chat images; no final approval inferred.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new NW HIT six-pose animation for transform:411, 신화-투사(여). First original catalog reference is authoritative for exact identity, original costume, face, hair, skin, colors, armor, ornaments, footwear and original equipment. Other saved drafts are style/identity and facing guides only, never copy their poses, clipping or errors. Create ONE transparent PNG, exactly SIX new full-body poses in THREE equal columns and TWO equal rows, reading order. ALL six must face NORTHWEST / screen up-left. A three-quarter back view facing screen UP-LEFT. Keep the same original top-down game camera and painted sprite detail, and the same facing throughout. Newly draw the correct body perspective and occlusion; no whole-image mirroring, flipped equipment, recoloring, rotating a static body or generic substitute. Retain original equipment in the correct anatomical hand, with proper grip and connected joints; never invent a weapon, wings or tail absent from the original. Required progression 0: stable guard; 1: impact response; 2: maximum stagger / recoil; 3: counterbalance; 4: regaining control; 5: recovered guard. One nonfatal impact, maximum stagger, counterbalance and recovery to the same living guard; no death, attack, firing or casting. Preserve grip, connected joints and believable support. No blood, gore, wounds or costume damage. Consistent body scale and common floor. Every full figure, complete weapon tip, original hair ornament and full toes/heels must stay entirely inside its cell with generous transparent gutters, no overlap between cells or clipping. No ground, opaque background, scenery, labels, grids, text, logos or extra figures. This is an unapproved first animation draft for local game production, output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/23ddcb3e1e4a9f3c6f48124e.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-S-attack-draft-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-NW-idle-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "HOLD_GENERATION_SERVICE_MODERATION_REJECTION",
+  "generation_error_observed": "HTTP 400 moderation_block; service reported safety_violations=[sexual]; request_id=820f1bea-3ebf-4987-bc4d-664c0a1757b5",
+  "retried": false,
+  "source": null,
+  "source_visual_status": "HOLD",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "last_verified_own_pushed_commit": "33e5f0ff45380a3e7de2d55e9faab71f710582f9",
+  "generation_request_sha256": "9090c507691ff07701b74fcb8c45243589d5743cabe502f41fd3a5f7946ffcb5"
+}
