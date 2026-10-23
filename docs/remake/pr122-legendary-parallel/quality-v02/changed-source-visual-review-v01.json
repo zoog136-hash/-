@@ -1,0 +1,272 @@
+{
+  "baseline": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
+  "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
+  "scope": "Exactly one static visual check of the13 successfully corrected source PNGs only, all6 authored poses each. No healthy/unchanged source rereview, image regeneration, resource mutation or final motion approval.",
+  "results": [
+    {
+      "candidate": "qc001",
+      "actor": "402",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six now expose the left/front face and chest toward down-left rather than the old right-facing guard. Costume, turquoise polearm and gold/white hair/ornaments remain recognizable. No obvious neighboring body or clipped extremity at this view."
+    },
+    {
+      "candidate": "qc002",
+      "actor": "402",
+      "direction": "NW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six now show the back of the head/costume and left side toward up-left, with the face hidden. The stable ready stance includes a raised trailing heel; static source views cannot certify exact temporal grounding."
+    },
+    {
+      "candidate": "qc005",
+      "actor": "375",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six use the left/front body, face and feet toward down-left rather than the old right-facing guard. Gold fishing rod, dangling purple float, cap and white/gold coat remain recognizable. No clear clipping or neighboring body at source-board resolution."
+    },
+    {
+      "candidate": "qc006",
+      "actor": "375",
+      "direction": "NE",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six expose the back of cap, coat and hair with the body turned toward up-right. The face/chest are hidden. Original rod/float and costume remain. Static foot positions and small cloth changes do not certify loop playback."
+    },
+    {
+      "candidate": "qc008",
+      "actor": "368",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six now show the face, chest and braced feet turned down-left. Original dark hair, green/gold outfit and paired green blades remain recognizable; no obvious foreign body or clipped extremity in the changed source."
+    },
+    {
+      "candidate": "qc009",
+      "actor": "339",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "UNRESOLVED_HOLD_NO_RETRY",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_OR_HOVER_POSES_STATIC_ONLY",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "All six corrected poses still expose a front/right face and body, with the nose/chest directed to screen-right rather than down-left. Original-resolution source confirms the camera remains inconsistent with SW.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ],
+      "notes": "Pink hair, black star dress, blue staff and ornaments remain recognizable, but this correction does not resolve the frozen SW camera error. Source preserved and no repeat call made; do not use this PNG as camera authority for future SW corrections."
+    },
+    {
+      "candidate": "qc010",
+      "actor": "338",
+      "direction": "N",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "UNRESOLVED_IDLE_CAST_LIKE_HOLD_NO_RETRY",
+      "remaining_issues": [
+        {
+          "cause": "articulation",
+          "status": "HOLD",
+          "frames": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "detail": "The new N IDLE raises both orbs from guard to above the head and adds a central charged flash, resembling a cast windup rather than restrained idle breathing. Camera is rear-facing, but idle action separation remains unresolved.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ],
+      "notes": "All six now show the rear horned helmet and back, with purple orb on screen-left and fire on screen-right. Original black/red/gold armor and paired orbs remain recognizable. No second generation is permitted for this candidate."
+    },
+    {
+      "candidate": "qc013",
+      "actor": "338",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six show the face/body/feet oriented down-left. Fire/purple orb order and original horned black/red/gold armor remain; small cloth/weight changes read as idle at static resolution. No clear neighboring body or clipped extremity."
+    },
+    {
+      "candidate": "qc014",
+      "actor": "337",
+      "direction": "NW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six show back hair/robe and the left side toward up-left; the frontal face/chest are hidden. Original white/gold robe, halo and flame staff remain recognizable. Cloth/arm changes are subtle; feet are partly hidden by the robe and cannot be fully judged statically."
+    },
+    {
+      "candidate": "qc016",
+      "actor": "332",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "The helmet/body and forward foot now point down-left consistently across all six, with the original white/red hair, black/red coat and red weapon retained. Some rear-leg anatomy is occluded by the coat; no definite missing limb is inferred from the still views."
+    },
+    {
+      "candidate": "qc018",
+      "actor": "282",
+      "direction": "E",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six now have a true right-facing side profile with nose, torso and feet pointing screen-right. Original gold/blue armor, blond hair, white scarf, blue spear and cape remain. The two feet stay in a stable guard layout at static resolution."
+    },
+    {
+      "candidate": "qc019",
+      "actor": "282",
+      "direction": "SE",
+      "role": "idle",
+      "camera_result": "RESOLVED_STATIC",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [],
+      "notes": "All six use a frontal/right three-quarter head and torso with the leading foot down-right; the old left-facing guard is replaced. The blue spear stays in its original carried hand on the viewer-left and is not treated as a camera error merely for pointing across the idle stance. Exact loop grounding remains unverified."
+    },
+    {
+      "candidate": "qc020",
+      "actor": "275",
+      "direction": "SW",
+      "role": "idle",
+      "camera_result": "UNRESOLVED_HOLD_NO_RETRY",
+      "identity_result": "RECOGNIZABLE_ORIGINAL",
+      "action_result": "SUBTLE_IDLE_POSES_STATIC_ONLY",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "All six still show the face/chest turned front/right and the firearm oriented down-right, retaining the old wrong camera instead of SW down-left.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ],
+      "notes": "Original dark hair, white suit, patterned black/gold coat and gold firearm remain recognizable, but the frozen SW camera error is unresolved. Preserve the new version and do not use it as SW camera authority or generate it again."
+    }
+  ],
+  "notes": [
+    "All13 outputs retain production HOLD and actor/final motion approvals0. Camera resolved at static source resolution does not certify runtime, cadence, registration or all-direction motion."
+  ],
+  "reviewed_sources": 13,
+  "reviewed_pose_occurrences": 78,
+  "camera_resolved_static": 11,
+  "camera_unresolved_hold": 2,
+  "remaining_action_hold": 1,
+  "new_generation_calls_during_review": 0,
+  "healthy_sources_rereviewed": 0,
+  "final_motion_approvals_added": 0,
+  "source_pixel_or_resource_mutations": 0,
+  "review_type": "changed_source_static_single_pass",
+  "remaining_candidates": [
+    {
+      "candidate": "qc009",
+      "actor": "339",
+      "direction": "SW",
+      "role": "idle",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "All six corrected poses still expose a front/right face and body, with the nose/chest directed to screen-right rather than down-left. Original-resolution source confirms the camera remains inconsistent with SW.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ]
+    },
+    {
+      "candidate": "qc010",
+      "actor": "338",
+      "direction": "N",
+      "role": "idle",
+      "remaining_issues": [
+        {
+          "cause": "articulation",
+          "status": "HOLD",
+          "frames": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "detail": "The new N IDLE raises both orbs from guard to above the head and adds a central charged flash, resembling a cast windup rather than restrained idle breathing. Camera is rear-facing, but idle action separation remains unresolved.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ]
+    },
+    {
+      "candidate": "qc020",
+      "actor": "275",
+      "direction": "SW",
+      "role": "idle",
+      "remaining_issues": [
+        {
+          "cause": "camera",
+          "status": "HOLD",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "detail": "All six still show the face/chest turned front/right and the firearm oriented down-right, retaining the old wrong camera instead of SW down-left.",
+          "fix_kind": "RETAIN_VERSIONED_OUTPUT_AND_HOLD_NO_SECOND_GENERATION"
+        }
+      ]
+    }
+  ]
+}

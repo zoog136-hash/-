@@ -131,6 +131,27 @@ func _apply_frame_registration() -> void:
 		return
 	# Godot draws centered texture coordinates at offset-size/2. Therefore the
 	# reviewed anchor maps exactly to target, independently of source dimensions.
+	# ActorMotion.apply already normalizes each original virtual canvas to256.
+	# Isolation adds padding, so use the ORIGINAL canvas from baseline_center,
+	# never the larger derivative atlas cell. This is runtime policy, not an
+	# inferred body-height/semantic correction. Reviewed explicit raw scales can
+	# opt out to avoid applying the same normalization twice.
+	var policy: String = str(_registration.get("scale_policy", "EXISTING_RUNTIME_CANVAS_NORMALIZATION" if str(_registration.get("status", "")) == "RASTER_COORDINATE_PRESERVATION" else "EXPLICIT_RAW_PIXEL_SCALE"))
+	if policy == "EXISTING_RUNTIME_CANVAS_NORMALIZATION":
+		var original_canvas: Vector2 = texture.get_size()
+		var baseline_values: Array = entry.get("baseline_center", [])
+		var explicit_canvas: Array = entry.get("original_virtual_canvas", [])
+		if explicit_canvas.size() == 2:
+			original_canvas = Vector2(float(explicit_canvas[0]), float(explicit_canvas[1]))
+		elif baseline_values.size() == 2:
+			original_canvas = Vector2(float(baseline_values[0]), float(baseline_values[1])) * 2.0
+		if not original_canvas.is_finite() or original_canvas.x <= 0.0 or original_canvas.y <= 0.0:
+			_fail("Invalid original virtual canvas")
+			return
+		factor *= Vector2(256.0, 256.0) / original_canvas
+	elif policy != "EXPLICIT_RAW_PIXEL_SCALE":
+		_fail("Unknown scale policy; never silently double-normalize")
+		return
 	sprite.scale = factor
 	sprite.offset = texture.get_size() * 0.5 - anchor
 	sprite.position = target

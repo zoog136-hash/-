@@ -69,6 +69,8 @@ def main():
     review = json.loads(review_raw)
     assert review['baseline_sha'] == I.BASELINE
     scales = {key: constant_scale(value) for key, value in review['scale_by_source_sha256'].items()}
+    scale_policy = review.get('scale_policy', 'EXPLICIT_RAW_PIXEL_SCALE')
+    assert scale_policy in ('EXPLICIT_RAW_PIXEL_SCALE', 'EXISTING_RUNTIME_CANVAS_NORMALIZATION')
     assert all(re.fullmatch('[0-9a-f]{64}', key) for key in scales)
     library = I.read_json(args.library) if args.library else {'revisions': []}
     current_entries = {tuple(entry['slot']): entry for entry in library['revisions']}
@@ -114,29 +116,58 @@ def main():
                                  'target_anchor': target, 'scale_basis': 'CONSTANT_PER_REVIEWED_SOURCE_SHA',
                                  'raw_source_sha256': source_sha, 'evidence_type': evidence['evidence_type'],
                                  'anchor_kind': evidence.get('anchor_kind', 'support-foot'),
-                                 'baseline_anchor': baseline_anchor})
+                                 'baseline_anchor': baseline_anchor,
+                                 'original_virtual_canvas': [base_frame['region'][2]+base_frame['margin'][2], base_frame['region'][3]+base_frame['margin'][3]] if baseline_anchor is not None else [frame['region'][2]+frame['margin'][2], frame['region'][3]+frame['margin'][3]]})
         relative = I.ASSETS / ('transform_' + slot[0].split(':')[1]) / 'corrections' / args.version
         stem = slot[1] + '-' + slot[2]
         record_path = relative / (stem + '-record.json')
         registration_path = relative / (stem + '-registration.json')
+        order = clip.get('frame_order_override', list(range(6)))
+        assert sorted(order) == list(range(6)), 'Frame override must preserve every real pose exactly once'
+        permutation = order != list(range(6))
+        if permutation:
+            assert clip.get('targeted_followup_finding'), 'A new order requires explicit targeted follow-up evidence'
+        ordered_frames = [copy.deepcopy(frames['frames'][phase]) for phase in order]
+        ordered_registration = [dict(registration[phase], index=index, original_phase=phase) for index, phase in enumerate(order)]
         revised = copy.deepcopy(current)
         revised.update(schema='pr122-legendary-semantic-registration-clip-v1',
                        status='REGISTERED_DRAFT_HOLD_NOT_FINAL_APPROVED', revision_parent=I.resource(current_path.relative_to(args.root)),
                        revision_parent_sha256=I.sha(current_raw), frame_registration=I.resource(registration_path),
                        frame_registration_status='REVIEWED_ANCHORS_AND_SCALE',
                        semantic_review_input_sha256=I.sha(review_raw), final_approved=False)
+        new_tres = None
+        if permutation:
+            # Duration weights travel with their bindings. Total presentation
+            # duration stays exact; old individual start times intentionally do
+            # not apply to this targeted action-order correction.
+            new_frames_path = relative / (stem + '-SpriteFrames.tres')
+            changed_frames = dict(frames, frames=ordered_frames)
+            new_tres = I.render_tres(changed_frames) + b'metadata/twilight_canvas_size = Vector2(256, 256)\n'
+            revised.update(output_spriteframes=I.resource(new_frames_path), output_spriteframes_sha256=I.sha(new_tres),
+                           frame_order_override=order, duration_policy='BINDING_WEIGHTS_TRAVEL_WITH_PRESERVED_POSES',
+                           legacy_individual_start_times_preserved=False, total_duration_preserved=True,
+                           targeted_followup_finding=clip['targeted_followup_finding'])
+            if 'automatic_checks' in current:
+                by_phase = {check['index']:check for check in current['automatic_checks']}
+                revised['automatic_checks'] = [dict(by_phase[old],index=index) for index,old in enumerate(order)]
+            revised['revision_source_pose_sequence'] = [dict(frame, phase=index, original_phase=old) for index,(old,frame) in enumerate(zip(order,ordered_frames))]
         revised_raw = I.json_bytes(revised)
         metadata = {'schema': 'legendary-frame-registration-v1', 'baseline_sha': I.BASELINE,
                     'status': 'REVIEWED_ANCHORS_AND_SCALE', 'record_sha256': I.sha(revised_raw),
-                    'SpriteFrames_sha256': current['output_spriteframes_sha256'], 'frames': registration,
+                    'SpriteFrames_sha256': revised['output_spriteframes_sha256'], 'frames': ordered_registration,
+                    'scale_policy': scale_policy, 'frame_order_override': order,
                     'evidence_type': 'static_semantic_anchor_review', 'review_input_sha256': I.sha(review_raw),
                     'actual_AnimatedSprite2D_changed_and_affected_validation': 'NOT_RUN', 'quality_status': 'HOLD', 'final_approved': 0}
         metadata_raw = I.json_bytes(metadata)
         entry = {'slot': slot, 'record': I.resource(record_path), 'record_sha256': I.sha(revised_raw),
-                 'SpriteFrames': current['output_spriteframes'], 'SpriteFrames_sha256': current['output_spriteframes_sha256'],
+                 'SpriteFrames': revised['output_spriteframes'], 'SpriteFrames_sha256': revised['output_spriteframes_sha256'],
                  'registration': I.resource(registration_path), 'registration_sha256': I.sha(metadata_raw),
                  'registration_status': 'REVIEWED_ANCHORS_AND_SCALE'}
-        prepared.append((entry, record_path, revised_raw, registration_path, metadata_raw))
+        if permutation:
+            entry.update(expected_terminal_baseline_phase=order[-1], expected_terminal_source=ordered_frames[-1]['source'],
+                         expected_terminal_region=ordered_frames[-1]['region'])
+        prepared.append((entry, record_path, revised_raw, registration_path, metadata_raw,
+                         (new_frames_path,new_tres) if permutation else None))
     manifest = {'schema': 'legendary-isolation-revision-library-v1', 'baseline_sha': I.BASELINE,
                 'dependency_required_slots': [entry[0]['slot'] for entry in prepared], 'excluded_slots': [],
                 'revisions': [entry[0] for entry in prepared], 'review_input_sha256': I.sha(review_raw),
@@ -147,7 +178,9 @@ def main():
                           'native_frames': native_frames, 'source_constant_scales': len(scales)}))
         return
     assert args.output_root is not None
-    for entry, record_path, record_raw, metadata_path, metadata_raw in prepared:
+    for entry, record_path, record_raw, metadata_path, metadata_raw, changed_resource in prepared:
+        if changed_resource:
+            I.immutable_write(args.output_root / changed_resource[0], changed_resource[1])
         I.immutable_write(args.output_root / record_path, record_raw)
         I.immutable_write(args.output_root / metadata_path, metadata_raw)
     target = args.output_root / I.DOCS / (review['actor'].replace(':', '_') + '-' + args.version + '-library.json')

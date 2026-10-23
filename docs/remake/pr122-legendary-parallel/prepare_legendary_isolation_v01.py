@@ -6,6 +6,7 @@ This is a repair of already recorded errors, never another corpus review.
 """
 import argparse
 import copy
+import functools
 import hashlib
 import io
 import json
@@ -60,6 +61,12 @@ def immutable_write(path, raw):
 
 def json_bytes(value):
     return (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+
+
+@functools.lru_cache(maxsize=16)
+def frame_source_pixels(path):
+    with Image.open(path) as image:
+        return np.asarray(image.convert('RGBA')).copy()
 
 
 def parse_frames(raw):
@@ -337,7 +344,7 @@ def write_revisions(root, output_root, version, substitutions, exclusions):
             path = safe_path(output_root, frame['source'])
             if not path.exists():
                 path = safe_path(root, frame['source'])
-            rgba = np.asarray(Image.open(path).convert('RGBA'))
+            rgba = frame_source_pixels(str(path))
             x, y, w, h = frame['region']
             checks.append({'index': i, 'region': frame['region'], 'rgba_sha256': sha(rgba[y:y+h, x:x+w].tobytes())})
         revision['automatic_checks'] = checks

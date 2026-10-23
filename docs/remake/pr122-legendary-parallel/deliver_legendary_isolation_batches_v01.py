@@ -90,6 +90,21 @@ def update_ledger(batch, manifest_relative, validation_relative, selection):
             assert slot not in seen
             seen.add(slot)
             aggregate['revisions'].append(entry)
+    ownership_clip_count = len(aggregate['revisions'])
+    # A later ownership batch must retain already delivered quality/semantic
+    # overlays. Their immutable PNGs and healthy action middles are reused.
+    previous_library = ledger.get('corrections', {}).get('active_revision_library')
+    if previous_library:
+        previous = read(WORK / previous_library.removeprefix('res://'))
+        merged = {tuple(entry['slot']): entry for entry in aggregate['revisions']}
+        retained = []
+        for entry in previous['revisions']:
+            if '/quality-v02/' in entry['record'] or entry.get('registration_status') == 'REVIEWED_ANCHORS_AND_SCALE':
+                merged[tuple(entry['slot'])] = entry
+                retained.append(entry['slot'])
+        aggregate['revisions'] = [merged[key] for key in sorted(merged)]
+        aggregate['dependency_required_slots'] = [list(slot) for slot in sorted({tuple(slot) for slot in aggregate['dependency_required_slots']} | {tuple(slot) for slot in retained})]
+        aggregate['retained_quality_or_semantic_overlays'] = retained
     aggregate_relative = DOCS / f'revision-library-ownership-through-batch{batch:03d}-v01.json'
     write_json(WORK / aggregate_relative, aggregate, immutable=True)
     corrections = ledger.setdefault('corrections', {})
@@ -107,7 +122,7 @@ def update_ledger(batch, manifest_relative, validation_relative, selection):
                                'newly_authored_poses_added': 0, 'approvals_added': 0})
     ownership.update(status='DRAFT_REPAIRED_HOLD' if delivered_sources == 622 else 'IN_PROGRESS',
                      planned_sources=622, isolated_sources=delivered_sources,
-                     revised_configurations=len(aggregate['revisions']), newly_authored_poses_added=0,
+                     revised_configurations=ownership_clip_count, newly_authored_poses_added=0,
                      original_source_mutations=0, semantic_registration_status='HOLD_REVIEWED_ANCHORS_REQUIRED')
     current = read(WORK / manifest_relative)
     by_slot = {tuple(entry['slot']): entry for entry in current['revisions']}
@@ -175,9 +190,19 @@ def deliver(batch, local_only=False):
         relative = path.relative_to(WORK)
         copy_new(relative)
         artifact_paths.add(relative)
+    for path in (WORK / DOCS / 'quality-v02').glob('generation-claims/*.json'):
+        relative = path.relative_to(WORK)
+        copy_new(relative)
+        artifact_paths.add(relative)
+    for name in ['changed-source-visual-review-v01.json', 'changed-source-visual-review-receipt-v01.json', 'tool-quota-checkpoint-v01.json']:
+        relative = DOCS / 'quality-v02' / name
+        if (WORK / relative).exists():
+            copy_new(relative)
+            artifact_paths.add(relative)
     for name in ['prepare_legendary_isolation_v01.py', 'legendary_registered_clip_player_v01.gd',
                  'legendary_revision_library_v01.gd', 'validate_legendary_corrected_dependencies_v01.gd',
-                 'deliver_legendary_isolation_batches_v01.py']:
+                 'deliver_legendary_isolation_batches_v01.py', 'prepare_legendary_registration_v01.py',
+                 'check_registered_clip_player_fixture_v01.gd']:
         relative = DOCS / name
         target = REPO / relative
         if not target.exists() or target.read_bytes() != (WORK / relative).read_bytes():

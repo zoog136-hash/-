@@ -91,6 +91,13 @@ func _validate(entry: Dictionary) -> Dictionary:
 			await process_frame
 		if sprite.frame != 5 or sprite.is_playing():
 			errors.append("once/final-frame hold failed")
+		if entry.has("expected_terminal_source"):
+			var terminal: AtlasTexture = sprite.sprite_frames.get_frame_texture(anim, 5) as AtlasTexture
+			var expected_region: Array = entry["expected_terminal_region"]
+			var expected := Rect2(float(expected_region[0]), float(expected_region[1]), float(expected_region[2]), float(expected_region[3]))
+			if terminal == null or terminal.atlas.resource_path != str(entry["expected_terminal_source"]) or terminal.region != expected:
+				errors.append("targeted final lying-corpse source binding was not held")
+			output["expected_terminal_baseline_phase"] = entry.get("expected_terminal_baseline_phase", -1)
 	output["frames_reached"] = reached.size()
 	output["wraps"] = wraps
 	output["terminal_frame"] = sprite.frame

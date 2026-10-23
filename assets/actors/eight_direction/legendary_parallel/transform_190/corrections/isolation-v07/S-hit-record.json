@@ -1,0 +1,312 @@
+{
+  "key": "transform:190",
+  "name": "백조의 로엔그린",
+  "grade": "전설",
+  "direction": "S",
+  "role": "hit",
+  "reference": "res://assets/catalog/8e64f6e658b71a667659ba97.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:190 백조의 로엔그린. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body S HIT poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use true front-facing SOUTH, screen DOWN, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Nonfatal HIT reaction, clearly distinct from attack: frame0 living guard;1 first external impact and flinch;2 maximum stagger/weight displacement;3 counterbalance with proper support;4 recovery;5 same living guard. No weapon strike, firing, spellcasting, death, wound, blood or new costume damage. Keep original equipment firmly connected and anatomical joints plausible. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/8e64f6e658b71a667659ba97.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": "31",
+  "reference_sha256": "81b9164683a72bba7b65229b8018f3efafb486b065f14fa16265c887e023c781",
+  "schema": "pr122-legendary-versioned-isolation-clip-v1",
+  "status": "CORRECTED_DRAFT_HOLD_NOT_FINAL_APPROVED",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+  "source_sha256": "b0a92d2de6e208bdecfde68b086f7fec3a853a4f8ab59d54192d2b53528e1eb3",
+  "source_bytes": 1736714,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-SpriteFrames.tres",
+  "output_spriteframes_sha256": "f5c7566b936601dc30573937446a2a799e06a06dffc7d5f8d024466d59dd7bfe",
+  "generated_original_path": "/workspace/generated_images/exec-0ae7808a-e189-4131-8828-294d9d8053bb.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_190-S-hit-v01.json",
+  "request_file_sha256": "eea35512cecd73d05875aff142702da596416b62e16c223bb22e5a37a34052f4",
+  "generation_request_sha256": "b6e4f0905d480df2def6c7a0b04170ee540ce5bfa8b615035212762081fa0d04",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "hit_2",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": false,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        633,
+        604
+      ],
+      "rgba_sha256": "461e9bec0b9eb7544860251ea614c1b36a4956b07afa0dda20aacc58976c3096"
+    },
+    {
+      "index": 1,
+      "region": [
+        633,
+        0,
+        633,
+        604
+      ],
+      "rgba_sha256": "11572f7964d00519e6ca20c97d34ca1b15dae8fa690644cfdcab7ed2fef459e5"
+    },
+    {
+      "index": 2,
+      "region": [
+        1266,
+        0,
+        633,
+        604
+      ],
+      "rgba_sha256": "8fd0de40a692139d6871694b11b88287ab10e6fc4addb95b786be3dfaca44ee2"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        604,
+        633,
+        604
+      ],
+      "rgba_sha256": "ce758d4f2c4d1dc28a7608394c35003e9473c8fac1b979c35d15578b42792a52"
+    },
+    {
+      "index": 4,
+      "region": [
+        633,
+        604,
+        633,
+        604
+      ],
+      "rgba_sha256": "e22ae735366446e6bc8c026fb0ff7b2563b6f8f5cfa5aaaad50cd0ded5c5467f"
+    },
+    {
+      "index": 5,
+      "region": [
+        1266,
+        604,
+        633,
+        604
+      ],
+      "rgba_sha256": "f10eccf365769e46b0c8d9ce46286fb66e222a3a996979c4da526ae9f1fe7743"
+    }
+  ],
+  "clipped_cell_count": 6,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-hit-record-v01.json",
+  "revision_parent_sha256": "ccab59735aa6d32b1524fe55baf02aa91c774994c77f3718efae3ef999a7ea46",
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_190/draft001/S-hit-source-v01.png",
+  "raw_authored_source_sha256": "053262bd169361518f51278486054c5785d87e1fd81279701bccd8f66b9bab2c",
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.proof.json"
+  ],
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-raster-registration.json",
+  "scale_registration_status": "HOLD_REVIEWED_SEMANTIC_INPUT_REQUIRED",
+  "final_approved": false,
+  "raw_parent_minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "raw_parent_cell_size": [
+    512,
+    512
+  ],
+  "raw_parent_partition_edges": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        633,
+        604
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "region": [
+        633,
+        0,
+        633,
+        604
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "region": [
+        1266,
+        0,
+        633,
+        604
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "region": [
+        0,
+        604,
+        633,
+        604
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "region": [
+        633,
+        604,
+        633,
+        604
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "region": [
+        1266,
+        604,
+        633,
+        604
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ],
+  "minimal_checks": {
+    "integer_translation_RGBA_proof": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "cell_size": [
+    633,
+    604
+  ],
+  "partition_edges": {
+    "x": [
+      0,
+      633,
+      1266,
+      1899
+    ],
+    "y": [
+      0,
+      604,
+      1208
+    ]
+  },
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_190/corrections/isolation-v07/S-hit-source-v01-isolated.png",
+      "sha256": "b0a92d2de6e208bdecfde68b086f7fec3a853a4f8ab59d54192d2b53528e1eb3",
+      "bytes": 1736714,
+      "source_kind": "integer_translation_derivative"
+    }
+  ]
+}
