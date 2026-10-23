@@ -29,7 +29,10 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	var review_root: String = OS.get_environment("TWILIGHT_MAP_PNG_PACK")
 	if review_root.is_empty(): review_root = "user://map_png"
 	var review: RefCounted = PNG_REVIEW_PACK.new()
-	if review.configure(review_root,source):
+	if source is RemakePlayableField and (source as RemakePlayableField).png_game_pack!=null:
+		png_pack=(source as RemakePlayableField).png_game_pack
+		set_meta("ordinary_source_png",true)
+	elif review.configure(review_root,source):
 		review.apply_layout(source)
 		png_pack = review
 		png_review_active = true

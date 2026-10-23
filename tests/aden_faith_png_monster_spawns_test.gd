@@ -153,7 +153,7 @@ func legacy_boss_identity_migration(mid: String, field: NativePngField) -> void:
 		director.import_state(saved)
 		var alive: Dictionary=director.state_for(mid,row)
 		check(str(alive.phase)=="alive" and int(alive.hp)==123 and float(alive.ready_at)==deadline and director.can_spawn(mid,row),old_key+" legacy saved live HP is restored without waiting for a new spawn")
-		check(alive.position.is_empty() and alive.home.is_empty() and int(alive.layout_revision)==2026102002,old_key+" only old canvas coordinates reset for the reviewed placement")
+		check(alive.position.is_empty() and alive.home.is_empty() and int(alive.layout_revision)==int(field.data.layout_revision),old_key+" only old canvas coordinates reset for the reviewed placement")
 		saved.bosses[old_key].phase="cooldown";saved.bosses[old_key].hp=-1
 		director.import_state(saved)
 		var dead: Dictionary=director.state_for(mid,row)
@@ -165,18 +165,27 @@ func walk_to(point: Vector2, label: String) -> bool:
 	var path: PackedVector2Array=world.field_map.path(world.player.global_position,point)
 	check(not path.is_empty(),label+" has physical walking path")
 	if path.is_empty(): return false
-	var length: float=0.0
+	# A straight production path can start at its destination after shortcut
+	# pruning. Include the actor-to-first-waypoint segment in the time budget.
+	var length: float=world.player.global_position.distance_to(path[0])
 	for index: int in range(1,path.size()): length+=path[index-1].distance_to(path[index])
 	world.player.set_physics_process(true)
 	world._set_click_destination(point)
 	var arrived: bool=false
-	var budget: int=clampi(int(length/100.0*60.0)+120,120,1200)
+	# Display units enlarge real travel distances; keep the actual actor speed
+	# and every destination instead of truncating long routes at 1200 ticks.
+	var budget: int=maxi(120,ceili(length/world.player.move_speed*Engine.physics_ticks_per_second*1.5)+120)
 	for _frame: int in range(budget):
 		await physics_frame
 		if world.player.global_position.distance_to(point)<12.0:
 			arrived=true
 			break
 	check(arrived,label+" actual body reaches target; position="+str(world.player.global_position)+" target="+str(point))
+	if not arrived:
+		printerr("ADEN_ROUTE_DIAGNOSTIC ",JSON.stringify({"label":label,"position":str(world.player.global_position),"path":str(world.player.click_path),"path_index":world.player.path_index,"velocity":str(world.player.velocity),"ui_blocks":world.hud.blocks_keyboard_input(),"movement_locked":world.player.movement_locked,"touch":str(world.player.touch_vector),"physics_enabled":world.player.is_physics_processing(),"foot_clear":world.field_map.line_clear(world.player.global_position,world.player.global_position)}))
+		for i: int in range(world.player.get_slide_collision_count()):
+			var contact: KinematicCollision2D=world.player.get_slide_collision(i)
+			printerr("ADEN_ROUTE_CONTACT ",contact.get_collider().get_path()," normal=",contact.get_normal())
 	world.player.set_physics_process(false)
 	world.player.clear_click_path()
 	world.player.velocity=Vector2.ZERO

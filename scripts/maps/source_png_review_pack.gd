@@ -1,6 +1,7 @@
 extends RefCounted
 ## Real source PNGs in a local pack. Candidate geometry is available only in an
-## explicit, non-saving review session, never silently accepted as a restoration.
+## explicit review session. Ordinary Oman allows only the pinned identity frame
+## over the unchanged source field; correspondence remains partially reviewed.
 const OLD_PACK = preload("res://scripts/maps/aden_png_pack.gd")
 const LAYOUT = preload("res://scripts/maps/png_review_layout.gd")
 const FOOTPRINTS = preload("res://scripts/maps/png_manual_footprints.gd")
@@ -9,6 +10,7 @@ var root_path: String = ""
 var textures: Dictionary = {}
 var rejection: String = "NOT_INSTALLED"
 var review_active: bool = false
+var ordinary_active: bool = false
 var review_spawn: Vector2 = Vector2.INF
 var review_layout: Dictionary = {}
 var ground_sampler: String = "nearest"
@@ -17,12 +19,24 @@ var manual_footprints: RefCounted
 func reject(reason: String) -> bool:
 	regions.clear(); textures.clear(); rejection = reason
 	review_active = false; review_spawn = Vector2.INF
+	ordinary_active=false
 	review_layout.clear()
 	manual_footprints = null
 	return false
 
 func configure(path: String, field: OriginalPlayableField) -> bool:
+	return _configure(path,field,false)
+
+func configure_ordinary(path: String, field: OriginalPlayableField) -> bool:
+	# Only the native 48x24 Oman canvas. Never promote the unregistered Aden
+	# or source-111 affine candidate by dropping the review flag.
+	var id: String=str(field.data.map_id)
+	if not id in ["oman_01","oman_02","oman_03","oman_04","oman_05","oman_06","oman_07","oman_08","oman_09","oman_10"]:return reject("NOT_AN_ORDINARY_SOURCE_MAP")
+	return _configure(path,field,true)
+
+func _configure(path: String, field: OriginalPlayableField, ordinary: bool) -> bool:
 	regions.clear();textures.clear();review_active = false;review_spawn = Vector2.INF
+	ordinary_active=false
 	review_layout.clear()
 	manual_footprints = null
 	root_path = path.path_join(str(field.data.map_id))
@@ -35,8 +49,8 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 	var expected: Dictionary = catalog[id]
 	if value.get("png_sha256") != expected.png_sha256 or value.get("png_size") != expected.png_size or value.get("source_map_id") != field.definition.source_map_id or field.definition.source_map_id != expected.source_map_id or value.get("source_grid_sha256") != field.definition.source_sha256: return reject("SOURCE_MISMATCH")
 	# These packs contain honest composite PNG chunks. Occlusion/collision review
-	# is incomplete, so they cannot activate in an ordinary saved game.
-	if value.get("status") != "REVIEW_REQUIRED" or not "--png-review" in OS.get_cmdline_user_args(): return reject("REVIEW_SESSION_REQUIRED")
+	# is incomplete. Ordinary Oman retains the source rules and explicit scope.
+	if value.get("status") != "REVIEW_REQUIRED" or (not ordinary and not "--png-review" in OS.get_cmdline_user_args()): return reject("REVIEW_SESSION_REQUIRED")
 	if not value.get("regions") is Array or value.regions.is_empty(): return reject("NO_REGIONS")
 	if not OLD_PACK.pair(value.get("review_spawn_cell")): return reject("INVALID_REVIEW_SPAWN")
 	var cell := Vector2i(value.review_spawn_cell[0],value.review_spawn_cell[1])
@@ -65,6 +79,7 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 		if bounds.size != Vector2i(32,32) or not Rect2i(0,0,field.width,field.height).encloses(bounds) or bounds.position.x%32 != 0 or bounds.position.y%32 != 0: return reject("INVALID_BOUNDS")
 		var mapping: Transform2D = OLD_PACK.matrix(row.get("world_to_image"))
 		if absf(mapping.determinant()) < .000001: return reject("INVALID_TRANSFORM")
+		if ordinary and not mapping.is_equal_approx(Transform2D.IDENTITY):return reject("ORDINARY_REQUIRES_NATIVE_OMAN_PROJECTION")
 		if not row.get("cuts") is Array: return reject("INVALID_CUTS")
 		for layer: Variant in [row]+row.cuts:
 			if not layer is Dictionary or not OLD_PACK.safe_file(layer.get("file")) or not OLD_PACK.pair(layer.get("image_origin")): return reject("INVALID_LAYER")
@@ -94,7 +109,7 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 	if not spawn_covered: return reject("REVIEW_SPAWN_OUTSIDE_PNG")
 	review_layout = prepared
 	manual_footprints = footprints if not footprints.polygons.is_empty() else null
-	review_active = true; rejection = ""
+	review_active = not ordinary; ordinary_active=ordinary; rejection = ""
 	return true
 
 func apply_layout(field: RemakePlayableField) -> void:

@@ -14,7 +14,8 @@ func texture(path: String) -> Texture2D:
 
 func build_png(field: OriginalPlayableField, key: Vector2i, pack: RefCounted, region: Dictionary) -> void:
 	y_sort_enabled = true
-	set_meta("aden_png_verified",not bool(pack.get("review_active")))
+	set_meta("aden_png_verified",pack.get("review_active")!=true and pack.get("ordinary_active")!=true)
+	set_meta("ordinary_source_png",pack.get("ordinary_active")==true)
 	set_meta("source_png",true)
 	set_meta("png_review",bool(pack.get("review_active")))
 	set_meta("layer_provenance","composite ground; manually reviewed cuts; source collision/navigation; water not separated")

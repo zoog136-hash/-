@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "mode": "ORDINARY_MAIN_NO_PNG_REVIEW_FLAGS",
+  "main_base": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
+  "public_tower_png_delivery": "PENDING_EXPLICIT_REDISTRIBUTION_AUTHORIZATION",
+  "android_device": "NOT_RUN",
+  "whole_map_complete": false,
+  "import": "PASS_REUSED_IMPORTED_TEXTURE_CACHE_SCRIPT_PARSE_CURRENT",
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "PASS"
+  },
+  "private_pack": {
+    "archive": "twilight-tower-png-20261023.zip",
+    "bytes": 553535365,
+    "sha256": "ea864f08ce9b725037809ec35dc15621ad6e15e161fce0a3b09be18d00214976",
+    "crc": "PASS",
+    "textures": 414,
+    "actual_installer": "PASS",
+    "negative_path_traversal_and_corruption_preserve_existing_packs": "PASS"
+  },
+  "tests": {
+    "tower_all_10_plus_domination": {
+      "checks": 475,
+      "failures": [],
+      "later_native_foot_guard": "LATEST_DOMINATION_85_CHECKS_PASS"
+    },
+    "latest_30fps_actual_movie": {
+      "checks": 73,
+      "failures": [],
+      "frames": 1271,
+      "fps": 30,
+      "native_physics_foot": "4px; 0.1px test tolerance",
+      "foreground_rgb_filtering": "COMPLEMENTARY_ALPHA_OWNERS_ORIGINAL_RGB_PRESERVED"
+    },
+    "scale_real_historical_saves": {
+      "checks": 50,
+      "failures": []
+    },
+    "compiler_unittests": {
+      "tests": 12,
+      "status": "PASS_CODE_FIXTURES_SEPARATE_FROM_ORIGINAL_ART"
+    },
+    "installer_security_unittests": {
+      "tests": 1,
+      "status": "PASS_CODE_FIXTURES"
+    },
+    "related_regressions": {
+      "initial": "13/16",
+      "two_new_compatibility_failures": "FIXED_AND_2_2_RERUN_PASS",
+      "source_render_suite": "5953 checks over 10 floors: one obsolete assumption that Domination remained authored; updated restoration fixture to actually authored Albino4; focused Oman10+restoration rerun pending"
+    },
+    "latest_domination_and_missing_pack": {
+      "checks": 85,
+      "failures": []
+    },
+    "source_png_ownership_fixture": {
+      "checks": 4,
+      "exclusive_pixels": 121,
+      "failures": []
+    },
+    "aden_faith_population_bosses_drops_and_all_routes": {
+      "checks": 1261,
+      "failures": [],
+      "actual_aden_travel_gates": 18,
+      "actual_aden_habitats": 17,
+      "boss_identities": 9,
+      "normal_deaths": 5,
+      "actual_ground_drops": 10
+    }
+  },
+  "open_local_regression": null,
+  "failure_attribution": {
+    "initial_missing_display": "TEST_ENVIRONMENT_SETUP_NOT_GAME_REGRESSION",
+    "new_bool_null_fixture_and_historical_revision_expectation": "THIS_CHANGE_FIXED",
+    "no_claim_of_preexisting_failure_without_reproduction": true,
+    "pr120_current_latest_checks": "28 checks snapshot: no failed conclusion; historical failure records are not reassigned to this change",
+    "pr147_current_latest_checks": "83 checks snapshot: no failed conclusion; branch unmerged"
+  },
+  "legacy_release_audit": "check_resource_integrity --release-dir expects TWILIGHT-original-resources.zip and asset paths, not a map-only ZIP. Map archive separately verified with its hash-pinned installer; no global original-resource delivery claim."
+}

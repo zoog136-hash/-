@@ -1,0 +1,198 @@
+{
+  "actor_opaque_height_world": 80,
+  "candidate_rulers_not_collision_registration": [
+    {
+      "id": "west_bed",
+      "png": [
+        7808.667,
+        3360
+      ],
+      "world": [
+        41146.10526315775,
+        21780.0
+      ],
+      "rgba_patch_equal": true
+    },
+    {
+      "id": "northwest_bed",
+      "png": [
+        7859.667,
+        3326.667
+      ],
+      "world": [
+        41460.0,
+        21570.0
+      ],
+      "rgba_patch_equal": true
+    },
+    {
+      "id": "northeast_bed",
+      "png": [
+        7899.333,
+        3326.667
+      ],
+      "world": [
+        41676.0,
+        21570.0
+      ],
+      "rgba_patch_equal": true
+    },
+    {
+      "id": "southwest_bed",
+      "png": [
+        7858,
+        3393.667
+      ],
+      "world": [
+        41484.0,
+        22005.0
+      ],
+      "rgba_patch_equal": true
+    },
+    {
+      "id": "southeast_bed",
+      "png": [
+        7898,
+        3393.667
+      ],
+      "world": [
+        41676.0,
+        21990.0
+      ],
+      "rgba_patch_equal": true
+    },
+    {
+      "id": "east_bed",
+      "png": [
+        7951.667,
+        3360
+      ],
+      "world": [
+        41989.62162162142,
+        21780.0
+      ],
+      "rgba_patch_equal": true
+    }
+  ],
+  "pairwise_world_per_png_pixel": [
+    6.198635713262679,
+    5.90056272448049,
+    6.79690701020195,
+    5.970574799098841,
+    5.898715793452277,
+    5.445469671759291,
+    6.5003997255126995,
+    6.118450334261945,
+    5.8224024786491535,
+    6.039964148894414,
+    6.267416417747427,
+    6.082994675662696,
+    4.8146261537112105,
+    5.560163385044519,
+    5.957669771785388
+  ],
+  "median_world_per_png_pixel": 5.970574799098841,
+  "original_tile_world": [
+    48,
+    24
+  ],
+  "pr147_scale": 2,
+  "proposed_uniform_display_scale": 6,
+  "terrain_affine_not_adopted": true,
+  "schema": 1,
+  "base_plan_sha256": "6ec5ef89bed215ea4a7f7ea8c03c5fe889f59c29d12284db704a607f6e287180",
+  "source_sha256": "c0af339cbc2dbba5fb2e65c3c7f01d9467507545d7b91cbb331f5bbd51128730",
+  "revision": 2026102301,
+  "display_matrix_png_to_world": [
+    6,
+    0,
+    0,
+    0,
+    6,
+    0
+  ],
+  "registration_status": "LOCAL_RULERS_ONLY_NOT_GLOBAL_SERVER_REGISTRATION",
+  "scale_rounding_relative_error": 0.004928369862412518,
+  "foreground": [
+    {
+      "id": "east_tree_crown",
+      "foot_image": [
+        11140,
+        2350
+      ],
+      "polygon_image": [
+        [
+          11117,
+          2329
+        ],
+        [
+          11119,
+          2318
+        ],
+        [
+          11133,
+          2314
+        ],
+        [
+          11136,
+          2306
+        ],
+        [
+          11147,
+          2300
+        ],
+        [
+          11161,
+          2308
+        ],
+        [
+          11164,
+          2316
+        ],
+        [
+          11181,
+          2319
+        ],
+        [
+          11187,
+          2329
+        ],
+        [
+          11176,
+          2337
+        ],
+        [
+          11165,
+          2339
+        ],
+        [
+          11154,
+          2344
+        ],
+        [
+          11139,
+          2335
+        ],
+        [
+          11125,
+          2338
+        ]
+      ],
+      "collision_correspondence": "EXISTING_MANUALLY_TRACED_east_tree_FOOTPRINT_RETAINED",
+      "scope": "MANUAL_LOCAL_CROWN_ONLY_NOT_FULL_MAP_LAYERS"
+    }
+  ],
+  "collision_replace": [
+    {
+      "id": "east_tree",
+      "shape": "circle",
+      "center": [
+        11140,
+        2350
+      ],
+      "radius": 4,
+      "evidence": "MANUAL_LOCAL_FOOT_AT_EXISTING_ANCHOR_CANOPY_IS_FOREGROUND_NOT_SOLID",
+      "source_registration": "HELD"
+    }
+  ]
+}

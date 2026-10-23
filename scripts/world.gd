@@ -19,6 +19,7 @@ const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
 const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
 const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
+const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
 # PR #137's shipped entry-only PNG plan (594438d). Only this reviewed layout
@@ -1211,6 +1212,10 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
+	if requested_original is RemakePlayableField and SOURCE_PNG_GAME.requested(map_id) and not SOURCE_PNG_GAME.attach(requested_original):
+		requested_original.close()
+		hud.show_message("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
+		return
 	_clear_combat_actions()
 	if is_instance_valid(world_interactions):
 		world_interactions.cancel_gesture()
@@ -3915,6 +3920,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
 		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
+	if field_map is RemakePlayableField and field_map.png_game_pack!=null:
+		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
 	var result: Error = equipment_collections.write_save(save_path(), data)
@@ -3975,7 +3982,8 @@ func _load_game(quiet: bool) -> void:
 		var known_native_upgrade: bool=(native_saved_field!=null and plan_changed and not migration.is_empty()
 			and saved_map_id in migration.map_ids
 			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
-			and int(native_saved_field.data.layout_revision)==int(migration.to_revision)
+			and (int(native_saved_field.data.layout_revision)==int(migration.to_revision)
+				or (saved_map_id=="aden_world" and int(migration.to_revision)==2026102002 and int(native_saved_field.data.layout_revision)==preload("res://scripts/maps/png_world_scale.gd").ADEN_REVISION))
 			and str(data.get("native_png_review_sha256",""))==saved_plan)
 		if native_saved_field==null or (plan_changed and not known_native_upgrade):
 			source_save_blocked=true
@@ -3992,6 +4000,28 @@ func _load_game(quiet: bool) -> void:
 				return
 			data=data.duplicate(true)
 			data["position"]=[];data["map_layout_revision"]=-1
+		elif has_native_position and saved_map_id=="aden_world" and not plan_changed and int(data.get("map_layout_revision",-1))!=int(native_saved_field.data.layout_revision):
+			# Same authenticated PNG/plan, explicit old world units. Never guess
+			# a ratio from arbitrary saved pixels or overwrite the original save.
+			var old_scales: Dictionary={2026102002:1.0,2026102003:2.0}
+			var old_revision: int=int(data.get("map_layout_revision",-1))
+			if not old_scales.has(old_revision):
+				source_save_blocked=true;hud.show_message("아덴 저장 좌표 버전을 확인할 수 없습니다");return
+			var original_hash: String=FileAccess.get_sha256(save_path())
+			var backup_path: String=save_path()+".pre-aden-scale-"+original_hash
+			if (not FileAccess.file_exists(backup_path) and DirAccess.copy_absolute(save_path(),backup_path)!=OK) or FileAccess.get_sha256(backup_path)!=original_hash:
+				source_save_blocked=true;hud.show_message("아덴 좌표 이전 백업 실패: 저장 파일을 보존합니다");return
+			data=data.duplicate(true)
+			var raw: Variant=data.get("position",[])
+			var position: Vector2=Vector2.INF
+			if raw is Array and raw.size()==2 and (raw[0] is int or raw[0] is float) and (raw[1] is int or raw[1] is float):
+				position=Vector2(raw[0],raw[1])*(native_saved_field as NativePngField).artwork_scale/float(old_scales[old_revision])
+			if position.is_finite() and native_saved_field.point_clear(position) and native_saved_field.line_clear(position,position):
+				data["position"]=[position.x,position.y];data["map_layout_revision"]=native_saved_field.data.layout_revision
+				# The historical review was the authenticated immutable PNG plan.
+				# Having checked the new exact foot, retain this valid location.
+				if str(data.get("native_png_review_sha256",""))==saved_plan:data["native_png_review_sha256"]=NATIVE_PNG.review_hash(saved_map_id)
+			else:data["position"]=[];data["map_layout_revision"]=-1
 		if not has_native_position and not FileAccess.file_exists(save_path()+".pre-native-png"):
 			if DirAccess.copy_absolute(save_path(),save_path()+".pre-native-png")!=OK:
 				source_save_blocked=true
@@ -3999,6 +4029,11 @@ func _load_game(quiet: bool) -> void:
 				return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
 		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+		if saved_field is RemakePlayableField and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not "--legacy-map-layouts" in OS.get_cmdline_user_args():
+			if not SOURCE_PNG_GAME.attach(saved_field) or (data.has("oman_png_index_sha256") and data.oman_png_index_sha256!=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")):
+				saved_field.close();source_save_blocked=true
+				hud.show_message("오만 PNG 리소스를 확인할 수 없어 저장 데이터를 보존합니다")
+				return
 		if saved_field == null:
 			source_save_blocked = true
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
@@ -6927,6 +6962,17 @@ func _notification(what: int) -> void:
 		_save_game(true)
 
 func constrain_original_motion(actor: CharacterBody2D) -> void:
+	if field_map is NativePngField and actor.velocity!=Vector2.ZERO:
+		var delta: float=actor.get_physics_process_delta_time()
+		var motion: Vector2=actor.velocity*delta
+		if not field_map.line_clear(actor.global_position,actor.global_position+motion):
+			# Godot's circle/convex vertex solver can settle inside the precise
+			# foot margin at low FPS. Resolve the real physics contact's tangent
+			# before moving, using the same reviewed geometry as navigation.
+			var contact:=KinematicCollision2D.new()
+			var tangent: Vector2=Vector2.ZERO
+			if actor.test_move(actor.global_transform,motion,contact):tangent=motion.slide(contact.get_normal())
+			actor.velocity=tangent/delta if field_map.line_clear(actor.global_position,actor.global_position+tangent) else Vector2.ZERO
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
 		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
 		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)

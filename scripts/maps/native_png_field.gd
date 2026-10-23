@@ -3,6 +3,9 @@ class_name NativePngField
 ## Pixel coordinates come from the decoded PNG, not an assumed server map ID.
 ## Hand-traced floors share one navigation/physics mesh. Unreviewed pockets stay solid.
 const NATIVE_SPAWNS = preload("res://scripts/monsters/native_png_spawns.gd")
+const PNG_SCALE = preload("res://scripts/maps/png_world_scale.gd")
+const DOMINATION_GAMEPLAY=preload("res://scripts/maps/domination_png_gameplay.gd")
+var artwork_scale: float=1.0
 const FLOOR_BUCKET: int=512
 var floor_buckets: Dictionary={}
 var floor_polygons_empty: bool=true
@@ -47,35 +50,54 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	landing_candidates.clear()
 	landing_candidates_ready = false
 	var spec: Dictionary = plan.maps[mid]
-	var spawn: Array = spec.spawn
+	artwork_scale=PNG_SCALE.ADEN_SCALE if mid=="aden_world" else 1.0
+	var spawn: Array = spec.spawn.duplicate(true)
 	var portals: Array = [{"id":"aden_return","name":"아덴 귀환","position":[spawn[0]-60,spawn[1]],"target_map":"aden_world","radius":18}]
 	if mid.begins_with("albino_"):
 		var next: String = "albino_%02d" % (int(mid.right(2))%3+1)
 		portals.append({"id":"next","name":"다음 구역","position":[spawn[0]+60,spawn[1]],"target_map":next,"radius":18})
-	portals=spec.get("portals",portals)
+	portals=spec.get("portals",portals).duplicate(true)
+	var monster_spawns: Array=NATIVE_SPAWNS.build(mid,spec,portals)
+	var npcs: Array=[]
+	if mid=="domination_summit":
+		var gameplay: Dictionary=DOMINATION_GAMEPLAY.build(spec)
+		monster_spawns=gameplay.get("monster_spawn",[])
+		npcs=gameplay.get("npc_spawn",[])
+		portals=gameplay.get("portal",[])
+	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale)
+	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn")
+	portals=PNG_SCALE.geometry(portals,artwork_scale)
+	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale)
+	if mid=="aden_world":
+		for zone: Dictionary in monster_spawns:zone.layout_revision=PNG_SCALE.ADEN_REVISION
+	for portal: Dictionary in portals:
+		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision") and mid=="aden_world":portal.target_layout_revision=PNG_SCALE.ADEN_REVISION
 	var value: Dictionary = {
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
-		"layout_revision":int(spec.get("layout_revision",plan.revision)),"bounds":manifest.bounds,"native_png":true,
-		"navigation":{"cell_size":16,"clearance":4,"use_baked_cache":false},
+		"layout_revision":PNG_SCALE.ADEN_REVISION if mid=="aden_world" else int(spec.get("layout_revision",plan.revision)),"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
+		"navigation":{"cell_size":48 if mid=="aden_world" else 16,"clearance":4,"use_baked_cache":false},
 		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
-		"spawn_position":spawn,"navigable_polygons":spec.walk_polygons,
+		"spawn_position":spawn,"navigable_polygons":geometry.walk_polygons,
 		"portal_connected_regions":bool(spec.get("portal_connected_regions",false)),
-		"constrain_all_population_patrol":mid in NATIVE_SPAWNS.EXTRA_MAP_IDS,
-		"collision":spec.get("collision",[]),"monster_spawn":NATIVE_SPAWNS.build(mid,spec,portals),"npc_spawn":[],"portal":portals,"teleport":[],
-		"regions":spec.get("regions",[]),"surfaces":[],"roads":[],"water":[],"props":[],"bridges":[],
-		"safe_zone":spec.get("safe_zone",[]),"combat_zone":spec.get("combat_zone",[]),"boss_zone":spec.get("boss_zone",[]),"route_checks":spec.route_checks,
+		"constrain_all_population_patrol":mid in NATIVE_SPAWNS.EXTRA_MAP_IDS or mid=="domination_summit",
+		"collision":geometry.get("collision",[]),"monster_spawn":monster_spawns,"npc_spawn":npcs,"portal":portals,"teleport":portals.filter(func(p: Dictionary) -> bool:return str(p.target_map)==mid) if mid=="domination_summit" else [],
+		"regions":geometry.get("regions",[]),"surfaces":[],"roads":[],"water":[],"props":[],"bridges":[],
+		"safe_zone":spec.get("safe_zone",[]),"combat_zone":spec.get("combat_zone",[]),"boss_zone":spec.get("boss_zone",[]),"route_checks":geometry.route_checks,"blocked_probes":geometry.get("blocked_probes",[]),
 		"minimap":{"title":spec.name},"collision_scope":spec.collision_scope,
 		"population_status":spec.get("population_status","LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES"),
 		"spawn_layout_revision":"aden_faith_png_spawns_20261020_v2" if mid in NATIVE_SPAWNS.EXTRA_MAP_IDS else "native_png_spawns_20261019"}
 	value["runtime_foreground"]=spec.get("runtime_foreground",[])
-	index_walk_polygons(spec.walk_polygons)
+	index_walk_polygons(geometry.walk_polygons)
 	configure(value)
 	# This mask only excludes transparent source pixels. Actual water, walls and
 	# obstacles still come from the independent visual trace, never PNG colours.
-	if int(manifest.get("alpha_guard_cell_size",0))==cell_size:
+	var alpha_cell: int=roundi(float(manifest.get("alpha_guard_cell_size",0))*artwork_scale)
+	if alpha_cell>=cell_size and alpha_cell%cell_size==0:
+		var factor: int=alpha_cell/cell_size
 		for run: Array in manifest.get("alpha_solid_runs",[]):
-			astar.fill_solid_region(Rect2i(int(run[1]),int(run[0]),int(run[2]),1))
+			var box:=Rect2i(int(run[1])*factor,int(run[0])*factor,int(run[2])*factor,factor).intersection(Rect2i(0,0,width,height))
+			if box.has_area():astar.fill_solid_region(box)
 		_build_reachability()
 	# The alpha guard was applied after PlayableField built its candidates.
 	# Drop any now-solid/unreachable or poorly cleared samples, rather than
@@ -97,6 +119,18 @@ func _portal_endpoint(raw: Variant) -> Vector2:
 	for offset: Vector2 in LANDING_BODY_OFFSETS:
 		if not walkable(point+offset): return Vector2.INF
 	return point
+
+func line_clear(from: Vector2,to: Vector2) -> bool:
+	# The raster physics occupies entire cells. Center-only shortcut tests can
+	# cut a solid cell corner with the real foot, stranding a click path before
+	# its next waypoint. Use the same foot for shortcutting and actor motion.
+	var steps: int=maxi(1,ceili(from.distance_to(to)/2.0))
+	for i: int in range(steps+1):
+		var point: Vector2=from.lerp(to,float(i)/steps)
+		if not walkable(point) or not point_clear(point,4.0):return false
+		for offset: Vector2 in LANDING_BODY_OFFSETS:
+			if not walkable(point+offset):return false
+	return true
 
 func _flood_portal_component(start: Vector2i) -> void:
 	if not astar.is_in_boundsv(start) or astar.is_point_solid(start): return
@@ -214,9 +248,10 @@ func solid_rectangles() -> Array[Rect2i]:
 	return result
 
 func build_physics(parent: Node2D) -> StaticBody2D:
-	var body:=StaticBody2D.new()
-	body.name="NativePngCollision";body.collision_layer=4;body.collision_mask=0
-	parent.add_child(body)
+	# Raster cells alone leave sub-cell slivers at angled polygon feet. Keep
+	# the exact reviewed walls/trunks as physical shapes as well as the grid.
+	var body: StaticBody2D=super.build_physics(parent)
+	body.name="NativePngCollision"
 	for box: Rect2i in solid_rectangles():
 		var node:=CollisionShape2D.new()
 		var shape:=RectangleShape2D.new()

@@ -18,11 +18,14 @@ static func split(image: Image, origin: Vector2, cuts: Array) -> Array[Dictionar
 		for y: int in range(size.y):
 			for x: int in range(size.x):
 				var global_pixel:=Vector2(start+Vector2i(x,y))
-				if not Geometry2D.is_point_in_polygon(global_pixel+Vector2(.5,.5),polygon): continue
 				var local:=Vector2i(global_pixel-origin)
 				var pixel: Color=image.get_pixelv(local)
+				# Keep the original RGB under both complementary alpha masks.
+				# Linear magnification must not filter a black seam into the cut.
+				layer.set_pixel(x,y,Color(pixel.r,pixel.g,pixel.b,0))
+				if not Geometry2D.is_point_in_polygon(global_pixel+Vector2(.5,.5),polygon): continue
 				if pixel.a==0: continue
-				layer.set_pixel(x,y,pixel);image.set_pixelv(local,Color.TRANSPARENT);owned+=1
+				layer.set_pixel(x,y,pixel);image.set_pixelv(local,Color(pixel.r,pixel.g,pixel.b,0));owned+=1
 		if owned>0:
 			pieces.append({"id":cut.id,"image":layer,"position":[start.x,start.y],"size":[size.x,size.y],"foot_image":cut.foot_image,"owned_pixels":owned})
 	return pieces

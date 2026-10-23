@@ -34,7 +34,7 @@ func inspect(mid: String, spec: Dictionary) -> void:
 	check(field.data.monster_spawn.all(func(row: Dictionary) -> bool: return row.get("coordinate_evidence","")=="reviewed_png_walk_polygons_local_unverified_original_positions"),mid+" local placement provenance retained")
 	check(field.walkable(world.player.global_position),mid+" entry on inspected floor")
 	var walked: float=0
-	for raw: Array in spec.route_checks:
+	for raw: Array in field.data.route_checks:
 		var target:=Vector2(raw[0],raw[1])
 		var path: PackedVector2Array=field.path(world.player.global_position,target)
 		check(field.walkable(target) and not path.is_empty(),mid+" inspected route reachable "+str(raw))
@@ -51,10 +51,10 @@ func inspect(mid: String, spec: Dictionary) -> void:
 		check(arrived,mid+" actual body reaches "+str(raw))
 		if not arrived: printerr("ADEN_FAITH_STUCK ",mid," at=",world.player.global_position," target=",target)
 		walked+=length;world.player.clear_click_path()
-	for raw: Array in spec.blocked_probes:
+	for raw: Array in field.data.blocked_probes:
 		check(not field.walkable(Vector2(raw[0],raw[1])),mid+" inspected wall/water/hole solid "+str(raw))
 	# Ray and actual CharacterBody collision agree at each hall boundary.
-	var spawn:=Vector2(spec.spawn[0],spec.spawn[1])
+	var spawn:=Vector2(field.data.spawn_position[0],field.data.spawn_position[1])
 	world.player.global_position=spawn;world.player.velocity=Vector2.ZERO
 	for direction: Vector2i in [Vector2i.UP,Vector2i.DOWN,Vector2i.LEFT,Vector2i.RIGHT]:
 		var cell: Vector2i=field.world_to_cell(spawn)
@@ -80,7 +80,7 @@ func inspect(mid: String, spec: Dictionary) -> void:
 	pause_population_for_routes()
 	check(world.active_map_id==mid and world.field_map is NativePngField,mid+" save restores native field")
 	check(world.player.global_position.distance_to(before)<16,mid+" saved source pixel coordinates restored")
-	for portal: Dictionary in spec.portals:
+	for portal: Dictionary in field.data.portal:
 		check(field.walkable(Vector2(portal.position[0],portal.position[1])),mid+" portal stands on reviewed floor: "+str(portal.id))
 		check(world.use_field_portal(str(portal.id)) and world.active_map_id==str(portal.target_map),mid+" actual portal loads target: "+str(portal.id))
 		world._set_map(mid,false)
