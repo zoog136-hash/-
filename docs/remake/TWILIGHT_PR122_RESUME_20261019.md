@@ -345,3 +345,5 @@
 - First-pass production checkpoint: 135,133 S ATTACK six new poses each, Godot resource one-shot/terminal-six-pose PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new S ATTACK drafts 15/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:135", "poses": 6, "clipped_cells": 2}, {"key": "transform:133", "poses": 6, "clipped_cells": 0}]. Continue transform:130 without draft polishing.
 
 - First-pass production checkpoint: 130 S ATTACK six new poses each, Godot resource one-shot/terminal-six-pose PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new S ATTACK drafts 16/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:130", "poses": 6, "clipped_cells": 3}]. Continue None without draft polishing.
+
+- First-pass production checkpoint: 412 S RUN six new poses each, Godot resource six-pose playback PASS; source/edge/identity/quality HOLD and Main/Player NOT_RUN. Total new S RUN drafts 1/16, final approvals0; active2/19 unchanged. Edge HOLD cells [{"key": "transform:412", "poses": 6, "clipped_cells": 1}]. Continue transform:411 without draft polishing.
