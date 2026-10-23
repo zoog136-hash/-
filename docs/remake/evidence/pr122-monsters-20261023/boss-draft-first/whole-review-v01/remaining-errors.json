@@ -1,0 +1,2921 @@
+{
+  "schema": "pr122-confirmed-remaining-errors-v1",
+  "fully_authored_first_pass": false,
+  "provider_usage_limit": {
+    "http_status": 429,
+    "error_code": "usage_limit_reached",
+    "reset_unix": 1792788938,
+    "slots": [
+      {
+        "actor": "monster:테베 아누비스",
+        "slug": "thebes_anubis",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "EXISTING_INDIVIDUAL_HOLD",
+        "submitted": true
+      },
+      {
+        "actor": "monster:테베 호루스",
+        "slug": "thebes_horus",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "EXISTING_INDIVIDUAL_HOLD",
+        "submitted": true
+      },
+      {
+        "actor": "monster:제로스",
+        "slug": "zeros",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "DIRECT_USAGE_LIMIT_FAILURE",
+        "submitted": true
+      },
+      {
+        "actor": "monster:제로스",
+        "slug": "zeros",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:제로스",
+        "slug": "zeros",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "DIRECT_USAGE_LIMIT_FAILURE",
+        "submitted": true
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:그림 리퍼",
+        "slug": "grim_reaper",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NW-idle-v01",
+        "direction": "NW",
+        "role": "idle",
+        "cause": "DIRECT_USAGE_LIMIT_FAILURE",
+        "submitted": true
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "N-idle-v01",
+        "direction": "N",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NE-idle-v01",
+        "direction": "NE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "E-run-v01",
+        "direction": "E",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "SE-run-v01",
+        "direction": "SE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "S-run-v01",
+        "direction": "S",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NW-run-v01",
+        "direction": "NW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "N-run-v01",
+        "direction": "N",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NE-run-v01",
+        "direction": "NE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "E-attack-v01",
+        "direction": "E",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "SE-attack-v01",
+        "direction": "SE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "S-attack-v01",
+        "direction": "S",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "SW-attack-v01",
+        "direction": "SW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "W-attack-v01",
+        "direction": "W",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NW-attack-v01",
+        "direction": "NW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:공포의 뱀파이어",
+        "slug": "dread_vampire",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "E-idle-v01",
+        "direction": "E",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SE-idle-v01",
+        "direction": "SE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "S-idle-v01",
+        "direction": "S",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SW-idle-v01",
+        "direction": "SW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "W-idle-v01",
+        "direction": "W",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NW-idle-v01",
+        "direction": "NW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "N-idle-v01",
+        "direction": "N",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NE-idle-v01",
+        "direction": "NE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "E-run-v01",
+        "direction": "E",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SE-run-v01",
+        "direction": "SE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "S-run-v01",
+        "direction": "S",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NW-run-v01",
+        "direction": "NW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "N-run-v01",
+        "direction": "N",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NE-run-v01",
+        "direction": "NE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "E-attack-v01",
+        "direction": "E",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SE-attack-v01",
+        "direction": "SE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "S-attack-v01",
+        "direction": "S",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SW-attack-v01",
+        "direction": "SW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "W-attack-v01",
+        "direction": "W",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NW-attack-v01",
+        "direction": "NW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:교만의 왕자 데우스",
+        "slug": "prince_deus",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "E-idle-v01",
+        "direction": "E",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SE-idle-v01",
+        "direction": "SE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "S-idle-v01",
+        "direction": "S",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SW-idle-v01",
+        "direction": "SW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "W-idle-v01",
+        "direction": "W",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NW-idle-v01",
+        "direction": "NW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "N-idle-v01",
+        "direction": "N",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NE-idle-v01",
+        "direction": "NE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "E-run-v01",
+        "direction": "E",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SE-run-v01",
+        "direction": "SE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "S-run-v01",
+        "direction": "S",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NW-run-v01",
+        "direction": "NW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "N-run-v01",
+        "direction": "N",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NE-run-v01",
+        "direction": "NE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "E-attack-v01",
+        "direction": "E",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SE-attack-v01",
+        "direction": "SE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "S-attack-v01",
+        "direction": "S",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SW-attack-v01",
+        "direction": "SW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "W-attack-v01",
+        "direction": "W",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NW-attack-v01",
+        "direction": "NW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:알비노 유니콘",
+        "slug": "albino_unicorn",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "E-idle-v01",
+        "direction": "E",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SE-idle-v01",
+        "direction": "SE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "S-idle-v01",
+        "direction": "S",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SW-idle-v01",
+        "direction": "SW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "W-idle-v01",
+        "direction": "W",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NW-idle-v01",
+        "direction": "NW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "N-idle-v01",
+        "direction": "N",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NE-idle-v01",
+        "direction": "NE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "E-run-v01",
+        "direction": "E",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SE-run-v01",
+        "direction": "SE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "S-run-v01",
+        "direction": "S",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NW-run-v01",
+        "direction": "NW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "N-run-v01",
+        "direction": "N",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NE-run-v01",
+        "direction": "NE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "E-attack-v01",
+        "direction": "E",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SE-attack-v01",
+        "direction": "SE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "S-attack-v01",
+        "direction": "S",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SW-attack-v01",
+        "direction": "SW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "W-attack-v01",
+        "direction": "W",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NW-attack-v01",
+        "direction": "NW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:오만한 우그누스",
+        "slug": "ugnus",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "E-idle-v01",
+        "direction": "E",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SE-idle-v01",
+        "direction": "SE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "S-idle-v01",
+        "direction": "S",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SW-idle-v01",
+        "direction": "SW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "W-idle-v01",
+        "direction": "W",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NW-idle-v01",
+        "direction": "NW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "N-idle-v01",
+        "direction": "N",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NE-idle-v01",
+        "direction": "NE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "E-run-v01",
+        "direction": "E",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SE-run-v01",
+        "direction": "SE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "S-run-v01",
+        "direction": "S",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NW-run-v01",
+        "direction": "NW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "N-run-v01",
+        "direction": "N",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NE-run-v01",
+        "direction": "NE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "E-attack-v01",
+        "direction": "E",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SE-attack-v01",
+        "direction": "SE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "S-attack-v01",
+        "direction": "S",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SW-attack-v01",
+        "direction": "SW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "W-attack-v01",
+        "direction": "W",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NW-attack-v01",
+        "direction": "NW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:왜곡의 제니스 퀸",
+        "slug": "zenith_queen",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "E-idle-v01",
+        "direction": "E",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SE-idle-v01",
+        "direction": "SE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "S-idle-v01",
+        "direction": "S",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SW-idle-v01",
+        "direction": "SW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "W-idle-v01",
+        "direction": "W",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NW-idle-v01",
+        "direction": "NW",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "N-idle-v01",
+        "direction": "N",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NE-idle-v01",
+        "direction": "NE",
+        "role": "idle",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "E-run-v01",
+        "direction": "E",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SE-run-v01",
+        "direction": "SE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "S-run-v01",
+        "direction": "S",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SW-run-v01",
+        "direction": "SW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NW-run-v01",
+        "direction": "NW",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "N-run-v01",
+        "direction": "N",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NE-run-v01",
+        "direction": "NE",
+        "role": "run",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "E-attack-v01",
+        "direction": "E",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SE-attack-v01",
+        "direction": "SE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "S-attack-v01",
+        "direction": "S",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SW-attack-v01",
+        "direction": "SW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "W-attack-v01",
+        "direction": "W",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NW-attack-v01",
+        "direction": "NW",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "N-attack-v01",
+        "direction": "N",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NE-attack-v01",
+        "direction": "NE",
+        "role": "attack",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "E-hit-v01",
+        "direction": "E",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SE-hit-v01",
+        "direction": "SE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "S-hit-v01",
+        "direction": "S",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "SW-hit-v01",
+        "direction": "SW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "W-hit-v01",
+        "direction": "W",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NW-hit-v01",
+        "direction": "NW",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "N-hit-v01",
+        "direction": "N",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "NE-hit-v01",
+        "direction": "NE",
+        "role": "hit",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:욥니르",
+        "slug": "jopnir",
+        "clip": "S-death-v01",
+        "direction": "S",
+        "role": "death",
+        "cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+        "submitted": false
+      },
+      {
+        "actor": "monster:질투의 공주 이자벨",
+        "slug": "isabelle",
+        "clip": "W-run-v01",
+        "direction": "W",
+        "role": "run",
+        "cause": "EXISTING_INDIVIDUAL_HOLD",
+        "submitted": true
+      }
+    ],
+    "count": 210,
+    "blind_retries": 0
+  },
+  "received_source_geometry_holds": [
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-idle-v01",
+      "role": "idle",
+      "direction": "SW",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/SW-idle-v01.png",
+      "source_sha256": "1aab4464819c34c37ae154aa9a220c5b86ff81581c0470a0d19eda512d200a6c",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          83939,
+          79958,
+          75188,
+          74928,
+          74335,
+          72360
+        ]
+      },
+      "status": "HOLD",
+      "cause": "source_outer_boundary",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v01",
+      "role": "idle",
+      "direction": "SW",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/SW-idle-v01.png",
+      "source_sha256": "fa0c333e7c3738546c0175df6605dd5acb35f7ed56e39d0244b64aa5d9a9aa5f",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          75040,
+          72172,
+          70180,
+          69981,
+          69719,
+          69119
+        ]
+      },
+      "status": "HOLD",
+      "cause": "source_outer_boundary",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "NE-run-v01",
+      "role": "run",
+      "direction": "NE",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/NE-run-v01.png",
+      "source_sha256": "90d794bcbc41f0031d87a9d5ac2f76093bb03dc167902645a91dc633ef8cf0cc",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          92373,
+          90047,
+          89854,
+          86974,
+          86102,
+          81271
+        ]
+      },
+      "status": "HOLD",
+      "cause": "source_outer_boundary",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-attack-v01",
+      "role": "attack",
+      "direction": "W",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/W-attack-v01.png",
+      "source_sha256": "15c1643bb941b3c4b376595622afb728d9ce1720c194a90148a0c7bf21f2abb3",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          106554,
+          103057,
+          100374,
+          96137,
+          94074,
+          90765
+        ]
+      },
+      "status": "HOLD",
+      "cause": "source_outer_boundary",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "E-idle-v01",
+      "role": "idle",
+      "direction": "E",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/E-idle-v01.png",
+      "source_sha256": "d394a20bef7dced4fabc39b66140081de1729481a78c2ac19497d147939da899",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          118250,
+          106631,
+          102715,
+          102202,
+          98505,
+          96088
+        ]
+      },
+      "status": "HOLD",
+      "cause": "foreign_body_rectangle",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "E-idle-v01",
+      "role": "idle",
+      "direction": "E",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-idle-v01.png",
+      "source_sha256": "89b990aaf44154c44215f9c5edc894270b0abfb8067f98fabcaf2e2dc0688fee",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          88418,
+          86246,
+          83810,
+          83614,
+          81523,
+          81124
+        ]
+      },
+      "reused_pinned_minimum_check": true,
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              78,
+              3,
+              376,
+              509
+            ],
+            "margin": [
+              490,
+              330,
+              960,
+              827
+            ],
+            "source_anchor": [
+              256,
+              508
+            ],
+            "rgba_sha256": "a2d3e95116993a3a10c2da13c118b099bc92348f8727ba14e59d2f44ebce63a0",
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ]
+          },
+          {
+            "row": 1,
+            "direction": "E",
+            "region": [
+              566,
+              4,
+              383,
+              508
+            ],
+            "margin": [
+              466,
+              331,
+              953,
+              828
+            ],
+            "source_anchor": [
+              768,
+              508
+            ],
+            "rgba_sha256": "f43e0c389ed240129fc1c79ee9ec4699f48415c70890a4193e9c2b9135f3ee92",
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ]
+          },
+          {
+            "row": 2,
+            "direction": "E",
+            "region": [
+              1080,
+              4,
+              367,
+              508
+            ],
+            "margin": [
+              468,
+              331,
+              969,
+              828
+            ],
+            "source_anchor": [
+              1280,
+              508
+            ],
+            "rgba_sha256": "7410d0af802fa02282205abf7adc745a9e7561815e16c60211dfed041f2d33d5",
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ]
+          },
+          {
+            "row": 3,
+            "direction": "E",
+            "region": [
+              80,
+              515,
+              391,
+              504
+            ],
+            "margin": [
+              492,
+              335,
+              945,
+              832
+            ],
+            "source_anchor": [
+              256,
+              1015
+            ],
+            "rgba_sha256": "3600eecee04ac8f52adef6d594c1bc24b397d950f5cda978ec3720777b60f06f",
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ]
+          },
+          {
+            "row": 4,
+            "direction": "E",
+            "region": [
+              559,
+              515,
+              393,
+              504
+            ],
+            "margin": [
+              459,
+              335,
+              943,
+              832
+            ],
+            "source_anchor": [
+              768,
+              1015
+            ],
+            "rgba_sha256": "5e0e86d64aa270c2cf8ed31649d0db5d1ce5d92096cac8a7c3eb3c8f82ef0ebf",
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ]
+          },
+          {
+            "row": 5,
+            "direction": "E",
+            "region": [
+              1078,
+              515,
+              374,
+              503
+            ],
+            "margin": [
+              466,
+              336,
+              962,
+              833
+            ],
+            "source_anchor": [
+              1280,
+              1014
+            ],
+            "rgba_sha256": "57e69492bd67935365a48f9fd75271a6c0e9dcddd3378dcc0c33d86781281911",
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ]
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 500.5,
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ],
+        "strict_source_analysis_canvas": 2048
+      },
+      "status": "HOLD",
+      "cause": "foreground_ownership",
+      "reason": "Detached foreground has ambiguous physical-body ownership"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "S-run-v01",
+      "role": "run",
+      "direction": "S",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/S-run-v01.png",
+      "source_sha256": "49be56b692006880d065af27445786a0a0f85745162a28d00eeb3e0a6f981e3e",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 5,
+        "strong_component_areas": [
+          96690,
+          96616,
+          95431,
+          94504,
+          91370,
+          88374
+        ]
+      },
+      "status": "HOLD",
+      "cause": "foreign_body_rectangle",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "E-attack-v01",
+      "role": "attack",
+      "direction": "E",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-attack-v01.png",
+      "source_sha256": "5267391cdae6c8b5c5c07ae3bfcb67aabfe789f822e6bd0e4a1b814cc4d0ed0a",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 5,
+        "foreground_alpha16_parts_ge200": 5,
+        "strong_component_areas": [
+          166590,
+          87119,
+          83574,
+          83560,
+          83437
+        ]
+      },
+      "status": "HOLD",
+      "cause": "physical_component_count",
+      "reason": "Expected exactly 6 separated poses, found 5; review/re-author, never invent slots"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "NE-idle-v01",
+      "role": "idle",
+      "direction": "NE",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/NE-idle-v01.png",
+      "source_sha256": "8180c019bc83a49c1eecc2b39f81e4c690d148e5e8c653257a6abf936015c2c0",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          90098,
+          88995,
+          85048,
+          84970,
+          80686,
+          80523
+        ]
+      },
+      "status": "HOLD",
+      "cause": "source_outer_boundary",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "N-run-v01",
+      "role": "run",
+      "direction": "N",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/N-run-v01.png",
+      "source_sha256": "c76084325b066f0cadf261eb7039b63b5adc7612da870085b6b8e2c35aaa90cc",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          90954,
+          87351,
+          85073,
+          83033,
+          82848,
+          82816
+        ]
+      },
+      "status": "HOLD",
+      "cause": "foreign_body_rectangle",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "NE-hit-v01",
+      "role": "hit",
+      "direction": "NE",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/NE-hit-v01.png",
+      "source_sha256": "f5c1ef0d3efa330ec4795fc9b17dd78167927b6d73d33632b43b46c78def7f1b",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          99959,
+          96417,
+          93737,
+          90300,
+          89092,
+          81530
+        ]
+      },
+      "status": "HOLD",
+      "cause": "source_outer_boundary",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SE-attack-v01",
+      "role": "attack",
+      "direction": "SE",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/SE-attack-v01.png",
+      "source_sha256": "1cf8c981a9206d7b6f19560fbc25d88ee819e2170d0312bad0002348ec2bbfd3",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          115227,
+          111825,
+          109538,
+          107250,
+          103945,
+          96935
+        ]
+      },
+      "status": "HOLD",
+      "cause": "foreign_body_rectangle",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-attack-v01",
+      "role": "attack",
+      "direction": "SW",
+      "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/SW-attack-v01.png",
+      "source_sha256": "e6ef0003f706972d46e57411b4fd5f6b42c0d51d645f32c5ef99b017f4df0889",
+      "component_inventory": {
+        "strong_alpha100_bodies_ge200": 6,
+        "foreground_alpha16_parts_ge200": 6,
+        "strong_component_areas": [
+          113256,
+          106533,
+          104639,
+          104587,
+          102528,
+          100096
+        ]
+      },
+      "status": "HOLD",
+      "cause": "foreign_body_rectangle",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "received_source_camera_holds": [
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-idle-v01",
+      "source_sha256": "2f71bfc31d3f312abbaff2b1c3b61414b1ade3ba631b2e3f53bb98117e2bfdb7",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-run-v01",
+      "source_sha256": "f7e6c190637d910b5e5745344d9ab5d7118ca3e594cfe6da8effa1d1df15d04a",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-attack-v01",
+      "source_sha256": "a261b301d6d86513be21fdd99b447020b0f94169f29bebc89efde507ba8f17a1",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-hit-v01",
+      "source_sha256": "035cf624e7b32406ad29131d2d57464a936b6f44dce26674f5a134f24c31a3ab",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-idle-v01",
+      "source_sha256": "1aab4464819c34c37ae154aa9a220c5b86ff81581c0470a0d19eda512d200a6c",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-idle-v01",
+      "source_sha256": "d87289ce41b2e1866185bcd81b24053e480295a7d2640dca52c8ffc60e6826b0",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-attack-v01",
+      "source_sha256": "3edc8be1709f89b6aee8015caa09154791f9b5a908f5c4ced6ea1ac1877a3efc",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-attack-v01",
+      "source_sha256": "cc53f8a9157a7447dffb60570150f27a762a743d26e47fb8ae09965a8d95d025",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-hit-v01",
+      "source_sha256": "3a9b2debe7d6f38e876d69e24f07a74adb930b1a3017830d2abd97f40a66ccf9",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-hit-v01",
+      "source_sha256": "1928e39dbeba0df44cc94c1ef3ce8a88d840cbc1cb6e2bba2a774659f6e955dc",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v01",
+      "source_sha256": "fa0c333e7c3738546c0175df6605dd5acb35f7ed56e39d0244b64aa5d9a9aa5f",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v01",
+      "source_sha256": "630ffef9f34a6b17aaada9dd5941057cd76d5c489d32b542d0b56a8dbc5ba94f",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "W-attack-v01",
+      "source_sha256": "aee2c14d5d2bc9434e649a22ef21e3c836c1498c56a6af18a3f54a7d93d3c4c7",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-idle-v01",
+      "source_sha256": "b111ab0feca914aa48b98e74b60615fc0247aefb582b02caa9e855114875518f",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-run-v01",
+      "source_sha256": "de8ffcfd803e95a8fd22546beb78a4c7536efd8ad78ef4a8e930830f18a7f50f",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-attack-v01",
+      "source_sha256": "15c1643bb941b3c4b376595622afb728d9ce1720c194a90148a0c7bf21f2abb3",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-hit-v01",
+      "source_sha256": "9d92614c439a58237275a9bfb495446c264093d8bbf7015fbede45974cf6ba0d",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "SW-idle-v01",
+      "source_sha256": "b1050ab3fbdeaf9e19b140f349a181f87a30bd6ce1b6b165697062b73ed5fd1c",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "W-idle-v01",
+      "source_sha256": "773961c2bbe3fe03c46531670fa171c9a935718a3b05b0f4cf0977be0332d48c",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "SW-attack-v01",
+      "source_sha256": "6720137a2907ad27b1a216be1a5dd63a9bfe3bd5aa1021649689107a674ff65a",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "W-attack-v01",
+      "source_sha256": "81f37e4611879a54c14f935f6bebdb92fb622e8a0661481e9620d306378ca0cd",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "SW-hit-v01",
+      "source_sha256": "66a257c1799419c534e7cb459925ba273fb699291b42863b6f8b4e14c806b5de",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "W-hit-v01",
+      "source_sha256": "f514cbde0973da895d8ce74002c7dbbc1621e1804e32e4c6c81714a6a5544e2c",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-idle-v01",
+      "source_sha256": "7a8fe7212252c8b7e44e3bbd2456f7d59b39f7d6fba717ff1561ecb582504d10",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "W-idle-v01",
+      "source_sha256": "df16b0076643f5a1a8d8ae262976d2520f86cfa82019779865274298c417995e",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-run-v01",
+      "source_sha256": "a2add61b3b24d990964aaf8e87ad32976d05ec5ca15eb36fe324b96611b9eeba",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-attack-v01",
+      "source_sha256": "f3ea98eac6f5d683d26dd537bc274317170a224bf13ef9d1e4131b17b60ffbcb",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "W-attack-v01",
+      "source_sha256": "9c70f5f26cdc2ccb498e31ba27b627054cff9e0daeb60059437a01a1bbd103d3",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v01",
+      "source_sha256": "1153b0f649b299b9811335198c7521f7fcda5ecadf33189fe8262b15911665ec",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-idle-v01",
+      "source_sha256": "d3e51a922e19bdbb201ad2457da9ac625d95f62540c81c2732781265d0ea862b",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-idle-v01",
+      "source_sha256": "7608560680d908de39f223af60ed3c1d6d0775bfc967b39c9a9882431dc8bea4",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "NW-idle-v01",
+      "source_sha256": "484a5f28bc5c0fbd83486b7cb91251acc0dec7a91b79a63b96b1c2973987983a",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared rear view exposes the front bodice/face instead of maintaining its rear camera.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-run-v01",
+      "source_sha256": "75fa43dd02600ae7e5c727c2dec12daedd8a08657ad3873b4f1810e060a92fc2",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-run-v01",
+      "source_sha256": "0c2b52223cb0f107c754457044d0d63fb52af1011bbf73311b786abe9c73de22",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-attack-v01",
+      "source_sha256": "3658100d4a2ac9c1e458698976d15a4876affb9ed52e0c6e79b296631b97603f",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-attack-v01",
+      "source_sha256": "1ea180944fc6172f012bef3d170c0d795598b6508303d444eda28a7cbad02a2e",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-hit-v01",
+      "source_sha256": "713593caa653e1665143a539a46e28a52e1532d6ffc9362138fe095dee2644bf",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-hit-v01",
+      "source_sha256": "639aab8523909b19f065f2347508b186d82bfd93dabd082f3375b2d193a5d3f3",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "SW-idle-v01",
+      "source_sha256": "181149f6611be29adb22e919c3f78d364aef4e51e59709de1bdceb796686f158",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "NW-idle-v01",
+      "source_sha256": "1a784457440f0695efe1e5bb47d836917a8ec270a2bdf10310d3cd39596095ed",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared rear view exposes the front bodice/face instead of maintaining its rear camera.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "SW-attack-v01",
+      "source_sha256": "501caad8e1f4a56ffd1ed86ec27bb8ba2106db17d426b59539000b772f7099e8",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "W-attack-v01",
+      "source_sha256": "f1b146b73ca2d103f01e4c86886e1da1f4b77ee086c9c198fc01b86faf3cfb3e",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "SW-hit-v01",
+      "source_sha256": "6fd61081e02c1ab33ededa3cd0b856ce277316661353b2bfba5d023b2cacaca2",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "W-hit-v01",
+      "source_sha256": "1a368165245f9011c626bc85c67d2021c40af7e6393a36114f03a785b2e9c7a9",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-idle-v01",
+      "source_sha256": "9a4b9ea67f0c22fe12f27ffbf2717c7790aacb2b02e88ce3d3931982c6c3f8c2",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-idle-v01",
+      "source_sha256": "55986915566b0474b2b673f7f2b4fc7c59b0ac8477954bb65e0d42ec103eb0bc",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared rear view exposes the front bodice/face instead of maintaining its rear camera.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-attack-v01",
+      "source_sha256": "e6ef0003f706972d46e57411b4fd5f6b42c0d51d645f32c5ef99b017f4df0889",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "W-attack-v01",
+      "source_sha256": "e3340c68d4dca06237c07093f9efca894bbfce084f9b087bf3aae021b2cbd414",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared left/front-left view retains a right-facing head, torso or recovery pose.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-attack-v01",
+      "source_sha256": "2d0c5c48d4099449278aa9e558e828785fbed52c23062a919734f4697a568eff",
+      "cause": "authored_camera_facing_mismatch",
+      "observation": "Declared rear view exposes the front bodice/face instead of maintaining its rear camera.",
+      "resolution": "Needs targeted source correction; no mirror/limb-side swap and no repeated generation while provider usage limit is active."
+    }
+  ],
+  "geometry_hold_count": 13,
+  "camera_hold_count": 49,
+  "overlapping_error_slots": 4,
+  "distinct_received_source_error_slots": 58,
+  "distinct_new_boss_unauthored_or_error_slots": 268,
+  "kurtz_remaining": [
+    {
+      "animation": "hit_4",
+      "cause": "Both west recoil source poses face east; one targeted clip needs replacement when generator available"
+    }
+  ],
+  "prior_unchanged_bosses_requiring_dedicated_quality_review_followup": [
+    "monster:개미굴의 지배자",
+    "monster:거대 드레이크",
+    "monster:검은숲의 지배자",
+    "monster:그라디움",
+    "monster:글루디오 던전의 지배자",
+    "monster:기란 평원의 지배자",
+    "monster:네크로맨서",
+    "monster:데스나이트",
+    "monster:듀페리온",
+    "monster:드레이크",
+    "monster:라스타바드의 지배자",
+    "monster:마계의 지배자",
+    "monster:말하는 섬의 지배자",
+    "monster:바포메트",
+    "monster:베레스",
+    "monster:분노의 주시자 라즈엘",
+    "monster:불멸의 리치",
+    "monster:불사의 머미 로드",
+    "monster:불신의 시어",
+    "monster:살라흐",
+    "monster:샌드 웜",
+    "monster:수룡의 둥지의 지배자",
+    "monster:시간의 균열의 지배자",
+    "monster:아틀란티스의 지배자",
+    "monster:알비노 피닉스",
+    "monster:어둠의 나이트발드",
+    "monster:에바 왕국의 지배자",
+    "monster:오만의 탑의 지배자",
+    "monster:용의 계곡의 지배자",
+    "monster:웨링",
+    "monster:이프리트",
+    "monster:잊혀진 섬의 지배자",
+    "monster:종말의 성역의 지배자",
+    "monster:지룡의 둥지의 지배자",
+    "monster:지옥의 쿠거",
+    "monster:천상계의 지배자",
+    "monster:테베라스의 지배자",
+    "monster:풍룡의 둥지의 지배자",
+    "monster:피닉스",
+    "monster:화룡의 둥지의 지배자",
+    "monster:흑장로"
+  ],
+  "no_normal_art_regenerated": true
+}

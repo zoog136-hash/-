@@ -374,6 +374,14 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 		# actual idle at its new facing. None creates a new authored track.
 		var native_role: String = "attack" if state == "recovery" else ("death" if state == "corpse" else ("idle" if state == "turn" else state))
 		var native_key: String = native_role + "_" + str(facing8)
+		# New monster art has RUN and intentionally no new WALK. Preserve a
+		# real existing WALK; otherwise present the same-facing authored RUN
+		# while movement speed still controls its cadence and world position.
+		if native_role == "walk" and profile.profile_id.begins_with("monster:") and not frames.has_animation(native_key):
+			var running_key: String = "run_" + str(facing8)
+			if frames.has_animation(running_key) and frames.get_frame_count(running_key) > 0:
+				native_role = "run"
+				native_key = running_key
 		if native_role == "death":
 			native_key = _available_death_key(frames, facing8)
 		_resolved_role = "unavailable"
@@ -388,6 +396,8 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 		elif attack_style == "magic": roles.push_front("cast")
 		if not action_role.is_empty(): roles.push_front(action_role)
 	match state:
+		"walk":
+			if profile.profile_id.begins_with("monster:"): roles.append("run")
 		"recovery": roles.append("attack")
 		"run": roles.append("walk")
 		"turn": roles.append("idle")
