@@ -1,0 +1,330 @@
+{
+  "key": "transform:175",
+  "name": "증오의 데스나이트",
+  "grade": "전설",
+  "direction": "NW",
+  "role": "run",
+  "reference": "res://assets/catalog/74a1b57396dd896edc6daadc.png",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 legendary transform:175 증오의 데스나이트. Authoritative original catalog PNG attached. Create ONE transparent source PNG with exactly SIX NEW full-body NW RUN poses, precisely THREE equal columns by TWO equal rows, reading order0..5. All poses use three-quarter rear NORTH-WEST, screen UP-LEFT, one fixed slightly elevated isometric game camera. Newly draw correct directional body perspective and occlusion, never rotate/flip a flat image or swap anatomical equipment hands. Genuine articulated RUNNING CYCLE, never walking or attacking: frame0 anatomical LEFT foot contacts ground while RIGHT leg recovers; frame1 LEFT support compression and RIGHT knee forward swing; frame2 flight transition with RIGHT foot reaching; frame3 anatomical RIGHT foot contacts ground while LEFT leg recovers; frame4 RIGHT support compression and LEFT forward swing; frame5 flight transition with LEFT reaching toward frame0. Natural alternating support, real hip/knee/ankle changes and opposite arm counter-swing. Preserve original carried equipment safely, no weapon attack or casting. Same camera/body scale and common ground plane. If the original is inherently hovering, preserve that anatomy and create a genuine articulated forward flight cycle; do not invent limbs, wings, or feet hidden by the original garment. Retain the original face, hair, skin, exact costume and armor, body proportions, colors, ornaments, weapon type and silhouette. Original image resolves any ambiguity. Six distinct genuine articulated joint poses, no translated still, generic replacement or invented accessory. Each entire body, hair/head ornament, toes/heels and COMPLETE original weapon fits inside its cell with generous transparent gutters, no overlap/clipping. Background outside the figure and original small effects is ZERO alpha, no opaque/gradient backdrop, ground plane, scenery, panels, text, labels, grid or additional figures. Match original detailed painted fantasy RPG sprite style. Output only the one six-pose sheet. Mandatory camera consistency: NORTH-WEST means diagonally AWAY toward the TOP-LEFT screen corner: show the BACK of the head and costume plus the LEFT side, not the face or chest front. Keep this exact projected facing in ALL six cells, including first and last. The head, torso, hips, grounded toes and action trajectory must agree with that facing; do not retain the source portrait camera when it differs. Draw the real 3D perspective with correct equipment-side occlusion; do not mirror or rotate a flat sprite.",
+    "referenced_image_paths": [
+      "/workspace/legendary_work/assets/catalog/74a1b57396dd896edc6daadc.png"
+    ],
+    "transparent_background": true
+  },
+  "source_base_sha": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+  "batch_id": 184,
+  "reference_sha256": "29946eb00d0ba196a7886ccbba18563af1c37ce8a0d9d5c50e4ccfa02f0e7e09",
+  "schema": "legendary-versioned-ownership-execution-delta-v2",
+  "status": "OWNERSHIP_REPAIRED_OTHER_QUALITY_HOLD",
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+  "source_resource_path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+  "source_sha256": "05aa016d4b3df34efbb7f65fc1c806ec699d11384413b11833440edc9685c1a4",
+  "source_bytes": 2069340,
+  "output_spriteframes": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-SpriteFrames.tres",
+  "output_spriteframes_sha256": "3e6115890a9a3113020fe896a5a73404391e46bf3e2408856d259fef6fd59c6c",
+  "generated_original_path": "/workspace/generated_images/exec-9a0a2728-3eba-42bb-a48d-0aecb27717f4.png",
+  "request_file": "/workspace/legendary_work/docs/remake/pr122-legendary-parallel/requests/transform_175-NW-run-v01.json",
+  "request_file_sha256": "e9082b6712710ef23e311827d3e3eb0fc051256eccd03ea9a4aff2fe85d686e5",
+  "generation_request_sha256": "fc240866ac32a20a2627222d2d5ffd3b3c86fab3520db9853970c58dc1fa145f",
+  "generation_service": "image_gen.imagegen",
+  "poses": 6,
+  "cell_size": [
+    634,
+    621
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "animation": "run_5",
+  "source_grid": [
+    3,
+    2
+  ],
+  "source_grid_pixel_boundaries": {
+    "x": [
+      0,
+      512,
+      1024,
+      1536
+    ],
+    "y": [
+      0,
+      512,
+      1024
+    ]
+  },
+  "partition_edges": {
+    "x": [
+      0,
+      634,
+      1268,
+      1902
+    ],
+    "y": [
+      0,
+      621,
+      1242
+    ]
+  },
+  "integer_grid_rounding_hold": false,
+  "loop": true,
+  "automatic_checks": [
+    {
+      "index": 0,
+      "region": [
+        0,
+        0,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "0516b2ced0652bf958ac5df6c38ac40db6bbe5c62b3ea7ad0f2480c2039b9407"
+    },
+    {
+      "index": 1,
+      "region": [
+        634,
+        0,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "1121445bf83123245df9bf52f16d9bf2e0712a9a69ace03ddbd61167e7ddc5d4"
+    },
+    {
+      "index": 2,
+      "region": [
+        1268,
+        0,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "59de8c89be15c98a3e355ff26f433ad4a29e002610763a9763dee670bb46d4ba"
+    },
+    {
+      "index": 3,
+      "region": [
+        0,
+        621,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "b1325b5c347fb02dc316b4f4b4a57237d8933aef89f1f54d60bc7791489b0105"
+    },
+    {
+      "index": 4,
+      "region": [
+        634,
+        621,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "47a7acff317cf051937a710f7fea59179c33724b1d1e1720016c7045264b0e54"
+    },
+    {
+      "index": 5,
+      "region": [
+        1268,
+        621,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rgba_sha256": "37035cbc13d30dc2f8e1c07faef43a83c5d5d0a1f3af26d084fdf17b8902d4da"
+    }
+  ],
+  "clipped_cell_count": 4,
+  "compiler_origin": {
+    "repository": "zoog136-hash/-",
+    "commit": "16bb178426134dbc5ffcc32306de0a2509352c8f",
+    "path": "tools/import_original_based_motion.py",
+    "source_file_sha256": "8e44eb850d27125e8704926925ffb00d241a591b2a7f149bb6d16b69acc647e2",
+    "function": "spriteframes",
+    "function_source_sha256": "90c168656ec82b680e96f7bea822dd11161085fe75233366f459b9cab2c1451c",
+    "reuse": "Exact function source copied. A single selected animation is retained; run loops explicitly."
+  },
+  "minimal_checks": {
+    "actual_png_exists": "PASS",
+    "six_cells_extractable": "PASS",
+    "catalog_id_name_grade_match": "PASS",
+    "original_reference_sha256": "PASS",
+    "six_distinct_rgba_and_visible_frames": "PASS",
+    "SpriteFrames_actual_Godot_playback": "NOT_RUN"
+  },
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "geometry_review": "NOT_RUN",
+  "hold_reasons": [
+    "Full source identity, footing, camera, articulation and clipping review pending",
+    "Visible alpha reaches cell edge"
+  ],
+  "actual_Main_Player": "NOT_RUN",
+  "required_Godot_4_7_2_full_QA": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "revision_parent": "res://assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-run-record-v01.json",
+  "revision_parent_sha256": "4af6f08b35eda817adcb121bd11e85dcc6ae12afbb8122d1ea6637cf64ed0775",
+  "frame_registration": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-registration.json",
+  "frame_registration_status": "RASTER_COORDINATE_PRESERVATION",
+  "ownership_execution_delta": "res://docs/remake/pr122-legendary-parallel/ownership-quota-execution-delta-v01.json",
+  "newly_authored_correction_poses_added": 0,
+  "final_approved": false,
+  "isolation_proofs": [
+    "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.proof.json"
+  ],
+  "ownership_delta_remaining_quality_holds": [
+    "camera"
+  ],
+  "raw_authored_source": "assets/actors/eight_direction/legendary_parallel/transform_175/draft001/NW-run-source-v01.png",
+  "raw_authored_source_sha256": "d5db124db66c5ed5c9402614d802a0e0e4dc6ffd544aed77552614d165a8e16d",
+  "source_files": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "sha256": "05aa016d4b3df34efbb7f65fc1c806ec699d11384413b11833440edc9685c1a4",
+      "bytes": 2069340
+    }
+  ],
+  "revision_source_pose_sequence": [
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "region": [
+        0,
+        0,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 0
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "region": [
+        634,
+        0,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 1
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "region": [
+        1268,
+        0,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 2
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "region": [
+        0,
+        621,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 3
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "region": [
+        634,
+        621,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 4
+    },
+    {
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_175/corrections/ownership-delta-v04/NW-run-source-v01-isolated.png",
+      "region": [
+        1268,
+        621,
+        634,
+        621
+      ],
+      "margin": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "duration": 1.0,
+      "phase": 5
+    }
+  ]
+}
