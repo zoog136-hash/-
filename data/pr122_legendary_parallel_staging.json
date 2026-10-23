@@ -8575,6 +8575,28 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:282",
+                "E",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/E-idle-record-v02.json",
+              "record_sha256": "9e92fd133defbd11b8710c849ba4d2b14f85d4bcc20be0ffdec7ea445de8903a",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/E-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "6e113738620f8641165677bf57d6c2cbcd6edd79dde0df91360ae115cb7dde21",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/E-idle-raster-registration-v02.json",
+              "registration_sha256": "603fb293be2bcd3e7a0b9545f56a0de7d67ddfa99f1581f46af368cc63e41388",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc018",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "7fbaf705892778a2346a73409f41afecae4d2b1880d80c14b5de7c73efc9f39e",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -9082,6 +9104,28 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:282",
+                "SE",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/SE-idle-record-v02.json",
+              "record_sha256": "0e97202a358a718249b70b74175eac6ce3a84d99aaf632476c4bdcbad8ca540c",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/SE-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "244c5a13f48e6232add9ec33b68b62c67550732a8c4dae1ecab9f91949860da3",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_282/quality-v02/SE-idle-raster-registration-v02.json",
+              "registration_sha256": "5efd426606720f4dd2f278cdb37cf449c6fa5ada809ba90d27eb471c52b9a5a6",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc019",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "37696c7b5cac0f361f4d1da641f10394ac52317b4632f9e937d4113c5fc2cca8",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -9991,6 +10035,28 @@
           "hold_reasons": [
             "Full source identity, footing, camera, articulation and clipping review pending",
             "Visible alpha reaches cell edge"
+          ],
+          "correction_revisions": [
+            {
+              "slot": [
+                "transform:275",
+                "SW",
+                "idle"
+              ],
+              "record": "res://assets/actors/eight_direction/legendary_parallel/transform_275/quality-v02/SW-idle-record-v02.json",
+              "record_sha256": "dfb4344f0f6db6c2d06891cddc567d30bcd0b1ec6462fd0999bca49134dfe19c",
+              "SpriteFrames": "res://assets/actors/eight_direction/legendary_parallel/transform_275/quality-v02/SW-idle-SpriteFrames.tres",
+              "SpriteFrames_sha256": "95b6f9b6adb8efde399eebbefd5e95c8f8227b33f4f87de0b352e68df638b0cf",
+              "registration": "res://assets/actors/eight_direction/legendary_parallel/transform_275/quality-v02/SW-idle-raster-registration-v02.json",
+              "registration_sha256": "5e43dbe8993e6165a1def8c4fa98ac9a2a2a78ba91a0424a6c366a0c995eb18f",
+              "registration_status": "RASTER_COORDINATE_PRESERVATION",
+              "correction_candidate_id": "qc020",
+              "newly_authored_correction_poses": 6,
+              "reused_poses": 0,
+              "generated_source_sha256": "2f0b5aa43103242fd313387a88b1177eba0fba40a7aa175fd89d37beec3513c6",
+              "kind": "bounded_quality_source",
+              "quality_status": "HOLD"
+            }
           ]
         },
         {
@@ -36418,8 +36484,8 @@
     "review_baseline_sha": "6bcd94f5a0868426ac4b5ae0ebffd93916fad1ba",
     "frozen_review": "res://docs/remake/pr122-legendary-parallel/whole-review-frozen-v01.json",
     "frozen_review_sha256": "bce7e7260712a27515627806a88690158f47bf8ddf4cd172dba5b5ba3eee00c6",
-    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch268-v02.json",
-    "active_revision_library_sha256": "1b0a61fd59c2e78e2e0441f755ec1f48210b3590e6971ae62c453da77c7f4b99",
+    "active_revision_library": "res://docs/remake/pr122-legendary-parallel/quality-v02/revision-library-through-batch269-v02.json",
+    "active_revision_library_sha256": "7a580017e9c5a7699c9d3cefeecae0506bbd58468fbf19fbfebb77ee193b9ac5",
     "final_approved": 0,
     "ownership_isolation": {
       "batches": [
@@ -36528,12 +36594,20 @@
           "successful_sources": 5,
           "blocked_sources": 0,
           "generation_retries": 0
+        },
+        {
+          "batch": 269,
+          "manifest": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch269-revision-library-v02.json",
+          "validation": "res://docs/remake/pr122-legendary-parallel/quality-v02/batch269-affected-validation-v02.json",
+          "successful_sources": 3,
+          "blocked_sources": 2,
+          "generation_retries": 0
         }
       ],
-      "successful_sources": 10,
-      "blocked_sources": 0,
-      "newly_authored_correction_poses": 60,
-      "unattempted_sources": 116,
+      "successful_sources": 13,
+      "blocked_sources": 2,
+      "newly_authored_correction_poses": 78,
+      "unattempted_sources": 111,
       "final_approved": 0
     }
   }

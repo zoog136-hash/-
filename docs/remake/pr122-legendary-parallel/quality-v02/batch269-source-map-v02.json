@@ -1,0 +1,64 @@
+[
+  {
+    "id": "282",
+    "direction": "E",
+    "role": "idle",
+    "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_282-E-idle-correction-v02.json",
+    "correction_candidate_id": "qc018",
+    "previous_source_sha256": "36fc22484d971aaaa5a6f8d0df9e86391d6dadd94f8cec659fe767478d723d51",
+    "representation": "six_new",
+    "batch": 269,
+    "generated": "/workspace/generated_images/exec-59b870b7-59cc-49c2-ab7f-7cca9cb945f6.png",
+    "returned_utc": "2026-10-23T18:28:44.279Z"
+  },
+  {
+    "id": "282",
+    "direction": "SE",
+    "role": "idle",
+    "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_282-SE-idle-correction-v02.json",
+    "correction_candidate_id": "qc019",
+    "previous_source_sha256": "f098b0722e1a5642cc98a8d5ce0bdc7266114c996202d4c99d15fa359e8c7418",
+    "representation": "six_new",
+    "batch": 269,
+    "generated": "/workspace/generated_images/exec-4611b2da-7061-4373-b63f-a73e1f63873d.png",
+    "returned_utc": "2026-10-23T18:26:15.598Z"
+  },
+  {
+    "id": "275",
+    "direction": "SW",
+    "role": "idle",
+    "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_275-SW-idle-correction-v02.json",
+    "correction_candidate_id": "qc020",
+    "previous_source_sha256": "f770168e7215ad1756e0a6579d51a3986cc6f69abc63713b68d34919269814b4",
+    "representation": "six_new",
+    "batch": 269,
+    "generated": "/workspace/generated_images/exec-df8cb7ea-a33b-49e5-b68a-016a10c5efb2.png",
+    "returned_utc": "2026-10-23T18:27:50.008Z"
+  },
+  {
+    "id": "274",
+    "direction": "SW",
+    "role": "idle",
+    "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_274-SW-idle-correction-v02.json",
+    "correction_candidate_id": "qc021",
+    "previous_source_sha256": "d8607448cf8ce0add83b37540643f7516eee10ca767fad110801daaf3a195c90",
+    "representation": "six_new",
+    "batch": 269,
+    "blocked": true,
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"prolite\\\",\\\"resets_at\\\":1792788938,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":8771}}\")",
+    "returned_utc": "2026-10-23T18:29:27.632Z"
+  },
+  {
+    "id": "273",
+    "direction": "E",
+    "role": "idle",
+    "request": "docs/remake/pr122-legendary-parallel/quality-v02/requests/transform_273-E-idle-correction-v02.json",
+    "correction_candidate_id": "qc023",
+    "previous_source_sha256": "8c0f68a685986a05c1d0ec6f1382630d6c05e8533ca0614d9fc36eb60f58e4db",
+    "representation": "six_new",
+    "batch": 269,
+    "blocked": true,
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"prolite\\\",\\\"resets_at\\\":1792788938,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":8772}}\")",
+    "returned_utc": "2026-10-23T18:29:26.820Z"
+  }
+]
