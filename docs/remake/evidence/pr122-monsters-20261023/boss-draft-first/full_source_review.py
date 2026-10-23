@@ -4,6 +4,7 @@
 Does not regenerate art, approve visual quality, or change normal monsters.
 Minimum batch checks are reused when their exact source/importer pins match.
 """
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -33,9 +34,14 @@ def category(reason):
     return 'other_source_geometry'
 
 def main():
-    plan=json.loads((HERE/'plan.json').read_text());jobs=[]
-    for actor in plan['actors']:
-        jobs.extend(json.loads((HERE/actor['slug']/'draft-queue.json').read_text()))
+    parser=argparse.ArgumentParser();parser.add_argument('--resume210',action='store_true');args=parser.parse_args()
+    if args.resume210:
+        jobs=json.loads((HERE/'resume210-v01/queue.json').read_text())['jobs']
+        assert all((HERE/j['slug']/(j['clip']+'-receipt.json')).exists() for j in jobs),'Finish all 210 first drafts before the single full review'
+    else:
+        plan=json.loads((HERE/'plan.json').read_text());jobs=[]
+        for actor in plan['actors']:
+            jobs.extend(json.loads((HERE/actor['slug']/'draft-queue.json').read_text()))
     service_file=HERE/'generation-service-hold.json'
     service=json.loads(service_file.read_text()) if service_file.exists() else None
     service_slots={(v['slug'],v['clip']):v for v in service['slots']} if service else {}
@@ -45,7 +51,8 @@ def main():
         f=HERE/j['slug']
         if not (f/(j['clip']+'-receipt.json')).exists() and not (f/(j['clip']+'-generation-hold.json')).exists() and (j['slug'],j['clip']) not in service_slots:pending.append(dict(actor=j['actor'],clip=j['clip']))
     assert not pending,'Unresolved first-pass queue: '+str(len(pending))+' clips; no source or explicit service HOLD'
-    out=HERE/'whole-review-v01';assert not (out/'summary.json').exists(),'Frozen inventory already complete; verify only changed/affected clips'
+    out=(HERE/'resume210-v01/whole-review-v01') if args.resume210 else HERE/'whole-review-v01'
+    assert not (out/'summary.json').exists(),'Frozen inventory already complete; verify only changed/affected clips'
     out.mkdir(exist_ok=True)
     importer_sha=sha(ROOT/'tools/import_original_based_motion.py')
     rows=[]
@@ -104,7 +111,7 @@ def main():
             reason=str(e);row.update(status='HOLD',cause=category(reason),reason=reason)
         rows.append(row)
         saved.write_text(json.dumps(row,ensure_ascii=False,indent=2)+'\n')
-    summary=dict(planned_clips=len(jobs),source_drafts=sum('source' in r for r in rows),fully_authored_first_pass=all('source' in r for r in rows),global_service_blocked=bool(service),structural_pass=sum(r['status']=='STRUCTURAL_PASS' for r in rows),holds_by_common_cause=dict(Counter(r['cause'] for r in rows if r['status']=='HOLD')),original_PNGs_regenerated=0,normal_art_changed=0,new_approvals=0,full_visual_review='NOT_YET_PERFORMED; structural inventory is not visual approval',importer_sha256=importer_sha)
+    summary=dict(planned_clips=len(jobs),source_drafts=sum('source' in r for r in rows),fully_authored_first_pass=all('source' in r for r in rows),global_service_blocked=any(r.get('cause')=='generation_service_usage_limit' for r in rows),structural_pass=sum(r['status']=='STRUCTURAL_PASS' for r in rows),holds_by_common_cause=dict(Counter(r['cause'] for r in rows if r['status']=='HOLD')),original_PNGs_regenerated=0,normal_art_changed=0,new_approvals=0,full_visual_review='NOT_YET_PERFORMED; structural inventory is not visual approval',importer_sha256=importer_sha)
     (out/'structural-inventory.json').write_text(json.dumps(dict(summary=summary,clips=rows),ensure_ascii=False,indent=2)+'\n')
     (out/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps(summary,ensure_ascii=False))
