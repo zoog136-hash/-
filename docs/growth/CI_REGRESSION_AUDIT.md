@@ -56,3 +56,7 @@ Godot 4.7.2, `GITHUB_ACTIONS=true`, 저장 격리, CI가 사용하는 두 PNG �
 ## 후속 cae446ce item-options 실패
 
 새 ground_drop_smoke_test 7건은 앞선 main 지도 실패와 별개다. main 원본 검사는 통과했고, 편입된 한 도착점 경로를 검사 좌표 선택기가 거부해 벽 모서리로 플레이어를 옮긴 테스트 호환성 문제였다. 생산 줍기·맵 코드를 바꾸지 않고 기존 25개 단언을 유지하며 좌표 유효성 단언 3개를 추가했다. [원인·수정·최소 비교](CI_GROUND_DROP_RECHECK.md).
+
+## 후속 1ed0a0da Windows Aden 로드 실패
+
+공용 PNG 로더가 인증하는 Domination 계획 파일이 Windows Git의 CRLF 변환으로 달라지는 문제를 별도 체크아웃과 실제 실패 검사로 재현했다. 해당 파일의 `-text` 속성만 추가했다. 지도/로더/기존 검사 변경 없이 3개 계획 SHA 유지와 동일 게임플레이 검사 1,440개 단언 통과를 확인했다. Windows Godot 자체의 수정 후 실행은 원격 CI에서 별도로 확인해야 한다. [원인·SHA·집중 검증](CI_WINDOWS_CHECKOUT_RECHECK.md).
