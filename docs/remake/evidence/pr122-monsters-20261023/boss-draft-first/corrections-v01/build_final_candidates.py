@@ -27,7 +27,7 @@ def main():
         is_v02=x['clip'].endswith('-v02')
         safe=x['status']=='STRUCTURAL_PASS' or x.get('repaired_geometry',False)
         if not safe or key in visual_bad or (is_v02 and key not in inspected):
-            if is_v02:holds.append(dict(slug=x['slug'],clip=x['clip'],reason=x.get('reason','Confirmed visual or missing-output HOLD'),cause=x.get('cause','visual_review')))
+            if is_v02 or key in visual_bad:holds.append(dict(slug=x['slug'],clip=x['clip'],reason=x.get('reason','Confirmed visual or missing-output HOLD'),cause=x.get('cause','visual_review')))
             continue
         slot=(x['slug'],x['direction'],x['role']);assert slot not in chosen
         chosen[slot]=x

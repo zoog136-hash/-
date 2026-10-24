@@ -35,11 +35,21 @@ def repair(row,out):
     assert columns in (2,3) and 6%columns==0
     gridrows=6//columns
     h,w=alpha.shape;slots={};seedframes=[]
-    for body in bodies:
-        ys,xs=np.where(labels==body)
-        slot=int((ys.min()+ys.max()+1)/2/h*gridrows)*columns+int((xs.min()+xs.max()+1)/2/w*columns)
-        assert 0<=slot<6 and slot not in slots,'Explicit temporal-grid assignment is ambiguous'
-        slots[slot]=body
+    def assign(cols):
+        result={}
+        for body in bodies:
+            ys,xs=np.where(labels==body)
+            slot=int((ys.min()+ys.max()+1)/2/h*(6//cols))*cols+int((xs.min()+xs.max()+1)/2/w*cols)
+            if not 0<=slot<6 or slot in result:return None
+            result[slot]=body
+        return result
+    slots=assign(columns)
+    if slots is None and row.get('cause')=='phase_grid_assignment':
+        alternative=3 if columns==2 else 2
+        slots=assign(alternative)
+        assert slots is not None,'Neither reviewed temporal grid has six unambiguous bodies'
+        columns=alternative;gridrows=6//columns
+    assert slots is not None,'Explicit temporal-grid assignment is ambiguous'
     assert len(slots)==6
     # Narrow interior seeds identify bodies without including a neighbour whose
     # bbox happens to interleave; the foreground topology decides all ownership.
@@ -85,7 +95,7 @@ def repair(row,out):
     Image.fromarray(packed).save(dest)
     g=dict(image_size=[tile*columns,tile*gridrows],frames=frames,distinct_pixel_frames=6,neutral_height=neutral,canvas_size=[canvas,canvas],foot=[canvas//2,canvas*5//8])
     core.require_complete_pose_regions(dest,g)
-    return dict(status='LOSSLESS_OWNED_PARTS_PASS',source=row['source'],source_sha256=row['source_sha256'],texture=dest.relative_to(ROOT).as_posix(),texture_sha256=sha(dest),geometry=g,proof=dict(**proof,**topology,subthreshold_fringe_texels=int(fringe.sum()),rule='alpha16 topology; alpha1..16 nearest proven foreground only',pose_regions_may_interleave_in_source=True,original_png_unchanged=sha(source)==row['source_sha256'],pose_pixels_invented=0))
+    return dict(status='LOSSLESS_OWNED_PARTS_PASS',source=row['source'],source_sha256=row['source_sha256'],texture=dest.relative_to(ROOT).as_posix(),texture_sha256=sha(dest),geometry=g,layout_used='phase_grid'+str(columns),proof=dict(**proof,**topology,subthreshold_fringe_texels=int(fringe.sum()),rule='alpha16 topology; alpha1..16 nearest proven foreground only',pose_regions_may_interleave_in_source=True,original_png_unchanged=sha(source)==row['source_sha256'],pose_pixels_invented=0))
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--review-root',type=Path);a=parser.parse_args()

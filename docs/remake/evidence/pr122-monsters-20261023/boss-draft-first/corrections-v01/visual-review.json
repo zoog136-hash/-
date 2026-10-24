@@ -414,8 +414,363 @@
       "all_six_poses": true,
       "notes": "All six poses inspected for required direction, complete silhouette and weapon ownership. Retain natural HIT head recoil and attack torso windup; geometry checked independently.",
       "reviewed_unix": 1792806130.6880453
+    },
+    "7": {
+      "page": {
+        "number": 7,
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/visual-pages/correction-07.jpg",
+        "sha256": "fe1581c02ae4b705ac79c90daaf49e078fd83bc3f3a7b40d4d81f190a04c957c",
+        "clips": [
+          {
+            "slug": "isabelle",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/SW-idle-v02.png",
+            "source_sha256": "16ee7bc0885b269d45a2931a9f7e1227146da6d82c26b1fb60d319c1092f808b",
+            "corrects": "SW-idle-v01"
+          },
+          {
+            "slug": "jopnir",
+            "clip": "SW-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/SW-attack-v02.png",
+            "source_sha256": "8f31b00f7161652c4e0ba2c82d250369c0badaa1eab43f9c498ce949f5b44757",
+            "corrects": "SW-attack-v01"
+          },
+          {
+            "slug": "jopnir",
+            "clip": "SW-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/SW-hit-v02.png",
+            "source_sha256": "0070948a79cecc33876dcc8d72bb73b96f53992593c80dd8bb26a4f4f49cbd29",
+            "corrects": "SW-hit-v01"
+          },
+          {
+            "slug": "prince_deus",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/prince_deus/raw/SW-idle-v02.png",
+            "source_sha256": "7819689299fa5efa7d1f9843afaade003a22f098af2abaea4e34be5d3116af08",
+            "corrects": "SW-idle-v01"
+          },
+          {
+            "slug": "prince_deus",
+            "clip": "W-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/prince_deus/raw/W-attack-v02.png",
+            "source_sha256": "c6f897cf90e70c71cb6c774f84a9b5fd6ef56f3edd90254d3f9f423dc47e8f03",
+            "corrects": "W-attack-v01"
+          },
+          {
+            "slug": "thebes_anubis",
+            "clip": "SW-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-attack-v02.png",
+            "source_sha256": "9c4378988410fbd75f410a994121013674693c50c962e21b6b3f2cb9deceec2d",
+            "corrects": "SW-attack-v01"
+          },
+          {
+            "slug": "thebes_anubis",
+            "clip": "SW-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-hit-v02.png",
+            "source_sha256": "f35ef85031c431695ff901327a8dd7710d2f142d277fe6755322286597ab2a4d",
+            "corrects": "SW-hit-v01"
+          },
+          {
+            "slug": "thebes_anubis",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-idle-v02.png",
+            "source_sha256": "dfff79295c548da5a2ec71a4f5cd409a5e6d5db2d2f7bd5a7522f33b7ea09763",
+            "corrects": "SW-idle-v01"
+          }
+        ]
+      },
+      "status": "VISUALLY_INSPECTED",
+      "all_six_poses": true,
+      "reviewed_unix": 1792806313.3907533
+    },
+    "8": {
+      "page": {
+        "number": 8,
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/visual-pages/correction-08.jpg",
+        "sha256": "28f368f2d55a778004046d3527986630e9046e669d85b69152cdf8d1ec110c5b",
+        "clips": [
+          {
+            "slug": "thebes_anubis",
+            "clip": "SW-run-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-run-v02.png",
+            "source_sha256": "594f47dc991ebc4584f9bc49c5a242571c6923943ab0b4a11862340d9d5bbd86",
+            "corrects": "SW-run-v01"
+          },
+          {
+            "slug": "thebes_horus",
+            "clip": "SW-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/SW-attack-v02.png",
+            "source_sha256": "07c8eff2da20600f3be02a1a3b74ca6986b94d15568cec69e2c480c15749504d",
+            "corrects": "SW-attack-v01"
+          },
+          {
+            "slug": "thebes_horus",
+            "clip": "SW-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/SW-hit-v02.png",
+            "source_sha256": "1688549cfddf752507c516fe82811bdecaf016fbc161723831d1eaed9d5567d2",
+            "corrects": "SW-hit-v01"
+          },
+          {
+            "slug": "thebes_horus",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/SW-idle-v02.png",
+            "source_sha256": "c5e39227b721e30bcc6ad66b0ee8f30d561a6a267b0c03585974b6ceaada08ea",
+            "corrects": "SW-idle-v01"
+          },
+          {
+            "slug": "thebes_horus",
+            "clip": "W-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-attack-v02.png",
+            "source_sha256": "045b5f562c59dc4f294975dde9cd139de8c171c876627dddadf26d5381268c7d",
+            "corrects": "W-attack-v01"
+          },
+          {
+            "slug": "thebes_horus",
+            "clip": "W-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-hit-v02.png",
+            "source_sha256": "9c44837d9761675328885b9df0e608bdfd11a9ef573e275beb954b0da3544e98",
+            "corrects": "W-hit-v01"
+          },
+          {
+            "slug": "thebes_horus",
+            "clip": "W-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-idle-v02.png",
+            "source_sha256": "f333c813ece26e4523eebdaf439dc47e41e24d32bf0c705ae00a66173d216a0f",
+            "corrects": "W-idle-v01"
+          },
+          {
+            "slug": "thebes_osiris",
+            "clip": "SW-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/SW-attack-v02.png",
+            "source_sha256": "674d3ad6c921fa30fb47dc1c585c616958b5809eda858b906bfe5d329d31bfe9",
+            "corrects": "SW-attack-v01"
+          }
+        ]
+      },
+      "status": "VISUALLY_INSPECTED",
+      "all_six_poses": true,
+      "reviewed_unix": 1792806313.3917534
+    },
+    "9": {
+      "page": {
+        "number": 9,
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/visual-pages/correction-09.jpg",
+        "sha256": "39ca5a003d656ef761a8068b692e2e7bbfbef6f84edbfd2773a8fde9f9fed494",
+        "clips": [
+          {
+            "slug": "thebes_osiris",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/SW-idle-v02.png",
+            "source_sha256": "caf9841e2eecb096c4e894b904d138241fe37e960dfa69fa8048ed01d89c29c0",
+            "corrects": "SW-idle-v01"
+          },
+          {
+            "slug": "thebes_osiris",
+            "clip": "W-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/W-attack-v02.png",
+            "source_sha256": "0b00da3e0d007c56a6e0c8c9626d3668f9798af2aa399e8e372dfdca02a6f058",
+            "corrects": "W-attack-v01"
+          },
+          {
+            "slug": "ugnus",
+            "clip": "NE-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/NE-idle-v02.png",
+            "source_sha256": "b418ba05ecb8650d5a9cc5d3be1e5cafc9c8e7f2b58d240d6bc626e2246df6d8",
+            "corrects": "NE-idle-v01"
+          },
+          {
+            "slug": "ugnus",
+            "clip": "SW-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/SW-attack-v02.png",
+            "source_sha256": "50ebcfcec9cbfca28df5f0e466320eb57079ac73dabfecd0fd835d02ba508275",
+            "corrects": "SW-attack-v01"
+          },
+          {
+            "slug": "ugnus",
+            "clip": "SW-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/SW-hit-v02.png",
+            "source_sha256": "d6bd9f6338f007a3633cb24fcd5ac894d42ba5f4e87141e16b8f9ac2a1902cd0",
+            "corrects": "SW-hit-v01"
+          },
+          {
+            "slug": "ugnus",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/SW-idle-v02.png",
+            "source_sha256": "c0e3d4936f91323d81c838e8c81a35f44ce66236b275eb6fdfdb91ff9fb752f5",
+            "corrects": "SW-idle-v01"
+          },
+          {
+            "slug": "zenith_queen",
+            "clip": "SW-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/SW-hit-v02.png",
+            "source_sha256": "ff76220987a37791322ddb99b02377e37fd6330e1478b69eecfb50acc144a66c",
+            "corrects": "SW-hit-v01"
+          },
+          {
+            "slug": "zenith_queen",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/SW-idle-v02.png",
+            "source_sha256": "926c0e4905b49722832d45dfd6056188be0835c7e7de4896c43945decbd603de",
+            "corrects": "SW-idle-v01"
+          }
+        ]
+      },
+      "status": "VISUALLY_INSPECTED",
+      "all_six_poses": true,
+      "reviewed_unix": 1792806313.3927622
+    },
+    "10": {
+      "page": {
+        "number": 10,
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/visual-pages/correction-10.jpg",
+        "sha256": "2bf161906adb6deabc72890e606d6bcb8e9e4c1118438787d587674a9ced284d",
+        "clips": [
+          {
+            "slug": "zeros",
+            "clip": "SW-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/SW-attack-v02.png",
+            "source_sha256": "ea7c0c31aef08c3fdb409c65676ced14f6a0521eaf5e772d0c40663b7f6df384",
+            "corrects": "SW-attack-v01"
+          },
+          {
+            "slug": "zeros",
+            "clip": "SW-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/SW-hit-v02.png",
+            "source_sha256": "4ea50163cf8c4eaf97908b8c8fbb745ca23ef5737dd25c59941d9f1485a1000e",
+            "corrects": "SW-hit-v01"
+          },
+          {
+            "slug": "zeros",
+            "clip": "SW-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/SW-idle-v02.png",
+            "source_sha256": "8ed0d7aa12418758a42288fcee6446844382a2550e241325bb89b8337ec9aef3",
+            "corrects": "SW-idle-v01"
+          },
+          {
+            "slug": "zeros",
+            "clip": "W-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-attack-v02.png",
+            "source_sha256": "21d886c837dc82277fc3ca94e8e057bf2bf2a95f0bd490185f2dd56b8a0e565a",
+            "corrects": "W-attack-v01"
+          },
+          {
+            "slug": "zeros",
+            "clip": "W-hit-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-hit-v02.png",
+            "source_sha256": "df82c99f33f3ac96db540449405f00217a785b9aa8956ab39127e31c984738dc",
+            "corrects": "W-hit-v01"
+          },
+          {
+            "slug": "zeros",
+            "clip": "W-idle-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-idle-v02.png",
+            "source_sha256": "c294e05c34b58da340c3bbad2c7f6bf5b7502bb86f918b52f5c4d76e1ff6154f",
+            "corrects": "W-idle-v01"
+          },
+          {
+            "slug": "belial",
+            "clip": "NE-run-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/NE-run-v02.png",
+            "source_sha256": "d6f78853706182aee174b20923ea19e9c47799d46d7aa20573ec539b1186b10f",
+            "corrects": "NE-run-v01"
+          },
+          {
+            "slug": "ugnus",
+            "clip": "N-run-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/N-run-v02.png",
+            "source_sha256": "b91ad232150cb2cff17881d825e51e1fe9c0fe40a93d79e799535cbd4cb735db",
+            "corrects": "N-run-v01"
+          }
+        ]
+      },
+      "status": "VISUALLY_INSPECTED",
+      "all_six_poses": true,
+      "reviewed_unix": 1792806313.3933847
+    },
+    "11": {
+      "page": {
+        "number": 11,
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/visual-pages/correction-11.jpg",
+        "sha256": "f929b2077b4dababa78194f46f878a7700f9e3a44d62b4a56e3286a059fbe60f",
+        "clips": [
+          {
+            "slug": "zenith_queen",
+            "clip": "E-attack-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/E-attack-v02.png",
+            "source_sha256": "cd957b414048395c1ceb447881653e168e6654cf448391c6372453e44c421720",
+            "corrects": "E-attack-v01"
+          },
+          {
+            "slug": "zenith_queen",
+            "clip": "S-death-v02",
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/S-death-v02.png",
+            "source_sha256": "5fe4a52198cb800b738d063c2199b73467e328fb3c1a364ad4c6b65756841c0d",
+            "corrects": "S-death-v01"
+          }
+        ]
+      },
+      "status": "VISUALLY_INSPECTED",
+      "all_six_poses": true,
+      "notes": "Zenith east claw strike and south full collapse remain coherent; geometry ownership evaluated separately.",
+      "reviewed_unix": 1792806366.5232728
     }
   },
-  "findings": [],
-  "no_automatic_repeat_generation": true
+  "findings": [
+    {
+      "slug": "thebes_horus",
+      "clip": "W-idle-v02",
+      "source_sha256": "f333c813ece26e4523eebdaf439dc47e41e24d32bf0c705ae00a66173d216a0f",
+      "cause": "repeated_authored_camera_error",
+      "observation": "All six WEST idle poses still face right",
+      "automatic_retry": false,
+      "resolution": "HOLD; preserve all originals and good clips"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "source_sha256": "9c44837d9761675328885b9df0e608bdfd11a9ef573e275beb954b0da3544e98",
+      "cause": "repeated_authored_camera_error",
+      "observation": "WEST brace and restored poses still face right; not merely head recoil",
+      "automatic_retry": false,
+      "resolution": "HOLD; preserve all originals and good clips"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "source_sha256": "045b5f562c59dc4f294975dde9cd139de8c171c876627dddadf26d5381268c7d",
+      "cause": "repeated_authored_camera_error",
+      "observation": "Initial/restored WEST guards face right around leftward strike",
+      "automatic_retry": false,
+      "resolution": "HOLD; preserve all originals and good clips"
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "source_sha256": "caf9841e2eecb096c4e894b904d138241fe37e960dfa69fa8048ed01d89c29c0",
+      "cause": "repeated_authored_camera_error",
+      "observation": "SW standing poses retain front-right canonical facing",
+      "automatic_retry": false,
+      "resolution": "HOLD; preserve all originals and good clips"
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "source_sha256": "674d3ad6c921fa30fb47dc1c585c616958b5809eda858b906bfe5d329d31bfe9",
+      "cause": "repeated_authored_camera_error",
+      "observation": "Front-right ready/recovery guards remain around leftward contact",
+      "automatic_retry": false,
+      "resolution": "HOLD; preserve all originals and good clips"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-run-v01",
+      "source_sha256": "6c956636fdf1d981d2259fbdfd2faf9a4bafde1875f02f58819fb0a480b270aa",
+      "cause": "affected_existing_camera_error",
+      "observation": "Left-camera reference triage shows the original W run advances right. Preserve it but do not qualify this actor as corrected WEST; no new generation during wrap-up.",
+      "automatic_retry": false
+    }
+  ],
+  "no_automatic_repeat_generation": true,
+  "review_complete": true,
+  "reviewed_sheets": 82
 }
