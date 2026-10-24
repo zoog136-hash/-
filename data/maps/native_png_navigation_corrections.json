@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "save_layout_compatible": true,
+  "base_plan_sha256": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+  "domination_plan_sha256": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+  "scope": "Correct continuous navigation inside unchanged physical raster cells; no source pixels, solid cells, spawn capacity, portal coordinates, or layout revisions change.",
+  "maps": {
+    "escaros_world": {
+      "source_sha256": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+      "walk_polygons_add": [
+        [
+          [
+            8293,
+            2167
+          ],
+          [
+            8301,
+            2167
+          ],
+          [
+            8301,
+            2185
+          ],
+          [
+            8293,
+            2185
+          ]
+        ]
+      ],
+      "reason": "The existing floor #3 and route cap #29 leave an approximately 8 px continuous-polygon gap between already open cell centers (8297,2168) and (8297,2184). Every original RGBA foot sample is opaque; this 8 by 18 px connector stays inside those existing physical floor cells.",
+      "route_checks_replace": [
+        {
+          "from": [
+            8260,
+            2270
+          ],
+          "to": [
+            8265,
+            2264
+          ]
+        }
+      ],
+      "route_anchor_reason": "The old destination center cell is open, but its 4 px foot enters adjacent solid raster. Use the same-cell center 7.81 px away; the exact replacement foot is clear."
+    },
+    "domination_summit": {
+      "source_sha256": "f5c4549298e586d3839246d736b61b6106851af07cde8c5a21522d046ff38f87",
+      "route_checks_replace": [
+        {
+          "from": [
+            8270,
+            3660
+          ],
+          "to": [
+            8275,
+            3669
+          ]
+        }
+      ],
+      "reason": "The old diagnostic destination is in alpha-solid cell (392,172). The replacement is the nearest foot-clear cell center in the same reviewed courtyard, 10.30 px away. No encounter, NPC, portal or player spawn is moved."
+    }
+  }
+}
