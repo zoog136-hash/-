@@ -88,7 +88,7 @@ def main():
         for p in (HERE/'minimum-batches').glob('*/summary.json'):
             for j in read(p)['source_pins']:done.add((j['slug'],j['clip']))
         pending=[j for j in jobs if (j['slug'],j['clip']) not in done and (PRODUCTION/j['slug']/(j['clip']+'-receipt.json')).exists()]
-        allsaved=all((PRODUCTION/j['slug']/(j['clip']+'-receipt.json')).exists() for j in jobs)
+        allsaved=all((PRODUCTION/j['slug']/(j['clip']+'-receipt.json')).exists() or (HERE/'attempts'/(j['slug']+'__'+j['clip']+'.json')).exists() for j in jobs)
         if len(pending)>=6 or (pending and allsaved):
             while (HERE/'minimum-batches'/f'bossfix-min{number:03}').exists():number+=1
             try:process(pending[:6],number)
