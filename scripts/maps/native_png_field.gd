@@ -104,7 +104,28 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		for run: Array in manifest.get("alpha_solid_runs",[]):
 			var box:=Rect2i(int(run[1])*factor,int(run[0])*factor,int(run[2])*factor,factor).intersection(Rect2i(0,0,width,height))
 			if box.has_area():astar.fill_solid_region(box)
-		_build_reachability()
+		# Grid centers are not enough for a real four-pixel player foot. PNG
+	# polygons and transparent pixels can clip the foot even when AStar sees
+	# an open cell. Reject those centers before computing connectivity so the
+	# routing grid and the physical body agree on the same traversable area.
+	# Leave source polygons, alpha runs and explicit blockers unchanged.
+	for y: int in range(height):
+		for x: int in range(width):
+			var cell := Vector2i(x,y)
+			if astar.is_point_solid(cell): continue
+			var point: Vector2=cell_to_world(cell)
+			var body_clear: bool=point_clear(point,4.0)
+			if body_clear:
+				for offset: Vector2 in LANDING_BODY_OFFSETS:
+					if not inside_navigable_area(point+offset) or not walkable(point+offset):
+						body_clear=false
+						break
+			if not body_clear: astar.set_point_solid(cell)
+	# The ordinary grid allows diagonal shortcuts between valid cell centers,
+	# but PNG edges may still clip a four-pixel foot at a corner. Keep the
+	# exact orthogonal graph until each diagonal has a physical edge check.
+	astar.diagonal_mode=AStarGrid2D.DIAGONAL_MODE_NEVER
+	_build_reachability()
 	# The alpha guard was applied after PlayableField built its candidates.
 	# Drop any now-solid/unreachable or poorly cleared samples, rather than
 	# materialising actors in invisible pixels, pillars or wall edges.
