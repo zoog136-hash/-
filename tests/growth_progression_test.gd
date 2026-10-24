@@ -103,6 +103,23 @@ func _run() -> void:
 	check(world._effective_max_mp()==mp_before+6,"Sayha MP reaches world")
 	check(world._equipment_additional_damage("melee")==damage_before+1,"Paagrio damage reaches world")
 	check(world._effective_ac()==ac_before-1,"Maphr signed AC reaches world")
+	var effect_fixture: Dictionary = saved_state.duplicate(true)
+	for eid: String in ["eva","sayha","grankain","einhasad"]:
+		effect_fixture.emblems[eid] = {"stage":30,"attempts":20,"spent":20,"guaranteed":false}
+	rt.restore(effect_fixture)
+	world.mp=0
+	world.mp_recovery_elapsed=0
+	world._tick_catalog_recovery(world.UNIQUE_RECOVERY_INTERVAL)
+	check(world.mp>=5,"Sayha regeneration reaches actual world tick")
+	world.inventory["체력 회복제"]=1
+	world.item_use_cooldowns.clear()
+	world.hp=1
+	world._use_healing_item("체력 회복제",10)
+	check(is_equal_approx(float(world.item_use_cooldowns[world.HP_POTION_COOLDOWN_KEY]),world.HP_POTION_COOLDOWN_SECONDS*.9),"Eva reduces actual potion cooldown")
+	check(rt.incoming_damage(100)==90,"Grankain percentage reduction")
+	var dev_save: Dictionary=rt.state.duplicate(true)
+	dev_save.profile="development"
+	check(not rt.validate(dev_save).is_empty(),"normal mode rejects development save")
 	rt.restore(saved_state)
 	var limit_fixture: Dictionary = saved_state.duplicate(true)
 	limit_fixture.emblems.eva = {"stage":30,"attempts":20,"spent":20,"guaranteed":false}
@@ -154,6 +171,12 @@ func _run() -> void:
 	world.hud._fit_hud()
 	var corner: Vector2 = root.get_final_transform()*world.hud.workspace.get_global_transform_with_canvas()*world.hud.workspace.size
 	check(corner.x<=855 and corner.y<=481,"Android landscape workspace fits")
+	rt.rerolls["eva"]=[95.0,3.0,2.0]
+	view._select("paagrio")
+	check(rt.rerolls.is_empty(),"changing emblem tab restores base odds")
+	rt.rerolls["paagrio"]=[95.0,3.0,2.0]
+	world.hud.open_growth("guardians")
+	check(rt.rerolls.is_empty(),"leaving emblem section restores base odds")
 	world.hud._close_workspace()
 	check(rt.rerolls.is_empty(),"closing resets session odds")
 	world.hud.open_growth("guardians")

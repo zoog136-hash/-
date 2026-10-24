@@ -50,3 +50,32 @@ GROWTH_CAPTURE_DIR=/tmp/growth-captures /path/to/godot --audio-driver Dummy \
 - 그림의 문양/수호성 기본 상태는 실설정이며, 성공·실패 거래 테스트의 비용/노드 fixtures는 합성 값이다. 미확인 원작 경제를 검증한 결과가 아니다.
 - 전체 수호성 그래프, 확률 개방 데이터, 절대 옵션 전투 효과, 서버별 개방 상태는 미완료. `RESEARCH.md`의 잠금 항목을 참조한다.
 - PR은 검토용 draft이며 main 병합·배포하지 않는다. 최종 SHA와 원격 CI 상태는 작업 결과 응답으로 별도 기록한다.
+
+## 후속 구현·이미지 개선 검증 (PR154)
+
+- 별도 개발 모드: `growth_lab_check.gd -- --growth-lab`, **37 assertions PASS**. 일반 저장 거부, 신규 시험 재료, 실제 1회/5회 강화, 초기화 환급, 선행 해금, 카드 실패/재시도/로드, 대표 HP, 절대 I~V 비용·상한·저장 검증. `followup/development-check.txt`.
+- 최종 변경 범위 통합 묶음: **4/4 PASS** — Main 부팅, 성장 **86 assertions**, 기존 Ain **26 assertions**, 기존 UI fidelity **88 assertions**. 성장 검사에는 실제 MP 회복 tick/물약 쿨타임과 일반 모드의 개발 저장 거부를 추가했다. `followup/summary.json`.
+- 래스터 자산 추가 후 전체 import PASS (`/tmp/growth-cards-import`). 기존 장비 컬렉션 76개 검사는 첫 커밋에서 통과했으며 후속 변경에서 반복하지 않았다.
+- 후속 리소스 무결성 PASS (동일 723 atlas/41,442 frames). 생성 UI 3개 PNG는 별도 `assets/growth/PROVENANCE.json` 해시/크기/생성 경로로 확인.
+- 투명도 검사: 카드 atlas 외곽/중앙 경계 alpha 0, sigil atlas 중앙 세로 경계 최대 alpha 1/255. 실제 검은 배경 적용 화면에서 잘린 테두리·옆 칸 문장 혼입 여부를 시각 확인한다. Godot AtlasTexture.filter_clip 사용. 외곽의 극미세 alpha를 원본 파일 편집으로 제거하지 않았다.
+- 작은 화면 개선: 문양/수호성 창만 전체 화면, 48px 기본 터치 버튼/76px 노드/110×150 카드, 스크롤·닫기 유지. 실제 Android 기기가 아닌 Linux 854×480 렌더+ScreenTouch/ScreenDrag 이벤트 검증이다.
+- 첫 개발 검사 실패는 테스트가 `joe_stat` 선행 노드를 건너뛰었기 때문이다. 순서를 수정한 재검사 통과. 첫 카드 캡처도 성공으로 집계하지 않는다. 캡처 fixture가 `.eva`로 StringName 키를 넣어 저장 검증에서 거절됐고, 문자열 키 `["eva"]`로 수정했다. 실제 게임 입력의 id는 String으로 해당하지 않는다.
+- 시각 비교의 `before/`는 첫 커밋의 기본 잠금 화면이다. 후속 이미지는 **개발 모드의 명시적인 진행 fixture**(에바 18, 조우 앞 3노드)이며 자연 플레이로 이 상태를 획득했다는 증거가 아니다. 카드 화면만 실제 개발 거래 후 촬영한다. 전후 진행 수치는 같지 않다.
+
+재현:
+
+```sh
+# 사용자 저장과 격리된 새 경로 권장. debug/editor 엔진만 허용.
+XDG_CONFIG_HOME=/tmp/growth-config XDG_CACHE_HOME=/tmp/growth-cache \
+XDG_DATA_HOME=/tmp/growth-lab-new /path/to/godot --headless --path . \
+  --script res://tests/growth_lab_check.gd -- --growth-lab
+
+# 직접 플레이: 같은 플래그, --headless/--script 생략
+/path/to/godot --path . -- --growth-lab
+```
+
+일반 플레이의 공식 강화 비용 전체표, 수호성 원본 전체 노드/비용/카드 수/전투 스킬, 절대 옵션 원작 효과는 아직 미완료다. 개발 모드 통과를 원작 수치 검증으로 해석하지 않는다. 전체 CI나 실제 Android 검증 통과도 주장하지 않는다.
+
+최종 래스터 적용 렌더: **7장 PASS**, llvmpipe. 문양/수호성 1280×720·854×480, 카드 뒷면·선택 강조·성공 앞면 854×480. `after/`와 `followup/capture.txt`에 보존했다. 카드 캡처는 실제 수호석 차감(100→99), 선택 대기 저장, 성공 노드 개방을 검사한 뒤 생성했다. 카드 미선택·선택·성공 화면을 직접 확인했다.
+
+문양 탭 변경/다른 메뉴 이동 시 확률 변경 상태를 지우는 경로를 추가 보완한 뒤 성장 검사만 재실행: **88 assertions PASS**, `followup/growth-tab-final.txt`. 전체 묶음을 반복하지 않았다. 캡처 후 대표 표시의 내부 ID를 사용자용 노드 이름으로 바꾼 텍스트 수정이 있으며 스크린샷은 그 직전 렌더다.

@@ -732,6 +732,7 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
 	navigation_memory.enter(active_section,section)
 	switching_workspace = true
 	_hide_aux_panels()

@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Art = preload("res://scripts/growth/growth_art.gd")
 const Diagram = preload("res://scripts/growth/growth_diagram.gd")
 var hud
 var runtime
@@ -12,6 +13,7 @@ var result: Label
 var confirmation: VBoxContainer
 var request: Dictionary = {}
 var submitting: bool = false
+var last_reveal: Dictionary = {}
 var diagram: Control
 
 func configure(owner_hud: Node, section: String) -> void:
@@ -20,15 +22,18 @@ func configure(owner_hud: Node, section: String) -> void:
 	mode = section
 	selected = "eva" if mode == "emblems" else "joe"
 	name = "GrowthView"
+	resized.connect(queue_redraw)
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	result = UI.label("",14,UI.GOLD)
 	result.name = "GrowthResult"
+	result.visible = false
 	result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(result)
 	scroll = ScrollContainer.new()
 	scroll.name = "GrowthScroll"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,.15),Color("746044"),8))
 	add_child(scroll)
 	body = VBoxContainer.new()
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -65,14 +70,15 @@ func _button(text: String, action: Callable, parent: Node = null) -> Button:
 func _refresh() -> void:
 	request = {}
 	for child: Node in body.get_children(): body.remove_child(child); child.queue_free()
-	_label("축복 포인트 %d  ·  수호석 %d\n로컬 저장 · 미확인 비용/효과는 잠금 표시" % [int(runtime.state.points),int(runtime.world.inventory.get("수호석",0))])
+	_label("축복 포인트 %d  ·  수호석 %d" % [int(runtime.state.points),int(runtime.world.inventory.get("수호석",0))])
+	if runtime.development: _label("개발용 · 원작 수치 아님 / 별도 저장",body).add_theme_color_override("font_color",Color("ffcc77"))
 	var tabs := GridContainer.new()
 	tabs.columns = 7 if mode == "emblems" else 6
 	body.add_child(tabs)
 	var rows: Array = runtime.config.get(mode,[])
 	for row: Dictionary in rows:
 		var id: String = str(row.id)
-		var button: Button = _button(str(row.name).replace("의 문양",""),func() -> void: selected=id; selected_node=""; _refresh(),tabs)
+		var button: Button = _button(str(row.name).replace("의 문양",""),func() -> void: _select(id),tabs)
 		button.name = "GrowthTab_"+id
 		button.modulate = UI.GOLD if id == selected else Color.WHITE
 	if mode == "emblems": _emblem()
@@ -80,10 +86,17 @@ func _refresh() -> void:
 	confirmation = VBoxContainer.new()
 	confirmation.name = "GrowthConfirmation"
 	body.add_child(confirmation)
+	_button("축복 포인트 상점 · 열쇠 1개",func() -> void: _prepare("buy_key","",1))
 	_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
 	_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
 	_button("수호석 제작 · 각인 주문서",func() -> void: _prepare("craft_stone_engraved","",1))
 	_label("출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n전체 노드 복원·특화 옵션·미확인 전투 효과는 미완료입니다.")
+
+func _select(id: String) -> void:
+	if mode=="emblems" and selected!=id: runtime.rerolls.clear()
+	selected=id
+	selected_node=""
+	_refresh()
 
 func _emblem() -> void:
 	var row: Dictionary = runtime.emblem(selected)
@@ -92,6 +105,7 @@ func _emblem() -> void:
 	body.add_child(overview)
 	diagram = Diagram.new()
 	diagram.stage = int(p.stage)
+	diagram.sigil_index = Art.index(selected)
 	overview.add_child(diagram)
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -101,7 +115,7 @@ func _emblem() -> void:
 	_label("+1 %.2f%%    +2 %.2f%%    +3 %.2f%%" % [float(odds[0]),float(odds[1]),float(odds[2])],info)
 	_label("현재 적용: "+_effect_text(row.effects[int(p.stage)]),info)
 	_label("다음 단계: "+_effect_text(row.effects[mini(30,int(p.stage)+1)]),info)
-	_label("미적용: "+", ".join(row.deferred_effects),info)
+	_label("미적용: "+", ".join(row.deferred_effects))
 	var actions := GridContainer.new()
 	actions.columns = 2
 	body.add_child(actions)
@@ -116,19 +130,29 @@ func _emblem() -> void:
 		_label(str(pair[1])+": "+str(offer.message))
 	_label("절대 옵션 I~V · 2026-03-18 확정 강화 추가")
 	_label("확정 강화 열쇠 비용: "+str(row.absolute_key_costs)+" · 열쇠 1개 = 1,000 축복 포인트")
-	var absolute := _button("열쇠 · 절대 옵션 확정 강화",func() -> void: pass)
-	absolute.disabled = true
-	_label("30단계 필요 · 확률 강화 성공률 10% 확인 · 전체 효과/환급 규칙 미확인으로 두 경로 모두 잠금")
+	var absolute := _button("열쇠 · 절대 옵션 확정 강화",func() -> void: _prepare("absolute",selected,1))
+	absolute.disabled = not runtime.quote("absolute",selected).ok
+	_label("절대 옵션 %d / 5 · %s" % [int(p.get("absolute",0)),str(runtime.quote("absolute",selected).message)])
+	_label("30단계 필요 · 확률 강화 성공률 10% 확인 · 전체 효과/환급 규칙 미확인으로 일반 플레이 잠금 / 개발 모드 확정 강화 지원")
 
 func _effect_text(effects: Dictionary) -> String:
-	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션"}
+	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
 	var parts: Array[String] = []
 	for key: String in effects:
 		if float(effects[key]) != 0: parts.append("%s %+d" % [str(mapping.get(key,key)),int(effects[key])])
 	return "없음" if parts.is_empty() else " · ".join(parts)
 
 func _guardian() -> void:
-	_label("대표: "+str(runtime.state.representative if not runtime.state.representative.is_empty() else "미설정"))
+	if not last_reveal.is_empty():
+		var reveal := TextureRect.new()
+		reveal.texture = Art.card(bool(last_reveal.won))
+		reveal.custom_minimum_size = Vector2(110,150)
+		reveal.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		reveal.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		reveal.modulate = Color.WHITE if last_reveal.won else Color(.45,.4,.5)
+		body.add_child(reveal)
+		_label("카드 %d · %s" % [int(last_reveal.index)+1,"개방 성공" if last_reveal.won else "실패 · 다음 시도에서 제외"])
+	_label("대표: "+str(runtime.node(runtime.state.representative).get("name","미설정")))
 	if not runtime.state.pending.is_empty():
 		_label("수호성 찾기 · 카드 선택 대기\n닫아도 이미 지불한 도전과 결과는 저장됩니다.")
 		var cards := GridContainer.new()
@@ -137,22 +161,39 @@ func _guardian() -> void:
 		for index: int in range(int(runtime.state.pending.cards)):
 			var b := _button("✦\n카드 %d" % (index+1),func() -> void: _prepare("choose","",index),cards)
 			b.name = "GuardianCard_"+str(index)
+			b.text = ""
+			b.custom_minimum_size=Vector2(110,150)
+			b.add_theme_stylebox_override("normal",UI.box(Color("171325"),UI.GOLD,8))
+			var texture := TextureRect.new()
+			texture.texture=Art.card(false)
+			texture.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			texture.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			texture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			b.add_child(texture)
+			texture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			texture.offset_left=4;texture.offset_right=-4;texture.offset_top=4;texture.offset_bottom=-22
+			var caption:=UI.label("카드 %d" % (index+1),14,UI.GOLD)
+			caption.position=Vector2(8,128)
+			b.add_child(caption)
 			b.disabled = runtime.state.searches[runtime.state.pending.node].failed.has(index)
-			if b.disabled: b.text = "실패"
-	_label("스킬 슬롯 목록 · 원본 노드 연결/배치는 미확인입니다.\n선행 슬롯 → 활성화 확인 → 카드 선택 → 결과 → 대표 설정")
+			if b.disabled:
+				caption.text = "실패 · 제외"
+				texture.modulate = Color(.25,.25,.3,.65)
+	_label("노드 선택 → 활성화 → 카드 → 대표 설정 · 원본 배치는 미확인")
 	for group: Dictionary in runtime.config.guardians:
 		if group.id != selected: continue
-		for row: Dictionary in group.nodes:
-			var id: String = str(row.id)
-			var caption: String = ("◆ " if runtime.state.nodes.has(id) else "◇ ")+str(row.name)
-			_button(caption,func() -> void: selected_node=id; _show_node(id)).name = "GuardianNode_"+id
-			if selected_node == id: _node_detail(row)
+		var chart := preload("res://scripts/growth/growth_constellation.gd").new()
+		body.add_child(chart)
+		chart.configure(runtime,group.nodes,hud,scroll,selected_node,_show_node)
+		if runtime.development: _label("개발용 연결도 · 1회 수호석 1개 / 카드 3장 / 노드당 HP 5 · 원작값 아님")
+		if not selected_node.is_empty(): _node_detail(runtime.node(selected_node))
 
 func _show_node(id: String) -> void:
 	selected_node = id
 	_refresh()
 
 func _node_detail(row: Dictionary) -> void:
+	_label(str(row.name))
 	var chance: Variant = row.get("proc_percent")
 	_label("발동 확률: "+("미확인" if chance == null else str(chance)+"%")+" · 피해/회복 수치 미확인")
 	var id: String = str(row.id)
@@ -165,8 +206,13 @@ func _node_detail(row: Dictionary) -> void:
 func _prepare(action: String, id: String, count: int) -> void:
 	if submitting: return
 	var offer: Dictionary = runtime.quote(action,id,count)
+	result.visible = true
 	result.text = str(offer.message)
 	if not offer.ok: return
+	if action == "choose":
+		for index: int in range(int(runtime.state.pending.cards)):
+			var card: Button = find_child("GuardianCard_"+str(index),true,false)
+			if card != null: card.modulate = Color(1.25,1.15,.8) if index==count else Color(.65,.65,.75)
 	request = {"action":action,"id":id,"count":count,"revision":int(offer.revision)}
 	for child: Node in confirmation.get_children(): confirmation.remove_child(child); child.queue_free()
 	_label(str(offer.message)+"\n진행하시겠습니까?",confirmation)
@@ -183,8 +229,12 @@ func _confirm() -> void:
 	submitting = true
 	var current: Dictionary = request.duplicate()
 	request = {}
+	var pending_node: String = str(runtime.state.pending.get("node",""))
 	var response: Dictionary = runtime.execute(current.action,current.id,int(current.count),int(current.revision))
+	if response.ok and current.action=="choose":
+		last_reveal={"index":int(current.count),"won":runtime.state.nodes.has(pending_node)}
 	_refresh()
+	result.visible = true
 	result.text = str(response.message)
 	if response.ok and is_instance_valid(diagram): diagram.reveal()
 	# A second release in this frame cannot create another transaction.
@@ -192,3 +242,6 @@ func _confirm() -> void:
 
 func _release_submit() -> void:
 	submitting = false
+
+func _draw() -> void:
+	draw_texture_rect(Art.BACKDROP,Rect2(Vector2.ZERO,size),false)

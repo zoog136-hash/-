@@ -341,6 +341,17 @@ func _ready() -> void:
 	_set_map(active_map_id, false)
 	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	if creating_character and growth.development: growth.seed_lab()
+	if growth.development:
+		var lab_badge := Label.new()
+		lab_badge.text = "개발용 성장 실험 · 근사 수치 / 일반 저장과 분리"
+		lab_badge.position = Vector2(440,80)
+		lab_badge.z_index = 200
+		lab_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lab_badge.add_theme_color_override("font_color",Color("ffcf76"))
+		hud.get_node("Root").add_child(lab_badge)
+		lab_badge.visible = not hud.workspace.visible
+		hud.workspace.visibility_changed.connect(func() -> void: lab_badge.visible = not hud.workspace.visible)
 	if NATIVE_PNG.enabled():
 		for argument: String in OS.get_cmdline_user_args():
 			if argument.begins_with("--native-png-map="): _set_map(argument.trim_prefix("--native-png-map="),false)
@@ -750,7 +761,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 func _tick_catalog_recovery(delta: float) -> void:
 	var elapsed: float = maxf(0.0, delta)
 	var hp_enabled: bool = _has_recovery_effect("hpAbsoluteRecovery") or _has_recovery_effect("hpRecoveryTick")
-	var mp_enabled: bool = _has_recovery_effect("mpRecoveryTick") or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp_recovery") > 0
+	var existing_mp_recovery: bool = _has_recovery_effect("mpRecoveryTick") or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp_recovery") > 0
+	var mp_tick_amount: int = (UNIQUE_RECOVERY_AMOUNT if existing_mp_recovery else 0)+int(growth.bonus("mp_regeneration:flat"))
+	var mp_enabled: bool = mp_tick_amount>0
 	var changed: bool = false
 	if hp_enabled:
 		hp_recovery_elapsed += elapsed
@@ -770,7 +783,7 @@ func _tick_catalog_recovery(delta: float) -> void:
 			var cycles: int = int(floor(mp_recovery_elapsed / UNIQUE_RECOVERY_INTERVAL))
 			mp_recovery_elapsed = fmod(mp_recovery_elapsed, UNIQUE_RECOVERY_INTERVAL)
 			var old_mp: int = mp
-			mp = mini(_effective_max_mp(), mp + cycles * UNIQUE_RECOVERY_AMOUNT)
+			mp = mini(_effective_max_mp(), mp + cycles * mp_tick_amount)
 			if mp > old_mp:
 				hud.append_log("MP 자동회복 · +%d" % (mp - old_mp))
 				changed = true
@@ -2531,6 +2544,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
 		if original_skills.last_evaded:
@@ -3517,6 +3531,7 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
 		return false
 	var amount: int = AIN_SERVICE.charge_amount(base_name, level)
+	amount = int(round(float(amount)*(1.0+growth.bonus("blessing_charge:percent")/100.0)))
 	var charged: int = ain_service.charge(amount)
 	if charged <= 0:
 		hud.show_message("아인하사드 축복이 최대치입니다")
@@ -3773,7 +3788,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS
+	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
@@ -3858,6 +3873,7 @@ func _refresh_combat_hud() -> void:
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func save_path() -> String:
+	if growth.development: return "user://twilight_growth_lab_v1.json"
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
@@ -3968,7 +3984,7 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
-	var growth_error: String = growth.validate(data.get("growth",GROWTH.fresh()))
+	var growth_error: String = growth.validate(data.get("growth",growth.empty_state()))
 	if not growth_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(growth_error)
@@ -4077,7 +4093,7 @@ func _load_game(quiet: bool) -> void:
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
 	if not equipment_collections.accept_load(data): return
-	growth.restore(data.get("growth",GROWTH.fresh()))
+	growth.restore(data.get("growth",growth.empty_state()))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
