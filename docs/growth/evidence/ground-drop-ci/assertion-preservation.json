@@ -1,0 +1,13 @@
+{
+  "head": "cae446ce8cd4680aaeb44fcaebe8c974b3fbd188",
+  "main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "all_original_assertions_preserved": true,
+  "original_assertion_sites": 25,
+  "new_assertion_sites": 28,
+  "added_assertions": [
+    "_check(player.global_position.distance_to(far_point)>PICKUP_RADIUS,\"distant fixture must remain outside pickup radius\")",
+    "_check(not fixture_path.is_empty() and fixture_path[fixture_path.size()-1].distance_to(far_point)<=PICKUP_RADIUS,\"fixture route must reach actual pickup range\")",
+    "_check(bool(world.call(\"_has_line_of_sight_world\",far_point,far_point+Vector2(13,0))),\"fixture must fit the real foot and adjacent AUTO drop\")"
+  ],
+  "change": "Fixture accepts a non-empty direct endpoint path and verifies pickup-range endpoint and adjacent foot-clear AUTO location."
+}
