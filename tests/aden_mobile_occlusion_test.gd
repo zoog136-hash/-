@@ -21,5 +21,7 @@ func run() -> void:
 	var anchor:=Vector2(11762,2921)*6
 	var behind: int=await actor_pixels(world,renderer,anchor+Vector2(0,-35))
 	var front: int=await actor_pixels(world,renderer,anchor+Vector2(0,55))
-	print("MOBILE_OCCLUSION ",JSON.stringify({"behind_actor_pixels":behind,"front_actor_pixels":front,"full_world":renderer.generated_full_world,"pass":behind<front}))
-	var ok: bool=behind<front and renderer.generated_full_world;world.queue_free();await process_frame;quit(0 if ok else 1)
+	var ok: bool=behind<front and renderer.generated_full_world
+	# Report the unchanged real-render predicate using the runner's terminal contract.
+	print("MOBILE_OCCLUSION_OK " if ok else "MOBILE_OCCLUSION_FAILED ",JSON.stringify({"checks":2,"behind_actor_pixels":behind,"front_actor_pixels":front,"full_world":renderer.generated_full_world,"pass":ok}))
+	world.queue_free();await process_frame;quit(0 if ok else 1)

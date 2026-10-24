@@ -24,3 +24,7 @@ data/maps/domination_png_plan.json -text
 
 # Mobile art receipt authenticates exact manifest bytes across Windows checkouts.
 assets/maps/aden_world_mobile/manifest.json -text
+
+# Keep every SHA-authenticated map review and bundled index byte-identical.
+data/maps/*.json -text
+external_map_packs/**/*.json -text
