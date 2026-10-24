@@ -83,6 +83,12 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         # All 25 real maps and 10,666 physical-route assertions take ~124s
         # locally; leave bounded room for shared CI runners without skipping any.
         return max(requested, 300)
+    if name == 'aden_faith_png_runtime_test':
+        # The tracked five-map OpenGL audit walks every reviewed route, tests
+        # physical boundaries/zoom/portals and round-trips real saves. The
+        # PR156 native-PNG job hit the generic 150-second cap without an
+        # assertion failure; preserve its full workload with a bounded budget.
+        return max(requested, 300)
     if name == 'ground_loot_system_test':
         # The unchanged 166-check full GUI/physics/save/loot suite completed
         # in ~112 seconds in its dedicated workflow, but exceeded the generic
