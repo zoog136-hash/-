@@ -9,6 +9,7 @@ func run() -> void:
 	if out.is_empty() or DisplayServer.get_name()=="headless":quit(1);return
 	DirAccess.make_dir_recursive_absolute(out);root.size=Vector2i(1280,720)
 	var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(BASE+"manifest.json"))
+	if manifest.get("status")!="FULL_EXTENT_RENDERED_GEOGRAPHIC_ART_DRAFT_NOT_PRODUCTION":push_error("Draft compilation incomplete");quit(1);return
 	var world: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(world);QA.enter_game(world);world.set_process(false);world.save_timer=-100000;world.portal_cooldown=100000
 	world._set_map("aden_world",false);world.field_population.configure(world,null);world._clear_monsters();world.player.set_auto_enabled(false);world.player.set_physics_process(false);world.player.camera.position_smoothing_enabled=false;world.player.camera.zoom=Vector2.ONE
 	var field: NativePngField=world.field_map;var before: Dictionary=field.navigation_snapshot();var portals: Array=field.data.portal.duplicate(true);var failures: Array=[]
