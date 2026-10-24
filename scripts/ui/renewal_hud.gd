@@ -696,6 +696,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if active_section == "emblems": get_parent().growth.rerolls.clear()
 	if class_picker_initial:
 		return
 	catalog_icon_generation += 1
@@ -801,6 +802,7 @@ func _navigate(section: String) -> void:
 		return
 	match section:
 		"equipment_collections": open_equipment_collections()
+		"emblems", "guardians": open_growth(section)
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -1023,11 +1025,15 @@ func toggle_menu() -> void:
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),Vector2(92,88))
+		if section_id in ["emblems","guardians"]:
+			button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
+			button.scroll_host = workspace
+			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
@@ -1888,3 +1894,9 @@ func open_equipment_collections() -> void:
 	var screen := EquipmentCollectionsUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+
+func open_growth(section: String) -> void:
+	_open_window(section,"문양" if section == "emblems" else "수호성","")
+	var screen := preload("res://scripts/growth/growth_view.gd").new()
+	workspace.mount(screen)
+	screen.configure(self,section)
