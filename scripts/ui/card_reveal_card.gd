@@ -6,6 +6,8 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ATLAS = preload("res://assets/card_reveal/authored_atlas.webp")
 const LIGHTNING_EARLY_SECONDS: float = 0.1
 const CONFIRM_DELAY_SECONDS: float = 2.0
+const DRAW_EXTRA_LIGHTNING_SECONDS: float = 2.0
+var extra_lightning_seconds: float=0.0
 var record: Dictionary = {}
 var grade: String = "희귀"
 var open_at: float = 0.6
@@ -101,6 +103,7 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		var effect: Control = FX.new()
 		effect.name = pass_name
 		effect.surface = true
+		if pass_name == "GradeLightningInsideCard":effect.extra_lightning_seconds=extra_lightning_seconds
 		effect.grade = grade
 		effect.reduced_motion = reduced_motion
 		effect.detail_scale = detail_scale
@@ -155,7 +158,7 @@ func lightning_at() -> float:
 	return open_at+reel_seconds-LIGHTNING_EARLY_SECONDS
 
 func reveal_at() -> float:
-	return lightning_at()+CONFIRM_DELAY_SECONDS
+	return lightning_at()+CONFIRM_DELAY_SECONDS+extra_lightning_seconds
 
 func promotion_at() -> float:
 	# The second signal stays inside the anticipation, on its own clock.
