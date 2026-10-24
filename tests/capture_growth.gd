@@ -1,5 +1,17 @@
 extends SceneTree
 var world
+var motion_frame: int=0
+func motion(directory: String) -> void:
+	if OS.get_environment("GROWTH_CAPTURE_MOTION")!="1":
+		await create_timer(1.4).timeout
+		return
+	DirAccess.make_dir_recursive_absolute(directory+"/frames")
+	for i: int in range(45):
+		await create_timer(1.0/30).timeout
+		await RenderingServer.frame_post_draw
+		var error: Error=root.get_texture().get_image().save_png(directory+"/frames/%04d.png" % motion_frame)
+		if error!=OK: quit(1); return
+		motion_frame+=1
 func _initialize() -> void: call_deferred("_run")
 func _run() -> void:
 	world=load("res://Main.tscn").instantiate()
@@ -29,6 +41,13 @@ func _run() -> void:
 			var error: Error = root.get_texture().get_image().save_png(directory+"/%s-%dx%d.png" % [mode,extent.x,extent.y])
 			if error != OK: quit(1); return
 	if world.growth.development:
+		world.hud.open_growth("emblems")
+		for i: int in range(5): await process_frame
+		var emblem_view: Control=world.hud.workspace.find_child("GrowthView",true,false)
+		emblem_view._prepare("enhance","eva",1)
+		emblem_view._confirm()
+		emblem_view.scroll.scroll_vertical=0
+		await motion(directory)
 		var activation: Dictionary = world.growth.execute("activate","joe_2",1,int(world.growth.state.revision))
 		print("CAPTURE_ACTIVATE ",activation)
 		if not activation.ok: quit(1); return
@@ -45,6 +64,8 @@ func _run() -> void:
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png(directory+"/guardian-card-selected-854x480.png")
 		view._confirm()
+		view.scroll.scroll_vertical=0
+		await motion(directory)
 		for i: int in range(5): await process_frame
 		view.scroll.scroll_vertical=0
 		await process_frame

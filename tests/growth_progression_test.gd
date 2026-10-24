@@ -153,7 +153,7 @@ func _run() -> void:
 	await process_frame
 	check(view.scroll.scroll_vertical>0 and view.selected=="eva" and view.request.is_empty(),"native swipe scrolls without activating button")
 	var action_button: Button = view.find_child("GrowthAction_enhance1",true,false)
-	view.scroll.ensure_control_visible(action_button)
+	if view.scroll.is_ancestor_of(action_button): view.scroll.ensure_control_visible(action_button)
 	for i: int in range(3): await process_frame
 	tap(action_button)
 	for i: int in range(3): await process_frame
@@ -166,6 +166,19 @@ func _run() -> void:
 		tap(cancel_button)
 		await process_frame
 		check(rt.state==unchanged and view.request.is_empty(),"native cancel leaves state and cost intact")
+	var previous_revision: int=int(rt.state.revision)
+	view._prepare("enhance","eva",1)
+	view._confirm()
+	check(view.submitting,"enhancement blocks actions during presentation")
+	view._confirm()
+	check(int(rt.state.revision)==previous_revision+1,"duplicate during animation cannot spend twice")
+	world.hud._close_workspace()
+	check(not world.hud.workspace.visible,"close works during presentation")
+	world._load_game(true)
+	check(int(rt.state.revision)==previous_revision+1,"closing animation preserves committed result")
+	world.hud.open_growth("emblems")
+	for i: int in range(3): await process_frame
+	view=world.hud.workspace.find_child("GrowthView",true,false)
 	root.size=Vector2i(854,480)
 	for i: int in range(3): await process_frame
 	world.hud._fit_hud()
