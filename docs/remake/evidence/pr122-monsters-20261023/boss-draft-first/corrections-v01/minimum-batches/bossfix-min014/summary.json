@@ -1,0 +1,48 @@
+{
+  "label": "bossfix-min014",
+  "checked_new_sheets": 4,
+  "safe_played_clips": 2,
+  "held": [
+    {
+      "slug": "ugnus",
+      "clip": "N-run-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [
+    "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/bossfix-min014/candidate.json",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/bossfix-min014/candidate.json"
+  ],
+  "runtime": "/workspace/runtime/bossfix-min014",
+  "source_pins": [
+    {
+      "slug": "belial",
+      "clip": "NE-run-v02",
+      "sha256": "d6f78853706182aee174b20923ea19e9c47799d46d7aa20573ec539b1186b10f"
+    },
+    {
+      "slug": "ugnus",
+      "clip": "N-run-v02",
+      "sha256": "b91ad232150cb2cff17881d825e51e1fe9c0fe40a93d79e799535cbd4cb735db"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "sha256": "cd957b414048395c1ceb447881653e168e6654cf448391c6372453e44c421720"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "S-death-v02",
+      "sha256": "5fe4a52198cb800b738d063c2199b73467e328fb3c1a364ad4c6b65756841c0d"
+    }
+  ]
+}
