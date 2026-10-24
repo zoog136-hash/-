@@ -1,6 +1,8 @@
 [gd_resource type="SpriteFrames" load_steps=12 format=3]
 
+
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/gnoll/r001/E-run.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/gnoll/r001/E-attack.png" id="2"]
 
 [sub_resource type="AtlasTexture" id="pose_0_0"]
 atlas = ExtResource("1")
@@ -38,7 +40,6 @@ region = Rect2(1042, 570, 467, 362)
 margin = Rect2(498, 562, 1005, 1110)
 filter_clip = true
 
-[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_staging/gnoll/r001/E-attack.png" id="2"]
 
 [sub_resource type="AtlasTexture" id="pose_1_0"]
 atlas = ExtResource("2")

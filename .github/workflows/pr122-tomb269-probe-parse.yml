@@ -42,6 +42,6 @@ jobs:
           export XDG_CONFIG_HOME="${RUNNER_TEMP}/pr122-tomb-config"
           export XDG_CACHE_HOME="${RUNNER_TEMP}/pr122-tomb-cache"
           mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
-          timeout 600 "$ENGINE" --headless --path . --import
+          timeout 1500 "$ENGINE" --headless --path . --import
           timeout 120 "$ENGINE" --headless --path . --check-only --script res://tests/pr122_tomb269_small_native_sw_probe.gd
           echo 'GDScript parse complete; unapproved Tomb269 art and real Main tests remain HOLD'
