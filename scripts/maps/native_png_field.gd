@@ -5,7 +5,31 @@ class_name NativePngField
 const NATIVE_SPAWNS = preload("res://scripts/monsters/native_png_spawns.gd")
 const PNG_SCALE = preload("res://scripts/maps/png_world_scale.gd")
 const DOMINATION_GAMEPLAY=preload("res://scripts/maps/domination_png_gameplay.gd")
+const PRECISE_ROUTE_GRAPH=preload("res://scripts/maps/native_png_route_graph.gd")
 var artwork_scale: float=1.0
+var precise_routes: AStar2D
+
+func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	if walkable(from) and walkable(to):
+		var start: Vector2i=world_to_cell(from)
+		var finish: Vector2i=world_to_cell(to)
+		if reachable[start.y*width+start.x]!=0 and reachable[finish.y*width+finish.x]!=0 and line_clear(from,to):
+			return PackedVector2Array([to])
+	if precise_routes!=null:return precise_routes.route(from,to)
+	var route: PackedVector2Array=super.path(from,to)
+	if route.is_empty():return route
+	var previous: Vector2=from
+	var valid: bool=true
+	for point: Vector2 in route:
+		if not line_clear(previous,point):valid=false;break
+		previous=point
+	if valid:return route
+	# Cell centers alone cannot prove the intervening segment clears a wall
+	# or narrow floor corner. Build exact edge checks only when one is needed.
+	precise_routes=PRECISE_ROUTE_GRAPH.new()
+	precise_routes.configure(self)
+	return precise_routes.route(from,to)
+
 const FLOOR_BUCKET: int=512
 var floor_buckets: Dictionary={}
 var floor_polygons_empty: bool=true
@@ -49,6 +73,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	png_root = local_root
 	landing_candidates.clear()
 	landing_candidates_ready = false
+	precise_routes=null
 	var spec: Dictionary = plan.maps[mid]
 	artwork_scale=PNG_SCALE.ADEN_SCALE if mid=="aden_world" else 1.0
 	var spawn: Array = spec.spawn.duplicate(true)
@@ -104,28 +129,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		for run: Array in manifest.get("alpha_solid_runs",[]):
 			var box:=Rect2i(int(run[1])*factor,int(run[0])*factor,int(run[2])*factor,factor).intersection(Rect2i(0,0,width,height))
 			if box.has_area():astar.fill_solid_region(box)
-		# Grid centers are not enough for a real four-pixel player foot. PNG
-	# polygons and transparent pixels can clip the foot even when AStar sees
-	# an open cell. Reject those centers before computing connectivity so the
-	# routing grid and the physical body agree on the same traversable area.
-	# Leave source polygons, alpha runs and explicit blockers unchanged.
-	for y: int in range(height):
-		for x: int in range(width):
-			var cell := Vector2i(x,y)
-			if astar.is_point_solid(cell): continue
-			var point: Vector2=cell_to_world(cell)
-			var body_clear: bool=point_clear(point,4.0)
-			if body_clear:
-				for offset: Vector2 in LANDING_BODY_OFFSETS:
-					if not inside_navigable_area(point+offset) or not walkable(point+offset):
-						body_clear=false
-						break
-			if not body_clear: astar.set_point_solid(cell)
-	# The ordinary grid allows diagonal shortcuts between valid cell centers,
-	# but PNG edges may still clip a four-pixel foot at a corner. Keep the
-	# exact orthogonal graph until each diagonal has a physical edge check.
-	astar.diagonal_mode=AStarGrid2D.DIAGONAL_MODE_NEVER
-	_build_reachability()
+		_build_reachability()
 	# The alpha guard was applied after PlayableField built its candidates.
 	# Drop any now-solid/unreachable or poorly cleared samples, rather than
 	# materialising actors in invisible pixels, pillars or wall edges.
