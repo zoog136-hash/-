@@ -30,11 +30,14 @@ jobs:
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
-      - name: Reproducible catalog and all regressions
+      - name: Reproducible catalog and monster-world regressions
+        # Integration keeps the full suite on these PR bases; other events remain full.
+        env:
+          TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'integration/twilight-complete-20261009') && github.head_ref != 'feature/twilight-monster-world-overhaul-20261009' && 'import,bake_navigation,boot,native_png_route_recovery_test,monster_world_test,monster_ai_leash_path_test,monster_attack_profiles_test,monster_motion_test,monster_capture_landing_test,boss_presentation_test,aden_boss_special_test,renewed_map_spawn_test,aden_faith_png_monster_spawns_test,native_png_monster_spawns_test,remake_map_population_test,hunting_paths_test,hunting_navigation_cache_test,combat_hud_test,ground_loot_system_test,stage5_save_compatibility_test' || '' }}
         run: |
           python3 tools/build_monster_world.py
           git diff --exit-code -- data/monsters/monster_world_catalog.json data/monsters/world_spawn_profiles.json
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --only "$TWILIGHT_CI_TESTS"
       # Only the two historical render fixtures use legacy Aden/Faith.
       # Do not apply this flag to the full suite or native PNG validation.
       - name: Actual OpenGL regions, AUTO dense hunts, bosses, all species poses

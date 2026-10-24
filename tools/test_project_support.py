@@ -79,6 +79,10 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         # Full real-PNG runtime checks can exceed the generic 150s under CI contention.
         # Do not omit maps, assertions or failure conditions; allow 300s per test.
         return max(requested, 300)
+    if name == 'hunting_paths_test':
+        # All 25 real maps and 10,666 physical-route assertions take ~124s
+        # locally; leave bounded room for shared CI runners without skipping any.
+        return max(requested, 300)
     if name == 'ground_loot_system_test':
         # The unchanged 166-check full GUI/physics/save/loot suite completed
         # in ~112 seconds in its dedicated workflow, but exceeded the generic

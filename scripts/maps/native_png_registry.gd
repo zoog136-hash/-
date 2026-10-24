@@ -11,6 +11,7 @@ const DOMINATION_PLAN_PATH := "res://data/maps/domination_png_plan.json"
 const DOMINATION_RECEIPT_PATH := "res://data/maps/domination_png_pack.json"
 const DOMINATION_ROOT := "res://external_map_packs/domination_png_v1"
 const REVIEW_PATH := "res://data/maps/native_png_review.json"
+const NAVIGATION_CORRECTIONS := "res://data/maps/native_png_navigation_corrections.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 const BUNDLED_ROOT := "res://external_map_packs/native_png_v5"
 const LEGACY_ROOT := "user://native_png_maps"
@@ -54,7 +55,32 @@ static func plan() -> Dictionary:
 	var domination: Dictionary=read_json(DOMINATION_PLAN_PATH)
 	value.sources.merge(domination.get("sources",{}))
 	value.maps.merge(domination.get("maps",{}))
+	if not apply_navigation_corrections(value):return {}
 	return value
+
+static func apply_navigation_corrections(value: Dictionary) -> bool:
+	var corrections: Dictionary=read_json(NAVIGATION_CORRECTIONS)
+	if corrections.get("schema")!=1 or corrections.get("save_layout_compatible")!=true:return false
+	if corrections.get("base_plan_sha256")!=FileAccess.get_sha256(PLAN_PATH):return false
+	if corrections.get("domination_plan_sha256")!=FileAccess.get_sha256(DOMINATION_PLAN_PATH):return false
+	if not corrections.get("maps") is Dictionary:return false
+	for mid: String in corrections.maps:
+		if not value.maps.has(mid):return false
+		var spec: Dictionary=value.maps[mid]
+		var patch: Dictionary=corrections.maps[mid]
+		var source: Dictionary=value.sources[spec.file]
+		if patch.get("source_sha256")!=source.sha256:return false
+		for polygon: Array in patch.get("walk_polygons_add",[]):
+			if not valid_polygon(polygon,source.size):return false
+			spec.walk_polygons.append(polygon)
+		for replacement: Dictionary in patch.get("route_checks_replace",[]):
+			if not valid_point(replacement.get("from"),source.size) or not valid_point(replacement.get("to"),source.size):return false
+			var index: int=spec.route_checks.find(replacement.from)
+			if index<0:return false
+			spec.route_checks[index]=replacement.to
+	# These corrections do not move a solid cell or a gameplay entity. Keep
+	# the immutable pack plan hashes, save-layout revisions and review identity.
+	return true
 
 static func valid_point(value: Variant, size: Array) -> bool:
 	return value is Array and value.size()==2 and (value[0] is float or value[0] is int) and (value[1] is float or value[1] is int) and is_finite(float(value[0])) and is_finite(float(value[1])) and value[0]>=0 and value[1]>=0 and value[0]<size[0] and value[1]<size[1]
