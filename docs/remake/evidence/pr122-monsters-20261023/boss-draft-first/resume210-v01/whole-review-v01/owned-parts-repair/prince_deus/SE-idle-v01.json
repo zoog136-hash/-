@@ -1,0 +1,247 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/prince_deus/raw/SE-idle-v01.png",
+  "source_sha256": "1a680ff3ce8e57fe076afb2889abb1406d301bd3f84b7ecfd17e58640e389dfb",
+  "texture": "assets/actors/eight_direction/boss_draft_first/prince_deus/owned_parts_v01/SE-idle-v01.png",
+  "texture_sha256": "0a2b8e890efbf40f692861bff22fb92d52057e506dd882432827232a6dc13e27",
+  "geometry": {
+    "image_size": [
+      1680,
+      1120
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SE",
+        "region": [
+          3,
+          3,
+          540,
+          533
+        ],
+        "margin": [
+          448,
+          377,
+          868,
+          875
+        ],
+        "source_anchor": [
+          259,
+          506
+        ],
+        "rgba_sha256": "166bc29560432181d268547c4c039ce6694c7e4be97b8c659a2961b229667824",
+        "original_source_region": [
+          0,
+          0,
+          540,
+          533
+        ],
+        "original_source_anchor": [
+          256,
+          503
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "SE",
+        "region": [
+          563,
+          3,
+          503,
+          550
+        ],
+        "margin": [
+          465,
+          384,
+          905,
+          858
+        ],
+        "source_anchor": [
+          802,
+          499
+        ],
+        "rgba_sha256": "75f3bd2ec2bff18c6970086e692dd8fd42e2991a26fd580a894462a5910d2da0",
+        "original_source_region": [
+          529,
+          4,
+          503,
+          550
+        ],
+        "original_source_anchor": [
+          768,
+          500
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "SE",
+        "region": [
+          1123,
+          3,
+          493,
+          544
+        ],
+        "margin": [
+          449,
+          377,
+          915,
+          864
+        ],
+        "source_anchor": [
+          1378,
+          506
+        ],
+        "rgba_sha256": "921235861ce335e35780b6e8442a64449b929fbba0a5781be0061d0f6cf6ab2c",
+        "original_source_region": [
+          1025,
+          0,
+          493,
+          544
+        ],
+        "original_source_anchor": [
+          1280,
+          503
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "SE",
+        "region": [
+          3,
+          563,
+          539,
+          524
+        ],
+        "margin": [
+          491,
+          375,
+          869,
+          884
+        ],
+        "source_anchor": [
+          216,
+          1068
+        ],
+        "rgba_sha256": "62b5aa6b871c8fb9d2284705f2815697c897d6dfe3ed4199e21d7e8571ad4a1a",
+        "original_source_region": [
+          43,
+          500,
+          539,
+          524
+        ],
+        "original_source_anchor": [
+          256,
+          1005
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "SE",
+        "region": [
+          563,
+          563,
+          491,
+          509
+        ],
+        "margin": [
+          497,
+          378,
+          917,
+          899
+        ],
+        "source_anchor": [
+          770,
+          1065
+        ],
+        "rgba_sha256": "761a0475f1787cf18155a5f727db369cc8e96affc9f73ae67ea3c0b3016d9ad7",
+        "original_source_region": [
+          561,
+          497,
+          491,
+          509
+        ],
+        "original_source_anchor": [
+          768,
+          999
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "SE",
+        "region": [
+          1123,
+          563,
+          470,
+          513
+        ],
+        "margin": [
+          468,
+          374,
+          938,
+          895
+        ],
+        "source_anchor": [
+          1359,
+          1069
+        ],
+        "rgba_sha256": "f4cbf72ba84e178c019f624d1b1429b8137b0015d7acceb4ae92dc56908cd74f",
+        "original_source_region": [
+          1044,
+          495,
+          470,
+          513
+        ],
+        "original_source_anchor": [
+          1280,
+          1001
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 528.5,
+    "canvas_size": [
+      1408,
+      1408
+    ],
+    "foot": [
+      704,
+      880
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 660872,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "cfab261af13f8ff8596a160813610564c107266ffa799bc257e6d6112892dda7",
+    "foreground_owner_sha256": "a1fc1ca81de5c65bff9e3fbcbf36590c05a163293810aa3b1db1e92a6f8fdaff",
+    "detached_pixels": 1,
+    "detached_fragments": [
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          210,
+          537,
+          211,
+          538
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 64.53681120105021,
+        "owner_margin_min": 62.53681120105021
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 87873,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:교만의 왕자 데우스",
+  "slug": "prince_deus",
+  "clip": "SE-idle-v01",
+  "role": "idle",
+  "direction": "SE",
+  "original_cause": "foreign_body_rectangle"
+}

@@ -1,0 +1,24 @@
+{
+  "slug": "zeros",
+  "actor": "monster:제로스",
+  "clip": "W-attack-v02",
+  "direction": "W",
+  "role": "attack",
+  "layout": "phase_grid2",
+  "phase_count": 6,
+  "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nCORRECTION: The FIRST reference establishes identity ONLY and may face the wrong side. The SECOND reference establishes a reviewed same-character camera direction. Adopt the required camera below consistently for ALL SIX poses; never copy the first reference camera automatically.\nThe nose/beak/muzzle/helmet front MUST point toward SCREEN LEFT in EVERY ready, loading, contact, recoil, and restored pose. Hips, knees, feet and torso must face LEFT too. Pure LEFT profile in all six poses.\nExactly ONE anatomical RIGHT-held weapon throughout if the character uses one; never hand swap or duplicate. Left hand stays free. Natural head recoil is fine without changing the overall facing.\nLayout EXACTLY SIX COMPLETE distinct animation poses in TWO COLUMNS and THREE ROWS (2x3), read row-major 0,1 / 2,3 / 4,5, WIDE LANDSCAPE transparent canvas. Keep each figure body about200px high with identical scale. Each full silhouette including extended wings, scythe, axe, staff, sword, tail and cape must fit comfortably inside its own large cell with generous empty alpha gutters and outside margins. No pose or weapon intersects another; no anatomy reaches canvas edge. No floor/shadow/effects/text. Preserve character identity and action sequence. Not flipped, no mirrored anatomy.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-run-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "corrects": "W-attack-v01",
+  "confirmed_causes": [
+    "authored_camera_facing_mismatch"
+  ],
+  "secondary_camera_reference": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-run-v01.png",
+  "secondary_reference_sha256": "fb4596ed6456ea93029183b81406a9a8e7214197824e81a17588c29cc1b45714"
+}

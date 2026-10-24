@@ -1,0 +1,233 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/E-idle-v01.png",
+  "source_sha256": "cd391e081e78635691c8d57eb2566485a965361d3fc97ba7c5b98c403cf4cf73",
+  "texture": "assets/actors/eight_direction/boss_draft_first/jopnir/owned_parts_v01/E-idle-v01.png",
+  "texture_sha256": "93320ad4781e09dbbf9ae707884e8e570613b7215e480d9c24f80988b11aed96",
+  "geometry": {
+    "image_size": [
+      1728,
+      1152
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "E",
+        "region": [
+          3,
+          3,
+          531,
+          519
+        ],
+        "margin": [
+          447,
+          349,
+          829,
+          841
+        ],
+        "source_anchor": [
+          236,
+          504
+        ],
+        "rgba_sha256": "c333d9e629f117824c067a1ba144528d165d10bc3a2aee74af71bec7e585adc0",
+        "original_source_region": [
+          23,
+          9,
+          531,
+          519
+        ],
+        "original_source_anchor": [
+          256,
+          510
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "E",
+        "region": [
+          579,
+          3,
+          527,
+          541
+        ],
+        "margin": [
+          407,
+          348,
+          833,
+          819
+        ],
+        "source_anchor": [
+          852,
+          505
+        ],
+        "rgba_sha256": "56d3313f8a96c0b79986cc42497088776d98240a87d8e2306e4fb79e3b048cce",
+        "original_source_region": [
+          495,
+          9,
+          527,
+          541
+        ],
+        "original_source_anchor": [
+          768,
+          511
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "E",
+        "region": [
+          1155,
+          3,
+          505,
+          563
+        ],
+        "margin": [
+          399,
+          345,
+          855,
+          797
+        ],
+        "source_anchor": [
+          1436,
+          508
+        ],
+        "rgba_sha256": "682ffb4c9d1cb57b0e6e70a33b5a3e8012486ae40502d3c1cc0264f16760f037",
+        "original_source_region": [
+          999,
+          5,
+          505,
+          563
+        ],
+        "original_source_anchor": [
+          1280,
+          510
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "E",
+        "region": [
+          3,
+          579,
+          476,
+          499
+        ],
+        "margin": [
+          466,
+          356,
+          884,
+          861
+        ],
+        "source_anchor": [
+          217,
+          1073
+        ],
+        "rgba_sha256": "78c2c3b55aa5361f847f98762e52521ef48fa272e83c04651966ba0d99efa7a1",
+        "original_source_region": [
+          42,
+          509,
+          476,
+          499
+        ],
+        "original_source_anchor": [
+          256,
+          1003
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "E",
+        "region": [
+          579,
+          579,
+          569,
+          514
+        ],
+        "margin": [
+          393,
+          357,
+          791,
+          846
+        ],
+        "source_anchor": [
+          866,
+          1072
+        ],
+        "rgba_sha256": "eca8d1628bde3f41ccf84bbae58dfcd0fb797bf863c515d0080368e643d810c4",
+        "original_source_region": [
+          481,
+          510,
+          569,
+          514
+        ],
+        "original_source_anchor": [
+          768,
+          1003
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "E",
+        "region": [
+          1155,
+          579,
+          507,
+          494
+        ],
+        "margin": [
+          399,
+          361,
+          853,
+          866
+        ],
+        "source_anchor": [
+          1436,
+          1068
+        ],
+        "rgba_sha256": "f5f5e2fe7da67903fe58837d8dca91b213d7f3748f262f3cc0f13a5e349bbb21",
+        "original_source_region": [
+          999,
+          514,
+          507,
+          494
+        ],
+        "original_source_anchor": [
+          1280,
+          1003
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 509.0,
+    "canvas_size": [
+      1360,
+      1360
+    ],
+    "foot": [
+      680,
+      850
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 775895,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "852aad42795f401e21ded6e51fc392da9d94e2f386cacc08327046c319e903fc",
+    "foreground_owner_sha256": "995a4a49a8c22bc7a812e47a28726a7811be1558de7a203a5d85fdce2f55a0fb",
+    "detached_pixels": 0,
+    "detached_fragments": [],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 89568,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:욥니르",
+  "slug": "jopnir",
+  "clip": "E-idle-v01",
+  "role": "idle",
+  "direction": "E",
+  "original_cause": "foreign_body_rectangle"
+}

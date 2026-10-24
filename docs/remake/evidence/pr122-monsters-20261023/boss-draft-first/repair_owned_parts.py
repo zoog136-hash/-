@@ -31,11 +31,14 @@ def repair(row,out):
     labels,_=ndimage.label(alpha>100);areas=np.bincount(labels.ravel())
     bodies=[int(v) for v in np.flatnonzero(areas>=200) if v]
     assert len(bodies)==6,'Six original separated strong bodies required'
+    columns=int(row.get('layout','phase_grid3').removeprefix('phase_grid'))
+    assert columns in (2,3) and 6%columns==0
+    gridrows=6//columns
     h,w=alpha.shape;slots={};seedframes=[]
     for body in bodies:
         ys,xs=np.where(labels==body)
-        slot=int((ys.min()+ys.max()+1)/2/h*2)*3+int((xs.min()+xs.max()+1)/2/w*3)
-        assert 0<=slot<6 and slot not in slots,'Explicit phase_grid3 assignment is ambiguous'
+        slot=int((ys.min()+ys.max()+1)/2/h*gridrows)*columns+int((xs.min()+xs.max()+1)/2/w*columns)
+        assert 0<=slot<6 and slot not in slots,'Explicit temporal-grid assignment is ambiguous'
         slots[slot]=body
     assert len(slots)==6
     # Narrow interior seeds identify bodies without including a neighbour whose
@@ -61,14 +64,14 @@ def repair(row,out):
         ys,xs=np.where(parts[str(i)][:,:,3]>0)
         boxes.append([int(xs.min()),int(ys.min()),int(xs.max()+1),int(ys.max()+1)])
     tile=((max(max(b[2]-b[0],b[3]-b[1]) for b in boxes)+6+7)//8)*8
-    packed=np.zeros((tile*2,tile*3,4),np.uint8)
+    packed=np.zeros((tile*gridrows,tile*columns,4),np.uint8)
     frames=[];neutral=float(np.median([boxes[i][3]-boxes[i][1] for i in [0,3]]))
     canvas=max(64,round(neutral*256/96/8)*8)
     for i,b in enumerate(boxes):
         x,y,x2,y2=b;bw,bh=x2-x,y2-y
-        dx,dy=tile*(i%3)+3,tile*(i//3)+3
+        dx,dy=tile*(i%columns)+3,tile*(i//columns)+3
         packed[dy:dy+bh,dx:dx+bw]=parts[str(i)][y:y2,x:x2]
-        anchor=[round(w/3*(i%3+.5)),int(np.max(np.where(labels==slots[i])[0]))]
+        anchor=[round(w/columns*(i%columns+.5)),int(np.max(np.where(labels==slots[i])[0]))]
         # Registration is translated with its whole source pose, never a bbox
         # centre for a long weapon. Exact source origin survives in the proof.
         ax,ay=anchor[0]-x,anchor[1]-y
@@ -80,7 +83,7 @@ def repair(row,out):
     dest=ROOT/'assets/actors/eight_direction/boss_draft_first'/row['slug']/'owned_parts_v01'/(row['clip']+'.png')
     dest.parent.mkdir(parents=True,exist_ok=True);assert not dest.exists()
     Image.fromarray(packed).save(dest)
-    g=dict(image_size=[tile*3,tile*2],frames=frames,distinct_pixel_frames=6,neutral_height=neutral,canvas_size=[canvas,canvas],foot=[canvas//2,canvas*5//8])
+    g=dict(image_size=[tile*columns,tile*gridrows],frames=frames,distinct_pixel_frames=6,neutral_height=neutral,canvas_size=[canvas,canvas],foot=[canvas//2,canvas*5//8])
     core.require_complete_pose_regions(dest,g)
     return dict(status='LOSSLESS_OWNED_PARTS_PASS',source=row['source'],source_sha256=row['source_sha256'],texture=dest.relative_to(ROOT).as_posix(),texture_sha256=sha(dest),geometry=g,proof=dict(**proof,**topology,subthreshold_fringe_texels=int(fringe.sum()),rule='alpha16 topology; alpha1..16 nearest proven foreground only',pose_regions_may_interleave_in_source=True,original_png_unchanged=sha(source)==row['source_sha256'],pose_pixels_invented=0))
 

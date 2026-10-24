@@ -1,0 +1,25 @@
+{
+  "actor": "monster:교만의 왕자 데우스",
+  "slug": "prince_deus",
+  "clip": "SE-idle-v01",
+  "role": "idle",
+  "direction": "SE",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/prince_deus/raw/SE-idle-v01.png",
+  "source_sha256": "1a680ff3ce8e57fe076afb2889abb1406d301bd3f84b7ecfd17e58640e389dfb",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      111224,
+      92857,
+      91116,
+      89993,
+      87864,
+      87206
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

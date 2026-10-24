@@ -1,0 +1,25 @@
+{
+  "actor": "monster:욥니르",
+  "slug": "jopnir",
+  "clip": "SW-idle-v01",
+  "role": "idle",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/SW-idle-v01.png",
+  "source_sha256": "c7073e7e82cc29c82449f983b5cb984febc1c8c933e86f55e8a9999b8c0d6f06",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      119009,
+      114062,
+      112297,
+      111414,
+      111323,
+      108518
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

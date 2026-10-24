@@ -83,7 +83,8 @@ def main():
             weak_areas=np.bincount(weak_labels.ravel())[1:]
             row['component_inventory']=dict(strong_alpha100_bodies_ge200=int(np.count_nonzero(strong_areas>=200)),foreground_alpha16_parts_ge200=int(np.count_nonzero(weak_areas>=200)),strong_component_areas=sorted((int(v) for v in strong_areas if v>=200),reverse=True))
             cache=folder/'structural-checks'/(j['clip']+'.json')
-            checked=json.loads(cache.read_text()) if cache.exists() else None
+            try:checked=json.loads(cache.read_text()) if cache.exists() else None
+            except json.JSONDecodeError:checked=None  # A final minimum batch may still be closing its cache.
             if checked and checked['source_sha256']==rec['sha256'] and checked['importer_sha256']==importer_sha:
                 if checked['status']=='SOURCE_HOLD':raise ValueError(checked['reason'])
                 g=checked['geometry'];row['reused_pinned_minimum_check']=True

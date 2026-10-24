@@ -1,0 +1,283 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:알비노 유니콘": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "attack",
+          "direction": "NE",
+          "animation": "attack_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/albino_unicorn/raw/NE-attack-v01.png",
+          "source_sha256": "2872da09b666724f7947023b5a4382363e7cb54da0165dce53b24e7b281daafa",
+          "texture": "assets/actors/eight_direction/boss_draft_first/albino_unicorn/sources/NE-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  44,
+                  37,
+                  374,
+                  463
+                ],
+                "margin": [
+                  356,
+                  251,
+                  762,
+                  673
+                ],
+                "source_anchor": [
+                  256,
+                  496
+                ],
+                "rgba_sha256": "50c0670283e112fae85af6717ce8170dae8254e8d2486eb07bff850b6076c370",
+                "canvas_size": [
+                  1136,
+                  1136
+                ],
+                "foot": [
+                  568,
+                  710
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  553,
+                  107,
+                  425,
+                  388
+                ],
+                "margin": [
+                  353,
+                  326,
+                  711,
+                  748
+                ],
+                "source_anchor": [
+                  768,
+                  491
+                ],
+                "rgba_sha256": "3fb20b4ddc361af54fed84d84e507b0b9d368fcfc460daf76e0431706588bcb1",
+                "canvas_size": [
+                  1136,
+                  1136
+                ],
+                "foot": [
+                  568,
+                  710
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  1025,
+                  46,
+                  491,
+                  450
+                ],
+                "margin": [
+                  313,
+                  264,
+                  645,
+                  686
+                ],
+                "source_anchor": [
+                  1280,
+                  492
+                ],
+                "rgba_sha256": "7233932d83834b6cdc8b9bafb8916717dc3da1febcdbe5f1ccfceb13a0c9315e",
+                "canvas_size": [
+                  1136,
+                  1136
+                ],
+                "foot": [
+                  568,
+                  710
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  46,
+                  560,
+                  505,
+                  403
+                ],
+                "margin": [
+                  358,
+                  311,
+                  631,
+                  733
+                ],
+                "source_anchor": [
+                  256,
+                  959
+                ],
+                "rgba_sha256": "e36c2fef98ca3990d0f5166a8771393ac4bd0d2398308421b47e93d5d56e6407",
+                "canvas_size": [
+                  1136,
+                  1136
+                ],
+                "foot": [
+                  568,
+                  710
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  600,
+                  545,
+                  389,
+                  408
+                ],
+                "margin": [
+                  400,
+                  306,
+                  747,
+                  728
+                ],
+                "source_anchor": [
+                  768,
+                  949
+                ],
+                "rgba_sha256": "e78b31536d801f5798cb7088d779afd5a74e8e6939317c0aa5c388b7b00d11dd",
+                "canvas_size": [
+                  1136,
+                  1136
+                ],
+                "foot": [
+                  568,
+                  710
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  1070,
+                  522,
+                  383,
+                  445
+                ],
+                "margin": [
+                  358,
+                  269,
+                  753,
+                  691
+                ],
+                "source_anchor": [
+                  1280,
+                  963
+                ],
+                "rgba_sha256": "eea903042f2c9c81f7452d5b348aa7354584bdeaefc1152dc8ac3fdff3cad6db",
+                "canvas_size": [
+                  1136,
+                  1136
+                ],
+                "foot": [
+                  568,
+                  710
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 427.0,
+            "canvas_size": [
+              1136,
+              1136
+            ],
+            "foot": [
+              568,
+              710
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/albino_unicorn/resume210-min018/SpriteFrames.tres",
+      "frames_sha256": "f0db9331feca7a85581f9a693d16e8baec94c63aea02763279ea0be64451d47e",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/albino_unicorn/resume210-min018/NativeMotionProfile.tres",
+      "native_profile_sha256": "2a27781511ad75fd1413d9ed2d2bf25754583e0becd19cd2c0a720014127fe5a",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "E-hit-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "NW-attack-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "S-hit-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "SW-attack-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "W-hit-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_drafts_saved": 6,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

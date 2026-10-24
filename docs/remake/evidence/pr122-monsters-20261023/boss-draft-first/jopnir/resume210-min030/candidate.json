@@ -1,0 +1,267 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:욥니르": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "idle",
+          "direction": "SE",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/SE-idle-v01.png",
+          "source_sha256": "f18dbc7ef5d16884197ccb952f28dcf396dcf5ffd3c6a423e1d18a7d4aee7506",
+          "texture": "assets/actors/eight_direction/boss_draft_first/jopnir/sources/SE-idle-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  39,
+                  4,
+                  454,
+                  491
+                ],
+                "margin": [
+                  431,
+                  323,
+                  842,
+                  805
+                ],
+                "source_anchor": [
+                  256,
+                  491
+                ],
+                "rgba_sha256": "50c352f8f8d2bd6c41c2ffacf523dd84246431b892708d7a6f2bb7dc2e89790d",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  541,
+                  4,
+                  456,
+                  496
+                ],
+                "margin": [
+                  421,
+                  318,
+                  840,
+                  800
+                ],
+                "source_anchor": [
+                  768,
+                  496
+                ],
+                "rgba_sha256": "b1265290dfec52aa46b43b5e65ae3a3ae4b20d246b8f0c9586d2b73375148454",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1061,
+                  1,
+                  450,
+                  504
+                ],
+                "margin": [
+                  429,
+                  310,
+                  846,
+                  792
+                ],
+                "source_anchor": [
+                  1280,
+                  501
+                ],
+                "rgba_sha256": "9c8db7633bd4a5354f6f0e6bb373a4e0b71ec2584287dd8d1321dfa7e8767423",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  35,
+                  516,
+                  462,
+                  491
+                ],
+                "margin": [
+                  427,
+                  323,
+                  834,
+                  805
+                ],
+                "source_anchor": [
+                  256,
+                  1003
+                ],
+                "rgba_sha256": "61270cca5c5880943e550b8dafea8786060fe4c9e6b80f6f013d136339078e82",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  538,
+                  521,
+                  462,
+                  486
+                ],
+                "margin": [
+                  418,
+                  328,
+                  834,
+                  810
+                ],
+                "source_anchor": [
+                  768,
+                  1003
+                ],
+                "rgba_sha256": "8676d62e4beb1a2050181c663144384a025cd34f649b5b28d4cd96cd13f82bfc",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1063,
+                  517,
+                  449,
+                  485
+                ],
+                "margin": [
+                  431,
+                  329,
+                  847,
+                  811
+                ],
+                "source_anchor": [
+                  1280,
+                  998
+                ],
+                "rgba_sha256": "477577a539f40ac7adfaa81cce5308371c964ea3247c96dfbdfd3b160bb0cb97",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 485.0,
+            "canvas_size": [
+              1296,
+              1296
+            ],
+            "foot": [
+              648,
+              810
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/jopnir/resume210-min030/SpriteFrames.tres",
+      "frames_sha256": "a858506c78d51566f47462191ab535ae7be535fa778e1c9fac262eb1f20cd8b3",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/jopnir/resume210-min030/NativeMotionProfile.tres",
+      "native_profile_sha256": "ee59aabeac736079868f800343cadb3eb4184cd2d6804cb02916a29a4acc379a",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "E-idle-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_drafts_saved": 2,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}
