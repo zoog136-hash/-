@@ -21,3 +21,8 @@ data/maps/native_png_*.json -text
 data/maps/aden_faith_png_*.json -text
 # Shared PNG loading authenticates this plan even when opening Aden.
 data/maps/domination_png_plan.json -text
+
+# Preserve every authenticated map review and bundled index on Windows.
+# Do not normalize bytes or relax the runtime SHA checks.
+data/maps/*.json -text
+external_map_packs/**/*.json -text
