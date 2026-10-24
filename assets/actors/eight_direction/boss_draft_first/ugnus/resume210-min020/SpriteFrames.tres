@@ -1,0 +1,140 @@
+[gd_resource type="SpriteFrames" load_steps=22 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/ugnus/sources/S-idle-v01.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/ugnus/sources/SE-idle-v01.png" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/ugnus/sources/SW-idle-v01.png" id="3"]
+
+[sub_resource type="AtlasTexture" id="draft_0_0"]
+atlas = ExtResource("1")
+region = Rect2(34, 27, 482, 475)
+margin = Rect2(402, 309, 766, 773)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_0_1"]
+atlas = ExtResource("1")
+region = Rect2(531, 27, 470, 474)
+margin = Rect2(387, 310, 778, 774)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_0_2"]
+atlas = ExtResource("1")
+region = Rect2(1025, 30, 480, 473)
+margin = Rect2(369, 311, 768, 775)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_0_3"]
+atlas = ExtResource("1")
+region = Rect2(29, 515, 490, 474)
+margin = Rect2(397, 310, 758, 774)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_0_4"]
+atlas = ExtResource("1")
+region = Rect2(542, 523, 454, 466)
+margin = Rect2(398, 318, 794, 782)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_0_5"]
+atlas = ExtResource("1")
+region = Rect2(1029, 517, 478, 472)
+margin = Rect2(373, 312, 770, 776)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_1_0"]
+atlas = ExtResource("2")
+region = Rect2(12, 23, 509, 482)
+margin = Rect2(388, 312, 755, 782)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_1_1"]
+atlas = ExtResource("2")
+region = Rect2(536, 13, 486, 492)
+margin = Rect2(400, 302, 778, 772)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_1_2"]
+atlas = ExtResource("2")
+region = Rect2(1037, 5, 494, 498)
+margin = Rect2(389, 296, 770, 766)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_1_3"]
+atlas = ExtResource("2")
+region = Rect2(13, 524, 511, 479)
+margin = Rect2(389, 315, 753, 785)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_1_4"]
+atlas = ExtResource("2")
+region = Rect2(531, 526, 494, 483)
+margin = Rect2(395, 311, 770, 781)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_1_5"]
+atlas = ExtResource("2")
+region = Rect2(1029, 526, 500, 478)
+margin = Rect2(381, 316, 764, 786)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_2_0"]
+atlas = ExtResource("3")
+region = Rect2(13, 35, 468, 466)
+margin = Rect2(381, 318, 780, 782)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_2_1"]
+atlas = ExtResource("3")
+region = Rect2(533, 28, 477, 475)
+margin = Rect2(389, 309, 771, 773)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_2_2"]
+atlas = ExtResource("3")
+region = Rect2(1019, 11, 504, 489)
+margin = Rect2(363, 295, 744, 759)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_2_3"]
+atlas = ExtResource("3")
+region = Rect2(25, 528, 480, 480)
+margin = Rect2(393, 304, 768, 768)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_2_4"]
+atlas = ExtResource("3")
+region = Rect2(534, 542, 470, 465)
+margin = Rect2(390, 319, 778, 783)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_2_5"]
+atlas = ExtResource("3")
+region = Rect2(1037, 540, 482, 467)
+margin = Rect2(381, 317, 766, 781)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
+{"duration": 1.0, "texture": SubResource("draft_0_1")},
+{"duration": 1.0, "texture": SubResource("draft_0_2")},
+{"duration": 1.0, "texture": SubResource("draft_0_3")},
+{"duration": 1.0, "texture": SubResource("draft_0_4")},
+{"duration": 1.0, "texture": SubResource("draft_0_5")}], "loop": true, "name": &"idle_2", "speed": 5.000000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("draft_1_0")},
+{"duration": 1.0, "texture": SubResource("draft_1_1")},
+{"duration": 1.0, "texture": SubResource("draft_1_2")},
+{"duration": 1.0, "texture": SubResource("draft_1_3")},
+{"duration": 1.0, "texture": SubResource("draft_1_4")},
+{"duration": 1.0, "texture": SubResource("draft_1_5")}], "loop": true, "name": &"idle_1", "speed": 5.000000000},
+{"frames": [{"duration": 1.0, "texture": SubResource("draft_2_0")},
+{"duration": 1.0, "texture": SubResource("draft_2_1")},
+{"duration": 1.0, "texture": SubResource("draft_2_2")},
+{"duration": 1.0, "texture": SubResource("draft_2_3")},
+{"duration": 1.0, "texture": SubResource("draft_2_4")},
+{"duration": 1.0, "texture": SubResource("draft_2_5")}], "loop": true, "name": &"idle_3", "speed": 5.000000000}
+]
+metadata/twilight_canvas_size = Vector2(256, 256)
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false
