@@ -6,6 +6,17 @@ const NATIVE_SPAWNS = preload("res://scripts/monsters/native_png_spawns.gd")
 const PNG_SCALE = preload("res://scripts/maps/png_world_scale.gd")
 const DOMINATION_GAMEPLAY=preload("res://scripts/maps/domination_png_gameplay.gd")
 var artwork_scale: float=1.0
+# Opt-in local profiling; disabled during ordinary play.
+var profile_paths: bool=false
+var profile_path_calls: int=0
+var profile_path_usec: int=0
+func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	if not profile_paths:return super.path(from,to)
+	var started: int=Time.get_ticks_usec()
+	var result: PackedVector2Array=super.path(from,to)
+	profile_path_calls+=1;profile_path_usec+=Time.get_ticks_usec()-started
+	return result
+
 const FLOOR_BUCKET: int=512
 var floor_buckets: Dictionary={}
 var floor_polygons_empty: bool=true
@@ -50,7 +61,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	landing_candidates.clear()
 	landing_candidates_ready = false
 	var spec: Dictionary = plan.maps[mid]
-	artwork_scale=PNG_SCALE.ADEN_SCALE if mid=="aden_world" else 1.0
+	artwork_scale=PNG_SCALE.map_scale(mid)
 	var spawn: Array = spec.spawn.duplicate(true)
 	var portals: Array = [{"id":"aden_return","name":"아덴 귀환","position":[spawn[0]-60,spawn[1]],"target_map":"aden_world","radius":18}]
 	if mid.begins_with("albino_"):
@@ -70,17 +81,19 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		monster_spawns=gameplay.get("monster_spawn",[])
 		npcs=gameplay.get("npc_spawn",[])
 		portals=gameplay.get("portal",[])
-	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale)
-	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn")
-	portals=PNG_SCALE.geometry(portals,artwork_scale)
-	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale)
-	if mid=="aden_world":
-		for zone: Dictionary in monster_spawns:zone.layout_revision=PNG_SCALE.ADEN_REVISION
+	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale,"",mid)
+	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn",mid)
+	portals=PNG_SCALE.geometry(portals,artwork_scale,"",mid)
+	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale,"",mid)
+	npcs=PNG_SCALE.geometry(npcs,artwork_scale,"",mid)
+	var revision: int=PNG_SCALE.ADEN_REVISION if mid=="aden_world" else (PNG_SCALE.FAITH_REVISION if mid.begins_with("faith_") else int(spec.get("layout_revision",plan.revision)))
+	if artwork_scale!=1.0:
+		for zone: Dictionary in monster_spawns:zone.layout_revision=revision
 	for portal: Dictionary in portals:
-		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision") and mid=="aden_world":portal.target_layout_revision=PNG_SCALE.ADEN_REVISION
+		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision") and artwork_scale!=1.0:portal.target_layout_revision=revision
 	var value: Dictionary = {
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
-		"layout_revision":PNG_SCALE.ADEN_REVISION if mid=="aden_world" else int(spec.get("layout_revision",plan.revision)),"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
+		"layout_revision":revision,"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
 		"navigation":{"cell_size":48 if mid=="aden_world" else 16,"clearance":4,"use_baked_cache":false},
 		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
@@ -89,7 +102,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		"constrain_all_population_patrol":mid in NATIVE_SPAWNS.EXTRA_MAP_IDS or mid=="domination_summit",
 		"collision":geometry.get("collision",[]),"monster_spawn":monster_spawns,"npc_spawn":npcs,"portal":portals,"teleport":portals.filter(func(p: Dictionary) -> bool:return str(p.target_map)==mid) if mid=="domination_summit" else [],
 		"regions":geometry.get("regions",[]),"surfaces":[],"roads":[],"water":[],"props":[],"bridges":[],
-		"safe_zone":spec.get("safe_zone",[]),"combat_zone":spec.get("combat_zone",[]),"boss_zone":spec.get("boss_zone",[]),"route_checks":geometry.route_checks,"blocked_probes":geometry.get("blocked_probes",[]),
+		"safe_zone":geometry.get("safe_zone",[]),"combat_zone":geometry.get("combat_zone",[]),"boss_zone":geometry.get("boss_zone",[]),"route_checks":geometry.route_checks,"blocked_probes":geometry.get("blocked_probes",[]),
 		"minimap":{"title":spec.name},"collision_scope":spec.collision_scope,
 		"population_status":spec.get("population_status","LOCAL_PNG_PLACEMENT_UNVERIFIED_ORIGINAL_COORDINATES"),
 		"spawn_layout_revision":"aden_faith_png_spawns_20261020_v2" if mid in NATIVE_SPAWNS.EXTRA_MAP_IDS else "native_png_spawns_20261019"}
@@ -98,11 +111,14 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	configure(value)
 	# This mask only excludes transparent source pixels. Actual water, walls and
 	# obstacles still come from the independent visual trace, never PNG colours.
-	var alpha_cell: int=roundi(float(manifest.get("alpha_guard_cell_size",0))*artwork_scale)
-	if alpha_cell>=cell_size and alpha_cell%cell_size==0:
-		var factor: int=alpha_cell/cell_size
+	var alpha_cell: float=float(manifest.get("alpha_guard_cell_size",0))*artwork_scale
+	if alpha_cell>0:
+		# Conservative rasterization also supports non-integral scales (1.3x).
+		# Alpha runs are relative to the source bounds, as is the AStar grid.
 		for run: Array in manifest.get("alpha_solid_runs",[]):
-			var box:=Rect2i(int(run[1])*factor,int(run[0])*factor,int(run[2])*factor,factor).intersection(Rect2i(0,0,width,height))
+			var low:=Vector2i(floori(float(run[1])*alpha_cell/cell_size),floori(float(run[0])*alpha_cell/cell_size))
+			var high:=Vector2i(ceili(float(run[1]+run[2])*alpha_cell/cell_size),ceili(float(run[0]+1)*alpha_cell/cell_size))
+			var box:=Rect2i(low,high-low).intersection(Rect2i(0,0,width,height))
 			if box.has_area():astar.fill_solid_region(box)
 		_build_reachability()
 	# The alpha guard was applied after PlayableField built its candidates.

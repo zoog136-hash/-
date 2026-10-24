@@ -180,7 +180,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
 		boss_director.capture(str(field.data.map_id),region,monster)
-	monster.set_physics_process(monster.global_position.distance_to(world.player.global_position)<float(field.data.streaming.monster_sleep_distance))
+	_update_activity(monster)
+	# Spread the first AI decision across the existing 30 Hz cadence.
+	if field is NativePngField and str(field.data.map_id)=="escaros_world":
+		monster.decision_elapsed=float(int(slot.slot_id)%2)*.016
 
 func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
 	var id: int = int(monster.get_meta("field_slot",-1))
@@ -314,9 +317,19 @@ func _process(delta: float) -> void:
 				if not is_instance_valid(slot.monster) and str(slot.region.get("mode","normal"))!="boss":
 					slot.remaining = 2.0
 		elif refresh:
-			var distance: float = monster.global_position.distance_to(world.player.global_position)
-			monster.set_physics_process(distance<float(field.data.streaming.monster_sleep_distance))
-			if field is NativePngField and str(field.data.map_id)=="escaros_world":
-				# Sleeping old habitats must also stop submitting draw calls.
-				monster.visible=distance<float(field.data.streaming.monster_sleep_distance)+240.0
-			if not monster.is_physics_processing(): monster.velocity = Vector2.ZERO
+			_update_activity(monster)
+
+func _update_activity(monster: TwilightMonster) -> void:
+	var distance: float=monster.global_position.distance_to(world.player.global_position)
+	var awake: bool=distance<float(field.data.streaming.monster_sleep_distance)
+	if field is NativePngField and str(field.data.map_id)=="escaros_world":
+		var camera: Camera2D=world.player.camera
+		var extent: Vector2=get_viewport().get_visible_rect().size/camera.zoom
+		var view:=Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
+		# Preserve combat, death/recycling and status clocks outside the view.
+		var busy: bool=monster.dead or monster.motion.active or monster.aggro_remaining>0 or monster.returning_home or monster.poison_remaining>0 or monster.bleed_remaining>0 or monster.slow_remaining>0 or monster.is_stunned() or monster.is_held() or monster.is_feared() or monster.is_silenced()
+		var radius: float=maxf(extent.length()*.5+320.0,float(monster.ai.get("aggro_radius",420.0))*1.7+320.0)
+		awake=busy or distance<radius
+		monster.visible=view.has_point(monster.global_position) or (monster.is_boss and monster.motion.active)
+	monster.set_physics_process(awake)
+	if not awake:monster.velocity=Vector2.ZERO

@@ -1,0 +1,32 @@
+{
+  "scope": "TARGETED_FINAL_INTEGRATION_NOT_FULL_CI",
+  "engine": "4.7.2",
+  "checks": [
+    "aden_faith_png_save_migration_test",
+    "aden_png_scale_migration_test",
+    "boot",
+    "card_draw_fusion_test",
+    "draw_lightning_test",
+    "import",
+    "map_repair_test",
+    "minimap_batch_render_test",
+    "monster_ai_leash_path_test",
+    "native_png_layer_ownership_test",
+    "native_png_normal_travel_test",
+    "native_png_polygon_index_test",
+    "ui_fidelity_regression_test"
+  ],
+  "passed": 13,
+  "failed": [],
+  "skipped": [],
+  "initial_summary": "integration-initial/summary.json",
+  "correction_summary": "recheck/summary.json",
+  "walking_summary": "walking/summary.json",
+  "android_device": "NOT_RUN",
+  "source_sha": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "notes": [
+    "Initial old revision expectation fixed; not a runtime rollback.",
+    "GPU MultiMesh readback requires OpenGL, moved to minimap_batch_render_test.",
+    "Explicit installed PNG pack enabled ordinary travel recheck."
+  ]
+}
