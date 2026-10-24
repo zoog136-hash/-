@@ -1,0 +1,377 @@
+{
+  "reason": "Restore pre-merge approved native bindings and scale after two importer regression failures. Preserve parallel commits and replacement candidates; no newly approved identities.",
+  "source_commit": "d069778458783e054d4755448f00f9dd18a04e86",
+  "saved_HEAD": "bc4ce605510a42a5db78f0ba9df8d8e63f39e68a",
+  "profiles": {
+    "transform:176": {
+      "pre_merge_approved": {
+        "name": "경비병(창) 대장",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병(창) 대장",
+          "layout": "directional4",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+        "pixel_scale": 0.980392,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -31.372544
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/4954db6f65010804b3185b7a.png"
+      },
+      "saved_parallel_candidate": {
+        "name": "경비병(창) 대장",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병(창) 대장",
+          "layout": "directional4",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres",
+        "pixel_scale": 1.04712,
+        "color_tint": "eed09b",
+        "sprite_offset": [
+          0,
+          -33.50784
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/4954db6f65010804b3185b7a.png",
+        "shared_visual_source": "transform:2",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "spear_guard_captain_variant"
+      }
+    },
+    "transform:351": {
+      "pre_merge_approved": {
+        "name": "알비노 자이언트 크랩",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "알비노 자이언트 크랩",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab/SpriteFrames.tres",
+        "pixel_scale": 0.694444,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -22.222208
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/72b67492cfa1d57101f23c63.png"
+      },
+      "saved_parallel_candidate": {
+        "name": "알비노 자이언트 크랩",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "알비노 자이언트 크랩",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/SpriteFrames.tres",
+        "pixel_scale": 0.968944,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -31.006208
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/72b67492cfa1d57101f23c63.png",
+        "shared_visual_source": "monster:알비노 자이언트 크랩",
+        "shared_visual_policy": "reuse_existing_8_direction_frames_only; independent_gameplay_record"
+      }
+    },
+    "transform:349": {
+      "pre_merge_approved": {
+        "name": "알비노 악어거북",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "알비노 악어거북",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_snapping_turtle_transform/SpriteFrames.tres",
+        "pixel_scale": 1.054217,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -33.734944
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/3b9b22970c8e33b6dddc37e9.png"
+      },
+      "saved_parallel_candidate": {
+        "name": "알비노 악어거북",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "알비노 악어거북",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/SpriteFrames.tres",
+        "pixel_scale": 0.888383,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -28.428256
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/3b9b22970c8e33b6dddc37e9.png",
+        "shared_visual_source": "monster:알비노 악어거북",
+        "shared_visual_policy": "reuse_existing_8_direction_frames_only; independent_gameplay_record"
+      }
+    },
+    "transform:167": {
+      "pre_merge_approved": {
+        "name": "경비병 (창) 그린",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병 (창) 그린",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard_green/SpriteFrames.tres",
+        "pixel_scale": 0.895468,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -28.654976
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/87117dbb872151681c4f8566.png"
+      },
+      "saved_parallel_candidate": {
+        "name": "경비병 (창) 그린",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병 (창) 그린",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres",
+        "pixel_scale": 1.04712,
+        "color_tint": "8fcf85",
+        "sprite_offset": [
+          0,
+          -33.50784
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/87117dbb872151681c4f8566.png",
+        "shared_visual_source": "transform:2"
+      }
+    },
+    "transform:110": {
+      "pre_merge_approved": {
+        "name": "경비병 (창) 레드",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병 (창) 레드",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard_red/SpriteFrames.tres",
+        "pixel_scale": 1.401869,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -44.859808
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/9ad7673e0bc7551d5fef799b.png"
+      },
+      "saved_parallel_candidate": {
+        "name": "경비병 (창) 레드",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병 (창) 레드",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres",
+        "pixel_scale": 1.04712,
+        "color_tint": "ff8178",
+        "sprite_offset": [
+          0,
+          -33.50784
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/9ad7673e0bc7551d5fef799b.png",
+        "shared_visual_source": "transform:2"
+      }
+    },
+    "transform:2": {
+      "pre_merge_approved": {
+        "name": "경비병 (창)",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병 (창)",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres",
+        "pixel_scale": 1.04712,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -33.50784
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/1b99b161b4ebedb6c86c2f16.png"
+      },
+      "saved_parallel_candidate": {
+        "name": "경비병 (창)",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "prior_visual_profile": {
+          "name": "경비병 (창)",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        },
+        "frames_path": "res://assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres",
+        "pixel_scale": 1.04712,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -33.50784
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 6.25,
+        "authoring_reference": "res://assets/catalog/1b99b161b4ebedb6c86c2f16.png",
+        "shared_visual_source": "transform:2"
+      }
+    }
+  }
+}

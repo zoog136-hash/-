@@ -1,0 +1,388 @@
+{
+  "schema": "pr122-boss-production-batch-v1",
+  "actor": "monster:테베 호루스",
+  "clips": 1,
+  "poses": 6,
+  "missing_required_slots": 32,
+  "root_Godot_real_speed": "PASS",
+  "viewport_captures": 58,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/NativeMotionProfile.tres",
+      "bytes": 788,
+      "sha256": "cfe6c622ba37f596eaa9c3ab59f825acbc5439a15c6caca5724305835df9777f"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/SpriteFrames.tres",
+      "bytes": 1759,
+      "sha256": "aa60bd5e5629c9f2f4a407497770ec23302d90f5143bd8eae000c32f7f558267"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/thebes_horus/sources/W-idle-v01.png",
+      "bytes": 2247168,
+      "sha256": "d87289ce41b2e1866185bcd81b24053e480295a7d2640dca52c8ffc60e6826b0"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 634565,
+      "sha256": "738c9fa9a0329232312e4f29087aa8b9a5d0a476a557d8132caa7c6b9550d510"
+    },
+    {
+      "path": "data/pr122_monster_production_scope.json",
+      "bytes": 902652,
+      "sha256": "d422543cb9f2110efa8ce4e18a0db5db9dc203b93f581ad928b8f76cd51d0e10"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/candidate.json",
+      "bytes": 7601,
+      "sha256": "a70583ff5242c94676c6d51f02afeac118255706183a2f6d518b41abc86a49d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/capture-manifest.json",
+      "bytes": 13612,
+      "sha256": "d95321bbcfdb8ff46de0f7a85ae13d871a9e66d53d74b96bd1983b1dad707d97"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/command.json",
+      "bytes": 379,
+      "sha256": "7fe86b7ae7e55b7183cb817eafedb09ce07e2ad77057904f14cd4ea96fd53072"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/config.json",
+      "bytes": 1471,
+      "sha256": "23047f4167a5459a6cb3f4c1ac3557e691ac9378c5059b59c9bf8b5756d306f0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/godot-run.txt",
+      "bytes": 674,
+      "sha256": "6e28a6801ecbf5fdebc01944b8f4e9bdf1afd9b145a413a999e08d4295189a6c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/process.json",
+      "bytes": 247,
+      "sha256": "2370de1a381814f562934758da5b25fa63d2ff94d7581bb357a57d097e3d1465"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/report.json",
+      "bytes": 7598,
+      "sha256": "5bffd2b15e6a634132547cdb2457e80dd66a90591bd6dde671926f271056282c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-action-idle_0-0.png",
+      "bytes": 33393,
+      "sha256": "4cea96a895d32dd2a5bcdca49377cd32c5f9c5126c9bf597905acf70e2fb9858"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-action-idle_0-1.png",
+      "bytes": 34138,
+      "sha256": "4d4b30b6a440087291d5488e721e7dd7787f489103d14e79bb291c7ae4abcb40"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-action-idle_0-2.png",
+      "bytes": 34414,
+      "sha256": "5ef4d8404677ad5a5be0e9009b71bca7053eb048eeb64d0ab335288149935ca9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-action-idle_0-3.png",
+      "bytes": 34287,
+      "sha256": "a270adbe099f09eac3398c350d37aba1b2a79699ac81393dc01fde08f642fe66"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-action-idle_0-4.png",
+      "bytes": 34290,
+      "sha256": "4be18dfcd90b90d1532f0082c546b10f9ad02ff4a494486c639e1e37f2d289a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-action-idle_0-5.png",
+      "bytes": 33976,
+      "sha256": "190f55da43d1bb231d7bc0eec559537471dc79a6e9ba0c31e80c4cc45e242546"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 33611,
+      "sha256": "90bbc3d958abbce4f99363ae43c4dab53af6d9ff1e335dbf6f2f801fd840bffb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-action-idle_2-0.png",
+      "bytes": 35876,
+      "sha256": "818c55200f9de7916d37722d4d8c741dd15d20f3aa4651fd0b93f2e845594e95"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-action-idle_2-1.png",
+      "bytes": 35663,
+      "sha256": "7fd87f0cd1baedf75230d96482704d7828643ec2c0da2a3510dde012845ed533"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-action-idle_2-2.png",
+      "bytes": 36443,
+      "sha256": "3d178dddfbc4c178d63307c1d86849c9f126e0899f252051390960514891e4d2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-action-idle_2-3.png",
+      "bytes": 36622,
+      "sha256": "a5f3cc6de5e271d0814a370f5b7c5ede37ce7931a104e53f4fb5442c3c5baea2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-action-idle_2-4.png",
+      "bytes": 36438,
+      "sha256": "621870c8d4a3f1f0fa5973ef57db03448bb9fca53a64e67a943a2870e282a170"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-action-idle_2-5.png",
+      "bytes": 36572,
+      "sha256": "ae2582c5ea62cb4c907e8b1a79b9c99ea8f756bcae69690cf7c42d1ba9524cbd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 35977,
+      "sha256": "2d0fb016b8d4fe5d1d790392720fa97ba5e2226beeed287787cd122645d9aa5c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-S-pre-idle-idle_2-1.png",
+      "bytes": 36158,
+      "sha256": "47116d3fd2ab6d81b57c67d94ae9f36fac8f45b18de9acfe471660a7124c1177"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-action-idle_3-0.png",
+      "bytes": 35407,
+      "sha256": "45bf786bf7e95a3b030d82ee6a3c98c95868d5a109d018be6844c23d2d0612a6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-action-idle_3-1.png",
+      "bytes": 35858,
+      "sha256": "2038be237fa45ccf982e9f2c5d9614e936325666e1d500b5f1e8a9c5e980b584"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-action-idle_3-2.png",
+      "bytes": 36463,
+      "sha256": "411ac7e32af27772c2e49ab4bebf7aa73b19722aa4f3fa7412fb70910724a320"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-action-idle_3-3.png",
+      "bytes": 36167,
+      "sha256": "8824a4d5db66587352a3d3e900680f0e182e771407715b787ec7f5d6927cee42"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-action-idle_3-4.png",
+      "bytes": 36196,
+      "sha256": "678a1194276b11230c808e2ae2b7da4942bae1a8a747e29ee9200f9410aa8438"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-action-idle_3-5.png",
+      "bytes": 35875,
+      "sha256": "a4089df46741c6203b71ed234ce0cfe840f7eb9f29b195e7ad87169e3480455b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-SW-pre-idle-idle_3-0.png",
+      "bytes": 35737,
+      "sha256": "70e045352d52cdda05c95044c78096eb89d6312196a0ef59521dc1818d4daab3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-action-idle_4-0.png",
+      "bytes": 33989,
+      "sha256": "50e38cedc69f3f19ba9f7fed3d3334a2d075cb0ea3452b9a78b0509346e1765d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-action-idle_4-1.png",
+      "bytes": 34265,
+      "sha256": "71751eee27ac1ea40cd40f3faacd06f569bc1e7fa8bebdf2b97606c2c2dd8881"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-action-idle_4-2.png",
+      "bytes": 34468,
+      "sha256": "cf2c6f5676ea45a683185f3f2970ac3a8c60689bda399d7dab9ee3f699727bba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-action-idle_4-3.png",
+      "bytes": 34833,
+      "sha256": "c9bd8663059ef1e724da11097ceb0dcb4690b33f9deedf5f3ef8cebd1e8fea89"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-action-idle_4-4.png",
+      "bytes": 34392,
+      "sha256": "ec222dcc52d95f0bb8ccbae69ad144015bb20730c3ed10d99aecaf75327a6498"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-action-idle_4-5.png",
+      "bytes": 34186,
+      "sha256": "d8def534cb927ef98fd518eba675803328d0c49220d9b3f0d461068313a254de"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 33945,
+      "sha256": "9765d9f07eb40919e2e370b9783a43582afb65326b37cbfada8522d45f1d7bbf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_anubis/samples.json",
+      "bytes": 237434,
+      "sha256": "830ddc8d597d2006e535d4cb83159899a44180a9a4532157114d52c65ed82551"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-action-idle_4-0.png",
+      "bytes": 35561,
+      "sha256": "3e4a07010134e61226309728487a3fc233981e1f5bbfdf28e1d91a44523795fb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-action-idle_4-1.png",
+      "bytes": 36427,
+      "sha256": "46a908a4c26f6b4321e564c5f22484489c8d25991e73acfbff5a3a337e8d9ee0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-action-idle_4-2.png",
+      "bytes": 36796,
+      "sha256": "ba6f1d8044910dfe67cf62c99cedaf039d663b09188170fc3e42f5c0d32bbc8f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-action-idle_4-3.png",
+      "bytes": 36630,
+      "sha256": "268373c305abe89ead85186c8d46a8f8338c0bf90615bd803bea101988adc31b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-action-idle_4-4.png",
+      "bytes": 36385,
+      "sha256": "0fc241d1c76a8a4866698a2978001f50f6c12b3a78608e5d457c346d3a4915f1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-action-idle_4-5.png",
+      "bytes": 36239,
+      "sha256": "aa6a1f8ebc2c0a77342731911275b76e4ab3985f5001ab085710ede5c416beba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 35747,
+      "sha256": "0e95b1ccd7c9918c88d003a3403ed8dad5d194a386ca9a767565a3a912d38baf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_horus/samples.json",
+      "bytes": 58445,
+      "sha256": "72afe427cda6564e8126edf650f3f77a15476e112a87390398f709d9aecb2090"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-action-idle_0-0.png",
+      "bytes": 33408,
+      "sha256": "fe994771f79c770e0030ffd6b40d48e0b3ac974a0f9f9ac4986f3f6baacbdc8a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-action-idle_0-1.png",
+      "bytes": 34013,
+      "sha256": "dede774f526373cf08bffc06f6d91fed4929269dec0f6571aa95bfd41a5a07b2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-action-idle_0-2.png",
+      "bytes": 34890,
+      "sha256": "fec48b86a7f6ad44c583886de18bfc4330e3b1eab356cd49a968af91651b3033"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-action-idle_0-3.png",
+      "bytes": 35884,
+      "sha256": "39e9e5b09c38db455b75f9cb16d2d4acbe1b28431af4e48ac69c9d1e3a26b10e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-action-idle_0-4.png",
+      "bytes": 34827,
+      "sha256": "3dfbd41f33a94441c23f814313ffa73db302526eefaacf4d6d13877455a9d7b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-action-idle_0-5.png",
+      "bytes": 33998,
+      "sha256": "cf2953c2905e12183b47b7e357f8b57a371c5e946e2e412a270591b97c813bbd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 33675,
+      "sha256": "69ad3c3ff2870d0e2beb125e66e767696393344995d560b70fd9a95e319800f1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-action-idle_2-0.png",
+      "bytes": 36109,
+      "sha256": "25893b83520cd689b0bbebc2ee013bb681788cc967ef8bfb1c39932f4fc06e32"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-action-idle_2-1.png",
+      "bytes": 36202,
+      "sha256": "3889a16bdfbf5bb2e16fe91cb52762efc5a698104fa8e8edeb557c8f1526f4c9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-action-idle_2-2.png",
+      "bytes": 37173,
+      "sha256": "6251bfdf4055111d6cb08db23db651cfee2638db07cab7d55a79ed6fc34e962a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-action-idle_2-3.png",
+      "bytes": 38191,
+      "sha256": "5cecf6edfc595755c8796191dbb7031351e6f746532a7d81451e651621995c4c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-action-idle_2-4.png",
+      "bytes": 37088,
+      "sha256": "2fbf19cdd8b25e25df9d81d9091ff582ba5966f8b6a563733d4930407e94715d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-action-idle_2-5.png",
+      "bytes": 37222,
+      "sha256": "e9cabd98ef34f97b12729659239ac3f117700379d5130b0f0865a1c1f69b0f9b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 36274,
+      "sha256": "a55312ab0454058a2033cc509ed6fbd3110887c930101f6a35f5cc048ae95ba8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-S-pre-idle-idle_2-1.png",
+      "bytes": 36729,
+      "sha256": "930492503fb238002611fed8dc8d91934dfd57cdf67652b52a1b3e758212499c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-action-idle_4-0.png",
+      "bytes": 34356,
+      "sha256": "adef668c8e2032e4a72c5fd08b41b41b41e134c5f266400ac7406c5ae90128af"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-action-idle_4-1.png",
+      "bytes": 34828,
+      "sha256": "e5b762cd3e21c70797db339b8c52b5bce5d68e37339d89223e6719779afee7f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-action-idle_4-2.png",
+      "bytes": 35084,
+      "sha256": "abedc5257737737e0c6b0f2fad1b011454d64c2e9e1be0fc40c37fa53cf52f96"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-action-idle_4-3.png",
+      "bytes": 35480,
+      "sha256": "17b0665d9b24cdc2d073dcfd98f3b1cfad9c33dad9bfa1dafacb1b5bfd9d9474"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-action-idle_4-4.png",
+      "bytes": 34852,
+      "sha256": "29f187af10233ebc5377bdf19707520b7f12a2fbb40531f6a5c0fa8c330f4a12"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-action-idle_4-5.png",
+      "bytes": 34591,
+      "sha256": "c24f27869e2a3e057d7c23c25d332a85fb945ffee4d9de1220bd4338c889591a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 34284,
+      "sha256": "565dc7eb5c718f3f0fd8e8f0542105846c317d45561394fffd78663888ba7dd3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/thebes_osiris/samples.json",
+      "bytes": 177183,
+      "sha256": "8060a130b0619cb6614c9dd4eb4f48c489cd0f3ba580e932a6d1db593a5060e5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/draft001/playback/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/save_batch.py",
+      "bytes": 4548,
+      "sha256": "f4194633e76dd92459a1c48ba959f9e2b5aded692f261377fd80f8cdfbb17ab2"
+    }
+  ]
+}

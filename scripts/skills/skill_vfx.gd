@@ -68,6 +68,9 @@ func color_for(id: String) -> Color:
 	return Color.from_hsv(float(presets.get(id, {}).get("hue", .58)), .5, 1.0)
 
 func emit_skill(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF) -> void:
+	var world := get_parent()
+	if world != null and world.get("combat_vfx") != null:
+		if world.combat_vfx.source_skill_event(id, phase, point): return
 	if phase in ["cast", "impact", "status", "resist"] and is_instance_valid(audio_pool): audio_pool.play_skill(id, point, phase)
 	if live.size() >= MAX_EFFECTS: return
 	var source: Dictionary = _source_sprite(id, phase, point)

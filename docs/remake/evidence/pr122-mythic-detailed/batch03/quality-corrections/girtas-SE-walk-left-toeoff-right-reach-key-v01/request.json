@@ -1,0 +1,52 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_walk_phase_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 5,
+  "intended_anatomical_support": "LEFT_TOE",
+  "references": [
+    "/workspace/scratch/girtas-SE-walk-left-toeoff-right-reach-key-v01/SEwalk_LEFT-midstance4-lossless.png",
+    "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+    "/workspace/scratch/girtas-SE-walk-left-toeoff-right-reach-key-v01/phase5-far-left-toe-support-near-right-reach-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SE-walk-left-toeoff-right-reach-key-v01/SEwalk_LEFT-midstance4-lossless.png": "8260a45836e489e6789f0e683837ff0d241399a1eda990bb2e6c2bfcea93cc78",
+    "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+    "/workspace/scratch/girtas-SE-walk-left-toeoff-right-reach-key-v01/phase5-far-left-toe-support-near-right-reach-guide.png": "c497feb07272ba92f99d371b28893c7ef291547a44339fe56aa99f4532d7d108"
+  },
+  "transparent_background": true,
+  "corrective_reason": "All5otherSEwalkposesvalid. LEFTpairrow1 copied LEFTcontact rather than moving nearRIGHT forward. Author SINGLE actual5 fromcorrectLEFTmidstance4 with explicit farLEFTtoe support/nearRIGHTlonglowerLEFTreach. Do not redo completed0-4.",
+  "prompt": "Edit FIRST image (actual correct LEFT-SUPPORT MIDSTANCE game4) into exactly ONE newly authored SE WALK GAME5: LEFT TOE-OFF SUPPORT + RIGHT FORWARD REACH. This SINGLE missing pose completes a genuine alternating walk; do not output2/6sheet. Image1 is the valid support-chain/body source: FAR LEFT leg is currently long flat at imageRIGHT, NEAR RIGHT leg is currently short bent passing. Those exact2leg identities MUST stay connected to same pelvis sides but their JOINTS NOW CHANGE. Image2 is original faithful SE neutral for face/gear/camera only, not legpose. Image3 is a materially new masked-leg kinematic target, GREEN nearRIGHT versus MAGENTA farLEFT. No guide marks in output.\n\nMANDATORY PHYSICAL JOINT CHANGES FROM FIRST IMAGE:\n1. The FAR anatomicalLEFT leg at IMAGERIGHT keeps TOE SUPPORT, but its LEFT HEEL NOW LIFTS HIGH so boot pivots onto the TOE tip, ankle strongly extended. LEFT leg goes slightly BEHIND/UP-RIGHT relative to advancing pelvis. It is no longer the big flat, long, FRONT/LOWER-RIGHT planted boot from game4. Show farLEFT raised heel and downward toe contacting receding ground, not whole boot flying.\n2. The NEAR anatomicalRIGHT leg at IMAGELEFT now UNFOLDS from game4 bent passing: RIGHT thigh swings FORWARD, knee straightens softly, shin extends DOWN toward foreground. RIGHT boot becomes the LONG LOWER-LEFT advancing boot, with RIGHT heel approaching landing just above ground and RIGHT toes tipped up. It will land in next contact0 but is NOT yet the flat support. NearRIGHT shin is the long front leg on IMAGELEFT; farLEFT boot is the shorter trailing TOE-support on UPPER-RIGHT. Do NOT keep LEFT long front planted or RIGHT short trailing. Do NOT repeat first image game4, or draw both legs in air.\n3. Pelvis moves over/reaches ahead of farLEFT toe support, a natural groundedWALK with only slight rise, no run/jump/attack. FreeLEFT arm counterbalances while weaponRIGHT arm still stabilizes original long blade. Robe/hair gently trail real shift. Reveal actual knees/ankles by parting existing LONG darkrobe panels; keep skirt length and goldtrim, no pants or extra limb.\n\nGuide approximate projected joints: GREEN NEAR RIGHT hip[287,365]\u2192knee[260,455]\u2192ankle[241,580]\u2192forwardboottoe[276,589], a long lowerLEFT reaching chain. MAGENTA FAR LEFT hip[347,360]\u2192knee[366,421]\u2192raisedheel[389,489]\u2192groundtoe[415,540], short upperRIGHT trailing TOE-support. The RIGHT reaching heel is lowerLEFT and toes UP. LEFT boot has heel UP and toes DOWN at upperRIGHT. Two complete coherent chains and exactly two boots. This ground/camera perspective is essential; never swap leg identities because of pose labels.\n\nIdentity/camera EXACT faithful selected SE: uncovered PALE face looking DOWNRIGHT, front3/4 chest notrear/side, long PALE hair, original goldenhorncrown and thin HARD STRAIGHT GOLD radialspines, blackgoldarmor, LONG DARK GOLD-TRIM layeredrobe. Original ONE LONG SINUOUS orangegold weapon in anatomicalRIGHT near hand at IMAGELEFT, LEFT far hand empty at IMAGERIGHT. Every limb/gear/spinetip/fullblade preserved, no mirror, extraarm, redVmask/flamefan/featherwings/shortbroadsword/newgear.\n\nOutput exactly ONE wholefigure isolated on transparent requested1024x1024PNG with body500-600px and wholegear<=800px, >=96px alpha0 outer margins, no clippedblade/spine/boot. Samefine gameart materials. Hard opaqueweaponoutline internalshine, NO outwardglow/haze/particles/shadows/floor/text/coloredguide/arrows/grid/blur/trails or duplicates. Finalcheck: farLEFT heel RAISED and TOEcontact UPPERRIGHT; nearRIGHT LONG REACH LOWERLEFT with heelapproach and toeup. Real NEW game5, not oldsupportpose.",
+  "requested_at": "2026-10-19T13:24:40.808600+00:00",
+  "source_contact_lineage": {
+    "source_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+    "source_sha256": "5b7921d64d52fa1c9b71e5edad98e1304fd1736c30418071862da7e842ed6d40",
+    "source_pose": 0,
+    "game_phase": 4,
+    "region": [
+      62,
+      15,
+      790,
+      837
+    ],
+    "rgba_sha256": "8e80df139ca18da01c03ce4184044f1f172030080d9a6c35683d03635542a62c",
+    "crop_path": "/workspace/scratch/girtas-SE-walk-left-toeoff-right-reach-key-v01/SEwalk_LEFT-midstance4-lossless.png",
+    "crop_sha256": "8260a45836e489e6789f0e683837ff0d241399a1eda990bb2e6c2bfcea93cc78",
+    "lossless_identity": true,
+    "source_visual_status": "PASS",
+    "partial_fullsheet_has_other_HOLD_row": true
+  },
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true,
+  "root_budget": "One additional distinct single missingphase5, then no further samephase calls onHOLD."
+}

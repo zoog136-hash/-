@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "SOURCE_QC_PENDING_NOT_APPROVED",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/girtas-E-run-right-flight-endpoint-v02.png",
+  "raw_sha256": "b686c0fdb315e6ed285d3789082f1424f14bed395a430008a188ddb173949e8f",
+  "raw_bytes": 1057206,
+  "request_path": "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/request-girtas-E-run-right-flight-endpoint-v02.json",
+  "request_sha256": "9fd61512e64bc607e12ae15ce481a9716dd76845b81e00d1f214b8ae151acaeb",
+  "corrective_reason": "AIR5 c73b58f3 has independent leg-art PASS but strict source HOLD from genuinely clipped EMPTY LEFT fist core24pixels at x1253/y501..524. Author ONLY missing fist endpoint with materially spacious exact-source padding; preserve original motion, old raw/HOLD immutable, no threshold/padding-only waiver. New generated body sameness must be independently rechecked, never claim pixel equality before exact assembly.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "region": [
+      39,
+      155,
+      1091,
+      881
+    ],
+    "distinct": 1,
+    "canvas_size": 2048
+  },
+  "intended_game_phase": 5,
+  "visual_findings": [
+    "Localized missing emptyLEFTfist endpoint restoration generated once on spacious exact-source reference. Old clipped source and HOLD preserved.",
+    "Fresh wholepose/identity/limb and endpoint review required; source body pixel equality not assumed."
+  ],
+  "visual_limitations": [
+    "No six-pose ground/root/composite or actor approval."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "generation_attempts": 1
+}

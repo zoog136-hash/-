@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "NW",
+  "role": "attack",
+  "version": "v05",
+  "source_batch": "batch03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "operation": "single missing recovery5 hand-chain correction; materially new low-pose primary conditioning",
+  "expected_poses": 1,
+  "replacement_rows": [
+    5
+  ],
+  "untouched_source_rows": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "not_assumed_valid_rows": [
+    3,
+    4
+  ],
+  "corrective_reason": "Previous two-pose edit fixed guard0 but copied a raised LOAD into intended recovery5. New single-pose edit uses exact existing LOW recovery5 as PRIMARY and successful guard0 only for correct far RIGHT arm ownership. No LOAD reference; retain low recovery/body stance and reconstruct both complete arm chains.",
+  "references": [
+    "/workspace/scratch/girtas-NW-attack-recovery5-repair-v05/reference-primary-old-LOW-recovery5.png",
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-attack-recovery5-repair-v05/reference-primary-old-LOW-recovery5.png": "936d51bb08793905f5798312d89d1837cd5599d7d06c2da735b6e312efc41194",
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723"
+  },
+  "reference_roles": [
+    "PRIMARY exact old LOW recovery5 body/stance, not wrong old weapon-hand authority",
+    "SECONDARY corrected guard0 v04 far RIGHT weapon arm and empty near LEFT anatomy only"
+  ],
+  "parent_source_pins": {
+    "old_NW_attack_v03": {
+      "path": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+      "sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935"
+    },
+    "corrected_guard0_v04": {
+      "path": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png",
+      "sha256": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723",
+      "scope": "source visual guard0 PASS only"
+    }
+  },
+  "prompt": "Make a LOCALIZED ANATOMICAL HAND-OWNERSHIP CORRECTION to the FIRST reference image, producing ONE SINGLE COMPLETE NW/back-left LOW RECOVERY sprite. FIRST reference is the exact required phase5 BODY/STANCE and LOW RELAXED ATTACK RECOVERY action. Keep its NW rear-left camera, head angle, crown, long pale hair, radial gold spines, dark long gold-trimmed skirt, two legs/feet placement and upright recovering stance. This is NOT an overhead attack/load pose. The second reference supplies ONLY the CORRECT SAME FAR RIGHT WEAPON ARM OWNERSHIP and exact original identity; do not replace the first reference pose wholesale or copy its arm positions blindly. There are NO raised-weapon references in this task.\n\nRequired surgical correction: the FIRST image wrongly puts the weapon in the NEAR anatomical LEFT arm (foreground image LEFT). COMPLETELY REMOVE the old wrong near-LEFT weapon grip AND its old weapon chain. Reconstruct that near LEFT shoulder, upper arm, elbow, forearm, wrist and one EMPTY relaxed hand, naturally hanging/resting at the image-left side, as demonstrated by the second reference. Do not leave a hand around the removed blade, duplicate fingers, a third arm, or a leftover glowing sword stump.\n\nReconstruct the weapon-bearing FAR anatomical RIGHT arm on the image RIGHT side of this rear-left model, matching the correct second reference: one continuous far RIGHT shoulder/upper-arm connection from the right side of the upper torso under/along the pale hair, one elbow lowered near the side of the waist, one forearm down to a LOW wrist/grip just outside the right hip/upper thigh. The RIGHT hand alone holds the original weapon, far/image RIGHT. Make the correct chain visibly readable along the right edge rather than floating or attaching to the near-left shoulder. The right shoulder is lowered, elbow BELOW the shoulder, wrist/grip BELOW THE WAIST: it is LOW RECOVERY, relaxed after a strike. BOTH hands MUST stay below the chest. NO ARM OVER THE HEAD. NO RAISED SWORD. NO LOAD, AIM, WINDUP OR CONTACT PHASE. Maintain exactly TWO arms and TWO hands. Near LEFT is empty; far RIGHT holds the weapon throughout.\n\nThe full original very LONG THIN sinuous orange/gold weapon with several flowing S-bends extends from that correct LOW RIGHT grip diagonally down toward image RIGHT, fully visible with its narrow tip, as demonstrated by reference2. It is never a broad short straight blade. Weapon is held low, not lifted, and cannot be in the near image-left hand. No mirroring of the whole model: the body still faces UP-LEFT/NW, long pale hair/back torso dominate and only the existing tiny left-side face/profile is visible. Feet and pelvis keep the FIRST reference NW pose.\n\nPreserve FIRST reference armor, thin hard GOLD radial back spines, gold crown, original dark LONG robe/skirt and gold hem/trim, original boots, pale flowing hair and original proportions. No red closed mask, feather fan, segmented pants, extra limbs or redesign. Keep its recovering weight placement and robe silhouette so this remains the missing existing recovery5, NOT a copy of another full phase.\n\nOutput exactly ONE isolated complete full-body sprite on transparent alpha0, 1024x1024 square. Crown-to-boots BODY about 460px high, entire full figure with EVERY spine and the entire long blade inside a centered maximum700x700 area, ample alpha0 margin all around. Uniform whole-model scaling only; do not shorten the weapon or crop ornaments. Crisp detailed original game rendering, original lighting. No ground, shadow, broad glow/halo, haze, blur, background, text, labels or extra sprites. Only the narrow physical blade and chest accents glow; no detached outer smoke. Again: ONE LOW RECOVERY NW sprite, RIGHT far hand weapon LOW, LEFT near hand EMPTY, exactly two complete arm chains.",
+  "transparent_background": true,
+  "attempt_policy": "EXACTLY ONE changed-conditioning single-pose image edit; preserve HOLD, no retry",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}

@@ -1,0 +1,47 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v04",
+  "status": "HOLD_NEAR_FAR_SUPPORT_EXCHANGE_UNPROVEN",
+  "source": "/workspace/scratch/girtas-E-walk-guide-v04/girtas-E-walk-v04.png",
+  "generated_sha256": "b55b61971b66f904e1cb8992293fb8082ffbf52cabd1851888f8e2f93e4f6635",
+  "generation_attempts": 1,
+  "method_changed": true,
+  "motion_guide": "/workspace/scratch/girtas-E-walk-guide-v04/girtas-E-walk-six-phase-support-guide-v04.png",
+  "motion_guide_sha256": "1852f96b2e2a05ec1d08202d50b7a2df9a7e64e1ef74822e88eebb16449ee3f2",
+  "prior_v03_hold_preserved_unchanged": true,
+  "visible_pose_count": 6,
+  "alpha_gt100_major_connected_components": 6,
+  "private_preview_bytes": 341155,
+  "private_images_shared_to_main": false,
+  "repo_mutations": false,
+  "identity_qc": "Major original identity retained: visible pale face/long pale hair, thin hard gold radial spines, long dark goldtrim skirt, long sinuous right-hand weapon. No old generic redesign identity used.",
+  "heading_qc": "All6 visibly face E consistently.",
+  "production_progress": "Conditioning changed from text-only phases to explicit near-blue/far-magenta hip-knee-ankle diagrams. Actual output now has lifted-knee/passing poses1 and4 rather than only the extended same-leg gait-like poses seen in v03.",
+  "functional_hold_findings": [
+    {
+      "phases": [
+        0,
+        3
+      ],
+      "finding": "Two intended opposite-side contact poses retain very similar front shin/boot and back boot relationships. Anatomical near/right versus far/left lead exchange cannot be visually established from overlap/shading."
+    },
+    {
+      "phases": [
+        1,
+        4
+      ],
+      "finding": "Both passing poses show essentially the same raised forward knee and planted center boot relationship. Expected opposite near/far support and occlusion are not established."
+    },
+    {
+      "phases": [
+        2,
+        5
+      ],
+      "finding": "Both advance poses have the same apparent front boot/back boot relationship rather than a clear opposite anatomical leg advance."
+    }
+  ],
+  "decision": "Preserve as identity-faithful articulated source with actual knee-pose improvement, but do not approve six genuine alternating gait phases or replace live finished walk. Needs independent limb-identity review or controlled authored leg rig/pose correction; no further image generation attempted in this task.",
+  "no_completion_claim": true
+}

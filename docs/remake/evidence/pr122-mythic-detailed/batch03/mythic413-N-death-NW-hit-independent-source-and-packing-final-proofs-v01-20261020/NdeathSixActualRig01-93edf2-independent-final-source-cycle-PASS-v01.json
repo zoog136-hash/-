@@ -1,0 +1,64 @@
+{
+  "schema": "PR122-independent-final-exact-request-source-cycle-review-v1",
+  "status": "PASS_EXACT_FINAL_N_DEATH_SIX_SOURCE_FALL_AND_HELD_DEAD_TERMINAL",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "death",
+  "version": "NdeathSixActualRig01",
+  "request_sha256": "93edf2e62deebdb4e77f187c44b85c42b8db433d928c30a87e847297f3bf599a",
+  "request_path": "/workspace/scratch/mythic413-N-death-actual-packed-r001-20261020/request-NdeathSixActualRig01.json",
+  "raw_sha256": "342d0ad9b651848313871346130131c3ffe0ebb36ce0eaef3b4da921df623792",
+  "raw_bytes": 2117836,
+  "raw_path": "/workspace/scratch/mythic413-N-death-actual-packed-r001-20261020/thunder_female-N-death-six-actual-poses-r001.png",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/actual-N-death-six-source-contract-v09.json",
+    "sha256": "42b774b1adc02f62ea2e95fece8862fcd51e755afb9e20815780f830e14cb65a",
+    "bytes": 22181
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Ndeath-v09-42b774-independent-actual-source-cycle-PASS-v01.json",
+    "sha256": "9dbffc8443daf0502df7139f5ea8bbb3c80bdca08e9400fa6cc3f2843d994af8",
+    "bytes": 6978
+  },
+  "exact_source_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Ndeath-v09-final-exact-request-source-binding-v01.json",
+    "sha256": "a2ef7ef5da71cb1d18055957c4bce2707a7cbd115f96870c891b72d310103dba",
+    "bytes": 5651
+  },
+  "physical_canvas": 1920,
+  "common_unpadded_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "uniform_integer_root_rounding_delta": [
+    0.1875,
+    0.3079468121195532
+  ],
+  "loop": false,
+  "terminal_pose_held": true,
+  "retained_runtime_death_seconds": 0.8,
+  "resource_role_seconds": 0.65,
+  "equal_weight_phase_seconds": 0.13333333333333333,
+  "visual_findings": [
+    "Six dedicated stagger, buckle, knee-catch, forward collapse, prone settle and held-dead poses articulate the actual pelvis, torso, head, arms, staff and complete boots. The sequence continues down into an irreversible dead terminal.",
+    "The actual RIGHT-held full double-ended staff/grip and the original blue/gold costume, white skirt, bun and ribbon remain coherent through the fall.",
+    "The old rigid upper-boot shaft was reassigned to its real calf node; native rounded leather/counter overlaps now close the previous rectangular cut in late collapse/terminal poses without shortening the complete boot/heel.",
+    "The first3 final sources, all fixed bones/body/head/grip controls, and the full original body/staff/cloth surfaces transfer exactly from the reviewed fall. Changes3..5 are confined to actual old/new leg semantics.",
+    "The complete shoe/staff source/raster surfaces, the reassigned leather and rounded joints, and terminal torso/cloth contacts satisfy the explicit finite floor model with positive guards and fixed bone lengths."
+  ],
+  "visual_limitations": [
+    "Final atlas/request preserves all six reviewed actual source RGBA pixels and the finite source/floor binding. One uniform root rounding adds no relative body/foot/gear change.",
+    "This approves actual source appearance, visible six-phase death progression and the explicit finite surface/floor model. Final atlas/request binding and actual Godot/Player/death-terminal checks remain pending.",
+    "Hidden anatomical depth and the unseen toe are declared constructive controls, not uniquely recovered image measurements. The35native torso hull and guards are stated assumptions.",
+    "Actual runtime uses retained death_duration .8s, distinct from the retained resource role specification .65s. Equal six weights give .133333s phases; actual runtime/fade/corpse behavior requires the integrated test.",
+    "Only this new N DEATH source is approved here; detailed actor completion count is unchanged."
+  ],
+  "images_forwarded": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

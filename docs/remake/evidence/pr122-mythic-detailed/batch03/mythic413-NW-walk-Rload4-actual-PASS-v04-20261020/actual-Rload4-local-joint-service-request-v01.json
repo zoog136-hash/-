@@ -1,0 +1,25 @@
+{
+  "tool": "image_gen__imagegen",
+  "args": {
+    "referenced_image_paths": [
+      "/workspace/scratch/mythic413-NW-walk-Rload4-author-20261020-v03/DERIVED-Rload4-native1254-actual-costume-control.png"
+    ],
+    "transparent_background": true,
+    "prompt": "Refine ONLY the current TWO LEG joint assembly and their hip joins IN PLACE on this existing native1254x1254 transparent sprite. This is the RIGHT support LOAD / LEFT passing phase of a WALK cycle, not a run or jump. The current exact leg and foot locations are intentional. The supplied image is a dedicated actual-costume pose control; repair pasted joint seams and the horizontal thigh cut beneath the skirt with natural freshly painted anatomy, maintaining two distinct hip-to-knee-to-ankle-to-shoe chains.\n\nThe anatomical RIGHT FAR leg is the SUPPORT / LOADING leg at SCREEN RIGHT. It is the straighter leg and the LOWER/RIGHT SMALLER shoe. Its narrow stiletto heel tip must stay at native(705,1015); its actual forefoot underside is around(676,988), sharing the same sloping northwest ground plane. Its knee is around(659,820) and ankle around(691,955). Naturally resolve weight acceptance/knee loading and a complete heel-to-flat shoe. Keep both its heel and forefoot where they are. Preserve ornate black leather/gold boot and entire pointed gold/black shoe. Do not change the current foot scale or move it down.\n\nThe anatomical LEFT NEAR leg is the PASSING / SWING leg at SCREEN LEFT. Its knee bends around(605,815), ankle around(630,878). Its complete raised shoe is the UPPER/LEFT LARGER shoe, with stiletto heel near(670,975). This LEFT foot is unweighted and lifted; it must remain distinct from the smaller supporting RIGHT boot behind it. Keep one continuous LEFT calf/ankle connection and its own single complete shoe and heel. Do not fuse overlapping shoes or turn a heel into a cuff. Keep the original slender adult thigh/shin widths and consistent physical proportions. Repair current segment seams, distorted cloth/leather edges, skirt-to-thigh gaps and any tiny obsolete cutout fragments; do not create extra or missing legs, knees, feet, floating gold, or a third shoe.\n\nKeep EVERYTHING above the thigh openings EXACTLY as it is: current true rear northwest three-quarter back, blonde braided bun and blue ribbons, blue/gold backbodice, white pleated skirt at its current y position, intricate blue/gold coat tails, free anatomical LEFT blackgloved arm swinging forward toward screenleft, and anatomical RIGHT far hand gripping the entire rigid gold/turquoise double-ended staff at screenright. The body and staff are already correctly bobbed together; do not resize, recenter, rotate, mirror, lower the body, extend the legs, move the waist, change clothing or weapon, restore a previous leg pose, or add another skirt band. Native1254 canvas and original body position/size, transparent background. No floor, shadow, guide, labels, text, aura or glow. ONE complete existing character with newly refined current RIGHT-loading/LEFT-passing legs only."
+  },
+  "source_control_sha256": "dcfc5070245499296d275aabc76db4b68b7526f867ba5f812927254b0a6f8f6f",
+  "fixed_C": 2048,
+  "common_root": [
+    641,
+    1058.3
+  ],
+  "body_bob": [
+    0,
+    4
+  ],
+  "rigid_staff_translation_withbody": [
+    0,
+    4
+  ],
+  "approval_added": 0
+}

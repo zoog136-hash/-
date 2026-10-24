@@ -1,0 +1,1181 @@
+{
+  "status": "ACTUAL_FULL_SOURCE_AND_RASTER_TEXEL_QUADS_FLOOR_AND_FIXED_TERMINAL_MODEL_PENDING_INDEPENDENT_REVIEW",
+  "actor": "transform:413",
+  "motion": "death",
+  "direction": "N",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/actual-N-death-six-source-contract-v08.json",
+    "sha256": "ce247e3fa0e961ad4701f64059ed37e9320bfc0a2d0cf343abcf1ef117147884"
+  },
+  "camera": {
+    "C": 1920,
+    "bodyunit": 1.875,
+    "common_unpadded_root": [
+      662.8125,
+      917.6920531878804
+    ],
+    "projection": "screenX=X;screenY=917.6920531878804+.45D-Z"
+  },
+  "timing": {
+    "retained_runtime_seconds": 0.8,
+    "equal_phase_seconds": 0.13333333333333333,
+    "resource_spec_seconds": 0.65,
+    "resource_fps": 9.23076923076923,
+    "profile_modified": false,
+    "loop": false,
+    "terminal_frame": 5,
+    "terminal_held_after_seconds": 0.8
+  },
+  "planes": "Exact same source-plane U,V, rigid SO3 arm/staff interpolation, heel/pitch/parity transform and floor-arclength cloth as actual renderer. Source alpha>0 and resulting editable raster alpha>0 are ALL included; texel quad radius .5 bounded analytically. No source alpha threshold relaxation or global height/root fit.",
+  "sole": "Front structural heel6.105 is a fixed local source calibration for the source sole3native+texelquad+2Zskin. Depthoffset13.5666667 preserves SAME actual image heel. Theta=asin(-6.105/90) puts only the declared occluded foretoe control at floor; visible painted heel skin stays above floor. In later collapsed poses original back-shoe surfaces are raised while fixed90foot controls describe the unseen toe. Those controls are not measured bitmap vertices.",
+  "terminal": "A fixed35native back-to-front torso hull derived from the actual bodice source region comes to floor at final rigid prone backsurfaceH35; separate head reaches pitch90 and remains dead. All visible source/raster backsurfaces stay above floor; head/face anatomy is not uniquely reconstructed. Cloth has actual floor10 and does not rise again on terminal.",
+  "limits": [
+    "One finite compatible chosen 2.5D artwork/bone model; no claim of unique hidden anatomy or complete volumetric sole geometry.",
+    "This proof covers actual shoe/staff/head/torso source/raster surface floor clearance, fixed-bone geometry, cloth floor arclength and the chosen torso support hull. Occluded toe controls are explicitly rig-only.",
+    "Independent actual death source/contact/gear/terminal and real-game validation remain required."
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "clock_range": [
+        0.0,
+        0.13333333333333333
+      ],
+      "shoe": [
+        {
+          "all_source_alpha_gt0_pixels": 6089,
+          "all_raster_alpha_gt0_pixels": 5894,
+          "source_texel_quad_plus_guard_min_Z": 0.49084382461674325,
+          "raster_texel_quad_plus_guard_min_Z": 1.3804132056760228,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "L",
+          "profile": "front",
+          "source_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+          "raster_sha256": "d89e2dc639a63299a194b5c5d7c30e69ca10646be7ae80ff9c74e5f77cdbec48",
+          "rigid_U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.0702075,
+            -1.032616050109502
+          ],
+          "source_capture_g": 0.9661835748792271,
+          "structural_heel": [
+            607.0,
+            193.56666666666666,
+            6.105
+          ],
+          "theta": -3.889550479406722,
+          "occluded_toe_control": [
+            607.0,
+            103.77396665714473,
+            0.0
+          ]
+        },
+        {
+          "all_source_alpha_gt0_pixels": 6089,
+          "all_raster_alpha_gt0_pixels": 5894,
+          "source_texel_quad_plus_guard_min_Z": 0.49084382461674325,
+          "raster_texel_quad_plus_guard_min_Z": 1.3804132056760228,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "R",
+          "profile": "front",
+          "source_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+          "raster_sha256": "ccc7fd6f26e99f5dc25662b2d8cd5e356e96d99a736014acc2fa233f03e831d0",
+          "rigid_U": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.0702075,
+            -1.032616050109502
+          ],
+          "source_capture_g": 0.9661835748792271,
+          "structural_heel": [
+            718.0,
+            193.56666666666666,
+            6.105
+          ],
+          "theta": -3.889550479406722,
+          "occluded_toe_control": [
+            718.0,
+            103.77396665714473,
+            0.0
+          ]
+        }
+      ],
+      "whole_staff": {
+        "all_source_alpha_gt0_pixels": 26894,
+        "all_raster_alpha_gt0_pixels": 25310,
+        "source_texel_quad_plus_guard_min_Z": 175.95128086562738,
+        "raster_texel_quad_plus_guard_min_Z": 176.58143017601395,
+        "Z_guard_native": 8.0,
+        "above_floor": true,
+        "source_material": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/native-RIGHT-actual-restored-full-shaft-and-both-ends.png",
+        "source_sha256": "88d967ceefc2494690092444f990dcb96c25894d05a669b45186d1db291dee68",
+        "raster_sha256": "3c589c2aaa6c83686739cab00eead18768ce8a71032273094256f7530edc9267",
+        "U_unit_residual": 0.0,
+        "V_unit_residual": 3.3306690738754696e-16,
+        "orthogonal_residual": 6.706325455711901e-18,
+        "elbow_grip_rigid_anchor": [
+          754.7685916464976,
+          180.0,
+          478.8271047577318
+        ]
+      },
+      "actual_torso_backsurface": {
+        "all_source_alpha_gt0_pixels": 36717,
+        "all_raster_alpha_gt0_pixels": 36335,
+        "source_texel_quad_plus_guard_min_Z": 341.1267014170384,
+        "raster_texel_quad_plus_guard_min_Z": 340.19205318788045,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "actual_head_ribbon_backsurface": {
+        "all_source_alpha_gt0_pixels": 26049,
+        "all_raster_alpha_gt0_pixels": 24974,
+        "source_texel_quad_plus_guard_min_Z": 530.5936497354726,
+        "raster_texel_quad_plus_guard_min_Z": 532.1920531878804,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "chosen_native_torso_front_support_hull": {
+        "fixed_back_to_front_thickness": 35.0,
+        "source_native_support_region": [
+          585,
+          430,
+          713,
+          579
+        ],
+        "original_actual_material_pixels": 18235,
+        "front_hull_min_Z": 423.47962289745044,
+        "at_floor_terminal": false
+      },
+      "cloth": [
+        {
+          "side": "LEFT",
+          "actual_source_alpha_gt0_pixels": 21182,
+          "source_native_root": [
+            590,
+            628
+          ],
+          "rig_root": [
+            589.6197725410799,
+            180.0,
+            382.11171018124253
+          ],
+          "native_arclength_angle": 0,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 146.11171018124253,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        },
+        {
+          "side": "RIGHT",
+          "actual_source_alpha_gt0_pixels": 17809,
+          "source_native_root": [
+            701,
+            628
+          ],
+          "rig_root": [
+            700.3493821199204,
+            180.0,
+            374.3687415956446
+          ],
+          "native_arclength_angle": 0,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 200.36874159564462,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "clock_range": [
+        0.13333333333333333,
+        0.26666666666666666
+      ],
+      "shoe": [
+        {
+          "all_source_alpha_gt0_pixels": 6089,
+          "all_raster_alpha_gt0_pixels": 5894,
+          "source_texel_quad_plus_guard_min_Z": 0.49084382461674325,
+          "raster_texel_quad_plus_guard_min_Z": 1.3804132056760228,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "L",
+          "profile": "front",
+          "source_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+          "raster_sha256": "d89e2dc639a63299a194b5c5d7c30e69ca10646be7ae80ff9c74e5f77cdbec48",
+          "rigid_U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.0702075,
+            -1.032616050109502
+          ],
+          "source_capture_g": 0.9661835748792271,
+          "structural_heel": [
+            607.0,
+            193.56666666666666,
+            6.105
+          ],
+          "theta": -3.889550479406722,
+          "occluded_toe_control": [
+            607.0,
+            103.77396665714473,
+            0.0
+          ]
+        },
+        {
+          "all_source_alpha_gt0_pixels": 6089,
+          "all_raster_alpha_gt0_pixels": 5894,
+          "source_texel_quad_plus_guard_min_Z": 0.49084382461674325,
+          "raster_texel_quad_plus_guard_min_Z": 1.3804132056760228,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "R",
+          "profile": "front",
+          "source_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+          "raster_sha256": "ccc7fd6f26e99f5dc25662b2d8cd5e356e96d99a736014acc2fa233f03e831d0",
+          "rigid_U": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.0702075,
+            -1.032616050109502
+          ],
+          "source_capture_g": 0.9661835748792271,
+          "structural_heel": [
+            718.0,
+            193.56666666666666,
+            6.105
+          ],
+          "theta": -3.889550479406722,
+          "occluded_toe_control": [
+            718.0,
+            103.77396665714473,
+            0.0
+          ]
+        }
+      ],
+      "whole_staff": {
+        "all_source_alpha_gt0_pixels": 26894,
+        "all_raster_alpha_gt0_pixels": 24030,
+        "source_texel_quad_plus_guard_min_Z": 117.48596475969619,
+        "raster_texel_quad_plus_guard_min_Z": 117.75807963185989,
+        "Z_guard_native": 8.0,
+        "above_floor": true,
+        "source_material": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/native-RIGHT-actual-restored-full-shaft-and-both-ends.png",
+        "source_sha256": "88d967ceefc2494690092444f990dcb96c25894d05a669b45186d1db291dee68",
+        "raster_sha256": "5ea96c49297bb820feff61a9cc5debd30101d698f5143171dccf16aabb6237d5",
+        "U_unit_residual": 0.0,
+        "V_unit_residual": 0.0,
+        "orthogonal_residual": 6.4403809526501496e-18,
+        "elbow_grip_rigid_anchor": [
+          755.25077944144,
+          85.79798566743312,
+          381.22504609803104
+        ]
+      },
+      "actual_torso_backsurface": {
+        "all_source_alpha_gt0_pixels": 36717,
+        "all_raster_alpha_gt0_pixels": 39707,
+        "source_texel_quad_plus_guard_min_Z": 259.4955253933549,
+        "raster_texel_quad_plus_guard_min_Z": 257.9500065134829,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "actual_head_ribbon_backsurface": {
+        "all_source_alpha_gt0_pixels": 26049,
+        "all_raster_alpha_gt0_pixels": 26557,
+        "source_texel_quad_plus_guard_min_Z": 442.9368687524353,
+        "raster_texel_quad_plus_guard_min_Z": 444.453278886325,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "chosen_native_torso_front_support_hull": {
+        "fixed_back_to_front_thickness": 35.0,
+        "source_native_support_region": [
+          585,
+          430,
+          713,
+          579
+        ],
+        "original_actual_material_pixels": 18235,
+        "front_hull_min_Z": 320.4093101803403,
+        "at_floor_terminal": false
+      },
+      "cloth": [
+        {
+          "side": "LEFT",
+          "actual_source_alpha_gt0_pixels": 21182,
+          "source_native_root": [
+            590,
+            628
+          ],
+          "rig_root": [
+            584.6641914939928,
+            122.73616114660535,
+            302.71525559571387
+          ],
+          "native_arclength_angle": 10,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 70.2702413908572,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        },
+        {
+          "side": "RIGHT",
+          "actual_source_alpha_gt0_pixels": 17809,
+          "source_native_root": [
+            701,
+            628
+          ],
+          "rig_root": [
+            694.5839471243071,
+            122.73616114660535,
+            287.2670413891466
+          ],
+          "native_arclength_angle": 10,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 115.88010787104682,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "clock_range": [
+        0.26666666666666666,
+        0.4000000000000001
+      ],
+      "shoe": [
+        {
+          "all_source_alpha_gt0_pixels": 6089,
+          "all_raster_alpha_gt0_pixels": 5894,
+          "source_texel_quad_plus_guard_min_Z": 0.49084382461674325,
+          "raster_texel_quad_plus_guard_min_Z": 1.3804132056760228,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "L",
+          "profile": "front",
+          "source_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+          "raster_sha256": "d89e2dc639a63299a194b5c5d7c30e69ca10646be7ae80ff9c74e5f77cdbec48",
+          "rigid_U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.0702075,
+            -1.032616050109502
+          ],
+          "source_capture_g": 0.9661835748792271,
+          "structural_heel": [
+            607.0,
+            193.56666666666666,
+            6.105
+          ],
+          "theta": -3.889550479406722,
+          "occluded_toe_control": [
+            607.0,
+            103.77396665714473,
+            0.0
+          ]
+        },
+        {
+          "all_source_alpha_gt0_pixels": 6089,
+          "all_raster_alpha_gt0_pixels": 5894,
+          "source_texel_quad_plus_guard_min_Z": 0.49084382461674325,
+          "raster_texel_quad_plus_guard_min_Z": 1.3804132056760228,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "R",
+          "profile": "front",
+          "source_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+          "raster_sha256": "ccc7fd6f26e99f5dc25662b2d8cd5e356e96d99a736014acc2fa233f03e831d0",
+          "rigid_U": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.0702075,
+            -1.032616050109502
+          ],
+          "source_capture_g": 0.9661835748792271,
+          "structural_heel": [
+            718.0,
+            193.56666666666666,
+            6.105
+          ],
+          "theta": -3.889550479406722,
+          "occluded_toe_control": [
+            718.0,
+            103.77396665714473,
+            0.0
+          ]
+        }
+      ],
+      "whole_staff": {
+        "all_source_alpha_gt0_pixels": 26894,
+        "all_raster_alpha_gt0_pixels": 20769,
+        "source_texel_quad_plus_guard_min_Z": 60.74742619906303,
+        "raster_texel_quad_plus_guard_min_Z": 61.07400257960845,
+        "Z_guard_native": 8.0,
+        "above_floor": true,
+        "source_material": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/native-RIGHT-actual-restored-full-shaft-and-both-ends.png",
+        "source_sha256": "88d967ceefc2494690092444f990dcb96c25894d05a669b45186d1db291dee68",
+        "raster_sha256": "c5bcd3bd2b4a473de71b950fe3d71510a6aa7c9399a1d794bca018e0fb7301a5",
+        "U_unit_residual": 0.0,
+        "V_unit_residual": 2.220446049250313e-16,
+        "orthogonal_residual": 3.434437349674429e-17,
+        "elbow_grip_rigid_anchor": [
+          758.1705388251423,
+          -114.07256009868166,
+          245.51468144719274
+        ]
+      },
+      "actual_torso_backsurface": {
+        "all_source_alpha_gt0_pixels": 36717,
+        "all_raster_alpha_gt0_pixels": 36291,
+        "source_texel_quad_plus_guard_min_Z": 186.2963484534035,
+        "raster_texel_quad_plus_guard_min_Z": 185.65086110874225,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "actual_head_ribbon_backsurface": {
+        "all_source_alpha_gt0_pixels": 26049,
+        "all_raster_alpha_gt0_pixels": 27102,
+        "source_texel_quad_plus_guard_min_Z": 314.50304847846917,
+        "raster_texel_quad_plus_guard_min_Z": 316.40942417600945,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "chosen_native_torso_front_support_hull": {
+        "fixed_back_to_front_thickness": 35.0,
+        "source_native_support_region": [
+          585,
+          430,
+          713,
+          579
+        ],
+        "original_actual_material_pixels": 18235,
+        "front_hull_min_Z": 208.5528521680224,
+        "at_floor_terminal": false
+      },
+      "cloth": [
+        {
+          "side": "LEFT",
+          "actual_source_alpha_gt0_pixels": 21182,
+          "source_native_root": [
+            590,
+            628
+          ],
+          "rig_root": [
+            579.1794875467857,
+            5.945158603819154,
+            222.4045968983262
+          ],
+          "native_arclength_angle": 32,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 21.961342397722518,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        },
+        {
+          "side": "RIGHT",
+          "actual_source_alpha_gt0_pixels": 17809,
+          "source_native_root": [
+            701,
+            628
+          ],
+          "rig_root": [
+            688.4931481311409,
+            5.945158603819154,
+            203.12964917729693
+          ],
+          "native_arclength_angle": 32,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 55.26537663839167,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "clock_range": [
+        0.4000000000000001,
+        0.5333333333333333
+      ],
+      "shoe": [
+        {
+          "all_source_alpha_gt0_pixels": 7788,
+          "all_raster_alpha_gt0_pixels": 6924,
+          "source_texel_quad_plus_guard_min_Z": 61.8138288271772,
+          "raster_texel_quad_plus_guard_min_Z": 62.2667387820684,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "L",
+          "profile": "back",
+          "source_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+          "raster_sha256": "fbd43dbbaa0d22cb40d4de7688025e270022719f3115172c72a642d445a14267",
+          "rigid_U": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.7021325447251736,
+            -0.5891591593164583
+          ],
+          "source_capture_g": 1.0910254037844387,
+          "structural_heel": [
+            607.0,
+            180.0,
+            70.0
+          ],
+          "theta": -50,
+          "occluded_toe_control": [
+            607.0,
+            122.14911512821146,
+            1.05600011929198
+          ]
+        },
+        {
+          "all_source_alpha_gt0_pixels": 7788,
+          "all_raster_alpha_gt0_pixels": 6924,
+          "source_texel_quad_plus_guard_min_Z": 61.8138288271772,
+          "raster_texel_quad_plus_guard_min_Z": 62.2667387820684,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "R",
+          "profile": "back",
+          "source_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+          "raster_sha256": "47933f6a1250d66ac134c356ba4fb93c7201a10cde4c64f70785746c7dfec5bc",
+          "rigid_U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.7021325447251736,
+            -0.5891591593164583
+          ],
+          "source_capture_g": 1.0910254037844387,
+          "structural_heel": [
+            718.0,
+            180.0,
+            70.0
+          ],
+          "theta": -50,
+          "occluded_toe_control": [
+            718.0,
+            122.14911512821146,
+            1.05600011929198
+          ]
+        }
+      ],
+      "whole_staff": {
+        "all_source_alpha_gt0_pixels": 26894,
+        "all_raster_alpha_gt0_pixels": 16246,
+        "source_texel_quad_plus_guard_min_Z": 80.12392463250413,
+        "raster_texel_quad_plus_guard_min_Z": 80.28710313828178,
+        "Z_guard_native": 8.0,
+        "above_floor": true,
+        "source_material": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/native-RIGHT-actual-restored-full-shaft-and-both-ends.png",
+        "source_sha256": "88d967ceefc2494690092444f990dcb96c25894d05a669b45186d1db291dee68",
+        "raster_sha256": "afd45bb88999ca2013b190c953083e6ac827f0186c2abc601079526fb743f8ac",
+        "U_unit_residual": 0.0,
+        "V_unit_residual": 2.220446049250313e-16,
+        "orthogonal_residual": 1.387643886691849e-16,
+        "elbow_grip_rigid_anchor": [
+          736.72795143173,
+          -254.35978696046786,
+          171.4963092328316
+        ]
+      },
+      "actual_torso_backsurface": {
+        "all_source_alpha_gt0_pixels": 36717,
+        "all_raster_alpha_gt0_pixels": 26202,
+        "source_texel_quad_plus_guard_min_Z": 191.12764472043617,
+        "raster_texel_quad_plus_guard_min_Z": 190.8305240156296,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "actual_head_ribbon_backsurface": {
+        "all_source_alpha_gt0_pixels": 26049,
+        "all_raster_alpha_gt0_pixels": 23511,
+        "source_texel_quad_plus_guard_min_Z": 229.54733733860328,
+        "raster_texel_quad_plus_guard_min_Z": 229.68043935015427,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "chosen_native_torso_front_support_hull": {
+        "fixed_back_to_front_thickness": 35.0,
+        "source_native_support_region": [
+          585,
+          430,
+          713,
+          579
+        ],
+        "original_actual_material_pixels": 18235,
+        "front_hull_min_Z": 180.4424982707677,
+        "at_floor_terminal": false
+      },
+      "cloth": [
+        {
+          "side": "LEFT",
+          "actual_source_alpha_gt0_pixels": 21182,
+          "source_native_root": [
+            590,
+            628
+          ],
+          "rig_root": [
+            575.0146657778807,
+            -92.34956195229572,
+            207.7589465677645
+          ],
+          "native_arclength_angle": 53,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 64.93423115018518,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        },
+        {
+          "side": "RIGHT",
+          "actual_source_alpha_gt0_pixels": 17809,
+          "source_native_root": [
+            701,
+            628
+          ],
+          "rig_root": [
+            685.7442753567212,
+            -92.34956195229572,
+            200.01597798216656
+          ],
+          "native_arclength_angle": 53,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 94.50379400001424,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "clock_range": [
+        0.5333333333333333,
+        0.6666666666666666
+      ],
+      "shoe": [
+        {
+          "all_source_alpha_gt0_pixels": 7788,
+          "all_raster_alpha_gt0_pixels": 4328,
+          "source_texel_quad_plus_guard_min_Z": 86.32881447198362,
+          "raster_texel_quad_plus_guard_min_Z": 86.50567792228351,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "L",
+          "profile": "back",
+          "source_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+          "raster_sha256": "743e5d4b6ddfabe22cdf258fcb7b285bd3e8f11aebdf6482c588b609f0a147b7",
+          "rigid_U": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.902644200214043,
+            -0.15916052647774942
+          ],
+          "source_capture_g": 1.0910254037844387,
+          "structural_heel": [
+            607.0,
+            310.0,
+            90.0
+          ],
+          "theta": -80,
+          "occluded_toe_control": [
+            607.0,
+            294.37166400997626,
+            1.3673022289012806
+          ]
+        },
+        {
+          "all_source_alpha_gt0_pixels": 7788,
+          "all_raster_alpha_gt0_pixels": 4328,
+          "source_texel_quad_plus_guard_min_Z": 86.32881447198362,
+          "raster_texel_quad_plus_guard_min_Z": 86.50567792228351,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "R",
+          "profile": "back",
+          "source_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+          "raster_sha256": "b16f103af5c62e58190503c61fdc5ed7cd6d535d0a9f76def9fd48d12afc17b6",
+          "rigid_U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.902644200214043,
+            -0.15916052647774942
+          ],
+          "source_capture_g": 1.0910254037844387,
+          "structural_heel": [
+            718.0,
+            310.0,
+            90.0
+          ],
+          "theta": -80,
+          "occluded_toe_control": [
+            718.0,
+            294.37166400997626,
+            1.3673022289012806
+          ]
+        }
+      ],
+      "whole_staff": {
+        "all_source_alpha_gt0_pixels": 26894,
+        "all_raster_alpha_gt0_pixels": 11665,
+        "source_texel_quad_plus_guard_min_Z": 3.9999999999999556,
+        "raster_texel_quad_plus_guard_min_Z": 3.9999999999999556,
+        "Z_guard_native": 8.0,
+        "above_floor": true,
+        "source_material": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/native-RIGHT-actual-restored-full-shaft-and-both-ends.png",
+        "source_sha256": "88d967ceefc2494690092444f990dcb96c25894d05a669b45186d1db291dee68",
+        "raster_sha256": "ecf29e29ba58288ec602e900911192642dfbb6e3049e87258bf3967dd689aa2a",
+        "U_unit_residual": 0.0,
+        "V_unit_residual": 1.1102230246251565e-16,
+        "orthogonal_residual": 0.0,
+        "elbow_grip_rigid_anchor": [
+          735.0,
+          -244.94991235216855,
+          12.0
+        ]
+      },
+      "actual_torso_backsurface": {
+        "all_source_alpha_gt0_pixels": 36717,
+        "all_raster_alpha_gt0_pixels": 17826,
+        "source_texel_quad_plus_guard_min_Z": 31.516771390143703,
+        "raster_texel_quad_plus_guard_min_Z": 31.501550026442118,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "actual_head_ribbon_backsurface": {
+        "all_source_alpha_gt0_pixels": 26049,
+        "all_raster_alpha_gt0_pixels": 17647,
+        "source_texel_quad_plus_guard_min_Z": 18.65355940839222,
+        "raster_texel_quad_plus_guard_min_Z": 19.181143342193884,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "chosen_native_torso_front_support_hull": {
+        "fixed_back_to_front_thickness": 35.0,
+        "source_native_support_region": [
+          585,
+          430,
+          713,
+          579
+        ],
+        "original_actual_material_pixels": 18235,
+        "front_hull_min_Z": 1.4870999158366942,
+        "at_floor_terminal": false
+      },
+      "cloth": [
+        {
+          "side": "LEFT",
+          "actual_source_alpha_gt0_pixels": 21182,
+          "source_native_root": [
+            590,
+            628
+          ],
+          "rig_root": [
+            577.0,
+            -132.00487338384724,
+            34.720804026379994
+          ],
+          "native_arclength_angle": 73,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 8.0,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        },
+        {
+          "side": "RIGHT",
+          "actual_source_alpha_gt0_pixels": 17809,
+          "source_native_root": [
+            701,
+            628
+          ],
+          "rig_root": [
+            688.0,
+            -132.00487338384724,
+            34.720804026379994
+          ],
+          "native_arclength_angle": 73,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 8.0,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": false
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "clock_range": [
+        0.6666666666666666,
+        0.8000000000000002
+      ],
+      "shoe": [
+        {
+          "all_source_alpha_gt0_pixels": 7788,
+          "all_raster_alpha_gt0_pixels": 3159,
+          "source_texel_quad_plus_guard_min_Z": 88.0,
+          "raster_texel_quad_plus_guard_min_Z": 88.0,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "L",
+          "profile": "back",
+          "source_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+          "raster_sha256": "01ab6c6788fbca64a56955e9381b2bf9be3d7a649ee725b41ef59cb0f1d2a0d3",
+          "rigid_U": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.9165689419616638,
+            -5.612366104856139e-17
+          ],
+          "source_capture_g": 1.0910254037844387,
+          "structural_heel": [
+            607.0,
+            307.0,
+            90.0
+          ],
+          "theta": -90,
+          "occluded_toe_control": [
+            607.0,
+            307.0,
+            0.0
+          ]
+        },
+        {
+          "all_source_alpha_gt0_pixels": 7788,
+          "all_raster_alpha_gt0_pixels": 3159,
+          "source_texel_quad_plus_guard_min_Z": 88.0,
+          "raster_texel_quad_plus_guard_min_Z": 88.0,
+          "Z_guard_native": 2.0,
+          "above_floor": true,
+          "side": "R",
+          "profile": "back",
+          "source_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+          "raster_sha256": "ad0fe8edfd5dda460b5ae50915cf2b29e93e8e9d2d1b04be071846688778ddd2",
+          "rigid_U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "rigid_V": [
+            0.0,
+            0.9165689419616638,
+            -5.612366104856139e-17
+          ],
+          "source_capture_g": 1.0910254037844387,
+          "structural_heel": [
+            718.0,
+            307.0,
+            90.0
+          ],
+          "theta": -90,
+          "occluded_toe_control": [
+            718.0,
+            307.0,
+            0.0
+          ]
+        }
+      ],
+      "whole_staff": {
+        "all_source_alpha_gt0_pixels": 26894,
+        "all_raster_alpha_gt0_pixels": 11334,
+        "source_texel_quad_plus_guard_min_Z": 3.9999999999999556,
+        "raster_texel_quad_plus_guard_min_Z": 3.9999999999999556,
+        "Z_guard_native": 8.0,
+        "above_floor": true,
+        "source_material": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v08/native-RIGHT-actual-restored-full-shaft-and-both-ends.png",
+        "source_sha256": "88d967ceefc2494690092444f990dcb96c25894d05a669b45186d1db291dee68",
+        "raster_sha256": "18293979f2be2a37e728bbd353b1373dec3d7c19a6102295d71de829b1d34d1e",
+        "U_unit_residual": 0.0,
+        "V_unit_residual": 1.1102230246251565e-16,
+        "orthogonal_residual": 0.0,
+        "elbow_grip_rigid_anchor": [
+          735.0,
+          -253.0232589591813,
+          12.0
+        ]
+      },
+      "actual_torso_backsurface": {
+        "all_source_alpha_gt0_pixels": 36717,
+        "all_raster_alpha_gt0_pixels": 16458,
+        "source_texel_quad_plus_guard_min_Z": 33.0,
+        "raster_texel_quad_plus_guard_min_Z": 33.0,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "actual_head_ribbon_backsurface": {
+        "all_source_alpha_gt0_pixels": 26049,
+        "all_raster_alpha_gt0_pixels": 11368,
+        "source_texel_quad_plus_guard_min_Z": 33.00000000000001,
+        "raster_texel_quad_plus_guard_min_Z": 33.00000000000001,
+        "Z_guard_native": 2.0,
+        "above_floor": true
+      },
+      "chosen_native_torso_front_support_hull": {
+        "fixed_back_to_front_thickness": 35.0,
+        "source_native_support_region": [
+          585,
+          430,
+          713,
+          579
+        ],
+        "original_actual_material_pixels": 18235,
+        "front_hull_min_Z": 0.0,
+        "at_floor_terminal": true
+      },
+      "cloth": [
+        {
+          "side": "LEFT",
+          "actual_source_alpha_gt0_pixels": 21182,
+          "source_native_root": [
+            590,
+            628
+          ],
+          "rig_root": [
+            577.0,
+            -142.0,
+            35.0
+          ],
+          "native_arclength_angle": 65,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 8.0,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": true
+        },
+        {
+          "side": "RIGHT",
+          "actual_source_alpha_gt0_pixels": 17809,
+          "source_native_root": [
+            701,
+            628
+          ],
+          "rig_root": [
+            688.0,
+            -142.0,
+            35.0
+          ],
+          "native_arclength_angle": 65,
+          "fixed_floor": 10.0,
+          "fixed_Z_guard": 2.0,
+          "all_source_material_min_Z_guard": 8.0,
+          "continuous_drape_floor_lower_bound_Z_guard": 8.0,
+          "true_arc_length": "s below first floor hit: D+=sin(theta)*s,Z-=cos(theta)*s; remaining arc follows floor with unit D progression",
+          "terminal_keeps_floor_contact": true
+        }
+      ]
+    }
+  ],
+  "min_all_shoe_source_and_raster_guard": 0.49084382461674325,
+  "min_all_staff_source_and_raster_guard": 3.9999999999999556,
+  "editable_actual_part_files": [
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-LEFT-coat-exact-alpha-matte.png",
+      "sha256": "eb48576f3bf0c93b030205baea26363ac2c25941df94dd81cc3563bc3fad0b04",
+      "bytes": 9187
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-LEFT-complete-curved-forearm-hand-exact-alpha-matte.png",
+      "sha256": "1fea5e1b4f65bd31f7e1d192d6c4d526e81e25cf01fc1723c9806ab0ba0835d9",
+      "bytes": 5645
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-LEFT-upperarm-native-curved-cuff-exact-alpha-matte.png",
+      "sha256": "047b95643961cb052beb7c3eef7c4bca622e52a73026ca6d8b4d68531f231fc5",
+      "bytes": 3711
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-RIGHT-actual-original-visible-staff-semantic-exact-alpha-matte.png",
+      "sha256": "3d5951bbda9bf45130fa8e9c3685933c6a025c3db8ca4a893ba41f2d260c592a",
+      "bytes": 15776
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-RIGHT-actual-restored-full-shaft-and-both-ends-exact-alpha-matte.png",
+      "sha256": "3a250272e3490b8526f62a99d2f6e8ee149357f4854b9535977dee8e7ab235ba",
+      "bytes": 15142
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-RIGHT-coat-exact-alpha-matte.png",
+      "sha256": "5abb5f3bf78bee65d9f179caa8cc1109d87bbdd8cc49c33f4fdde330fc5f7b83",
+      "bytes": 6532
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-RIGHT-complete-forearm-grip-full-restored-staff-exact-alpha-matte.png",
+      "sha256": "e2d6868cd08f1d089051dd42c7e2ed3b3cdc75d9715f86b94c1ea79eaff9cc77",
+      "bytes": 16572
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-RIGHT-upperarm-exact-alpha-matte.png",
+      "sha256": "5bf32c115353385268210c1ed01c57b4003ae494531801604ae1dbdbb7dec18a",
+      "bytes": 3701
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-body-native-bodice-pleated-skirt-exact-alpha-matte.png",
+      "sha256": "b19f98dc96b214d59f331a38b8bf4296af438f9e1e18368017d4720c8ce67033",
+      "bytes": 9495
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/native-head-bun-outside-ribbon-exact-alpha-matte.png",
+      "sha256": "e41c83c7212d2df6c096b0ea17b5303e7ae00b29ed07c562d13c19ff1f2ff045",
+      "bytes": 13982
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase0-L-actual-complete-shoe-bound-raster.png",
+      "sha256": "d89e2dc639a63299a194b5c5d7c30e69ca10646be7ae80ff9c74e5f77cdbec48",
+      "bytes": 24956
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase0-R-actual-complete-shoe-bound-raster.png",
+      "sha256": "ccc7fd6f26e99f5dc25662b2d8cd5e356e96d99a736014acc2fa233f03e831d0",
+      "bytes": 25057
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase0-actual-full-RIGHT-staff-bound-raster.png",
+      "sha256": "3c589c2aaa6c83686739cab00eead18768ce8a71032273094256f7530edc9267",
+      "bytes": 88816
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase1-L-actual-complete-shoe-bound-raster.png",
+      "sha256": "d89e2dc639a63299a194b5c5d7c30e69ca10646be7ae80ff9c74e5f77cdbec48",
+      "bytes": 24956
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase1-R-actual-complete-shoe-bound-raster.png",
+      "sha256": "ccc7fd6f26e99f5dc25662b2d8cd5e356e96d99a736014acc2fa233f03e831d0",
+      "bytes": 25057
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase1-actual-full-RIGHT-staff-bound-raster.png",
+      "sha256": "5ea96c49297bb820feff61a9cc5debd30101d698f5143171dccf16aabb6237d5",
+      "bytes": 94282
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase2-L-actual-complete-shoe-bound-raster.png",
+      "sha256": "d89e2dc639a63299a194b5c5d7c30e69ca10646be7ae80ff9c74e5f77cdbec48",
+      "bytes": 24956
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase2-R-actual-complete-shoe-bound-raster.png",
+      "sha256": "ccc7fd6f26e99f5dc25662b2d8cd5e356e96d99a736014acc2fa233f03e831d0",
+      "bytes": 25057
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase2-actual-full-RIGHT-staff-bound-raster.png",
+      "sha256": "c5bcd3bd2b4a473de71b950fe3d71510a6aa7c9399a1d794bca018e0fb7301a5",
+      "bytes": 89456
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase3-L-actual-complete-shoe-bound-raster.png",
+      "sha256": "fbd43dbbaa0d22cb40d4de7688025e270022719f3115172c72a642d445a14267",
+      "bytes": 29516
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase3-R-actual-complete-shoe-bound-raster.png",
+      "sha256": "47933f6a1250d66ac134c356ba4fb93c7201a10cde4c64f70785746c7dfec5bc",
+      "bytes": 29561
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase3-actual-full-RIGHT-staff-bound-raster.png",
+      "sha256": "afd45bb88999ca2013b190c953083e6ac827f0186c2abc601079526fb743f8ac",
+      "bytes": 69750
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase4-L-actual-complete-shoe-bound-raster.png",
+      "sha256": "743e5d4b6ddfabe22cdf258fcb7b285bd3e8f11aebdf6482c588b609f0a147b7",
+      "bytes": 23100
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase4-R-actual-complete-shoe-bound-raster.png",
+      "sha256": "b16f103af5c62e58190503c61fdc5ed7cd6d535d0a9f76def9fd48d12afc17b6",
+      "bytes": 23116
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase4-actual-full-RIGHT-staff-bound-raster.png",
+      "sha256": "ecf29e29ba58288ec602e900911192642dfbb6e3049e87258bf3967dd689aa2a",
+      "bytes": 41168
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase5-L-actual-complete-shoe-bound-raster.png",
+      "sha256": "01ab6c6788fbca64a56955e9381b2bf9be3d7a649ee725b41ef59cb0f1d2a0d3",
+      "bytes": 19816
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase5-R-actual-complete-shoe-bound-raster.png",
+      "sha256": "ad0fe8edfd5dda460b5ae50915cf2b29e93e8e9d2d1b04be071846688778ddd2",
+      "bytes": 19820
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-v08-bound-editable-parts-and-semantic-mattes-v01/N-death-phase5-actual-full-RIGHT-staff-bound-raster.png",
+      "sha256": "18293979f2be2a37e728bbd353b1373dec3d7c19a6102295d71de829b1d34d1e",
+      "bytes": 41152
+    }
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

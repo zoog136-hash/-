@@ -1,0 +1,116 @@
+{
+  "schema": "PR122-independent-constructive-flight-depth-v1",
+  "status": "PASS_FINITE_CONSTRUCTIVE_BONES_AND_DECLARED_MARKERS_ONLY",
+  "source_placement_contract": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight5-actual-rig-v01/flight5-actual-rig-placement-and-source-provenance-v01.json",
+    "sha256": "38d97db0a24ec8de284691b70eebbeca09e2104d5b040fd2a65252c3d25244ff"
+  },
+  "native_C": 2560,
+  "common_rig_root": [
+    669.0,
+    1267.95
+  ],
+  "storage_translation": [
+    128.0,
+    128.0
+  ],
+  "declared_common_body_bob": [
+    -2,
+    -38
+  ],
+  "chosen_body_hip_height_native": 623.2754704912418,
+  "legs": {
+    "L": {
+      "hip_XYZ": [
+        547.2,
+        1277.2754704912418,
+        623.2754704912418
+      ],
+      "quadratic_knee_Z_branches": [
+        486.45483879629745,
+        726.495425746632
+      ],
+      "chosen_knee_XYZ": [
+        365.19517704282794,
+        1174.0555152358515,
+        486.45483879629745
+      ],
+      "quadratic_ankle_Z_branches": [
+        253.80312257102923,
+        537.7072314611198
+      ],
+      "chosen_ankle_XYZ": [
+        441.0,
+        1122.8031225710292,
+        253.80312257102923
+      ],
+      "same_bone_lengths": [
+        249.99999999999986,
+        250.00000000000014
+      ],
+      "declared_heel_forefoot_Z_offsets_from_ankle": [
+        -90,
+        -150
+      ],
+      "conditional_structural_heel_forefoot_clearances_native": [
+        163.80312257102923,
+        103.80312257102923
+      ],
+      "conditional_structural_heel_forefoot_clearances_Playerworld": [
+        15.5330547265473,
+        9.843399554139301
+      ]
+    },
+    "R": {
+      "hip_XYZ": [
+        632.7,
+        1290.2754704912418,
+        623.2754704912418
+      ],
+      "quadratic_knee_Z_branches": [
+        378.1565010402263,
+        629.4620587364122
+      ],
+      "chosen_knee_XYZ": [
+        681.4690162004205,
+        1284.0888822460713,
+        378.1565010402263
+      ],
+      "quadratic_ankle_Z_branches": [
+        161.1333578114211,
+        408.11202547487653
+      ],
+      "chosen_ankle_XYZ": [
+        801.9,
+        1254.133357811421,
+        161.1333578114211
+      ],
+      "same_bone_lengths": [
+        250.0,
+        250.00000000000003
+      ],
+      "declared_heel_forefoot_Z_offsets_from_ankle": [
+        -99.0622,
+        -85.0622
+      ],
+      "conditional_structural_heel_forefoot_clearances_native": [
+        62.07115781142109,
+        76.07115781142109
+      ],
+      "conditional_structural_heel_forefoot_clearances_Playerworld": [
+        5.8860580683184205,
+        7.21364427521362
+      ]
+    }
+  },
+  "maximum_bone_length_error_native": 1.4210854715202004e-13,
+  "limitations": [
+    "Chosen hip ground depths and root coordinate are authored model assumptions, not recovered absolute physical proof.",
+    "Each real quadratic branch is exposed; one descending hip/knee/ankle branch is a finite compatible construction, not unique anatomy.",
+    "Heel/forefoot offsets are declared shoe-rig markers; no claim covers the entire alpha sole perimeter or all raster pixels.",
+    "Actual artwork and final control-preserving revisions must be gated by the primary fresh actual-cycle reviewer; this step used no image views."
+  ],
+  "actual_source_visual_status": "NOT_ASSESSED",
+  "whole_cycle_status": "PENDING",
+  "actor_approvals_added": 0
+}

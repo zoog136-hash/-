@@ -1,0 +1,71 @@
+{
+  "status": "SINGLE_SERVICE_NATIVE_BASE_PRODUCED_PENDING_INDEPENDENT_SOURCE_AND_BODY_REGISTRATION",
+  "key": "transform:413",
+  "direction": "SE",
+  "actual_service_calls": 1,
+  "raw_native_output": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/service-SE-fullbody-base-native-r001.png",
+  "raw_sha256": "1eb7a28211a222fbe764ff0cef2fa299f73caf1c94ef704674721b6b4be78772",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "bytes": 1059405,
+  "source_pixels_resampled": false,
+  "alpha_threshold_bounds": {
+    "1": {
+      "bbox": [
+        19,
+        0,
+        1254,
+        1254
+      ],
+      "border_pixels": 17
+    },
+    "8": {
+      "bbox": [
+        264,
+        1,
+        1024,
+        1206
+      ],
+      "border_pixels": 0
+    },
+    "100": {
+      "bbox": [
+        266,
+        2,
+        1024,
+        1206
+      ],
+      "border_pixels": 0
+    },
+    "240": {
+      "bbox": [
+        268,
+        7,
+        1023,
+        1205
+      ],
+      "border_pixels": 0
+    }
+  },
+  "strong_alpha100_components_ge200": [
+    370138
+  ],
+  "visual_findings": [
+    "New front-three-quarter torso/hip view facing screen right/down, matching oldSE direction cue; not a mirrored or rotated E cutout.",
+    "Golden high bun and blue bow/ribbons, navy/gold fitted bodice, white pleated skirt and split gold-trim coat retained.",
+    "Anatomical RIGHT staff at image-left with complete upper and lower gold/crystal ends; LEFT hand free at image-right.",
+    "Both tall gold-trim black boots, counters, toes and gold stiletto heels present; no visible body or equipment cutoff.",
+    "No lightning, aura, magic FX, scene background, text, sheet or second figure seen in bounded preview."
+  ],
+  "limitations": [
+    "Generation-only material handoff; independent source/direction/physical-body-density/C/unit/root registration remains required.",
+    "Native service output is1254square although request stated1024square; original PNG kept without resampling.",
+    "All positive alpha touches canvas via faint residual pixels; alpha>=8 andalpha>=100 border/bounds recorded explicitly. Do not infer full alpha-edge PASS from opaque-only check.",
+    "This is not an animation clip, game connection or actor approval."
+  ],
+  "C_unit_root_registered": false,
+  "actor_approvals_added": 0,
+  "image_returned_to_parent": false
+}

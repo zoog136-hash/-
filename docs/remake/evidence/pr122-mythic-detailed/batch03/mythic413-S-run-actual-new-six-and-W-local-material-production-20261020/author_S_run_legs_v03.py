@@ -1,0 +1,26 @@
+from pathlib import Path
+import json,math,numpy as np
+from PIL import Image,ImageDraw
+from native_run_surface import *
+B=Path(__file__).parent;D=B/'actual-S-RUN6-native-leg-controls-v03';D.mkdir(exist_ok=False)
+INP=Path('/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-ninety-native-posed-parts-v01/actual-original-native-inputs/own-S-DEATH-readonly-real-part-inputs-cape-CORE-explicitly-not-loaded-v01.json');inp=json.loads(INP.read_text());REG=Path(inp['once_registration']['path']);reg=json.loads(REG.read_text());SOLE=Path(inp['canonical_sole_capture']['path']);sole=json.loads(SOLE.read_text())
+ROOT=np.array(reg['common_rig_root_in_unpadded_frame']);C=reg['new_S_fixed_C'];UNIT=reg['new_S_fixed_bodyunit'];N=2048;PAD=256;P=np.array([[10/9,0,0],[0,1,-1.]])
+U=np.array([.9,0,0]);V=np.array([0,0,-1.]);BODY=np.column_stack([U,V]);BONE=289.75;SCALE=.23706896551724138*1024/C;STEP=16.8/SCALE
+controls={'R':dict(hip=[567,650],knee=[549,850],ankle=[512,1040]),'L':dict(hip=[691,650],knee=[718,850],ankle=[777,1040])};rows=[]
+# Complete gait: left contact/load/flight, right contact/load/flight. S runs
+# toward +worldY. Support's source heel moves -STEP on the next actual phase.
+states=[dict(name='LEFT-CONTACT',bob=-8,L=[240,0],R=[-80,170]),dict(name='LEFT-LOAD',bob=30,L=[240-STEP,0],R=[-160,160]),dict(name='RIGHT-DRIVE-FLIGHT',bob=-45,L=[-140,200],R=[145,160]),dict(name='RIGHT-CONTACT',bob=-8,L=[-80,170],R=[240,0]),dict(name='RIGHT-LOAD',bob=30,L=[-160,160],R=[240-STEP,0]),dict(name='LEFT-DRIVE-FLIGHT',bob=-45,L=[145,160],R=[-140,200])]
+for ph,st in enumerate(states):
+ H=np.array([[-8,-3,5,8,3,-5][ph],80.,80+ROOT[1]-645-st['bob']]);legs={};models={}
+ for side,m in zip(['R','L'],sole['source_material_capture_models']):
+  entry=inp['materials'][side+'-complete-native-skin-thigh-shaft-counter-stiletto'];assert pin(entry['path'])['sha256']==entry['sha256'];im=Image.open(entry['path']).convert('RGBA');ct=controls[side];hip=H+BODY@(np.array(ct['hip'])-[636,645]);srcHeel=np.array(m['observed_painted_heel_native']);fu=np.array(m['source_U']);fv=np.array(m['source_V']);footM=np.column_stack([fu,fv]);dep,lift=st[side];paintH=m['once_visible_paint_sole_height_native'];x=(-114.375 if side=='R'else 90.825);heel=np.array([x,dep+paintH,lift+paintH]);ankle=heel+footM@(np.array(ct['ankle'])-srcHeel);kind="support"if lift==0 else ("drive"if dep>0 else "recovery");K=fixed_knee_front(hip,ankle,BONE,side,kind,ROOT[1]);MT=bone_basis(ct['hip'],ct['knee'],hip,K,P);MC=bone_basis(ct['knee'],ct['ankle'],K,ankle,P)
+  world=continuous_chain_world([(np.array(ct['hip']),hip),(np.array(ct['hip']),hip),(np.array(ct['knee']),K),(srcHeel,heel)],[BODY,MT,MC,footM],[(695,755),(830,874),(1012,1056)])
+  leg,meta=raster_surface(im,world,ROOT,P,N,PAD);path=D/f'S-run-phase{ph}-{side}-complete-real-native-articulated-leg-v01.png';leg.save(path);legs[side]=pin(path);models[side]=dict(source=entry,hip=hip.tolist(),knee=K.tolist(),ankle=ankle.tolist(),heel=heel.tolist(),heel_source=srcHeel.tolist(),foot_UV=footM.tolist(),femur_native=float(np.linalg.norm(K-hip)),tibia_native=float(np.linalg.norm(ankle-K)),support=(side=='L'and ph in(0,1))or(side=='R'and ph in(3,4)),physical_sole_depth=dep,sole_lift=lift,native_capture=meta,original_own_side_material=True,opposite_side_mirrored=False)
+ out=Image.new('RGBA',(N,N));out.alpha_composite(Image.open(legs['R']['path']));out.alpha_composite(Image.open(legs['L']['path']));path=D/f'S-run-phase{ph}-both-legs-only-v01.png';out.save(path);rows.append(dict(phase=ph,name=st['name'],pelvis=H.tolist(),legs=legs,bones=models,legs_only=pin(path)))
+contract=dict(status='ACTUAL_S_RUN6_NEW_LEGS_AND_FIXED_BONE_CONTROLS_BODY_SHARED_MATERIALS_PENDING',actor='transform:413',direction='S',motion='run',C=C,bodyunit=UNIT,common_unpadded_root=ROOT.tolist(),storage_canvas=[N,N],storage_translation=[PAD,PAD],source_RGBA_rescaled=False,phase_seconds_authored=.08,cycle_seconds_authored=.48,fps_authored=12.5,reference_speed=210,runtime_speed_ratio=1.25,actual_phase_seconds=.064,actual_run_speed=262.5,pixel_scale=.23706896551724138,native_to_game_scale=SCALE,world_phase_displacement=16.8,native_support_contact_to_load_step=STEP,source_inputs=pin(INP),once=pin(REG),sole=pin(SOLE),projection=P.tolist(),fixed_femur_tibia=BONE,frames=rows,actor_approvals_added=0,game_clips_adopted=0,limits=['One declared native capture and conditional hidden geometry; no unique anatomy claim.','Complete own-side original skin/greave/counter/stiletto source sampled through a continuous source-to-fixed-bone UV chain. No WALK pose or actor mirror.','Body/arm/head/cape sources are pending assembly. Native leg details and new cycle require source QA.'])
+p=D/'S-RUN6-new-native-leg-controls-and-exact-clock-v01.json';p.write_text(json.dumps(contract,indent=2)+'\n')
+board=Image.new('RGB',(900,720),'#405265');draw=ImageDraw.Draw(board)
+for r in rows:
+ im=Image.open(r['legs_only']['path']);im=im.crop((550,750,1200,1600));im.thumbnail((295,330));x=r['phase']%3*300;y=r['phase']//3*360;board.paste(im,(x,y+24),im);draw.text((x+5,y+5),r['name'],fill='white')
+pv=D/'private-S-run-six-new-legs-v01.jpg';board.save(pv,quality=82);assert pv.stat().st_size<150000
+print(json.dumps(dict(contract=pin(p),preview=pin(pv),new_leg_materials=12,contact_step=STEP)))

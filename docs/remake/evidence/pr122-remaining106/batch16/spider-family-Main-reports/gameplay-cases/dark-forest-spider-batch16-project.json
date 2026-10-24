@@ -1,0 +1,3313 @@
+{
+	"boss": [],
+	"checks": 1961,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792368024.23647,
+				"expires_at": 1792368624.23647,
+				"grade": "일반",
+				"hunt_batch": "7f73e3bc96054b2a82eb49b7c71e58f0",
+				"id": "c6efb6db9748bde1e26b68d6a8370690",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 162,
+		"manual_pickup": true,
+		"player_hp": 1647,
+		"weapon_attempts": 4
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(84.02344, 0.0)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(59.41406, 59.41406)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 84.02344)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-59.41406, 59.41406)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-84.02344, 0.0)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-59.41406, -59.41406)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -84.02344)",
+			"name": "검은숲 거미",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(59.41406, -59.41406)",
+			"name": "검은숲 거미",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 23,
+			"facing": 0,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 1,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 2,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 3,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 4,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 5,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 6,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		},
+		{
+			"damage": 23,
+			"facing": 7,
+			"kind": "melee",
+			"name": "검은숲 거미"
+		}
+	],
+	"physics_ticks": 1199,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 4,
+			"track": "walk_0"
+		},
+		{
+			"frame": 5,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 4,
+			"track": "walk_1"
+		},
+		{
+			"frame": 5,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 4,
+			"track": "walk_2"
+		},
+		{
+			"frame": 5,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 4,
+			"track": "walk_3"
+		},
+		{
+			"frame": 5,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 4,
+			"track": "walk_4"
+		},
+		{
+			"frame": 5,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 4,
+			"track": "walk_5"
+		},
+		{
+			"frame": 5,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 4,
+			"track": "walk_6"
+		},
+		{
+			"frame": 5,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 4,
+			"track": "walk_7"
+		},
+		{
+			"frame": 5,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25332.93359375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "a622c718131217b17b14b40d5edfd368e0e67d85292c4f4e3a8e1555d65b3834",
+			"visible_body_viewport": [
+				531.226440429688,
+				269.585144042969,
+				211.788513183594,
+				176.608215332031
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25332.93359375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "a622c718131217b17b14b40d5edfd368e0e67d85292c4f4e3a8e1555d65b3834",
+			"visible_body_viewport": [
+				531.226440429688,
+				269.585144042969,
+				211.788513183594,
+				176.608215332031
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25338.53515625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk-native-1.png",
+			"physics_tick": 25,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "ad0ea8d7cf5258a2de809232b3f70aadef148220bd86fe4f563b885fab6250f6",
+			"visible_body_viewport": [
+				537.624877929688,
+				274.0751953125,
+				195.792358398438,
+				172.1181640625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25345.0703125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk-native-2.png",
+			"physics_tick": 33,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "77c2047c654f3e954e3b09d99561e59db05ba9da3efc48b88a5c1d4c051a21cb",
+			"visible_body_viewport": [
+				538.264770507812,
+				271.830169677734,
+				206.029907226562,
+				174.363189697266
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25351.60546875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk-native-3.png",
+			"physics_tick": 41,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "a0e559218a2ccc251156480da35989bf60436a0db38cb916594268858436e166",
+			"visible_body_viewport": [
+				538.264770507812,
+				272.578521728516,
+				212.428344726562,
+				173.614837646484
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25358.140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk-native-4.png",
+			"physics_tick": 49,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "573cf5ee6eba896503b93f0e19540a6278380a814a4ac90217d109a7f914e647",
+			"visible_body_viewport": [
+				541.467895507812,
+				268.836822509766,
+				205.390075683594,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25364.67578125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-walk-native-5.png",
+			"physics_tick": 57,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "cdd917608a7322ecc7b82ff0a10c3a38a591a72405daf325ca1df78cf1bdc53a",
+			"visible_body_viewport": [
+				536.988952636719,
+				274.823547363281,
+				207.949401855469,
+				171.369812011719
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25416.0234375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-attack-0.png",
+			"physics_tick": 114,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "0fe9f794c0e0faf113d0f01749546c7ec335a2b257a538af13a8cd6de70a0bfc",
+			"visible_body_viewport": [
+				547.862426757812,
+				275.571868896484,
+				200.9111328125,
+				170.621490478516
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25416.0234375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-attack-1.png",
+			"physics_tick": 132,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "b6677de3f76d96772eb981d163457684f7abf8b074949e454697f92f0efe700a",
+			"visible_body_viewport": [
+				535.705383300781,
+				272.578521728516,
+				232.903381347656,
+				173.614837646484
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25416.0234375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-E-contact.png",
+			"physics_tick": 132,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "b6677de3f76d96772eb981d163457684f7abf8b074949e454697f92f0efe700a",
+			"visible_body_viewport": [
+				535.705383300781,
+				272.578521728516,
+				232.903381347656,
+				173.614837646484
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25373.666015625,
+				22745.666015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk.png",
+			"physics_tick": 145,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "3c02ed4d47798e8efab41ebeab4f1da444d6f18c446b716fbae5954e80da0cdf",
+			"visible_body_viewport": [
+				544.027221679688,
+				268.836822509766,
+				192.593139648438,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25373.666015625,
+				22745.666015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk-native-1.png",
+			"physics_tick": 145,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "3c02ed4d47798e8efab41ebeab4f1da444d6f18c446b716fbae5954e80da0cdf",
+			"visible_body_viewport": [
+				544.027221679688,
+				268.836822509766,
+				192.593139648438,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25377.626953125,
+				22749.626953125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk-native-2.png",
+			"physics_tick": 152,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "dd352d9d914d440a5bc86539454717ca91ccea2c39f774c6d29c28dc1b46776e",
+			"visible_body_viewport": [
+				534.425659179688,
+				265.843444824219,
+				204.1103515625,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25382.908203125,
+				22754.908203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk-native-3.png",
+			"physics_tick": 161,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "7e2667cfeedce98cb596c0d19346ded164c699574e6ec9c16cabf6f3ec38d1c8",
+			"visible_body_viewport": [
+				534.429565429688,
+				274.819641113281,
+				201.551025390625,
+				171.369812011719
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25387.529296875,
+				22759.529296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk-native-4.png",
+			"physics_tick": 169,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "9b61d59f31a84b3dadc0421a969e767d8c8f3b8c94f7318d5d1353bacae4dbbc",
+			"visible_body_viewport": [
+				536.34130859375,
+				268.836822509766,
+				202.830688476562,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25392.810546875,
+				22764.810546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk-native-5.png",
+			"physics_tick": 178,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "e5f81fd3236a259aa2aad32cf6a2916ede24d78fcf3120f22f8ae634af3d68b8",
+			"visible_body_viewport": [
+				536.985046386719,
+				268.832916259766,
+				202.190856933594,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25397.431640625,
+				22769.431640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-walk-native-0.png",
+			"physics_tick": 186,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "577d3e61f567fa30b99f6a0b1b185b4171a86876642724ab8dda3885e4f7a0e9",
+			"visible_body_viewport": [
+				535.065490722656,
+				264.346771240234,
+				209.229125976562,
+				181.846588134766
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25432.419921875,
+				22804.419921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-attack-0.png",
+			"physics_tick": 241,
+			"player_hp": 1812,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "1e6f656f6da6852ec71bcf3c6899e1cbb60123dc05cb9531d8a994ffa1056cb8",
+			"visible_body_viewport": [
+				549.781921386719,
+				265.839538574219,
+				191.953308105469,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25432.419921875,
+				22804.419921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-attack-1.png",
+			"physics_tick": 259,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "e5b0c2c4264ef3049a1dc1d4c2354625ff8b56587cb2495692ca4af9c6899ab8",
+			"visible_body_viewport": [
+				547.862426757812,
+				265.839538574219,
+				193.872863769531,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25432.419921875,
+				22804.419921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SE-contact.png",
+			"physics_tick": 259,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "e5b0c2c4264ef3049a1dc1d4c2354625ff8b56587cb2495692ca4af9c6899ab8",
+			"visible_body_viewport": [
+				547.862426757812,
+				265.839538574219,
+				193.872863769531,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22704.93359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk.png",
+			"physics_tick": 272,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "d42fd96bbe15a82ceb92ddae2f63a81a508c9606553b0e5d66dfd437b5aeaf87",
+			"visible_body_viewport": [
+				556.180358886719,
+				268.836822509766,
+				174.037658691406,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22704.93359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk-native-1.png",
+			"physics_tick": 272,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "d42fd96bbe15a82ceb92ddae2f63a81a508c9606553b0e5d66dfd437b5aeaf87",
+			"visible_body_viewport": [
+				556.180358886719,
+				268.836822509766,
+				174.037658691406,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22711.46875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk-native-2.png",
+			"physics_tick": 280,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "f1aa7dadbe9ed69cbcf42517312965b4c77b7b881134782bedfeb8db319bd30b",
+			"visible_body_viewport": [
+				548.502258300781,
+				269.585144042969,
+				180.436096191406,
+				176.608215332031
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22718.9375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk-native-3.png",
+			"physics_tick": 289,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "a7bde5c9edd035ca0e2d460565e2bc7dab98753f3b7150ccc57c662a4e4b1eed",
+			"visible_body_viewport": [
+				552.34130859375,
+				262.85009765625,
+				177.876770019531,
+				183.34326171875
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22726.40625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk-native-4.png",
+			"physics_tick": 298,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "5147205a22253d6e2a9873f0c3afb72c2eb2942d5478ee331581524b8652691c",
+			"visible_body_viewport": [
+				558.73974609375,
+				265.839538574219,
+				177.876770019531,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22733.875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk-native-5.png",
+			"physics_tick": 307,
+			"player_hp": 1792,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "f3da9303ef33c486e4b6be03ccc132a1af047ebe6fde6b2a177de8008bbf9c68",
+			"visible_body_viewport": [
+				542.103820800781,
+				266.591796875,
+				190.673645019531,
+				179.6015625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22741.34375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-walk-native-0.png",
+			"physics_tick": 316,
+			"player_hp": 1789,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "348f1187be79696b33ca591d817f76fd67d06656b806d3a1abb90d929eb570e0",
+			"visible_body_viewport": [
+				556.820251464844,
+				265.843444824219,
+				181.075988769531,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22788.0234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-attack-0.png",
+			"physics_tick": 368,
+			"player_hp": 1789,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "762cdeceffd7c76f8de5d4dab1359633f74b58655fd28c881f43ada27081a49c",
+			"visible_body_viewport": [
+				545.94287109375,
+				266.591796875,
+				190.033813476562,
+				179.6015625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22788.0234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-attack-1.png",
+			"physics_tick": 386,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "0b6b88f9dd45719571d9210d2444758697c1230c493c8b57387c82da309b1e95",
+			"visible_body_viewport": [
+				542.74365234375,
+				252.373352050781,
+				195.152526855469,
+				193.820007324219
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22788.0234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-S-contact.png",
+			"physics_tick": 386,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "0b6b88f9dd45719571d9210d2444758697c1230c493c8b57387c82da309b1e95",
+			"visible_body_viewport": [
+				542.74365234375,
+				252.373352050781,
+				195.152526855469,
+				193.820007324219
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25570.333984375,
+				22745.666015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk.png",
+			"physics_tick": 399,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "890d178b00781b4ca437fe28a617a6c619f0ca16c89f647f2f5a5ec457c63234",
+			"visible_body_viewport": [
+				541.463989257812,
+				268.836822509766,
+				195.792358398438,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25570.333984375,
+				22745.666015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk-native-0.png",
+			"physics_tick": 399,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "890d178b00781b4ca437fe28a617a6c619f0ca16c89f647f2f5a5ec457c63234",
+			"visible_body_viewport": [
+				541.463989257812,
+				268.836822509766,
+				195.792358398438,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25567.033203125,
+				22748.966796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk-native-1.png",
+			"physics_tick": 405,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "d5c59ca55eaaf3649ea7777e5638f714b9cd5dd37ca8b9e889ee06dabb4dad4c",
+			"visible_body_viewport": [
+				544.663208007812,
+				268.836822509766,
+				182.995483398438,
+				177.356536865234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25561.751953125,
+				22754.248046875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk-native-2.png",
+			"physics_tick": 414,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "00c169fcfe5d33a375d25f822900550abcb5fd9ab394ffb721fd307d7e3e4456",
+			"visible_body_viewport": [
+				548.502258300781,
+				259.856750488281,
+				185.554870605469,
+				186.336608886719
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25557.130859375,
+				22758.869140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk-native-3.png",
+			"physics_tick": 422,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "9933928983492760f88b85ff27331cba6d96b05ea5e2b3142338240e8212611e",
+			"visible_body_viewport": [
+				547.222534179688,
+				258.360046386719,
+				190.033813476562,
+				187.833312988281
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25551.849609375,
+				22764.150390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk-native-4.png",
+			"physics_tick": 431,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a7e5226e033dea49a89ef5ea361fbce33a39c6f19946fed2d377edf7cf1ebb5f",
+			"visible_body_viewport": [
+				535.065490722656,
+				265.095123291016,
+				207.3095703125,
+				181.098236083984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25547.228515625,
+				22768.771484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-walk-native-5.png",
+			"physics_tick": 439,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "2f303c29597a7290ac5f641fea9a7e3a3650d12679e682da5f539f5d972c394a",
+			"visible_body_viewport": [
+				540.184265136719,
+				262.85009765625,
+				189.393981933594,
+				183.34326171875
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25511.580078125,
+				22804.419921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-attack-0.png",
+			"physics_tick": 495,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "95471edd2a5b48c568b656c6f2ab53b6eea04ae85480647f4ae3866ee30fc89d",
+			"visible_body_viewport": [
+				549.789733886719,
+				250.872756958008,
+				200.271301269531,
+				195.316696166992
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25511.580078125,
+				22804.419921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-attack-1.png",
+			"physics_tick": 513,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "20b305ed4a188924c99001b45789e27ab6090b7cb49f448aeb003b9fe2dbe2b3",
+			"visible_body_viewport": [
+				542.75146484375,
+				269.581237792969,
+				210.5087890625,
+				176.608215332031
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25511.580078125,
+				22804.419921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-SW-contact.png",
+			"physics_tick": 513,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "20b305ed4a188924c99001b45789e27ab6090b7cb49f448aeb003b9fe2dbe2b3",
+			"visible_body_viewport": [
+				542.75146484375,
+				269.581237792969,
+				210.5087890625,
+				176.608215332031
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25611.06640625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk.png",
+			"physics_tick": 526,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "3070799b34d33bc01dc0794f440b09f47fc6c14603c9f1dca7d659260dee5637",
+			"visible_body_viewport": [
+				541.471801757812,
+				283.803619384766,
+				198.351806640625,
+				162.389739990234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25611.06640625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk-native-0.png",
+			"physics_tick": 526,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "3070799b34d33bc01dc0794f440b09f47fc6c14603c9f1dca7d659260dee5637",
+			"visible_body_viewport": [
+				541.471801757812,
+				283.803619384766,
+				198.351806640625,
+				162.389739990234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25606.3984375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk-native-1.png",
+			"physics_tick": 532,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "719705616eb66482131c439caaa4ba90ff6aa6d6fca5997c084191c2bf939ef4",
+			"visible_body_viewport": [
+				547.222534179688,
+				285.30029296875,
+				191.953308105469,
+				160.89306640625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25600.796875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk-native-2.png",
+			"physics_tick": 539,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "2392aa11f2ae6090fc2bea4b20c1bac12ce5f99cf8ed91f21129aa08c394b5be",
+			"visible_body_viewport": [
+				544.023315429688,
+				281.55859375,
+				193.233032226562,
+				164.634765625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25594.26171875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk-native-3.png",
+			"physics_tick": 547,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "528cbaaeac72e986324e3bcdeaa3d559d7c4eceecf7ca897a57a83c1f696a2a3",
+			"visible_body_viewport": [
+				540.824096679688,
+				281.55859375,
+				194.5126953125,
+				164.634765625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25587.7265625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk-native-4.png",
+			"physics_tick": 555,
+			"player_hp": 1737,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "30ba0268f0c380be1ecf46fec0f21d49ff7cf7338c5a6c55f0858af78a0efd4b",
+			"visible_body_viewport": [
+				525.467834472656,
+				280.810241699219,
+				215.627563476562,
+				165.383117675781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25581.19140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-walk-native-5.png",
+			"physics_tick": 563,
+			"player_hp": 1737,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "723b61a9c1171a9bf649fd67a2642a7377c86a7cc19e370f1abd52c08a4b84b4",
+			"visible_body_viewport": [
+				545.303039550781,
+				283.803619384766,
+				195.792419433594,
+				162.389739990234
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25527.9765625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-attack-0.png",
+			"physics_tick": 622,
+			"player_hp": 1734,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "9adbf6ac59152e6961cdfb1e00db42c98a0fc651e09d8c0be2dfce8b98f79917",
+			"visible_body_viewport": [
+				544.663208007812,
+				281.55859375,
+				195.152526855469,
+				164.634765625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25527.9765625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-attack-1.png",
+			"physics_tick": 640,
+			"player_hp": 1714,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "495a9677b84c875e38231d2252701b381a236a8fbd9f0e5df86460608bfdaf9d",
+			"visible_body_viewport": [
+				536.34521484375,
+				297.273742675781,
+				209.868957519531,
+				148.919616699219
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25527.9765625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-W-contact.png",
+			"physics_tick": 640,
+			"player_hp": 1714,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "495a9677b84c875e38231d2252701b381a236a8fbd9f0e5df86460608bfdaf9d",
+			"visible_body_viewport": [
+				536.34521484375,
+				297.273742675781,
+				209.868957519531,
+				148.919616699219
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25570.333984375,
+				22942.333984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk.png",
+			"physics_tick": 653,
+			"player_hp": 1714,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "cb421287729ff9bcba76f20edf1895ac29697405c15514fd9d67d44c2aeba648",
+			"visible_body_viewport": [
+				537.624877929688,
+				275.571868896484,
+				185.554870605469,
+				170.621490478516
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25570.333984375,
+				22942.333984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk-native-1.png",
+			"physics_tick": 653,
+			"player_hp": 1714,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "cb421287729ff9bcba76f20edf1895ac29697405c15514fd9d67d44c2aeba648",
+			"visible_body_viewport": [
+				537.624877929688,
+				275.571868896484,
+				185.554870605469,
+				170.621490478516
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25567.033203125,
+				22939.033203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk-native-2.png",
+			"physics_tick": 659,
+			"player_hp": 1714,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "7464b1b0e08ecdbbaa82316aa9b5c961e12c822b735fc438494dd19f1b0323bb",
+			"visible_body_viewport": [
+				551.701477050781,
+				271.081848144531,
+				191.953308105469,
+				175.111511230469
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25562.412109375,
+				22934.412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk-native-3.png",
+			"physics_tick": 667,
+			"player_hp": 1714,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "0886303bd07116af951a8ae10c3dad206c45c86e9c7a09566b53df14b711dab6",
+			"visible_body_viewport": [
+				548.502258300781,
+				266.591796875,
+				190.673645019531,
+				179.6015625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25557.130859375,
+				22929.130859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk-native-4.png",
+			"physics_tick": 676,
+			"player_hp": 1711,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "5c2f4e0997202efc80d372c2a67d98e8f26db04c81336c2e19979ace4f55dcd7",
+			"visible_body_viewport": [
+				544.023315429688,
+				276.320220947266,
+				186.194702148438,
+				169.873138427734
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25552.509765625,
+				22924.509765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk-native-5.png",
+			"physics_tick": 684,
+			"player_hp": 1711,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "507c6085550c8ca3c3ea56bcccd297218ccf34d3305672f1aae46bc21b62b10d",
+			"visible_body_viewport": [
+				544.663208007812,
+				263.598449707031,
+				186.194702148438,
+				182.594909667969
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25547.228515625,
+				22919.228515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-walk-native-0.png",
+			"physics_tick": 693,
+			"player_hp": 1711,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "afe8956b4dcceaebc97794dc8319826f49bccffeb16ef8d60b3bb8bae01636df",
+			"visible_body_viewport": [
+				539.54443359375,
+				272.578521728516,
+				174.037719726562,
+				173.614837646484
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25511.580078125,
+				22883.580078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-attack-0.png",
+			"physics_tick": 749,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "8430cc8e796e31e6164dda7a70c45758b591eb6c3dceceaabbee6b9c55cde89e",
+			"visible_body_viewport": [
+				552.34912109375,
+				254.614456176758,
+				184.9150390625,
+				191.574996948242
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25511.580078125,
+				22883.580078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-attack-1.png",
+			"physics_tick": 767,
+			"player_hp": 1688,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "bac6b2000c5a139cc316701d3a30580eee0b51a8903fbff431ac244d7fae99bc",
+			"visible_body_viewport": [
+				548.510070800781,
+				252.369445800781,
+				194.5126953125,
+				193.820007324219
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25511.580078125,
+				22883.580078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NW-contact.png",
+			"physics_tick": 767,
+			"player_hp": 1688,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "bac6b2000c5a139cc316701d3a30580eee0b51a8903fbff431ac244d7fae99bc",
+			"visible_body_viewport": [
+				548.510070800781,
+				252.369445800781,
+				194.5126953125,
+				193.820007324219
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22983.06640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk.png",
+			"physics_tick": 780,
+			"player_hp": 1688,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "2916bfd2a6f57d554607ca77644575edacfa8e6262dc4291749515860745977f",
+			"visible_body_viewport": [
+				552.981140136719,
+				295.024810791016,
+				168.9189453125,
+				151.164642333984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22983.06640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk-native-1.png",
+			"physics_tick": 780,
+			"player_hp": 1688,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "2916bfd2a6f57d554607ca77644575edacfa8e6262dc4291749515860745977f",
+			"visible_body_viewport": [
+				552.981140136719,
+				295.024810791016,
+				168.9189453125,
+				151.164642333984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22978.3984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk-native-2.png",
+			"physics_tick": 786,
+			"player_hp": 1688,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "b8d69d444dc0b17e1fb9fb345315484630e2e0d8e9fbf323484bf06ba0b628e4",
+			"visible_body_viewport": [
+				558.73974609375,
+				286.793060302734,
+				177.236938476562,
+				159.396392822266
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22970.9296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk-native-3.png",
+			"physics_tick": 795,
+			"player_hp": 1685,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "483cea41f1f6cd1536dc95391326b8088dfb00e18d181369791f74428e15bd13",
+			"visible_body_viewport": [
+				549.14208984375,
+				287.545318603516,
+				188.754089355469,
+				158.648040771484
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22963.4609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk-native-4.png",
+			"physics_tick": 804,
+			"player_hp": 1685,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "787a84ab0095f5c291f45a2e8a972948cb34485e70da44cbe43554e0032d27fd",
+			"visible_body_viewport": [
+				557.460083007812,
+				284.551940917969,
+				163.800170898438,
+				167.628112792969
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22955.9921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk-native-5.png",
+			"physics_tick": 813,
+			"player_hp": 1685,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "7f074e1bdafca7ea3dcaecc7e92286461f25df217f764ee87ad757f1bdb36198",
+			"visible_body_viewport": [
+				545.303039550781,
+				286.048645019531,
+				182.995483398438,
+				160.144714355469
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22948.5234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-walk-native-0.png",
+			"physics_tick": 822,
+			"player_hp": 1685,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "edac5d5522e3635239dad61bc813e63b095499593e9c7938402c1834064c28e7",
+			"visible_body_viewport": [
+				555.54052734375,
+				298.022064208984,
+				161.880615234375,
+				149.66796875
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22899.9765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-attack-0.png",
+			"physics_tick": 876,
+			"player_hp": 1682,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "90928a09613dca27b2cda0697610ce61e27fe215df42c6f511568ac4a6da645d",
+			"visible_body_viewport": [
+				554.260864257812,
+				274.823547363281,
+				175.957214355469,
+				171.369812011719
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22899.9765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-attack-1.png",
+			"physics_tick": 894,
+			"player_hp": 1662,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "25aa2d3ba297173b26cfe6a3dcae8e6d11d1348ab6b4554da048c7bf2e65c303",
+			"visible_body_viewport": [
+				556.820251464844,
+				286.048645019531,
+				167.639221191406,
+				166.131439208984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25472.0,
+				22899.9765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-N-contact.png",
+			"physics_tick": 894,
+			"player_hp": 1662,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "25aa2d3ba297173b26cfe6a3dcae8e6d11d1348ab6b4554da048c7bf2e65c303",
+			"visible_body_viewport": [
+				556.820251464844,
+				286.048645019531,
+				167.639221191406,
+				166.131439208984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25373.666015625,
+				22942.333984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk.png",
+			"physics_tick": 907,
+			"player_hp": 1662,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "11c1da660e79fee148888a9ddb38c704975829d2d1bf029528003dc835c8c0c0",
+			"visible_body_viewport": [
+				551.065551757812,
+				265.095123291016,
+				191.3134765625,
+				181.098236083984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25373.666015625,
+				22942.333984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk-native-0.png",
+			"physics_tick": 907,
+			"player_hp": 1662,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "11c1da660e79fee148888a9ddb38c704975829d2d1bf029528003dc835c8c0c0",
+			"visible_body_viewport": [
+				551.065551757812,
+				265.095123291016,
+				191.3134765625,
+				181.098236083984
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25375.646484375,
+				22940.353515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk-native-1.png",
+			"physics_tick": 911,
+			"player_hp": 1662,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "3cc94b799d90f91fe4becf365637e1d6b8996b2bfb87ef58979b7267d7974220",
+			"visible_body_viewport": [
+				553.624877929688,
+				271.830169677734,
+				186.834594726562,
+				174.363189697266
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25380.927734375,
+				22935.072265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk-native-2.png",
+			"physics_tick": 920,
+			"player_hp": 1659,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "baff3c60af478932eae5e63927e6cb9c5286fd5d17d841e07c7b442161814261",
+			"visible_body_viewport": [
+				549.13818359375,
+				274.0712890625,
+				194.5126953125,
+				172.1181640625
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25385.548828125,
+				22930.451171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk-native-3.png",
+			"physics_tick": 928,
+			"player_hp": 1659,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "af0c5a3724f76099f1736fbaeaf7537ad0079b1b9bb6fc2459eb9bafbfaf89c6",
+			"visible_body_viewport": [
+				551.061645507812,
+				283.055267333984,
+				199.631469726562,
+				163.138092041016
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25390.830078125,
+				22925.169921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-4",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk-native-4.png",
+			"physics_tick": 937,
+			"player_hp": 1659,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "7e317ef8d5bd36792a7a20ee1cc34fd3667319c44343aabcb795805de9e9a57b",
+			"visible_body_viewport": [
+				550.421752929688,
+				271.077941894531,
+				199.631469726562,
+				175.111511230469
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25395.451171875,
+				22920.548828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-5",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-walk-native-5.png",
+			"physics_tick": 945,
+			"player_hp": 1659,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "e74ba221ee61faa8c79115373d54860d7cf40f6d28c43f4b3ca9a9a92537b8ce",
+			"visible_body_viewport": [
+				550.425659179688,
+				277.068542480469,
+				185.554870605469,
+				169.124816894531
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25432.419921875,
+				22883.580078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-attack-0.png",
+			"physics_tick": 1003,
+			"player_hp": 1656,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "11298da4993edf10fcc8b0b7a4cd9c580207a28b0cc878b8a168a1f3c6439b28",
+			"visible_body_viewport": [
+				556.180358886719,
+				265.839538574219,
+				188.1142578125,
+				180.349914550781
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25432.419921875,
+				22883.580078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-attack-1.png",
+			"physics_tick": 1021,
+			"player_hp": 1656,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "bc708ee17574b3cae241ffcfa0307575103dd1cc73acabf8f4bc01b39ccb163b",
+			"visible_body_viewport": [
+				551.061645507812,
+				289.0380859375,
+				204.1103515625,
+				157.1513671875
+			]
+		},
+		{
+			"actor_hp": 162,
+			"actor_world": [
+				25432.419921875,
+				22883.580078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/ai-NE-contact.png",
+			"physics_tick": 1021,
+			"player_hp": 1656,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "bc708ee17574b3cae241ffcfa0307575103dd1cc73acabf8f4bc01b39ccb163b",
+			"visible_body_viewport": [
+				551.061645507812,
+				289.0380859375,
+				204.1103515625,
+				157.1513671875
+			]
+		},
+		{
+			"actor_hp": 109,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/lifecycle-hit.png",
+			"physics_tick": 1043,
+			"player_hp": 1647,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "32b0d1130bccf337db3b99afe65e1ab02bc2f58fd6627cad634ccd39e7b35c69",
+			"visible_body_viewport": [
+				560.659301757812,
+				289.0419921875,
+				177.876770019531,
+				157.1513671875
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/lifecycle-ground-drop.png",
+			"physics_tick": 1096,
+			"player_hp": 1647,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "46b2e22dadafa1894c2ec16fa7f27d6d9754a5372c1ce7b585b94455d18b681a",
+			"visible_body_viewport": [
+				553.620971679688,
+				283.055267333984,
+				177.876770019531,
+				163.138092041016
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/lifecycle-death-0.png",
+			"physics_tick": 1098,
+			"player_hp": 1647,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "41fc37db4610bc4b091d32a37e15950d98c89e3267324c8a0dc0d2e104e8c0a9",
+			"visible_body_viewport": [
+				553.620971679688,
+				293.532043457031,
+				182.995483398438,
+				152.661315917969
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/lifecycle-manual-pickup.png",
+			"physics_tick": 1109,
+			"player_hp": 1647,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "39dd6d10b3a51af45b561cdb82d6e9d67383d110915daa19f523c2e43b9be906",
+			"visible_body_viewport": [
+				553.620971679688,
+				293.532043457031,
+				182.995483398438,
+				152.661315917969
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/lifecycle-death-1.png",
+			"physics_tick": 1112,
+			"player_hp": 1647,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "eb28081f799bfbf0eca0b3be3eded017bffe004285d2269245d5aa2f8a6bbefb",
+			"visible_body_viewport": [
+				556.820251464844,
+				277.068542480469,
+				175.957214355469,
+				169.124816894531
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/batch16/Spider-Family-Main-QA-v01/captures/dark-forest-spider-batch16-project/lifecycle-death-2.png",
+			"physics_tick": 1126,
+			"player_hp": 1647,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "ed0f6c632ecb15d06df0ef647294bfa4c92b0a042bc9fe3b24a2e086fc9e23a3",
+			"visible_body_viewport": [
+				549.14208984375,
+				336.935729980469,
+				180.436157226562,
+				109.257629394531
+			]
+		}
+	],
+	"scope": "original-based dark_forest_spider_batch16_project, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-walk-native-4.png",
+		"ai-E-walk-native-5.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-walk-native-4.png",
+		"ai-SE-walk-native-5.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-4.png",
+		"ai-S-walk-native-5.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-walk-native-4.png",
+		"ai-SW-walk-native-5.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-walk-native-4.png",
+		"ai-W-walk-native-5.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-walk-native-4.png",
+		"ai-NW-walk-native-5.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-walk-native-4.png",
+		"ai-N-walk-native-5.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-walk-native-4.png",
+		"ai-NE-walk-native-5.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-walk-4.png",
+		"authored-E-walk-5.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-walk-4.png",
+		"authored-SE-walk-5.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-walk-4.png",
+		"authored-S-walk-5.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-walk-4.png",
+		"authored-SW-walk-5.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-walk-4.png",
+		"authored-W-walk-5.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-walk-4.png",
+		"authored-NW-walk-5.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-walk-4.png",
+		"authored-N-walk-5.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-walk-4.png",
+		"authored-NE-walk-5.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"map": "aden_world",
+		"normal": "검은숲 거미",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_1.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

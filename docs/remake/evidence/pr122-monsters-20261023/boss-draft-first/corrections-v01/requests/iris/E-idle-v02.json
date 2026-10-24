@@ -1,0 +1,24 @@
+{
+  "slug": "iris",
+  "actor": "monster:잔혹한 아이리스",
+  "clip": "E-idle-v02",
+  "direction": "E",
+  "role": "idle",
+  "layout": "phase_grid2",
+  "phase_count": 6,
+  "reference_sha256": "af28e6ee08fbbd6bfd6b779ba443449aefa6fafa6571f9a327ada7f13aff7511",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique severe female VALKYRIE war commander, long flowing crimson hair, silver winged temple helmet, dark silver armor with emerald inlays, broad layered feather-shaped pauldrons, dark green split battle skirt, fitted steel greaves and boots, deep green short battle cape. One broad silver SWORD with emerald hilt in anatomical RIGHT hand, LEFT gauntlet empty. Tall athletic imposing silhouette, no bird wings on back or princess gown; keep red hair/winged helmet/green armor.\nFixed camera throughout this sheet: EAST pure right profile; nose and toes RIGHT; no front-facing chest. Anatomical RIGHT weapon arm is near/foreground, LEFT empty hand far.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nCORRECTION: The FIRST reference establishes identity ONLY and may face the wrong side. The SECOND reference establishes a reviewed same-character camera direction. Adopt the required camera below consistently for ALL SIX poses; never copy the first reference camera automatically.\nExactly ONE anatomical RIGHT-held weapon throughout if the character uses one; never hand swap or duplicate. Left hand stays free. Natural head recoil is fine without changing the overall facing.\nLayout EXACTLY SIX COMPLETE distinct animation poses in TWO COLUMNS and THREE ROWS (2x3), read row-major 0,1 / 2,3 / 4,5, WIDE LANDSCAPE transparent canvas. Keep each figure body about200px high with identical scale. Each full silhouette including extended wings, scythe, axe, staff, sword, tail and cape must fit comfortably inside its own large cell with generous empty alpha gutters and outside margins. No pose or weapon intersects another; no anatomy reaches canvas edge. No floor/shadow/effects/text. Preserve character identity and action sequence. Not flipped, no mirrored anatomy.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/canonical-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-run-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "corrects": "E-idle-v01",
+  "confirmed_causes": [
+    "foreground_ownership"
+  ],
+  "secondary_camera_reference": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-run-v01.png",
+  "secondary_reference_sha256": "0b5c4fd221fe59b83da885998643f1ca6f98602454f94ec5189d4165e970c7ae"
+}

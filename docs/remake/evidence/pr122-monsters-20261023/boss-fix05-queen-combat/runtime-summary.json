@@ -1,0 +1,84 @@
+{
+  "schema": "pr122-queen-combat-game-scale-qa-v1",
+  "key": "monster:얼음 여왕",
+  "clips": 25,
+  "selected_unique_poses": 60,
+  "source_PNGs_preserved": 16,
+  "source_poses_preserved": 99,
+  "source_strict_pass": 15,
+  "source_strict_HOLD": 1,
+  "played_role_direction_cases": 25,
+  "run_not_authored_in_this_library": 8,
+  "captures": 129,
+  "engine": "Godot4.7.2",
+  "renderer": "llvmpipe/X11",
+  "speed_scale": 1,
+  "camera_zoom": 1,
+  "simulation_dt": 0.016666666666666666,
+  "reference_speed": 66,
+  "attack_interval": 1.56,
+  "release_events": [
+    {
+      "segment": "attack-E",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_0",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-S",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_2",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-W",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_4",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-SW",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_3",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-N",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_6",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-SE",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_1",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-NW",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_5",
+      "attack_elapsed": 0.816666666666668
+    },
+    {
+      "segment": "attack-NE",
+      "tick": 60,
+      "frame": 1,
+      "clip": "attack_7",
+      "attack_elapsed": 0.816666666666668
+    }
+  ],
+  "all_release_frames_authored_contact_index1": true,
+  "Main": false,
+  "quality_approval_changes": 0,
+  "default_catalog_switches": 0,
+  "production_connected": false,
+  "visual_observations": "Game-size E/S contact and W two-phase hit/corpse PNGs inspected privately; clear rendered sprites, W hit stays left-facing. N slit identity and exact diagonal headings remain HOLD. No ground/contact/damage quality approval."
+}

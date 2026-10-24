@@ -1,0 +1,56 @@
+{
+  "status": "PASS_EXACT_SOURCE_PACKET_PLUS_SCOPED_INDEPENDENT_FLOW_AND_CHOSEN_NEUTRAL_FLOOR_MODEL",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "hit",
+  "source_PASS": {
+    "path": "/workspace/scratch/mythic413-SE-hit-independent-qc-20261020-v01/SE-HIT-v02-exact-six-actual-source-one-shot-reaction-PASS-v01.json",
+    "sha256": "225fd160ac807ab31d8e95c044eab15a8f1c803b2fe9fe4d6f1c83dd023ee93b",
+    "bytes": 7755
+  },
+  "exact_packet_PASS": {
+    "path": "/workspace/scratch/mythic413-SE-hit-independent-qc-20261020-v01/SEhitSixActualRig01-exact-r001-request-source-reaction-PASS-v01.json",
+    "sha256": "d5a85c705d26b447114d822ff791f019313b3acf90917a21dc9f17e4cefbb889",
+    "bytes": 4913
+  },
+  "request_sha256": "2ba8f1d85281ea48cf0ba8056a86c49ef88b3d09d8a51dc85fc10352314ddf77",
+  "raw_sha256": "08748189d4e45b96ca924025b1c449cae8b836587366f1445249180c8c4b82b0",
+  "raw_bytes": 4072025,
+  "independent_floor_companion": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEhit-042b54-independent-once-neutral-source-and-actual-six-floor-companion-v01.json",
+    "sha256": "14a518ca0fcb70a4c3620fffb60c6cf01448fdbd922e6d118bfdbce1c65b3d36",
+    "bytes": 11718
+  },
+  "independent_actual_flow_companion": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEhit-v02-5c5870-independent-actual-flow-shared-attachments-fixed-material-companion-v01.json",
+    "sha256": "0945690ec44b44d6d1b53fc7b6fee59f48eb5d12e50a225308917c6e49b30bc0",
+    "bytes": 12636
+  },
+  "same_six_source_SHA256": [
+    "21f71ec58ab192bf532a03d9100261aa1c4ab455cd0040e24214f740a8a98f64",
+    "a4a81a0a348cf3639d4ee5d1e9b6241ff0ac9c338274aba7eb5145de61d562e8",
+    "98679828171d5ebda1f1b0252b766b0c5da4a71fb53b3732333b4f29903fe76c",
+    "0481b14770b0b547e2bdfe1d77ba21b47a90e0d403b4071bbd87f42e5a112495",
+    "a0bcbcfa4db6e5fe315756b3ba49cea9910b7026ac78605db2f889113887d5ca",
+    "7a2a017646871a92314c8a41ebf402079522a888b5acdd0a0f5cbe723dc1d1f4"
+  ],
+  "scope": [
+    "All actual float32 flow inputs and shared arm attachments bind to the exact reviewed six source files. All bilinear-cell-corner Jacobians are positive and the sampled analytic inverse/backtracking residual is finite and small.",
+    "The two original stationary shoe patches and all remaining actual alpha-positive texel quads, including the full staff, satisfy guarded floor bounds under one explicit native capture model with fixed camera-null sole thickness."
+  ],
+  "scoped_checks": {
+    "minimum_all_cell_corner_Jacobian": 0.3075641275527232,
+    "maximum_independent_sample_inverse_residual": 8.952838470577262e-13,
+    "stationary_shoe_guarded_min_Z_native": 1.0,
+    "remaining_material_guarded_min_Z_native": 97.71501134222467
+  },
+  "limits": [
+    "Positive local Jacobians and the finite sampled inverse checks do not assert injectivity of an arbitrary global map. The full-pixel renderer bound is separate pinned producer evidence.",
+    "The compatible chosen camera-null sole/depth model is not uniquely recovered hidden anatomy or a measured absolute floor. Actual support semantics/uncertainty remain those in SOURCE225fd.",
+    "SOURCE/cycle/packing and scoped model PASS add no complete-actor approvals and do not replace actual Godot/game verification."
+  ],
+  "new_source_or_profile_changes": 0,
+  "new_images": 0,
+  "actor_approvals_added": 0
+}

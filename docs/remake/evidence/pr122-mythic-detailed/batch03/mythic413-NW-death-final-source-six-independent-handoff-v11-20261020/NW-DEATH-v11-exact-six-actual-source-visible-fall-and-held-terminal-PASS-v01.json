@@ -1,0 +1,125 @@
+{
+  "status": "INDEPENDENT_EXACT_SIX_ACTUAL_SOURCE_VISIBLE_FALL_AND_HELD_TERMINAL_PASS",
+  "actor_id": 413,
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "death",
+  "source_visual_status": "PASS",
+  "source_roster": {
+    "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/NW-DEATH-final-six-actual-source-constant-root-and-native-registration-v11.json",
+    "sha256": "3cfeeeb94a8e8756daa7469209f6bac78d6b9ec452cebb67383cf115bf6dd4f3"
+  },
+  "frames": [
+    {
+      "phase": 0,
+      "name": "STAGGER0",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH-single-phase0-rest-transverse-final-v10/thunder_female-NW-DEATH-0-STAGGER0-rest-transverse-final-v10.png",
+      "sha256": "1484e7ae487c8c9455c5e707e4d493629c9c98ffd5f69ec3cfbecaa0c24db2ce",
+      "bytes": 498277,
+      "storage_edge_clipping": false,
+      "prior_motion_state_and_joint_pins_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "BUCKLE1",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH6-final-original-fabric-volume-v09/thunder_female-NW-DEATH-1-BUCKLE1-final-original-fabric-v09.png",
+      "sha256": "fa89d420a98c98bfbc9e106f34bec485fb11f742f47160603124dadc13474f8c",
+      "bytes": 499174,
+      "storage_edge_clipping": false,
+      "prior_motion_state_and_joint_pins_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "KNEES2",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH6-final-original-fabric-volume-v09/thunder_female-NW-DEATH-2-KNEES2-final-original-fabric-v09.png",
+      "sha256": "60a489704e824c786ad982e3b016dc195b83dc718f8f957f7fbed76df5ca1897",
+      "bytes": 463355,
+      "storage_edge_clipping": false,
+      "prior_motion_state_and_joint_pins_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "COLLAPSE3",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH6-final-original-fabric-volume-v09/thunder_female-NW-DEATH-3-COLLAPSE3-final-original-fabric-v09.png",
+      "sha256": "22cdd81c70acc0b59a0f6889f88ba9bae1b77cdd429c92beadf5d56d12bb22bc",
+      "bytes": 397099,
+      "storage_edge_clipping": false,
+      "prior_motion_state_and_joint_pins_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "IMPACT4",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH6-final-original-fabric-volume-v09/thunder_female-NW-DEATH-4-IMPACT4-final-original-fabric-v09.png",
+      "sha256": "71f30ed0ca5b6c6f59dc4c31bdba21c10423397ce9a1f1a791ada62275e97a5c",
+      "bytes": 264226,
+      "storage_edge_clipping": false,
+      "prior_motion_state_and_joint_pins_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "HELD_DEAD5",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH6-final-original-fabric-volume-v09/thunder_female-NW-DEATH-5-HELD_DEAD5-final-original-fabric-v09.png",
+      "sha256": "9806988d9ee9816e7734764cb303299ff13e3540a0787d9c8f98f36acb551f09",
+      "bytes": 252406,
+      "storage_edge_clipping": false,
+      "prior_motion_state_and_joint_pins_unchanged": true
+    }
+  ],
+  "basis": {
+    "C": 2048,
+    "body_unit": 2,
+    "root": [
+      641,
+      1058.3
+    ],
+    "storage": [
+      128,
+      128
+    ],
+    "runtime_death_seconds_declared": 0.8,
+    "resource_role_seconds_declared": 0.65,
+    "terminal_held": true,
+    "loop": false
+  },
+  "visual_review_basis": [
+    "New dedicated full6 source fall/impact/held views, source shoulder/elbow closeups and native final held body/gear.",
+    "Final actual whitefold elbow operator phase2 exact60a489 and the other five final elbow ROIs.",
+    "Finalphase0 actual upperarm rest-transverse correction1484e7ae in torso context; no view of old motions/approved actors.",
+    "Exact final selection pins and unchanged prior source/body/joint states bind narrowed material corrections to the full6 motion reading."
+  ],
+  "visual_findings": [
+    "Distinct stagger, buckle, kneel, collapse, impact and held-dead phases form a readable native jointed death action.",
+    "Complete double-ended RIGHTstaff/grip, gold counter/stilettos, original costume, face, hair/bun and ribbon remain recognizable and present.",
+    "RIGHT proximal shoulder puff now joins torso; the prior dark gap is closed.",
+    "Genuine original whitefold UV forms a broad rounded innerelbow; prior aperture and point-pinch are closed while original good opaque material remains intact.",
+    "Phase0 LEFT upper sleeve uses the actual torso rest-transverse basis and retains its visible breadth, closing the prior wire-like collapsed upperarm. Only its bounded source region changed; shoulder/elbow nodes, legs, staff and root remain fixed.",
+    "Final held pose retains its fallen posture and gear; animation is not declared as a loop or a whole-figure transform."
+  ],
+  "closed_source_HOLDs": [
+    "RIGHT_SHOULDER_PUFF_TORSO_GAP",
+    "LEFT_ELBOW_UPSTREAM_SLEEVE_CUT",
+    "LEFT_WHITE_SLEEVE_INNER_ELBOW_APERTURE_AND_PINCH",
+    "PHASE0_LEFT_UPPERARM_EDGE_ON_COLLAPSE"
+  ],
+  "blocking_source_HOLD_count": 0,
+  "visual_limitations": [
+    "This source conclusion is based on actual visible native materials and the selected authored2.5D surface construction, not uniquely recovered hidden volumetric anatomy.",
+    "Independent final finite surface/raster-floor numeric companion is a separate metadata gate pending peer closure.",
+    "Actual game death playback uses declared.8second runtime and held terminal; the.65second resource-role timing is a distinct existing value. Game playback/fade/profile integration is pending parent validation.",
+    "No whole actor detailed approval is added by this source conclusion."
+  ],
+  "prior_phase2_operator_PASS": {
+    "path": "/workspace/scratch/mythic413-NW-death-independent-qc-20261020-v01/NW-DEATH-v07-independent-single-phase2-original-whitefold-volume-PASS-v01.json",
+    "sha256": "7d0de6dace1d4094f51093bfd5ec2257952f74b83023d79546869f64258889c3"
+  },
+  "frozen_private_ledger": {
+    "path": "/workspace/scratch/mythic413-NW-death-independent-qc-20261020-v01/private-image-ledger-through-NW-DEATH-v11-final-source-frozen-v01.json",
+    "sha256": "dac29a8e34151fd012eb8b8601de3ddbb72b0aa0cbb8dc4d47f9649001277501",
+    "cumulative_returned_image_bytes": 3530344
+  },
+  "new_images_for_final_selection_and_formal_proof": 0,
+  "images_to_root_or_user": 0,
+  "repository_changes": 0,
+  "game_validation": false,
+  "actor_approvals_added": 0
+}

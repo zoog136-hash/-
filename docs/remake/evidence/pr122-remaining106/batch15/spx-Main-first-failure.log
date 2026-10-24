@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+ERROR: Error calling method from 'filter': 'GDScript::<anonymous lambda>': Cannot convert argument 1 from Object to Object.
+   at: filter (core/variant/array.cpp:619)
+   GDScript backtrace (most recent call first):
+       [0] play_source_effect (res://scripts/animation/combat_vfx.gd:111)
+       [1] run (res://tests/run_private_spx_main_review.gd:67)
+SCRIPT ERROR: Trying to assign an array of type "Array" to a variable of type "Array[TwilightSourceSPXPlayer]".
+          at: TwilightCombatVFX.play_source_effect (res://scripts/animation/combat_vfx.gd:111)
+          GDScript backtrace (most recent call first):
+              [0] play_source_effect (res://scripts/animation/combat_vfx.gd:111)
+              [1] run (res://tests/run_private_spx_main_review.gd:67)
+ERROR: Error calling method from 'filter': 'GDScript::<anonymous lambda>': Cannot convert argument 1 from Object to Object.
+   at: filter (core/variant/array.cpp:619)
+   GDScript backtrace (most recent call first):
+       [0] play_source_effect (res://scripts/animation/combat_vfx.gd:111)
+       [1] run (res://tests/run_private_spx_main_review.gd:68)
+SCRIPT ERROR: Trying to assign an array of type "Array" to a variable of type "Array[TwilightSourceSPXPlayer]".
+          at: TwilightCombatVFX.play_source_effect (res://scripts/animation/combat_vfx.gd:111)
+          GDScript backtrace (most recent call first):
+              [0] play_source_effect (res://scripts/animation/combat_vfx.gd:111)
+              [1] run (res://tests/run_private_spx_main_review.gd:68)
+PR100_GAMEPLAY_FAIL: Main effect preview 19522
+SCRIPT ERROR: Cannot call method 'set_process' on a previously freed instance.
+          at: run (res://tests/run_private_spx_main_review.gd:71)
+          GDScript backtrace (most recent call first):
+              [0] run (res://tests/run_private_spx_main_review.gd:71)

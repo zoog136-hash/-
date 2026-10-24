@@ -1,0 +1,6 @@
+{"phase": 0, "source": {"path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/actual-E-HIT6-own-native-articulated-v01/phase0-actual-E-hit-stable_guard-v01/thunder_female-E-hit-phase0-stable_guard-actual-native-v01.png", "sha256": "b907049346fffa92c7fafcf63413e009e65e775ac2943cda6a1c9c641f407e11", "bytes": 981079}, "inverse_residual": 0.0, "strong": [364779]}
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-E-hit-author-20261020-v01/author-E-HIT6-own-native-fixed-brace-spine-head-LEFTguard-v01.py", line 82, in <module>
+    dx,dy=field(xx.astype(float),yy.astype(float),p);assert np.max(abs(dx[rightprotect]))<1e-9 and np.max(abs(dy[rightprotect]))<1e-9
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

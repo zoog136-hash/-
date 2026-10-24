@@ -1,0 +1,35 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01-3D-load101",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "newly_authored_poses": 1,
+  "game_phases": [
+    1
+  ],
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-W-run-LEFT-halfcycles-3D-v02/3D-W-RUN-LEFT-game1-authority.png",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-run-LEFT-halfcycles-3D-v02/3D-W-RUN-LEFT-game1-authority.png": "a81230f6f30079c798e4c9b5352e4978b312e16e6e97502786b11c7b1db11033",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png": "fb8e5354e393d3f4f2eee1c3d79a9c0e4622e688028353202d8d904e67744926",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  },
+  "prompt": "Create ONE brand-new finished GIRTAS actual RUN animation key, game phase1. Target1254x1254 transparent RGBA, one complete figure only, facing WEST/LEFT true side camera. At least35px transparent space around all hair/crown/hardrays/longrobe/twohands/twoboots/completeblade. No bodypart, ray, hair or weapon clipping. No panels, text, ground, shadow, mannequins or referencecolors.\nFIRST reference is absolute PRIMARY 3D pose, camera, anatomical ownership, depth, bone lengths, run lean and real body bob authority. Dress exactly this mannequin. Near anatomical LEFT blue leg FLAT SOLE supports under body with visibly flexed load-bearing knee. FAR anatomical RIGHT orange leg is passing/recovering, its entire boot fully lifted AIR behind/under pelvis. This is compressed RUN support, not upright straight-legged walk; retain same limb segment lengths, lower pelvis through real knee flexion. Show two real hip\u2192thigh\u2192knee\u2192shin\u2192boot chains with original Wmodel near/far occlusion, never just swapping boots or changing caption. Preserve SAME fixed rigid skull/torso/pauldron/pelvis proportions while joints flex. Keep genuine forward-running lean, bent elbows and momentum. Follow emptynearLEFTarm counter-swing from3D; anatomical FAR RIGHT arm carries single original fiery sinuousblade in low compact running carry, not an attack. Exactly one head, two arms and two legs.\nSECOND reference is ORIGINAL appearance ONLY: pale male face, longsilverwhite hair, black/gold ornate helmet and hard armor, gold chestjewel, thin HARD gold radial rays. All old arms+legs have been deliberately removed, so do NOT reconstruct old leftfootforward stance or old static lowarm; obey3D joints instead. Complete any cut reference ornaments smoothly; this is a designpiece, not damaged armor. No soft featherwings/new face/new armor. THIRD reference is complete ORIGINAL anatomical RIGHT-hand long GOLD/ORANGE SINUOUS flameblade outline/material: one original multibend flowing waveblade, never straight sword or a second weapon. Correct farRIGHT hand/wrist grip; anatomical LEFT hand EMPTY. FOURTH reference is exact original LONG dark robe/goldtrim hanging panel material. Preserve the long flowing darkrobe and ornate gold tails, not segmented armored pants, shortskirt or bareflesh. Original side slit and cloth lag can reveal upperthigh/knee chains enough to prove actual ownership; no large robe curtain hiding both hiproots.\nThis is a brand-new dedicated actual RUN key, not reused walk or colorchange. Keep high detail painterly original game appearance and physically coherent bone/arm/leg joints. Hair and robe follow running momentum, goldrays remain rigid. Keep same original physical camera and body, all equipment complete. Render only faithful finished source art with a clean transparent silhouette. Never render blue/orange mannequin materials or referencefloor. Pose must be materially identical in hip/knee/boot/arm relation to the primary3D authority.",
+  "pose_contract": "Near anatomical LEFT blue leg FLAT SOLE supports under body with visibly flexed load-bearing knee. FAR anatomical RIGHT orange leg is passing/recovering, its entire boot fully lifted AIR behind/under pelvis. This is compressed RUN support, not upright straight-legged walk; retain same limb segment lengths, lower pelvis through real knee flexion.",
+  "wholebody_AIR": false,
+  "support_leg": "LEFT",
+  "primary_physical_authority": "/workspace/scratch/girtas-W-run-LEFT-halfcycles-3D-v02/3D-W-RUN-LEFT-game1-authority.png",
+  "user_authorization": "Continue PR122 actual animation production. Private production tools allowed; no images/binary in mainchat. Do not claim actor completion from sources.",
+  "requested_at": "2026-10-19T15:42:53.850073+00:00",
+  "actor_approval": false
+}

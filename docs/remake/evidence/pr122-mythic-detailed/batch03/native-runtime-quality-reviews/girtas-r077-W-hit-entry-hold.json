@@ -1,0 +1,54 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_W_HIT_SEQUENCE_HOLD_EXISTING_IDLE_TRANSITION",
+  "actor_key": "transform:267",
+  "revision": "r077",
+  "checkpoint": "e37b7c241568386510fd829241ee0b1346693ab2",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r077/SpriteFrames.tres",
+  "frames_sha256": "9f5a034a88866d41540a61ad4700e4310c546db26e7916ba6b1e2d75288ee2e8",
+  "scope": [
+    "Widle_phase0_to_hit0",
+    "Whit_all6",
+    "Whitphase1_to2_to3_armchains_and_scale"
+  ],
+  "source_authorship": {
+    "newly_authored_poses": 1,
+    "reused_existing_poses": 5,
+    "edited_row": 2
+  },
+  "all_nine_actual_tres_crop_regions_margins_SHA_match": true,
+  "hit_sequence_status": "PASS_SCOPED",
+  "pose_canvas_sizes": [
+    1024,
+    1024,
+    2720,
+    1024,
+    1024,
+    1024
+  ],
+  "findings": [
+    "All six trueW hit poses retain same pale face/hair/crown, hardgoldspines, darkgoldtrimskirt and long sinuous right-hand weapon.",
+    "Normalized phase2 shows two continuous physical arm chains: near pauldron\u2192bent elbow\u2192raised free forearm/fist and far weapon shoulder/arm\u2192weapon hand. No extra third hanging fist remains.",
+    "Phase1\u21922\u21923 maintains physical head, shoulderplate and hand scale despite phase2canvas2720. Recoil leans back/compresses torso, then phase3 bends forward with support change; no resolution-driven enlargement.",
+    "Foot/bracing/backstep and recoil are authored motion, not forced idle footlock. Current hit anchors/sourceRGBA stay unchanged.",
+    "Existing Widle support reference uses cellcenter256/768, approximately68sourcepx left of lowestsole midpoint. This produces approximately19worldpx transition placement error; idle-only SHA-pinned support proposal preserves all hit motion."
+  ],
+  "idle_transition_status": "HOLD_EXISTING_IDLE_ROOT_REFERENCE",
+  "idle_lowfootband_midpoint_world_x": 15.202,
+  "hit0_lowfootband_midpoint_world_x": -7.46,
+  "lowest_idle_sole_midpoint_source_x": [
+    324,
+    836,
+    324,
+    836,
+    325,
+    837
+  ],
+  "metadata_only_idle_proposal": "/workspace/scratch/girtas-r077-W-hit-runtime-qc/W-idle-support-layout-proposal-v01.json",
+  "proposal_proof_source_pixels_unchanged": true,
+  "new_compiled_transition_QC": "PENDING_IDLE_METADATA_REVISION",
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_previews_not_for_chat": true,
+  "private_preview_bytes": 243115
+}

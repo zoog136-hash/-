@@ -112,6 +112,10 @@ func refresh_visible() -> void:
 			chunk.texture_cache = png_textures
 			chunk.build_png(source,key,png_pack,png_region)
 		elif not png_review_active or debug_collision: chunk.build(source,key,floor_material,render_profile,debug_collision)
+		# PNG-only chunks do not use RemakeChunk's source-edge pass. Overlay
+		# live closed doors on those chunks so artwork cannot hide a blocked edge.
+		if not png_region.is_empty() or (png_review_active and not debug_collision):
+			_append_png_door_boundaries(chunk,key)
 		chunks[key] = chunk
 		built_chunks += 1
 	for key: Vector2i in chunks.keys():
@@ -124,6 +128,25 @@ func refresh_visible() -> void:
 	stream_build_usec = maxi(stream_build_usec,Time.get_ticks_usec()-start)
 	_refresh_markers()
 	if source is RemakePlayableField and is_instance_valid(source.collision_stream): source.collision_stream.refresh()
+
+
+func _append_png_door_boundaries(chunk: Node2D,key: Vector2i) -> void:
+	if source==null: return
+	# SourceDoors.flags contains only CLOSED door edges. The same flags drive
+	# navigation and collision, so open doors remove these drawn ledges.
+	for cell: Vector2i in source.source_doors.flags:
+		if cell.x<0 or cell.y<0 or cell.x>=source.width or cell.y>=source.height: continue
+		if Vector2i(cell.x/CHUNK_SIZE,cell.y/CHUNK_SIZE)!=key: continue
+		var flags: int=int(source.source_doors.flags[cell])
+		for heading: int in [0,2]:
+			if (flags & (64 if heading==0 else 128))==0: continue
+			var edge: PackedVector2Array=source.coordinates.edge_points(cell,heading)
+			var boundary:=BoundaryRow.new()
+			boundary.position.y=roundi((edge[0].y+edge[1].y)*0.5)
+			boundary.debug=debug_collision
+			boundary.wall_height=float(render_profile.get("unclassified_boundary_height",12))
+			boundary.segments=[edge]
+			chunk.add_child(boundary)
 
 func set_visual_mode(mode: String) -> void:
 	var collision: bool = mode == "collision"

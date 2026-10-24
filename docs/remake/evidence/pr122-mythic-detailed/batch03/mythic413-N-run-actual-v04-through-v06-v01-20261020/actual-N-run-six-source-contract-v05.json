@@ -1,0 +1,1476 @@
+{
+  "status": "ACTUAL_DEDICATED_N_RUN_SIX_POSES_PENDING_QUALITY_PHYSICAL_CYCLE_AND_GAME",
+  "actor": "transform:413",
+  "role": "run",
+  "direction": "N",
+  "frames": [
+    {
+      "phase": 0,
+      "name": "LEFT-contact",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v05/N-run-phase0-actual-native-rig-v05.png",
+      "sha256": "f7c0c17f7b4f5d5f2bcbfe6b685b7f346e2b6a19f22031d479b6213163305a30",
+      "bytes": 432023,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        -10,
+        -10
+      ],
+      "body_rigid_torso_lean_degrees": 1.75,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_chosen_rig_anchor": [
+            608.5624443050373,
+            611.3506907186814
+          ],
+          "knee_from_fixed_187p5_bones": [
+            615.0,
+            561.8123164958993
+          ],
+          "ankle_chosen_rig_anchor": [
+            616.5,
+            763.0434782608695
+          ],
+          "structural_heel": [
+            616.5,
+            850
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 0,
+            "side": "L",
+            "hip": [
+              608.5624443050373,
+              0.0,
+              306.341362469199
+            ],
+            "knee": [
+              615.0,
+              -184.38271531447396,
+              272.9075148004679
+            ],
+            "ankle": [
+              616.5,
+              -144.1504225035406,
+              89.78088480041762
+            ],
+            "heel": [
+              616.5,
+              -150.42678486195655,
+              0.0
+            ],
+            "toe": [
+              616.5,
+              -240.20766966237417,
+              6.276362358415963
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              2.842170943040401e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "heel-contact",
+            "foot_pitch_degrees": 3.99890216311585
+          }
+        },
+        "R": {
+          "hidden_hip_chosen_rig_anchor": [
+            676.5307284819338,
+            609.2740718204135
+          ],
+          "knee_from_fixed_187p5_bones": [
+            715.0,
+            810.3143065315143
+          ],
+          "ankle_chosen_rig_anchor": [
+            726.0,
+            665.8077136594005
+          ],
+          "structural_heel": [
+            726,
+            764
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 0,
+            "side": "R",
+            "hip": [
+              676.5307284819338,
+              0.0,
+              308.41798136746695
+            ],
+            "knee": [
+              715.0,
+              67.85816736904955,
+              137.91392197243854
+            ],
+            "ankle": [
+              726,
+              135.0,
+              312.6343395284799
+            ],
+            "heel": [
+              726,
+              180.0,
+              234.69205318788045
+            ],
+            "toe": [
+              726,
+              102.05771365940052,
+              189.69205318788045
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              2.842170943040401e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": -29.999999999999996
+          }
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          557.8727307471484,
+          425.8121423266582
+        ],
+        "elbow": [
+          536.5407752163218,
+          513.5044890464881
+        ],
+        "wrist": [
+          500.6128164946723,
+          614.6488501453423
+        ]
+      },
+      "left_coat_tail_degrees": -4,
+      "strong_body_components": [
+        {
+          "area": 143230,
+          "bbox": [
+            515,
+            259,
+            1008,
+            1082
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-load-footroll",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v05/N-run-phase1-actual-native-rig-v05.png",
+      "sha256": "d9df5a559d5f5abc514c4f5f7eae4e99a7875be0575a5ce1d666988b9bfcc0f6",
+      "bytes": 438994,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        -3,
+        35
+      ],
+      "body_rigid_torso_lean_degrees": 0.5,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_chosen_rig_anchor": [
+            615.8707773527009,
+            655.3845387159658
+          ],
+          "knee_from_fixed_187p5_bones": [
+            611.0,
+            787.8961077362136
+          ],
+          "ankle_chosen_rig_anchor": [
+            616.5,
+            893.0
+          ],
+          "structural_heel": [
+            616.5,
+            983
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.035,
+          "model": {
+            "phase": 1,
+            "side": "L",
+            "hip": [
+              615.8707773527009,
+              40.0,
+              280.3075144719146
+            ],
+            "knee": [
+              611.0,
+              -41.07484741942508,
+              111.31226411292566
+            ],
+            "ankle": [
+              616.5,
+              145.128770693599,
+              90.0
+            ],
+            "heel": [
+              616.5,
+              145.128770693599,
+              0.0
+            ],
+            "toe": [
+              616.5,
+              55.128770693598995,
+              0.0
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              2.842170943040401e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "full-support",
+            "foot_pitch_degrees": 0.0
+          }
+        },
+        "R": {
+          "hidden_hip_chosen_rig_anchor": [
+            683.8681881210646,
+            654.7911343020764
+          ],
+          "knee_from_fixed_187p5_bones": [
+            725.0,
+            609.2233981866516
+          ],
+          "ankle_chosen_rig_anchor": [
+            733.0,
+            771.0434782608695
+          ],
+          "structural_heel": [
+            733,
+            858
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 1,
+            "side": "R",
+            "hip": [
+              683.8681881210646,
+              40.0,
+              280.900918885804
+            ],
+            "knee": [
+              725.0,
+              -139.51183161573175,
+              245.68833077414956
+            ],
+            "ankle": [
+              733,
+              26.276362358415962,
+              158.47293798829807
+            ],
+            "heel": [
+              733,
+              20.0,
+              68.69205318788045
+            ],
+            "toe": [
+              733,
+              -69.78088480041762,
+              74.96841554629641
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              5.684341886080802e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": 3.99890216311585
+          }
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          569.2406286766172,
+          468.7843532003926
+        ],
+        "elbow": [
+          532.9488868986111,
+          550.1041507820303
+        ],
+        "wrist": [
+          491.604976292294,
+          625.4678095027749
+        ]
+      },
+      "left_coat_tail_degrees": 6,
+      "strong_body_components": [
+        {
+          "area": 142458,
+          "bbox": [
+            543,
+            306,
+            1012,
+            1130
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-drive-flight",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v05/N-run-phase2-actual-native-rig-v05.png",
+      "sha256": "8cb47ad78af04b53c702e3cd082431cb8e3466226ab221edc3d7da1464f0ed72",
+      "bytes": 421158,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        12,
+        -48
+      ],
+      "body_rigid_torso_lean_degrees": -1.25,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_chosen_rig_anchor": [
+            631.3376940840025,
+            571.0437146522806
+          ],
+          "knee_from_fixed_187p5_bones": [
+            594.0,
+            769.9379494076237
+          ],
+          "ankle_chosen_rig_anchor": [
+            582.0,
+            643.8077136594005
+          ],
+          "structural_heel": [
+            582,
+            742
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 2,
+            "side": "L",
+            "hip": [
+              631.3376940840025,
+              0.0,
+              346.6483385355998
+            ],
+            "knee": [
+              594.0,
+              47.61112018694768,
+              169.17910786438324
+            ],
+            "ankle": [
+              582,
+              135.0,
+              334.6343395284799
+            ],
+            "heel": [
+              582,
+              180.0,
+              256.69205318788045
+            ],
+            "toe": [
+              582,
+              102.05771365940052,
+              211.69205318788045
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              2.842170943040401e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": -29.999999999999996
+          }
+        },
+        "R": {
+          "hidden_hip_chosen_rig_anchor": [
+            699.3215119254363,
+            572.5271268346308
+          ],
+          "knee_from_fixed_187p5_bones": [
+            714.0,
+            520.8930493033315
+          ],
+          "ankle_chosen_rig_anchor": [
+            698.0,
+            725.0434782608695
+          ],
+          "structural_heel": [
+            698,
+            812
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 2,
+            "side": "R",
+            "hip": [
+              699.3215119254363,
+              0.0,
+              345.1649263532496
+            ],
+            "knee": [
+              714.0,
+              -184.28627422764205,
+              313.87018048211
+            ],
+            "ankle": [
+              698,
+              -93.72363764158403,
+              150.47293798829807
+            ],
+            "heel": [
+              698,
+              -100.0,
+              60.69205318788045
+            ],
+            "toe": [
+              698,
+              -189.78088480041762,
+              66.96841554629641
+            ],
+            "bone_length_residuals": [
+              0.0,
+              0.0
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": 3.99890216311585
+          }
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          590.4277863668694,
+          383.1065457617824
+        ],
+        "elbow": [
+          551.2588255459666,
+          436.2647295927842
+        ],
+        "wrist": [
+          536.4406369045544,
+          381.92854196991607
+        ]
+      },
+      "left_coat_tail_degrees": 10,
+      "strong_body_components": [
+        {
+          "area": 139512,
+          "bbox": [
+            564,
+            228,
+            1022,
+            1052
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-contact",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v05/N-run-phase3-actual-native-rig-v05.png",
+      "sha256": "468dc2a6b0e81eb11a5f80c16e582d012b64bb82173db5ca13cc059d5ed78993",
+      "bytes": 421800,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        10,
+        -10
+      ],
+      "body_rigid_torso_lean_degrees": -1.75,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_chosen_rig_anchor": [
+            629.478599701332,
+            608.6633015562171
+          ],
+          "knee_from_fixed_187p5_bones": [
+            610.0,
+            813.0614280614925
+          ],
+          "ankle_chosen_rig_anchor": [
+            599.0,
+            665.8077136594005
+          ],
+          "structural_heel": [
+            599,
+            764
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 3,
+            "side": "L",
+            "hip": [
+              629.478599701332,
+              0.0,
+              309.02875163166334
+            ],
+            "knee": [
+              610.0,
+              71.19447077753912,
+              136.66813697628046
+            ],
+            "ankle": [
+              599,
+              135.0,
+              312.6343395284799
+            ],
+            "heel": [
+              599,
+              180.0,
+              234.69205318788045
+            ],
+            "toe": [
+              599,
+              102.05771365940052,
+              189.69205318788045
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              0.0
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": -29.999999999999996
+          }
+        },
+        "R": {
+          "hidden_hip_chosen_rig_anchor": [
+            697.4468838782285,
+            610.7399204544851
+          ],
+          "knee_from_fixed_187p5_bones": [
+            711.0,
+            561.9346183894345
+          ],
+          "ankle_chosen_rig_anchor": [
+            708.5,
+            763.0434782608695
+          ],
+          "structural_heel": [
+            708.5,
+            850
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 3,
+            "side": "R",
+            "hip": [
+              697.4468838782285,
+              0.0,
+              306.9521327333954
+            ],
+            "knee": [
+              711.0,
+              -183.9019355839302,
+              273.0015637856774
+            ],
+            "ankle": [
+              708.5,
+              -144.1504225035406,
+              89.78088480041762
+            ],
+            "heel": [
+              708.5,
+              -150.42678486195655,
+              0.0
+            ],
+            "toe": [
+              708.5,
+              -240.20766966237417,
+              6.276362358415963
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              2.842170943040401e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "heel-contact",
+            "foot_pitch_degrees": 3.99890216311585
+          }
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          590.2102900839168,
+          420.37628697530977
+        ],
+        "elbow": [
+          559.9411983948395,
+          461.4710809073669
+        ],
+        "wrist": [
+          576.6138204839303,
+          406.95481110949504
+        ]
+      },
+      "left_coat_tail_degrees": 4,
+      "strong_body_components": [
+        {
+          "area": 139324,
+          "bbox": [
+            546,
+            267,
+            1019,
+            1091
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-load-footroll",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v05/N-run-phase4-actual-native-rig-v05.png",
+      "sha256": "57ae18c2923e0342fdd35ba362e5c6535ed2b2da6641a3a62896d910580d367b",
+      "bytes": 429608,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        3,
+        35
+      ],
+      "body_rigid_torso_lean_degrees": -0.5,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_chosen_rig_anchor": [
+            622.132573417652,
+            654.616603592109
+          ],
+          "knee_from_fixed_187p5_bones": [
+            600.0,
+            612.7630480089281
+          ],
+          "ankle_chosen_rig_anchor": [
+            592.0,
+            771.0434782608695
+          ],
+          "structural_heel": [
+            592,
+            858
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 4,
+            "side": "L",
+            "hip": [
+              622.132573417652,
+              40.0,
+              281.0754495957715
+            ],
+            "knee": [
+              600.0,
+              -141.8466490373417,
+              241.09801311214858
+            ],
+            "ankle": [
+              592,
+              26.276362358415962,
+              158.47293798829807
+            ],
+            "heel": [
+              592,
+              20.0,
+              68.69205318788045
+            ],
+            "toe": [
+              592,
+              -69.78088480041762,
+              74.96841554629641
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              0.0
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": 3.99890216311585
+          }
+        },
+        "R": {
+          "hidden_hip_chosen_rig_anchor": [
+            690.1299841860157,
+            655.2100080059984
+          ],
+          "knee_from_fixed_187p5_bones": [
+            714.0,
+            786.2872077798606
+          ],
+          "ankle_chosen_rig_anchor": [
+            708.5,
+            893.0
+          ],
+          "structural_heel": [
+            708.5,
+            983
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.035,
+          "model": {
+            "phase": 4,
+            "side": "R",
+            "hip": [
+              690.1299841860157,
+              40.0,
+              280.4820451818821
+            ],
+            "knee": [
+              714.0,
+              -40.87240040251922,
+              113.01226522688617
+            ],
+            "ankle": [
+              708.5,
+              145.128770693599,
+              90.0
+            ],
+            "heel": [
+              708.5,
+              145.128770693599,
+              0.0
+            ],
+            "toe": [
+              708.5,
+              55.128770693598995,
+              0.0
+            ],
+            "bone_length_residuals": [
+              0.0,
+              0.0
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "full-support",
+            "foot_pitch_degrees": 0.0
+          }
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          578.7661490179603,
+          467.23102988168216
+        ],
+        "elbow": [
+          543.2787957228053,
+          522.9234688308326
+        ],
+        "wrist": [
+          544.6190925303061,
+          483.9336803668283
+        ]
+      },
+      "left_coat_tail_degrees": -5,
+      "strong_body_components": [
+        {
+          "area": 139574,
+          "bbox": [
+            522,
+            309,
+            1015,
+            1133
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-drive-flight",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v05/N-run-phase5-actual-native-rig-v05.png",
+      "sha256": "7baf2d6c67d6abc24bd74483a9e10ac7169f843230550bb864bffe87f6397ff9",
+      "bytes": 428200,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        -12,
+        -48
+      ],
+      "body_rigid_torso_lean_degrees": 1.25,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_chosen_rig_anchor": [
+            606.6832475329655,
+            572.963424535322
+          ],
+          "knee_from_fixed_187p5_bones": [
+            611.0,
+            520.9521197595512
+          ],
+          "ankle_chosen_rig_anchor": [
+            627.0,
+            725.0434782608695
+          ],
+          "structural_heel": [
+            627,
+            812
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 5,
+            "side": "L",
+            "hip": [
+              606.6832475329655,
+              0.0,
+              344.7286286525584
+            ],
+            "knee": [
+              611.0,
+              -184.84107398366666,
+              313.56145013567925
+            ],
+            "ankle": [
+              627,
+              -93.72363764158403,
+              150.47293798829807
+            ],
+            "heel": [
+              627,
+              -100.0,
+              60.69205318788045
+            ],
+            "toe": [
+              627,
+              -189.78088480041762,
+              66.96841554629641
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              5.684341886080802e-14
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": 3.99890216311585
+          }
+        },
+        "R": {
+          "hidden_hip_chosen_rig_anchor": [
+            674.6670653743994,
+            571.4800123529718
+          ],
+          "knee_from_fixed_187p5_bones": [
+            731.0,
+            764.2073591017021
+          ],
+          "ankle_chosen_rig_anchor": [
+            744.0,
+            643.8077136594005
+          ],
+          "structural_heel": [
+            744,
+            742
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0,
+          "model": {
+            "phase": 5,
+            "side": "R",
+            "hip": [
+              674.6670653743994,
+              0.0,
+              346.21204083490863
+            ],
+            "knee": [
+              731.0,
+              41.959940857054136,
+              172.36666747185265
+            ],
+            "ankle": [
+              744,
+              135.0,
+              334.6343395284799
+            ],
+            "heel": [
+              744,
+              180.0,
+              256.69205318788045
+            ],
+            "toe": [
+              744,
+              102.05771365940052,
+              211.69205318788045
+            ],
+            "bone_length_residuals": [
+              2.842170943040401e-14,
+              0.0
+            ],
+            "foot_length_residual": 0.0,
+            "sole_state": "AIR",
+            "foot_pitch_degrees": -29.999999999999996
+          }
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          557.6145728129068,
+          386.98959529793433
+        ],
+        "elbow": [
+          526.3676167220347,
+          467.6904486704675
+        ],
+        "wrist": [
+          497.29098108108894,
+          510.3349003588605
+        ]
+      },
+      "left_coat_tail_degrees": -9,
+      "strong_body_components": [
+        {
+          "area": 140879,
+          "bbox": [
+            502,
+            222,
+            1004,
+            1045
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    }
+  ],
+  "fixed_physical_C": 1920,
+  "bodyunit": 1.875,
+  "common_rig_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "native_output_canvas": [
+    1536,
+    1536
+  ],
+  "logical_canvas": 1024,
+  "actual_player_phase_ground_step": [
+    0,
+    132.8727272728626
+  ],
+  "actual_old_calf_residue_removed_alpha16": 156,
+  "actual_run_speed": 262.5,
+  "phase_seconds": 0.064,
+  "cycle_seconds": 0.384,
+  "source_handoff_sha256": "257e6675357a63a8790b8a55732a1851f312a2c6a362bdd31d5a13bc62949763",
+  "semantics": "Actual dedicated articulated native materials and freeLEFTarm/cape/bodybob; no shared motion/color-only loop or fast WALK relabel",
+  "UV": "No t-clamp; inverse map samples alpha-bounded semantic real material, each bone region preclipped with <=7px joint overlap. Complete hand and counter/stiletto are explicitly whole real material groups.",
+  "physical_limitations": [
+    "One chosen camera/hip-depth/foot rig is constructively fixed, not a unique recovery of hidden source anatomy.",
+    "Original complete front/back shoe RGBA are actual source-view materials; back-shell planar pitch is used for the visible CONTACT to LOAD material change. Hidden toe controls are not measured bitmap pixels.",
+    "Full painted sole depth/occlusion and all6 real source quality/Player closure require independent review."
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0,
+  "constructive_fixed_bone_rig": {
+    "camera_depth_factor": 0.45,
+    "projection": "x=X; y=ROOTY+.45*depth-height",
+    "bone_lengths_native": [
+      187.5,
+      187.5
+    ],
+    "foot_length_native": 90.0,
+    "heel_to_ankle_native": 90.0,
+    "hips_depth_contact_flight": 0,
+    "hips_depth_load": 40,
+    "hidden_hip_source_y": 620,
+    "back_foot_material_pitch_degrees": -30,
+    "front_contact_pitch_degrees": 3.99890216311585,
+    "models": [
+      {
+        "phase": 0,
+        "side": "L",
+        "hip": [
+          608.5624443050373,
+          0.0,
+          306.341362469199
+        ],
+        "knee": [
+          615.0,
+          -184.38271531447396,
+          272.9075148004679
+        ],
+        "ankle": [
+          616.5,
+          -144.1504225035406,
+          89.78088480041762
+        ],
+        "heel": [
+          616.5,
+          -150.42678486195655,
+          0.0
+        ],
+        "toe": [
+          616.5,
+          -240.20766966237417,
+          6.276362358415963
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          2.842170943040401e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "heel-contact",
+        "foot_pitch_degrees": 3.99890216311585
+      },
+      {
+        "phase": 0,
+        "side": "R",
+        "hip": [
+          676.5307284819338,
+          0.0,
+          308.41798136746695
+        ],
+        "knee": [
+          715.0,
+          67.85816736904955,
+          137.91392197243854
+        ],
+        "ankle": [
+          726,
+          135.0,
+          312.6343395284799
+        ],
+        "heel": [
+          726,
+          180.0,
+          234.69205318788045
+        ],
+        "toe": [
+          726,
+          102.05771365940052,
+          189.69205318788045
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          2.842170943040401e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": -29.999999999999996
+      },
+      {
+        "phase": 1,
+        "side": "L",
+        "hip": [
+          615.8707773527009,
+          40.0,
+          280.3075144719146
+        ],
+        "knee": [
+          611.0,
+          -41.07484741942508,
+          111.31226411292566
+        ],
+        "ankle": [
+          616.5,
+          145.128770693599,
+          90.0
+        ],
+        "heel": [
+          616.5,
+          145.128770693599,
+          0.0
+        ],
+        "toe": [
+          616.5,
+          55.128770693598995,
+          0.0
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          2.842170943040401e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "full-support",
+        "foot_pitch_degrees": 0.0
+      },
+      {
+        "phase": 1,
+        "side": "R",
+        "hip": [
+          683.8681881210646,
+          40.0,
+          280.900918885804
+        ],
+        "knee": [
+          725.0,
+          -139.51183161573175,
+          245.68833077414956
+        ],
+        "ankle": [
+          733,
+          26.276362358415962,
+          158.47293798829807
+        ],
+        "heel": [
+          733,
+          20.0,
+          68.69205318788045
+        ],
+        "toe": [
+          733,
+          -69.78088480041762,
+          74.96841554629641
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          5.684341886080802e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": 3.99890216311585
+      },
+      {
+        "phase": 2,
+        "side": "L",
+        "hip": [
+          631.3376940840025,
+          0.0,
+          346.6483385355998
+        ],
+        "knee": [
+          594.0,
+          47.61112018694768,
+          169.17910786438324
+        ],
+        "ankle": [
+          582,
+          135.0,
+          334.6343395284799
+        ],
+        "heel": [
+          582,
+          180.0,
+          256.69205318788045
+        ],
+        "toe": [
+          582,
+          102.05771365940052,
+          211.69205318788045
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          2.842170943040401e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": -29.999999999999996
+      },
+      {
+        "phase": 2,
+        "side": "R",
+        "hip": [
+          699.3215119254363,
+          0.0,
+          345.1649263532496
+        ],
+        "knee": [
+          714.0,
+          -184.28627422764205,
+          313.87018048211
+        ],
+        "ankle": [
+          698,
+          -93.72363764158403,
+          150.47293798829807
+        ],
+        "heel": [
+          698,
+          -100.0,
+          60.69205318788045
+        ],
+        "toe": [
+          698,
+          -189.78088480041762,
+          66.96841554629641
+        ],
+        "bone_length_residuals": [
+          0.0,
+          0.0
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": 3.99890216311585
+      },
+      {
+        "phase": 3,
+        "side": "L",
+        "hip": [
+          629.478599701332,
+          0.0,
+          309.02875163166334
+        ],
+        "knee": [
+          610.0,
+          71.19447077753912,
+          136.66813697628046
+        ],
+        "ankle": [
+          599,
+          135.0,
+          312.6343395284799
+        ],
+        "heel": [
+          599,
+          180.0,
+          234.69205318788045
+        ],
+        "toe": [
+          599,
+          102.05771365940052,
+          189.69205318788045
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          0.0
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": -29.999999999999996
+      },
+      {
+        "phase": 3,
+        "side": "R",
+        "hip": [
+          697.4468838782285,
+          0.0,
+          306.9521327333954
+        ],
+        "knee": [
+          711.0,
+          -183.9019355839302,
+          273.0015637856774
+        ],
+        "ankle": [
+          708.5,
+          -144.1504225035406,
+          89.78088480041762
+        ],
+        "heel": [
+          708.5,
+          -150.42678486195655,
+          0.0
+        ],
+        "toe": [
+          708.5,
+          -240.20766966237417,
+          6.276362358415963
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          2.842170943040401e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "heel-contact",
+        "foot_pitch_degrees": 3.99890216311585
+      },
+      {
+        "phase": 4,
+        "side": "L",
+        "hip": [
+          622.132573417652,
+          40.0,
+          281.0754495957715
+        ],
+        "knee": [
+          600.0,
+          -141.8466490373417,
+          241.09801311214858
+        ],
+        "ankle": [
+          592,
+          26.276362358415962,
+          158.47293798829807
+        ],
+        "heel": [
+          592,
+          20.0,
+          68.69205318788045
+        ],
+        "toe": [
+          592,
+          -69.78088480041762,
+          74.96841554629641
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          0.0
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": 3.99890216311585
+      },
+      {
+        "phase": 4,
+        "side": "R",
+        "hip": [
+          690.1299841860157,
+          40.0,
+          280.4820451818821
+        ],
+        "knee": [
+          714.0,
+          -40.87240040251922,
+          113.01226522688617
+        ],
+        "ankle": [
+          708.5,
+          145.128770693599,
+          90.0
+        ],
+        "heel": [
+          708.5,
+          145.128770693599,
+          0.0
+        ],
+        "toe": [
+          708.5,
+          55.128770693598995,
+          0.0
+        ],
+        "bone_length_residuals": [
+          0.0,
+          0.0
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "full-support",
+        "foot_pitch_degrees": 0.0
+      },
+      {
+        "phase": 5,
+        "side": "L",
+        "hip": [
+          606.6832475329655,
+          0.0,
+          344.7286286525584
+        ],
+        "knee": [
+          611.0,
+          -184.84107398366666,
+          313.56145013567925
+        ],
+        "ankle": [
+          627,
+          -93.72363764158403,
+          150.47293798829807
+        ],
+        "heel": [
+          627,
+          -100.0,
+          60.69205318788045
+        ],
+        "toe": [
+          627,
+          -189.78088480041762,
+          66.96841554629641
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          5.684341886080802e-14
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": 3.99890216311585
+      },
+      {
+        "phase": 5,
+        "side": "R",
+        "hip": [
+          674.6670653743994,
+          0.0,
+          346.21204083490863
+        ],
+        "knee": [
+          731.0,
+          41.959940857054136,
+          172.36666747185265
+        ],
+        "ankle": [
+          744,
+          135.0,
+          334.6343395284799
+        ],
+        "heel": [
+          744,
+          180.0,
+          256.69205318788045
+        ],
+        "toe": [
+          744,
+          102.05771365940052,
+          211.69205318788045
+        ],
+        "bone_length_residuals": [
+          2.842170943040401e-14,
+          0.0
+        ],
+        "foot_length_residual": 0.0,
+        "sole_state": "AIR",
+        "foot_pitch_degrees": -29.999999999999996
+      }
+    ],
+    "max_bone_length_residual": 5.684341886080802e-14,
+    "articulation_surface": "Actual native thigh and continuous black/gold calf leather UV surface is articulated under complete original shoe/counter/stiletto RGBA; painted shaft points are not claimed uniquely measured anatomical joints."
+  }
+}

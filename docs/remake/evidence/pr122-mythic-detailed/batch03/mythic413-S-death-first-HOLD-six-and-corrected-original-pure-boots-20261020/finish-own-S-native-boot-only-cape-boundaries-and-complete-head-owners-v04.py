@@ -1,0 +1,28 @@
+from pathlib import Path
+import json,hashlib,numpy as np
+from PIL import Image,ImageDraw
+from scipy.ndimage import distance_transform_edt
+B=Path(__file__).parent;D=B/'actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04';D.mkdir()
+BP=B/'actual-own-S-DEATH-native-head-and-complete-boot-materials-v02/own-S-DEATH-actual-complete-head-curls-and-fullboots-readonly-native-handoff-v02.json';prior=json.loads(BP.read_text());raw=Image.open(prior['source']['path']).convert('RGBA');ra=np.array(raw);sole=json.loads(Path(prior['canonical_original_sole_capture']['path']).read_text())
+AMP=Path('/workspace/scratch/mythic413-S-attack-author-20261020-v01/actual-own-S-final-authoritative-native-material-provenance-v11/S-own-final-authoritative-native-materials-cloth703-and-original-gear-source-provenance-v11.json');am=json.loads(AMP.read_text());core=np.array(Image.open(am['fullCORE']['path']).convert('RGBA'))
+def pin(p):return dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),bytes=p.stat().st_size)
+def poly(points):
+ m=Image.new('L',(1254,1254));ImageDraw.Draw(m).polygon(points,fill=255);return np.array(m)>0
+polys={
+'R':[(519,641),(562,650),(613,649),(616,657),(605,675),(601,700),(593,725),(588,750),(584,775),(587,800),(582,825),(579,850),(575,875),(575,900),(565,925),(547,950),(537,975),(527,1000),(521,1025),(528,1050),(579,1225),(445,1225),(450,1050),(470,1025),(478,1000),(486,975),(492,950),(498,925),(501,915),(496,910),(493,901),(494,889),(498,878),(509,870),(516,861),(516,849),(521,825),(523,800),(525,775),(521,750),(519,725),(519,700),(518,675)],
+'L':[(652,645),(694,647),(737,638),(736,675),(737,700),(739,725),(739,750),(743,775),(748,800),(752,825),(755,842),(759,855),(765,867),(773,876),(781,886),(780,897),(774,907),(771,911),(773,925),(777,950),(782,975),(786,1000),(790,1025),(802,1055),(858,1220),(708,1220),(709,1055),(727,1025),(719,1000),(710,975),(704,950),(702,925),(701,908),(697,899),(697,888),(699,878),(699,870),(696,855),(694,835),(689,815),(685,800),(687,775),(679,750),(673,725),(664,700),(656,675)]}
+files={};mattes={};stats=[]
+for side,model in zip(['R','L'],sole['source_material_capture_models']):
+ mask=poly(polys[side])|(np.array(Image.open(model['exact_source_alpha_support']['path']).convert('L'))>0)
+ a=ra.copy();a[~mask]=0;a[a[:,:,3]==0,:3]=0;p=D/f'{side}-actual-own-S-complete-boot-skin-native-source-with-cape-excluded-v04.png';Image.fromarray(a).save(p);mp=D/f'{side}-actual-own-S-boot-only-true-gold-sidefins-and-skin-semantic-matte-v04.png';Image.fromarray((mask*255).astype('uint8')).save(mp);files[side+'-complete-native-leg']=pin(p);mattes[side+'-complete-native-leg']=pin(mp)
+ old=np.array(Image.open(prior['materials'][side+'-complete-native-leg']['path']).convert('RGBA'));removed=(old[:,:,3]>0)&(a[:,:,3]==0);added=(a[:,:,3]>0)&(old[:,:,3]==0);stats.append(dict(side=side,old_mixed_boundary_pixels_returned_to_CORE=int(removed.sum()),new_actual_native_boundary_pixels=int(added.sum()),original_RGBA_changed_on_retained_pixels=int(np.any(a[(a[:,:,3]>0)&(old[:,:,3]>0)]!=old[(a[:,:,3]>0)&(old[:,:,3]>0)],axis=1).sum()),canonical_complete_lowerboot_RGBA_unchanged=bool(np.array_equal(a[np.array(Image.open(model['exact_source_alpha_support']['path']).convert('L'))>0],ra[np.array(Image.open(model['exact_source_alpha_support']['path']).convert('L'))>0]))))
+# The actual arm-erased CORE is the authority for visible head ribbon pixels.
+# Only the head region and the two observed ribbon corridors are transferred;
+# original arm surfaces never enter this material because CORE has none.
+hm=np.array(Image.open(prior['mattes']['head-face-bun-and-both-blue-ribbons']['path']).convert('L'))>0
+y,x=np.mgrid[:1254,:1254];hm|=(x>=510)&(x<=750)&(y>=70)&(y<=320)
+corr=poly([(410,335),(538,275),(577,293),(534,381),(514,433),(442,447)])|poly([(700,266),(732,277),(835,411),(817,451),(747,438),(706,331)])
+blue=(core[:,:,2].astype(int)-core[:,:,0].astype(int)>12)&(core[:,:,3]>0)&corr
+dist=distance_transform_edt(~blue);fringe=corr&(dist<=2)&(core[:,:,3]>0);hm|=fringe
+ha=core.copy();ha[~hm]=0;ha[ha[:,:,3]==0,:3]=0;p=D/'actual-own-S-complete-head-face-goldcurls-and-entire-original-blue-ribbons-native-v04.png';Image.fromarray(ha).save(p);mp=D/'actual-own-S-complete-head-face-and-ribbon-original-native-owner-matte-v04.png';Image.fromarray((hm*255).astype('uint8')).save(mp);files['head-face-bun-and-both-blue-ribbons']=pin(p);mattes['head-face-bun-and-both-blue-ribbons']=pin(mp)
+o=D/'own-S-native-source-owned-boot-only-skin-gold-sidefins-and-complete-head-input-v04.json';out=dict(status='ACTUAL_OWN_S_NEW_NATIVE_BOOT_CLOTH_AND_HEAD_OWNER_CORRECTION_PENDING_INDEPENDENT_BOUNDARY_SOURCE_QC',source=prior['source'],once_registration=prior['once_registration'],canonical_original_sole_capture=prior['canonical_original_sole_capture'],materials=files,mattes=mattes,prior_preserved_mixed_inputs=pin(BP),actual_arm_erased_CORE=am['fullCORE'],authoritative_shared_materials=pin(AMP),native_canvas=[1254,1254],native_boot_contour_controls=polys,source_boundary_corrections=stats,head_owner_rule='Original head region and two actual observed blue ribbon corridors sampled from arm-erased CORE. Complete native fringe transfer; no source repaint.',source_RGBA_recolored=False,source_rescaled=False,wholeactor_mirror=False,actor_approvals_added=0,limits=['Native black/gold boot/leather and true boot side-fin contours are separated from adjacent cloak gold bands. Existing mixed inputs and actual90 are preserved as HOLD.','Canonical lowerboot/wholetruefoot original RGBA and every real stiletto remain exact; semantic masks are articulation inputs, not a completed animation.']);o.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(dict(manifest=pin(o),corrections=stats)))

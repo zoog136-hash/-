@@ -1,0 +1,63 @@
+{
+  "status": "FRESH_W_ONLY_CONSERVATIVE_CUMULATIVE_IMAGE_LEDGER_PRIOR_WORKERS_NOT_RESET",
+  "initial_image_bytes": 0,
+  "existing_workers_ledgers_unchanged": true,
+  "charged_total_bytes": 3066427,
+  "working_limit_bytes": 6000000,
+  "hard_limit_bytes": 7000000,
+  "original_reference_full_files_conservatively_charged": true,
+  "input_and_output_preview_views_separately_charged": true,
+  "events": [
+    {
+      "kind": "CONSERVATIVE_ACTUAL_REFERENCE_USED_FOR_INPUT_BOARD",
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "bytes": 24057
+    },
+    {
+      "kind": "CONSERVATIVE_ACTUAL_REFERENCE_USED_FOR_INPUT_BOARD",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+      "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+      "bytes": 996497
+    },
+    {
+      "kind": "CONSERVATIVE_ACTUAL_REFERENCE_USED_FOR_INPUT_BOARD",
+      "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/service-SW-fullbody-base-native-r001.png",
+      "sha256": "1e5de9a93d8755783a2405733eddb21f7f59b3141acb9f5204332228a7a263ee",
+      "bytes": 950319
+    },
+    {
+      "kind": "ACTUAL_SERVICE_INPUT_BOARD",
+      "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-three-reference-W-board-v01.jpg",
+      "sha256": "48b3d70010b2f473610a125ad78ea723653dd4dc1548d032b915569fc0f877e4",
+      "bytes": 57231
+    },
+    {
+      "kind": "PRIVATE_INPUT_BOARD_VIEW",
+      "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-three-reference-W-board-v01.jpg",
+      "sha256": "48b3d70010b2f473610a125ad78ea723653dd4dc1548d032b915569fc0f877e4",
+      "bytes": 57231
+    },
+    {
+      "kind": "GENERATED_NATIVE_RAW_UNVIEWED",
+      "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/service-W-fullbody-base-native-r001.png",
+      "sha256": "fc440f258979b615d3375f4a288f767d69649de2b46495bc93be652998bb076e",
+      "bytes": 856782
+    },
+    {
+      "kind": "GENERATED_DIAGNOSTIC_PREVIEW",
+      "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-produced-W-base-quality-v01.jpg",
+      "sha256": "da8541e7c3bf21571614dbe6348344607a3d2ef65ed9c5ad91bfd5fc5ad71a49",
+      "bytes": 62155
+    },
+    {
+      "kind": "PRIVATE_OUTPUT_PREVIEW_VIEW",
+      "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-produced-W-base-quality-v01.jpg",
+      "sha256": "da8541e7c3bf21571614dbe6348344607a3d2ef65ed9c5ad91bfd5fc5ad71a49",
+      "bytes": 62155
+    }
+  ],
+  "new_service_calls": 1,
+  "no_service_retries": true,
+  "no_raw_view": true
+}

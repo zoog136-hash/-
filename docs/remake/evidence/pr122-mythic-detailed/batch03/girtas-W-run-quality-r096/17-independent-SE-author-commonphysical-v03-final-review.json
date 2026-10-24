@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "status": "PASS_INDEPENDENT_W_RUN_SIX_RIGID_C_AND_AUTHORED_PROJECTED_ROOT_CANDIDATE",
+  "reviewer": "/root/girtas_se_walk_author (independent reviewer; did not author W run source or layout)",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "W",
+  "role": "run",
+  "source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+  "source_visual_status": "PASS",
+  "physical_layout_status": "PASS",
+  "draft_path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/author-commonphysical-DRAFT-v03.json",
+  "draft_sha256": "d1aefccc9d497acb5680bb6e62c2949b5a6254be515590caea3c1d36605394e8",
+  "rigid_markers_path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/author-rigid-landmark-candidates-v02.json",
+  "rigid_markers_sha256": "43ad0a9e76f6ef8956867d0a4f70076f4a697924268fba3864f723ecfae43b6c",
+  "poseCs": [
+    2560,
+    2688,
+    2688,
+    2816,
+    2688,
+    2688
+  ],
+  "source_native_anchors": [
+    [
+      650,
+      1136
+    ],
+    [
+      650,
+      1118
+    ],
+    [
+      650,
+      1228
+    ],
+    [
+      630,
+      1184
+    ],
+    [
+      650,
+      1149
+    ],
+    [
+      650,
+      1208
+    ]
+  ],
+  "private_reviewed_previews": [
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/private-commonphysical7-DRAFT-v03.jpg",
+      "sha256": "8622a61bd0b8fc19b47efc29a19ac1c43903d2ee63d88025c13c7870bc73a008"
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/private-independent-bounded-commonphysical-core-v02.jpg",
+      "sha256": "5efb585fda3ca29bd3dc328f3fd5f30113114587cf7f02af3d99158189d592a0"
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/private-original-W-idle-vs-six-run-hilts-v02.jpg",
+      "sha256": "4ec203d31f7709360d92c3cc55c8c1197a4b424e16e55acd4c51b3381cb19529"
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/private-original-W-idle-hilt-native-upscale-v03.jpg",
+      "sha256": "4c0eaf801c22dd344190c9bcd50e7374ea9070d680ea80536fb87f2059b21639"
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/private-current-Wattack0-Wwalk0-hilt-minimal-RO.jpg",
+      "sha256": "b13b959392adf46e9e9581526cc269281a9e7a858e012420032f64977db7fa5c"
+    }
+  ],
+  "reference_gear_provenance": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/current-Wattack0-Wwalk0-hilt-RO-provenance.json",
+  "reference_gear_provenance_sha256": "e743c77d5925c7eb7c246ce462a1872798786f32691e0eb7a9aab392612d3167",
+  "visual_findings": [
+    "Actual six source keys retain true W camera, original pale face/hair, hard gold rays, heavy dark/gold longrobe, two arm/leg chains and original long sinuous RIGHT blade. Genuine alternate nearLEFT and farRIGHT contact/load halves plus two folded-leg AIR poses are present.",
+    "Current Cs retain rigid skull/neck/pauldron scale vs selected W idle; ear-to-chin projected lengths are0.985-1.034 times idle while eye-to-chin changes with head pitch. Armor span differences agree with arm and torso rotation, not a reason to fit fullgear bounds or ornamentalcrest.",
+    "Corrected phase3/4 projected roots1184/1149 preserve actual pelvis heights matching opposite contact/load: contact3vs0 world445.8vs445.6, load4vs1 world449.9vs450.3 in author commonphysical coordinates. Earlier roots1292/1199 falsely raised one half; these metadata corrections remove that baseline jump without altering sourcepixels.",
+    "AIR2/5 actual anatomical pelvis is nearer sourceY650/630 than the previous hanging-cloth points700/680. Corrected roots1228/1208 keep explicit authored run pelvis arc and visible positive clearance of both complete boots. This is authored game ground/root placement, not a floor inferred from transparentPNG.",
+    "Actual7panel v03 shows coherent0->1 compression,1->2 airborne extension,2->3 alternate landing,3->4 load,4->5 airborne recovery and5->0 return. Modest remaining head-height variation follows torso lean and shoulder pitch; do not normalize all heads to equalY.",
+    "Read-only current PR122 Wattack0c6026a and faithfulWwalk0 059974 hand/hilt crops confirm existing hard angular gold upper/lower prongs at blade base. Run hilt visibility/decorative rendering varies with wrist angle, but a new longgrip/extraweapon/material addedguard structure is not established. Original hidden hand-back shape alone cannot prove an invented pommel; no unsupported unknown-backside HOLD is added."
+  ],
+  "manual_anatomical_uncertainty_native_px": 20,
+  "gear_fidelity_scope": "No confirmed material gear structure change after minimal currentPR122 references; no PR100 used. Absolute byte-identical hilt detail or unseen anatomy is not claimed.",
+  "preserved_previous_review": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/independent-SE-author-commonphysical-DRAFT-v01-review.json",
+  "preserved_previous_review_sha256": "689b8d957b6a07d906234011f52b8f694c5a56248b4a688fae8efe52973031e6",
+  "runtime_status": "HOLD_PENDING_OFFICIAL_STRICT_CANONICAL_LAYOUT_AND_ACTUAL_COMPILED_PLAYER_TRANSITION_LOOP_REVIEW",
+  "actor_approval": false,
+  "new_approvals": 0,
+  "source_pixels_changed": false,
+  "game_assets_changed": false,
+  "integration_ready": false,
+  "reviewed_at": "2026-10-19T16:29:32.271844+00:00"
+}

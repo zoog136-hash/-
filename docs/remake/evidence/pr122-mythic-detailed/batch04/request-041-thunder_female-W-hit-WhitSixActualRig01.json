@@ -1,0 +1,150 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "W",
+  "role": "hit",
+  "version": "WhitSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+    "base_geometry_sha256": "4a55a2e1aceb2d6fb5a9b470f44894d9c30757fc0948e6659385cb760cd528aa",
+    "direction": "W",
+    "regions": [
+      [
+        464,
+        145,
+        675,
+        1172
+      ],
+      [
+        2000,
+        145,
+        675,
+        1172
+      ],
+      [
+        464,
+        1681,
+        675,
+        1172
+      ],
+      [
+        2000,
+        1681,
+        675,
+        1172
+      ],
+      [
+        464,
+        3217,
+        675,
+        1172
+      ],
+      [
+        2000,
+        3217,
+        675,
+        1172
+      ]
+    ],
+    "nearest_owner_sha256": "d69b0cacfc8d3367954945565b1c2f2737b3188ac1e7dd4727cca967f8aa7151",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof a0b12875f1ddc66aeb778ae84ac593a469be7f5d2051be8c941cb8448dd84cc7"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+    "direction": "W",
+    "role": "hit",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        774,
+        1120
+      ],
+      [
+        2310,
+        1120
+      ],
+      [
+        774,
+        2656
+      ],
+      [
+        2310,
+        2656
+      ],
+      [
+        774,
+        4192
+      ],
+      [
+        2310,
+        4192
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "a0b12875f1ddc66aeb778ae84ac593a469be7f5d2051be8c941cb8448dd84cc7",
+  "authored_common_root_float": [
+    646.0833333333334,
+    991.9227375838406
+  ],
+  "common_root_integer": [
+    646,
+    992
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Original actual-six full board and native neck/guard/cuff sequence showed impact→maximum recoil→counterbalance→settle. Final head/arm/cloth/ribbon controls equal phase-by-phase; final exact-six new seam remains coherent even when guard raises and exposes coat. Free-hand fingertips remain readable and cuff stays joined.",
+      "Final exact12 native changed-seams show coherent shaded navy fold/pleat and gold trim joining original cape. Angular cut, pale detached shard, smeared donor gold and extra hanging flat flap are absent across all phases. Natural cape edge and upper negative gap remain intact.",
+      "All six exact nativeRGBA1536 sources inverse-match original PACK atlas cells with zeroRGBA difference, fixedC2560/unit2.5/root/storage128 preserved. SRCd040 and new-support numeric9b8ffe remain pinned.",
+      "Individual SOURCE/cycle and exactPACK only; original W once tipmargin18px versusrequested32px retained, common integer root rounding disclosed, Godot/game and wholeactor approval remain separate."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+    "raw_bytes": 3257522,
+    "request_sha256": "74aa29c9b216f6d9f557f5dffa85cb6a00a14db1cd8132ea69b7661a7e1a05a8",
+    "review_sha256": "28695a24f34755f3230b95e5051151166fae70cbe08dd8418c86aa55389a5126"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-W-hit-actual-packed-r001-20261020/thunder_female-W-hit-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-innu2m3q/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-W-hit-actual-packed-r001-20261020/request-WhitSixActualRig01.json": "74aa29c9b216f6d9f557f5dffa85cb6a00a14db1cd8132ea69b7661a7e1a05a8",
+      "/workspace/scratch/mythic413-W-hit-actual-packed-r001-20261020/thunder_female-W-hit-six-actual-poses-r001.png": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+      "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/WhitSixActualRig01-independent-final-source-cycle-PASS-v02.json": "28695a24f34755f3230b95e5051151166fae70cbe08dd8418c86aa55389a5126",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-hit-WhitSixActualRig01.png",
+  "output_sha256": "a8e772d5b06a3d283784b3d21dc8047b75d930c44fa3273a144fa5ecef3701c6",
+  "output_bytes": 3257522,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-innu2m3q/reviewed-source.png"
+}

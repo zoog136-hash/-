@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "camera": [
+    5,
+    -7,
+    5
+  ],
+  "camera_target": [
+    0,
+    0,
+    1
+  ],
+  "forward_world_axis": "+Y projects NE UP-RIGHT",
+  "anatomical_RIGHT": "+X near/imageRIGHT hip GREEN",
+  "anatomical_LEFT": "-X far/imageLEFT hip MAGENTA",
+  "guide_only_not_exact_Girtas_bone_measurement": true,
+  "material_change": "Prior0 copiednearRIGHTlandingdespitecontralateralarms. NEW farLEFTheelforward.60/recoverynearRIGHTankle.72 HIGH; wirepelvis+coloredhipballs expose actualfarhip\u2192knee\u2192heel andnearRIGHTfoldedrecovery. SameNEcamera, noimageLEFTbootconstraint.",
+  "pose_authority": "Constant-bone anatomical pose/ownership only; actual model proportions must remain faithful original skull/pauldron/waist/robe/limb reference. No generic mannequin redesign.",
+  "constant_lengths": {
+    "thigh": 0.57,
+    "shin": 0.57,
+    "upperarm": 0.3,
+    "forearm": 0.28
+  },
+  "poses": [
+    {
+      "phase": 0,
+      "leading_support": "LEFT",
+      "pose": "RUN_FIRST_LANDING_OPPOSITE_HIGH_FOLDED_RECOVERY",
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.0
+          ],
+          "knee": [
+            -0.18,
+            0.4215589476899834,
+            0.6163490471502595
+          ],
+          "ankle": [
+            -0.18,
+            0.6,
+            0.075
+          ],
+          "foot_center": [
+            -0.18000000715255737,
+            0.6800000071525574,
+            0.06128637492656708
+          ],
+          "support": true,
+          "minimum_foot_Z": 4.656612873077393e-10,
+          "thigh_length": 0.5700000011293511,
+          "shin_length": 0.5700000011293511,
+          "shoulder": [
+            -0.31,
+            0.13,
+            1.47
+          ],
+          "elbow": [
+            -0.31,
+            0.15804515392006227,
+            1.1713137610441353
+          ],
+          "wrist": [
+            -0.31,
+            -0.1,
+            1.28
+          ],
+          "upperarm_length": 0.30000002361678735,
+          "forearm_length": 0.279999996671187,
+          "projected_pixels": {
+            "hip": [
+              346.5032730102539,
+              372.7071533203125
+            ],
+            "knee": [
+              409.22996520996094,
+              424.7376937866211
+            ],
+            "ankle": [
+              435.781494140625,
+              534.7288513183594
+            ],
+            "foot_center": [
+              447.6852264404297,
+              530.8855361938477
+            ],
+            "shoulder": [
+              338.76583099365234,
+              244.0308837890625
+            ],
+            "elbow": [
+              342.9388732910156,
+              310.9021453857422
+            ],
+            "wrist": [
+              304.5425262451172,
+              308.33766174316406
+            ]
+          }
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.0
+          ],
+          "knee": [
+            0.18,
+            0.39468370035700123,
+            0.5887521712245707
+          ],
+          "ankle": [
+            0.18,
+            -0.16,
+            0.72
+          ],
+          "foot_center": [
+            0.18000000715255737,
+            -0.07999999821186066,
+            0.7080000042915344
+          ],
+          "support": false,
+          "minimum_foot_Z": 0.622111439704895,
+          "thigh_length": 0.570000014200545,
+          "shin_length": 0.5699999962276534,
+          "shoulder": [
+            0.31,
+            0.13,
+            1.47
+          ],
+          "elbow": [
+            0.31,
+            0.2495300711918806,
+            1.1948408422733054
+          ],
+          "wrist": [
+            0.31,
+            0.5,
+            1.32
+          ],
+          "upperarm_length": 0.3000000773618519,
+          "forearm_length": 0.2800000482265397,
+          "projected_pixels": {
+            "hip": [
+              421.49693298339844,
+              395.29296112060547
+            ],
+            "knee": [
+              480.22467041015625,
+              456.0901336669922
+            ],
+            "ankle": [
+              397.6894226074219,
+              474.3432312011719
+            ],
+            "foot_center": [
+              409.59320068359375,
+              470.1021194458008
+            ],
+            "shoulder": [
+              467.9215850830078,
+              282.9286193847656
+            ],
+            "elbow": [
+              485.7073059082031,
+              336.30308532714844
+            ],
+            "wrist": [
+              522.9765014648438,
+              285.24993896484375
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "actor_approval": false
+}

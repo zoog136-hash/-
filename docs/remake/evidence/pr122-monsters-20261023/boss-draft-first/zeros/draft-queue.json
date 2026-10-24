@@ -1,0 +1,563 @@
+[
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "E-idle-v01",
+    "direction": "E",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: EAST pure right profile; nose and toes RIGHT; no front-facing chest. Anatomical RIGHT weapon arm is near/foreground, LEFT empty hand far.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SE-idle-v01",
+    "direction": "SE",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHEAST front three-quarter facing DOWN-RIGHT. Anatomical RIGHT weapon hand is screenLEFT, LEFT empty hand screenRIGHT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "S-idle-v01",
+    "direction": "S",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SW-idle-v01",
+    "direction": "SW",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHWEST front three-quarter facing DOWN-LEFT. Anatomical RIGHT weapon arm is far/screenLEFT, LEFT empty hand near/screenRIGHT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "W-idle-v01",
+    "direction": "W",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NW-idle-v01",
+    "direction": "NW",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHWEST REAR three-quarter facing UP-LEFT. Show broad back, not front chest. Anatomical RIGHT weapon arm is FAR/screenRIGHT, LEFT empty hand near/screenLEFT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "N-idle-v01",
+    "direction": "N",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTH straight BACK facing UP away from viewer. Show back of head/torso. Anatomical RIGHT weapon hand is viewerRIGHT; LEFT empty hand viewerLEFT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NE-idle-v01",
+    "direction": "NE",
+    "role": "idle",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHEAST REAR three-quarter facing UP-RIGHT. Show back and right side. Anatomical RIGHT weapon arm is near/screenRIGHT, LEFT empty hand far/screenLEFT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "E-run-v01",
+    "direction": "E",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: EAST pure right profile; nose and toes RIGHT; no front-facing chest. Anatomical RIGHT weapon arm is near/foreground, LEFT empty hand far.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SE-run-v01",
+    "direction": "SE",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHEAST front three-quarter facing DOWN-RIGHT. Anatomical RIGHT weapon hand is screenLEFT, LEFT empty hand screenRIGHT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "S-run-v01",
+    "direction": "S",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SW-run-v01",
+    "direction": "SW",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHWEST front three-quarter facing DOWN-LEFT. Anatomical RIGHT weapon arm is far/screenLEFT, LEFT empty hand near/screenRIGHT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "W-run-v01",
+    "direction": "W",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NW-run-v01",
+    "direction": "NW",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHWEST REAR three-quarter facing UP-LEFT. Show broad back, not front chest. Anatomical RIGHT weapon arm is FAR/screenRIGHT, LEFT empty hand near/screenLEFT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "N-run-v01",
+    "direction": "N",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTH straight BACK facing UP away from viewer. Show back of head/torso. Anatomical RIGHT weapon hand is viewerRIGHT; LEFT empty hand viewerLEFT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NE-run-v01",
+    "direction": "NE",
+    "role": "run",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHEAST REAR three-quarter facing UP-RIGHT. Show back and right side. Anatomical RIGHT weapon arm is near/screenRIGHT, LEFT empty hand far/screenLEFT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "E-attack-v01",
+    "direction": "E",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: EAST pure right profile; nose and toes RIGHT; no front-facing chest. Anatomical RIGHT weapon arm is near/foreground, LEFT empty hand far.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SE-attack-v01",
+    "direction": "SE",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHEAST front three-quarter facing DOWN-RIGHT. Anatomical RIGHT weapon hand is screenLEFT, LEFT empty hand screenRIGHT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "S-attack-v01",
+    "direction": "S",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SW-attack-v01",
+    "direction": "SW",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHWEST front three-quarter facing DOWN-LEFT. Anatomical RIGHT weapon arm is far/screenLEFT, LEFT empty hand near/screenRIGHT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "W-attack-v01",
+    "direction": "W",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NW-attack-v01",
+    "direction": "NW",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHWEST REAR three-quarter facing UP-LEFT. Show broad back, not front chest. Anatomical RIGHT weapon arm is FAR/screenRIGHT, LEFT empty hand near/screenLEFT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "N-attack-v01",
+    "direction": "N",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTH straight BACK facing UP away from viewer. Show back of head/torso. Anatomical RIGHT weapon hand is viewerRIGHT; LEFT empty hand viewerLEFT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NE-attack-v01",
+    "direction": "NE",
+    "role": "attack",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHEAST REAR three-quarter facing UP-RIGHT. Show back and right side. Anatomical RIGHT weapon arm is near/screenRIGHT, LEFT empty hand far/screenLEFT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "E-hit-v01",
+    "direction": "E",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: EAST pure right profile; nose and toes RIGHT; no front-facing chest. Anatomical RIGHT weapon arm is near/foreground, LEFT empty hand far.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SE-hit-v01",
+    "direction": "SE",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHEAST front three-quarter facing DOWN-RIGHT. Anatomical RIGHT weapon hand is screenLEFT, LEFT empty hand screenRIGHT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "S-hit-v01",
+    "direction": "S",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "SW-hit-v01",
+    "direction": "SW",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTHWEST front three-quarter facing DOWN-LEFT. Anatomical RIGHT weapon arm is far/screenLEFT, LEFT empty hand near/screenRIGHT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "W-hit-v01",
+    "direction": "W",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NW-hit-v01",
+    "direction": "NW",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHWEST REAR three-quarter facing UP-LEFT. Show broad back, not front chest. Anatomical RIGHT weapon arm is FAR/screenRIGHT, LEFT empty hand near/screenLEFT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "N-hit-v01",
+    "direction": "N",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTH straight BACK facing UP away from viewer. Show back of head/torso. Anatomical RIGHT weapon hand is viewerRIGHT; LEFT empty hand viewerLEFT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "NE-hit-v01",
+    "direction": "NE",
+    "role": "hit",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHEAST REAR three-quarter facing UP-RIGHT. Show back and right side. Anatomical RIGHT weapon arm is near/screenRIGHT, LEFT empty hand far/screenLEFT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  },
+  {
+    "slug": "zeros",
+    "actor": "monster:제로스",
+    "clip": "S-death-v01",
+    "direction": "S",
+    "role": "death",
+    "layout": "phase_grid3",
+    "phase_count": 6,
+    "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+    "request": {
+      "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction DEATH: Six non-graphic SOUTH death stages:0 wounded upright,1 knees/legs weaken,2 body descends,3 collapses,4 settles on ground,5 motionless full corpse. All armor/limbs/weapon/wings/tail remain attached or contiguous and fully visible. No gore, blood, dissolving particles or vanished body. Horse/spider collapse naturally with all limbs present.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+      "referenced_image_paths": [
+        "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+      ],
+      "transparent_background": true
+    }
+  }
+]

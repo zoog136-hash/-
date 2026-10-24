@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/author_S_run_legs_v01.py", line 18, in <module>
+    leg,meta=render_surface(im,world,ROOT,P,N,PAD);path=D/f'S-run-phase{ph}-{side}-complete-real-native-articulated-leg-v01.png';leg.save(path);legs[side]=pin(path);models[side]=dict(source=entry,hip=hip.tolist(),knee=K.tolist(),ankle=ankle.tolist(),heel=heel.tolist(),heel_source=srcHeel.tolist(),foot_UV=footM.tolist(),femur_native=float(np.linalg.norm(K-hip)),tibia_native=float(np.linalg.norm(ankle-K)),support=(side=='L'and ph in(0,1))or(side=='R'and ph in(3,4)),physical_sole_depth=dep,sole_lift=lift,native_capture=meta,original_own_side_material=True,opposite_side_mirrored=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/native_run_surface.py", line 35, in render_surface
+    c=sample(im,sol[:,0],sol[:,1]);c[res>.7]=0
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/native_run_surface.py", line 14, in sample
+    c[:,:,:3]=np.divide(c[:,:,:3],c[:,:,3:4],out=np.zeros_like(c[:,:,:3]),where=np.abs(c[:,:,3:4])>1e-12)
+                        ~^^^^^^^^
+IndexError: too many indices for array: array is 2-dimensional, but 3 were indexed

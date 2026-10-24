@@ -1,0 +1,158 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "idle",
+  "version": "NWidleSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+    "base_geometry_sha256": "b0c3d0269f23f67783248e6e01e06c1d6011bec6fd4cf622239db5cdad69f5f8",
+    "direction": "NW",
+    "regions": [
+      [
+        460,
+        15,
+        610,
+        1105
+      ],
+      [
+        1996,
+        15,
+        610,
+        1105
+      ],
+      [
+        460,
+        1551,
+        610,
+        1105
+      ],
+      [
+        1996,
+        1551,
+        610,
+        1105
+      ],
+      [
+        460,
+        3087,
+        610,
+        1105
+      ],
+      [
+        1996,
+        3087,
+        610,
+        1105
+      ]
+    ],
+    "nearest_owner_sha256": "c7f5eb53a8eed7f0405d875722c1ab4901f8a7c6dc5ae74070b776e3ed864b0f",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 853055de2408614bd4190d18795e23788b9e7671878df0c1ad7116833c8948fb"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+    "direction": "NW",
+    "role": "idle",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        641,
+        1058
+      ],
+      [
+        2177,
+        1058
+      ],
+      [
+        641,
+        2594
+      ],
+      [
+        2177,
+        2594
+      ],
+      [
+        641,
+        4130
+      ],
+      [
+        2177,
+        4130
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "853055de2408614bd4190d18795e23788b9e7671878df0c1ad7116833c8948fb",
+  "authored_common_root_float": [
+    641,
+    1058.3
+  ],
+  "common_root_integer": [
+    641,
+    1058
+  ],
+  "common_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Complete right-hand double-ended staff, grip, costume, face, bun, hair and ribbon retained.",
+      "Relaxed LEFT upperarm, cuff, wrist and fingers form connected anatomical contours without observed duplicated cuff remnants or detached material.",
+      "Actual corset/rib surface expands by3.8149681174490695 native units; gentle neck, hair and farcoat lag accompany breathing without whole-actor bob or root motion.",
+      "Six source poses and5-to-0 wrap show a smooth restrained idle rhythm; no blocking source defect observed.",
+      "Exact fixed semantic leg32843pixels and complete-staff23241pixels RGBA changes0 across all6; actual arm joint affine residual1.1368683772161603e-13.",
+      "Exact request/packing/raw and six final source digests are bound; all six complete RGBA tile comparisons changed0, every nonzero-alpha pixel is retained inside its reviewed region.",
+      "C2048/unit2/root641,1058.3 preserved; one common rounding delta[0,-.3] is applied identically to all6, with no source resampling or per-pose fitting."
+    ],
+    "visual_limitations": [
+      "Private reduced previews plus exact source/material checks establish the scoped source conclusion. This is not a claim of uniquely reconstructed hidden3D anatomy.",
+      "Game SpriteFrames binding and actual1.2second idle runtime are separate pending parent integration gates.",
+      "No actor detailed-completion count is increased by this source/loop review."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+    "raw_bytes": 2139700,
+    "request_sha256": "b3da7227ab67929ffbd66820cc3c1ad3a830bd333f6136d2c9e6636b970aef55",
+    "review_sha256": "9b5252b81e2e9ea4f22b06bf62ce9d6ffd6a1e387e7c5b309e6a57294dbc154a"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NW-idle-actual-packed-r001-20261020/thunder_female-NW-idle-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-2xaza0p6/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NW-idle-actual-packed-r001-20261020/request-NWidleSixActualRig01.json": "b3da7227ab67929ffbd66820cc3c1ad3a830bd333f6136d2c9e6636b970aef55",
+      "/workspace/scratch/mythic413-NW-idle-actual-packed-r001-20261020/thunder_female-NW-idle-six-actual-poses-r001.png": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+      "/workspace/scratch/mythic413-NW-idle-independent-qc-20261020-v01/NWidleSixActualRig01-exact-request-source-loop-PASS-v01.json": "9b5252b81e2e9ea4f22b06bf62ce9d6ffd6a1e387e7c5b309e6a57294dbc154a",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-idle-NWidleSixActualRig01.png",
+  "output_sha256": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+  "output_bytes": 2139700,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-2xaza0p6/reviewed-source.png"
+}

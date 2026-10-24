@@ -1,0 +1,97 @@
+{
+  "schema": "pr122-user-transform-walk-omission-proposal-v1",
+  "official_files_changed": false,
+  "proposed_files": [
+    {
+      "repo_path": "data/pr122_transform_motion_scope.json",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/data/pr122_transform_motion_scope.json",
+      "sha256": "770ae33ff628f37b71cef0f071914578d132e00439c1820f931c8e5eb12b2758",
+      "bytes": 430,
+      "original_sha256": null
+    },
+    {
+      "repo_path": "tools/pr122_transform_motion_scope.py",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tools/pr122_transform_motion_scope.py",
+      "sha256": "06001b834a7ee0b10c95124a6a9ae6c263bb905026e0f14c497d989b0d58bb42",
+      "bytes": 1986,
+      "original_sha256": null
+    },
+    {
+      "repo_path": "scripts/animation/transformation_movement_scope.gd",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/scripts/animation/transformation_movement_scope.gd",
+      "sha256": "bde780fc18bab522c907337fb73a94d3a9f1ff5407ee6dd628241692bf854f56",
+      "bytes": 1413,
+      "original_sha256": null
+    },
+    {
+      "repo_path": "tools/stage_pr122_native_locomotion.py",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tools/stage_pr122_native_locomotion.py",
+      "sha256": "6cc5c9933015c9a5bf8c17d5daac04bb3ebb585cb5609420bf3f6b90d0623b7b",
+      "bytes": 11785,
+      "original_sha256": "fd3518e21451668800367b2845d3f8c79c52ff9e6cc65d34eb2c079e10b24849"
+    },
+    {
+      "repo_path": "tools/pr122_native_production_approvals.py",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tools/pr122_native_production_approvals.py",
+      "sha256": "e10c66e9241969c11678f24f056350ed5f1daab2ce1e6136dd117d5b8f6e4234",
+      "bytes": 21580,
+      "original_sha256": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706"
+    },
+    {
+      "repo_path": "scripts/animation/actor_motion.gd",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/scripts/animation/actor_motion.gd",
+      "sha256": "e9403a24e93b9fadfa266ab8f56178f8e26a5f2cbdc2259635f6e44d43305d65",
+      "bytes": 25168,
+      "original_sha256": "af1042205de1c10df021f4396f1bd0158ae0a35f1449d080e2bec68c1919ed98"
+    },
+    {
+      "repo_path": "tests/pr122_native_player_connection_test.gd",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tests/pr122_native_player_connection_test.gd",
+      "sha256": "ff03a36d5046efc53ba74633109b04ecde1ae12adb4836b31e7db027c74f4b5c",
+      "bytes": 6138,
+      "original_sha256": "6b3f959b540265e5f6bc914ad53f837bf0f3617afa2d7461578076bee8abd86e"
+    },
+    {
+      "repo_path": "tests/pr122_native_motion_smoke.gd",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tests/pr122_native_motion_smoke.gd",
+      "sha256": "bf13e021e8a26737914994f8fc47cefc4ae4e655f4138bda47c24e05bfed8c6c",
+      "bytes": 3129,
+      "original_sha256": "879d41e56a532d0bde3215278145c128bfdc1b64398c80c710c9795272484f35"
+    },
+    {
+      "repo_path": "tests/test_pr122_transform_motion_scope.py",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tests/test_pr122_transform_motion_scope.py",
+      "sha256": "b1e9985a692bd2ea19a9cb23ff951b6d05b79b3491527688c591d4fb68d37f55",
+      "bytes": 5643,
+      "original_sha256": null
+    },
+    {
+      "repo_path": "tests/pr122_transform_run_only_scope_test.gd",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tests/pr122_transform_run_only_scope_test.gd",
+      "sha256": "4c01f9c2a8208f6e312b353ffaea4fc72a42121e40bbee8ee2f9e709340d888a",
+      "bytes": 1091,
+      "original_sha256": null
+    },
+    {
+      "repo_path": "tools/checkpoint_pr122_native_clip.py",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tools/checkpoint_pr122_native_clip.py",
+      "sha256": "23f0f7b75b90b7af4368214e11feea43fa8c5899a08cb1a2797fd2dc489559ca",
+      "bytes": 8886,
+      "original_sha256": "72306d749937f9c5fefc0ef7d4cbcc7ac14210da2ec7c7dd161e99f841ce30ef"
+    },
+    {
+      "repo_path": "tests/test_pr122_transform_motion_queue.py",
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/tests/test_pr122_transform_motion_queue.py",
+      "sha256": "83075f78a339ff6b8af24551763fb42d0b400a0dbe491f7f630f4920cec7474e",
+      "bytes": 1880,
+      "original_sha256": null
+    }
+  ],
+  "pure_test_log": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/pure-scope-and-original-freeze-fixtures-v03.log",
+  "pure_tests_passed": 21,
+  "unchanged_existing_approval_fixtures": 13,
+  "new_scope_boundary_tests": 8,
+  "actor_approvals_added": 0,
+  "isolated_real_motion_Godot_PASS": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/isolated-godot-real-motion-scope-v01.log",
+  "queue_test_PASS": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/pure-transform-only-next-action-queue-v01.log"
+}

@@ -1,0 +1,3313 @@
+{
+	"boss": [],
+	"checks": 1625,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792375894.16278,
+				"expires_at": 1792376494.16278,
+				"grade": "일반",
+				"hunt_batch": "34ed0bc02380c9bd7ea07f2e0cb3401e",
+				"id": "b0057628da8b3523f4ff2aa6f16125bc",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1400,
+		"manual_pickup": true,
+		"player_hp": 1877,
+		"weapon_attempts": 62
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(89.625, 0.0)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(63.375, 63.375)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 89.625)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-63.375, 63.375)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-89.625, 0.0)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-63.375, -63.375)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -89.625)",
+			"name": "놀",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(63.375, -63.375)",
+			"name": "놀",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 26,
+			"facing": 0,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 1,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 2,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 3,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 4,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 5,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 6,
+			"kind": "melee",
+			"name": "놀"
+		},
+		{
+			"damage": 26,
+			"facing": 7,
+			"kind": "melee",
+			"name": "놀"
+		}
+	],
+	"physics_ticks": 1837,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 4,
+			"track": "walk_0"
+		},
+		{
+			"frame": 5,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 4,
+			"track": "walk_1"
+		},
+		{
+			"frame": 5,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 4,
+			"track": "walk_2"
+		},
+		{
+			"frame": 5,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 4,
+			"track": "walk_3"
+		},
+		{
+			"frame": 5,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 4,
+			"track": "walk_4"
+		},
+		{
+			"frame": 5,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 4,
+			"track": "walk_5"
+		},
+		{
+			"frame": 5,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 4,
+			"track": "walk_6"
+		},
+		{
+			"frame": 5,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 4,
+			"track": "walk_7"
+		},
+		{
+			"frame": 5,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25333.8671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "815ad75acc666dbc844ee926d632b0d8ed7718b95a6683e96c6e587cb609371a",
+			"visible_body_viewport": [
+				507.825958251953,
+				262.661987304688,
+				220.027923583984,
+				183.759582519531
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25333.8671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "815ad75acc666dbc844ee926d632b0d8ed7718b95a6683e96c6e587cb609371a",
+			"visible_body_viewport": [
+				507.825958251953,
+				262.661987304688,
+				220.027923583984,
+				183.759582519531
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25341.3359375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk-native-1.png",
+			"physics_tick": 23,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "dfc10a5b94e5f9d73499886b834d5e85f2561aa4b6597de6e1922598c52c4808",
+			"visible_body_viewport": [
+				526.359191894531,
+				263.467956542969,
+				237.759094238281,
+				182.95361328125
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25350.671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk-native-2.png",
+			"physics_tick": 29,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "b7bc98cbc9c272cf093fd79fe6bf725db74bdbc32ef2025397dc53c639f8e5a8",
+			"visible_body_viewport": [
+				524.747253417969,
+				265.885833740234,
+				236.953186035156,
+				180.535736083984
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25360.0078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk-native-3.png",
+			"physics_tick": 35,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "168563015806e0ae28669ba0f411745a5812c8a76a07f8dd9470f4bdef0011dc",
+			"visible_body_viewport": [
+				526.359191894531,
+				267.497741699219,
+				245.012756347656,
+				178.923828125
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25369.34375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk-native-4.png",
+			"physics_tick": 41,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "72e2a53f624ade8082b3c044185e46e6f17d616d356404a3d1f07e739b88e3ee",
+			"visible_body_viewport": [
+				516.687622070312,
+				274.751434326172,
+				253.878356933594,
+				171.670135498047
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25376.8125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-walk-native-5.png",
+			"physics_tick": 46,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "19db8d8444b4cc13b15bda7ed6c4f59515fdf898c95914f9344ca33baa855ba5",
+			"visible_body_viewport": [
+				526.363098144531,
+				266.691802978516,
+				240.177001953125,
+				179.729766845703
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25421.625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-attack-0.png",
+			"physics_tick": 72,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "360c7e05050e95d99dd0e9b72ccea50d5032cd9800d76f717ab78b6701dc7809",
+			"visible_body_viewport": [
+				501.370422363281,
+				267.497741699219,
+				250.654541015625,
+				178.923828125
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25421.625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-attack-1.png",
+			"physics_tick": 90,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "1407deaabc3df06cf73b44bc6597de675696cd67be44765ec68fbc0b55671961",
+			"visible_body_viewport": [
+				504.594299316406,
+				244.930786132812,
+				236.147155761719,
+				201.490783691406
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25421.625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-E-contact.png",
+			"physics_tick": 90,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "1407deaabc3df06cf73b44bc6597de675696cd67be44765ec68fbc0b55671961",
+			"visible_body_viewport": [
+				504.594299316406,
+				244.930786132812,
+				236.147155761719,
+				201.490783691406
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25374.326171875,
+				22746.326171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk.png",
+			"physics_tick": 103,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "bdfe7a172446ac05c3be9a03e3410b8d7abae8ee1cfa64b2f3c32f47fda9bcc2",
+			"visible_body_viewport": [
+				572.152954101562,
+				262.282684326172,
+				165.001220703125,
+				184.265289306641
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25374.326171875,
+				22746.326171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk-native-4.png",
+			"physics_tick": 103,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "bdfe7a172446ac05c3be9a03e3410b8d7abae8ee1cfa64b2f3c32f47fda9bcc2",
+			"visible_body_viewport": [
+				572.152954101562,
+				262.282684326172,
+				165.001220703125,
+				184.265289306641
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25379.607421875,
+				22751.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk-native-5.png",
+			"physics_tick": 108,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "0a8dc1cfeeb79bbca24f0beca0861a6512475a6fa83addc3bdcecab39eab652c",
+			"visible_body_viewport": [
+				572.994445800781,
+				270.654479980469,
+				175.052062988281,
+				175.889617919922
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25386.208984375,
+				22758.208984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk-native-0.png",
+			"physics_tick": 114,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "b0b196e601bdfb5e40050f4b8d1243f59774602710ca547c697d7ebb7706581d",
+			"visible_body_viewport": [
+				555.405456542969,
+				266.466644287109,
+				170.864196777344,
+				180.077484130859
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25392.810546875,
+				22764.810546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk-native-1.png",
+			"physics_tick": 120,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "f66928988501170c2555aae05af865806c58db22014f0b65a5cb963c8d0c5190",
+			"visible_body_viewport": [
+				575.507141113281,
+				262.278778076172,
+				159.975769042969,
+				184.265289306641
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25399.412109375,
+				22771.412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk-native-2.png",
+			"physics_tick": 126,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "7f1b328cc4b8d329774160b070d1f30f27e706985b21f29134c876c6d24a07f7",
+			"visible_body_viewport": [
+				541.166809082031,
+				253.903091430664,
+				172.539367675781,
+				192.641006469727
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25404.693359375,
+				22776.693359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-walk-native-3.png",
+			"physics_tick": 131,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "624a836385879c6e1631600369bba03e74823ace7c896ebd01890e22a611d887",
+			"visible_body_viewport": [
+				552.896667480469,
+				262.278778076172,
+				175.052062988281,
+				184.265289306641
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25436.380859375,
+				22808.380859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-attack-0.png",
+			"physics_tick": 157,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "5a452f811c179c09bfb2c02cb353433dd300b865dd02217acf8056baeb5b7575",
+			"visible_body_viewport": [
+				540.329223632812,
+				278.196502685547,
+				188.453125,
+				168.351470947266
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25436.380859375,
+				22808.380859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-attack-1.png",
+			"physics_tick": 175,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "60199201c6b030f81b73e079f67df3ed4ec1af3ec68fc8a974f1e847c7aa5929",
+			"visible_body_viewport": [
+				542.004333496094,
+				241.343444824219,
+				186.778015136719,
+				205.204528808594
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25436.380859375,
+				22808.380859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SE-contact.png",
+			"physics_tick": 175,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "60199201c6b030f81b73e079f67df3ed4ec1af3ec68fc8a974f1e847c7aa5929",
+			"visible_body_viewport": [
+				542.004333496094,
+				241.343444824219,
+				186.778015136719,
+				205.204528808594
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22705.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk.png",
+			"physics_tick": 188,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "729b469c61ab3f46d14903459dc9564001dae51c7df981c663ce4f4dcb04ace4",
+			"visible_body_viewport": [
+				571.144287109375,
+				269.779418945312,
+				146.63720703125,
+				175.964599609375
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22705.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk-native-2.png",
+			"physics_tick": 188,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "729b469c61ab3f46d14903459dc9564001dae51c7df981c663ce4f4dcb04ace4",
+			"visible_body_viewport": [
+				571.144287109375,
+				269.779418945312,
+				146.63720703125,
+				175.964599609375
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22713.3359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk-native-3.png",
+			"physics_tick": 193,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "6a7f98a1fe50fec7c56079441a17f48411d8f6a095b8027915229ff468d7c7e3",
+			"visible_body_viewport": [
+				576.882263183594,
+				274.883728027344,
+				144.086975097656,
+				170.864196777344
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22722.671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk-native-4.png",
+			"physics_tick": 199,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "b533fcb75c1374506c78858405d716cbd9dd559355b37ede4481a8e533e6289f",
+			"visible_body_viewport": [
+				579.432495117188,
+				267.233093261719,
+				143.449401855469,
+				178.514831542969
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22732.0078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk-native-5.png",
+			"physics_tick": 205,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "d36b41329bee657d82fddd3acbd3d4ce21c33cbe5c4ff8de1cb87a54c79ef304",
+			"visible_body_viewport": [
+				579.432495117188,
+				269.783325195312,
+				135.798767089844,
+				175.964599609375
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22741.34375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk-native-0.png",
+			"physics_tick": 211,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "59546764097a54ec9d68b1f0a01531e4be573c813e57e2f556a94b61e319b0b2",
+			"visible_body_viewport": [
+				576.244689941406,
+				274.883728027344,
+				152.375183105469,
+				170.864196777344
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22748.8125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-walk-native-1.png",
+			"physics_tick": 216,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "d73b307b4be5133a382fba10c0c02192f7a2c814cbe5b6e06593a8bdb4e05dd2",
+			"visible_body_viewport": [
+				580.070007324219,
+				271.058410644531,
+				138.986511230469,
+				174.689514160156
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22793.625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-attack-0.png",
+			"physics_tick": 242,
+			"player_hp": 1809,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "6b60c667f916f8ec7749c8da5835bd0e82979b09d4fdd4c5857d3232e89091ba",
+			"visible_body_viewport": [
+				567.95654296875,
+				295.285430908203,
+				157.4755859375,
+				150.462493896484
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22793.625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-attack-1.png",
+			"physics_tick": 260,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "8dc4feff90ffc28827484f664571b18a9e6909c6064a7b376417ca5fe7426331",
+			"visible_body_viewport": [
+				568.594055175781,
+				266.595550537109,
+				152.375183105469,
+				179.152374267578
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22793.625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-S-contact.png",
+			"physics_tick": 260,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "8dc4feff90ffc28827484f664571b18a9e6909c6064a7b376417ca5fe7426331",
+			"visible_body_viewport": [
+				568.594055175781,
+				266.595550537109,
+				152.375183105469,
+				179.152374267578
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25569.673828125,
+				22746.326171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk.png",
+			"physics_tick": 273,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a819dcd565faff4a81a6fad046d9151e99a62f2c7bb76f81bfeeae2716abf5b0",
+			"visible_body_viewport": [
+				529.088134765625,
+				273.832336425781,
+				214.329650878906,
+				172.362976074219
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25569.673828125,
+				22746.326171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk-native-0.png",
+			"physics_tick": 273,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a819dcd565faff4a81a6fad046d9151e99a62f2c7bb76f81bfeeae2716abf5b0",
+			"visible_body_viewport": [
+				529.088134765625,
+				273.832336425781,
+				214.329650878906,
+				172.362976074219
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25564.392578125,
+				22751.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk-native-1.png",
+			"physics_tick": 278,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "b6e1944ef2a105a3889ed84efb462ab68613a54a82f027246575b3bacec2cb15",
+			"visible_body_viewport": [
+				524.599548339844,
+				270.830810546875,
+				224.8212890625,
+				175.360595703125
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25557.791015625,
+				22758.208984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk-native-2.png",
+			"physics_tick": 284,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "15675a8f0f3e6a54f046fe050c55b477177ba6fd9b0e14a7bfc54d8e32da4088",
+			"visible_body_viewport": [
+				525.348937988281,
+				272.329620361328,
+				215.079040527344,
+				173.861785888672
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25551.189453125,
+				22764.810546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk-native-3.png",
+			"physics_tick": 290,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "3963485ad5c146bc02fff35e54122a9cfed441e840f31cd3f425c2f58cf68a0b",
+			"visible_body_viewport": [
+				509.611450195312,
+				272.329620361328,
+				230.816528320312,
+				173.861785888672
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25544.587890625,
+				22771.412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk-native-4.png",
+			"physics_tick": 296,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "8b4a44332af76a01440b0abc794fa401a46aa52e67ed97866245523b116c7a0a",
+			"visible_body_viewport": [
+				527.59716796875,
+				267.833190917969,
+				219.575439453125,
+				178.358215332031
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25539.306640625,
+				22776.693359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-walk-native-5.png",
+			"physics_tick": 301,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "60396fbdf2b88c83ff83a4af809f1def27f09de9fd58b309e9d05bf816a5e92f",
+			"visible_body_viewport": [
+				533.584594726562,
+				263.336791992188,
+				206.086181640625,
+				182.854644775391
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25507.619140625,
+				22808.380859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-attack-0.png",
+			"physics_tick": 327,
+			"player_hp": 1786,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "f5105a83800c87546f8cd55f484c1eae90d7a131516d08aa85109309035e5517",
+			"visible_body_viewport": [
+				517.097717285156,
+				258.094848632812,
+				197.093322753906,
+				188.100463867188
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25507.619140625,
+				22808.380859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-attack-1.png",
+			"physics_tick": 345,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "7559f5bbef1a3a30ed375fa1bdc0a47ef9a0596eae1618b6669752a45ca119c2",
+			"visible_body_viewport": [
+				514.10009765625,
+				266.338317871094,
+				239.809387207031,
+				179.857055664062
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25507.619140625,
+				22808.380859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-SW-contact.png",
+			"physics_tick": 345,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "7559f5bbef1a3a30ed375fa1bdc0a47ef9a0596eae1618b6669752a45ca119c2",
+			"visible_body_viewport": [
+				514.10009765625,
+				266.338317871094,
+				239.809387207031,
+				179.857055664062
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25610.1328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk.png",
+			"physics_tick": 358,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "e74bb709652c0380b039d19d96b6527ab6c125f063f2f9bb7b433f29ce994ff1",
+			"visible_body_viewport": [
+				497.613159179688,
+				276.552398681641,
+				251.022705078125,
+				170.864166259766
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25610.1328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk-native-4.png",
+			"physics_tick": 358,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "e74bb709652c0380b039d19d96b6527ab6c125f063f2f9bb7b433f29ce994ff1",
+			"visible_body_viewport": [
+				497.613159179688,
+				276.552398681641,
+				251.022705078125,
+				170.864166259766
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25602.6640625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk-native-5.png",
+			"physics_tick": 363,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "93d9409218aa654e1d8a151e2d0ee270e3ada07f921df5995da90a877eff44c5",
+			"visible_body_viewport": [
+				469.135803222656,
+				275.497680664062,
+				259.460388183594,
+				171.918884277344
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25593.328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk-native-0.png",
+			"physics_tick": 369,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "3c67707dd5697116c8ae8f8760e8a3db679da48ba9f1c15a8310068083d480be",
+			"visible_body_viewport": [
+				482.847137451172,
+				278.661834716797,
+				265.788726806641,
+				168.754730224609
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25583.9921875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk-native-1.png",
+			"physics_tick": 375,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "376c3a3b3cffa61dcc9f91a6e0629ad4c9bfb4dc49c617ad70534528ac414d4a",
+			"visible_body_viewport": [
+				464.916931152344,
+				277.607116699219,
+				264.734008789062,
+				169.809448242188
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25574.65625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk-native-2.png",
+			"physics_tick": 381,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "0dbd983244c3d4f171ee5df4a9eaf8ae04c2a47aecfdf00402279aa1f2058f0f",
+			"visible_body_viewport": [
+				529.254699707031,
+				279.716552734375,
+				265.788757324219,
+				167.700012207031
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25567.1875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-walk-native-3.png",
+			"physics_tick": 386,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "859caeda47667f2dd0368492072c6ba157f27dad264759edbd745730693ca6ab",
+			"visible_body_viewport": [
+				513.433959960938,
+				275.497680664062,
+				255.241577148438,
+				171.918884277344
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25522.375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-attack-0.png",
+			"physics_tick": 412,
+			"player_hp": 1763,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "ce941f8f64bf2af6bc6cd158cc894395bc6e81c1ad7d6ee27e448b4f321d0657",
+			"visible_body_viewport": [
+				564.060363769531,
+				253.3486328125,
+				226.764221191406,
+				194.067962646484
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25522.375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-attack-1.png",
+			"physics_tick": 430,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "c9eeb868a1465c4a9431c50e388445d078a25ae31d15d3a6bb1fc315716383a9",
+			"visible_body_viewport": [
+				548.239624023438,
+				223.816543579102,
+				207.779296875,
+				223.600021362305
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25522.375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-W-contact.png",
+			"physics_tick": 430,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "c9eeb868a1465c4a9431c50e388445d078a25ae31d15d3a6bb1fc315716383a9",
+			"visible_body_viewport": [
+				548.239624023438,
+				223.816543579102,
+				207.779296875,
+				223.600021362305
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25569.673828125,
+				22941.673828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk.png",
+			"physics_tick": 443,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "57a52547c71b33a878f654ad7f6c1e4b9a1eaa657fdd3a99b73eabe104a508aa",
+			"visible_body_viewport": [
+				576.637878417969,
+				268.769958496094,
+				166.592590332031,
+				177.271606445312
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25569.673828125,
+				22941.673828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk-native-2.png",
+			"physics_tick": 443,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "57a52547c71b33a878f654ad7f6c1e4b9a1eaa657fdd3a99b73eabe104a508aa",
+			"visible_body_viewport": [
+				576.637878417969,
+				268.769958496094,
+				166.592590332031,
+				177.271606445312
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25564.392578125,
+				22936.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk-native-3.png",
+			"physics_tick": 448,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "c7a5cd244c7264aac9df343d3cae2de7c031e5e3d38bd8278a887aedfb6e6ef7",
+			"visible_body_viewport": [
+				581.629211425781,
+				274.465423583984,
+				151.641967773438,
+				171.576110839844
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25557.791015625,
+				22929.791015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk-native-4.png",
+			"physics_tick": 454,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "03536d9cfdd5ba07a64f4ee79bcb580653ee3169d3bca8723d5aa62c70ef0063",
+			"visible_body_viewport": [
+				573.797973632812,
+				266.634155273438,
+				175.847717285156,
+				179.407409667969
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25551.189453125,
+				22923.189453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk-native-5.png",
+			"physics_tick": 460,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "ea2e76dcd5e0546ecb3afbc784dea4093b9f24fe0adaf02640599c5b873d1f3e",
+			"visible_body_viewport": [
+				571.662109375,
+				270.193817138672,
+				166.592590332031,
+				175.847717285156
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25544.587890625,
+				22916.587890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk-native-0.png",
+			"physics_tick": 466,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "75b12173795affee1984e6c35429724ded15bff8fe418fe3b44e699798f62191",
+			"visible_body_viewport": [
+				573.797973632812,
+				268.058013916016,
+				176.559692382812,
+				177.983520507812
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25539.306640625,
+				22911.306640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-walk-native-1.png",
+			"physics_tick": 471,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "a3062cdb45bc6651eebed8e941863efc588af05a82cb8a2ae4a22290baec1b61",
+			"visible_body_viewport": [
+				575.213989257812,
+				273.757385253906,
+				170.152221679688,
+				172.288055419922
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25507.619140625,
+				22879.619140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-attack-0.png",
+			"physics_tick": 497,
+			"player_hp": 1740,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "ed689e7405fea871be6c1ab734e41888921104e7cedea5a3e1dfa77ef4ac81e0",
+			"visible_body_viewport": [
+				574.502075195312,
+				288.7080078125,
+				183.679016113281,
+				157.337432861328
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25507.619140625,
+				22879.619140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-attack-1.png",
+			"physics_tick": 515,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "504e32f19ffe8ccafba824f095512401c3955f96d9766c17d687bb2e348477bf",
+			"visible_body_viewport": [
+				564.534973144531,
+				265.214202880859,
+				174.423889160156,
+				180.831268310547
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25507.619140625,
+				22879.619140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NW-contact.png",
+			"physics_tick": 515,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "504e32f19ffe8ccafba824f095512401c3955f96d9766c17d687bb2e348477bf",
+			"visible_body_viewport": [
+				564.534973144531,
+				265.214202880859,
+				174.423889160156,
+				180.831268310547
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22982.1328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk.png",
+			"physics_tick": 528,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "6a87cd4adcc0f813e9facddf4cca94a910c19e32e78aeea449d132610fc96233",
+			"visible_body_viewport": [
+				575.258483886719,
+				275.003295898438,
+				130.81787109375,
+				170.864196777344
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22982.1328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk-native-0.png",
+			"physics_tick": 528,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "6a87cd4adcc0f813e9facddf4cca94a910c19e32e78aeea449d132610fc96233",
+			"visible_body_viewport": [
+				575.258483886719,
+				275.003295898438,
+				130.81787109375,
+				170.864196777344
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22974.6640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk-native-1.png",
+			"physics_tick": 533,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "f1adae0f3b0a532bd616c8450e386df2a920db94ac44c01b0204031926e29ceb",
+			"visible_body_viewport": [
+				583.935180664062,
+				277.673034667969,
+				132.820190429688,
+				168.194427490234
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22965.328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk-native-2.png",
+			"physics_tick": 539,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "77c4bbfb9963185d9c8f8d500b3a0b212ae02164e3c09d14081ff385b277ed95",
+			"visible_body_viewport": [
+				577.92822265625,
+				277.005615234375,
+				133.487670898438,
+				168.861877441406
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22955.9921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk-native-3.png",
+			"physics_tick": 545,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "a7873e7d73a89abf42677ba20c872ce52df1a2949713c742c88bd646f236b104",
+			"visible_body_viewport": [
+				577.92822265625,
+				270.998657226562,
+				130.150451660156,
+				174.868804931641
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22946.65625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk-native-4.png",
+			"physics_tick": 551,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "195c9742e4b6443141cdd15e032d9bda944453a02ceeef2c243f050e9f29da80",
+			"visible_body_viewport": [
+				575.925903320312,
+				276.338165283203,
+				132.820190429688,
+				169.529327392578
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22939.1875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-walk-native-5.png",
+			"physics_tick": 556,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "2957c2e185ed56999be5ea766e89944f912ae9ec33a961f75c0cd4468f6ef01d",
+			"visible_body_viewport": [
+				583.935180664062,
+				276.334259033203,
+				136.157409667969,
+				169.529327392578
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22894.375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-attack-0.png",
+			"physics_tick": 582,
+			"player_hp": 1717,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "8a89ebd4e2b237d0c0320da0f38cdc01e22aad57ef39006a15f75892ca3e16d0",
+			"visible_body_viewport": [
+				573.256164550781,
+				263.652923583984,
+				146.1689453125,
+				182.210632324219
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22894.375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-attack-1.png",
+			"physics_tick": 600,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "b25b08e657833b2dc84e82352768633fbc0d4413b6350a12a1c2ecdbab49d82d",
+			"visible_body_viewport": [
+				559.907409667969,
+				302.364349365234,
+				208.908142089844,
+				143.499237060547
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25472.0,
+				22894.375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-N-contact.png",
+			"physics_tick": 600,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "b25b08e657833b2dc84e82352768633fbc0d4413b6350a12a1c2ecdbab49d82d",
+			"visible_body_viewport": [
+				559.907409667969,
+				302.364349365234,
+				208.908142089844,
+				143.499237060547
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25374.326171875,
+				22941.673828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk.png",
+			"physics_tick": 613,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "55d6d49c8dbf146e071424a4d4c4e7b51b7db74882e8fb8245e19f957792580e",
+			"visible_body_viewport": [
+				563.478637695312,
+				268.615203857422,
+				219.15185546875,
+				177.550140380859
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25374.326171875,
+				22941.673828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk-native-4.png",
+			"physics_tick": 613,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "55d6d49c8dbf146e071424a4d4c4e7b51b7db74882e8fb8245e19f957792580e",
+			"visible_body_viewport": [
+				563.478637695312,
+				268.615203857422,
+				219.15185546875,
+				177.550140380859
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25379.607421875,
+				22936.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk-native-5.png",
+			"physics_tick": 618,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "41d514f3f8b7c28c855ff0ef8abf7094429944e3e5f5ff59ef9073d31f92705c",
+			"visible_body_viewport": [
+				562.739685058594,
+				274.558288574219,
+				208.751403808594,
+				171.607055664062
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25386.208984375,
+				22929.791015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk-native-0.png",
+			"physics_tick": 624,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "29850e424b7e43692d2e7c74fd8a8b5a601591a077dac087f5aa4494663c6f94",
+			"visible_body_viewport": [
+				543.424621582031,
+				274.558288574219,
+				234.009582519531,
+				171.607055664062
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25392.810546875,
+				22923.189453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk-native-1.png",
+			"physics_tick": 630,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "d64da176ce96c1db2a4eca6a3fe02ae8aeeddbff6c81d9768a8ac597a1f63833",
+			"visible_body_viewport": [
+				553.082153320312,
+				272.329650878906,
+				223.609191894531,
+				173.835693359375
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25399.412109375,
+				22916.587890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk-native-2.png",
+			"physics_tick": 636,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "8e7f55c6e7e4d1856fc699223c0a0d4f01c6281b35160d6329efbdd3451c5ff7",
+			"visible_body_viewport": [
+				553.082153320312,
+				275.301177978516,
+				231.0380859375,
+				170.864166259766
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25404.693359375,
+				22911.306640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-walk-native-3.png",
+			"physics_tick": 641,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "a5bc078c49f0f5333c7e1aa9f6a80109df2833a08d0a461146c433fc58aaee10",
+			"visible_body_viewport": [
+				556.800476074219,
+				270.104888916016,
+				228.066528320312,
+				176.064361572266
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25436.380859375,
+				22879.619140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-attack-0.png",
+			"physics_tick": 667,
+			"player_hp": 1694,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "456dc588bb1e2325083602ef641e9eec99d050973f83b202a281964bf12078d1",
+			"visible_body_viewport": [
+				552.339233398438,
+				259.704467773438,
+				226.580749511719,
+				186.464813232422
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25436.380859375,
+				22879.619140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-attack-1.png",
+			"physics_tick": 685,
+			"player_hp": 1671,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "bc17cbcf8caa05b071be3940c9d0d90e0c05141cfd0f3db8bf7e9a37c1f7cd9e",
+			"visible_body_viewport": [
+				532.281311035156,
+				288.677062988281,
+				267.439575195312,
+				157.4921875
+			]
+		},
+		{
+			"actor_hp": 1400,
+			"actor_world": [
+				25436.380859375,
+				22879.619140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/ai-NE-contact.png",
+			"physics_tick": 685,
+			"player_hp": 1671,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "bc17cbcf8caa05b071be3940c9d0d90e0c05141cfd0f3db8bf7e9a37c1f7cd9e",
+			"visible_body_viewport": [
+				532.281311035156,
+				288.677062988281,
+				267.439575195312,
+				157.4921875
+			]
+		},
+		{
+			"actor_hp": 1347,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/lifecycle-hit.png",
+			"physics_tick": 707,
+			"player_hp": 1671,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "04c3d8ede4392dd463fd6350c307f9b0e1fd20f768505436d56b19e8598425dd",
+			"visible_body_viewport": [
+				559.768127441406,
+				285.705505371094,
+				210.980102539062,
+				160.463745117188
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/lifecycle-ground-drop.png",
+			"physics_tick": 1734,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "9792f5323a02db943743b61368fad1f3e6d3a17ce2ecbb71b5bc5e93381ce23d",
+			"visible_body_viewport": [
+				570.168579101562,
+				270.847778320312,
+				206.522766113281,
+				175.321472167969
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/lifecycle-death-0.png",
+			"physics_tick": 1736,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "3484456778164803f813c6b485763f98ddac4c1dfbd7e2d94a7bcaa63c4f67d5",
+			"visible_body_viewport": [
+				529.309753417969,
+				312.449462890625,
+				235.495422363281,
+				133.719787597656
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/lifecycle-manual-pickup.png",
+			"physics_tick": 1747,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "9c365f5530cbbfe39a08f1b447384abe3ae03ae8eff2a8d55f17cfd332e26b32",
+			"visible_body_viewport": [
+				529.309753417969,
+				312.449462890625,
+				235.495422363281,
+				133.719787597656
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/lifecycle-death-1.png",
+			"physics_tick": 1750,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "20dac1afb09f7937451403f82fe6365de2ecc994dc61bb8f2e361912473657d4",
+			"visible_body_viewport": [
+				502.565795898438,
+				334.736114501953,
+				254.067565917969,
+				111.433135986328
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/batch17/Queen-Gnoll-QA-v01/gameplay/captures/gnoll-candidate/lifecycle-death-2.png",
+			"physics_tick": 1764,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "0c50aa862f001f259b55e972b1974081edb9b92dbebc8bbff562a2a388aa085c",
+			"visible_body_viewport": [
+				478.793395996094,
+				363.708740234375,
+				294.926452636719,
+				82.4605407714844
+			]
+		}
+	],
+	"scope": "original-based gnoll_batch17_candidate, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-walk-native-4.png",
+		"ai-E-walk-native-5.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-4.png",
+		"ai-SE-walk-native-5.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-4.png",
+		"ai-S-walk-native-5.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-walk-native-4.png",
+		"ai-SW-walk-native-5.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-4.png",
+		"ai-W-walk-native-5.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-walk-native-4.png",
+		"ai-NW-walk-native-5.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-walk-native-4.png",
+		"ai-N-walk-native-5.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-4.png",
+		"ai-NE-walk-native-5.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-walk-4.png",
+		"authored-E-walk-5.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-walk-4.png",
+		"authored-SE-walk-5.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-walk-4.png",
+		"authored-S-walk-5.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-walk-4.png",
+		"authored-SW-walk-5.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-walk-4.png",
+		"authored-W-walk-5.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-walk-4.png",
+		"authored-NW-walk-5.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-walk-4.png",
+		"authored-N-walk-5.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-walk-4.png",
+		"authored-NE-walk-5.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"map": "aden_world",
+		"normal": "놀",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_5.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_5.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

@@ -1,0 +1,1602 @@
+{
+  "schema": "pr122-own-native-six-pose-source-v01",
+  "status": "SIX_ACTUAL_NATIVE_W_RUN_POSES_SOURCE_VISUAL_AND_ANATOMY_HOLD_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "W",
+  "action": "run",
+  "frames": [
+    {
+      "phase": 0,
+      "role": "NEAR_CONTACT_FAR_AIR",
+      "source": {
+        "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v05.png",
+        "bytes": 751322,
+        "sha256": "feafe6a2c8b1be51e36b386dd4cc78d454041eed454034920792bd19fce0369e"
+      },
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_rig_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        384,
+        128
+      ],
+      "native_canvas": [
+        1792,
+        1792
+      ],
+      "parameters": {
+        "role": "NEAR_CONTACT_FAR_AIR",
+        "body_deg": -6,
+        "torso": [
+          -8,
+          10
+        ],
+        "head_deg": 1,
+        "right_upper": 3,
+        "right_fore": -2,
+        "left_upper": 12,
+        "left_fore": -14,
+        "cloth": [
+          8,
+          -3
+        ],
+        "ribbon": [
+          8,
+          0
+        ]
+      },
+      "bones": {
+        "L-near": {
+          "hip": [
+            621.8854068254379,
+            656.9493456008945
+          ],
+          "knee": [
+            542.1349387959979,
+            864.3158396376247
+          ],
+          "heel": [
+            612.0,
+            1179.5695045218906
+          ],
+          "upper": [
+            [
+              0.8741387771554061,
+              -0.4856762278238985
+            ],
+            [
+              0.4856762278238985,
+              0.8741387771554061
+            ]
+          ],
+          "upper_offset": [
+            397.16276327194623,
+            -206.92086078101943
+          ],
+          "lower": [
+            [
+              0.9940124639862414,
+              0.10926674443764388
+            ],
+            [
+              -0.10926674443764388,
+              0.9940124639862414
+            ]
+          ],
+          "lower_offset": [
+            -195.61612608609994,
+            74.1966294766952
+          ],
+          "femur_length": 222.17335573826128,
+          "lower_to_original_heel_length": 322.9024620531717,
+          "requested_foot_lift": 0.0,
+          "original_visible_sole_plane": 1185.0,
+          "desired_sole_plane": 1185.0,
+          "transformed_native_sole_error": 0.001006451630473748,
+          "minimum_owned_skinning_jacobian": 0.772238969758843,
+          "maximum_knee_radius_change": 0.0
+        },
+        "R-far": {
+          "hip": [
+            576.1373996384973,
+            661.7576549112066
+          ],
+          "knee": [
+            455.5719191321054,
+            846.8629355227084
+          ],
+          "heel": [
+            713.0,
+            972.1457483131016
+          ],
+          "upper": [
+            [
+              0.7850789369754624,
+              -0.6193957238450052
+            ],
+            [
+              0.6193957238450052,
+              0.7850789369754624
+            ]
+          ],
+          "upper_offset": [
+            528.7720431663571,
+            -198.45890096659502
+          ],
+          "lower": [
+            [
+              0.4779777894142022,
+              0.8783719216975872
+            ],
+            [
+              -0.8783719216975872,
+              0.4779777894142022
+            ]
+          ],
+          "lower_offset": [
+            -587.1050608123844,
+            951.1736036915858
+          ],
+          "femur_length": 220.90722034374522,
+          "lower_to_original_heel_length": 286.29530209208815,
+          "requested_foot_lift": 100.0,
+          "original_visible_sole_plane": 1152.0,
+          "desired_sole_plane": 1052.0,
+          "transformed_native_sole_error": 9.530451279715635e-06,
+          "minimum_owned_skinning_jacobian": 0.49787459776026355,
+          "maximum_knee_radius_change": 0.0
+        }
+      },
+      "nodes": [
+        {
+          "name": "R-far-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-R-far-own-native-articulated-leg.png",
+          "bytes": 81308,
+          "sha256": "093e07a07d002a2bcac3f016ce02bd272caeddae02a032bb5c19f024817472a5"
+        },
+        {
+          "name": "L-near-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-L-near-own-native-articulated-leg.png",
+          "bytes": 116722,
+          "sha256": "0d9a9e0c1a522926a49cd19fb7a15b44eedabb3b7a75dcfb6f39a5bf79e9a881"
+        },
+        {
+          "name": "RIGHT-full-visible-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-full-visible-upper-arm.png",
+          "bytes": 15446,
+          "sha256": "7a613bfcb49459bdd6602cc02aae6c0864b47b3544053bb9826c9d892d01fa28"
+        },
+        {
+          "name": "BODY-HEAD-NECK-real-COAT-native-material",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+          "bytes": 472795,
+          "sha256": "887d74e4b0ae12894dd380837b1d110c17d342884ce3341d2bc12102ce043c7f"
+        },
+        {
+          "name": "complete-rigid-RIGHT-staff",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-complete-rigid-RIGHT-staff.png",
+          "bytes": 125481,
+          "sha256": "5f9db18e4b0033a8ac814c346d288a8895cb1846347f7671492d161bf1077fdd"
+        },
+        {
+          "name": "RIGHT-white-puff-elbow",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-white-puff-elbow.png",
+          "bytes": 26830,
+          "sha256": "f8d36d7d10080e331caccb772713f549cdfb6c0b4dd6984c5526c96c0f7f9567"
+        },
+        {
+          "name": "RIGHT-complete-forearm-cuff-grip-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+          "bytes": 30812,
+          "sha256": "e2c6bc90883a168d14746e35de18a9c1b127de306d4602e897003ac02d558f0f"
+        },
+        {
+          "name": "LEFT-full-near-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-LEFT-full-near-upper-arm.png",
+          "bytes": 55852,
+          "sha256": "3f4826eed5e8bf42d776f8840822458fb72b7661176b0a83d8a1b64ab36722f0"
+        },
+        {
+          "name": "LEFT-original-distal-upper-cuff-follows-rigid-forearm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+          "bytes": 14459,
+          "sha256": "c3c46b37a1379b1acf1345c166e9575967adf584938034027317773e75ce6156"
+        },
+        {
+          "name": "LEFT-complete-original-curved-cuff-forearm-free-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+          "bytes": 55171,
+          "sha256": "2014e3e4676e5b2f2b80bdd7e9df38899ca2c8d01afed334a38638be3fc3771c"
+        }
+      ],
+      "body_inverse_error": 2.2737367544323206e-13,
+      "arm_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "leg_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "rigid_staff_Gram_error": 2.1632406296408585e-18,
+      "border_alpha_texels": 0,
+      "major_alpha_components": [
+        252101
+      ],
+      "LEFT_full_forearm_rigid_matrix": [
+        [
+          0.9702957262759965,
+          0.24192189559966773
+        ],
+        [
+          -0.24192189559966773,
+          0.9702957262759965
+        ]
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9993908270190958,
+          0.03489949670250097
+        ],
+        [
+          -0.03489949670250097,
+          0.9993908270190958
+        ]
+      ],
+      "reused_unchanged_node_count": 9,
+      "changed_node_count": 1
+    },
+    {
+      "phase": 1,
+      "role": "NEAR_COMPRESSION_FAR_RECOVER",
+      "source": {
+        "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v05.png",
+        "bytes": 736754,
+        "sha256": "bab5a3c278b145b37683c7942e14f5a33a67b3bed065b4ec4ffb55ed796b3895"
+      },
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_rig_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        384,
+        128
+      ],
+      "native_canvas": [
+        1792,
+        1792
+      ],
+      "parameters": {
+        "role": "NEAR_COMPRESSION_FAR_RECOVER",
+        "body_deg": -7,
+        "torso": [
+          -8,
+          35
+        ],
+        "head_deg": 0,
+        "right_upper": 1,
+        "right_fore": -5,
+        "left_upper": 6,
+        "left_fore": -7,
+        "cloth": [
+          12,
+          -1
+        ],
+        "ribbon": [
+          12,
+          1
+        ]
+      },
+      "bones": {
+        "L-near": {
+          "hip": [
+            624.2060149032183,
+            681.9660015111369
+          ],
+          "knee": [
+            517.0985877444617,
+            876.6169687510447
+          ],
+          "heel": [
+            682.0,
+            1154.2381571285334
+          ],
+          "upper": [
+            [
+              0.8002852971142859,
+              -0.5996194153149973
+            ],
+            [
+              0.5996194153149973,
+              0.8002852971142859
+            ]
+          ],
+          "upper_offset": [
+            518.5844141743064,
+            -204.38386025873
+          ],
+          "lower": [
+            [
+              0.9100564987447269,
+              0.4144842205591053
+            ],
+            [
+              -0.4144842205591053,
+              0.9100564987447269
+            ]
+          ],
+          "lower_offset": [
+            -430.6513019475617,
+            356.67933153985234
+          ],
+          "femur_length": 222.17335573826128,
+          "lower_to_original_heel_length": 322.9024620531717,
+          "requested_foot_lift": 0.0,
+          "original_visible_sole_plane": 1185.0,
+          "desired_sole_plane": 1185.0,
+          "transformed_native_sole_error": 0.00012143996036684257,
+          "minimum_owned_skinning_jacobian": 0.6046268915691837,
+          "maximum_knee_radius_change": 0.0
+        },
+        "R-far": {
+          "hip": [
+            578.5488919277175,
+            687.5719913077737
+          ],
+          "knee": [
+            385.8557802976282,
+            795.5968251670024
+          ],
+          "heel": [
+            653.0,
+            898.5481043218091
+          ],
+          "upper": [
+            [
+              0.4080246150907485,
+              -0.912970926963201
+            ],
+            [
+              0.912970926963201,
+              0.4080246150907485
+            ]
+          ],
+          "upper_offset": [
+            935.7540801442187,
+            -96.40533840987439
+          ],
+          "lower": [
+            [
+              0.4015975196047769,
+              0.9158162655507331
+            ],
+            [
+              -0.9158162655507331,
+              0.4015975196047769
+            ]
+          ],
+          "lower_offset": [
+            -644.1836422361253,
+            988.1449698641982
+          ],
+          "femur_length": 220.90722034374522,
+          "lower_to_original_heel_length": 286.29530209208815,
+          "requested_foot_lift": 170.0,
+          "original_visible_sole_plane": 1152.0,
+          "desired_sole_plane": 982.0,
+          "transformed_native_sole_error": 5.713267000828637e-06,
+          "minimum_owned_skinning_jacobian": 0.3341100391014673,
+          "maximum_knee_radius_change": 0.0
+        }
+      },
+      "nodes": [
+        {
+          "name": "R-far-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-R-far-own-native-articulated-leg.png",
+          "bytes": 49994,
+          "sha256": "888f8ccf195771b8d6530ad74361e3849999a49d6a3752603ee2099982666e12"
+        },
+        {
+          "name": "L-near-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-L-near-own-native-articulated-leg.png",
+          "bytes": 118667,
+          "sha256": "9524cd8c8dc2dfc50a5c698fb10e5f0531ab6292d9209bb8f66213d3c9c6f7bc"
+        },
+        {
+          "name": "RIGHT-full-visible-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-full-visible-upper-arm.png",
+          "bytes": 15509,
+          "sha256": "24f8ef46b8153c42586703e747f85532a1252c7c4670dd5a4a72726c0f68dab1"
+        },
+        {
+          "name": "BODY-HEAD-NECK-real-COAT-native-material",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+          "bytes": 474013,
+          "sha256": "71ae38cd63e7a5686c63fcd7fe03668fb35680f060a1bdcf14a22761514f1092"
+        },
+        {
+          "name": "complete-rigid-RIGHT-staff",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-complete-rigid-RIGHT-staff.png",
+          "bytes": 128452,
+          "sha256": "c3fb627db7b0c42d20c9afc573d1f4503754d3843281b899ea373cb9b65ac43b"
+        },
+        {
+          "name": "RIGHT-white-puff-elbow",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-white-puff-elbow.png",
+          "bytes": 26947,
+          "sha256": "baadb4165a04d47bc54c8ef2292c2efce9ff652419c9bc30ec135bf8cc41c419"
+        },
+        {
+          "name": "RIGHT-complete-forearm-cuff-grip-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+          "bytes": 30865,
+          "sha256": "da2b2e5176b4cbdd819183d8014665cec59f507276aa3301d2f90a49a3c032ba"
+        },
+        {
+          "name": "LEFT-full-near-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-LEFT-full-near-upper-arm.png",
+          "bytes": 54970,
+          "sha256": "af0adb767d48a950548cd29eb5d4baa53e281115aee4c63a3257d8bd821fd6b6"
+        },
+        {
+          "name": "LEFT-original-distal-upper-cuff-follows-rigid-forearm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+          "bytes": 14431,
+          "sha256": "555c1c03938b4d4830774ff024d9ad33cea4e65cbddf71db9fa7bc80f9ece774"
+        },
+        {
+          "name": "LEFT-complete-original-curved-cuff-forearm-free-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+          "bytes": 54943,
+          "sha256": "12cbc535727dd2f83688cfe56d8001c7743d17c991456e657750ebfe808995b0"
+        }
+      ],
+      "body_inverse_error": 2.2737367544323206e-13,
+      "arm_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "leg_inverse_errors": [
+        1.1368683772161603e-13,
+        2.2737367544323206e-13
+      ],
+      "rigid_staff_Gram_error": 2.2982146219235116e-18,
+      "border_alpha_texels": 0,
+      "major_alpha_components": [
+        247487
+      ],
+      "LEFT_full_forearm_rigid_matrix": [
+        [
+          0.992546151641322,
+          0.12186934340514748
+        ],
+        [
+          -0.12186934340514748,
+          0.992546151641322
+        ]
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9961946980917455,
+          0.08715574274765817
+        ],
+        [
+          -0.08715574274765817,
+          0.9961946980917455
+        ]
+      ],
+      "reused_unchanged_node_count": 9,
+      "changed_node_count": 1
+    },
+    {
+      "phase": 2,
+      "role": "NEAR_TOEOFF_FAR_REACH",
+      "source": {
+        "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v05.png",
+        "bytes": 770170,
+        "sha256": "329058c9cacb1ba74908937d10afa2f312b9ee3afee61de7e9aa4cfbd0e94df0"
+      },
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_rig_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        384,
+        128
+      ],
+      "native_canvas": [
+        1792,
+        1792
+      ],
+      "parameters": {
+        "role": "NEAR_TOEOFF_FAR_REACH",
+        "body_deg": -5,
+        "torso": [
+          -8,
+          -5
+        ],
+        "head_deg": -1,
+        "right_upper": -3,
+        "right_fore": -7,
+        "left_upper": -3,
+        "left_fore": 3,
+        "cloth": [
+          16,
+          -5
+        ],
+        "ribbon": [
+          15,
+          -1
+        ]
+      },
+      "bones": {
+        "L-near": {
+          "hip": [
+            619.565442873223,
+            641.8921920320729
+          ],
+          "knee": [
+            577.0112193074435,
+            859.9521334626659
+          ],
+          "heel": [
+            762.0,
+            1124.6125782176032
+          ],
+          "upper": [
+            [
+              0.9451592590140252,
+              -0.32660982088733753
+            ],
+            [
+              0.32660982088733753,
+              0.9451592590140252
+            ]
+          ],
+          "upper_offset": [
+            248.3372836138035,
+            -169.87233895758732
+          ],
+          "lower": [
+            [
+              0.8768976472730744,
+              0.48067714342055723
+            ],
+            [
+              -0.48067714342055723,
+              0.8768976472730744
+            ]
+          ],
+          "lower_offset": [
+            -406.60796468043816,
+            411.556882717284
+          ],
+          "femur_length": 222.17335573826128,
+          "lower_to_original_heel_length": 322.9024620531717,
+          "requested_foot_lift": 24.0,
+          "original_visible_sole_plane": 1185.0,
+          "desired_sole_plane": 1161.0,
+          "transformed_native_sole_error": 0.0011905324172403198,
+          "minimum_owned_skinning_jacobian": 0.6918940962518321,
+          "maximum_knee_radius_change": 0.0
+        },
+        "R-far": {
+          "hip": [
+            573.7404867610027,
+            645.9013561984652
+          ],
+          "knee": [
+            399.7293451728667,
+            781.9900133422319
+          ],
+          "heel": [
+            503.0,
+            1049.0109335930151
+          ],
+          "upper": [
+            [
+              0.5421983963087287,
+              -0.8402504977923209
+            ],
+            [
+              0.8402504977923209,
+              0.5421983963087287
+            ]
+          ],
+          "upper_offset": [
+            807.4892224388666,
+            -183.30159155859633
+          ],
+          "lower": [
+            [
+              0.9480937193250377,
+              0.31799103662904815
+            ],
+            [
+              -0.31799103662904815,
+              0.9480937193250377
+            ]
+          ],
+          "lower_offset": [
+            -435.0261869496612,
+            148.55556401788772
+          ],
+          "femur_length": 220.90722034374522,
+          "lower_to_original_heel_length": 286.29530209208815,
+          "requested_foot_lift": 75.0,
+          "original_visible_sole_plane": 1152.0,
+          "desired_sole_plane": 1077.0,
+          "transformed_native_sole_error": 2.4206933630921412e-05,
+          "minimum_owned_skinning_jacobian": 0.6187778962608258,
+          "maximum_knee_radius_change": 0.0
+        }
+      },
+      "nodes": [
+        {
+          "name": "R-far-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-R-far-own-native-articulated-leg.png",
+          "bytes": 84234,
+          "sha256": "e7b6514779b0a20a29aad13c57213d655f4af485ad2562100952439d5004b1e1"
+        },
+        {
+          "name": "L-near-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-L-near-own-native-articulated-leg.png",
+          "bytes": 118743,
+          "sha256": "9947aa3260eaf165dd44a5fd11a4bd22eeafb0df5ce883a0b64b7be4c1229434"
+        },
+        {
+          "name": "RIGHT-full-visible-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-full-visible-upper-arm.png",
+          "bytes": 15434,
+          "sha256": "2e515af706af8401225e41caff42833cace652cfdcdcbfdb1282f4a2573bf987"
+        },
+        {
+          "name": "BODY-HEAD-NECK-real-COAT-native-material",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+          "bytes": 474994,
+          "sha256": "83c43b2570e4e3bfc01b03e5227b45030de298bd828bb1279b3dfd9f8c04309d"
+        },
+        {
+          "name": "complete-rigid-RIGHT-staff",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-complete-rigid-RIGHT-staff.png",
+          "bytes": 129827,
+          "sha256": "93606daa659a841bd4704901242471a8b8134715987c4a17a279423af5250596"
+        },
+        {
+          "name": "RIGHT-white-puff-elbow",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-white-puff-elbow.png",
+          "bytes": 26970,
+          "sha256": "b22fd3b157ca4a5b9fd9917b0e39ea04dbd8d0adc3ee7bbcccdaa5a767d95c12"
+        },
+        {
+          "name": "RIGHT-complete-forearm-cuff-grip-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-complete-forearm-cuff-grip-fingers.png",
+          "bytes": 30927,
+          "sha256": "16d2b27d9c51f875173f4be3a319fc981c051da0f55005e5d4df268309d3de4e"
+        },
+        {
+          "name": "LEFT-full-near-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-LEFT-full-near-upper-arm.png",
+          "bytes": 54142,
+          "sha256": "4cc086e5b03cc1a7c71a66008fc7b9591e720e5c4ec51d44fd5c9ce5ead08778"
+        },
+        {
+          "name": "LEFT-original-distal-upper-cuff-follows-rigid-forearm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+          "bytes": 14448,
+          "sha256": "b1f8f3bcd4a18b544f737c1ba47a0864fd1b7c364d38c169291a67efbd090e1c"
+        },
+        {
+          "name": "LEFT-complete-original-curved-cuff-forearm-free-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+          "bytes": 54753,
+          "sha256": "1f910a3269ab1f92a7fcfe80cd4f111c241ff9e2be1840bfe564895c7d55625c"
+        }
+      ],
+      "body_inverse_error": 2.2737367544323206e-13,
+      "arm_inverse_errors": [
+        1.1368683772161603e-13,
+        2.2737367544323206e-13
+      ],
+      "leg_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "rigid_staff_Gram_error": 1.1102230246251565e-16,
+      "border_alpha_texels": 0,
+      "major_alpha_components": [
+        260359
+      ],
+      "LEFT_full_forearm_rigid_matrix": [
+        [
+          0.9986295347545738,
+          -0.052335956242943835
+        ],
+        [
+          0.052335956242943835,
+          0.9986295347545738
+        ]
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.992546151641322,
+          0.12186934340514748
+        ],
+        [
+          -0.12186934340514748,
+          0.992546151641322
+        ]
+      ],
+      "reused_unchanged_node_count": 9,
+      "changed_node_count": 1
+    },
+    {
+      "phase": 3,
+      "role": "FAR_CONTACT_NEAR_AIR",
+      "source": {
+        "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v05.png",
+        "bytes": 762227,
+        "sha256": "1324394797ed60c1327fc3d2bdb7a3e27b66511c17a814b3b7826b6077f13842"
+      },
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_rig_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        384,
+        128
+      ],
+      "native_canvas": [
+        1792,
+        1792
+      ],
+      "parameters": {
+        "role": "FAR_CONTACT_NEAR_AIR",
+        "body_deg": -6,
+        "torso": [
+          -8,
+          10
+        ],
+        "head_deg": 1,
+        "right_upper": -5,
+        "right_fore": -11,
+        "left_upper": -12,
+        "left_fore": 10,
+        "cloth": [
+          10,
+          -3
+        ],
+        "ribbon": [
+          9,
+          0
+        ]
+      },
+      "bones": {
+        "L-near": {
+          "hip": [
+            621.8854068254379,
+            656.9493456008945
+          ],
+          "knee": [
+            516.9212420452582,
+            852.7643708466587
+          ],
+          "heel": [
+            792.0,
+            1021.8728476361932
+          ],
+          "upper": [
+            [
+              0.8068194818962855,
+              -0.5907980396316573
+            ],
+            [
+              0.5907980396316573,
+              0.8068194818962855
+            ]
+          ],
+          "upper_offset": [
+            506.5401395793767,
+            -228.18763211720682
+          ],
+          "lower": [
+            [
+              0.6129666197788018,
+              0.7901088045560243
+            ],
+            [
+              -0.7901088045560243,
+              0.6129666197788018
+            ]
+          ],
+          "lower_offset": [
+            -563.9023856971437,
+            833.135674665964
+          ],
+          "femur_length": 222.17335573826128,
+          "lower_to_original_heel_length": 322.9024620531717,
+          "requested_foot_lift": 100.0,
+          "original_visible_sole_plane": 1185.0,
+          "desired_sole_plane": 1085.0,
+          "transformed_native_sole_error": 1.1935228030779399e-05,
+          "minimum_owned_skinning_jacobian": 0.4300510438278917,
+          "maximum_knee_radius_change": 0.0
+        },
+        "R-far": {
+          "hip": [
+            576.1373996384973,
+            661.7576549112066
+          ],
+          "knee": [
+            474.7865422347253,
+            858.0431706873848
+          ],
+          "heel": [
+            533.0,
+            1138.3576250685503
+          ],
+          "upper": [
+            [
+              0.843356482022208,
+              -0.5373544865646189
+            ],
+            [
+              0.5373544865646189,
+              0.843356482022208
+            ]
+          ],
+          "upper_offset": [
+            442.5552032065825,
+            -189.34268981697255
+          ],
+          "lower": [
+            [
+              0.9873325066060139,
+              0.1586648083195683
+            ],
+            [
+              -0.1586648083195683,
+              0.9873325066060139
+            ]
+          ],
+          "lower_offset": [
+            -245.14336066756903,
+            96.62545687512204
+          ],
+          "femur_length": 220.90722034374522,
+          "lower_to_original_heel_length": 286.29530209208815,
+          "requested_foot_lift": 0.0,
+          "original_visible_sole_plane": 1152.0,
+          "desired_sole_plane": 1152.0,
+          "transformed_native_sole_error": 0.0027985840333712986,
+          "minimum_owned_skinning_jacobian": 0.7903595510612655,
+          "maximum_knee_radius_change": 0.0
+        }
+      },
+      "nodes": [
+        {
+          "name": "R-far-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-R-far-own-native-articulated-leg.png",
+          "bytes": 83767,
+          "sha256": "8e27e7f1c4483fb5c16d3484c9b20f01c33c95a6c6199ed13fdfa053c31c82ea"
+        },
+        {
+          "name": "L-near-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-L-near-own-native-articulated-leg.png",
+          "bytes": 116408,
+          "sha256": "285ff6e403773400580bca360ece0cb98ceb832f1ffcd2801b4082c580448498"
+        },
+        {
+          "name": "RIGHT-full-visible-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-full-visible-upper-arm.png",
+          "bytes": 15435,
+          "sha256": "501b65ab6a5f369266a8e3fc8ae4f77efb71e4d99d76b9ac6dc6628b341730b2"
+        },
+        {
+          "name": "BODY-HEAD-NECK-real-COAT-native-material",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+          "bytes": 473249,
+          "sha256": "83b1df70c2f78a4cda0174211578812866cd73f58bf9f47fd8ca28c82d04ef95"
+        },
+        {
+          "name": "complete-rigid-RIGHT-staff",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-complete-rigid-RIGHT-staff.png",
+          "bytes": 132276,
+          "sha256": "4031076e55f0de8d3740eb704abe4464c451789aeb4973badf63206517df6738"
+        },
+        {
+          "name": "RIGHT-white-puff-elbow",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-white-puff-elbow.png",
+          "bytes": 26987,
+          "sha256": "67bcde4340d5e0e88c9c16f45b392dc691b6cbb4ec115005f946f899fefa67d8"
+        },
+        {
+          "name": "RIGHT-complete-forearm-cuff-grip-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-complete-forearm-cuff-grip-fingers.png",
+          "bytes": 30823,
+          "sha256": "53dde28def77a18f5cbb9537955670bcc50a0d2edce237df2f8b5833f8d1809a"
+        },
+        {
+          "name": "LEFT-full-near-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-LEFT-full-near-upper-arm.png",
+          "bytes": 53591,
+          "sha256": "81007f3bcd81389d2dda72d029474da78e5543bc9924e433393133e787ccfd75"
+        },
+        {
+          "name": "LEFT-original-distal-upper-cuff-follows-rigid-forearm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+          "bytes": 14517,
+          "sha256": "2edd88fa05ffc6bc6f152ba0c6c0ec2fe3a436b6f239d02157325cd7b5921279"
+        },
+        {
+          "name": "LEFT-complete-original-curved-cuff-forearm-free-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+          "bytes": 55143,
+          "sha256": "ee7f6bfd815a38b3039ee7fd0405e0a6ca89752c2bc9974c9f4ad2c9e39625f8"
+        }
+      ],
+      "body_inverse_error": 2.2737367544323206e-13,
+      "arm_inverse_errors": [
+        1.1368683772161603e-13,
+        2.2737367544323206e-13
+      ],
+      "leg_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "rigid_staff_Gram_error": 6.66274657811958e-18,
+      "border_alpha_texels": 0,
+      "major_alpha_components": [
+        255965
+      ],
+      "LEFT_full_forearm_rigid_matrix": [
+        [
+          0.984807753012208,
+          -0.17364817766693033
+        ],
+        [
+          0.17364817766693033,
+          0.984807753012208
+        ]
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.981627183447664,
+          0.1908089953765448
+        ],
+        [
+          -0.1908089953765448,
+          0.981627183447664
+        ]
+      ],
+      "reused_unchanged_node_count": 9,
+      "changed_node_count": 1
+    },
+    {
+      "phase": 4,
+      "role": "FAR_COMPRESSION_NEAR_RECOVER",
+      "source": {
+        "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v05.png",
+        "bytes": 766296,
+        "sha256": "1256e644ba3be539cd0f902a86adb626dafef30604dc5ccbaf1643b7748d0907"
+      },
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_rig_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        384,
+        128
+      ],
+      "native_canvas": [
+        1792,
+        1792
+      ],
+      "parameters": {
+        "role": "FAR_COMPRESSION_NEAR_RECOVER",
+        "body_deg": -7,
+        "torso": [
+          -8,
+          35
+        ],
+        "head_deg": 0,
+        "right_upper": -1,
+        "right_fore": -9,
+        "left_upper": -6,
+        "left_fore": 0,
+        "cloth": [
+          14,
+          -1
+        ],
+        "ribbon": [
+          13,
+          1
+        ]
+      },
+      "bones": {
+        "L-near": {
+          "hip": [
+            624.2060149032183,
+            681.9660015111369
+          ],
+          "knee": [
+            440.7062332244867,
+            807.2210617835981
+          ],
+          "heel": [
+            732.0,
+            946.5549824121832
+          ],
+          "upper": [
+            [
+              0.4430141210247112,
+              -0.896514633774989
+            ],
+            [
+              0.896514633774989,
+              0.4430141210247112
+            ]
+          ],
+          "upper_offset": [
+            930.457769770639,
+            -156.47413507621968
+          ],
+          "lower": [
+            [
+              0.5267438125459767,
+              0.850024091390667
+            ],
+            [
+              -0.850024091390667,
+              0.5267438125459767
+            ]
+          ],
+          "lower_offset": [
+            -636.2178766370779,
+            901.0265072485439
+          ],
+          "femur_length": 222.17335573826128,
+          "lower_to_original_heel_length": 322.9024620531717,
+          "requested_foot_lift": 170.0,
+          "original_visible_sole_plane": 1185.0,
+          "desired_sole_plane": 1015.0,
+          "transformed_native_sole_error": 6.747424777131528e-06,
+          "minimum_owned_skinning_jacobian": 0.2140310000171028,
+          "maximum_knee_radius_change": 0.0
+        },
+        "R-far": {
+          "hip": [
+            578.5488919277175,
+            687.5719913077737
+          ],
+          "knee": [
+            448.6116587606167,
+            866.2233709186753
+          ],
+          "heel": [
+            603.0,
+            1107.3234333188161
+          ],
+          "upper": [
+            [
+              0.7521425994068924,
+              -0.6590003870692667
+            ],
+            [
+              0.6590003870692667,
+              0.7521425994068924
+            ]
+          ],
+          "upper_offset": [
+            575.541860312535,
+            -173.94234853856085
+          ],
+          "lower": [
+            [
+              0.8657557040511465,
+              0.5004668429605537
+            ],
+            [
+              -0.5004668429605537,
+              0.8657557040511465
+            ]
+          ],
+          "lower_offset": [
+            -495.58849263339926,
+            411.75436855710905
+          ],
+          "femur_length": 220.90722034374522,
+          "lower_to_original_heel_length": 286.29530209208815,
+          "requested_foot_lift": 0.0,
+          "original_visible_sole_plane": 1152.0,
+          "desired_sole_plane": 1152.0,
+          "transformed_native_sole_error": 0.00016032417534006527,
+          "minimum_owned_skinning_jacobian": 0.6412030717955477,
+          "maximum_knee_radius_change": 0.0
+        }
+      },
+      "nodes": [
+        {
+          "name": "R-far-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-R-far-own-native-articulated-leg.png",
+          "bytes": 84940,
+          "sha256": "eef4714b0cc9cca25a801f1915c933f2b77b969dedb7b4453e02e5b597f4811c"
+        },
+        {
+          "name": "L-near-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-L-near-own-native-articulated-leg.png",
+          "bytes": 89196,
+          "sha256": "6f0fcb54473926f2866f4e469d3b7bb2306e1404a2d90a62ec9b7d4911ae821f"
+        },
+        {
+          "name": "RIGHT-full-visible-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-full-visible-upper-arm.png",
+          "bytes": 15498,
+          "sha256": "77981a3103953f19d084b18113502ef7109e095595f942806c95e8d8138991b5"
+        },
+        {
+          "name": "BODY-HEAD-NECK-real-COAT-native-material",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+          "bytes": 474564,
+          "sha256": "334133593b599c2f2827581a33cf4cd44f677e540a6a149c94fb2fc52204cd63"
+        },
+        {
+          "name": "complete-rigid-RIGHT-staff",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-complete-rigid-RIGHT-staff.png",
+          "bytes": 131371,
+          "sha256": "1702fdc760ee880d6004c5cde96adfd1d9bbe2648cf39337c7069116f8769587"
+        },
+        {
+          "name": "RIGHT-white-puff-elbow",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-white-puff-elbow.png",
+          "bytes": 27003,
+          "sha256": "5783721841cc7ea0e5b25704644709b6e4f086f6c3cabd0c738fd20247638ef6"
+        },
+        {
+          "name": "RIGHT-complete-forearm-cuff-grip-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-complete-forearm-cuff-grip-fingers.png",
+          "bytes": 30911,
+          "sha256": "51586ec4c3b83ca66eeefb45e23afc0f16369d3021e0a1acc8b0b6d3fa14beba"
+        },
+        {
+          "name": "LEFT-full-near-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-LEFT-full-near-upper-arm.png",
+          "bytes": 53919,
+          "sha256": "86106274ce2ebb0c4e6059868b65c8aaeb853e09e1472882344a0dfd0d9bd96b"
+        },
+        {
+          "name": "LEFT-original-distal-upper-cuff-follows-rigid-forearm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+          "bytes": 14367,
+          "sha256": "bc72c0631d7287389c6348dc3d2c2bb9f4f5e5e7c52ab6b9502c70ac4c816f42"
+        },
+        {
+          "name": "LEFT-complete-original-curved-cuff-forearm-free-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+          "bytes": 54058,
+          "sha256": "104ac79a2a2552c3f6734ae1a3932ae20b16c0dfa14cb70cffb6b158c5997f72"
+        }
+      ],
+      "body_inverse_error": 2.2737367544323206e-13,
+      "arm_inverse_errors": [
+        1.7053025658242404e-13,
+        2.2737367544323206e-13
+      ],
+      "leg_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "rigid_staff_Gram_error": 6.721972338421803e-18,
+      "border_alpha_texels": 0,
+      "major_alpha_components": [
+        257535
+      ],
+      "LEFT_full_forearm_rigid_matrix": [
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9876883405951378,
+          0.15643446504023087
+        ],
+        [
+          -0.15643446504023087,
+          0.9876883405951378
+        ]
+      ],
+      "reused_unchanged_node_count": 9,
+      "changed_node_count": 1
+    },
+    {
+      "phase": 5,
+      "role": "FAR_TOEOFF_NEAR_REACH",
+      "source": {
+        "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v05.png",
+        "bytes": 768062,
+        "sha256": "a2fd1d9e3aa6038463cd59302bd886e0722177c9d684033626ac627e374a4742"
+      },
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_rig_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        384,
+        128
+      ],
+      "native_canvas": [
+        1792,
+        1792
+      ],
+      "parameters": {
+        "role": "FAR_TOEOFF_NEAR_REACH",
+        "body_deg": -5,
+        "torso": [
+          -8,
+          -5
+        ],
+        "head_deg": -1,
+        "right_upper": 2,
+        "right_fore": -5,
+        "left_upper": 4,
+        "left_fore": -8,
+        "cloth": [
+          18,
+          -5
+        ],
+        "ribbon": [
+          16,
+          -1
+        ]
+      },
+      "bones": {
+        "L-near": {
+          "hip": [
+            619.565442873223,
+            641.8921920320729
+          ],
+          "knee": [
+            456.29320364349536,
+            792.5679229807249
+          ],
+          "heel": [
+            582.0,
+            1089.9965721552526
+          ],
+          "upper": [
+            [
+              0.5690164581872712,
+              -0.8223261337887866
+            ],
+            [
+              0.8223261337887866,
+              0.5690164581872712
+            ]
+          ],
+          "upper_offset": [
+            800.2739870574201,
+            -232.24533837079684
+          ],
+          "lower": [
+            [
+              0.9578801743377616,
+              0.28716819393982246
+            ],
+            [
+              -0.28716819393982246,
+              0.9578801743377616
+            ]
+          ],
+          "lower_offset": [
+            -412.14292510492265,
+            148.8415134832884
+          ],
+          "femur_length": 222.17335573826128,
+          "lower_to_original_heel_length": 322.9024620531717,
+          "requested_foot_lift": 75.0,
+          "original_visible_sole_plane": 1185.0,
+          "desired_sole_plane": 1110.0,
+          "transformed_native_sole_error": 1.1554906905075768e-05,
+          "minimum_owned_skinning_jacobian": 0.5357932148224147,
+          "maximum_knee_radius_change": 0.0
+        },
+        "R-far": {
+          "hip": [
+            573.7404867610027,
+            645.9013561984652
+          ],
+          "knee": [
+            499.4840692789313,
+            853.9541967528022
+          ],
+          "heel": [
+            683.0,
+            1073.697008174655
+          ],
+          "upper": [
+            [
+              0.9075101756621452,
+              -0.4200300954332465
+            ],
+            [
+              0.4200300954332465,
+              0.9075101756621452
+            ]
+          ],
+          "upper_offset": [
+            327.79912828345715,
+            -179.76737167623105
+          ],
+          "lower": [
+            [
+              0.7958537322762613,
+              0.605488923781389
+            ],
+            [
+              -0.605488923781389,
+              0.7958537322762613
+            ]
+          ],
+          "lower_offset": [
+            -494.4230407587456,
+            521.9833296325794
+          ],
+          "femur_length": 220.90722034374522,
+          "lower_to_original_heel_length": 286.29530209208815,
+          "requested_foot_lift": 24.0,
+          "original_visible_sole_plane": 1152.0,
+          "desired_sole_plane": 1128.0,
+          "transformed_native_sole_error": 0.0006465064850544877,
+          "minimum_owned_skinning_jacobian": 0.6872975969237294,
+          "maximum_knee_radius_change": 0.0
+        }
+      },
+      "nodes": [
+        {
+          "name": "R-far-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-R-far-own-native-articulated-leg.png",
+          "bytes": 84721,
+          "sha256": "83f312ed4bfb07fd8b286d1de463e53fb1a934f0d3fac056b7efa3fedbfd8694"
+        },
+        {
+          "name": "L-near-own-native-articulated-leg",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-L-near-own-native-articulated-leg.png",
+          "bytes": 118279,
+          "sha256": "dd22f469d0b4b87d82bd84e2b2ec0eaabbd58fed2fe56324e94ce2cb9db4151d"
+        },
+        {
+          "name": "RIGHT-full-visible-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-full-visible-upper-arm.png",
+          "bytes": 15447,
+          "sha256": "178c879bdbf1d989973cf2d9e1b7af0235ff6021abca643c35cd494d08979b09"
+        },
+        {
+          "name": "BODY-HEAD-NECK-real-COAT-native-material",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+          "bytes": 475350,
+          "sha256": "dbbd1526b8780216d1df96f3c12549b0b47baae1643aca689021c92b0b143083"
+        },
+        {
+          "name": "complete-rigid-RIGHT-staff",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-complete-rigid-RIGHT-staff.png",
+          "bytes": 128262,
+          "sha256": "d438dc6c64e4bd50d11e138671e6ea3ca275f2783c1b9fe83320c8ea2c406284"
+        },
+        {
+          "name": "RIGHT-white-puff-elbow",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-white-puff-elbow.png",
+          "bytes": 26864,
+          "sha256": "c73397d9690a438e3a7daf0f20c373777b381f01bcbdca4116cd7a3331201a7a"
+        },
+        {
+          "name": "RIGHT-complete-forearm-cuff-grip-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-complete-forearm-cuff-grip-fingers.png",
+          "bytes": 30877,
+          "sha256": "14f6f32636f943822e79ff42362547b27e0bb12527d81160af13a425edcff5ce"
+        },
+        {
+          "name": "LEFT-full-near-upper-arm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-LEFT-full-near-upper-arm.png",
+          "bytes": 54585,
+          "sha256": "698addd65d57ee6288a0515f25cf8680a2d7ef3d75080bb5f516c8529db85fc2"
+        },
+        {
+          "name": "LEFT-original-distal-upper-cuff-follows-rigid-forearm",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+          "bytes": 14446,
+          "sha256": "777a0a57a04472a1ae494b22b8cd6b05fc0b0812f1d1ad967854b0e61fcd27d1"
+        },
+        {
+          "name": "LEFT-complete-original-curved-cuff-forearm-free-fingers",
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+          "bytes": 55094,
+          "sha256": "bb715ffc15f46588b84c893348875c6de508f3f88df9d8ee09b82fc148a9f52e"
+        }
+      ],
+      "body_inverse_error": 2.2737367544323206e-13,
+      "arm_inverse_errors": [
+        1.1368683772161603e-13,
+        2.2737367544323206e-13
+      ],
+      "leg_inverse_errors": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      "rigid_staff_Gram_error": 2.2982146219235116e-18,
+      "border_alpha_texels": 0,
+      "major_alpha_components": [
+        259795
+      ],
+      "LEFT_full_forearm_rigid_matrix": [
+        [
+          0.9902680687415704,
+          0.13917310096006544
+        ],
+        [
+          -0.13917310096006544,
+          0.9902680687415704
+        ]
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9961946980917455,
+          0.08715574274765817
+        ],
+        [
+          -0.08715574274765817,
+          0.9961946980917455
+        ]
+      ],
+      "reused_unchanged_node_count": 9,
+      "changed_node_count": 1
+    }
+  ],
+  "source_materials": {
+    "body": {
+      "path": "/workspace/scratch/mythic413-W-attack-author-fresh-20261020-v01/native-W-source-parts-v03-exact-rims-bow/W-exact-native-complete-RIGHT-staff-LEFT-upper-and-true-bow-parts-v03.json",
+      "bytes": 10454,
+      "sha256": "581d7816f55bb96b6c644a971c4127c6620995108849cac498c71ccc7483b979"
+    },
+    "legs": {
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/W-own-native-pure-leg-material-candidates-v04/W-two-original-visible-shin-owners-one-new-hidden-upperleg-candidate-HOLD-contract-v04.json",
+      "bytes": 4064,
+      "sha256": "89c0d92da885d6956da0888e922ef326011c34986d652fdf44e7a32910a3f3f6"
+    },
+    "registration": {
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/W-new-native-one-time-body-density-C2560-root-registration-v01.json",
+      "bytes": 3983,
+      "sha256": "d514580de87d960781ab292dbf1a667c2522757962ea4d2b75e0619c32ce4f74"
+    }
+  },
+  "recovered_original_lower_actor_surface": {
+    "status": "EXACT_CURRENT_W_SOURCE_SURFACE_RETAINED_SEMANTIC_QUALITY_HOLD",
+    "source": {
+      "path": "/workspace/scratch/mythic413-W-attack-author-fresh-20261020-v01/native-W-source-parts-v01/LEGS-original-full-boots-conservative-fixed-exact-actual-own-W-native-RGBA-v01.png",
+      "bytes": 257888,
+      "sha256": "d28f6bfec4df852c8cfb74b4393d06d9c8b66b53f42b0f22a6c47bb537ebd52a"
+    },
+    "recovered_native_texels": 55289,
+    "material": {
+      "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "bytes": 143190,
+      "sha256": "04eddb215e4a099888fbc0c9321a29133cb5c05d309940db9947bb5d40a4c2a0"
+    },
+    "source_RGBA_resampled": false,
+    "colors_changed": false,
+    "original_source_coordinates_changed": false
+  },
+  "exact_original_calf_strip_ownership": {
+    "status": "EXACT_ORIGINAL_SOURCE_CALF_STRIP_REBOUND_ANATOMY_REVIEW_HOLD",
+    "original_native_texels_rebound": 922,
+    "owners": {
+      "R-far": {
+        "material": {
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/R-far-exact-original-calf-gap-ownership-native-v04.png",
+          "bytes": 74690,
+          "sha256": "ec0dc9abf405d4b21c21465bcc33e561af3d76a882277323b345baf08b837899"
+        },
+        "added_original_native_texels": 732
+      },
+      "L-near": {
+        "material": {
+          "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/L-near-exact-original-calf-gap-ownership-native-v04.png",
+          "bytes": 107896,
+          "sha256": "db68445a641340b835cbfa6582e47859df52a56aa806e74964f0ac1d07ebd758"
+        },
+        "added_original_native_texels": 190
+      }
+    },
+    "colors_changed": false,
+    "source_RGBA_resampled": false,
+    "new_pixels_created": 0,
+    "native_source_region": [
+      612,
+      866,
+      639,
+      1000
+    ],
+    "source_visual_status": "HOLD_NOT_REVIEWED"
+  },
+  "reused_sampler_and_arm_seam_solver": {
+    "path": "/workspace/scratch/mythic413-W-attack-author-fresh-20261020-v01/author-own-W-ATTACK6-native-visible-profile-distal-cuff-bind-v04-20261022.py",
+    "bytes": 12665,
+    "sha256": "17da374f9b8672a6f5a3be3ef27d721447141935134da15e1b69660ff44dfd99"
+  },
+  "C": 2560.0,
+  "bodyunit": 2.5,
+  "common_rig_root_unpadded": [
+    646.0833333333334,
+    991.9227375838406
+  ],
+  "storage_translation": [
+    384,
+    128
+  ],
+  "source_canvas": [
+    1792,
+    1792
+  ],
+  "native_rig_landmarks_are_proposed_not_visually_reviewed": true,
+  "original_W_only_materials": true,
+  "mirrored_other_direction": false,
+  "shared_motion_or_recolored_substitute": false,
+  "per_pose_C_or_root_fit": false,
+  "bone_lengths_constant": true,
+  "original_fullboot_materials_retained": true,
+  "knee_skinning": "FIXED_200_NATIVE_PIXEL_CIRCULAR_ROTATION_NO_RADIAL_COLLAPSE",
+  "new_source_images_generated_by_service": 0,
+  "preview_images_created": 0,
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "retained_hidden_far_upperleg_source_status": "HOLD_NOT_INDEPENDENTLY_REVIEWED",
+  "gameplay_world_foot_contact": "NOT_RUN_HOLD",
+  "production_connected": false,
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0,
+  "source_input_preflight": {
+    "status": "SOURCE_INPUT_GUARDS_PASS_BEFORE_POSE_RENDER",
+    "ownership": {
+      "original_visible_texels": 109922,
+      "missing": 0,
+      "duplicate": 0
+    },
+    "minimum_owned_Jacobian": 0.21403100001710285,
+    "support_order": [
+      "L-near",
+      "R-far"
+    ],
+    "source_original_pixels_recovered_from_hidden_overlap": 641,
+    "source_visual_status": "HOLD_NOT_REVIEWED",
+    "actor_approvals_added": 0
+  },
+  "character_settings": {
+    "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/W-own-native-motion-settings-v01.json",
+    "bytes": 3299,
+    "sha256": "79a63db8a6a7a6705583047394620ebb0c8aa9e064429ece284ef09c4c33933a"
+  },
+  "parent_source_contract": {
+    "path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/W-RUN-six-own-native-source-contract-v04.json",
+    "bytes": 53540,
+    "sha256": "5f94daa8b5d12f33f41712b25ee76d42f31bae175197491c2acd78a560e87d90"
+  },
+  "changed_nodes_rendered": 6,
+  "unchanged_nodes_reused": 54
+}

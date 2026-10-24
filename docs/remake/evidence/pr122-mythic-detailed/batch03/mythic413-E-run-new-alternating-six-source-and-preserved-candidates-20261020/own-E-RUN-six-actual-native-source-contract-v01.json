@@ -1,0 +1,3878 @@
+{
+  "status": "ACTUAL_NEW_OWN_E_RUN_SIX_SOURCE_PENDING_INDEPENDENT_NATIVE_FEET_GRIP_LOOP_AND_GAME_QC",
+  "actor": "transform:413",
+  "direction": "E",
+  "motion": "run",
+  "fixed_C": 2816.0,
+  "bodyunit": 2.75,
+  "common_unpadded_root": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "native_input_canvas": [
+    1254,
+    1254
+  ],
+  "storage_canvas": [
+    2048,
+    2048
+  ],
+  "storage_translation": [
+    320,
+    320
+  ],
+  "source_capture_body_U": [
+    0.9,
+    0.35,
+    0.35
+  ],
+  "source_capture_body_V": [
+    0.0,
+    0.0,
+    -1.0
+  ],
+  "native_pelvis_anchor": [
+    724,
+    686
+  ],
+  "fixed_femur_tibia": 245.0,
+  "fixed_bone_choice": "RUN-specific fixed245-native femur/tibia declared before final rendering; projected original longitudinal source native lengths remain conditioned on the native capture planes. Old death-specific318.725 crouch model was not a required run anatomy pin.",
+  "projection_matrix": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "original_own_materials": {
+    "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-actual-native-source-parts-and-semantic-owners-v02.json",
+    "sha256": "d8959a8208bbe7a653b7b81351062b82f7e54cb4c02245b0ae7ade8b9d76cd93",
+    "bytes": 11536
+  },
+  "once_registration": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "canonical_original_sole_capture": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-original-neutral-once-true-sole-and-HIT-six-material-floor-binding-v01.json",
+    "sha256": "d97aa4f359522c632b40eb2942e314f0ba08d0f88a85afd3b508a798a5b6e9e1",
+    "bytes": 16356
+  },
+  "source_floor_binding": {
+    "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-actual-all-native-source-raster-floor-binding-v02.json",
+    "sha256": "9e477285b2eb22dca491e770dc4c5f314b7eca75491fca3865d098b40b5e56f3",
+    "bytes": 202849
+  },
+  "runtime_scale_and_fixed_control": {
+    "profile": {
+      "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r035/NativeMotionProfile.tres",
+      "sha256": "ffd55b2eaf1e48422d6cecea4845e7ae5befa06be08ad2303640bb05d02232e5",
+      "bytes": 968
+    },
+    "controller": {
+      "path": "/workspace/twilight/scripts/animation/actor_motion.gd",
+      "sha256": "e9403a24e93b9fadfa266ab8f56178f8e26a5f2cbdc2259635f6e44d43305d65",
+      "bytes": 25168
+    },
+    "C": 2816.0,
+    "logical_canvas": 1024,
+    "profile_pixel_scale": 0.237068965517,
+    "native_to_game_world": 0.08620689655163637,
+    "movement_reference_speed": 210.0,
+    "authored_fps": 12.5,
+    "authored_phase_seconds": 0.08,
+    "authored_cycle_seconds": 0.48,
+    "existing_run_speed_ratio": 1.25,
+    "actual_run_speed": 262.5,
+    "actual_phase_seconds": 0.064,
+    "actual_cycle_seconds": 0.384,
+    "world_phase_step": 16.8,
+    "screen_forward": [
+      1.0,
+      0.0
+    ],
+    "native_screen_phase_step": [
+      194.88000000019844,
+      0.0
+    ],
+    "support_phase0_to1_native_heel_delta": [
+      -194.88000000019846,
+      0.0
+    ],
+    "support_phase3_to4_native_heel_delta": [
+      -194.88000000019846,
+      0.0
+    ],
+    "support_world_lock_error": 3.552713678800501e-15,
+    "profile_or_controller_changed": false
+  },
+  "source_RGBA_scaled": false,
+  "wholeactor_mirror": false,
+  "perpose_root_or_C_fit": false,
+  "loop": true,
+  "authored_cycle_seconds": 0.48,
+  "authored_fps": 12.5,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "LEFT-CONTACT",
+      "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-phase0-LEFT-CONTACT-actual-native-v02.png",
+      "sha256": "0983a736820bac776e0ca2a3bd44986704bf90da6c41a2135ab4a3123a5c4b26",
+      "bytes": 1024784,
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_unpadded_root": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        320,
+        320
+      ],
+      "native_size": [
+        2048,
+        2048
+      ],
+      "state": {
+        "phase": 0,
+        "name": "LEFT-CONTACT",
+        "pelvis_bob_Z": 0.0,
+        "pelvis_pitch": 4.0,
+        "torso_pitch": 10.0,
+        "cloth_lag": 28.0,
+        "hair_lag": -3.0
+      },
+      "bones": {
+        "L": {
+          "gait_state": {
+            "name": "CONTACT",
+            "stride": 120.0,
+            "height": 0.0,
+            "pitch": 0.0
+          },
+          "hip": [
+            28.55167911808418,
+            241.1,
+            642.4073621363225
+          ],
+          "knee": [
+            203.8803183057493,
+            205.1294437893019,
+            475.10228939047136
+          ],
+          "ankle": [
+            147.45,
+            155.01592297722644,
+            242.01592297722644
+          ],
+          "painted_heel_anchor": [
+            120.0,
+            69.77189409368636,
+            9.771894093686354
+          ],
+          "structural_heel_support": [
+            120.0,
+            60.0,
+            0.0
+          ],
+          "structural_foreball": [
+            196.05,
+            64.0,
+            0.0
+          ],
+          "foot_source_heel": [
+            844.5,
+            1197.0
+          ],
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "foot_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.07406035919274208,
+              -0.5645250879466766
+            ],
+            [
+              0.07406035919274208,
+              -1.5645250879466766
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.7668582763378645,
+              0.7144593514220623
+            ],
+            [
+              -0.45288161332420623,
+              -0.048605853100805146
+            ],
+            [
+              0.11745250693568682,
+              -0.9632719511712284
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.7467983245704927,
+              -0.5144928166366943
+            ],
+            [
+              0.08790937221697134,
+              -0.30896824321050953
+            ],
+            [
+              -0.4782308094341051,
+              -1.2089484570783442
+            ]
+          ],
+          "femur": 245.0,
+          "tibia": 244.99999999999994,
+          "support": true,
+          "paired_or_whole_actor_mirror": false
+        },
+        "R": {
+          "gait_state": {
+            "name": "RECOVERY-fold",
+            "stride": -220.0,
+            "height": 200.0,
+            "pitch": -20.0
+          },
+          "hip": [
+            -57.35451805652265,
+            208.55,
+            613.7801410522288
+          ],
+          "knee": [
+            -43.55408888162651,
+            202.28025095677668,
+            369.24949184537843
+          ],
+          "ankle": [
+            -278.7686812556399,
+            204.0372894947875,
+            437.77691956525325
+          ],
+          "painted_heel_anchor": [
+            -225.5104464310794,
+            126.11146752205293,
+            215.13982714050496
+          ],
+          "structural_heel_support": [
+            -220.0,
+            110.0,
+            200.0
+          ],
+          "structural_foreball": [
+            -166.71942840143902,
+            127.5,
+            219.39254212656542
+          ],
+          "foot_source_heel": [
+            522.0,
+            1201.5
+          ],
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9396926207859083,
+              0.0,
+              -0.34202014332566866
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              0.34202014332566866,
+              0.0,
+              0.9396926207859083
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.7085861721292627,
+              0.49369387168099726
+            ],
+            [
+              0.4009623095429029,
+              -0.4434643143544507
+            ],
+            [
+              0.6845994524838428,
+              -1.3564127645666681
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.8321932914521168,
+              0.3463433732835033
+            ],
+            [
+              -0.020011600689829972,
+              -0.04285108768118591
+            ],
+            [
+              0.4430243242862007,
+              -1.280025066111101
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.22150263971571363,
+              -1.1928690486641178
+            ],
+            [
+              0.44875240004824235,
+              0.18270901598606534
+            ],
+            [
+              -0.5770449959890573,
+              0.14976757067745516
+            ]
+          ],
+          "femur": 245.0000000000001,
+          "tibia": 244.99999999999997,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -13.312499999999964,
+        225.0,
+        637.2150113422247
+      ],
+      "pelvis_SO3": [
+        [
+          0.9975640502598243,
+          0.0,
+          0.0697564737441253
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.0697564737441253,
+          0.0,
+          0.9975640502598243
+        ]
+      ],
+      "torso_waist": [
+        -7.383199731749314,
+        225.0,
+        722.0079556143097
+      ],
+      "torso_SO3": [
+        [
+          0.9848077530122081,
+          0.0,
+          0.17364817766693033
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.17364817766693033,
+          0.0,
+          0.9848077530122081
+        ]
+      ],
+      "head_neck": [
+        5.343129325110657,
+        211.35,
+        996.3153981832938
+      ],
+      "head_SO3": [
+        [
+          0.9902680687415704,
+          0.0,
+          0.13917310096006544
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.13917310096006544,
+          0.0,
+          0.9902680687415705
+        ]
+      ],
+      "arms": {
+        "L": {
+          "shoulder": [
+            82.43543599745495,
+            249.85,
+            863.4093176153333
+          ],
+          "elbow": [
+            94.13543599745495,
+            254.4,
+            825.9593176153332
+          ],
+          "upper_SO3": [
+            [
+              1.0000000000000002,
+              0.0,
+              -5.1689683996308866e-18
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -5.1689683996308866e-18,
+              0.0,
+              1.0000000000000002
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9902680687415704,
+              0.0,
+              0.13917310096006544
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.13917310096006544,
+              0.0,
+              0.9902680687415705
+            ]
+          ],
+          "source_upper_anchor": [
+            795,
+            471
+          ],
+          "source_fore_anchor": [
+            808,
+            513
+          ],
+          "upper_world_UV": [
+            [
+              0.9000000000000002,
+              5.1689683996308866e-18
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.35000000000000003,
+              -1.0000000000000002
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9399518472034363,
+              -0.13917310096006544
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.22133803319549075,
+              -0.9902680687415705
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": false
+        },
+        "R": {
+          "shoulder": [
+            -61.09669151724764,
+            189.3,
+            946.0387365356135
+          ],
+          "elbow": [
+            -170.6240377250846,
+            164.10000000000002,
+            834.5773511473606
+          ],
+          "upper_SO3": [
+            [
+              0.9396926207859085,
+              0.0,
+              0.3420201433256687
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.3420201433256687,
+              0.0,
+              0.9396926207859085
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9271838545667874,
+              0.0,
+              0.374606593415912
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.374606593415912,
+              0.0,
+              0.9271838545667874
+            ]
+          ],
+          "source_upper_anchor": [
+            622,
+            354
+          ],
+          "source_fore_anchor": [
+            550,
+            471
+          ],
+          "upper_world_UV": [
+            [
+              0.9654304088713018,
+              -0.3420201433256687
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.02107428828196612,
+              -0.9396926207859085
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9655777768056779,
+              -0.374606593415912
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              -0.01263158497594523,
+              -0.9271838545667874
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": true
+        }
+      },
+      "actual_node_rasters": [
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-thigh-proximal-actual-native-node.png",
+          "sha256": "f02440681ac1fe547fa9770aafad681b6e9d05a4ff2f6b0e5eeca7faf11cd23c",
+          "bytes": 58872
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-calf-actual-native-node.png",
+          "sha256": "355a1fa06c6eb00d40984eff479216a925f91581b6d14419c1000c96b8b2c400",
+          "bytes": 50378
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-continuous-knee-actual-native-node.png",
+          "sha256": "e30e604b5d099397c47214715de1ddb3c1d64d59e12c4e40ccd2e10d719385c3",
+          "bytes": 27753
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-continuous-ankle-actual-native-node.png",
+          "sha256": "d79571dcdb29f6bda2e28bbef08a5f9eb90154f41702ab7ab125b2515a90eeb6",
+          "bytes": 24395
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "00edfc8ffd27ee79ff57156551c6e20129ebc63dee4fcbfeddab760c186fee30",
+          "bytes": 55553
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-thigh-proximal-actual-native-node.png",
+          "sha256": "7d614d45599b1bb4f6e849a6130908cbc75ab2818a551b0668f0fc8dd38f593d",
+          "bytes": 64843
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-calf-actual-native-node.png",
+          "sha256": "20ff817ed249ce9f4fef3dbd164db518a4f11c819f1ee40e987ad8a3fbf67270",
+          "bytes": 47883
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-continuous-knee-actual-native-node.png",
+          "sha256": "a361e706fad2f1ea02693799aa7681ba69118fd5fbe15737b51c8c25f7abab2a",
+          "bytes": 26846
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-continuous-ankle-actual-native-node.png",
+          "sha256": "7089793507ee3fd604d2505e86a1ab0008faff778a129c67122f3fe111f643bb",
+          "bytes": 22521
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "b9150bf7687be5d99388a714d3501f34bfb5e81e3e075f328564259ea8b0bcf7",
+          "bytes": 52731
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-original-root-bound-cape-lag-actual-native-node.png",
+          "sha256": "59b5e65534389b12309727183f83af5220d2accf0281a3bdd3baadf93aea471a",
+          "bytes": 230275
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-pelvis-white-pleats-gold-waist-actual-native-node.png",
+          "sha256": "3758704424bc2c8bba9d8f1e597cacdc919ddfa72dd5fde82948c12bf9e7e728",
+          "bytes": 81453
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-original-black-gold-bodice-actual-native-node.png",
+          "sha256": "fb123022edff2979761387825b65876b973369534361217ed8245ed1720ef91b",
+          "bytes": 176922
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-original-complete-head-with-continuous-real-ribbon-lag-actual-native-node.png",
+          "sha256": "c262bb7d37758fb7c43bf2951452742062d02e7eb9cd05c6ebbb4325d9b0c62d",
+          "bytes": 176701
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-original-upper-arm-actual-native-node.png",
+          "sha256": "d41870ebed25a7c72b0661c45f796c09e118bff55fa0a336c3ef0f21ac34227a",
+          "bytes": 26609
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-L-original-complete-forearm-cuff-hand-actual-native-node.png",
+          "sha256": "24c9d8278d2af89deaff349e345eeff13aef9255bf1c84d49d675c5108177a32",
+          "bytes": 60748
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-original-upper-arm-actual-native-node.png",
+          "sha256": "bbf71bddecb53a9e034e5a47b01c5c4fa1a3247c7672c4a9517e8d0e31d6fe3c",
+          "bytes": 53972
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase0-R-original-full-forearm-grip-pole-actual-native-node.png",
+          "sha256": "51582b74832bf2888c5b91b155c9bc2835731139ba4078cb57d2c66eacee6cf9",
+          "bytes": 242021
+        }
+      ],
+      "actual_node_count": 18,
+      "strong_components": [
+        {
+          "area": 365797,
+          "bbox": [
+            398,
+            257,
+            1357,
+            1484
+          ]
+        },
+        {
+          "area": 3319,
+          "bbox": [
+            766,
+            598,
+            913,
+            681
+          ]
+        }
+      ],
+      "stored_alpha_bbox": [
+        391,
+        255,
+        1359,
+        1486
+      ],
+      "storage_boundary_alpha_contact": false,
+      "authored_clock": [
+        0.0,
+        0.08
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-LOAD",
+      "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-phase1-LEFT-LOAD-actual-native-v02.png",
+      "sha256": "178c23f67bfc7e6d0a5316b8dce851678be46d94a4b51caa1ebdba08c932172a",
+      "bytes": 977237,
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_unpadded_root": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        320,
+        320
+      ],
+      "native_size": [
+        2048,
+        2048
+      ],
+      "state": {
+        "phase": 1,
+        "name": "LEFT-LOAD",
+        "pelvis_bob_Z": -60.0,
+        "pelvis_pitch": 5.0,
+        "torso_pitch": 12.0,
+        "cloth_lag": 32.0,
+        "hair_lag": 1.0
+      },
+      "bones": {
+        "L": {
+          "gait_state": {
+            "name": "LOAD",
+            "stride": -55.3920000001786,
+            "height": 0.0,
+            "pitch": 0.0
+          },
+          "hip": [
+            28.635922017254337,
+            241.1,
+            581.6759406470147
+          ],
+          "knee": [
+            167.09516772752485,
+            191.4433323473127,
+            385.74673752769024
+          ],
+          "ankle": [
+            -27.942000000178602,
+            155.01592297722644,
+            242.01592297722644
+          ],
+          "painted_heel_anchor": [
+            -55.3920000001786,
+            69.77189409368636,
+            9.771894093686354
+          ],
+          "structural_heel_support": [
+            -55.3920000001786,
+            60.0,
+            0.0
+          ],
+          "structural_foreball": [
+            20.6579999998214,
+            64.0,
+            0.0
+          ],
+          "foot_source_heel": [
+            844.5,
+            1197.0
+          ],
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "foot_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.07406035919274208,
+              -0.5645250879466766
+            ],
+            [
+              0.07406035919274208,
+              -1.5645250879466766
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.8171193167836925,
+              0.49409992653728707
+            ],
+            [
+              -0.42589126439999203,
+              -0.13316680546236342
+            ],
+            [
+              0.02064519728630687,
+              -1.0893254969972535
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.1179676753964985,
+              -1.1448326464031195
+            ],
+            [
+              0.3837552256019208,
+              -0.30683654012670114
+            ],
+            [
+              -0.6320590564265687,
+              -0.6587894686358184
+            ]
+          ],
+          "femur": 245.00000000000006,
+          "tibia": 245.0,
+          "support": true,
+          "paired_or_whole_actor_mirror": false
+        },
+        "R": {
+          "gait_state": {
+            "name": "DRIVE-forward",
+            "stride": -35.0,
+            "height": 255.0,
+            "pitch": -5.0
+          },
+          "hip": [
+            -57.756805124956365,
+            208.55,
+            554.552349495924
+          ],
+          "knee": [
+            173.25088901610647,
+            215.26411760501713,
+            635.8872489697363
+          ],
+          "ankle": [
+            -30.2249917324751,
+            204.03728949478753,
+            499.8853214680558
+          ],
+          "painted_heel_anchor": [
+            -36.4042069186393,
+            126.11146752205293,
+            271.0501585239465
+          ],
+          "structural_heel_support": [
+            -35.0,
+            110.0,
+            255.0
+          ],
+          "structural_foreball": [
+            21.48423938180197,
+            127.5,
+            259.94173061379223
+          ],
+          "foot_source_heel": [
+            522.0,
+            1201.5
+          ],
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9961946980917457,
+              0.0,
+              -0.08715574274765818
+            ],
+            [
+              0.0,
+              1.0000000000000002,
+              0.0
+            ],
+            [
+              0.08715574274765818,
+              0.0,
+              0.9961946980917457
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8616290603805429,
+              0.1258062044473013
+            ],
+            [
+              0.4009623095429031,
+              -0.4434643143544509
+            ],
+            [
+              0.4778766953741536,
+              -1.4379714968445407
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              -0.6289386514471074,
+              1.1419538855318137
+            ],
+            [
+              -0.46863493359381486,
+              -0.11081862641071336
+            ],
+            [
+              0.32012697752844577,
+              0.5752435071969586
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.7771280045995064,
+              -0.8059771327283511
+            ],
+            [
+              0.4288993767988139,
+              0.10448384588307708
+            ],
+            [
+              -0.16015778622767424,
+              -0.8009409256730728
+            ]
+          ],
+          "femur": 245.0,
+          "tibia": 245.0,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -13.312499999999964,
+        225.0,
+        577.2150113422247
+      ],
+      "pelvis_SO3": [
+        [
+          0.9961946980917457,
+          0.0,
+          0.08715574274765818
+        ],
+        [
+          0.0,
+          1.0000000000000002,
+          0.0
+        ],
+        [
+          -0.08715574274765818,
+          0.0,
+          0.9961946980917457
+        ]
+      ],
+      "torso_waist": [
+        -5.904261866449019,
+        225.0,
+        661.8915606800231
+      ],
+      "torso_SO3": [
+        [
+          0.9781476007338056,
+          0.0,
+          0.20791169081775931
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.20791169081775931,
+          0.0,
+          0.9781476007338056
+        ]
+      ],
+      "head_neck": [
+        16.387506342011157,
+        211.35,
+        935.5877600875783
+      ],
+      "head_SO3": [
+        [
+          0.984807753012208,
+          0.0,
+          0.17364817766693036
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.17364817766693033,
+          0.0,
+          0.984807753012208
+        ]
+      ],
+      "arms": {
+        "L": {
+          "shoulder": [
+            88.79449514357118,
+            249.85,
+            800.0721596103981
+          ],
+          "elbow": [
+            95.1685989168931,
+            254.4,
+            761.3582951547935
+          ],
+          "upper_SO3": [
+            [
+              0.9902680687415704,
+              0.0,
+              0.13917310096006544
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.13917310096006544,
+              0.0,
+              0.9902680687415704
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9694453498951388,
+              0.0,
+              0.24530738587880255
+            ],
+            [
+              0.0,
+              0.9999999999999998,
+              0.0
+            ],
+            [
+              -0.24530738587880255,
+              0.0,
+              0.9694453498951388
+            ]
+          ],
+          "source_upper_anchor": [
+            795,
+            471
+          ],
+          "source_fore_anchor": [
+            808,
+            513
+          ],
+          "upper_world_UV": [
+            [
+              0.9399518472034363,
+              -0.13917310096006544
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.22133803319549072,
+              -0.9902680687415704
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9583583999632058,
+              -0.24530738587880255
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.11852922517237624,
+              -0.9694453498951388
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": false
+        },
+        "R": {
+          "shoulder": [
+            -51.76647134401983,
+            189.3,
+            887.6604419321466
+          ],
+          "elbow": [
+            -153.25186123800017,
+            164.10000000000002,
+            768.8303294266592
+          ],
+          "upper_SO3": [
+            [
+              0.9612616959383189,
+              0.0,
+              0.27563735581699916
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.27563735581699916,
+              0.0,
+              0.9612616959383189
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9408807689542253,
+              0.0,
+              0.3387379202452913
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.33873792024529137,
+              0.0,
+              0.9408807689542255
+            ]
+          ],
+          "source_upper_anchor": [
+            622,
+            354
+          ],
+          "source_fore_anchor": [
+            550,
+            471
+          ],
+          "upper_world_UV": [
+            [
+              0.9616086008804366,
+              -0.27563735581699916
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.08836797334311235,
+              -0.9612616959383189
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9653509641446547,
+              -0.3387379202452913
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.024444140913216634,
+              -0.9408807689542255
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": true
+        }
+      },
+      "actual_node_rasters": [
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-thigh-proximal-actual-native-node.png",
+          "sha256": "a36c1a33a69506dc0df131bf79e0b1040cf755c6428df205760fda627fc31fb6",
+          "bytes": 57692
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-calf-actual-native-node.png",
+          "sha256": "92246a09905d20a29111a8d421e5e21b811818648eeed2d967b53d23208a1976",
+          "bytes": 57614
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-continuous-knee-actual-native-node.png",
+          "sha256": "e48e3b693dc02922f63738c96eb8f6bbe57a1a1e045fb20c96553097f323117b",
+          "bytes": 27868
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-continuous-ankle-actual-native-node.png",
+          "sha256": "8b597a5cc61b79984fb9c8d72bcaca6146ad2c07eab77e6aaf75f61c714eca2e",
+          "bytes": 26240
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "14ea2cee95c5e5165a0078f9bbb52a62af96f4bbc643ec2e05ccb8440625d5d1",
+          "bytes": 55705
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-thigh-proximal-actual-native-node.png",
+          "sha256": "7aaa7112684320690498e99734dbd87d14bb7b2d3439da1339560128bba884de",
+          "bytes": 65412
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-calf-actual-native-node.png",
+          "sha256": "f319b94721f3e67028e4d26b142c978e187399d22432035b78e8b4d40fec4a1b",
+          "bytes": 53088
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-continuous-knee-actual-native-node.png",
+          "sha256": "6eb24740d281a4524ebfd58ee66a757259d3aeab003b34512161540750323dbe",
+          "bytes": 25534
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-continuous-ankle-actual-native-node.png",
+          "sha256": "6be04252c2ba4dd67786dbd33b184618f13d77f87543ea2bb556c5be15e6e072",
+          "bytes": 23736
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "2610fea8f028e64fa64c18399dcc2690121bc0d343d4f1a19d5647e29b6cb05b",
+          "bytes": 53132
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-original-root-bound-cape-lag-actual-native-node.png",
+          "sha256": "445a0e15ef9be9942fc40ed60aa2d2d3ff5b8105274c2d6646a8cd79a14ef609",
+          "bytes": 230287
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-pelvis-white-pleats-gold-waist-actual-native-node.png",
+          "sha256": "7cd289cc8c317e999bbce31f44761669a3d1af11c13fc78bb4872267d836379d",
+          "bytes": 82043
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-original-black-gold-bodice-actual-native-node.png",
+          "sha256": "222d6841b21c7c201af9a867ef0be3bb1ec2ad7b96964caacb703177d425f114",
+          "bytes": 178518
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-original-complete-head-with-continuous-real-ribbon-lag-actual-native-node.png",
+          "sha256": "87832bde1dfcf2a2d5d3f268d1e490c840eba84e58ce019e99a0d12097cc9108",
+          "bytes": 176117
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-original-upper-arm-actual-native-node.png",
+          "sha256": "6b4727a8d2f06c34f5a5487760ccf5e892142cbc4515cc49384a17af5070af7d",
+          "bytes": 27607
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-L-original-complete-forearm-cuff-hand-actual-native-node.png",
+          "sha256": "19870870e52ab21e15a3afe8a949f034cf0e26bd4af685f9083b99b5333ca042",
+          "bytes": 62549
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-original-upper-arm-actual-native-node.png",
+          "sha256": "ac46873bab20dafdf03f70b30bb6643f92c4243828e17abd14125dd642c18200",
+          "bytes": 53293
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase1-R-original-full-forearm-grip-pole-actual-native-node.png",
+          "sha256": "5e30bc73223daf1d266994c36a9d8e1b9c26b08156cf64c39e4e8c890535c282",
+          "bytes": 238437
+        }
+      ],
+      "actual_node_count": 18,
+      "strong_components": [
+        {
+          "area": 346469,
+          "bbox": [
+            430,
+            323,
+            1348,
+            1484
+          ]
+        },
+        {
+          "area": 3353,
+          "bbox": [
+            773,
+            654,
+            924,
+            733
+          ]
+        }
+      ],
+      "stored_alpha_bbox": [
+        358,
+        320,
+        1350,
+        1486
+      ],
+      "storage_boundary_alpha_contact": false,
+      "authored_clock": [
+        0.08,
+        0.16
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "FLIGHT-RIGHT-drive",
+      "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-phase2-FLIGHT-RIGHT-drive-actual-native-v02.png",
+      "sha256": "bdafd8077cf94999455a6824c5d97f5e5cd6794d803e9b0e9497be5a8c472540",
+      "bytes": 998034,
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_unpadded_root": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        320,
+        320
+      ],
+      "native_size": [
+        2048,
+        2048
+      ],
+      "state": {
+        "phase": 2,
+        "name": "FLIGHT-RIGHT-drive",
+        "pelvis_bob_Z": 60.0,
+        "pelvis_pitch": 3.0,
+        "torso_pitch": 8.0,
+        "cloth_lag": 37.0,
+        "hair_lag": 4.0
+      },
+      "bones": {
+        "L": {
+          "gait_state": {
+            "name": "FLIGHT-trailing",
+            "stride": -225.0,
+            "height": 160.0,
+            "pitch": -14.0
+          },
+          "hip": [
+            28.45468398440724,
+            241.1,
+            703.1372019852788
+          ],
+          "knee": [
+            -23.443195135685855,
+            175.39635860215702,
+            472.888115885247
+          ],
+          "ankle": [
+            -256.9143331656777,
+            155.0159229772264,
+            401.4677717897544
+          ],
+          "painted_heel_anchor": [
+            -227.3640351427438,
+            69.77189409368636,
+            169.48162707672552
+          ],
+          "structural_heel_support": [
+            -225.0,
+            60.0,
+            160.0
+          ],
+          "structural_foreball": [
+            -151.20901001671047,
+            64.0,
+            178.39816016035473
+          ],
+          "foot_source_heel": [
+            844.5,
+            1197.0
+          ],
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9702957262759965,
+              0.0,
+              -0.2419218955996677
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              0.2419218955996677,
+              0.0,
+              0.9702957262759965
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8553493311636964,
+              0.3784928749892968
+            ],
+            [
+              0.07406035919274206,
+              -0.5645250879466764
+            ],
+            [
+              0.28959015605088373,
+              -1.5180520064862377
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.7205748528340096,
+              -0.5255932060228379
+            ],
+            [
+              0.04854449349878964,
+              -0.379095640926908
+            ],
+            [
+              -0.5369018997822386,
+              -1.0941158680281629
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              -0.15351101903981476,
+              -1.294646526704001
+            ],
+            [
+              0.44704776365015,
+              -0.23141477136678495
+            ],
+            [
+              -0.5735725749034132,
+              -0.26062616128479416
+            ]
+          ],
+          "femur": 245.00000000000003,
+          "tibia": 245.0,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        },
+        "R": {
+          "gait_state": {
+            "name": "FLIGHT-reaching",
+            "stride": 165.0,
+            "height": 130.0,
+            "pitch": 9.0
+          },
+          "hip": [
+            -56.9388153627443,
+            208.55,
+            673.0150710970427
+          ],
+          "knee": [
+            178.78807984403346,
+            207.56726132060885,
+            606.2553145002662
+          ],
+          "ankle": [
+            228.876291288998,
+            204.0372894947875,
+            366.45600179659436
+          ],
+          "painted_heel_anchor": [
+            167.5203888028254,
+            126.11146752205293,
+            145.91310862140892
+          ],
+          "structural_heel_support": [
+            165.0,
+            110.0,
+            130.0
+          ],
+          "structural_foreball": [
+            221.0019289117443,
+            127.5,
+            121.1301658322189
+          ],
+          "foot_source_heel": [
+            522.0,
+            1201.5
+          ],
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9876883405951378,
+              0.0,
+              0.15643446504023087
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.15643446504023087,
+              0.0,
+              0.9876883405951378
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.9516438309302634,
+              -0.22580756782070216
+            ],
+            [
+              0.40096230954290296,
+              -0.4434643143544508
+            ],
+            [
+              0.25523477961741603,
+              -1.4256928733530458
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              -0.18878967173492797,
+              1.3101364143102137
+            ],
+            [
+              -0.46024357591045784,
+              -0.15288450787480434
+            ],
+            [
+              0.5745015182021326,
+              -0.20443123892825102
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.7258626335888939,
+              0.552306839292261
+            ],
+            [
+              -0.10050876890187163,
+              -0.057967904444859976
+            ],
+            [
+              0.5446658813165569,
+              -1.093087147446719
+            ]
+          ],
+          "femur": 244.99999999999997,
+          "tibia": 244.99999999999991,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -13.312499999999964,
+        225.0,
+        697.2150113422247
+      ],
+      "pelvis_SO3": [
+        [
+          0.9986295347545738,
+          0.0,
+          0.052335956242943835
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.052335956242943835,
+          0.0,
+          0.9986295347545738
+        ]
+      ],
+      "torso_waist": [
+        -8.863943719349738,
+        225.0,
+        782.0985217963635
+      ],
+      "torso_SO3": [
+        [
+          0.9902680687415703,
+          0.0,
+          0.13917310096006544
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.13917310096006544,
+          0.0,
+          0.9902680687415703
+        ]
+      ],
+      "head_neck": [
+        -5.718558885705033,
+        211.35,
+        1056.6830061618284
+      ],
+      "head_SO3": [
+        [
+          0.9945218953682734,
+          0.0,
+          0.10452846326765348
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.10452846326765347,
+          0.0,
+          0.9945218953682733
+        ]
+      ],
+      "arms": {
+        "L": {
+          "shoulder": [
+            75.96514055690274,
+            249.85,
+            926.5483710896474
+          ],
+          "elbow": [
+            76.20458585980377,
+            254.4,
+            887.3140090335756
+          ],
+          "upper_SO3": [
+            [
+              0.9563047559630354,
+              0.0,
+              0.2923717047227367
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.2923717047227367,
+              0.0,
+              0.9563047559630354
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9438009515832293,
+              0.0,
+              0.330514392713223
+            ],
+            [
+              0.0,
+              0.9999999999999998,
+              0.0
+            ],
+            [
+              -0.330514392713223,
+              0.0,
+              0.9438009515832293
+            ]
+          ],
+          "source_upper_anchor": [
+            795,
+            471
+          ],
+          "source_fore_anchor": [
+            808,
+            513
+          ],
+          "upper_world_UV": [
+            [
+              0.9630043770196898,
+              -0.2923717047227367
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.07157213033659932,
+              -0.9563047559630354
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9651008938745345,
+              -0.330514392713223
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.03286737961222952,
+              -0.9438009515832293
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": false
+        },
+        "R": {
+          "shoulder": [
+            -70.36327619696407,
+            189.3,
+            1004.1182553895912
+          ],
+          "elbow": [
+            -132.6716746477165,
+            164.10000000000002,
+            860.8089972012165
+          ],
+          "upper_SO3": [
+            [
+              0.9998476951563912,
+              0.0,
+              -0.01745240643728351
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              0.017452406437283508,
+              0.0,
+              0.9998476951563913
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.993170649538486,
+              0.0,
+              0.11667073709933318
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.11667073709933316,
+              0.0,
+              0.993170649538486
+            ]
+          ],
+          "source_upper_anchor": [
+            622,
+            354
+          ],
+          "source_fore_anchor": [
+            550,
+            471
+          ],
+          "upper_world_UV": [
+            [
+              0.8937545833877029,
+              0.01745240643728351
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.36565385909829207,
+              -0.9998476951563913
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.934688342569404,
+              -0.11667073709933318
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.24260606394907022,
+              -0.993170649538486
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": true
+        }
+      },
+      "actual_node_rasters": [
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-thigh-proximal-actual-native-node.png",
+          "sha256": "a1669999cbce7df6f8b823e0ef81160cc64a79acb617474a050e4daba38284fc",
+          "bytes": 52039
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-calf-actual-native-node.png",
+          "sha256": "7f99af5487977cd5e04790b8d1e8a1f3a03deb410d19ce9c04e50a23d525da85",
+          "bytes": 53649
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-continuous-knee-actual-native-node.png",
+          "sha256": "20d2be9aebf32879c0366775d493e23734a4e7852cdb00954f90db09ecf74484",
+          "bytes": 27664
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-continuous-ankle-actual-native-node.png",
+          "sha256": "fff93d9ca210dcb3c54c8304c9dd7346c44c5ceb553eb74555a3672c592db39b",
+          "bytes": 25962
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "230d5551abff285681c4d7c737f4c0f9a394852d257b613a9edafc41392f7701",
+          "bytes": 58157
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-thigh-proximal-actual-native-node.png",
+          "sha256": "a18fcd9db408f77405d7ae0b2d659ba46b01a6a99a7b1f9c41c8c6e141381401",
+          "bytes": 65957
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-calf-actual-native-node.png",
+          "sha256": "24b5ae07cbfe95616c953fc2e9de9973a98bf75cc54750a25db25a1850ee623c",
+          "bytes": 49856
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-continuous-knee-actual-native-node.png",
+          "sha256": "211d4c3402850ecc78fa27bd0c83de45ca10be62c80506ef138a80327c2877ab",
+          "bytes": 28026
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-continuous-ankle-actual-native-node.png",
+          "sha256": "9dded16b9ac4ff45e0b1d1f18b75a8dcdca1ba1869f5d5ed46b60f38d8e814fe",
+          "bytes": 24709
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "167a26f4a29449092b021517a6e05c8c620a43f063f1bd082dc92269ea0c0270",
+          "bytes": 56748
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-original-root-bound-cape-lag-actual-native-node.png",
+          "sha256": "d4b2cdc187aad99453a0898034b56ea0bfa59a5edf542c243222cbce4747e897",
+          "bytes": 227792
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-pelvis-white-pleats-gold-waist-actual-native-node.png",
+          "sha256": "4b73bc1c527acfd61fcf1d3f83ab82b4883b2ae640f4b5bd0171b8838d424c2a",
+          "bytes": 80705
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-original-black-gold-bodice-actual-native-node.png",
+          "sha256": "52f3fae2a85d8d7d4e60262873ec42d420d4a1067972b6c5b212e8d2cb804b59",
+          "bytes": 176177
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-original-complete-head-with-continuous-real-ribbon-lag-actual-native-node.png",
+          "sha256": "14398ebc5932127cded0c1dd8e1d021f43e439e62e90fc5431a4e887bb708955",
+          "bytes": 172517
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-original-upper-arm-actual-native-node.png",
+          "sha256": "b2bad0e534774fe55d1c6c3a1c5b8e4595720ad1449cfc9091c33729af0a83b7",
+          "bytes": 28375
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-L-original-complete-forearm-cuff-hand-actual-native-node.png",
+          "sha256": "98bd6306a821d7fb50f5d266de7ccfa3d2ae467edf87441f1440de8f4a2dd2ed",
+          "bytes": 64080
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-original-upper-arm-actual-native-node.png",
+          "sha256": "ef1c9ec4cdf0d77f7f005fef96a604f7b0e6dc635ab57c7a58ac386fda4889c7",
+          "bytes": 51154
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase2-R-original-full-forearm-grip-pole-actual-native-node.png",
+          "sha256": "c096510661b455a60783e73f6e0fe46f212b051cc02b4cf13024febf6163948c",
+          "bytes": 216111
+        }
+      ],
+      "actual_node_count": 18,
+      "strong_components": [
+        {
+          "area": 365038,
+          "bbox": [
+            428,
+            243,
+            1341,
+            1427
+          ]
+        }
+      ],
+      "stored_alpha_bbox": [
+        341,
+        227,
+        1343,
+        1429
+      ],
+      "storage_boundary_alpha_contact": false,
+      "authored_clock": [
+        0.16,
+        0.24
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-CONTACT",
+      "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-phase3-RIGHT-CONTACT-actual-native-v02.png",
+      "sha256": "16f01faee487fd7de9299795089ea8516b1a0e61f040779c83a9f4951d08873a",
+      "bytes": 986978,
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_unpadded_root": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        320,
+        320
+      ],
+      "native_size": [
+        2048,
+        2048
+      ],
+      "state": {
+        "phase": 3,
+        "name": "RIGHT-CONTACT",
+        "pelvis_bob_Z": 0.0,
+        "pelvis_pitch": 4.0,
+        "torso_pitch": 10.0,
+        "cloth_lag": 36.0,
+        "hair_lag": 3.0
+      },
+      "bones": {
+        "L": {
+          "gait_state": {
+            "name": "RECOVERY-fold",
+            "stride": -220.0,
+            "height": 200.0,
+            "pitch": -20.0
+          },
+          "hip": [
+            28.55167911808418,
+            241.1,
+            642.4073621363225
+          ],
+          "knee": [
+            -32.40351311334793,
+            149.45310858041725,
+            423.52311913752555
+          ],
+          "ankle": [
+            -276.9797582231918,
+            155.0159229772264,
+            436.80902986868
+          ],
+          "painted_heel_anchor": [
+            -223.34218461848587,
+            69.77189409368636,
+            209.18257677093845
+          ],
+          "structural_heel_support": [
+            -220.0,
+            60.0,
+            200.0
+          ],
+          "structural_foreball": [
+            -148.53637618923167,
+            64.0,
+            226.0106318999171
+          ],
+          "foot_source_heel": [
+            844.5,
+            1197.0
+          ],
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9396926207859083,
+              0.0,
+              -0.34202014332566866
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              0.34202014332566866,
+              0.0,
+              0.9396926207859083
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8203932240414653,
+              0.5350990948161267
+            ],
+            [
+              0.07406035919274206,
+              -0.5645250879466764
+            ],
+            [
+              0.3774121020192753,
+              -1.4701726801779162
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.6535226317392274,
+              -0.5534063543413578
+            ],
+            [
+              0.07177608003620237,
+              -0.5301295923853862
+            ],
+            [
+              -0.5841896018068572,
+              -1.0156511982894227
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              -0.36185010409818025,
+              -1.304531373859576
+            ],
+            [
+              0.49171799893482687,
+              -0.09465426031576028
+            ],
+            [
+              -0.4657396641489659,
+              0.1956811178163309
+            ]
+          ],
+          "femur": 245.00000000000003,
+          "tibia": 245.0,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        },
+        "R": {
+          "gait_state": {
+            "name": "CONTACT",
+            "stride": 120.0,
+            "height": 0.0,
+            "pitch": 0.0
+          },
+          "hip": [
+            -57.35451805652265,
+            208.55,
+            613.7801410522288
+          ],
+          "knee": [
+            153.1377581412055,
+            207.02202165250415,
+            488.4179978698912
+          ],
+          "ankle": [
+            146.1,
+            204.0372894947875,
+            243.5372894947875
+          ],
+          "painted_heel_anchor": [
+            120.0,
+            126.11146752205293,
+            16.11146752205293
+          ],
+          "structural_heel_support": [
+            120.0,
+            110.0,
+            0.0
+          ],
+          "structural_foreball": [
+            176.7,
+            127.5,
+            0.0
+          ],
+          "foot_source_heel": [
+            522.0,
+            1201.5
+          ],
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "foot_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.40096230954290296,
+              -0.4434643143544508
+            ],
+            [
+              0.40096230954290296,
+              -1.4434643143544508
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.046103285463944876,
+              1.238534633129332
+            ],
+            [
+              -0.41831041808790764,
+              -0.14264564733913246
+            ],
+            [
+              0.6323297588877126,
+              -0.526651200252985
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.8520655762070214,
+              0.29053748787767947
+            ],
+            [
+              0.02051996755878642,
+              -0.008303339462189207
+            ],
+            [
+              0.4319171427024226,
+              -1.1642097350175638
+            ]
+          ],
+          "femur": 245.0,
+          "tibia": 245.00000000000003,
+          "support": true,
+          "paired_or_whole_actor_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -13.312499999999964,
+        225.0,
+        637.2150113422247
+      ],
+      "pelvis_SO3": [
+        [
+          0.9975640502598243,
+          0.0,
+          0.0697564737441253
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.0697564737441253,
+          0.0,
+          0.9975640502598243
+        ]
+      ],
+      "torso_waist": [
+        -7.383199731749314,
+        225.0,
+        722.0079556143097
+      ],
+      "torso_SO3": [
+        [
+          0.9848077530122081,
+          0.0,
+          0.17364817766693033
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.17364817766693033,
+          0.0,
+          0.9848077530122081
+        ]
+      ],
+      "head_neck": [
+        5.343129325110657,
+        211.35,
+        996.3153981832938
+      ],
+      "head_SO3": [
+        [
+          0.9902680687415704,
+          0.0,
+          0.13917310096006544
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.13917310096006544,
+          0.0,
+          0.9902680687415705
+        ]
+      ],
+      "arms": {
+        "L": {
+          "shoulder": [
+            82.43543599745495,
+            249.85,
+            863.4093176153333
+          ],
+          "elbow": [
+            80.62118529310378,
+            254.4,
+            824.2161932899907
+          ],
+          "upper_SO3": [
+            [
+              0.9396926207859085,
+              0.0,
+              0.3420201433256687
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.3420201433256687,
+              0.0,
+              0.9396926207859085
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9271838545667874,
+              0.0,
+              0.374606593415912
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.374606593415912,
+              0.0,
+              0.9271838545667874
+            ]
+          ],
+          "source_upper_anchor": [
+            795,
+            471
+          ],
+          "source_fore_anchor": [
+            808,
+            513
+          ],
+          "upper_world_UV": [
+            [
+              0.9654304088713018,
+              -0.3420201433256687
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.02107428828196612,
+              -0.9396926207859085
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9655777768056779,
+              -0.374606593415912
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              -0.01263158497594523,
+              -0.9271838545667874
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": false
+        },
+        "R": {
+          "shoulder": [
+            -61.09669151724764,
+            189.3,
+            946.0387365356135
+          ],
+          "elbow": [
+            -125.89669151724766,
+            164.10000000000002,
+            803.8387365356134
+          ],
+          "upper_SO3": [
+            [
+              1.0000000000000002,
+              0.0,
+              -5.1689683996308866e-18
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -5.1689683996308866e-18,
+              0.0,
+              1.0000000000000002
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9902680687415704,
+              0.0,
+              0.13917310096006544
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.13917310096006544,
+              0.0,
+              0.9902680687415705
+            ]
+          ],
+          "source_upper_anchor": [
+            622,
+            354
+          ],
+          "source_fore_anchor": [
+            550,
+            471
+          ],
+          "upper_world_UV": [
+            [
+              0.9000000000000002,
+              5.1689683996308866e-18
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.35000000000000003,
+              -1.0000000000000002
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9399518472034363,
+              -0.13917310096006544
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.22133803319549075,
+              -0.9902680687415705
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": true
+        }
+      },
+      "actual_node_rasters": [
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-thigh-proximal-actual-native-node.png",
+          "sha256": "672ce6248fc4a6f9fd69bea2b1a8330d3e69fa5b0bb36de28a5a40a3011f3795",
+          "bytes": 46058
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-calf-actual-native-node.png",
+          "sha256": "c5753b382166f5a5eea45bd839939a6e4a26b134d4926139fd89e5e99339fa0f",
+          "bytes": 53598
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-continuous-knee-actual-native-node.png",
+          "sha256": "fdc3f8e718ba9255daba7d6f6cf8e1857498b3daeb9e438afe6c6403f0fd9a8f",
+          "bytes": 27179
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-continuous-ankle-actual-native-node.png",
+          "sha256": "65eab5c43eee7618a22b884dfdf99ffd539ad2151b4c7507d4a610014d405287",
+          "bytes": 25290
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "f25ef0d2bbca11a846e1146ed7a0f1eb51ae97322b3ae9e56217022acde4d5b1",
+          "bytes": 58691
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-thigh-proximal-actual-native-node.png",
+          "sha256": "72c7a7b709d30d258972854f4269b1eb1b765a8390b6ece0b2aa4b8723a85e9e",
+          "bytes": 68836
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-calf-actual-native-node.png",
+          "sha256": "19bef56051805ade1696a393c47f51e969eab59d87436c74865d434446ab69f9",
+          "bytes": 47809
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-continuous-knee-actual-native-node.png",
+          "sha256": "d98252d516380ede08ddc6af7099732203a5c42ea63853d065bea2533bbaa1a5",
+          "bytes": 27823
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-continuous-ankle-actual-native-node.png",
+          "sha256": "ec7130e0a6ca7d35abe0884afa1759298be1af365f7c09c6b1da82ab61587447",
+          "bytes": 23662
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "d4584ab406e92f68cb8372db584cf464ef160816ab2cd60dd96a6fb657f46a03",
+          "bytes": 53587
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-original-root-bound-cape-lag-actual-native-node.png",
+          "sha256": "d3b68b63fcae15676d2c53809dfbe8d5809b5a63fb86ec4bf2b2cae949707cb4",
+          "bytes": 228531
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-pelvis-white-pleats-gold-waist-actual-native-node.png",
+          "sha256": "3758704424bc2c8bba9d8f1e597cacdc919ddfa72dd5fde82948c12bf9e7e728",
+          "bytes": 81453
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-original-black-gold-bodice-actual-native-node.png",
+          "sha256": "fb123022edff2979761387825b65876b973369534361217ed8245ed1720ef91b",
+          "bytes": 176922
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-original-complete-head-with-continuous-real-ribbon-lag-actual-native-node.png",
+          "sha256": "404f24badeca975a6c1bc8bb21c884a4acf62777264c45bff738f419ff3144ce",
+          "bytes": 173572
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-original-upper-arm-actual-native-node.png",
+          "sha256": "801dbb23b64ee3c2dc2b14a12b314cc7aa163c801831fc96a41e811894d59f3f",
+          "bytes": 28527
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-L-original-complete-forearm-cuff-hand-actual-native-node.png",
+          "sha256": "1efffe78172171eb474561af4879e81241705f6852f61830052b0cdc7286c6c1",
+          "bytes": 64507
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-original-upper-arm-actual-native-node.png",
+          "sha256": "ad1c547a99071feb58c09d0e4ff6aae75b6c6d46fbdd5b1540f6538866f9b126",
+          "bytes": 50501
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase3-R-original-full-forearm-grip-pole-actual-native-node.png",
+          "sha256": "d06660b595ee03e9cddb2f07f7684f71e319ffa80ee1ddc039e1cb1e4e4e133a",
+          "bytes": 218565
+        }
+      ],
+      "actual_node_count": 18,
+      "strong_components": [
+        {
+          "area": 360485,
+          "bbox": [
+            428,
+            298,
+            1316,
+            1547
+          ]
+        }
+      ],
+      "stored_alpha_bbox": [
+        341,
+        279,
+        1319,
+        1549
+      ],
+      "storage_boundary_alpha_contact": false,
+      "authored_clock": [
+        0.24,
+        0.32
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-LOAD",
+      "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-phase4-RIGHT-LOAD-actual-native-v02.png",
+      "sha256": "0964db515f918883507d683ef06794751c4e5b99228d9f9f8f34a73b9a2c36f2",
+      "bytes": 961592,
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_unpadded_root": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        320,
+        320
+      ],
+      "native_size": [
+        2048,
+        2048
+      ],
+      "state": {
+        "phase": 4,
+        "name": "RIGHT-LOAD",
+        "pelvis_bob_Z": -60.0,
+        "pelvis_pitch": 5.0,
+        "torso_pitch": 12.0,
+        "cloth_lag": 32.0,
+        "hair_lag": -1.0
+      },
+      "bones": {
+        "L": {
+          "gait_state": {
+            "name": "DRIVE-forward",
+            "stride": -35.0,
+            "height": 255.0,
+            "pitch": -5.0
+          },
+          "hip": [
+            28.635922017254337,
+            241.1,
+            581.6759406470147
+          ],
+          "knee": [
+            212.61068978334637,
+            124.7521958987926,
+            469.2416340220367
+          ],
+          "ankle": [
+            -28.747533061221784,
+            155.01592297722647,
+            498.4874044621165
+          ],
+          "painted_heel_anchor": [
+            -35.851676687786686,
+            69.77189409368636,
+            264.7347090864444
+          ],
+          "structural_heel_support": [
+            -35.0,
+            60.0,
+            255.0
+          ],
+          "structural_foreball": [
+            40.76060678987726,
+            64.0,
+            261.6281942359594
+          ],
+          "foot_source_heel": [
+            844.5,
+            1197.0
+          ],
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9961946980917457,
+              0.0,
+              -0.08715574274765818
+            ],
+            [
+              0.0,
+              1.0000000000000002,
+              0.0
+            ],
+            [
+              0.08715574274765818,
+              0.0,
+              0.9961946980917457
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8901204426689692,
+              0.13635734608733782
+            ],
+            [
+              0.07406035919274209,
+              -0.5645250879466767
+            ],
+            [
+              0.1522187056394723,
+              -1.5585715976440013
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.2872283000986585,
+              0.9212213798904559
+            ],
+            [
+              -0.6665040522885967,
+              -0.4218649777010585
+            ],
+            [
+              0.2889861995460669,
+              -0.7169805447389064
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              -0.3293443774756585,
+              -1.2945012906180773
+            ],
+            [
+              0.5259540869951069,
+              0.03769024664945174
+            ],
+            [
+              -0.4439348714259456,
+              0.2812733694528421
+            ]
+          ],
+          "femur": 245.00000000000003,
+          "tibia": 245.0,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        },
+        "R": {
+          "gait_state": {
+            "name": "LOAD",
+            "stride": -55.3920000001786,
+            "height": 0.0,
+            "pitch": 0.0
+          },
+          "hip": [
+            -57.756805124956365,
+            208.55,
+            554.552349495924
+          ],
+          "knee": [
+            144.46179001988344,
+            206.5432291152491,
+            416.24612169593115
+          ],
+          "ankle": [
+            -29.2920000001786,
+            204.0372894947875,
+            243.5372894947875
+          ],
+          "painted_heel_anchor": [
+            -55.3920000001786,
+            126.11146752205293,
+            16.11146752205293
+          ],
+          "structural_heel_support": [
+            -55.3920000001786,
+            110.0,
+            0.0
+          ],
+          "structural_foreball": [
+            1.3079999998213907,
+            127.5,
+            0.0
+          ],
+          "foot_source_heel": [
+            522.0,
+            1201.5
+          ],
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "foot_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.40096230954290296,
+              -0.4434643143544508
+            ],
+            [
+              0.40096230954290296,
+              -1.4434643143544508
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.10353550226639668,
+              1.2087967893575096
+            ],
+            [
+              -0.4037975974958877,
+              -0.14078859736642294
+            ],
+            [
+              0.6404566464596985,
+              -0.5993087921204034
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.8724302164736639,
+              -0.607669807882782
+            ],
+            [
+              0.3544853317594262,
+              0.12316586377422649
+            ],
+            [
+              -0.03465992621827979,
+              -0.9520091682752256
+            ]
+          ],
+          "femur": 245.00000000000006,
+          "tibia": 245.0,
+          "support": true,
+          "paired_or_whole_actor_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -13.312499999999964,
+        225.0,
+        577.2150113422247
+      ],
+      "pelvis_SO3": [
+        [
+          0.9961946980917457,
+          0.0,
+          0.08715574274765818
+        ],
+        [
+          0.0,
+          1.0000000000000002,
+          0.0
+        ],
+        [
+          -0.08715574274765818,
+          0.0,
+          0.9961946980917457
+        ]
+      ],
+      "torso_waist": [
+        -5.904261866449019,
+        225.0,
+        661.8915606800231
+      ],
+      "torso_SO3": [
+        [
+          0.9781476007338056,
+          0.0,
+          0.20791169081775931
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.20791169081775931,
+          0.0,
+          0.9781476007338056
+        ]
+      ],
+      "head_neck": [
+        16.387506342011157,
+        211.35,
+        935.5877600875783
+      ],
+      "head_SO3": [
+        [
+          0.984807753012208,
+          0.0,
+          0.17364817766693036
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.17364817766693033,
+          0.0,
+          0.984807753012208
+        ]
+      ],
+      "arms": {
+        "L": {
+          "shoulder": [
+            88.79449514357118,
+            249.85,
+            800.0721596103981
+          ],
+          "elbow": [
+            89.71863801070289,
+            254.4,
+            760.8479520344491
+          ],
+          "upper_SO3": [
+            [
+              0.9612616959383189,
+              0.0,
+              0.27563735581699916
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.27563735581699916,
+              0.0,
+              0.9612616959383189
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9408807689542253,
+              0.0,
+              0.3387379202452913
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.33873792024529137,
+              0.0,
+              0.9408807689542255
+            ]
+          ],
+          "source_upper_anchor": [
+            795,
+            471
+          ],
+          "source_fore_anchor": [
+            808,
+            513
+          ],
+          "upper_world_UV": [
+            [
+              0.9616086008804366,
+              -0.27563735581699916
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.08836797334311235,
+              -0.9612616959383189
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9653509641446547,
+              -0.3387379202452913
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.024444140913216634,
+              -0.9408807689542255
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": false
+        },
+        "R": {
+          "shoulder": [
+            -51.76647134401983,
+            189.3,
+            887.6604419321466
+          ],
+          "elbow": [
+            -135.7262571549949,
+            164.10000000000002,
+            755.8627394993075
+          ],
+          "upper_SO3": [
+            [
+              0.9902680687415704,
+              0.0,
+              0.13917310096006544
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.13917310096006544,
+              0.0,
+              0.9902680687415704
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9694453498951388,
+              0.0,
+              0.24530738587880255
+            ],
+            [
+              0.0,
+              0.9999999999999998,
+              0.0
+            ],
+            [
+              -0.24530738587880255,
+              0.0,
+              0.9694453498951388
+            ]
+          ],
+          "source_upper_anchor": [
+            622,
+            354
+          ],
+          "source_fore_anchor": [
+            550,
+            471
+          ],
+          "upper_world_UV": [
+            [
+              0.9399518472034363,
+              -0.13917310096006544
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.22133803319549072,
+              -0.9902680687415704
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9583583999632058,
+              -0.24530738587880255
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.11852922517237624,
+              -0.9694453498951388
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": true
+        }
+      },
+      "actual_node_rasters": [
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-thigh-proximal-actual-native-node.png",
+          "sha256": "f7d3d60d281e6dc8d917fb5f77211fbcd819ee5e2df78740ed2460a68b5404dd",
+          "bytes": 48737
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-calf-actual-native-node.png",
+          "sha256": "40a834f606090f3c822c01a8933e875c27ac53074e24bd09841a758ab342e495",
+          "bytes": 52619
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-continuous-knee-actual-native-node.png",
+          "sha256": "0246dc6e4a24ab658a05b7e79eda48a720c5fa6496ad2aaf1d216d1fefb1f282",
+          "bytes": 25806
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-continuous-ankle-actual-native-node.png",
+          "sha256": "b311f79435adf303835e3e0c26686a68c1411160b54489982ffa44abc0a345ef",
+          "bytes": 25700
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "68a04ee257dac9b9ca58d87b91112719ae5d41e2a11867c4a362eaea7fe46ff2",
+          "bytes": 56074
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-thigh-proximal-actual-native-node.png",
+          "sha256": "f68a8315e07322a019f72a61f9b4f34de68dfcacdbb983880fece7983f24eb3b",
+          "bytes": 70520
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-calf-actual-native-node.png",
+          "sha256": "3d7470968c70f813b9bf12b712ac19c314736d05a62bd543d73d2c4fa64834b2",
+          "bytes": 55471
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-continuous-knee-actual-native-node.png",
+          "sha256": "80453657d8998860928eb591e1e8f5ae6b8e78440846e264e5d2b1259a49226c",
+          "bytes": 27564
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-continuous-ankle-actual-native-node.png",
+          "sha256": "0dd64aed06d2286744fc86ec8d9574fd144ac766cf3cae2915d540219676a1dd",
+          "bytes": 24020
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "d64a87cfad4177509c32ee0f1a0c8f317b18aa39593f4dd636d70d603dcbef86",
+          "bytes": 53249
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-original-root-bound-cape-lag-actual-native-node.png",
+          "sha256": "445a0e15ef9be9942fc40ed60aa2d2d3ff5b8105274c2d6646a8cd79a14ef609",
+          "bytes": 230287
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-pelvis-white-pleats-gold-waist-actual-native-node.png",
+          "sha256": "7cd289cc8c317e999bbce31f44761669a3d1af11c13fc78bb4872267d836379d",
+          "bytes": 82043
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-original-black-gold-bodice-actual-native-node.png",
+          "sha256": "222d6841b21c7c201af9a867ef0be3bb1ec2ad7b96964caacb703177d425f114",
+          "bytes": 178518
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-original-complete-head-with-continuous-real-ribbon-lag-actual-native-node.png",
+          "sha256": "8e3bf717648a380a76ff3fe9213b9cfb546518de5931afe9195f3e3891fb03c1",
+          "bytes": 177235
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-original-upper-arm-actual-native-node.png",
+          "sha256": "bb9952b5c9425d9173ae19a81f42c4f2fb8c6a43012a4bb82dab66afc6dce14b",
+          "bytes": 28213
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-L-original-complete-forearm-cuff-hand-actual-native-node.png",
+          "sha256": "8e69ce896aafc71f03eef0df80366f5acca4ac6677686da0b7d8b7b6246f82c3",
+          "bytes": 63789
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-original-upper-arm-actual-native-node.png",
+          "sha256": "560fa3394632fbafc6b34d0c5f097edc281e6c7dfdb8d7ef2352848babab9433",
+          "bytes": 51986
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase4-R-original-full-forearm-grip-pole-actual-native-node.png",
+          "sha256": "edda97d50b66cd15b3204469db914f868faa7e678285ff78173cd1997e6f30a2",
+          "bytes": 230758
+        }
+      ],
+      "actual_node_count": 18,
+      "strong_components": [
+        {
+          "area": 350078,
+          "bbox": [
+            430,
+            339,
+            1331,
+            1547
+          ]
+        }
+      ],
+      "stored_alpha_bbox": [
+        358,
+        332,
+        1333,
+        1549
+      ],
+      "storage_boundary_alpha_contact": false,
+      "authored_clock": [
+        0.32,
+        0.4
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "FLIGHT-LEFT-drive",
+      "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/E-RUN-phase5-FLIGHT-LEFT-drive-actual-native-v02.png",
+      "sha256": "fee3309f2679a36d6f03a48464b1b15d72bd13777cbfe53f5d92669e8d71785d",
+      "bytes": 1024893,
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_unpadded_root": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        320,
+        320
+      ],
+      "native_size": [
+        2048,
+        2048
+      ],
+      "state": {
+        "phase": 5,
+        "name": "FLIGHT-LEFT-drive",
+        "pelvis_bob_Z": 60.0,
+        "pelvis_pitch": 3.0,
+        "torso_pitch": 8.0,
+        "cloth_lag": 27.0,
+        "hair_lag": -4.0
+      },
+      "bones": {
+        "L": {
+          "gait_state": {
+            "name": "FLIGHT-reaching",
+            "stride": 165.0,
+            "height": 130.0,
+            "pitch": 9.0
+          },
+          "hip": [
+            28.45468398440724,
+            241.1,
+            703.1372019852788
+          ],
+          "knee": [
+            249.82432259393792,
+            215.21890118626158,
+            601.39904873843
+          ],
+          "ankle": [
+            229.97167639149666,
+            155.01592297722644,
+            364.7421792976231
+          ],
+          "painted_heel_anchor": [
+            166.5286610249756,
+            69.77189409368636,
+            139.6515858618645
+          ],
+          "structural_heel_support": [
+            165.0,
+            60.0,
+            130.0
+          ],
+          "structural_foreball": [
+            240.11369830226022,
+            64.0,
+            118.10315893369044
+          ],
+          "foot_source_heel": [
+            844.5,
+            1197.0
+          ],
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9876883405951378,
+              0.0,
+              0.15643446504023087
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.15643446504023087,
+              0.0,
+              0.9876883405951378
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.9005050992066278,
+              -0.2447456451749585
+            ],
+            [
+              0.07406035919274208,
+              -0.5645250879466766
+            ],
+            [
+              -0.06764246526124848,
+              -1.545263187933515
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.6170506556926841,
+              1.0184894987180642
+            ],
+            [
+              -0.4962318343567193,
+              0.021507244462236147
+            ],
+            [
+              0.28564480089682454,
+              -0.6567781287329187
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.8375496450238946,
+              -0.32881360130580867
+            ],
+            [
+              -0.022906909032153644,
+              -0.3381266703005042
+            ],
+            [
+              -0.3862414261667098,
+              -1.2530057443617426
+            ]
+          ],
+          "femur": 245.00000000000003,
+          "tibia": 244.99999999999994,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        },
+        "R": {
+          "gait_state": {
+            "name": "FLIGHT-trailing",
+            "stride": -225.0,
+            "height": 160.0,
+            "pitch": -14.0
+          },
+          "hip": [
+            -56.9388153627443,
+            208.55,
+            673.0150710970427
+          ],
+          "knee": [
+            -15.314328609083873,
+            204.52116061470497,
+            431.6104925246762
+          ],
+          "ankle": [
+            -258.5922842679805,
+            204.0372894947875,
+            402.6173526607838
+          ],
+          "painted_heel_anchor": [
+            -228.89771676382753,
+            126.11146752205293,
+            175.63288808068248
+          ],
+          "structural_heel_support": [
+            -225.0,
+            110.0,
+            160.0
+          ],
+          "structural_foreball": [
+            -169.98423232015102,
+            127.5,
+            173.71697148050114
+          ],
+          "foot_source_heel": [
+            522.0,
+            1201.5
+          ],
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "foot_SO3": [
+            [
+              0.9702957262759965,
+              0.0,
+              -0.2419218955996677
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              0.2419218955996677,
+              0.0,
+              0.9702957262759965
+            ]
+          ],
+          "foot_world_UV": [
+            [
+              0.7762645916597569,
+              0.34920562315910336
+            ],
+            [
+              0.4009623095429029,
+              -0.4434643143544507
+            ],
+            [
+              0.6067817213869329,
+              -1.4005872552500351
+            ]
+          ],
+          "thigh_world_UV": [
+            [
+              0.771211739399622,
+              0.48861123500371884
+            ],
+            [
+              -0.0842818556289674,
+              -0.050374078167954944
+            ],
+            [
+              0.49824235695287744,
+              -1.2441933077904546
+            ]
+          ],
+          "calf_world_UV": [
+            [
+              0.5321330052361473,
+              -1.1168288711257075
+            ],
+            [
+              0.4647866905006599,
+              0.1767173038349423
+            ],
+            [
+              -0.41098131271187155,
+              -0.31615659275236563
+            ]
+          ],
+          "femur": 245.00000000000003,
+          "tibia": 244.99999999999997,
+          "support": false,
+          "paired_or_whole_actor_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -13.312499999999964,
+        225.0,
+        697.2150113422247
+      ],
+      "pelvis_SO3": [
+        [
+          0.9986295347545738,
+          0.0,
+          0.052335956242943835
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.052335956242943835,
+          0.0,
+          0.9986295347545738
+        ]
+      ],
+      "torso_waist": [
+        -8.863943719349738,
+        225.0,
+        782.0985217963635
+      ],
+      "torso_SO3": [
+        [
+          0.9902680687415703,
+          0.0,
+          0.13917310096006544
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.13917310096006544,
+          0.0,
+          0.9902680687415703
+        ]
+      ],
+      "head_neck": [
+        -5.718558885705033,
+        211.35,
+        1056.6830061618284
+      ],
+      "head_SO3": [
+        [
+          0.9945218953682734,
+          0.0,
+          0.10452846326765348
+        ],
+        [
+          0.0,
+          0.9999999999999999,
+          0.0
+        ],
+        [
+          -0.10452846326765347,
+          0.0,
+          0.9945218953682733
+        ]
+      ],
+      "arms": {
+        "L": {
+          "shoulder": [
+            75.96514055690274,
+            249.85,
+            926.5483710896474
+          ],
+          "elbow": [
+            88.31695121130878,
+            254.4,
+            889.3082680613568
+          ],
+          "upper_SO3": [
+            [
+              0.9998476951563912,
+              0.0,
+              -0.01745240643728351
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              0.017452406437283508,
+              0.0,
+              0.9998476951563913
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.993170649538486,
+              0.0,
+              0.11667073709933318
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.11667073709933316,
+              0.0,
+              0.993170649538486
+            ]
+          ],
+          "source_upper_anchor": [
+            795,
+            471
+          ],
+          "source_fore_anchor": [
+            808,
+            513
+          ],
+          "upper_world_UV": [
+            [
+              0.8937545833877029,
+              0.01745240643728351
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.36565385909829207,
+              -0.9998476951563913
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.934688342569404,
+              -0.11667073709933318
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.24260606394907022,
+              -0.993170649538486
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": false
+        },
+        "R": {
+          "shoulder": [
+            -70.36327619696407,
+            189.3,
+            1004.1182553895912
+          ],
+          "elbow": [
+            -173.90708079494192,
+            164.10000000000002,
+            887.077405557681
+          ],
+          "upper_SO3": [
+            [
+              0.9563047559630354,
+              0.0,
+              0.2923717047227367
+            ],
+            [
+              0.0,
+              0.9999999999999999,
+              0.0
+            ],
+            [
+              -0.2923717047227367,
+              0.0,
+              0.9563047559630354
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9438009515832293,
+              0.0,
+              0.330514392713223
+            ],
+            [
+              0.0,
+              0.9999999999999998,
+              0.0
+            ],
+            [
+              -0.330514392713223,
+              0.0,
+              0.9438009515832293
+            ]
+          ],
+          "source_upper_anchor": [
+            622,
+            354
+          ],
+          "source_fore_anchor": [
+            550,
+            471
+          ],
+          "upper_world_UV": [
+            [
+              0.9630043770196898,
+              -0.2923717047227367
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.07157213033659932,
+              -0.9563047559630354
+            ]
+          ],
+          "fore_world_UV": [
+            [
+              0.9651008938745345,
+              -0.330514392713223
+            ],
+            [
+              0.3499999999999999,
+              0.0
+            ],
+            [
+              0.03286737961222952,
+              -0.9438009515832293
+            ]
+          ],
+          "full_staff_and_actual_grip_single_rigid_node": true
+        }
+      },
+      "actual_node_rasters": [
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-thigh-proximal-actual-native-node.png",
+          "sha256": "97d17a9acdee96a90edb55bcdacfab55e21330a9fe478ceb13f67ee87a62af55",
+          "bytes": 56697
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-calf-actual-native-node.png",
+          "sha256": "7f5e4a12316637dc8a55d0ac1c4842f2590414c22e816e3e03d9a01deced443e",
+          "bytes": 45960
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-continuous-knee-actual-native-node.png",
+          "sha256": "bd9969553501711cdbf1e382f403f2d94caa907a7a1d0f2c02946bb542b36e77",
+          "bytes": 27854
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-continuous-ankle-actual-native-node.png",
+          "sha256": "552f1b5b783208f806c2d4724482dd6dff4c231c92412325dc7679a925737849",
+          "bytes": 23735
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "bb846e40c172246d86e785fca37835256cec411e42892da4b59e416b4e4cbd83",
+          "bytes": 57042
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-thigh-proximal-actual-native-node.png",
+          "sha256": "27d11eb9cbdbefa74eb55a389c6e704a1208c24dae338d87374f4e6cb82ba6f4",
+          "bytes": 66961
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-calf-actual-native-node.png",
+          "sha256": "794ec84f7159302d8b8c78f3b5407cb3698e3d7b128bbdcd039571a2bb8672d1",
+          "bytes": 49699
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-continuous-knee-actual-native-node.png",
+          "sha256": "2ac75f1aa8bacf7453e839cd1963cefbb4cd8cb36534cc8ef8af38b476cc026e",
+          "bytes": 26982
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-continuous-ankle-actual-native-node.png",
+          "sha256": "4f28f29aea2de9528d4810be945fec854aeec32e0f6eb49326454a26487c871f",
+          "bytes": 23140
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-complete-foot-toe-heel-actual-native-node.png",
+          "sha256": "1d5c829bb528a61ccbdaea57747ddf0b4fcc1886d3c09d469c342dc6f4f1a872",
+          "bytes": 53278
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-original-root-bound-cape-lag-actual-native-node.png",
+          "sha256": "0413b30c733fddfa3d3142433b3b9fb63d1103dd76bd047f943cd2d2db12c610",
+          "bytes": 229620
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-pelvis-white-pleats-gold-waist-actual-native-node.png",
+          "sha256": "4b73bc1c527acfd61fcf1d3f83ab82b4883b2ae640f4b5bd0171b8838d424c2a",
+          "bytes": 80705
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-original-black-gold-bodice-actual-native-node.png",
+          "sha256": "52f3fae2a85d8d7d4e60262873ec42d420d4a1067972b6c5b212e8d2cb804b59",
+          "bytes": 176177
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-original-complete-head-with-continuous-real-ribbon-lag-actual-native-node.png",
+          "sha256": "db273323224f4d20c6465c3a57ce0f920cadd747141bb8651cd3d31a3ed2de67",
+          "bytes": 175299
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-original-upper-arm-actual-native-node.png",
+          "sha256": "381746447268eb606305d5d35024c5d7687760f42663e6829cf47e6e1bb1a5c6",
+          "bytes": 26725
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-L-original-complete-forearm-cuff-hand-actual-native-node.png",
+          "sha256": "f08328326a5113289a8b88701c488aa80f3f6067b047e0103587e411f3b7b335",
+          "bytes": 60215
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-original-upper-arm-actual-native-node.png",
+          "sha256": "49cee1525ef022f2a7a0cb3db556b7ca145b078c7a31f848c675856e44e7e871",
+          "bytes": 53498
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/actual-own-E-RUN-six-native-v02/phase5-R-original-full-forearm-grip-pole-actual-native-node.png",
+          "sha256": "9e1b62b0b741118177734c2f4819fed9d2496ca21b0de93b64590adc3bac456e",
+          "bytes": 238390
+        }
+      ],
+      "actual_node_count": 18,
+      "strong_components": [
+        {
+          "area": 368761,
+          "bbox": [
+            430,
+            205,
+            1368,
+            1377
+          ]
+        },
+        {
+          "area": 3276,
+          "bbox": [
+            759,
+            542,
+            902,
+            629
+          ]
+        }
+      ],
+      "stored_alpha_bbox": [
+        406,
+        202,
+        1370,
+        1379
+      ],
+      "storage_boundary_alpha_contact": false,
+      "authored_clock": [
+        0.4,
+        0.48
+      ]
+    }
+  ],
+  "renderer": {
+    "path": "/workspace/scratch/mythic413-E-run-author-fresh-20261020-v01/author-own-E-RUN-six-native-v02.py",
+    "sha256": "a670349a8af7e9df62d334c836fcfeac72d1246d014b202802a08499be6b8800",
+    "bytes": 22922
+  },
+  "limits": [
+    "One fixed physical bone model and source capture with source-plane material witnesses, not a unique hidden3D recovery.",
+    "Original actual full ornate greaves, toes, heels, head, bodice, jewels, cape and complete RIGHT foregrip-pole preserved; proper own left/right feet with no oldRUN or paired-leg bitmap substitution.",
+    "Continuous original proximal thigh, knee, ankle and real cloth/ribbon modules; float4 premultiplied sample then unpremultiply then final clamp.",
+    "All6 are a dedicated new run cycle, leftsupport0/load1 then AIR2/rightsupport3/load4 then AIR5. Exact support displacement follows savedprofile and controller clock.",
+    "A seamless periodic six-pose controller samples these actual poses; independent visual loop and game timing checks remain required."
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

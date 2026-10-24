@@ -1,0 +1,176 @@
+{
+  "actors": [
+    {
+      "key": "monster:알비노 유니콘",
+      "source_frames": "res://assets/actors/eight_direction/boss_draft_first/albino_unicorn/reviewed-final-v01/SpriteFrames.tres",
+      "source_frames_sha256": "c9043bdd25d446a5bab976577f78c2f5ca1d87328d50892f1070cd2a1d77fb26",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_unicorn/published-v02/SpriteFrames.tres",
+      "frames_sha256": "2df436087925266f79402b145d97d0d43eb502ffd43c77f1c8b5b64fd106cccd",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/albino_unicorn/reviewed-final-v01/NativeMotionProfile.tres",
+      "visual_settings": {
+        "frames_path": "res://assets/actors/eight_direction/monster_boss_repair/albino_unicorn/published-v02/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.333333333333,
+        "sprite_offset": [
+          0,
+          -42.666666666656
+        ],
+        "movement_fps": 12.5,
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "color_tint": "ffffff",
+        "attack_hit_frame": 2,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        }
+      },
+      "prior_profile": {
+        "name": "알비노 유니콘",
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.61054,
+        "sprite_offset": [
+          0,
+          -19.53728
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 16.666666666666668,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "e4ddf8",
+        "shared_visual_source": "monster:알비노 디어",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "quadruped_proxy_no_unicorn_horn_native_HOLD_preserved"
+      },
+      "tracks": 33,
+      "poses": 198
+    },
+    {
+      "key": "monster:테베 아누비스",
+      "source_frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/reviewed-final-v01/SpriteFrames.tres",
+      "source_frames_sha256": "148d4a2530ae0364a570a5de144b2d86fed94960105e1f5cbe8b948e68922752",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/thebes_anubis/published-v02/SpriteFrames.tres",
+      "frames_sha256": "10eefd2795ec7a83065d8d7c12453b167853d4f81a43a159d988a01941228b8c",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/reviewed-final-v01/NativeMotionProfile.tres",
+      "visual_settings": {
+        "frames_path": "res://assets/actors/eight_direction/monster_boss_repair/thebes_anubis/published-v02/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.895833333333,
+        "sprite_offset": [
+          0,
+          -28.666666666656
+        ],
+        "movement_fps": 12.5,
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "color_tint": "ffffff",
+        "attack_hit_frame": 2,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        }
+      },
+      "prior_profile": {
+        "name": "테베 아누비스",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "pixel_scale": 1.4,
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "movement_fps": 15.009380863039398,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "hit_recoil": 0,
+        "body_kind": "armored",
+        "color_tint": "c6b6e3",
+        "shared_visual_source": "monster:커츠",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      },
+      "tracks": 33,
+      "poses": 198
+    },
+    {
+      "key": "monster:커츠",
+      "source_frames": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r015/SpriteFrames.tres",
+      "source_frames_sha256": "dae73e97409c3e086f0375cc8bf02dd0b8496d428d3a958d8b0b20545586e1b6",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/published-v02/SpriteFrames.tres",
+      "frames_sha256": "9f7512b506bf214527b09364b35c8b496d1b7039d42b2cd7874c48dcaaf33db9",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r015/NativeMotionProfile.tres",
+      "visual_settings": {
+        "frames_path": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/published-v02/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.166666666667,
+        "sprite_offset": [
+          0,
+          -37.333333333344
+        ],
+        "movement_fps": 12.5,
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "color_tint": "ffffff",
+        "attack_hit_frame": 2,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        }
+      },
+      "prior_profile": {
+        "name": "커츠",
+        "layout": "directional8",
+        "motion_style": "slash",
+        "floating": false,
+        "body_kind": "armored",
+        "pixel_scale": 1.4,
+        "color_tint": "b76d5a",
+        "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "movement_fps": 15.009380863039398,
+        "prior_visual_profile": {
+          "name": "커츠",
+          "layout": "still",
+          "motion_style": "slash",
+          "floating": false
+        }
+      },
+      "tracks": 33,
+      "poses": 116
+    }
+  ],
+  "normal_profiles_unchanged": true,
+  "combat_and_death_clocks_preserved": true,
+  "existing_PNGs_modified": 0,
+  "new_art_generated": 0,
+  "actual_Main": "PENDING"
+}

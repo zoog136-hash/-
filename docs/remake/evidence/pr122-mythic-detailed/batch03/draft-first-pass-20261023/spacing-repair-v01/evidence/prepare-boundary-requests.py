@@ -1,0 +1,13 @@
+import json,hashlib
+from pathlib import Path
+r=Path('/workspace/twilight');s=Path('/workspace/scratch/pr122-spacing-repair-20261023');b=r/'docs/remake/evidence/pr122-mythic-detailed/batch03';rows=json.loads((b/'draft-first-pass-20261023/source-region-repair-v01/remaining-errors.json').read_text())['source_holds'];jobs=[]
+order=[412,411,399,367,346,242,224,212,189,174,141,139,137,135,133,130]
+for row in sorted(rows,key=lambda x:(order.index(int(x['key'].split(':')[1])),x['direction'],x['role'])):
+ if row.get('geometry_error')!='A visible pose touches the image boundary':continue
+ src=r/row['source'];meta=json.loads(src.with_suffix('.json').read_text());old=meta['generation_request'];role=meta['role'];direction=meta['direction'];ident=meta['key'].replace(':','-')+'-'+direction+'-'+role
+ # A new source clip, using saved identity references; existing PNGs unchanged.
+ prompt=old['prompt']+'\nFRAMING REPAIR FOR THIS NEW CLIP ONLY: Keep the identity, equipment and intended six-phase motion from the saved request. Each complete character including weapon tips/cape/wings/feet must fit within a 310 by 310 pixel area centered in its own 512 by 512 cell, with at least 96 transparent pixels to every cell border. Exactly 1536 by 1024 overall, 3 columns by 2 rows. Keep fixed camera, scale and artboard root across all phases; preserve authored vertical running flight and alternating left/right foot contacts. No clipped anatomy, no detached limbs, no floating equipment, no disconnected decorative particles or separate oval shadows; hands visibly grip equipment and limbs join the torso naturally. Do not connect parts by artificial bridges. Six complete distinct poses, no text, true transparent RGBA. Existing draft is an identity guide, not a crop to copy. Do not zoom to fill each cell.'
+ request=dict(prompt=prompt,referenced_image_paths=old['referenced_image_paths'],transparent_background=True);assert len(json.dumps(request,ensure_ascii=False).encode())<4096
+ job=dict(key=meta['key'],direction=direction,role=role,original_source=row['source'],original_source_sha256=row['sha256'],generation_request=request,generation_request_sha256=hashlib.sha256(json.dumps(request,ensure_ascii=False,sort_keys=True).encode()).hexdigest(),reference_sha256={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in request['referenced_image_paths']},final_approval=0)
+ path=s/('boundary-request-'+ident+'.json');assert not path.exists();path.write_text(json.dumps(job,ensure_ascii=False,indent=2)+'\n');jobs.append(str(path))
+(s/'boundary-jobs.json').write_text(json.dumps(jobs,indent=2)+'\n');print('prepared_boundary_clip_jobs',len(jobs))

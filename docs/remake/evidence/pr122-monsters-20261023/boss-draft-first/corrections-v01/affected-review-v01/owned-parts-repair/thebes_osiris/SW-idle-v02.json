@@ -1,0 +1,248 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/SW-idle-v02.png",
+  "source_sha256": "caf9841e2eecb096c4e894b904d138241fe37e960dfa69fa8048ed01d89c29c0",
+  "texture": "assets/actors/eight_direction/boss_draft_first/thebes_osiris/owned_parts_v01/SW-idle-v02.png",
+  "texture_sha256": "144362e1d6079e7c4dbdf03a65d40be214fb87885ba23494eeb047bd9f9a43b5",
+  "geometry": {
+    "image_size": [
+      1800,
+      1200
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SW",
+        "region": [
+          3,
+          3,
+          519,
+          593
+        ],
+        "margin": [
+          489,
+          397,
+          921,
+          847
+        ],
+        "source_anchor": [
+          234,
+          506
+        ],
+        "rgba_sha256": "3896247da41205fd5489984b66180e2350c132a58bc569242b8a2b216b652c87",
+        "original_source_region": [
+          25,
+          0,
+          519,
+          593
+        ],
+        "original_source_anchor": [
+          256,
+          503
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "SW",
+        "region": [
+          603,
+          3,
+          523,
+          590
+        ],
+        "margin": [
+          457,
+          399,
+          917,
+          850
+        ],
+        "source_anchor": [
+          866,
+          504
+        ],
+        "rgba_sha256": "2e7d3876eefc9366bf252924249d07e697a7db4ff7747d4728ecf3755975ba9a",
+        "original_source_region": [
+          505,
+          0,
+          523,
+          590
+        ],
+        "original_source_anchor": [
+          768,
+          501
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "SW",
+        "region": [
+          1203,
+          3,
+          492,
+          588
+        ],
+        "margin": [
+          452,
+          397,
+          948,
+          852
+        ],
+        "source_anchor": [
+          1471,
+          506
+        ],
+        "rgba_sha256": "fa82775305514b5c21d91f7f91ee2b87e3ca2361e35e3c2914960e849faed567",
+        "original_source_region": [
+          1012,
+          0,
+          492,
+          588
+        ],
+        "original_source_anchor": [
+          1280,
+          503
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "SW",
+        "region": [
+          3,
+          603,
+          503,
+          487
+        ],
+        "margin": [
+          489,
+          420,
+          937,
+          953
+        ],
+        "source_anchor": [
+          234,
+          1083
+        ],
+        "rgba_sha256": "f3a79aa005fc32d99f39be1cdb417a996ffdb6f973bc5abe681d8c9a79af738b",
+        "original_source_region": [
+          25,
+          513,
+          503,
+          487
+        ],
+        "original_source_anchor": [
+          256,
+          993
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "SW",
+        "region": [
+          603,
+          603,
+          523,
+          485
+        ],
+        "margin": [
+          467,
+          422,
+          917,
+          955
+        ],
+        "source_anchor": [
+          856,
+          1081
+        ],
+        "rgba_sha256": "17e4729c270e53eeb0cf7c69e132a704522832de8a66fd93f1ea25e4615ce001",
+        "original_source_region": [
+          515,
+          511,
+          523,
+          485
+        ],
+        "original_source_anchor": [
+          768,
+          989
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "SW",
+        "region": [
+          1203,
+          603,
+          475,
+          495
+        ],
+        "margin": [
+          485,
+          409,
+          965,
+          945
+        ],
+        "source_anchor": [
+          1438,
+          1094
+        ],
+        "rgba_sha256": "a7556535924acbc8c8d21c050528dbaec9ab7e8a8555d4e73f48eb269102beb8",
+        "original_source_region": [
+          1045,
+          513,
+          475,
+          495
+        ],
+        "original_source_anchor": [
+          1280,
+          1004
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 540.0,
+    "canvas_size": [
+      1440,
+      1440
+    ],
+    "foot": [
+      720,
+      900
+    ]
+  },
+  "layout_used": "phase_grid3",
+  "proof": {
+    "original_visible_texels": 573665,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "7791426afded57b3007c20f5515f8c0cbb59c49fda10fe1938336921fa96c21a",
+    "foreground_owner_sha256": "60db31321d5f115dd9054e5323c00d4c05b10686a6448f4ed8f08832ad314bff",
+    "detached_pixels": 1,
+    "detached_fragments": [
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1209,
+          755,
+          1210,
+          756
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 242.33241632105268,
+        "owner_margin_min": 240.09634834355288
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 109582,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "slug": "thebes_osiris",
+  "clip": "SW-idle-v02",
+  "actor": "monster:테베 오시리스",
+  "direction": "SW",
+  "role": "idle",
+  "original_cause": "phase_grid_assignment"
+}

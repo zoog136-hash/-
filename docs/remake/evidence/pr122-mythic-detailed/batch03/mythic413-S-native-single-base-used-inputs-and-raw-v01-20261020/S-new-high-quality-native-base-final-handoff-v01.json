@@ -1,0 +1,92 @@
+{
+  "status": "NATIVE_S_SOURCE_PRODUCED_ONCE_FROZEN_NOT_REGISTERED",
+  "source": {
+    "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+    "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+    "bytes": 996497,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "native_untouched": true
+  },
+  "actual_service_calls": 1,
+  "requested_square_size": 1024,
+  "actual_native_size": [
+    1254,
+    1254
+  ],
+  "mask_used": false,
+  "source_pixels_modified": false,
+  "source_pixels_resampled": false,
+  "C_or_unit_or_root_registered": false,
+  "actor_approvals_added": 0,
+  "source_QA_gate": "Independent source-owner direction/body/hand/weapon acceptance remains required before once registration and motion manufacture.",
+  "direction_visual_observation": "Straight frontal S: both eyes, shoulders, chest, pelvis and legs face viewer/lower-center. Right staff hand is image left, free left hand image right. No mirror or whole-PNG rotation used.",
+  "visual_retained": [
+    "blond high bun and blue bow/ribbons",
+    "navy/gold bodice and white pleated miniskirt",
+    "split navy/gold coat tails",
+    "full black/gold boots with toes/counters and both gold stiletto heels",
+    "complete double-ended gold staff with turquoise gems",
+    "complete full-body silhouette; no FX, shadow, floor, text or duplicate person"
+  ],
+  "source_alpha_stats": {
+    "1": {
+      "bbox": [
+        0,
+        9,
+        1236,
+        1254
+      ],
+      "foreground_pixels": 382146,
+      "border_pixels": 20,
+      "component_count": 1014,
+      "components_at_least_100px": 3,
+      "largest_component_pixels": 379429
+    },
+    "8": {
+      "bbox": [
+        263,
+        11,
+        991,
+        1199
+      ],
+      "foreground_pixels": 345366,
+      "border_pixels": 0,
+      "component_count": 122,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 345181
+    },
+    "100": {
+      "bbox": [
+        264,
+        13,
+        989,
+        1197
+      ],
+      "foreground_pixels": 336545,
+      "border_pixels": 0,
+      "component_count": 12,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 336523
+    }
+  },
+  "explicit_limitations": [
+    "Requested 6-percent all-side transparent margin was not fully obeyed: complete top staff point begins at alpha100 y13 of1254; original kept unchanged. Independent source owner must assess margin and may derive padded basis without resampling raw.",
+    "At alpha100 there is one large336523-pixel component plus11 tiny components; no meaningful border pixels. Faint residual pixels may remain at lower alpha; do not claim clean all-positive-alpha pass.",
+    "Face/hand/equipment acceptance and actual-game direction/body registration are not asserted by this generation task."
+  ],
+  "diagnostic_preview": {
+    "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/private-produced-S-base-quality-v01.jpg",
+    "sha256": "89e6c949b54a389e4ccd2cecebe050a0e8f7b7d0070a69c5a3d093fdffc0b06e",
+    "bytes": 74431,
+    "size": [
+      760,
+      760
+    ]
+  },
+  "private_cumulative_image_bytes": 3706238,
+  "root_and_source_owner_receive_metadata_only": true
+}

@@ -1,0 +1,51 @@
+{
+  "status": "REVIEWED_LAYOUT_PROPOSAL",
+  "key": "transform:267",
+  "role": "run",
+  "direction": "NW",
+  "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+  "canvas_size": 2048,
+  "authored_pose_canvas_sizes": [
+    848,
+    2096,
+    2392,
+    2376,
+    2280,
+    872
+  ],
+  "source_anchors": [
+    [
+      565,
+      811
+    ],
+    [
+      1799,
+      1047
+    ],
+    [
+      540,
+      2605
+    ],
+    [
+      1817,
+      2449
+    ],
+    [
+      539,
+      3635
+    ],
+    [
+      1880,
+      3410
+    ]
+  ],
+  "review_basis": "Candidate individuallymeasured NWrigidhelmet/skull/pauldron/waist size with explicitlyauthoredposteriorwaist/pelvis/ground smallRUNarc contact245/load225/flight310; actualnear/far/foreaftfootdepth retained. SOURCEwhole6PASS butindependentphysical/floor/AIRreviewpending. No hiddenbone/PNGfloor/bboxnormalization claim. Independent exactwhole6 source/camera/gear/gait and C/body/pelvis/sole/AIR candidate PASS now pinned. Actual compiledPlayer/actor approval remains HOLD.",
+  "anchor_measurement_evidence": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/authored-ground-root-config.json",
+  "anchor_measurement_evidence_sha256": "6ece860407b2afefcb29c65263cdd66e5bf02182f0966c42c55fbee9c2d37274",
+  "runtime_validation": "INDEPENDENT_SOURCE_AND_PHYSICAL_CANDIDATE_PASS_ACTUAL_COMPILED_PLAYER_HOLD",
+  "actor_approval": false,
+  "independent_source_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+  "independent_source_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+  "independent_physical_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+  "independent_physical_review_sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010"
+}

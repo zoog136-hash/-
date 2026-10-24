@@ -1,0 +1,66 @@
+{
+  "schema": "pr122-boss-correction-GitHub-binary-receipt-v1",
+  "source_commit": "a1e9f09959838a699132dee06fefe97f12d621c0",
+  "same_PR": 122,
+  "branch": "feature/twilight-remaining106-20261016",
+  "verified_tree_sha": "fcbd6a2483f0af626a1989a543f27fbafa63e85d",
+  "sample_count": 5,
+  "actual_bytes_downloaded": 6747620,
+  "binary_SHA256_mismatches": 0,
+  "files": [
+    {
+      "key": "monster:얼음 여왕",
+      "animation": "run_6",
+      "source_phase": 1,
+      "path": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase1-RIGHT-midstance-v01.png",
+      "blob_sha": "e95c1f94a3f4be201e891b0bd7f85a5270e0e403",
+      "bytes": 875905,
+      "sha256": "07014a7483f20822018f12c0cf4a40891903fd4732b4095c0a5a6503f84f1843",
+      "actual_GitHub_binary_download_match": true
+    },
+    {
+      "key": "monster:얼음 여왕",
+      "animation": "attack_3",
+      "source_phase": 1,
+      "path": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-contact1-left-hand-v01.png",
+      "blob_sha": "c7380cedf82ff26f78de358a70255d2ae4f2316c",
+      "bytes": 1816704,
+      "sha256": "de44e387e0c3fefa103c006708ef015a35db3d2f8541b877cef2ef2cae747619",
+      "actual_GitHub_binary_download_match": true
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "animation": "run_0",
+      "source_phase": 3,
+      "path": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/zombie-lord-E-far-left-support3-guide-v01.png",
+      "blob_sha": "824d06dba674a894577a75efc728e52722241643",
+      "bytes": 1449343,
+      "sha256": "19d1ea1c69d6b46dd563f7f084f0ff1ca74456befe8ddb280c706db027e2d5aa",
+      "actual_GitHub_binary_download_match": true
+    },
+    {
+      "key": "monster:알비노 데몬",
+      "animation": "run_0",
+      "source_phase": 0,
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+      "blob_sha": "525135d02f7bdfdc72e7ae1ce8763f55e966cb37",
+      "bytes": 1130928,
+      "sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+      "actual_GitHub_binary_download_match": true
+    },
+    {
+      "key": "monster:커츠",
+      "animation": "idle_0",
+      "source_phase": 0,
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-E-idle-hit4-v02.png",
+      "blob_sha": "4b0f7700d6042f04ef7a5bdcb637cf30bd9b9cd7",
+      "bytes": 1474740,
+      "sha256": "8ae4dad2afcbf156a0586b7f8dd0fcacfbf4b21a39356a33f5c9776ead69f061",
+      "actual_GitHub_binary_download_match": true
+    }
+  ],
+  "new_PR_created": false,
+  "force_push": false,
+  "full_CI_repeated": false,
+  "image_or_Base64_emitted_to_chat": false
+}

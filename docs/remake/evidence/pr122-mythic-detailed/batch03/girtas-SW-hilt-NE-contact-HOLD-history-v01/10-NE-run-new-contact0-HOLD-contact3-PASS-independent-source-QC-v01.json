@@ -1,0 +1,73 @@
+{
+  "schema": "PR122_NE_RUN_NEW_CONTACT_PAIR_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-19T16:17:55.163029+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE3_NEARRIGHT_PASS_SOURCE0_SAME_NEARRIGHT_HOLD",
+  "scope": "Actual new NE0/3 singleton hip/thigh/knee/shin/boot ownership plus camera/model/gear. No remainingfour/artcycle/physical/runtime/actorapproval.",
+  "actor_approval_increment": 0,
+  "source_pins": [
+    {
+      "phase": 0,
+      "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-key-v01/girtas-NE-run-LEFT-landing0-key-v01.png",
+      "raw_sha256": "d07effebddfaad6df85dffc7c60389e8ef7a7ce548cd410c2b3e085abb774a73",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-key-v01/request.json",
+      "request_sha256": "0543c17cc4bab11bc0c5ee41ce3fe70b48422afacf4decec3fef9b88a6562f4b",
+      "receipt_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-key-v01/production-receipt.json",
+      "receipt_sha256": "6a2bd2bc9d4ea2180c61c79be5ad58d06eb6c11f29d12b5371f6bff685d88992",
+      "geometry_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-key-v01/geometry-base2048.json",
+      "geometry_sha256": "64ea1e8ed9877e5523e13f6e7f32b0e90a2fb551fe5cf435c271f621f8546b88",
+      "reference_pins": {
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-RUN-LEFT-landing0-fixedbone-3d-guide.png": "878d67cd3daef216c2e2c04772113c45de2a85a17db85d5637e3ce1d1e445ffd",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-head-hair-spines-central-cuirass-NO-POSED-ARMS-NO-LEGS.png": "18b6be587faa98d3b1564284ad5a7bf537e1595237464ae18e23a6ca2fd790a1",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-near-pauldron-material-only.png": "a0fe40c6fbfb15d7c97f8a0c3c3fa21fe18d80245f03dcfc3bcad24b37da33fa",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-long-robe-gold-trim-material-only.png": "3634131b43459fec746ca6b72ebe4dd447108e88831fb185cff6c230a253059f",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-RIGHT-sinuous-weapon-material-only.png": "fba50d589080cfec6e5e794a09dced995487373eacd83e7fa1aa1ac6c3a613a0"
+      }
+    },
+    {
+      "phase": 3,
+      "raw_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+      "raw_sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/request.json",
+      "request_sha256": "436e92c342234647fcdc46ad28808d8125b453f78c1fc784200da544554b727d",
+      "receipt_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/production-receipt.json",
+      "receipt_sha256": "967eaef2f8defeaed28e05b1a7f90324bcf888b4953ab1965b848902c64eae33",
+      "geometry_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/geometry-base2048.json",
+      "geometry_sha256": "d91231dcc909143537a9ea075e396e713b018e7db4789e96c784d26d2b49b349",
+      "reference_pins": {
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-RUN-RIGHT-landing3-fixedbone-3d-guide.png": "68c9800a2aab2cc61a2883cf1715be0328a0698683d65a13de179db417192a50",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-head-hair-spines-central-cuirass-NO-POSED-ARMS-NO-LEGS.png": "18b6be587faa98d3b1564284ad5a7bf537e1595237464ae18e23a6ca2fd790a1",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-near-pauldron-material-only.png": "a0fe40c6fbfb15d7c97f8a0c3c3fa21fe18d80245f03dcfc3bcad24b37da33fa",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-long-robe-gold-trim-material-only.png": "3634131b43459fec746ca6b72ebe4dd447108e88831fb185cff6c230a253059f",
+        "/workspace/scratch/girtas-NE-run-production-v01/NE-original-RIGHT-sinuous-weapon-material-only.png": "fba50d589080cfec6e5e794a09dced995487373eacd83e7fa1aa1ac6c3a613a0"
+      }
+    }
+  ],
+  "findings": {
+    "phase3": "SOURCE_PASS_SCOPED_NEARRIGHT_LANDING. Visible leading upperthigh exits near/image-right outerpelvis just under nearRIGHT flank armor, continues into exposed knee/shin and complete heel-leading/toe-up frontboot. FarLEFT folds behind robe to separate complete raised recoveryboot.",
+    "phase0": "SOURCE_HOLD_SAME_NEARRIGHT_LEAD. Enlarged actualhip/slit view shows the same near/image-right outerpelvis\u2192outerthigh\u2192knee/shin\u2192leadingboot chain as3. Rearboot again emerges from far/image-left hem. There is no visible farLEFT thigh path crossing from farhip into the leading chain. Opposite arm swing/torsolean and frontshin screenplacement do not reverse actualleg ownership. This is a genuine source-anatomy role defect, not ground/C/root judgment.",
+    "identity_camera_endpoints": "Both retain NE rear-right camera, long pale hair, hard pointedgoldrays/crown/armor, long darkgoldtrimrobe, actualnearRIGHT permanent sinuousblade, two arms/two legs and complete recoveryboots.3 has no other materialsource defect seen."
+  },
+  "single_material_fix": "Regenerate/repair ONLY0 to true farLEFT forwardlanding: make its hip-origin\u2192thigh\u2192knee\u2192shin\u2192boot path unambiguously farLEFT and show nearRIGHT foldedrear recoveryboot separately, while preserving successful3, faithfulNEidentity/weapon/longrobe and completeendpoints. An open/cutaway constantboneguide may expose hiddenfarhip/thigh for conditioning; finalart must use naturalrobeocclusion. Do not relabel nearRIGHT0 or alter roots/AIR/C to fake opposite support.",
+  "remaining_HOLD": [
+    "Remaining4 costly NErun sources paused until newactual0 passes independently;3notredo.",
+    "Whole6 sourcequality, truephysicalC/root/floor/AIR,actualcompiled/Godot and actorquality pending;actor2670/catalogOFF."
+  ],
+  "private_evidence": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-NE-new0-3-native-hip-chain-enlarged-v01.jpg",
+      "sha256": "c7beefde48123d76580269b120288b2fe41dcb4326f5a4c0ca15944753e37b7c"
+    }
+  ],
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "71fc93f534273c1563832403024aca19a9eb9d4cc9af7ccdb77348b87c9520bb",
+  "repository_mutations": false
+}

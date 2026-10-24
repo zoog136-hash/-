@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-LEFTcontact0-3D-v02",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "game_phases": [
+    0
+  ],
+  "newly_authored_poses": 1,
+  "operation": "AUTHOR_MISSING_NEAR_LEFT_CONTACT_FROM_TRUE_3D_DEPTH_AUTHORITY",
+  "corrective_reason": "Two independent reviews HOLD old 2D pair/single: same visible chain, robe hides hip swap. Materially new actual3D capsule/boot depth guide is primary; ALLoldlegs removed from identity refs. No identical2D retry.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/3D-W-LEFT-near-forward-RIGHT-far-back.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": [
+    "7b4f416ac7df246719f8e3b7a7fec6c7f3dd2d209dc00c99481711fd071f81e6",
+    "480e064084b9245c4ecc18d30ca4dc6b35a1e7c0e2c47257f108a0cfe3e8f23f",
+    "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  ],
+  "reference_roles": [
+    "ABSOLUTE3Dcamera/hip-knee-ankle/nearLEFTfront/farRIGHTback authority; materialcolorsnotfinal",
+    "Faithful W head/hair/hardgoldrays/RIGHTsinuousblade/EMPTYLEFT identity ONLY; oldlegs removed",
+    "Original LONGrobe goldtrim material only, never legpose"
+  ],
+  "prompt": "DRESS THE EXACT 3D MANNEQUIN POSE OF IMAGE1 as the faithful GIRTAS character of IMAGE2/3. Image1 is ABSOLUTE AUTHORITY for camera, body, anatomical LEFT/RIGHT hip->thigh->knee->ankle, projected near/far depth, support and which leg occludes which. Copy these REAL 3D leg relationships exactly. Image2 provides identity/equipment/colors ONLY, its old lower legs were deliberately removed so there is NO old gait to copy. Image3 provides the original LONG ROBE material/trim ONLY. Do NOT copy any diagram/mannequin material, colors or background into final art.\n\nONE complete new WEST WALK gamephase0 LEFT contact key on transparent RGBA1254x1254, full figure including all radial spines, long hair/robe/boots and full long wavy blade contained with at least70px transparent margin. No second figure, floor, shadows, text, diagrams, smears or particle/glow connections.\n\nCRITICAL 3D POSE: BLUE limb of image1 is anatomical LEFT NEAR leg and NEAR EMPTY LEFT arm, nearest the camera. That BLUE LEFT thigh visibly comes out of the NEAR hip, crosses IN FRONT OF THE FAR LEG and extends diagonally FORWARD to IMAGE LEFT through its SAME near knee to the leading LEFT boot. This leading NEAR LEFT boot is on the LOWER screen floor-depth lane, heel supporting body/toes slightly up. ORANGE limb of image1 is anatomical RIGHT FAR leg; it goes from FAR hip BEHIND the blue/near leg diagonally BACK to IMAGE RIGHT; rear RIGHT toe supports at the HIGHER screen floor-depth lane and heel is up. Copy the exact near-blue FRONT thigh/knee and far-orange BACK thigh/knee occlusion of image1. Do not simply keep a generic far-leg-forward armor stance. Do not swap only shoe labels/heel outlines; the whole actual hip->thigh->knee chain and overlap must follow the 3D model. Two legs only. Upright genuine walk, NO airborne/run/high-knee.\n\nMake this ownership readable in finished character: maintain the original long dark gold-trimmed split robe, with its near panel opening/wrapping naturally around the actual NEAR LEFT FRONT thigh so that the near-side hip-to-front-thigh/knee relation and forward knee edge are visible. FAR RIGHT trailing thigh is behind it with normal occlusion. Long robe panels still hang to ankle height around/back of the legs; never replace robe with segmented armored pants, never raise/shorten the entire robe. Show genuine walking folds/slit opening, not a flat robe hiding both upper-leg roots.\n\nIMAGE2 identity: pale visible LEFT profile face and one side eye, long silver-white hair, original crown, narrow HARD SOLID GOLD RADIAL BACK NEEDLES pointing behind toward imageRIGHT (not feather/flame wings), original black/gold fine armor and long robe trim fromimage3. Exact ONE head, TWO arms, TWO legs. Anatomical RIGHT FAR arm permanently holds the original LONG SINUOUS GOLD/ORANGE SOLID BLADE, extending toward imageLEFT; full intact wave-shaped blade and continuous right shoulder/elbow/forearm/wrist/grip. It may be naturally partly torso-occluded, never detached or swapped. The BLUE NEAR LEFT arm fromimage1 is the distinct EMPTY near arm and hand; do not let it carry a second blade or grow a third arm. Keep source equipment/color/material quality. No recolored mannequin limbs in finished art.\n\nThe final output is ONLY the finished faithful high-quality character in the exact 3D image1 near-LEFT-forward/far-RIGHT-back support pose on transparency.",
+  "transparent_background": true,
+  "attempt_policy": "One materially new3D-authority single pose, then strict independent ownership review. If still unproven HOLD with no blind repetitions.",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}

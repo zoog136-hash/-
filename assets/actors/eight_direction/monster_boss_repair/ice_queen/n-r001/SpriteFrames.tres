@@ -1,0 +1,57 @@
+[gd_resource type="SpriteFrames" load_steps=11 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/N-preserved-source.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase1-RIGHT-midstance-v01.png" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase4-LEFT-midstance-v01.png" id="3"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase5-RIGHT-forward-flight-v01.png" id="4"]
+
+[sub_resource type="AtlasTexture" id="N_0"]
+atlas = ExtResource("1")
+region = Rect2(246, 37, 360, 368)
+margin = Rect2(144, 21, 256, 248)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="N_1"]
+atlas = ExtResource("2")
+region = Rect2(584, 300, 397, 418)
+margin = Rect2(168, 21, 299, 278)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="N_2"]
+atlas = ExtResource("1")
+region = Rect2(239, 759, 373, 341)
+margin = Rect2(135, 36, 243, 275)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="N_3"]
+atlas = ExtResource("1")
+region = Rect2(834, 38, 352, 366)
+margin = Rect2(156, 23, 264, 250)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="N_4"]
+atlas = ExtResource("3")
+region = Rect2(571, 292, 418, 438)
+margin = Rect2(186, 21, 310, 290)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="N_5"]
+atlas = ExtResource("4")
+region = Rect2(547, 283, 442, 461)
+margin = Rect2(167, 16, 334, 315)
+filter_clip = true
+
+[resource]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("N_0")},
+{"duration": 1.0, "texture": SubResource("N_1")},
+{"duration": 1.0, "texture": SubResource("N_2")},
+{"duration": 1.0, "texture": SubResource("N_3")},
+{"duration": 1.0, "texture": SubResource("N_4")},
+{"duration": 1.0, "texture": SubResource("N_5")}], "loop": true, "name": &"run_6", "speed": 12.5}]
+metadata/twilight_canvas_size = Vector2(256, 256)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false

@@ -1,0 +1,124 @@
+{
+  "schema": "PR122-independent-lossless-request-source-binding-v1",
+  "status": "PASS_EXACT_HIT_SIX_SOURCE_RGBA_LAYOUT_C_ROOT",
+  "request": {
+    "path": "/workspace/scratch/mythic413-N-hit-actual-packed-r001-20261020/request-NhitSixActualRig01.json",
+    "sha256": "e671b4e28f2ca8fa8c598e27e77008c72745006d39313c1a43b24ede525e9052",
+    "bytes": 2981
+  },
+  "raw": {
+    "path": "/workspace/scratch/mythic413-N-hit-actual-packed-r001-20261020/thunder_female-N-hit-six-actual-poses-r001.png",
+    "sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+    "bytes": 2084626
+  },
+  "packing": {
+    "path": "/workspace/scratch/mythic413-N-hit-actual-packed-r001-20261020/thunder_female-N-hit-six-actual-poses-r001.packing.json",
+    "sha256": "3cab8a9e501bc006a2db3e6d2fe927b66de122223988755a79053a2d857d1abc",
+    "bytes": 5575
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Nhit-v08-97c6e6-independent-actual-source-cycle-PASS-v01.json",
+    "sha256": "39fb15164ee3864342c6bc97a0ed8c9149261a5fb9476f0eccd1f814db41942c",
+    "bytes": 6644
+  },
+  "source_bindings": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/N-hit-phase0-stable_guard-actual-native-v08.png",
+        "sha256": "430f4b968d2af41cc34a670119dcf3a4bd6912c667420af9f5e7f0e5161d854e",
+        "bytes": 450534
+      },
+      "exact_native_RGBA_mismatch_pixels": 0,
+      "outside_native_tile_nonzero_RGBA_pixels": 0,
+      "fixed_C": 1920,
+      "atlas_integer_root": [
+        663,
+        918
+      ]
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/N-hit-phase1-impact_response-actual-native-v08.png",
+        "sha256": "d257014491ac6f3ca0bafc93727db2b7bbb7dd1f3f30f44bf30eaa5812cd6619",
+        "bytes": 437686
+      },
+      "exact_native_RGBA_mismatch_pixels": 0,
+      "outside_native_tile_nonzero_RGBA_pixels": 0,
+      "fixed_C": 1920,
+      "atlas_integer_root": [
+        2199,
+        918
+      ]
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/N-hit-phase2-maximum_stagger_recoil-actual-native-v08.png",
+        "sha256": "d00a1e9d93c23b8d07b70d09062f452d8966caf62a5f7a0492120b7c8801611e",
+        "bytes": 422905
+      },
+      "exact_native_RGBA_mismatch_pixels": 0,
+      "outside_native_tile_nonzero_RGBA_pixels": 0,
+      "fixed_C": 1920,
+      "atlas_integer_root": [
+        663,
+        2454
+      ]
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/N-hit-phase3-counterbalance-actual-native-v08.png",
+        "sha256": "4ce5f64e75562f3d31de27958b23f64f4d9405e84e7380846cfb2dbe33d8bce2",
+        "bytes": 437369
+      },
+      "exact_native_RGBA_mismatch_pixels": 0,
+      "outside_native_tile_nonzero_RGBA_pixels": 0,
+      "fixed_C": 1920,
+      "atlas_integer_root": [
+        2199,
+        2454
+      ]
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/N-hit-phase4-regaining_control-actual-native-v08.png",
+        "sha256": "3965ed2e8c69aa09ab7170f8669c84833cfabea88ef7061fc79ca93c61a287e7",
+        "bytes": 449906
+      },
+      "exact_native_RGBA_mismatch_pixels": 0,
+      "outside_native_tile_nonzero_RGBA_pixels": 0,
+      "fixed_C": 1920,
+      "atlas_integer_root": [
+        663,
+        3990
+      ]
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/N-hit-phase5-recovered_guard-actual-native-v08.png",
+        "sha256": "0c8cd4996d5dbc8267b7b24fda70a6c76606e9651290569273e00ff96a2ef39a",
+        "bytes": 452717
+      },
+      "exact_native_RGBA_mismatch_pixels": 0,
+      "outside_native_tile_nonzero_RGBA_pixels": 0,
+      "fixed_C": 1920,
+      "atlas_integer_root": [
+        2199,
+        3990
+      ]
+    }
+  ],
+  "uniform_root_rounding_delta": [
+    0.1875,
+    0.3079468121195532
+  ],
+  "relative_stance_drift_added_by_rounding": 0,
+  "source_resampled": false,
+  "actual_game_binding_status": "PENDING",
+  "actor_approvals_added": 0
+}

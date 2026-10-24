@@ -1,0 +1,326 @@
+{
+  "schema": "pr122-boss-repair-session-summary-v1",
+  "date": "2026-10-23",
+  "source_commit": "88516cfcb303b9c8f288abf72d1cc477aed62ebf",
+  "normal": {
+    "review": "frame_integrity_only",
+    "reviewed": 258,
+    "previously_approved_included": 221,
+    "missing_runtime_frames": 0,
+    "required_requests": 8514,
+    "WALK_to_RUN_reuse_requests": 2064,
+    "profiles_and_scope_rows_preserved": 258,
+    "art_quality_review_performed": false,
+    "partial_new_staging_missing": {
+      "monster:놀": 31,
+      "monster:알비노 몽크": 32
+    }
+  },
+  "boss": {
+    "authored_candidates": 4,
+    "selected_clips": 117,
+    "selected_new_unique_RGBA_poses": 401,
+    "full_required_source_sets": 2,
+    "partial_source_sets": 2,
+    "missing_required_selected_tracks": 15,
+    "raw_generated_PNGs_including_failed_trials": 98,
+    "actors": [
+      {
+        "key": "monster:얼음 여왕",
+        "name": "얼음 여왕",
+        "clips": 32,
+        "selected_new_unique_poses": 102,
+        "missing_required_tracks": [
+          "run_6"
+        ],
+        "improvements": "E/S 지지 교대, NE 후방사선, SW 방향, 방향별 크기 등록, W/SW HIT와 S 전방 공격 보완",
+        "quality_status": "HOLD",
+        "hold_reason": "N RUN 미선택. N 의상/slit 좌우 연속성, 일부 사선 카메라·실제 지지/접촉 검토 잔여.",
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r001/NativeMotionProfile.tres",
+        "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r001/SpriteFrames.tres",
+        "production_connected": false,
+        "new_approval": false
+      },
+      {
+        "key": "monster:죽음의 좀비 로드",
+        "name": "죽음의 좀비 로드",
+        "clips": 33,
+        "selected_new_unique_poses": 116,
+        "missing_required_tracks": [],
+        "improvements": "거대한 배·사슬·주먹·맨발 복원, E/SW 카메라 및 S 반대발 지지 보완",
+        "quality_status": "HOLD",
+        "hold_reason": "S 지지 교대는 보완. E 등 일부 RUN의 같은 다리 반복/가려진 지지 교대가 남음.",
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/NativeMotionProfile.tres",
+        "frames": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/SpriteFrames.tres",
+        "production_connected": false,
+        "new_approval": false
+      },
+      {
+        "key": "monster:알비노 데몬",
+        "name": "알비노 데몬",
+        "clips": 33,
+        "selected_new_unique_poses": 107,
+        "missing_required_tracks": [],
+        "improvements": "붉은 근육·쌍뿔·가시 갑옷·도끼 복원, S 반대발 지지와 NW 도끼손 보완",
+        "quality_status": "HOLD",
+        "hold_reason": "S 지지·NW 오른손 도끼 보완. E의 SE성 몸통/같은 지지발, NW 공격 접촉·일부 방향 검토 잔여.",
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/NativeMotionProfile.tres",
+        "frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/SpriteFrames.tres",
+        "production_connected": false,
+        "new_approval": false
+      },
+      {
+        "key": "monster:커츠",
+        "name": "커츠",
+        "clips": 19,
+        "selected_new_unique_poses": 76,
+        "missing_required_tracks": [
+          "attack_0",
+          "attack_1",
+          "attack_4",
+          "attack_5",
+          "attack_6",
+          "attack_7",
+          "hit_0",
+          "hit_1",
+          "hit_2",
+          "hit_3",
+          "idle_0",
+          "idle_1",
+          "idle_2",
+          "idle_3"
+        ],
+        "improvements": "큰 가시 갑옷·붉은 망토·대검 복원, S RUN 반대 부츠 지지 및 SW 대검 동작 보완",
+        "quality_status": "HOLD",
+        "hold_reason": "필수14클립 미제작. W/NW 카메라 및 일부 공격손·지지/접촉 검토 잔여.",
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r002/NativeMotionProfile.tres",
+        "frames": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r002/SpriteFrames.tres",
+        "production_connected": false,
+        "new_approval": false
+      }
+    ],
+    "new_approvals": 0,
+    "default_catalog_switches": 0
+  },
+  "validation": {
+    "frozen_artifact_files_verified": 1522,
+    "frozen_artifact_bytes_verified": 435584935,
+    "SHA256_mismatches": 0,
+    "arena_latest": [
+      {
+        "key": "monster:얼음 여왕",
+        "requested_role_direction_segments": 33,
+        "played_segments": 32,
+        "not_authored_segments": 1,
+        "tick_samples": 3065,
+        "viewport_captures": 179,
+        "actual_Monster_reference_speed": 66.0,
+        "native_pixel_scale": 0.614285714286,
+        "max_virtual_canvas_anchor_error": 1.9073486328125e-06,
+        "physical_contact_approval": false
+      },
+      {
+        "key": "monster:죽음의 좀비 로드",
+        "requested_role_direction_segments": 33,
+        "played_segments": 33,
+        "not_authored_segments": 0,
+        "tick_samples": 3264,
+        "viewport_captures": 173,
+        "actual_Monster_reference_speed": 107.0,
+        "native_pixel_scale": 2.0,
+        "max_virtual_canvas_anchor_error": 3.814697265625e-06,
+        "physical_contact_approval": false
+      },
+      {
+        "key": "monster:알비노 데몬",
+        "requested_role_direction_segments": 33,
+        "played_segments": 33,
+        "not_authored_segments": 0,
+        "tick_samples": 3093,
+        "viewport_captures": 164,
+        "actual_Monster_reference_speed": 75.0,
+        "native_pixel_scale": 2.0,
+        "max_virtual_canvas_anchor_error": 0.0,
+        "physical_contact_approval": false
+      },
+      {
+        "key": "monster:커츠",
+        "requested_role_direction_segments": 33,
+        "played_segments": 19,
+        "not_authored_segments": 14,
+        "tick_samples": 1749,
+        "viewport_captures": 96,
+        "actual_Monster_reference_speed": 70.0,
+        "native_pixel_scale": 1.166666666667,
+        "max_virtual_canvas_anchor_error": 3.814697265625e-06,
+        "physical_contact_approval": false
+      }
+    ],
+    "real_speed_rendering": true,
+    "speed_scale": 1,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "actual_Main_approval": false,
+    "physical_contact_approval": false,
+    "GitHub_actual_PNG_download": {
+      "schema": "pr122-boss-repair-github-binary-receipt-v1",
+      "verified_source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+      "binary_samples": [
+        {
+          "key": "monster:얼음 여왕",
+          "direction": "E",
+          "role": "run",
+          "path": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/E-run.png",
+          "blob_sha": "ff4c0bbd98695be244c22e25f979c33d77825368",
+          "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+          "bytes": 1886838,
+          "sha256": "036614afe3bb8bc9cf661900cbf9e27b22131635cfd1d99a8d47ee06899a111f",
+          "binary_download_match": true
+        },
+        {
+          "key": "monster:죽음의 좀비 로드",
+          "direction": "S",
+          "role": "run",
+          "path": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/zombie-lord-S-run6-support-columns-v02.png",
+          "blob_sha": "eff33f8b8366993a7fa3c40843995875d42e0a7d",
+          "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+          "bytes": 2697647,
+          "sha256": "b5df37652060618c65d3ab9a61b2c97b190320009484d02c681a9ec1c598a588",
+          "binary_download_match": true
+        },
+        {
+          "key": "monster:알비노 데몬",
+          "direction": "NW",
+          "role": "attack",
+          "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_attack_NW_v01.png",
+          "blob_sha": "7b88c7a4a7626840ff9fdcc8d5acf120892139ae",
+          "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+          "bytes": 1807395,
+          "sha256": "7dfb9ef725d07b61993384ad2d6858720871a144e8957240c40f4e5e6f7a7b42",
+          "binary_download_match": true
+        },
+        {
+          "key": "monster:커츠",
+          "direction": "S",
+          "role": "run",
+          "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r001/run-S6-v02.png",
+          "blob_sha": "9d8267d623b8ed53e01cf24d5d984698e20ba9c1",
+          "source_commit": "370a61ca712213eaad155a1b874080a7e19c0d64",
+          "bytes": 2443158,
+          "sha256": "0cf2ac2bc90a52506d101a58be27f3a5f53163cb0e1638010260622de850883e",
+          "binary_download_match": true
+        }
+      ],
+      "sample_count": 4,
+      "bytes_downloaded": 8835038,
+      "binary_mismatches": 0,
+      "connector_binary_read_error": "UnicodeDecodeError interpreting PNG as UTF8",
+      "fallback": "GitHub CLI git/blobs API; actual base64 decoded locally, no binary/Base64 in chat",
+      "approval_changes": 0
+    },
+    "full_CI_repeated": false
+  },
+  "production_approval_counts_preserved": {
+    "normal": {
+      "total": 258,
+      "completed_preserved": 221,
+      "remaining": 37,
+      "statuses": {
+        "VERIFIED_COMPLETED": 221,
+        "SOURCE_HOLD": 9,
+        "IN_PROGRESS": 9,
+        "NOT_AUTHORED": 19
+      }
+    },
+    "boss": {
+      "total": 60,
+      "completed_preserved": 43,
+      "remaining": 17,
+      "statuses": {
+        "VERIFIED_COMPLETED": 43,
+        "NOT_AUTHORED": 14,
+        "IN_PROGRESS": 2,
+        "SOURCE_HOLD": 1
+      }
+    }
+  },
+  "existing_assets_deleted_or_rewritten": 0,
+  "old_runtime_assets_SHA256_preserved": 642,
+  "chat_images_or_Base64_emitted": false,
+  "input_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/file-manifest.json",
+      "bytes": 19663,
+      "sha256": "a65ff40ff2d360869eb3348e5ce0dea991b6320548449c6045ad5e755eac3fa2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/file-manifest.json",
+      "bytes": 24726,
+      "sha256": "ee17b85c2b09db30b4eab6a0aadfaec827c4ef50f2737423833e2fbfb40949ff"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/file-manifest.json",
+      "bytes": 37072,
+      "sha256": "a9b8b6162c18f4d615ec1deb3577bf2aaefa6fe4903ab526ec098ec04b323a84"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/file-manifest.json",
+      "bytes": 14121,
+      "sha256": "b9afb98477841218279a93b94147d3b4758be33ecec4e0a69dff8939b12b0fa3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/manifest.json",
+      "bytes": 53992,
+      "sha256": "9e0f09006cb6756c26e4a2e748537af9d3b26ee7877625b2d21b26dc6f66e195"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix-runtime/manifest.json",
+      "bytes": 3633,
+      "sha256": "0592c1bb8632416ab0cb3313216b54a45ad910b1436b96e0035aede9183758f3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/file-manifest.json",
+      "bytes": 2112,
+      "sha256": "de69b90e79b3b787e1451dca6791324a15fd97be4dc7c45c3d18d908deea1264"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/queen-combined-file-manifest.json",
+      "bytes": 2569,
+      "sha256": "1594164139dbab49b14504db515bae50ef71a93c2de48eb2917d34364b578703"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/file-manifest.json",
+      "bytes": 2467,
+      "sha256": "326282285439fec73989732ac1b83921d5d54cc3c4eeb2edb6818681417ee04d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/file-manifest.json",
+      "bytes": 2032,
+      "sha256": "fa8c5336a49da9b3383a23ca37d97cc763a72866907dc9703b40d980e2c4edfe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/arena-r001/receipt.json",
+      "bytes": 61180,
+      "sha256": "f67ee308efe2d08c75ae175980bc603aa375300c71dd6cc7819d8296ef507ad2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/arena-r002/receipt.json",
+      "bytes": 162410,
+      "sha256": "e0049ce3086e03974596ad13aa459a7625ec898e563960495fac6dd132b4b806"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 410677,
+      "sha256": "8280f1bd2f5b8e1cd2b062170eeaec792d481a74e414004defaaf349259ec4fc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/selection-verification.json",
+      "bytes": 991,
+      "sha256": "c487e7332c7a79ac6a7cf93a193a650e3e0344023a55692d3a098943ebdc75f4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/preservation-result.json",
+      "bytes": 398,
+      "sha256": "84a374a4e37b7d74f9b9220a42a2c18d7c3ac864e4873fdd9477c94a93f8d33c"
+    }
+  ]
+}

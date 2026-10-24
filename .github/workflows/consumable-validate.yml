@@ -2,6 +2,8 @@ name: Consumable Validate
 
 on:
   push:
+    # Feature revisions are validated by pull_request, without a second push run.
+    branches: [main]
     paths:
       - 'scripts/consumable_rules.gd'
       - 'scripts/consumable_service.gd'
@@ -70,7 +72,9 @@ jobs:
         run: |
           set -euo pipefail
           git rev-parse HEAD | tee consumable-tested-sha.txt
-          timeout 420 "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee consumable-import.log
+          # PR122's complete authored asset import took 665s in the APK job;
+          # use the existing full-suite 900s import budget, without skipping art.
+          timeout 900 "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee consumable-import.log
           if grep -E 'SCRIPT ERROR:|ERROR:|Parse Error|Failed to load script' consumable-import.log; then exit 1; fi
       - name: Automatic use, all-class cooking and saved settings
         run: |

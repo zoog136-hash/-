@@ -1,0 +1,78 @@
+{
+  "schema": "pr122-independent-native-quality-findings-v1",
+  "actor": "transform:393",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+  "selected_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+  "status": "HOLD",
+  "findings": [
+    {
+      "direction": "E",
+      "role": "hit",
+      "status": "HOLD_SOURCE_WEAPON_OWNERSHIP_ANATOMY",
+      "phases": [
+        2
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
+      "source_sha256": "be8487121e951bff94dfc0384ed2916e306c8cb67e4acc0fecd1137ca64acc00",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r021/E-hit.png",
+      "phase2_region": [
+        49,
+        559,
+        493,
+        412
+      ],
+      "phase2_rgba_sha256": "7aec4b85f29e56b4288645fa0243bdf8d3e3043b4e4fbffd9287f772bde6e40a",
+      "basis": "At peak recoil phase2 both separately visible arms end in closed EMPTY fists (one near the image-left shoulder, the other raised image-right). The unsheathed purple blade, gold guard and lower-right weapon grip/limb nevertheless remain below the raised empty fist beside the hip. This produces an extra weapon-bearing hand/arm or a detached unsheathed weapon; neither is consistent with the required continuous anatomical RIGHT hand ownership. S/SW/W phase2 have one empty hand and one weapon hand, so a clenched non-weapon fist is distinguishable. Preserve armor/cape/wing quality but reauthor affected recoil phases with exactly two arms and permanent RIGHT weapon grip.",
+      "metadata_only_fix_possible": false,
+      "fix_type": "new_source_art_required"
+    },
+    {
+      "direction": "SE",
+      "role": "hit",
+      "status": "HOLD_SOURCE_WEAPON_OWNERSHIP_ANATOMY",
+      "phases": [
+        2
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
+      "source_sha256": "b1d3889dd8f1123a2198a5e6d9da02e7e5c8aeee35580d3a251e312ccd64f088",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r022/SE-hit.png",
+      "phase2_region": [
+        56,
+        552,
+        502,
+        416
+      ],
+      "phase2_rgba_sha256": "1841a8e138d68987b519ad9391fa222f38b5e013b1ca8aacdb7edba06069b163",
+      "basis": "At peak recoil phase2 both separately visible arms end in closed EMPTY fists (one near the image-left shoulder, the other raised image-right). The unsheathed purple blade, gold guard and lower-right weapon grip/limb nevertheless remain below the raised empty fist beside the hip. This produces an extra weapon-bearing hand/arm or a detached unsheathed weapon; neither is consistent with the required continuous anatomical RIGHT hand ownership. S/SW/W phase2 have one empty hand and one weapon hand, so a clenched non-weapon fist is distinguishable. Preserve armor/cape/wing quality but reauthor affected recoil phases with exactly two arms and permanent RIGHT weapon grip.",
+      "metadata_only_fix_possible": false,
+      "fix_type": "new_source_art_required"
+    },
+    {
+      "direction": "NE",
+      "role": "hit",
+      "status": "HOLD_SOURCE_WEAPON_OWNERSHIP_ANATOMY",
+      "phases": [
+        2
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png",
+      "source_sha256": "52a812e58379619769cfc267e923bd0f1d5c7849290d13685972752effa90d0a",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r028/NE-hit.png",
+      "phase2_region": [
+        55,
+        544,
+        494,
+        419
+      ],
+      "phase2_rgba_sha256": "5d18fb311dbbb30d54860d3a36330bf4f2a9171f15ba5973268fc2ae40293c08",
+      "basis": "At peak recoil phase2 both separately visible arms end in closed EMPTY fists (one near the image-left shoulder, the other raised image-right). The unsheathed purple blade, gold guard and lower-right weapon grip/limb nevertheless remain below the raised empty fist beside the hip. This produces an extra weapon-bearing hand/arm or a detached unsheathed weapon; neither is consistent with the required continuous anatomical RIGHT hand ownership. S/SW/W phase2 have one empty hand and one weapon hand, so a clenched non-weapon fist is distinguishable. Preserve armor/cape/wing quality but reauthor affected recoil phases with exactly two arms and permanent RIGHT weapon grip.",
+      "metadata_only_fix_possible": false,
+      "fix_type": "new_source_art_required"
+    }
+  ],
+  "actor_approved": false,
+  "counts_changed": false,
+  "private_evidence_panels": [
+    "r062-all-hit-phase2-source-detail.jpg"
+  ],
+  "reviewer": "halpas_final_native_quality"
+}

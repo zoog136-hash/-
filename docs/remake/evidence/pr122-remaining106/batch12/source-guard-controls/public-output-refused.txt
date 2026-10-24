@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py", line 180, in <module>
+    main()
+  File "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py", line 47, in main
+    assert not source.is_relative_to(root) and not output.is_relative_to(root), 'Private art must stay outside public checkout'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Private art must stay outside public checkout

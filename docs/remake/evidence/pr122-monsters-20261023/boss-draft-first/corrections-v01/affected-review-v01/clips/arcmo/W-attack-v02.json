@@ -1,0 +1,26 @@
+{
+  "actor": "monster:아크모",
+  "slug": "arcmo",
+  "clip": "W-attack-v02",
+  "role": "attack",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/W-attack-v02.png",
+  "source_sha256": "f414fa85edf75d9bde3e9d987c193b58ff6d484ab5e5f6eb9c1fce31ebe06807",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      82334,
+      75086,
+      68424,
+      67552,
+      67310,
+      61898
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

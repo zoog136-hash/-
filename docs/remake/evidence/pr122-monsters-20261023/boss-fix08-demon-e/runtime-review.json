@@ -1,0 +1,535 @@
+{
+  "schema": "pr122-demon-r003-independent-runtime-sampled-review-v1",
+  "date": "2026-10-23",
+  "id": "monster:알비노 데몬",
+  "revision": "r003",
+  "frozen": true,
+  "runtime_first_pass": "PASS_WITHIN_EXAMINED_RUNTIME_CAPTURE_SCOPE",
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "default_catalog_changes": 0,
+  "source_review_unchanged": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/independent-review.json",
+    "bytes": 8481,
+    "sha256": "9e9004aa5876b5d67f488dd58264e66ec2f661143787ecc6de49a532df4b75cd"
+  },
+  "method": "Actual private vision of original 960x640 game-scale Godot screenshots and 1:1 actor-area diagnostics. E RUN all6 poses, pre-idle, representative attack/hit/return-idle, and S/NW pre-idle plus RUN0/3 were examined. No new render, generation, whole CI or source/asset edits. These are runtime-captured samples; the reviewer did not watch an uninterrupted real-time movie.",
+  "runtime_metadata": {
+    "engine": "4.7.2-stable (official)",
+    "display_server": "X11",
+    "video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "camera_zoom": 1.0,
+    "speed_scale": 1.0,
+    "simulation_dt_seconds": 0.0166666666666667,
+    "simulation_fps": 59.99999999999988,
+    "movement_fps": 12.5,
+    "actual_Monster_move_speed": 75.0,
+    "runtime_reference_speed": 75.0,
+    "original_profile_reference_speed": 210.0,
+    "native_width_ratio": 1.0,
+    "pixel_scale": 1.33333333333333,
+    "capture_dimensions": [
+      960,
+      640
+    ]
+  },
+  "producer_execution_evidence": {
+    "report": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/report.json",
+      "bytes": 20941,
+      "sha256": "79fce3d7d7afca8d1e433b41869e295e80f14435f1b11677836cdd69924f08db"
+    },
+    "samples": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/samples.json",
+      "bytes": 1925826,
+      "sha256": "5e7d2b082a53d8781aee2d2e9a99261ff370abe8abfeb479ea9d9eaeed574db4"
+    },
+    "config": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/config.json",
+      "bytes": 690,
+      "sha256": "95ecf99fe3d9fd215f496f0ffb60e8633df09c436092d4b4d37485f7377f2130"
+    },
+    "played_segments": 33,
+    "reported_total_captures": 164,
+    "scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval."
+  },
+  "runtime_asset_pins": {
+    "SpriteFrames": {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/SpriteFrames.tres",
+      "bytes": 29181,
+      "sha256": "b30bb0b5e953159862ed83f29c8869020fa17aea138979d74ee222bffd3c700a"
+    },
+    "NativeMotionProfile": {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
+      "bytes": 868,
+      "sha256": "1869be110775546c8fe79c622b3bcdf49873fe4083c2c5a3da43ea0156987845"
+    }
+  },
+  "observed_views": [
+    "E",
+    "S",
+    "NW"
+  ],
+  "observed_E_RUN_frames": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "observed_S_RUN_frames": [
+    0,
+    3
+  ],
+  "observed_NW_RUN_frames": [
+    0,
+    3
+  ],
+  "actually_examined_capture_count": 17,
+  "captures": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 59841,
+      "sha256": "f5148d943ea41c7dd9bf10ae252064ca8f9f82ffdb3fe65ff505401bfafed007",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "pre-idle",
+        "resolved_clip": "idle_0",
+        "frame": 0,
+        "simulation_seconds": 0.0,
+        "tick": 0,
+        "motion_state": "turn",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.49042147397995,
+          0.49042147397995
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-action-run_0-0.png",
+      "bytes": 59036,
+      "sha256": "45bd5623f1fef77ced0c88bfb01ebf6c54c6fb2b70ea433a25db6444dfdfec70",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "action",
+        "resolved_clip": "run_0",
+        "frame": 0,
+        "simulation_seconds": 0.2,
+        "tick": 12,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.21768707036972,
+          0.21768707036972
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-action-run_0-1.png",
+      "bytes": 57177,
+      "sha256": "9384119d790cd12cc1778814af74cf22539df6f93e50d0cc021683dc801f6c02",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "action",
+        "resolved_clip": "run_0",
+        "frame": 1,
+        "simulation_seconds": 0.266666666666667,
+        "tick": 16,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.288288295269012,
+          0.288288295269012
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-action-run_0-2.png",
+      "bytes": 59347,
+      "sha256": "099ac7aceab83de4b351028c4e5d76ce92ac3396dcb4ebb0ed584dd23119ce1b",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "action",
+        "resolved_clip": "run_0",
+        "frame": 2,
+        "simulation_seconds": 0.35,
+        "tick": 21,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.288288295269012,
+          0.288288295269012
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-action-run_0-3.png",
+      "bytes": 56947,
+      "sha256": "6838839fd420c9b43337dd5d20a4ff7c97cbfa28858fe2958225fbaac82b06f3",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "action",
+        "resolved_clip": "run_0",
+        "frame": 3,
+        "simulation_seconds": 0.433333333333333,
+        "tick": 26,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.21768707036972,
+          0.21768707036972
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-action-run_0-4.png",
+      "bytes": 56472,
+      "sha256": "594a35b4e468d070d5820784d4bbffa5d466f83785ea315d3ce30c54d16466d7",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "action",
+        "resolved_clip": "run_0",
+        "frame": 4,
+        "simulation_seconds": 0.516666666666667,
+        "tick": 31,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.296296298503876,
+          0.296296298503876
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-E-action-run_0-5.png",
+      "bytes": 57040,
+      "sha256": "7aab421d9be16b19915510cd35abcac190d1ae8495045ca04fd640344fbc9f4f",
+      "runtime_sample": {
+        "segment": "run-E",
+        "stage": "action",
+        "resolved_clip": "run_0",
+        "frame": 5,
+        "simulation_seconds": 0.583333333333333,
+        "tick": 35,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.296296298503876,
+          0.296296298503876
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/attack-E-action-attack_0-1.png",
+      "bytes": 64053,
+      "sha256": "7c2356d02221ea722c0f4b4af605619888efa8bc694c90b6580ad22d9ebc1f11",
+      "runtime_sample": {
+        "segment": "attack-E",
+        "stage": "action",
+        "resolved_clip": "attack_0",
+        "frame": 1,
+        "simulation_seconds": 0.816666666666667,
+        "tick": 49,
+        "motion_state": "attack",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.49042147397995,
+          0.49042147397995
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/hit-E-action-hit_0-0.png",
+      "bytes": 59702,
+      "sha256": "dbd32857a8e789fae86d4c2469ec7d4af4191cb8d028ee3e85bdf92b9f067437",
+      "runtime_sample": {
+        "segment": "hit-E",
+        "stage": "action",
+        "resolved_clip": "hit_0",
+        "frame": 0,
+        "simulation_seconds": 0.2,
+        "tick": 12,
+        "motion_state": "hit",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.49042147397995,
+          0.49042147397995
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/attack-E-action-idle_0-0.png",
+      "bytes": 60181,
+      "sha256": "952565035104c49293a3de5fa9d9a8e7f27fdc2a0cf5298a23f2e3a249803595",
+      "runtime_sample": {
+        "segment": "attack-E",
+        "stage": "action",
+        "resolved_clip": "idle_0",
+        "frame": 0,
+        "simulation_seconds": 1.53333333333333,
+        "tick": 92,
+        "motion_state": "idle",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.49042147397995,
+          0.49042147397995
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/hit-E-action-idle_0-0.png",
+      "bytes": 60210,
+      "sha256": "158afa17dacc5019c406af6576756ce5af93462ce710c9f81caf2ece5e18d13f",
+      "runtime_sample": {
+        "segment": "hit-E",
+        "stage": "action",
+        "resolved_clip": "idle_0",
+        "frame": 0,
+        "simulation_seconds": 0.483333333333333,
+        "tick": 29,
+        "motion_state": "idle",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.49042147397995,
+          0.49042147397995
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 59366,
+      "sha256": "c2b778e562d1e6d3baaa37d9a6887a70065a583ca6da7e1623ca3cc5c9706b10",
+      "runtime_sample": {
+        "segment": "run-S",
+        "stage": "pre-idle",
+        "resolved_clip": "idle_2",
+        "frame": 0,
+        "simulation_seconds": 0.0,
+        "tick": 0,
+        "motion_state": "idle",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.439862549304962,
+          0.439862549304962
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-S-action-run_2-0.png",
+      "bytes": 57014,
+      "sha256": "ea1c345ce0296a19c077ac0d897d79d2d6aade7a34943beff633a061064b7309",
+      "runtime_sample": {
+        "segment": "run-S",
+        "stage": "action",
+        "resolved_clip": "run_2",
+        "frame": 0,
+        "simulation_seconds": 0.2,
+        "tick": 12,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.286353468894958,
+          0.286353468894958
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-S-action-run_2-3.png",
+      "bytes": 58488,
+      "sha256": "cb83b674a9a9bcb1d2c29606ce8f1b4bc3bc1635d07ac28cee16985caf34021f",
+      "runtime_sample": {
+        "segment": "run-S",
+        "stage": "action",
+        "resolved_clip": "run_2",
+        "frame": 3,
+        "simulation_seconds": 0.433333333333333,
+        "tick": 26,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.286353468894958,
+          0.286353468894958
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-NW-pre-idle-idle_5-0.png",
+      "bytes": 59852,
+      "sha256": "cb2daa8f3789d56a1403434d75536cd74b395db2fee422800d8547fa17c0559f",
+      "runtime_sample": {
+        "segment": "run-NW",
+        "stage": "pre-idle",
+        "resolved_clip": "idle_5",
+        "frame": 0,
+        "simulation_seconds": 0.0,
+        "tick": 0,
+        "motion_state": "turn",
+        "move_ratio": 0.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.435374140739441,
+          0.435374140739441
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-NW-action-run_5-0.png",
+      "bytes": 56462,
+      "sha256": "907603d61bac89283171298048598fb6a7b7c6131a2a794ad95e05f89694d83f",
+      "runtime_sample": {
+        "segment": "run-NW",
+        "stage": "action",
+        "resolved_clip": "run_5",
+        "frame": 0,
+        "simulation_seconds": 0.2,
+        "tick": 12,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.344086021184921,
+          0.344086021184921
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-demon-r003/albino_demon/captures/run-NW-action-run_5-3.png",
+      "bytes": 58670,
+      "sha256": "d6e831acd0519195368a745973db6fc5c1e7edc768c186acf33ef9dd70bfe360",
+      "runtime_sample": {
+        "segment": "run-NW",
+        "stage": "action",
+        "resolved_clip": "run_5",
+        "frame": 3,
+        "simulation_seconds": 0.433333333333333,
+        "tick": 26,
+        "motion_state": "run",
+        "move_ratio": 1.0,
+        "movement_fps": 12.5,
+        "sprite_scale": [
+          0.344086021184921,
+          0.344086021184921
+        ],
+        "sprite_offset": [
+          0.0,
+          -42.6666679382324
+        ]
+      }
+    }
+  ],
+  "findings": [
+    {
+      "criterion": "E_opposite_support_survives_runtime",
+      "result": "PASS_WITHIN_EXAMINED_CAPTURE_SCOPE",
+      "observation": "Rendered run_0:0 shows the large near anatomical RIGHT foot low/planted and the far LEFT leg raised back. Rendered run_0:3 shows the near RIGHT knee/foot lifted near the body while the smaller far LEFT foot is low. The actual opposite source support change survives Godot rendering; the former repeated near-foot0/3 sequence is not what these captures show."
+    },
+    {
+      "criterion": "E_direction_and_axe",
+      "result": "PASS_FIRST_RUNTIME_SCREEN",
+      "observation": "All six E RUN samples face SCREEN RIGHT with a lateral torso/overlapping shoulders. The same near RIGHT arm keeps the axe grip; no mirroring, opposite-facing frame, introduced wings or replacement body is visible."
+    },
+    {
+      "criterion": "RUN_scale_and_clipping",
+      "result": "NO_OBVIOUS_NEW_DEFECT_OBSERVED",
+      "observation": "Across the six rendered E poses, body/armor proportions remain comparable while knees and torso compress/extend. No obvious abrupt scale doubling/shrinking, camera reversal, severed foot/horn/axe, or viewport-edge truncation was observed in the actual captures. The full 960x640 E0/E3 screenshots also show ample space around the complete figure."
+    },
+    {
+      "criterion": "representative_transitions",
+      "result": "NO_OBVIOUS_SEVERE_TRANSITION_DEFECT_OBSERVED",
+      "observation": "Pre-idle to the sampled E RUN, representative E attack/hit poses and their captured return to idle retain the same boss identity and general displayed size. Attack lunges widen/lower the silhouette and hit recoils, without an observed catastrophic rescale or opposite-direction flip. E idle exposes more frontal chest/belt than the new lateral RUN; this residual pose-angle difference is recorded rather than treated as a newly invented runtime gate."
+    },
+    {
+      "criterion": "S_and_NW_preservation",
+      "result": "PASS_WITHIN_REPRESENTATIVE_CAPTURES",
+      "observation": "S pre-idle and RUN0/3 stay front-facing, retain red heavy demon/axe identity, and visibly switch the low leg between the compared S RUN poses. NW pre-idle and RUN0/3 keep the back-left silhouette, tail and far RIGHT-hand axe/near empty LEFT-hand presentation. No obvious new direction/scale/truncation change was observed in these representatives. This is not an all-view gait approval."
+    }
+  ],
+  "unseen_not_reviewed": [
+    "Uninterrupted real-time loop cadence and every transition tick",
+    "Other directions and nonselected poses beyond the listed17 screenshots",
+    "Detailed sole/physical-ground collision or impact forces",
+    "Actual combat target damage/contact correctness",
+    "Full mythic-quality or release approval"
+  ],
+  "scope_note": "Deferred items describe review limits; no new Main/floor/contact prerequisite is imposed by this first runtime screen. Existing source review and other boss-wide HOLD decisions are preserved."
+}

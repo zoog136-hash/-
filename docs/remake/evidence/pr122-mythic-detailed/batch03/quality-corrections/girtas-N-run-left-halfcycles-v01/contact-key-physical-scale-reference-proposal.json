@@ -1,0 +1,93 @@
+{
+  "status": "DRAFT_REFERENCE_SCALE_ONLY",
+  "input_sources": [
+    {
+      "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+      "sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+      "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+      "size": [
+        339,
+        392
+      ]
+    }
+  ],
+  "manual_anatomical_landmarks": {
+    "left": {
+      "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+      "head_root": [
+        593,
+        230
+      ],
+      "shoulder_midpoint": [
+        593,
+        420
+      ],
+      "hip_axis": [
+        593,
+        610
+      ],
+      "support_sole_last_strong": [
+        526,
+        1178
+      ],
+      "suggested_reference_canvas": 3328
+    },
+    "right": {
+      "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+      "head_root": [
+        143,
+        65
+      ],
+      "shoulder_midpoint": [
+        143,
+        126
+      ],
+      "hip_axis": [
+        143,
+        182
+      ],
+      "support_sole_last_strong": [
+        151,
+        388
+      ],
+      "suggested_reference_canvas": 1024
+    }
+  },
+  "landmark_uncertainty_native_pixels": {
+    "left": [
+      15,
+      20
+    ],
+    "right": [
+      4,
+      6
+    ]
+  },
+  "left_over_right_native_ratios": {
+    "head_root_to_shoulder": 3.1147540983606556,
+    "shoulder_to_hip": 3.392857142857143,
+    "head_root_to_hip": 3.247863247863248
+  },
+  "reference_canvas_proposal": {
+    "left": 3328,
+    "right": 1024,
+    "ratio": 3.25
+  },
+  "method": "Approximate rigid head-root/shoulder/pelvis distances; not total pose bounding-box height.",
+  "limitations": [
+    "Reference-only relative proposal, not final runtime layout.",
+    "Absolute physical scale must later match current Nwalk/idle via rigid landmarks; neither 1024 nor 3328 is a final runtime default.",
+    "Original source PNGs remain unchanged; resizing occurs only in this production conditioning guide."
+  ],
+  "ground_convention": "Guide contact plane y=400, below last strong sole pixel; hip x=256.",
+  "reference_common_unit": 768,
+  "reference_resampling": "Pillow LANCZOS, conditioning only",
+  "actor_approval": false
+}

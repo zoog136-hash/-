@@ -1,0 +1,353 @@
+{
+  "schema": "pr122-kurtz-independent-SW-reuse-review-v1",
+  "date": "2026-10-23",
+  "reviewed_candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/candidate.json",
+    "sha256": "cfa1b7f5137a0474fd2533261f5062c9b4bce02d86894cba1ff6a99bee952f5e"
+  },
+  "method": "Actual private view of all six SW RUN and four SW ATTACK pose crops taken from exact candidate regions. No generation, original edits, Git mutation or image forwarding.",
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "tracks": {
+    "run_3": {
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-front4-v02.png",
+        "sha256": "00a72871c581991522d2dfa73a440ebac9ad298a8d40ac1642938381c467c59f"
+      },
+      "direction": "SW",
+      "examined_poses": 6,
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "distinct_pixel_frames": 24,
+        "neutral_height": 204.5,
+        "canvas_size": [
+          544,
+          544
+        ],
+        "foot": [
+          272,
+          340
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              795,
+              52,
+              208,
+              207
+            ],
+            "margin": [
+              169,
+              146,
+              336,
+              337
+            ],
+            "source_anchor": [
+              898,
+              246
+            ],
+            "rgba_sha256": "94d019802437e941a344ea4f1e943750dc3d3b10153c4764e083ba3dd03cb5fa",
+            "ground_plane_basis": {
+              "contact_phases": [
+                0,
+                3
+              ],
+              "cell_relative_y": 246
+            }
+          },
+          {
+            "row": 1,
+            "direction": "SW",
+            "region": [
+              810,
+              302,
+              193,
+              200
+            ],
+            "margin": [
+              184,
+              140,
+              351,
+              344
+            ],
+            "source_anchor": [
+              898,
+              502
+            ],
+            "rgba_sha256": "d123487be1bb3e61d25a85fad49cfde70b1bf9918f585a58da70d7502f8629aa",
+            "ground_plane_basis": {
+              "contact_phases": [
+                0,
+                3
+              ],
+              "cell_relative_y": 246
+            }
+          },
+          {
+            "row": 2,
+            "direction": "SW",
+            "region": [
+              813,
+              535,
+              189,
+              210
+            ],
+            "margin": [
+              187,
+              117,
+              355,
+              334
+            ],
+            "source_anchor": [
+              898,
+              758
+            ],
+            "rgba_sha256": "66b4282107cf49fa3114eba12f0bc89ce18a46af547f9b110cb10bd86ff445ad",
+            "ground_plane_basis": {
+              "contact_phases": [
+                0,
+                3
+              ],
+              "cell_relative_y": 246
+            }
+          },
+          {
+            "row": 3,
+            "direction": "SW",
+            "region": [
+              791,
+              796,
+              213,
+              214
+            ],
+            "margin": [
+              165,
+              122,
+              331,
+              330
+            ],
+            "source_anchor": [
+              898,
+              1014
+            ],
+            "rgba_sha256": "b530cf92331c89f09b4829c7beaae0e929e0bd1ba7674d820a441e2d40cabdf3",
+            "ground_plane_basis": {
+              "contact_phases": [
+                0,
+                3
+              ],
+              "cell_relative_y": 246
+            }
+          },
+          {
+            "row": 4,
+            "direction": "SW",
+            "region": [
+              813,
+              1043,
+              188,
+              203
+            ],
+            "margin": [
+              187,
+              113,
+              356,
+              341
+            ],
+            "source_anchor": [
+              898,
+              1270
+            ],
+            "rgba_sha256": "ed4c7af564c1935e80624bf9492a3ac1e60614014b530972b73f787c74d39a20",
+            "ground_plane_basis": {
+              "contact_phases": [
+                0,
+                3
+              ],
+              "cell_relative_y": 246
+            }
+          },
+          {
+            "row": 5,
+            "direction": "SW",
+            "region": [
+              811,
+              1275,
+              188,
+              210
+            ],
+            "margin": [
+              185,
+              89,
+              356,
+              334
+            ],
+            "source_anchor": [
+              898,
+              1526
+            ],
+            "rgba_sha256": "b3879e30e7df6269c8ce517bc8e487da6b266c902e2a8fb0283fb737989b0081",
+            "ground_plane_basis": {
+              "contact_phases": [
+                0,
+                3
+              ],
+              "cell_relative_y": 246
+            }
+          }
+        ]
+      },
+      "reuse": "EXCLUDE",
+      "current_review": "HOLD_WRONG_OR_MIRRORED_WEAPON_HAND",
+      "observations": [
+        "The six front-left SW RUN figures all put the sword grip on the near arm at SCREEN RIGHT of chest/waist, with the farther SCREEN LEFT fist empty.",
+        "Against the frontal reference RIGHT sword hand=SCREEN LEFT and a front-left camera rotation, the near SCREEN RIGHT arm reads as anatomical LEFT; the sheet therefore fails stable anatomical RIGHT weapon ownership. This is visible in all6 poses, not just a hidden grip or cape occlusion.",
+        "The body points front-left/SW, so direction naming alone does not fix the hand mismatch. Do not reuse this track to fill a six-pose count; no pixel mirroring or relabeling is proposed as a safe repair."
+      ]
+    },
+    "attack_3": {
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/attack-SW4-v03.png",
+        "sha256": "5dbf77062d9b3803986a1983fd6a1d1bea88c0cd363052e4a0f1131bff2ad6ed"
+      },
+      "direction": "SW",
+      "examined_poses": 4,
+      "source_rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              103,
+              7,
+              540,
+              627
+            ],
+            "margin": [
+              465,
+              222,
+              812,
+              725
+            ],
+            "source_anchor": [
+              314,
+              630
+            ],
+            "rgba_sha256": "4e615196ccda905f563fb7f0e3e4e3bcb254f8bda2aa5462cfa36550dc542e03"
+          },
+          {
+            "row": 1,
+            "direction": "SW",
+            "region": [
+              695,
+              96,
+              547,
+              540
+            ],
+            "margin": [
+              431,
+              309,
+              805,
+              812
+            ],
+            "source_anchor": [
+              940,
+              632
+            ],
+            "rgba_sha256": "9bb6c17d287be231ffa0ac3e3d7f20d4f8659b1903fc3504b15c8cb49749f039"
+          },
+          {
+            "row": 2,
+            "direction": "SW",
+            "region": [
+              10,
+              686,
+              699,
+              483
+            ],
+            "margin": [
+              372,
+              366,
+              653,
+              869
+            ],
+            "source_anchor": [
+              314,
+              1165
+            ],
+            "rgba_sha256": "81f8d43e48ac97be95a135c7fb9ae014d9ec1ae0f69c9c6c9626a031fbb7d6ab"
+          },
+          {
+            "row": 3,
+            "direction": "SW",
+            "region": [
+              718,
+              680,
+              528,
+              514
+            ],
+            "margin": [
+              454,
+              335,
+              824,
+              838
+            ],
+            "source_anchor": [
+              940,
+              1190
+            ],
+            "rgba_sha256": "1452871fc34a5f04ffb4302ad9d0df3b64ca75d570df6119733bdbc8faaaeff1"
+          }
+        ],
+        "distinct_pixel_frames": 4,
+        "neutral_height": 508.0,
+        "canvas_size": [
+          1352,
+          1352
+        ],
+        "foot": [
+          676,
+          845
+        ]
+      },
+      "reuse": "ELIGIBLE_WITHIN_FIRST_STATIC_SOURCE_SCOPE",
+      "current_review": "PASS_RIGHT_HAND_WITHIN_EXAMINED_SOURCE",
+      "observations": [
+        "Phase0 raises the weapon with the SCREEN LEFT/far anatomical RIGHT shoulder-elbow-hand chain; SCREEN RIGHT/near anatomical LEFT claw is open.",
+        "Phase1 keeps the weapon hand on the raised far/right-arm chain while the near left empty hand reaches forward.",
+        "Phase2 extends the same RIGHT sword arm diagonally toward lower-left; the LEFT empty hand stays opposite/back. Phase3 recovers with the grip on SCREEN LEFT and the blade crossing to screen-right. Blade direction at recovery does not mean hand ownership changed.",
+        "All4 poses remain plausibly front-left/SW with attack torso twist; no definite front/back reversal, transferred grip, obvious sword/foot clipping or severe limb collapse was observed. Reuse eligibility applies to this four-pose attack track only, not the whole boss candidate."
+      ]
+    }
+  },
+  "unseen_not_reviewed": [
+    "Timed attack order/contact or target hitbox",
+    "Other directions/roles",
+    "Native playback integration/loop continuity",
+    "Full mythic/release approval"
+  ],
+  "decision": "Exclude SW run_3 for weapon-hand mismatch. Existing SW attack_3 has a visible continuous anatomical RIGHT grip and may be reused within the stated static first-pass scope."
+}

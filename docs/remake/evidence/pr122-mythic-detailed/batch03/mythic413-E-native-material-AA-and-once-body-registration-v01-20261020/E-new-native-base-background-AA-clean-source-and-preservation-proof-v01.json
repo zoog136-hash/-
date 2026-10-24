@@ -1,0 +1,35 @@
+{
+  "schema": "MYTHIC413_NEW_E_BASE_NATIVE_BACKGROUND_AA_CLEAN_V01",
+  "raw_service_source": {
+    "path": "/workspace/scratch/mythic413-E-private-base-generation-fresh-20261020-v01/service-E-fullbody-base-native-r001.png",
+    "sha256": "dde77166996a5f262932dccbcf0ff5c74f62cf502e6cac1df75446b576121991",
+    "bytes": 1037135
+  },
+  "output": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "35883c6c11693141bd3988c47399298a1cd37152ba12403e9d94678ab75fbf62",
+    "bytes": 974323
+  },
+  "support_mask": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-base-actual-material-plus-two-pixel-native-AA-support-mask-v01.png",
+    "sha256": "37ea5235082c52b146bd6ce23274e4d95d004ce36a9525aa5800f8ea7cb1952d",
+    "bytes": 19892
+  },
+  "method": "Retain every native RGBA pixel alpha>=8 exactly, and its existing alpha>0 antialias material within a two-pixel dilation. All other sub-alpha8 isolated background and RGB-under-alpha0 are exact RGBA0. No new painted pixels, resampling, alpha-height normalization or density registration.",
+  "all_original_alpha_ge8_RGBA_mismatch": 0,
+  "preserved_visible_source_pixels": 374778,
+  "cleared_RGBA_pixels": 22178,
+  "clean_alpha_bbox": [
+    268,
+    5,
+    1014,
+    1223
+  ],
+  "native_size": [
+    1254,
+    1254
+  ],
+  "source_density_or_foot_geometry_changed": false,
+  "C_root_unit_registration": "PENDING_ONCE_BODY_GATE",
+  "actor_approvals_added": 0
+}

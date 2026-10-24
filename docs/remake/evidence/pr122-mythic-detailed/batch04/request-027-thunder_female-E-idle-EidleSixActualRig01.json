@@ -1,0 +1,158 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "E",
+  "role": "idle",
+  "version": "EidleSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
+    "base_geometry_sha256": "e65fc152f691cc7821e35bb29c8087a761ca2bcd5a101922157d4680803e7469",
+    "direction": "E",
+    "regions": [
+      [
+        396,
+        133,
+        733,
+        1218
+      ],
+      [
+        1932,
+        133,
+        735,
+        1218
+      ],
+      [
+        396,
+        1669,
+        738,
+        1218
+      ],
+      [
+        1932,
+        1669,
+        738,
+        1218
+      ],
+      [
+        396,
+        3205,
+        735,
+        1218
+      ],
+      [
+        1932,
+        3205,
+        733,
+        1218
+      ]
+    ],
+    "nearest_owner_sha256": "472e9b5ac3d84c7be98252b63614343f33a7c8074ddfecf9f5699fabfbdbc87e",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 94179d1cb2d76ce5274490b2b37ce84cb96e1c3c01c69edbca697082b4ac3328"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
+    "direction": "E",
+    "role": "idle",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        867,
+        1226
+      ],
+      [
+        2403,
+        1226
+      ],
+      [
+        867,
+        2762
+      ],
+      [
+        2403,
+        2762
+      ],
+      [
+        867,
+        4298
+      ],
+      [
+        2403,
+        4298
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "94179d1cb2d76ce5274490b2b37ce84cb96e1c3c01c69edbca697082b4ac3328",
+  "authored_common_root_float": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "common_root_integer": [
+    739,
+    1098
+  ],
+  "common_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "New actual E six-phase torso/corset volume, free LEFT arm relaxation, delayed complete head/bun/ribbon and clothing form a smooth restrained1.2second idle sequence.",
+      "The5-to-0 wrap and full6 phase order retain steady body scale/root and continuous anatomy; no whole-actor bob or palette-only motion is used.",
+      "Native free LEFT cuff/sleeve/bracer/wrist/hand at0/3/5 remain connected; prior two322/602pixel old-cuff BODY remnants are closed by the complete sharedv03r1 material transfer.",
+      "Original near RIGHTarm/grip/fullstaff and complete lowerlegs/boots are exact protected RGBA in all6; native source gear and character identity remain intact.",
+      "Actual chest source controls widen by4.507149962041936native units; actual corset pixels deform visibly while the protected stationary parts remain unchanged.",
+      "Exact request/packing/raw are bound to the finalsix source digests. Full6RGBA tile comparisons changed0 and every nonzero-alpha source pixel remains inside its reviewed region.",
+      "C2816/unit2.75/source root and storage128,128 retain the one-time fixed body registration; one common root rounding delta applies identically to all6 without source resizing/per-pose fitting."
+    ],
+    "visual_limitations": [
+      "One-time E C2816/root source registration is the fixed authored basis with its declared landmark uncertainty; no unique hidden volumetric anatomy/floor recovery is claimed.",
+      "This source/loop PASS does not assert actual Godot5fps/1.2second integration or whole actor detailed approval; parent game gate remains separate.",
+      "The two cuff residues were production-input semantic ownership defects; base source35883 and its quality/once-registration PASSa33172 were preserved."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
+    "raw_bytes": 3749152,
+    "request_sha256": "b0a6cdfbe5e43afc2f82f88e82ea401274773d2c8aef3d6999fc1c5fa7c03f17",
+    "review_sha256": "00dfaba1b7e10d87e8395db80ef28c6082f64bc346a0364aba2546259ec74272"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-E-idle-actual-packed-r001-20261020/thunder_female-E-idle-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-ymmrypb8/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-E-idle-actual-packed-r001-20261020/request-EidleSixActualRig01.json": "b0a6cdfbe5e43afc2f82f88e82ea401274773d2c8aef3d6999fc1c5fa7c03f17",
+      "/workspace/scratch/mythic413-E-idle-actual-packed-r001-20261020/thunder_female-E-idle-six-actual-poses-r001.png": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
+      "/workspace/scratch/mythic413-E-idle-independent-qc-20261020-v01/EidleSixActualRig01-exact-r001-request-source-loop-PASS-v01.json": "00dfaba1b7e10d87e8395db80ef28c6082f64bc346a0364aba2546259ec74272",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-idle-EidleSixActualRig01.png",
+  "output_sha256": "d4bc7ea4a66b2c859eb6a1141f755ba2e1af072b51e6372d3e2b2bd1be588210",
+  "output_bytes": 3749152,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-ymmrypb8/reviewed-source.png"
+}

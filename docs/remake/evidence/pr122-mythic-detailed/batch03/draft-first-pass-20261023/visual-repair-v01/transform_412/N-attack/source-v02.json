@@ -1,0 +1,31 @@
+{
+  "key": "transform:412",
+  "direction": "N",
+  "role": "attack",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v01/transform_412/N-attack/source-v02.png",
+  "source_sha256": "08e8e7f0fa0f41761525cb1d83e1f2a9a62ac461b8b3ae2464d481fc9c184181",
+  "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-N-attack-draft-v01.png",
+  "previous_source_sha256": "2f79b96c3ad9a351c47d16cc17e7036c2d3c13491792098bb8e23066f458c707",
+  "reference": "res://assets/catalog/e090d7a50d6f7a23fe55576c.png",
+  "reference_sha256": "d0c26b83f744e9ba811eb2649ac78ae32938a437ef5d3f6984f2c9c3cc367af7",
+  "generation_request": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-N-attack-draft-v01.png",
+      "assets/catalog/e090d7a50d6f7a23fe55576c.png"
+    ],
+    "prompt": "Production-only local PNG edit for TWILIGHT transform 412 MYTHIC death-goddess NORTH ATTACK. Do not post or preview the image in chat. First input is the existing SIX-frame 3-column 2-row NORTH/back-facing attack sheet. Second input is authoritative original character equipment/color/identity. Preserve the existing six back-facing poses, their phase order, long silver hair, black gold teal armor, same double-ended scythe, chains, slim female proportions and hand grips. Make only the needed cleanup: the bottom-center follow-through frame currently contains a detached small gold/teal attack-effect clump near its lower-right blade arc (native x967..991,y788..814). Integrate that visual energy naturally into its OWN existing continuous scythe trail so it is not a separate solid fragment. Never attach one pose to another. Preserve the attack progression: guard, backswing, loaded overhead, strong lateral contact, follow-through, recovery. Give each complete pose enough transparent breathing room: exactly six separate fully contained poses in three equal columns and two equal rows, at least 48 transparent pixels around ALL visible texels including chains, blade tips, hair, sparks and trails. Fit each pose without cutting body/equipment or touching a neighboring cell. No straight cell-edge cutting. No character/body redesign, no missing limbs, no false mirrored hand, no background, no glow fog between poses, no detached solid particles, no extra character, no captions/grid/text. Clean true alpha transparency around articulated silhouettes; effect is coherent and continuously connected to its matching weapon. Keep the distinctive original painted sprite detail. Output one locally saved PNG only."
+  },
+  "generation_service": "image_gen.imagegen",
+  "newly_authored_frames": 6,
+  "source_visual_review": {
+    "reviewer": "current assistant, internal review allowed by user 2026-10-24",
+    "source_identity": "PASS: original silver hair/black-gold-teal equipment and back facing preserved",
+    "six_pose_sequence": "PASS: guard, backswing, overhead load, lateral contact, follow-through, recovery observed",
+    "weapon_grip": "PASS: linked shaft held by the hands, no foreign-direction pose",
+    "remaining": "Runtime scale/anchors, playback and ambiguous alpha<=16 residue require inspection before final approval",
+    "final_approval": false
+  },
+  "final_approval": false,
+  "previous_source_preserved": true
+}

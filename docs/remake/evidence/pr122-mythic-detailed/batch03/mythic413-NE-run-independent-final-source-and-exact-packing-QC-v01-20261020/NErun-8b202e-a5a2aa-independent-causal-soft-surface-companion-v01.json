@@ -1,0 +1,217 @@
+{
+  "schema": "PR122-NErun-independent-causal-flexible-surface-numeric-companion-v1",
+  "status": "PASS_DECLARED_ACTUAL_FORWARD_MESH_PROJECTION_SHARED_JOINTS_AND_GUARDED_VERTEX_BOUNDS_ONLY",
+  "tarsal_model": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/NE-run-common-finished-real-tarsal-joint-causal-surface-model-v03.json",
+    "sha256": "8b202ea03586339e8cc92eacc7d1ab71c4e4e91f77cec25fec2cebe49d339e46",
+    "bytes": 21727
+  },
+  "proximal_skin_model": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-two-proximal-pelvis-finish-v04/NE-run-two-actual-proximal-pelvis-surface-model-v04.json",
+    "sha256": "a5a2aa216bc591e339b743a2547237aadd930c8be5263e9bdd4c6b50ec961aba",
+    "bytes": 5022
+  },
+  "unchanged_original_rig": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v02/NE-run-six-actual-causal-rig-shoe-surface-and-source-contract-v02.json",
+    "sha256": "1c17170e46401d2fd7483159a77e82e5b1fd675d78ed90d13aee0b91604f21b6",
+    "bytes": 36750
+  },
+  "tarsal_rows": [
+    {
+      "phase": 0,
+      "side": "R",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase0-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "a5a11999ca8f6575bf5c650acd6de59cf8d7c5d1b3e81ec85d77105ba18afb1c",
+        "bytes": 19987
+      },
+      "vertices": 124,
+      "projection_max_error": 4.547473508864641e-13,
+      "shared_ankle_endpoint_error": 1.4210854715202004e-13,
+      "minimum_native_Z_minus8": 67.03574805162405
+    },
+    {
+      "phase": 0,
+      "side": "L",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase0-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "74552385b5201abe5835f4338fd31696c17179779727aa38537fe793e78a52ee",
+        "bytes": 19879
+      },
+      "vertices": 124,
+      "projection_max_error": 5.684341886080801e-13,
+      "shared_ankle_endpoint_error": 2.2737367544323206e-13,
+      "minimum_native_Z_minus8": 115.78017600000324
+    },
+    {
+      "phase": 1,
+      "side": "R",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase1-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "df898a0568609b44a3a46aea96551fee561cc12c260a403804f8498999331f70",
+        "bytes": 19938
+      },
+      "vertices": 124,
+      "projection_max_error": 4.547473508864641e-13,
+      "shared_ankle_endpoint_error": 2.4158453015843406e-13,
+      "minimum_native_Z_minus8": 65.00730875163629
+    },
+    {
+      "phase": 1,
+      "side": "L",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase1-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "e75d2ee44652aa248be0dc85609cd37d29fd787eca1457f9697e942448297f90",
+        "bytes": 19977
+      },
+      "vertices": 124,
+      "projection_max_error": 5.684341886080801e-13,
+      "shared_ankle_endpoint_error": 1.7053025658242404e-13,
+      "minimum_native_Z_minus8": 396.1244927346237
+    },
+    {
+      "phase": 2,
+      "side": "R",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase2-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "07607531c783331f67f59aaf17949b5052e195c237cacd83c151aca21e378034",
+        "bytes": 19977
+      },
+      "vertices": 124,
+      "projection_max_error": 4.547473508864641e-13,
+      "shared_ankle_endpoint_error": 1.9895196601282805e-13,
+      "minimum_native_Z_minus8": 111.4461877112432
+    },
+    {
+      "phase": 2,
+      "side": "L",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase2-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "106f9b83667d7a278743838a7fba5dbeee8e9d74ecaa86147fa115555db0dc7b",
+        "bytes": 19917
+      },
+      "vertices": 124,
+      "projection_max_error": 3.410605131648481e-13,
+      "shared_ankle_endpoint_error": 1.4210854715202004e-13,
+      "minimum_native_Z_minus8": 131.4223209054855
+    },
+    {
+      "phase": 3,
+      "side": "R",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase3-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "112b6d1597c9af0adad1676e26f04eaa96a5846579876e57bfb8c8fca09d23e1",
+        "bytes": 19879
+      },
+      "vertices": 124,
+      "projection_max_error": 3.410605131648481e-13,
+      "shared_ankle_endpoint_error": 2.8421709430404007e-13,
+      "minimum_native_Z_minus8": 115.28070556154005
+    },
+    {
+      "phase": 3,
+      "side": "L",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase3-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "a32c728305fe719124f4204f442d1931bcb592004388c8b4480439f06e0fdea7",
+        "bytes": 20006
+      },
+      "vertices": 124,
+      "projection_max_error": 4.547473508864641e-13,
+      "shared_ankle_endpoint_error": 2.4158453015843406e-13,
+      "minimum_native_Z_minus8": 67.067087080458
+    },
+    {
+      "phase": 4,
+      "side": "R",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase4-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "d317852c933deac4d7660dbf63047f6bddb25f89ee82587285142e006789344b",
+        "bytes": 19898
+      },
+      "vertices": 124,
+      "projection_max_error": 4.547473508864641e-13,
+      "shared_ankle_endpoint_error": 1.0658141036401503e-13,
+      "minimum_native_Z_minus8": 393.90614536761257
+    },
+    {
+      "phase": 4,
+      "side": "L",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase4-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "72959b27aa9672da89c80ec55e4a579f81387f8a201cb093ab1ca668a485153e",
+        "bytes": 19970
+      },
+      "vertices": 124,
+      "projection_max_error": 3.410605131648481e-13,
+      "shared_ankle_endpoint_error": 2.2737367544323206e-13,
+      "minimum_native_Z_minus8": 65.01546907947203
+    },
+    {
+      "phase": 5,
+      "side": "R",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase5-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "762c003d8dc9e717baae743fa2c3cc2d8bcdf2f5272fcefc541481d23caf64e0",
+        "bytes": 19968
+      },
+      "vertices": 124,
+      "projection_max_error": 2.2737367544323206e-13,
+      "shared_ankle_endpoint_error": 1.4210854715202004e-13,
+      "minimum_native_Z_minus8": 131.7065000575023
+    },
+    {
+      "phase": 5,
+      "side": "L",
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase5-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+        "sha256": "bd730766d7dae103c237786f8d14f5814a9fe5d8483d8f2f13aa1220747a3a3b",
+        "bytes": 19962
+      },
+      "vertices": 124,
+      "projection_max_error": 4.547473508864641e-13,
+      "shared_ankle_endpoint_error": 2.7000623958883807e-13,
+      "minimum_native_Z_minus8": 110.65779633868955
+    }
+  ],
+  "proximal_rows": [
+    {
+      "phase": 2,
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-two-proximal-pelvis-finish-v04/phase2-actual-pelvis-finish-v04/RIGHT-actual-proximal-skin-pelvis-bound-thigh-calf-actual-forward-mesh.json",
+        "sha256": "0c685ecf398e5de620604e4f52f89f20b01ce203f8bc2843f6ee36eaf3469da9",
+        "bytes": 169277
+      },
+      "vertices": 1144,
+      "projection_max_error": 4.547473508864641e-13,
+      "fixed_hip_knee_ankle_chart_error": 2.8421709430404007e-13,
+      "minimum_native_Z_minus8": 134.063889468762
+    },
+    {
+      "phase": 3,
+      "mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-two-proximal-pelvis-finish-v04/phase3-actual-pelvis-finish-v04/RIGHT-actual-proximal-skin-pelvis-bound-thigh-calf-actual-forward-mesh.json",
+        "sha256": "25c767ed957df56795b04f5b070428b5241e77ac3fb9ea527718c59568eb58b2",
+        "bytes": 168709
+      },
+      "vertices": 1144,
+      "projection_max_error": 4.547473508864641e-13,
+      "fixed_hip_knee_ankle_chart_error": 1.7053025658242404e-13,
+      "minimum_native_Z_minus8": 138.18024787564104
+    }
+  ],
+  "max_projection_error": 5.684341886080801e-13,
+  "max_physical_joint_chart_error": 2.8421709430404007e-13,
+  "scope": [
+    "Actual forward mesh target vertices project from the declared shared fixed-bone/calf/rigid-shoe charts. All12 tarsal surfaces use the same exact ankle endpoint; the2 proximal skin surfaces share the same hip/knee/ankle endpoints.",
+    "The authored triangular surface uses interpolated3D vertices, so its vertex height minima bound each active triangle; the stated8native uncertainty guard stays positive."
+  ],
+  "limits": [
+    "These are explicit compatible flexible source-surface models, not unique recovered hidden anatomy or actual source-art approval.",
+    "The upstream complete shoe contact-paint plane minima in prior companion d0f3ea remain separate; this add-on does not silently change or approve those contact assumptions.",
+    "Primary independent source reviewer retains actual semantic material, complete rendered sole/staff, full6/cycle and final source gate. No images/Godot/Git/repository writes were performed."
+  ],
+  "source_visual_status": "NOT_REVIEWED_HERE",
+  "actor_approvals_added": 0,
+  "images_viewed": 0
+}

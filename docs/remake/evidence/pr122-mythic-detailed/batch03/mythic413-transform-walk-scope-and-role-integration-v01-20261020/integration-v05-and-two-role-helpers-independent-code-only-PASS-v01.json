@@ -1,0 +1,88 @@
+{
+  "schema": "twilight-independent-code-only-preservation-audit-v1",
+  "status": "PASS_SCOPED_CODE_CHANGES_WITH_OLD_GUARDS_RETAINED",
+  "integration": {
+    "path": "/workspace/scratch/mythic413-new-clip-integration-proposal-20261020-v05/integrate_new_413_clip_retaining_profile_v05.py",
+    "sha256": "f93a25b0a63a8e8c084652944c9340fdc3872f298491d6a7f9b7e7a9f7d272cc",
+    "baseline": "/workspace/scratch/mythic413-new-clip-integration-proposal-20261020-v04/integrate_new_413_clip_retaining_profile_v04.py",
+    "baseline_sha256": "d2f216a5f3a760e633f60a6ed92f1d32f43086a0b73a9d77abeda007743ae0ed",
+    "canonical_pins": "/workspace/scratch/mythic413-new-clip-integration-proposal-20261020-v05/canonical-input-pins.json",
+    "canonical_pins_sha256": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+    "exact_exhaustive_intentional_patch_labels": [
+      "canonical pin digest",
+      "runtime scope contract checks",
+      "pinned scope module import",
+      "rear role whitelist",
+      "role selection and user WALK scope",
+      "post-adoption role table binding"
+    ],
+    "all_other_code_bytes_identical": true,
+    "non_run_functions_AST_identical": [
+      "require",
+      "digest",
+      "finite",
+      "strict_loads",
+      "strict_json",
+      "encode",
+      "git",
+      "actual_file",
+      "repo_path",
+      "require_absent",
+      "rewrite_path_writes",
+      "frame_contract"
+    ]
+  },
+  "helpers": [
+    {
+      "old": "/workspace/scratch/pr122-author-six-pose-atlas-v01.py",
+      "old_sha256": "d5c55fe3436c3904c2908437d07cfb8335bdcdb2cb79a73cae335538bcf29276",
+      "new": "/workspace/scratch/pr122-author-six-pose-atlas-v02.py",
+      "new_sha256": "596c51fb20eb04d9df49babc373e72a65264eb1bf852b4d46f6134699527ac0c",
+      "only_role_whitelist_and_message_changed": true,
+      "all_RGBA_regions_geometry_root_checks_byte_identical": true
+    },
+    {
+      "old": "/workspace/scratch/pr122-build-authored-clip-request-v02.py",
+      "old_sha256": "ccb80fc88c81bdc4f9fdfc6ec3fb839cb265a0a415adf57bc0010ff6c29cdb62",
+      "new": "/workspace/scratch/pr122-build-authored-clip-request-v03.py",
+      "new_sha256": "bf14344460fafc78e3a1e261d5d1052558bc6f037a80f1cec706ebbcdc44d727",
+      "only_role_whitelist_and_message_changed": true,
+      "all_RGBA_regions_geometry_root_checks_byte_identical": true
+    }
+  ],
+  "pin_scope": {
+    "three_existing_tool_pins_updated": [
+      "checkpoint_pr122_native_clip.py",
+      "pr122_native_production_approvals.py",
+      "stage_pr122_native_locomotion.py"
+    ],
+    "one_new_scope_tool_pinned": "pr122_transform_motion_scope.py",
+    "new_runtime_contract_pins": [
+      "data/pr122_transform_motion_scope.json",
+      "scripts/animation/actor_motion.gd",
+      "scripts/animation/transformation_movement_scope.gd",
+      "tests/pr122_native_action_test.gd",
+      "tests/pr122_native_motion_smoke.gd",
+      "tests/pr122_native_player_connection_test.gd"
+    ],
+    "all_other_canonical_profile_approval_basis_values_identical": true
+  },
+  "reviewed_behavior": [
+    "Only transform:413 and rear NW/N/NE six-role requests allowed; exact safe batch/version and independent request/raw SHA/bytes receipt binding remain unchanged.",
+    "Locomotion roles select selected_locomotion_sheets; idle/attack/hit/death select selected_detailed_action_sheets. Already selected slot in either table is rejected before new writes, and the correct table is verified after adoption.",
+    "The pinned scope module supplies requires_walk(ROOT,413); false rejects new WALK and removes only the RUN same-direction WALK prerequisite, while true retains the prior prerequisite. No approved track, profile or actor state is reset.",
+    "The base nine-path output plan and existing explicitly reviewed reference-copy branch are byte-identical. Exact before-write HEAD/index/worktree/immutable checks, file ownership, exclusive absent destinations, snapshots and atomic write protections are unchanged.",
+    "Every prior native clip geometry/source/texture and SpriteFrames playback texture/region/margin/duration/loop/speed contract is retained. Current/r010 physical profile literals differ only by the exact frames_path replacement; approved267/393 and existing color/profile freezes remain.",
+    "Only the same three scoped Godot scripts may run through the original subprocess guard. No manual CI, additional process allowance, force/reset/rebase/push/merge authorization was added.",
+    "Both authoring/request helpers differ only by role whitelist/message. Full exactRGBA, alpha-positive ownership/regions, geometry, fixed authored C/root and root rounding validation remain byte-identical."
+  ],
+  "limits": [
+    "Read-only static code/AST/byte-equivalence and in-memory compilation audit; the integration program and helpers were not executed, imported, or applied.",
+    "The proposed policy/runtime/test file bodies and queue changes are independently reviewed by another agent. This audit verifies their explicit pins and call sites, not their contents.",
+    "The repository policy patch is not yet assumed applied. Actual integration must run only when every canonical tool/runtime pin matches; mismatches fail closed before adoption.",
+    "Future source packets still require actual independent source/cycle/physical receipt and the existing three scoped Godot adoption gates."
+  ],
+  "images_viewed": 0,
+  "repo_game_Git_mutations": 0,
+  "CI_runs": 0
+}

@@ -1,0 +1,262 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:오만한 우그누스": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "idle",
+          "direction": "NE",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/NE-idle-v02.png",
+          "source_sha256": "b418ba05ecb8650d5a9cc5d3be1e5cafc9c8e7f2b58d240d6bc626e2246df6d8",
+          "texture": "assets/actors/eight_direction/boss_draft_first/ugnus/sources/NE-idle-v02.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  144,
+                  4,
+                  567,
+                  330
+                ],
+                "margin": [
+                  204,
+                  229,
+                  321,
+                  558
+                ],
+                "source_anchor": [
+                  384,
+                  330
+                ],
+                "rgba_sha256": "521a1f0273f84041628f39704523ec2dc32238725cb0d1e7e3580b6dd3a0b54c",
+                "canvas_size": [
+                  888,
+                  888
+                ],
+                "foot": [
+                  444,
+                  555
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  850,
+                  2,
+                  577,
+                  332
+                ],
+                "margin": [
+                  142,
+                  227,
+                  311,
+                  556
+                ],
+                "source_anchor": [
+                  1152,
+                  330
+                ],
+                "rgba_sha256": "b7b510ca9857dbedc28f35cb9968480f8e63ccc3d255cbfad54619170e154af8",
+                "canvas_size": [
+                  888,
+                  888
+                ],
+                "foot": [
+                  444,
+                  555
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  133,
+                  333,
+                  610,
+                  348
+                ],
+                "margin": [
+                  193,
+                  211,
+                  278,
+                  540
+                ],
+                "source_anchor": [
+                  384,
+                  677
+                ],
+                "rgba_sha256": "a5b6ca6d015c4d3aa9aa11afbaf861a9a814909f42683662b7b28dd6d5a24c58",
+                "canvas_size": [
+                  888,
+                  888
+                ],
+                "foot": [
+                  444,
+                  555
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  794,
+                  333,
+                  694,
+                  348
+                ],
+                "margin": [
+                  86,
+                  211,
+                  194,
+                  540
+                ],
+                "source_anchor": [
+                  1152,
+                  677
+                ],
+                "rgba_sha256": "cf5a5322a614e5aa8a54141f188974a9ba3b613aa751cca1541ab1adb22a8147",
+                "canvas_size": [
+                  888,
+                  888
+                ],
+                "foot": [
+                  444,
+                  555
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  123,
+                  685,
+                  607,
+                  325
+                ],
+                "margin": [
+                  183,
+                  234,
+                  281,
+                  563
+                ],
+                "source_anchor": [
+                  384,
+                  1006
+                ],
+                "rgba_sha256": "0b5073cfa255d385489244aabb7ea3c31924f42ecce0a1bbd9eae62700db203f",
+                "canvas_size": [
+                  888,
+                  888
+                ],
+                "foot": [
+                  444,
+                  555
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  864,
+                  683,
+                  597,
+                  327
+                ],
+                "margin": [
+                  156,
+                  232,
+                  291,
+                  561
+                ],
+                "source_anchor": [
+                  1152,
+                  1006
+                ],
+                "rgba_sha256": "4270701ea012a0e21822c98e8002d72c9b3d83543f2137c736e5ae9157aa87ce",
+                "canvas_size": [
+                  888,
+                  888
+                ],
+                "foot": [
+                  444,
+                  555
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 333.0,
+            "canvas_size": [
+              888,
+              888
+            ],
+            "foot": [
+              444,
+              555
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/bossfix-min011/SpriteFrames.tres",
+      "frames_sha256": "d7533f7fc6a34e187eb3f9bd179af6731c1ff909204eb34f71d8328d2c8f869d",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/bossfix-min011/NativeMotionProfile.tres",
+      "native_profile_sha256": "87092a550f0e777d43ced4b3e48233ca8b03ee965221a74592699f82b9631d09",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [],
+  "source_drafts_saved": 1,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

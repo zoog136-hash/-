@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v03",
+  "source_batch": "batch03",
+  "status": "GENERATED_SOURCE_QC_HOLD_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "prompt": "Production replacement animation source for the UNIQUE boss Girtas. The first supplied tiny original portrait is the absolute identity authority. The second supplied image is a faithful enlargement draft of that same portrait, provided ONLY for readable materials and the restored original silhouette. Do not redesign the character. Do not refer to any other art.\n\nProduce a finished transparent 1024x1536 SPRITE SHEET, exactly TWO COLUMNS and THREE ROWS: six 512x512 cells, row-major walking phases0,1,2,3,4,5. Exactly one full-body character per cell, all six characters face EAST/screen RIGHT in the SAME mostly side-on elevated game camera. Face, boots and movement aim RIGHT in every cell. Keep identical identity, anatomy, body proportions, camera, pixel scale, handedness, equipment and material detail throughout; the same physical character moves, not six altered designs. Center each body inside its cell, boots around local y440, with the entire silhouette including every spike, ornament and long weapon inside local x60..452,y60..452. If necessary use natural equipment perspective and consistent framing, never crop or shrink only one pose. Wide transparent gutters. No inter-cell overlaps.\n\nIdentity contract: pale VISIBLE face, long pale white/silver hair, original high dark/gold head ornaments; long THIN hard GOLD RADIAL SPINES physically joined to the original back/shoulder structure, not thick wings or orange feather shapes. Original long DARK skirt/coat-like lower armor with gold edge trim over boots. Original LONG THIN SINUOUS orange/gold weapon in the SAME anatomical RIGHT HAND as the reference; the right hand is the near-camera hand when facing screen right. Keep its flowing long contour distinct from the straight gold spines. Hold this existing weapon low and controlled alongside the walking body, keeping its entire tip visible without crossing a neighboring cell. No broad short sword, no red V-mask, no flame feather fan, no fitted segmented-leg demon redesign, no newly invented weapon or back device. Conservative hidden-side details only, consistent with original material and structure.\n\nThis is a true articulated WALK CYCLE, not standing bobs, translated copies, color swaps or run poses. Six clear sequential support phases:0 RIGHT heel contacts ahead/right while left toe trails behind/left;1 weight on RIGHT foot beneath torso, LEFT knee/foot passes forward unweighted;2 RIGHT support nearing toe-off, LEFT knee clearly advancing toward contact;3 LEFT heel contacts ahead/right while RIGHT toe trails behind/left;4 weight on LEFT foot beneath torso, RIGHT knee/foot passes forward unweighted;5 LEFT support nearing toe-off, RIGHT knee advances, flowing naturally back to phase0. Show actual opposite-side leg exchange between0 and3, and between1 and4, using near/far leg overlap and shading faithfully; do not repeat the same lead leg. Knees and ankles articulate, coat hem responds slightly and physically, pelvis counter-rotates subtly, torso stays controlled; boots remain readable below the skirt rather than hidden. WALK has grounded support and modest stride, not airborne sprinting. Maintain coherent weapon hand, head, hair and radial-spike attachment during all phases. Maintain body size across phases; only anatomically justified small knee/hip height changes.\n\nHigh-quality detailed black/gold fantasy game source preserving original character. Gold and dark armor surfaces fully opaque; alpha0 outside the actual physical silhouette, including between thin spines. Thin spines must remain connected to the physical back/shoulder hub; no floating gold rays, standalone sparkles or detached glow blobs. No background, floor, shadow, fog, bloom cloud, grid, number, text, border, labels, extra characters or extra anatomy. Six complete distinct articulated poses only. This is an animation production asset, never a poster.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "right_heel_contact",
+    "right_support_left_passing",
+    "right_toeoff_left_advance",
+    "left_heel_contact",
+    "left_support_right_passing",
+    "left_toeoff_right_advance"
+  ],
+  "user_authorization": "Production image generation allowed, no images shared in main chat; replacement quality source, no new approval. One attempt only.",
+  "canonical_uncertainty": "Clipped source spike/weapon endpoints and hidden side details are conservatively inferred, documented without stopping production.",
+  "repo_mutations": false,
+  "generated_original_path": "/workspace/generated_images/exec-06e9aed7-0d61-47e0-af74-77f160894cc9.png",
+  "preserved_raw_path": "/workspace/scratch/girtas-E-walk-repair/girtas-E-walk-v03.png",
+  "generated_sha256": "baa853544e2f886fb05f5a9134eb1c131479956ceb511c276f3afad4626db388",
+  "generated_bytes": 2547996,
+  "generated_dimensions": [
+    1024,
+    1536
+  ],
+  "source_qc_status": "HOLD_FUNCTIONAL_WALK_SUPPORT_EXCHANGE",
+  "source_qc_path": "/workspace/scratch/girtas-E-walk-repair/private-source-qc-girtas-E-walk-v03.json",
+  "animation_approved": false,
+  "new_approved_count": 0
+}

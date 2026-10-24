@@ -1,0 +1,24 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 4,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/exact-3D-RIGHT-support-V-chain-highlight-guide.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/exact-3D-RIGHT-support-V-chain-highlight-guide.png": "449ed0a80a1cc9dbba830b9a44a0a32ee3f75e7d059bf46ba670235a98a08b4d",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738"
+  },
+  "prompt": "Dress image1's EXACT ONE3Dhumanbody/joints as GIRTASfromimage2/3 in a REAL FAR-RIGHT-LEG SUPPORT LOAD/RUN-COMPRESSION frame. The goldhighlightline+circles ONLYshow anatomicallycorrecthip->knee->ankle V-chain, NEVER outputguidecolors/marks/text. Image1isabsoluteanatomyleg/occlusion/cameraauthority. BLUE=anatomicalLEFTnearleg/emptyarm, ORANGE=anatomicalRIGHTfarleg/weaponarm. Image2identityONLYhasALLoldlegsremoved. REQUIREDRIGHTSUPPORT: farRIGHT hip atimageRIGHT drops/thighslants diagonallyUPLEFTto visiblyFORWARD bentRIGHTKNEE, then RIGHTSHINslants DOWNRIGHT toflatRIGHTsupportBOOTonfloor beneathhips. This V-bentKNEE mustbe visible asactualgoldarmorkneecap/thigh-to-shin bend, notstiffstraightleg/disappearedjointunderrobe. FarRIGHT supportknee bendsDEEPLYandhipsarecompressedlower, matchinghighlighted3Djointchain. EXACToppositesupportfromusualnearLEFTlanding. DoNOTdrawnearLEFTsupportandrenameitright.\n\nNEAR LEFTleg is PASSING/RECOVERING: its knee flexesHIGHFORWARD towardUPLEFT, nearLEFT shin/BOOTisraisedofffloor onimageLEFT, noLEFTgroundcontact. The farRIGHTplantedboot isimageRIGHT/lowerground, nearLEFTpassingboot isimageLEFT/raised. LongrobeopensviaNATURALRUNNINGSLIT toshow partofFARRIGHTupperthigh/visibleknee/diagonalshin while keepingfulloriginalLONGrobe panels; not pants/shortskirt. Exactlytwocontinuouslegs/boots, noextraorangeleg/phantomknee. SourceV-chaincomesfromactualfixedbone3Drig, notarbitraryjointlines. TorsohipLOWERfromrealkneebending, notsqueezing/rescalingbody. SameUPLEFT NORTHWEST REAR-LEFT3/4head/body/hipcamera, noaxialNrear/Wside/NEflip. Fullskull/armorbodyproportionsconsistent.\n\nExactGIRTAS fromimage2/3: longPALESILVERhair, pointedGOLDcrown, paleprofileonlywherevisible, ornateBLACK/GOLDpauldrons/bodyarmor, THINHARDSTRAIGHTGOLD RADIAL BACKRAYS rigidmetalNOTfeathers/wings, SAME LONG DARK GOLDTRIM ROBE andboots, ONE ORIGINAL LONG NARROW SINUOUS GOLD/YELLOWBLADE withmultiplesmoothS-curvesandoriginalsmallgrip(noextraornatecrossguard). ExactlyTWOARMS/HANDS: nearLEFTimageLEFTLOWEMPTYhand, farRIGHTimageRIGHTclosedhandholding sameLOWoutwardblade besidehip, continuousshoulder/elbow/wrist, no raisedemptyfist/thirdarm/weaponflip/floatingblade. Hair/robe trailwithrunbutraysrigidattachedbackneverflap. Noattack.\n\nONEfinishedhigh-detailRPGgamecutout transparent1024x1024 PNG, fullcrown/hair/rays/longrobe/boots/bladetipcenteredwith100pxalpha0margin. Neverclip/shortenblade/rays, opaquearmor/cloth/metal thinAAedge. No3Dguidecolors/text/labels/jointlines/grid/floor/shadow/glow/haze/particles/extraobjects. ACTUALVISIBLEFARRIGHTsupportkneeVbend +NEARLEFTpassingAIRboot essential.",
+  "transparent_background": true,
+  "material_change": "FullsixRIGHTload4supportkneelooksstraight/hiddenHOLD. NEWsingleRIGHTloadactualfixed3D IKguide with LEFTpassingankleFORWARD Y+.30 Z.35 soLEFTkneeHIGH(.57,.85) noRIGHTkneelowocclusion. RIGHTsupportVchain projectedexactly[[562,534],[476,599],[550,776]] overlayhighlightsmusttranslateintonaturalvisiblearmor/kneeslit, nooldcharacterlegs.",
+  "requested_at": "2026-10-19T15:19:53.276160+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

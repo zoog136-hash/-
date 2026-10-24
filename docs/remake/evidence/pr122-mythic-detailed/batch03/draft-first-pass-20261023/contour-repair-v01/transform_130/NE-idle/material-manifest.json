@@ -1,0 +1,154 @@
+{
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_130-NE-idle-draft-v01.png",
+  "source_sha256": "6bbccf5a6ff241b539b5cba56f0350d690481885d00fd66d04cb17697acb61d2",
+  "body_seeds": [
+    {
+      "region": [
+        284,
+        84,
+        1,
+        1
+      ],
+      "phase": 0,
+      "body_label": 4,
+      "body_area": 72095
+    },
+    {
+      "region": [
+        779,
+        75,
+        1,
+        1
+      ],
+      "phase": 1,
+      "body_label": 3,
+      "body_area": 76456
+    },
+    {
+      "region": [
+        1234,
+        15,
+        1,
+        1
+      ],
+      "phase": 2,
+      "body_label": 1,
+      "body_area": 84395
+    },
+    {
+      "region": [
+        270,
+        563,
+        1,
+        1
+      ],
+      "phase": 3,
+      "body_label": 25,
+      "body_area": 87340
+    },
+    {
+      "region": [
+        805,
+        569,
+        1,
+        1
+      ],
+      "phase": 4,
+      "body_label": 29,
+      "body_area": 83910
+    },
+    {
+      "region": [
+        1294,
+        565,
+        1,
+        1
+      ],
+      "phase": 5,
+      "body_label": 27,
+      "body_area": 72556
+    }
+  ],
+  "foreground_ownership_proof": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "8c69f060915b26de45395887bd7780c106b3176b70444be6f3eeaa6b57402c88",
+    "foreground_owner_sha256": "99195324b0af46b072cfc89f52df744b6508c4be6b3394b51e9d089b2b2e9fd8",
+    "detached_pixels": 2,
+    "detached_fragments": [
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          184,
+          407,
+          185,
+          408
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 177.341478509682,
+        "owner_margin_min": 175.1054105321822
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          334,
+          714,
+          335,
+          715
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 204.2473990042468,
+        "owner_margin_min": 202.011331026747
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "RGBA_ownership": {
+    "original_visible_texels": 763860,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "parts": [
+    {
+      "name": "phase_0",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/phase_0.png",
+      "sha256": "36f4b8a2a753707b43999397748b9feb1b20d522ebd0e49c12f0a922781a588a"
+    },
+    {
+      "name": "phase_1",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/phase_1.png",
+      "sha256": "e14806c7ba52aac45ad4a4041208df5f7f7581ea757ec85e2e20613348e33143"
+    },
+    {
+      "name": "phase_2",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/phase_2.png",
+      "sha256": "920a59a67f5ce41cede1fd06f14601677def4f10e73f60f8898fe78f05a8ad0b"
+    },
+    {
+      "name": "phase_3",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/phase_3.png",
+      "sha256": "94d74ee4994d229bf4d77b697ae474d12d64efa8f03bb125a76212bb254a1216"
+    },
+    {
+      "name": "phase_4",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/phase_4.png",
+      "sha256": "4db961797eeadfa79e0d3f22c8632018e8564512f623d808b59e5e1e000784cd"
+    },
+    {
+      "name": "phase_5",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/phase_5.png",
+      "sha256": "001f9316741507501e3cd209f1d39559b2772b06734e400ebf00dd50facf227f"
+    },
+    {
+      "name": "unclassified_soft_residue",
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_130/NE-idle/parts/unclassified_soft_residue.png",
+      "sha256": "7468b81e68d84b4ab8f9a6bda1a490e3287f2577484a57f907d3da527915a4fb"
+    }
+  ],
+  "unclassified_soft_residue_pixels": 23236,
+  "unclassified_soft_residue_max_alpha": 1,
+  "residue_status": "PRESERVED_SEPARATE_NOT_RENDERED_FINAL_REVIEW_HOLD",
+  "motion": "Original whole-pose coordinates retained; contour extraction and rigid translation only",
+  "no_resampling": true
+}

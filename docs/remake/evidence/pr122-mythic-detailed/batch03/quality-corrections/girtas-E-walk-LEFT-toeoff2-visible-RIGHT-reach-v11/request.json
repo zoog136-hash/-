@@ -1,0 +1,29 @@
+{
+  "key": "transform_267",
+  "name": "Girtas",
+  "direction": "E",
+  "role": "walk",
+  "version": "v11LEFTtoeoffRIGHTreach2",
+  "source_pose": 2,
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_batch": "batch03",
+  "status": "AUTHORING_DISTINCT_MISSING_TOEOFF_REACH_NOT_ACTOR_COMPLETION",
+  "references": [
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase2.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase2.png": "ba142c0290efa19e3c61b947a999975eed7b48f29ee20f601bf269e3db4f15af",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13"
+  },
+  "transparent_background": true,
+  "prompt": "Create ONE full high-detail Girtas E-facing WALK animation key on transparent background, generous margins, no scene/text/guide/extra characters. This is actual phase2 TOE-OFF with opposite leg reaching FORWARD IN AIR, not running flight and not heel-contact. Image1 is PRIMARY exact solid3D leg geometry/depth: faithfully dress this pose. ORANGE anatomical RIGHT NEAR leg reaches FORWARD/imageRIGHT, continuous weapon-side hip\u2192diagonal forward armored thigh\u2192front knee\u2192shin\u2192AIR leading boot exposed IN FRONT of the robe natural side slit. BLUE anatomical LEFT FAR leg trails BACK/imageLEFT BEHIND the robe to supporting REAR TOE, heel raised. The near RIGHT front heel is visibly AIRBORNE with toe slightly up, still approaching next RIGHTheelcontact3, not already planted. ONLY the FAR LEFT rear toe touches ground. Exactly TWO physically connected legs and TWO hips, never a third boot. Supporting toe keeps body grounded; front AIR heel clearance modest and plainly visible. Show the actual proximal nearRIGHT hip\u2192upperthigh\u2192knee through the natural longrobe slit to prove leg ownership, not hidden disconnected boots. Match exact primary near/far ordering; final armor black/gold, no mannequin colors.\nImage2 is ONLY original upperbody identity with old legs absent: same pale face in RIGHT profile, long pale gray hair, fine HARD narrow straight gold radial crown spines and ornate black/gold armor. Image3 is ONLY original longrobe cloth/gold trim: preserve full ankle-length flowing side/back panels and original longrobe silhouette, naturally part the near slit around actual nearRIGHT thigh, never shorts/pants or shortened coat. Image4 is ONLY original long sinuous dark/gold blade. Anatomical RIGHT NEAR arm continuously grips that blade low/back to imageLEFT; LEFT FAR hand empty and balances. Exactly TWO arms, unchanged model/equipment. Fixed pure E side camera from mannequin, face/nose RIGHT, not SE. Crown rays, hair, entire weapon, both boots all complete within canvas. Physically clear new toeoff/reach key, preserve boss quality.",
+  "corrective_reason": "New missing toeoff/reach single phase after v07 full6 opposite ownership HOLD; require visible actual proximal nearRIGHT chain and real sole support. No full6 retry, no guide/filename approval.",
+  "quality_gate": "Actual one rear toe support+opposite front AIR reach, unbroken two leg chains, faithful E identity/camera; fresh independent QC required."
+}

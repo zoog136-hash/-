@@ -1,0 +1,30 @@
+{
+  "schema": "pr122-source-contact-key-v1",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "source_path": "/workspace/scratch/girtas-E-walk-repair/girtas-E-walk-v03.png",
+  "source_sha256": "baa853544e2f886fb05f5a9134eb1c131479956ceb511c276f3afad4626db388",
+  "source_pose": 0,
+  "source_region": [
+    16,
+    8,
+    465,
+    489
+  ],
+  "crop_path": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-lossless.png",
+  "crop_sha256": "32753e75778c6b195e0f79fecf1ec92ef758ce383b1789fd5f9bdb51119e52bb",
+  "rgba_sha256": "5c5bea8dfd44388e608cec0202bf54c766c9b2c5e2e04b1b6e86e82346779ada",
+  "crop_size": [
+    465,
+    489
+  ],
+  "pad_path": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png",
+  "pad_sha256": "ca12906450ef3eb855196608903f99d031cf7472a4953d2b06ed7d20432bb346",
+  "pad_translation": [
+    279,
+    267
+  ],
+  "pixel_processing": "exactRGBA crop and translation, no scaling/masking/recoloring",
+  "anatomy_review": "Existing contact0 leads with near anatomicalRIGHT leg; no clear farLEFT leading contact found across v03/v04; author opposite contact only."
+}

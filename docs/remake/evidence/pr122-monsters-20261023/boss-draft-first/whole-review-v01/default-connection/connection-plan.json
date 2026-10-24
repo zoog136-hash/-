@@ -1,0 +1,170 @@
+{
+  "actors": [
+    {
+      "key": "monster:얼음 여왕",
+      "source_frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r003/SpriteFrames.tres",
+      "source_frames_sha256": "7f00d728f81d2582df44afd4a12db3df5ca4a3e748aacb75aa9eb4ad6528a054",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/published-v01/SpriteFrames.tres",
+      "frames_sha256": "6540aeb8fd5e49b15adccb9f5c4d943fc2208179428fc611651302202cf8721a",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r003/NativeMotionProfile.tres",
+      "visual_settings": {
+        "frames_path": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/published-v01/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.614285714286,
+        "sprite_offset": [
+          0,
+          -19.657142857152
+        ],
+        "movement_fps": 12.5,
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "color_tint": "ffffff",
+        "attack_hit_frame": 1,
+        "action_hit_frames": {
+          "attack": 1,
+          "cast": 1
+        }
+      },
+      "prior_profile": {
+        "name": "얼음 여왕",
+        "motion_style": "slash",
+        "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0,
+          -33.6
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "movement_fps": 15.009380863039398,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.8,
+        "hit_recoil": 0,
+        "body_kind": "caster",
+        "floating": false,
+        "color_tint": "c5ddff",
+        "shared_visual_source": "transform:137",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "female_caster_proxy_native_queen_WIP_preserved"
+      },
+      "tracks": 33,
+      "poses": 108
+    },
+    {
+      "key": "monster:알비노 데몬",
+      "source_frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r004/SpriteFrames.tres",
+      "source_frames_sha256": "b44c230079ac9343ed0ed52a148c75ef151b8965cf6b7575de5b464ed3f4822f",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/published-v01/SpriteFrames.tres",
+      "frames_sha256": "9cab6677d899009849f83751c5525fef67b8ca2fd54348b282e6ceac451cce88",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r004/NativeMotionProfile.tres",
+      "visual_settings": {
+        "frames_path": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/published-v01/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.33333333333333,
+        "sprite_offset": [
+          0,
+          -42.66666666666656
+        ],
+        "movement_fps": 12.5,
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "color_tint": "ffffff",
+        "attack_hit_frame": 1,
+        "action_hit_frames": {
+          "attack": 1,
+          "cast": 1
+        }
+      },
+      "prior_profile": {
+        "name": "알비노 데몬",
+        "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.877551,
+        "sprite_offset": [
+          0,
+          -28.081632
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "floating": false,
+        "color_tint": "d8e8fc",
+        "shared_visual_source": "monster:아시타지오",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      },
+      "tracks": 33,
+      "poses": 107
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "source_frames": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/SpriteFrames.tres",
+      "source_frames_sha256": "f5089bb511afb8522d712e4fc15dc366f240fd901272fd216ff6e0e1ba8629a5",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/SpriteFrames.tres",
+      "frames_sha256": "3a54faf2d7e55bd12096b9f9f4629db79ce57019903e7daf79371a421d11c68f",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres",
+      "visual_settings": {
+        "frames_path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 1.333333333333,
+        "sprite_offset": [
+          0,
+          -42.666666666656
+        ],
+        "movement_fps": 12.5,
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "color_tint": "ffffff",
+        "attack_hit_frame": 1,
+        "action_hit_frames": {
+          "attack": 1,
+          "cast": 1
+        }
+      },
+      "prior_profile": {
+        "name": "죽음의 좀비 로드",
+        "body_kind": "large",
+        "pixel_scale": 1.4,
+        "color_tint": "ffffff",
+        "frames_path": "res://assets/actors/eight_direction/expanded/zombie_dark/SpriteFrames.tres",
+        "layout": "directional8",
+        "sprite_offset": [
+          0,
+          -44.8
+        ],
+        "embedded_shadow": true,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 2,
+          "cast": 2
+        },
+        "attack_hit_frame": 2,
+        "death_duration": 0.4,
+        "movement_fps": 10.0,
+        "prior_visual_profile": null
+      },
+      "tracks": 33,
+      "poses": 116
+    }
+  ],
+  "normal_profiles_unchanged": true,
+  "combat_and_death_clocks_preserved": true,
+  "existing_PNGs_modified": 0,
+  "new_art_generated": 0,
+  "actual_Main": "PENDING"
+}

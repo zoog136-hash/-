@@ -1,0 +1,101 @@
+{
+  "schema": "pr122-413-N-terminal2-independent-actual-source-quality-v1",
+  "actor": "transform:413",
+  "direction": "N",
+  "action": "walk",
+  "status": "ACTUAL_SOURCE_QUALITY_PASS",
+  "scope": "Terminal2 finished actual bitmap source only; occluded forefoot physical anchor remains rig-control evidence rather than measured contact",
+  "actual_terminal2": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-terminal2-local-finish-v06/N-walk-phase2-actual-native-local-finish-v06.png",
+    "sha256": "62e74f9a4d4103d3493c39e1557913613df5f0d0996d5efd8bf2d9d861992cb2",
+    "bytes": 448872
+  },
+  "reviewed_local_finish_v04": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-terminal2-local-finish-v04/N-walk-phase2-actual-native-local-finish-v04.png",
+    "sha256": "7bb660d2ae010a6e790332c45f5f8685ff41c57160f1a74ecf6ff6979890bb4f",
+    "bytes": 449063
+  },
+  "actual_pose_and_joint_contract": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-terminal2-rig-v02/actual-terminal2-articulation-contract.json",
+    "sha256": "8d10edb1fe5218fb931eb995fa6a59dbde17468d1e94e33964d0fe6ee8c37760",
+    "bytes": 1873
+  },
+  "local_skin_hand_finish_proof": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-terminal2-local-finish-v04/terminal2-local-finish-proof-v04.json",
+    "sha256": "323a41fe944e127046f1620be8e4dd085e7908a30795d35b1c4809c2c3abba9d",
+    "bytes": 1732
+  },
+  "numeric_only_AA_cleanup": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-terminal2-local-finish-v06/terminal2-oldhand-halo-only-proof-v06.json",
+    "sha256": "812e5a3693a9f8eb412a533e3953ada462de134e00ebf0dc55cb983de75561ea",
+    "bytes": 820
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-N-terminalfinished-view31-frozen.json",
+    "sha256": "b0323ab2b6e2f2f83f6eff60ddd05fbf176fd0aac44064cac0242ff00218ab30",
+    "bytes": 15343
+  },
+  "CONTACT0": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+    "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+    "bytes": 452591
+  },
+  "LOAD1": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-LOAD1-native-skin-joint-finished-v05.png",
+    "sha256": "e30aa65c1fb5f69c0ca13ac539be3702c2951fdf42d007bbaaded4fba7516d95",
+    "bytes": 443682
+  },
+  "constant_C": 1920,
+  "body_unit": 1.875,
+  "unchanged_common_source_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "actual_body_node_bob": [
+    7,
+    -6
+  ],
+  "independent_checks": {
+    "v04_to_v06_changed_RGBA": 77,
+    "changes_outside_known_empty_oldfinger_AA_ROI": 0,
+    "empty_ROI_remaining_nonzero_alpha": 0,
+    "all_y_ge800_vs_reviewed_v04_RGBA_changed": 0,
+    "RIGHTstaff_ROI_770_0_920_1120_RGBA_changed_vs_original_body_bob": 0,
+    "head_upper_y_lt400_RGBA_changed_vs_original_body_bob": 0,
+    "actual_alpha16_bbox_xyxy": [
+      408,
+      138,
+      893,
+      1084
+    ]
+  },
+  "actual_quality": [
+    "Pure N rear body, original RIGHT staff/hand, complete two-ended weapon, bun/ribbon and dedicated gold-blue-white costume retained.",
+    "Near LEFT terminal support leg/heel-rise material and short late RIGHT swing are distinct genuine native-part articulation, not whole-picture translation.",
+    "Natural completed LEFT forearm/hand now progresses forward against terminal LEFT leg moving rearward; old 69px fingertip and final tiny AA trail are removed without altering actual hand.",
+    "Native bare-skin cap/garter joins now have no large white patch or double skin seam; preserved original blue inner coat is actual clothing rather than discarded as a residual leg.",
+    "Complete original boot material and prior finished calf/ankle/feet are preserved through local finishes."
+  ],
+  "physical_limit": {
+    "authored_occluded_forefoot2": [
+      617,
+      1066.38200653
+    ],
+    "authored_model_forefoot1": [
+      616.5,
+      933.509279257
+    ],
+    "authored_actual_goldheel2": [
+      617,
+      1081.61730959
+    ],
+    "note": "Forefoot2 is explicitly occluded rig control, not a measured visible bitmap sole contact; source QUALITY PASS does not certify unit sole plant, all6 physical loop or unique hidden3D bones. Full six actual body-ground/swing/loop review and real staging remain required."
+  },
+  "next": "Opposite RIGHT contact3/load4/terminal5 production then full6 actual cycle/body-ground and staging review.",
+  "whole_cycle_APPROVED": false,
+  "physical_sole_pair_APPROVED": false,
+  "staging_APPROVED": false,
+  "actor_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

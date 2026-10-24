@@ -1,0 +1,28 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v04guard0",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 0,
+  "references": [
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Genuinely NEW NEhitguard0 needed: exact idle0 reused in v03 failed existing native cross-track duplicate gate. Do not weaken/bypass gate; author distinct low EMPTY LEFT combat brace and local shoulder/wing/cape tension while preserving low connected RIGHT blade arm and NErear camera.",
+  "prompt": "Author ONE genuinely NEW NE HIT-REACTION COMBAT GUARD0 pose of the SAME Halpas. Primary image1 is correct neutral NE camera/identity; image2 is verified low onset1 for same two-arm anatomy. This new guard precedes onset1. Exact NE BACK-RIGHT/UP-RIGHT camera: helmet REAR and back spinal armor visible, no front face or pink breastplate. Same gold-horn black/gold plate armor, TWO complete solid purple crystal fan wings rooted on back, torn LEFT/back burgundy cape, same compact purple blade and two complete hovering legs. Same proportions, model and equipment.\n\nEXACTLY TWO ARMS. Existing near/imageRIGHT shoulder->upperarm->elbow->forearm->closed hand continuously grips SAME blade LOW beside same hip in the SAME ownership as both refs. Never lift an empty right fist or detach/drop blade to waist. Keep wrist/hilt contact. OTHER far/imageLEFT arm is always EMPTY.\n\nSpecific new guard0, genuinely different from original idle image1 and onset1 image2: draw same EMPTY LEFT upperarm angled slightly out from far LEFT shoulder; lower forearm/empty closed fist to LEFT WAIST/upper-hip level along cape edge, well BELOW shoulder and lower than bent onset1. Fist visibly braced just off cape, elbow slightly bent outward10degrees, preparing to absorb impact. Redraw that ORIGINAL LEFT arm continuously to new low hand position, do not leave previous hidden/down forearm or add a new third hand. Right blade arm remains low. Head/upper-back slightly alert/braced, shoulders gently tensed, wing roots partly set and cape hem pulled a little back: a real combat reaction guard with local arm/torso/hairless-helmet/feather/cloth changes, not an exact copy of idle or a random translation. No arm raised near head, no attack swing and no camera turn. Hips and correct hovering two-leg chains sameNE plane.\n\nMaintain complete full silhouette and high detail: same gold horns, segmented armor, original blade length, two wing roots/fans and cape. ONE centered transparent1024x1024 cutout, whole figure in central700x800 with at least120px TRANSPARENT gutters all sides. Opaque crisp RPG materials, thin edgeAA, alpha0 background/gaps. No guide marks, text, panels, floor/shadow, glow, haze, particles, trails, extra objects or duplicate limbs.",
+  "requested_at": "2026-10-19T13:50:07.657753+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

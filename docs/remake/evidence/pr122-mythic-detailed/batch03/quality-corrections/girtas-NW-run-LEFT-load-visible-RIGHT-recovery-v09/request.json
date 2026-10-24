@@ -1,0 +1,32 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 1,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-nearLEFT-load1-lossless-pose-only.png",
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/same-nearLEFT-load-pose-natural-farRIGHT-hem-opening-guide.png",
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-source0-farRIGHT-folded-recovery-boot-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-nearLEFT-load1-lossless-pose-only.png": "f314a147a62108f696212a68f2897745a6066cc988b69db4f60cde63a0ab9533",
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/same-nearLEFT-load-pose-natural-farRIGHT-hem-opening-guide.png": "2930bfed4f27d1aef07185cc7e1fba602de17d893ed5d086b643ce3e7141b40f",
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-source0-farRIGHT-folded-recovery-boot-detail.png": "4f5db73df7e36345ace8796e466a443009b9c932c5247daed0c01bf3bea9281e"
+  },
+  "prompt": "Edit FIRST exact faithful GIRTAS NW run LEFT-LOAD character pose to reveal its currently fully hidden FAR anatomicalRIGHT recovering shin/boot through a SMALL NATURAL opening under the existing longrobe rear/far hem. SECOND is same FIRST with mint circle only marking the natural far-right hem opening area; never output marks. THIRD is exact detail of SAME GIRTAS's anatomically correct FAR RIGHT folded-back recovery shin/boot from independently accepted LEFTlanding0, supplied ONLY for correct same boot/armor anatomy. It is NOT an extra limb.\n\nKeep FIRST's existing anatomical NEAR LEFT support leg: its knee already bends underload, shin and sole bear weight, same sourcecamera/head/torso/hips and body proportions. Do not move/re-pose that loaded LEFT leg or replace it with a straight stiff leg. The other actual FAR RIGHT leg belongs to far RIGHT hip behindrobe; let its knee advance subtly in the passing/recovery cycle and its shin fold back to a visibly RAISED gold-black RIGHT boot below/far-right behindbody, clear of floor. Reveal a small connected knee/shin/boot portion under natural robe slit/hem so independent viewers can track two real leg chains: near LEFT planted LOAD, far RIGHT recovering AIR. Match third boot's actual farRIGHT ownership and armor; no swap. Exactly TWO legs total, never three. Existing nearLEFT plantedboot remains sole groundcontact; farRIGHT boot is separate and raised.\n\nDo not shorten the original longrobe, cut a new bare-thigh slit, turn robe into pants/shortskirt, expose barethigh, alter armorbody proportions, or remove flowing long goldtrim robe panels/tail. Lift only a small existing far/rear hem naturally over the recovering boot. Full faithful correct NW rear-LEFT3/4camera preserved, nearLEFT emptyhand, farRIGHT hand continuous glowing sinuousblade via ORIGINAL SMALL plain goldcollar/hilt (NO invented flower/diamond/prongs). HARD thin goldrays, longsilverhair, crown, blackgoldarmor and longrobe unchanged. No extraarm/head/weapon/boot, no mirror/rescale/recolor/guidecolors. ONE full unlabelled transparent-background pose with generous margins, allraytips/bladelongtip/feet/robe complete; no ground/shadow/grid/text.",
+  "transparent_background": true,
+  "material_change": "preserve independently accepted actualnearLEFTbentLOAD, reveal actualotherfarRIGHTrecoveringshin/boot throughnaturalexistinglongrobehem withoutrobe redesign",
+  "base1_proof_sha256": "57f7cf445bb8d7e9fb93cefaa1ae53afa2855bbdb6d054ca5e64e64b0fa8bb74",
+  "boot_detail_source_region_xyxy": [
+    250,
+    335,
+    375,
+    450
+  ],
+  "prior_independent_HOLD_sha256": "9246493e9d73298a39ef18c455d949ea5c95f5355a1d6d919ba27b53f0ab9d52",
+  "requested_at": "2026-10-19T15:56:49.946414+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

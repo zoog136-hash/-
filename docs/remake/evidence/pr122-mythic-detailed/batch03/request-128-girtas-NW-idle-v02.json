@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "NW",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png",
+    "/workspace/scratch/girtas-N-idle-repair/girtas-N-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802",
+    "/workspace/scratch/girtas-N-idle-repair/girtas-N-idle-v02.png": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6"
+  },
+  "prompt": "Create one faithful six-phase NW IDLE native animation sheet of the original UNIQUE boss Girtas. Reference1 exact original tiny portrait is the absolute identity authority, reference2 is its faithful enlargement draft for the same original visible face/material/equipment. Image3 is the already faithful BACK/N idle source, supplied only for conservative rear equipment/hair construction; rotate to the requested new heading, do not copy its heading. No other character design or prior generic animation art is allowed.\n\nFIXED ABSOLUTE HEADING FOR ALL6: NORTHWEST: stable BACK-LEFT three-quarter view facing UP-LEFT/away from viewer. Back surface and pale hair down back dominate, shoulders/pelvis/boots aim UP-LEFT, head looks UP-LEFT and away. Not lateral WEST, not front-left SW. Do not show front chest emblem/front-facing human face. AnatomicalRIGHT weapon arm is the FAR arm projecting on the upper/right side of torso; maintain its real right shoulder/elbow/grip even if partly occluded. Do not mirror NE art or swap weapon to the nearLEFT hand. Keep whole weapon visible with natural offset. Keep this exact heading for head, shoulders/torso, pelvis and boots throughout every phase. A breathing pose must not turn into another direction.\n\nOutput transparent1024x1536, exactly TWO COLUMNS x THREE ROWS of512x512 cells, one complete full-body figure per cell, phases0..5 row-major. Same physical model, anatomical ratios, camera and pixel scale in all6. CROWN/HELMET-to-BOOT CORE BODY height about300-330px: top helmet localy105, soles near localy435. Do NOT enlarge characters to fill all512px; leave generous visible transparent margins. Entire combined equipment/body/spines/long weapon must fit within localx45..467,y45..467 and never overlap neighboring cells or clip. Preserve correct core-body/equipment ratios, not a resized body with huge new gear.\n\nORIGINAL IDENTITY: pale VISIBLE human face only if actual heading permits seeing face; long pale white/silver hair, original tall black/gold head ornaments; narrow LONG HARD GOLD RADIAL SPINES physically attached behind original back/shoulder structure; original long DARK skirt/coat-like lower armor with GOLD EDGE TRIM, original dark boots and black/gold armor. Original LONG THIN SINUOUS orange/gold weapon with repeated flowing curves and pointed tip stays the SAME length/curve identity and SAME ANATOMICALRIGHT hand in every frame. Conservatively rotate existing structures to requested heading without inventing back badges, machinery, new spikes, extra ornaments or extra weapons. NO closed redV mask, NO broad orange flame-feather fan, NO generic muscular demon, NO short broad sword, NO fitted segmented-leg armor replacing long dark skirt. Rigid gold spines are actual material, not wings, floating rays or animated flames.\n\nA true restrained planted-foot IDLE: both boot soles, pelvis anchor and ground stance IDENTICAL throughout6.0 relaxed neutral baseline;1 local inhale starts, slight ribcage expansion and connected shoulder/elbow response;2 inhale peak chest/back lifts subtly through joints;3 exhale begins shoulders relax;4 exhale completes with small hair/robe/wrist settling lag;5 returns near baseline0 for clean loop. Six actual distinct connected local chest/back/shoulder/forearm/hair/cloth articulations, not six identical copies, global translation/rotation/resizing or tint cycling. No walk, no lifted knee/heel, no attack or weapon swing. Existing pale hair and dark goldtrim robe respond gently; rigid gold spine geometry remains attached. Weapon only follows tiny breathing wrist response, never morphs/changes hand.\n\nAll head/boots/robe and every thin spine plus ENTIRE long curved blade/tip fully visible each cell. Fine opaque dark/gold armor, alpha0 outside physical silhouette and between connected thin spikes. No floor, cast shadow, backdrop, diffuse glow cloud, fog, detached sparkles, text, grid, labels, borders or extra figures. Accurate game animation source, not poster art. Heading and original anatomicalRIGHT weapon hand are non-negotiable.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "neutral_baseline",
+    "inhale_begin",
+    "inhale_peak",
+    "exhale_begin",
+    "exhale_settle",
+    "return_to_baseline"
+  ],
+  "corrective_reason": "Replace unapproved generic redesigned NW idle with original-faithful pale-face/hair/thin-gold-radial-spines/long-dark-goldtrim-skirt/long-sinuous-right-hand-weapon, exactNW compass and genuine locally articulated planted-foot breathing.",
+  "user_authorization": "Actual remaining unique production queue, exactlyone generation per new direction, private bounded previews only, no repo/index changes or approval inflation.",
+  "canonical_uncertainty": "Original108x132 clipped tips/fine unseen details conservatively inferred; no invented major gear and no stopping only for uncertain fine pixels.",
+  "repo_mutations": false,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Actual6 poses remain BACK-LEFT/NW, not NE: left boot toe projects screenLEFT while opposite boot reads rear/heel, left near shoulder/arm silhouette is exposed, helmet/back axis and pale back-hair placement turn left-away. No front face/cheststar and no right-facing boot/helmet reversal.",
+      "AnatomicalRIGHT weapon remains the far/right projected arm with same long thin sinuous glowing blade on imageRIGHT; nearLEFT hand imageLEFT is empty. It is not a simple mirrored NE sprite/hand swap.",
+      "Original tall dark/gold ornaments, long pale back hair, thin hard gold radial spikes and long dark goldtrim skirt remain faithful without redmask/flamefeather redesign.",
+      "Both feet remain planted throughout6, while back/shoulder/elbow posture and clearly moving hair/robe lag create locally articulated idle/settle states.",
+      "Full gear/boots/blade tip visible, physical spine attachments rigid, coherent body/equipment ratios across6."
+    ],
+    "visual_limitations": [
+      "NW back-left turn is restrained rather than an exaggerated side exposure; runtime eight-heading comparison should retain its left-away interpretation and distinguish it from N.",
+      "Rear details derive conservatively from original/canonical plus N rearPASS source, not any old redesigned art.",
+      "Source-art review only; actual runtime breathing readability, exact foot lock,5->0 seam and final Main integration remain separate checks.",
+      "Tiny108x132 original clips some equipment endpoints and does not establish all hidden-side engraving; these are documented conservative inferences, not final character approval.",
+      "Generated source uses more of512cell height than requested300-330px target; internally coherent anatomy/equipment must be normalized by stable body landmarks at runtime, never by spike/weapon bbox.",
+      "No actor completion, approval count change or replacement of original approved assets is claimed."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+    "raw_bytes": 2445925,
+    "request_sha256": "de2a8293d990c8b473f1bbab09509133937bbcfe08c98f044e631b29b877c90c",
+    "review_sha256": "a7b9300015692b8afba070f466285164c484c58e0be0d77088455b6b01a8e498"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+  "output_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+  "output_bytes": 2445925,
+  "original_generated_file": "/workspace/scratch/girtas-NW-idle-repair/girtas-NW-idle-v02.png"
+}

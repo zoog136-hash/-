@@ -1,0 +1,3314 @@
+{
+	"boss": [],
+	"checks": 1643,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792373259.78058,
+				"expires_at": 1792373859.78058,
+				"grade": "일반",
+				"hunt_batch": "751aa6171ac861c9f9a579dc0a6cb42d",
+				"id": "14a56933011c8c330a42e78929d3a898",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1900,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 28
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(94.14062, 0.0)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(66.60156, 66.60156)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 94.14062)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-66.60156, 66.60156)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-94.14062, 0.0)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-66.60156, -66.60156)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -94.14062)",
+			"name": "알비노 몽크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(66.60156, -66.60156)",
+			"name": "알비노 몽크",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 35,
+			"facing": 0,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 1,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 2,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 3,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 4,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 5,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 6,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		},
+		{
+			"damage": 35,
+			"facing": 7,
+			"kind": "melee",
+			"name": "알비노 몽크"
+		}
+	],
+	"physics_ticks": 1256,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 4,
+			"track": "walk_0"
+		},
+		{
+			"frame": 5,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 4,
+			"track": "walk_1"
+		},
+		{
+			"frame": 5,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 4,
+			"track": "walk_2"
+		},
+		{
+			"frame": 5,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 4,
+			"track": "walk_3"
+		},
+		{
+			"frame": 5,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 4,
+			"track": "walk_4"
+		},
+		{
+			"frame": 5,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 4,
+			"track": "walk_5"
+		},
+		{
+			"frame": 5,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 4,
+			"track": "walk_6"
+		},
+		{
+			"frame": 5,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 4,
+			"track": "walk_7"
+		},
+		{
+			"frame": 5,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25333.8828125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "74eb5c1f5b8b513fd17ee7e169a789404be7020cc53a247257ce598a2f729f9f",
+			"visible_body_viewport": [
+				516.399291992188,
+				276.710113525391,
+				248.890930175781,
+				169.851257324219
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25333.8828125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "74eb5c1f5b8b513fd17ee7e169a789404be7020cc53a247257ce598a2f729f9f",
+			"visible_body_viewport": [
+				516.399291992188,
+				276.710113525391,
+				248.890930175781,
+				169.851257324219
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25341.4140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk-native-1.png",
+			"physics_tick": 23,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "d1f3d5587e9338dd4e70c7753e04d853325784c458237adbfbaee60919a0e719",
+			"visible_body_viewport": [
+				514.713684082031,
+				276.710113525391,
+				251.413513183594,
+				169.851257324219
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25350.828125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk-native-2.png",
+			"physics_tick": 29,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "2e2abd14eb22f9558521b1437479ad7ca1090b82241e78d0b3d17354a7397d75",
+			"visible_body_viewport": [
+				532.371459960938,
+				279.232635498047,
+				238.80078125,
+				167.328704833984
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25360.2421875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk-native-3.png",
+			"physics_tick": 35,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "02b73b94bb65fbe35c16a89fdfe7c59364e31ded3fe074070b1ccfadd6688e05",
+			"visible_body_viewport": [
+				535.73486328125,
+				278.391784667969,
+				224.50634765625,
+				168.169555664062
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25369.65625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk-native-4.png",
+			"physics_tick": 41,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "562920d1cf4c16fb711fb4712bcec89929aabf990ce1507e22a2d429a77d73ef",
+			"visible_body_viewport": [
+				523.122131347656,
+				280.914337158203,
+				247.209228515625,
+				165.647003173828
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25379.0703125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-walk-native-5.png",
+			"physics_tick": 47,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "54b063a96e8e5b7b62f1da6fe496b53f790d088ef43ef782bfdc1fab9f7ecd66",
+			"visible_body_viewport": [
+				517.236206054688,
+				279.232635498047,
+				243.005004882812,
+				167.328704833984
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25426.140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-attack-0.png",
+			"physics_tick": 74,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "1ad56fcefb877af1d58a4c6da948427ad8e1b0a615cadffdea34908912d3ea30",
+			"visible_body_viewport": [
+				550.029296875,
+				227.940933227539,
+				199.280944824219,
+				218.620407104492
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25426.140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-attack-1.png",
+			"physics_tick": 92,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "9097829c6956f5fa4673563df5815e2b8595077befeb8d16b0ccc9b356316cd3",
+			"visible_body_viewport": [
+				523.122131347656,
+				254.007217407227,
+				295.137573242188,
+				192.554122924805
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25426.140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-E-contact.png",
+			"physics_tick": 92,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "9097829c6956f5fa4673563df5815e2b8595077befeb8d16b0ccc9b356316cd3",
+			"visible_body_viewport": [
+				523.122131347656,
+				254.007217407227,
+				295.137573242188,
+				192.554122924805
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25374.337890625,
+				22746.337890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk.png",
+			"physics_tick": 105,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "1e493983998e83b0d81625b93b5dcae8b88caee8f36c8c1440c259329bca2554",
+			"visible_body_viewport": [
+				527.799377441406,
+				268.485565185547,
+				209.174011230469,
+				177.918151855469
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25374.337890625,
+				22746.337890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk-native-4.png",
+			"physics_tick": 105,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "1e493983998e83b0d81625b93b5dcae8b88caee8f36c8c1440c259329bca2554",
+			"visible_body_viewport": [
+				527.799377441406,
+				268.485565185547,
+				209.174011230469,
+				177.918151855469
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25377.001953125,
+				22749.001953125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk-native-5.png",
+			"physics_tick": 108,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "28fcca413ae3c2f00816b30caa10588acc6929ad3cd9e440cc6e3443791bb6ae",
+			"visible_body_viewport": [
+				525.395080566406,
+				274.095581054688,
+				221.195495605469,
+				172.30810546875
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25383.662109375,
+				22755.662109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk-native-0.png",
+			"physics_tick": 114,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "bd1edd21f96caf272f9290765486e173f26b997afe3061152855a5703ca9aaaa",
+			"visible_body_viewport": [
+				525.391174316406,
+				270.088439941406,
+				214.784057617188,
+				176.315277099609
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25390.322265625,
+				22762.322265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk-native-1.png",
+			"physics_tick": 120,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "c18f215c350d2f2ec9e5c090e54bcc535a6e09cf893dc21a3a46ff58789e7b4d",
+			"visible_body_viewport": [
+				524.593627929688,
+				271.691284179688,
+				224.401245117188,
+				174.71240234375
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25396.982421875,
+				22768.982421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk-native-2.png",
+			"physics_tick": 126,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "e34815999e2cc61976af4ac9df5265cfa68da550730530b28213bf585ce77b35",
+			"visible_body_viewport": [
+				534.206909179688,
+				274.897033691406,
+				221.195556640625,
+				171.506683349609
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25403.642578125,
+				22775.642578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-walk-native-3.png",
+			"physics_tick": 132,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "f04d5fff5229d03b0bbc98aa9ed1c5b6f8db65fcaabfedfb6970ef978588add3",
+			"visible_body_viewport": [
+				533.409423828125,
+				273.294158935547,
+				220.394104003906,
+				173.109527587891
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25439.607421875,
+				22811.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-attack-0.png",
+			"physics_tick": 161,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "29cd6749c75bfd3f41708a6334a559355c7247d3677699b48cac78ad8911b516",
+			"visible_body_viewport": [
+				539.820861816406,
+				222.799957275391,
+				219.592651367188,
+				223.599822998047
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25439.607421875,
+				22811.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-attack-1.png",
+			"physics_tick": 179,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "2bd347bdc3eefa0dae9e4071ba7615eb02ebed3eaf3061c6050552cba62f3d13",
+			"visible_body_viewport": [
+				524.593627929688,
+				269.283081054688,
+				249.245727539062,
+				177.11669921875
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25439.607421875,
+				22811.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SE-contact.png",
+			"physics_tick": 179,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "2bd347bdc3eefa0dae9e4071ba7615eb02ebed3eaf3061c6050552cba62f3d13",
+			"visible_body_viewport": [
+				524.593627929688,
+				269.283081054688,
+				249.245727539062,
+				177.11669921875
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22705.8828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk.png",
+			"physics_tick": 192,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "59238c434f8037b2170376bc83895de1109d976e04bd34362c339754cb774825",
+			"visible_body_viewport": [
+				553.962280273438,
+				267.813385009766,
+				197.721313476562,
+				178.693725585938
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22705.8828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk-native-3.png",
+			"physics_tick": 192,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "59238c434f8037b2170376bc83895de1109d976e04bd34362c339754cb774825",
+			"visible_body_viewport": [
+				553.962280273438,
+				267.813385009766,
+				197.721313476562,
+				178.693725585938
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22715.296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk-native-4.png",
+			"physics_tick": 198,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "fbfe3d55cfaa49e2069f84bb0f4d02f1e24204ec83431e58436a31e925ec2dac",
+			"visible_body_viewport": [
+				532.452880859375,
+				267.813385009766,
+				200.203125,
+				178.693725585938
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22724.7109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk-native-5.png",
+			"physics_tick": 204,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "7334842826c832dd197e0de837cd6f197c8ad20a2d1d4737e37b4d743f89efba",
+			"visible_body_viewport": [
+				528.31640625,
+				269.467956542969,
+				210.957885742188,
+				177.039154052734
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22734.125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk-native-0.png",
+			"physics_tick": 210,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "8ddcc8b40e146788eb3010b076420a1cc2961d4dda5697d8dc3fb4c7de6c2a33",
+			"visible_body_viewport": [
+				537.416564941406,
+				271.949829101562,
+				197.721313476562,
+				174.557312011719
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22743.5390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk-native-1.png",
+			"physics_tick": 216,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "a7beb45bc71a9d31964eb2322922f3305281ec51fbe01d399e4d19f0f0cb5a4d",
+			"visible_body_viewport": [
+				521.698120117188,
+				266.158813476562,
+				217.576171875,
+				180.348297119141
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22751.0703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-walk-native-2.png",
+			"physics_tick": 221,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "50f81761becbf9208c9c79205e5e6e3b3605ae2eba99f1f188fc6ecb48394f14",
+			"visible_body_viewport": [
+				565.544311523438,
+				268.640686035156,
+				205.166870117188,
+				177.866455078125
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22798.140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-attack-0.png",
+			"physics_tick": 248,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "d11f6f3e369f2e5200168babbe03563d5c1b72fe50770292abe57f4d750a287a",
+			"visible_body_viewport": [
+				545.689453125,
+				268.640686035156,
+				244.876586914062,
+				177.866455078125
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22798.140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-attack-1.png",
+			"physics_tick": 266,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "c1fa4788c4a89702f19a2447f5fa1cd2a808ba413aa99ef16677597e21a6a873",
+			"visible_body_viewport": [
+				540.725708007812,
+				259.54052734375,
+				208.476013183594,
+				186.966583251953
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22798.140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-S-contact.png",
+			"physics_tick": 266,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "c1fa4788c4a89702f19a2447f5fa1cd2a808ba413aa99ef16677597e21a6a873",
+			"visible_body_viewport": [
+				540.725708007812,
+				259.54052734375,
+				208.476013183594,
+				186.966583251953
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25569.662109375,
+				22746.337890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk.png",
+			"physics_tick": 279,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "19d021f9aff6685adfdb3db93a9daae0c77c60cc9b6f88fd5ba59557d90139e4",
+			"visible_body_viewport": [
+				491.305816650391,
+				268.080780029297,
+				284.954010009766,
+				177.189575195312
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25569.662109375,
+				22746.337890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk-native-1.png",
+			"physics_tick": 279,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "19d021f9aff6685adfdb3db93a9daae0c77c60cc9b6f88fd5ba59557d90139e4",
+			"visible_body_viewport": [
+				491.305816650391,
+				268.080780029297,
+				284.954010009766,
+				177.189575195312
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25565.666015625,
+				22750.333984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk-native-2.png",
+			"physics_tick": 283,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "545d10ce1629093e3831c71abd9e5fa95d4ec3757d9d276b2f785c0e472b3103",
+			"visible_body_viewport": [
+				481.461975097656,
+				270.667358398438,
+				265.266296386719,
+				174.599090576172
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25559.005859375,
+				22756.994140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk-native-3.png",
+			"physics_tick": 289,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "ce9582cea1c8348182a83f410970d4c33d7c45e82f2de9800c0f1661f78aefe2",
+			"visible_body_viewport": [
+				516.174560546875,
+				272.73974609375,
+				262.67578125,
+				172.526672363281
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25552.345703125,
+				22763.654296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk-native-4.png",
+			"physics_tick": 295,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "25664d91f25107631869e102e6cf179512fe18887ad976cbcecf81b6ef6c2e58",
+			"visible_body_viewport": [
+				491.823913574219,
+				269.113067626953,
+				283.399719238281,
+				176.153381347656
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25545.685546875,
+				22770.314453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk-native-5.png",
+			"physics_tick": 301,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "5ea77e0455acb3c8d4d408177bfe4930244b0e096f925d0ef08b4b8258543f1e",
+			"visible_body_viewport": [
+				480.94384765625,
+				272.2216796875,
+				273.555847167969,
+				173.044799804688
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25540.357421875,
+				22775.642578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-walk-native-0.png",
+			"physics_tick": 306,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "fed989d53cd10a07fdf14d3806bc29c2398db39ff5f136ba45c2c6b1061a1061",
+			"visible_body_viewport": [
+				518.254760742188,
+				271.189392089844,
+				265.784362792969,
+				174.080993652344
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25504.392578125,
+				22811.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-attack-0.png",
+			"physics_tick": 335,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "8516bc9a8cf5476b7de19432c12b82b84f75e9ab4906efa2f90c8965420cf128",
+			"visible_body_viewport": [
+				531.928833007812,
+				256.956268310547,
+				195.397033691406,
+				188.680267333984
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25504.392578125,
+				22811.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-attack-1.png",
+			"physics_tick": 353,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "7a840be67e5177657ef3bc9c109b0f0be377744d52eaad4fb53fb841b726d4c2",
+			"visible_body_viewport": [
+				486.743286132812,
+				269.168579101562,
+				243.025024414062,
+				176.467956542969
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25504.392578125,
+				22811.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-SW-contact.png",
+			"physics_tick": 353,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "7a840be67e5177657ef3bc9c109b0f0be377744d52eaad4fb53fb841b726d4c2",
+			"visible_body_viewport": [
+				486.743286132812,
+				269.168579101562,
+				243.025024414062,
+				176.467956542969
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25610.1171875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk.png",
+			"physics_tick": 366,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "b4942fd0ed0953df2f85cc32ed150529d5a2bc3cc9f21ed2c8e90d3f75ef8bc3",
+			"visible_body_viewport": [
+				541.080261230469,
+				271.737060546875,
+				193.443054199219,
+				174.391845703125
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25610.1171875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk-native-5.png",
+			"physics_tick": 366,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "b4942fd0ed0953df2f85cc32ed150529d5a2bc3cc9f21ed2c8e90d3f75ef8bc3",
+			"visible_body_viewport": [
+				541.080261230469,
+				271.737060546875,
+				193.443054199219,
+				174.391845703125
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25608.234375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk-native-0.png",
+			"physics_tick": 368,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "72e56f827976357e1eeb40516056de48e78588b6cd3e2ddca09c74e54c1a36c3",
+			"visible_body_viewport": [
+				533.020141601562,
+				275.400756835938,
+				207.365112304688,
+				170.728149414062
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25598.8203125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk-native-1.png",
+			"physics_tick": 374,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "43fc4d3aa7e051daf1a826d6d25aac95d6f70a8f0f41e0a9e4a2062740e60c4e",
+			"visible_body_viewport": [
+				544.01123046875,
+				276.133514404297,
+				202.235900878906,
+				169.995391845703
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25589.40625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk-native-2.png",
+			"physics_tick": 380,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "d3849566a6d0cd480e6557068abe6e25d3a9537f9ed367c48c9ddcda3832ae59",
+			"visible_body_viewport": [
+				533.020141601562,
+				269.538879394531,
+				211.761535644531,
+				176.590057373047
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25579.9921875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk-native-3.png",
+			"physics_tick": 386,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "828712b254af5f4a364b88edc5cb9f6aa67a852366f239899d70105f06879ba5",
+			"visible_body_viewport": [
+				543.278442382812,
+				271.004333496094,
+				206.63232421875,
+				175.124572753906
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25572.4609375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-walk-native-4.png",
+			"physics_tick": 391,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "4c3a187bc3cf66f8740b3b139e1f7964ec5c3e90adc5944a4c6693b9e4a844db",
+			"visible_body_viewport": [
+				542.545715332031,
+				273.935302734375,
+				195.641296386719,
+				172.193634033203
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25517.859375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-attack-0.png",
+			"physics_tick": 422,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "4fd1c5b7f15dbef117aab83903868428ff8be9f1833b6903fa00ccba56a3e857",
+			"visible_body_viewport": [
+				537.416564941406,
+				241.694778442383,
+				212.494262695312,
+				204.434127807617
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25517.859375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-attack-1.png",
+			"physics_tick": 440,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "5508b1c02806faa120b84ba581431413112e67bc992f546e4c4e4cfea5009efc",
+			"visible_body_viewport": [
+				519.830810546875,
+				273.202545166016,
+				238.872863769531,
+				172.926361083984
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25517.859375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-W-contact.png",
+			"physics_tick": 440,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "5508b1c02806faa120b84ba581431413112e67bc992f546e4c4e4cfea5009efc",
+			"visible_body_viewport": [
+				519.830810546875,
+				273.202545166016,
+				238.872863769531,
+				172.926361083984
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25569.662109375,
+				22941.662109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk.png",
+			"physics_tick": 453,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "70fd5c04ae632462e988f5c3544de0314360502ceb8d9f123e64ff4d52d9e7a4",
+			"visible_body_viewport": [
+				563.413757324219,
+				257.700744628906,
+				170.738159179688,
+				188.303833007812
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25569.662109375,
+				22941.662109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk-native-4.png",
+			"physics_tick": 453,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "70fd5c04ae632462e988f5c3544de0314360502ceb8d9f123e64ff4d52d9e7a4",
+			"visible_body_viewport": [
+				563.413757324219,
+				257.700744628906,
+				170.738159179688,
+				188.303833007812
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25564.333984375,
+				22936.333984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk-native-5.png",
+			"physics_tick": 458,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "e502baa89e590ea051689d8777c5dc807dac0a8e93ef999e7f0761ca1c3514d5",
+			"visible_body_viewport": [
+				544.442810058594,
+				264.726989746094,
+				191.114318847656,
+				181.277587890625
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25557.673828125,
+				22929.673828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk-native-0.png",
+			"physics_tick": 464,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "62600baa94af734cb4afae7a91dc7fd912e676d43b814ba6e12b4b1f2175099b",
+			"visible_body_viewport": [
+				562.016296386719,
+				269.645385742188,
+				167.225036621094,
+				176.359191894531
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25551.013671875,
+				22923.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk-native-1.png",
+			"physics_tick": 470,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "a6cc40a067dd705ea2a64f971dddbfc55c3008cc0b0ddb1a1ac71ebd7f1f668a",
+			"visible_body_viewport": [
+				545.145446777344,
+				260.51123046875,
+				186.195983886719,
+				185.493316650391
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25545.685546875,
+				22917.685546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk-native-2.png",
+			"physics_tick": 475,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "960da6797f6b57eaea3ae7f8c434ef9bf2f3639989a1b65901b7d909f473ba16",
+			"visible_body_viewport": [
+				552.171752929688,
+				259.8125,
+				183.385437011719,
+				186.195953369141
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25539.025390625,
+				22911.025390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-walk-native-3.png",
+			"physics_tick": 481,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "640c9487d2f10f763519dd1230f13b35047929a21ef1f88e08a4a45488b745a8",
+			"visible_body_viewport": [
+				566.224243164062,
+				264.028259277344,
+				158.090881347656,
+				181.980194091797
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25504.392578125,
+				22876.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-attack-0.png",
+			"physics_tick": 509,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "b4fef10a23e7a7469b82e3e02171ded2b23d4804aebba8fc461e798c85d458cc",
+			"visible_body_viewport": [
+				547.261169433594,
+				252.079727172852,
+				191.816955566406,
+				193.924850463867
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25504.392578125,
+				22876.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-attack-1.png",
+			"physics_tick": 527,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "661d9777a067b6d94a7cdf2a812478ca3b3b5d3352994e14b7aafe5f12f68842",
+			"visible_body_viewport": [
+				526.885009765625,
+				261.2138671875,
+				230.46142578125,
+				184.790710449219
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25504.392578125,
+				22876.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NW-contact.png",
+			"physics_tick": 527,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "661d9777a067b6d94a7cdf2a812478ca3b3b5d3352994e14b7aafe5f12f68842",
+			"visible_body_viewport": [
+				526.885009765625,
+				261.2138671875,
+				230.46142578125,
+				184.790710449219
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22982.1171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk.png",
+			"physics_tick": 540,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "7422656bbafb2c165dbeb6fbce18b58b8f6ac905f77da78bf013a63b74c3a05d",
+			"visible_body_viewport": [
+				556.3134765625,
+				267.722381591797,
+				169.397644042969,
+				178.171234130859
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22982.1171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk-native-2.png",
+			"physics_tick": 540,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "7422656bbafb2c165dbeb6fbce18b58b8f6ac905f77da78bf013a63b74c3a05d",
+			"visible_body_viewport": [
+				556.3134765625,
+				267.722381591797,
+				169.397644042969,
+				178.171234130859
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22978.3515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk-native-3.png",
+			"physics_tick": 543,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "32c0297f09ab200d76e6a14a037121e1a1bb4d8202f1344c7aa2b24f35b7cb30",
+			"visible_body_viewport": [
+				552.939086914062,
+				277.174774169922,
+				174.796752929688,
+				168.722747802734
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22968.9375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk-native-4.png",
+			"physics_tick": 549,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "612c7403d1d7fdaf78370ebd21b2e0ea9a2e7b25d00bc0a3e7f9cb2f188629c5",
+			"visible_body_viewport": [
+				555.638610839844,
+				269.7509765625,
+				169.397644042969,
+				176.146545410156
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22959.5234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk-native-5.png",
+			"physics_tick": 555,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "193e58cc660d5b882d35385b6b3a4160c88b009bed791698ccea7ad7de2c7a42",
+			"visible_body_viewport": [
+				551.589294433594,
+				267.051391601562,
+				165.348327636719,
+				178.846130371094
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22951.9921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk-native-0.png",
+			"physics_tick": 560,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "336e832ca4d0e4cde243ae9f47c1b00e10d2542d4a320e548c79107ac7e898ed",
+			"visible_body_viewport": [
+				556.988403320312,
+				267.047485351562,
+				163.99853515625,
+				178.846130371094
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22942.578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-walk-native-1.png",
+			"physics_tick": 566,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "5b12cd54eef0f99b99fa817299950415ea2c17a0a4bd51edbfce07bec9d06beb",
+			"visible_body_viewport": [
+				553.613952636719,
+				264.347930908203,
+				169.397644042969,
+				181.545684814453
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22889.859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-attack-0.png",
+			"physics_tick": 596,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "9a3a67a364cec2536fba58d8435584539e8522711dda26846ea71c94c8678177",
+			"visible_body_viewport": [
+				553.613952636719,
+				269.076080322266,
+				182.895446777344,
+				176.821441650391
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22889.859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-attack-1.png",
+			"physics_tick": 614,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "0e778ae553ec5859a69c37d331c6df5e98f544c7003c4854d1df378bfcae4d44",
+			"visible_body_viewport": [
+				550.239501953125,
+				278.524536132812,
+				172.772094726562,
+				167.372985839844
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25472.0,
+				22889.859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-N-contact.png",
+			"physics_tick": 614,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "0e778ae553ec5859a69c37d331c6df5e98f544c7003c4854d1df378bfcae4d44",
+			"visible_body_viewport": [
+				550.239501953125,
+				278.524536132812,
+				172.772094726562,
+				167.372985839844
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25374.337890625,
+				22941.662109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk.png",
+			"physics_tick": 627,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "71f34a391214d79568d03aff25eb44f51429d843004958fa8ddbd92e880c8f90",
+			"visible_body_viewport": [
+				547.120422363281,
+				268.524963378906,
+				188.53173828125,
+				177.441619873047
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25374.337890625,
+				22941.662109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk-native-1.png",
+			"physics_tick": 627,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "71f34a391214d79568d03aff25eb44f51429d843004958fa8ddbd92e880c8f90",
+			"visible_body_viewport": [
+				547.120422363281,
+				268.524963378906,
+				188.53173828125,
+				177.441619873047
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25380.998046875,
+				22935.001953125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk-native-2.png",
+			"physics_tick": 633,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "92b8c13eff9d620c3b3d1d11e8f67812b6b54e86f1fdc3859844bce316ada73f",
+			"visible_body_viewport": [
+				551.283081054688,
+				274.070007324219,
+				187.145446777344,
+				171.896575927734
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25387.658203125,
+				22928.341796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk-native-3.png",
+			"physics_tick": 639,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "1ba202d203a504308add6ef67c0ed8c9e1f29d4d83e5ca3c79c7c8e04d11400c",
+			"visible_body_viewport": [
+				563.062438964844,
+				274.763153076172,
+				177.441589355469,
+				171.203460693359
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25392.986328125,
+				22923.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk-native-4.png",
+			"physics_tick": 644,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "336345ec855b6fc4d51056b0c8b0f0fd57eeb73d30a47faa9706005d3db4ab99",
+			"visible_body_viewport": [
+				554.748779296875,
+				278.921936035156,
+				186.452331542969,
+				167.044647216797
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25399.646484375,
+				22916.353515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk-native-5.png",
+			"physics_tick": 650,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "c8576aba02df9b9dd05ec8dd831e96859b3f6219f0afd961ce3cca18061141e8",
+			"visible_body_viewport": [
+				556.131103515625,
+				276.1494140625,
+				176.055358886719,
+				169.817169189453
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25406.306640625,
+				22909.693359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-walk-native-0.png",
+			"physics_tick": 656,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "688e9622a260cd1252ebb021618b099778a83f5abe20d94cb67e7fc13ee9614b",
+			"visible_body_viewport": [
+				556.135009765625,
+				269.911224365234,
+				170.510314941406,
+				176.055358886719
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25439.607421875,
+				22876.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-attack-0.png",
+			"physics_tick": 683,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "37e0ac9d25d0d56771d11c5fcca2c1833b663be35212bfb814abed86992d5765",
+			"visible_body_viewport": [
+				562.369262695312,
+				248.424163818359,
+				188.53173828125,
+				197.542449951172
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25439.607421875,
+				22876.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-attack-1.png",
+			"physics_tick": 701,
+			"player_hp": 1608,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "12fe0eb408073fc3e3964830ee2f44a4f567fdd86fb6733e6a311ef51be66728",
+			"visible_body_viewport": [
+				545.041015625,
+				291.398315429688,
+				203.780639648438,
+				154.568298339844
+			]
+		},
+		{
+			"actor_hp": 1900,
+			"actor_world": [
+				25439.607421875,
+				22876.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/ai-NE-contact.png",
+			"physics_tick": 701,
+			"player_hp": 1608,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "12fe0eb408073fc3e3964830ee2f44a4f567fdd86fb6733e6a311ef51be66728",
+			"visible_body_viewport": [
+				545.041015625,
+				291.398315429688,
+				203.780639648438,
+				154.568298339844
+			]
+		},
+		{
+			"actor_hp": 1706,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/lifecycle-hit.png",
+			"physics_tick": 724,
+			"player_hp": 1608,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "240ae93c7edb178daf2a82a84cd272195297f0c568a152f96287e0403ba885c2",
+			"visible_body_viewport": [
+				564.448669433594,
+				267.142608642578,
+				175.362243652344,
+				178.827880859375
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/lifecycle-ground-drop.png",
+			"physics_tick": 1153,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "49248bda904adac71e916aa373d7ded5c7316381e0a05372442e050b479db99d",
+			"visible_body_viewport": [
+				556.131103515625,
+				269.915130615234,
+				170.510314941406,
+				176.055358886719
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/lifecycle-death-0.png",
+			"physics_tick": 1155,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "b85e22da61feeb903854a5c08be717d6431deec47a3081f0d48ce858bfee1abc",
+			"visible_body_viewport": [
+				549.892944335938,
+				307.34423828125,
+				191.304260253906,
+				138.626281738281
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/lifecycle-manual-pickup.png",
+			"physics_tick": 1166,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "d54e0bc69b70b89c6d1035a742acae9600a456e023f047e915e4f945db54ae63",
+			"visible_body_viewport": [
+				549.892944335938,
+				307.34423828125,
+				191.304260253906,
+				138.626281738281
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/lifecycle-death-1.png",
+			"physics_tick": 1169,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "f646c5735debdabf3e5ca8242a56d6b04a93c6c11beed5e168bac2d149e9a22e",
+			"visible_body_viewport": [
+				541.575317382812,
+				316.354919433594,
+				189.91796875,
+				129.615539550781
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/batch17/Monk-QA-v01/gameplay/captures/albino-monk/lifecycle-death-2.png",
+			"physics_tick": 1183,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "dd3b39b02d1c93d8123f84050c7871e5a906454de1926c2c0501fe5c1ee3c0f7",
+			"visible_body_viewport": [
+				539.495971679688,
+				326.058776855469,
+				196.156127929688,
+				119.911712646484
+			]
+		}
+	],
+	"scope": "original-based albino_monk_batch17_authored, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-walk-native-4.png",
+		"ai-E-walk-native-5.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-4.png",
+		"ai-SE-walk-native-5.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-4.png",
+		"ai-S-walk-native-5.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-walk-native-4.png",
+		"ai-SW-walk-native-5.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-5.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-walk-native-4.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-4.png",
+		"ai-NW-walk-native-5.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-walk-native-4.png",
+		"ai-N-walk-native-5.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-walk-native-4.png",
+		"ai-NE-walk-native-5.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-walk-4.png",
+		"authored-E-walk-5.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-walk-4.png",
+		"authored-SE-walk-5.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-walk-4.png",
+		"authored-S-walk-5.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-walk-4.png",
+		"authored-SW-walk-5.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-walk-4.png",
+		"authored-W-walk-5.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-walk-4.png",
+		"authored-NW-walk-5.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-walk-4.png",
+		"authored-N-walk-5.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-walk-4.png",
+		"authored-NE-walk-5.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "알비노 몽크",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_3.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_3.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

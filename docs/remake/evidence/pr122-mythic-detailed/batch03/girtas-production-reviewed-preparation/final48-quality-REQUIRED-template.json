@@ -1,0 +1,54 @@
+{
+  "schema": "pr122-native-independent-quality-v1",
+  "key": "transform:267",
+  "status": "HOLD_NOT_REVIEWED",
+  "independent": false,
+  "reviewer": "",
+  "source_selection_sha256": "REQUIRED_ACTUAL_FINAL_SOURCE_SIGNATURE",
+  "production_frames": null,
+  "production_profile": null,
+  "effective_profile_sha256": "REQUIRED_ACTUAL_PRODUCTION_PROFILE_HASH",
+  "checks": {
+    "identity_equipment": "REQUIRED_REAL_FINAL48_REVIEW",
+    "compass8": "REQUIRED_REAL_FINAL48_REVIEW",
+    "anatomy_continuity": "REQUIRED_REAL_FINAL48_REVIEW",
+    "motion_specificity": "REQUIRED_REAL_FINAL48_REVIEW",
+    "loops_transitions": "REQUIRED_REAL_FINAL48_REVIEW",
+    "attack_contact": "REQUIRED_REAL_FINAL48_REVIEW",
+    "hit_recovery": "REQUIRED_REAL_FINAL48_REVIEW",
+    "death_irreversibility": "REQUIRED_REAL_FINAL48_REVIEW",
+    "runtime_scale_footing": "REQUIRED_REAL_FINAL48_REVIEW"
+  },
+  "tracks": [],
+  "required_track_schema": [
+    "direction",
+    "role",
+    "source",
+    "source_sha256",
+    "texture",
+    "source_geometry_sha256",
+    "geometry_sha256",
+    "frame_rgba_sha256",
+    "status",
+    "visual_findings",
+    "independent_review_evidence",
+    "baseline_unchanged_review_reused"
+  ],
+  "required_coverage": {
+    "directions": 8,
+    "roles": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "tracks": 48,
+    "poses": 288
+  },
+  "actual_default_Main_status": "NOT_RUN",
+  "actor_approved": false,
+  "counts_changed": false,
+  "note": "STRUCTURE EXAMPLE ONLY. No new review/quality/approval is asserted. Fresh independent reviewer must bind actual final48 resources and all required check/source/geometry findings; official gate rejects this template."
+}

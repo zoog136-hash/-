@@ -1,0 +1,390 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "role": "run",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "NW",
+  "metadata_sha256": "30f39dc4b9e6c54a5ddac4b2596a3d892a156312a16e04e87c61525c7cd5ea99",
+  "metadata_path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/pose-map.candidate.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/girtas-NW-run-reviewed-composite-candidate-v03.png",
+  "output_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+  "output_canvas": [
+    2560,
+    3840
+  ],
+  "cell_size": [
+    1280,
+    1280
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+      "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+      "source_pose": 0,
+      "source_region": [
+        106,
+        7,
+        415,
+        449
+      ],
+      "rgba_sha256": "5a2f4da1abaab939cb910d74094b05bef46da550f1b6ef464522d6589cc43725",
+      "visible_pose_sha256": "590fddbec699a7dd5529bcbe6d716bf682d28a970c7e44de6155adcbe77d8a8c",
+      "newly_authored": true,
+      "review_basis": "CandidateactualnearLEFTlanding withfarRIGHTrecoveringbootraised; oppositephase3needsindependentQC. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate.",
+      "output_region": [
+        432,
+        415,
+        415,
+        449
+      ],
+      "translation": [
+        326,
+        408
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 72351
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+      "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+      "source_pose": 0,
+      "source_region": [
+        84,
+        45,
+        1133,
+        1058
+      ],
+      "rgba_sha256": "a207442bec5e82e8b6fd59c00c0a4a112cd90bc31762ae5daaede56599998058",
+      "visible_pose_sha256": "f50f89bc14c0d29340d90099f7cd51ae657d9f728766f2ce435e8fa3b8d12344",
+      "newly_authored": true,
+      "review_basis": "ActualnearLEFTdeepflatLOAD +separatefarRIGHTcurledshin/raisedwholebootunderlonghem; independentSOURCErepairPASSac46cfdc.",
+      "output_region": [
+        1353,
+        111,
+        1133,
+        1058
+      ],
+      "translation": [
+        1269,
+        66
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 467205
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+      "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+      "source_pose": 0,
+      "source_region": [
+        220,
+        24,
+        1006,
+        1130
+      ],
+      "rgba_sha256": "8567491b42f8c487e33a3cccf2371803b05c737150010194a77fbf1ee5061dc2",
+      "visible_pose_sha256": "47e4da0531c5424361a0db1bbb9270d9691be4433ed6ed4c25ca1578902ae18b",
+      "newly_authored": true,
+      "review_basis": "ActualfarRIGHTleadingAIR fromprovedoppositeRIGHTlanding3, leadingknee/ankleflexedraised +nearLEFTfoldedbackraisedsole preserved; independentSOURCErepairPASSac46cfdc.",
+      "output_region": [
+        137,
+        1355,
+        1006,
+        1130
+      ],
+      "translation": [
+        -83,
+        1331
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 408707
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+      "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+      "source_pose": 0,
+      "source_region": [
+        228,
+        27,
+        996,
+        1128
+      ],
+      "rgba_sha256": "6a7253dbae5e7a0a9cac960aba9302ac94bffeccae585bfe152a0db6ff6a17fc",
+      "visible_pose_sha256": "89e76c08de98589fbe072750bff7ccf6214ab32283f29534c516ccf4e6cd6e36",
+      "newly_authored": true,
+      "review_basis": "ActualfarRIGHTforwardlanding +nearLEFTfoldedbackraisedboot, faithfulsmallplaincollar/hiltrestored; independentSOURCErepairPASS2482f21b.",
+      "output_region": [
+        1422,
+        1356,
+        996,
+        1128
+      ],
+      "translation": [
+        1194,
+        1329
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 409713
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+      "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+      "source_pose": 0,
+      "source_region": [
+        214,
+        24,
+        1023,
+        1123
+      ],
+      "rgba_sha256": "b0066fbbec812ae5a32142c23c5da447ed3eea598a821a36c9bb3b9e6de78990",
+      "visible_pose_sha256": "884f4e0eb472417a938a4abc82330ed39c9e6bf9875eab0ee7330724e1c81392",
+      "newly_authored": true,
+      "review_basis": "NewsingleactualfarRIGHTsupportV-thigh/kneecap/shinbendwithflatRIGHTsole; nearLEFTpassingkneeHIGHforwardandbootRAISED. BodycompressioncomesfromrealbentRIGHTknee, oldstraight/occluded4notselected. IndependentSOURCE/loadownershipQCpending. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate.",
+      "output_region": [
+        128,
+        2638,
+        1023,
+        1123
+      ],
+      "translation": [
+        -86,
+        2614
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 423503
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+      "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+      "source_pose": 5,
+      "source_region": [
+        560,
+        1010,
+        453,
+        482
+      ],
+      "rgba_sha256": "51934eb5dedeb8af5dfa8fb4edfadcd0d94598f0d52752ea488a4cb3e15ac685",
+      "visible_pose_sha256": "63549cb20fb3b133c480934df3c20330feefcbe584d1a7e9c402a589353d2879",
+      "newly_authored": true,
+      "review_basis": "CandidateactualAIRfarRIGHTtrailing/nearLEFTleading oppositephase2; bothraised/source+rootindependentQCpending. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate.",
+      "output_region": [
+        1693,
+        2959,
+        453,
+        482
+      ],
+      "translation": [
+        1133,
+        1949
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 73144
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      2560,
+      3840
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NW",
+        "region": [
+          430,
+          413,
+          419,
+          453
+        ],
+        "margin": [
+          814,
+          831,
+          1629,
+          1595
+        ],
+        "source_anchor": [
+          640,
+          862
+        ],
+        "rgba_sha256": "519bbfa603d5d7ad8adc7e5135cb55ce1b8b2c4253c94bdc181ef163ca915925"
+      },
+      {
+        "row": 1,
+        "direction": "NW",
+        "region": [
+          1351,
+          109,
+          1138,
+          1062
+        ],
+        "margin": [
+          455,
+          222,
+          910,
+          986
+        ],
+        "source_anchor": [
+          1920,
+          1167
+        ],
+        "rgba_sha256": "184ed69671cb604fb782e693fb239b349ecfa1f0dab5de50aad6bcddd04a6b1e"
+      },
+      {
+        "row": 2,
+        "direction": "NW",
+        "region": [
+          134,
+          1352,
+          1011,
+          1136
+        ],
+        "margin": [
+          518,
+          148,
+          1037,
+          912
+        ],
+        "source_anchor": [
+          640,
+          2484
+        ],
+        "rgba_sha256": "92d438db4ef4a8ed5e27b5455f08ee1b371ed249153b249b44bb1250faed6dc7"
+      },
+      {
+        "row": 3,
+        "direction": "NW",
+        "region": [
+          1420,
+          1354,
+          1001,
+          1132
+        ],
+        "margin": [
+          524,
+          152,
+          1047,
+          916
+        ],
+        "source_anchor": [
+          1920,
+          2482
+        ],
+        "rgba_sha256": "d1845a2e513ba2b400a3bb7361317fb52248c1d66eb2bbe0551d398141dfb2e7"
+      },
+      {
+        "row": 4,
+        "direction": "NW",
+        "region": [
+          126,
+          2636,
+          1028,
+          1127
+        ],
+        "margin": [
+          510,
+          157,
+          1020,
+          921
+        ],
+        "source_anchor": [
+          640,
+          3759
+        ],
+        "rgba_sha256": "7693558a79536389e2f8c95c87f1a89adeceafa03ce5276160ee1aff192b2a50"
+      },
+      {
+        "row": 5,
+        "direction": "NW",
+        "region": [
+          1691,
+          2957,
+          457,
+          486
+        ],
+        "margin": [
+          795,
+          798,
+          1591,
+          1562
+        ],
+        "source_anchor": [
+          1920,
+          3439
+        ],
+        "rgba_sha256": "8149ba0b85746552ec484119e7cd08520cda3a4e7062b1bd88c00382bc9ca659"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 786.5,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    449,
+    1130
+  ],
+  "possible_region_height_mismatch": true,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "PR122_NE_RUN_CONTACT0_BOUNDED_V02_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-20T06:42:19.883560+00:00",
+  "reviewer": "/root/girtas_final_actual_quality_v04",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "phase": 0,
+  "status": "PASS",
+  "source_visual_status": "PASS",
+  "scope": "Only final bounded source0v02 actual farLEFT softheel contact anatomy/ownedchain/genuinekneeflex/completeboots/clothjoin/strict originalmodel preservation. No whole6physical/runtime/actorapproval.",
+  "raw_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+  "raw_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+  "source_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+  "fixed_pose_canvas_size": 1936,
+  "reference_original": {
+    "path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+    "sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987"
+  },
+  "preservation_v02": {
+    "path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/exact-bounded-preservation-proof-v02.json",
+    "sha256": "fa11bc6577c96c01d2d501b82161814866d9fc9bd348c1ab07887ee3d5c99e8e"
+  },
+  "alpha16_crop_v02": {
+    "path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/source-crop-alpha16-proof-v02.json",
+    "sha256": "036090d41d711805d7cad71411563146514fb473392e57aafb017848c034aa8d"
+  },
+  "final_producer_allowlist_v02": {
+    "path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/finished-producer-files-allowlist-v02.json",
+    "sha256": "3f81276b08d20e30d0fe3980da94bc26ca36dc60515d16e11438ac71bb5ef297"
+  },
+  "independent_numeric_proof": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-contact0-v02-independent-byte-geometry-proof.json",
+    "sha256": "56215b1265ce4a3bf26949a564ff892a7c6859d85996ec6c9f7a747afbc51e7a"
+  },
+  "visual_findings": [
+    "Actual bounded lowerbody shows a genuine bent/foreshortened farLEFT supporting hip/thigh/knee/shin/heel chain, rather than shrinking/translating the old straight shin or boot. The nearRIGHT remains a separate high folded recovery; no ownership swap or extra leg is seen.",
+    "The complete supportingboot has low rearheel/outsole and raised forwardtoe, reading as a soft initial heel/contact stage rather than duplicate flat load1. Wholefigure seam inspection shows natural longrobe/slit connection, no hard polygon splice, residual oldboot or detached limb.",
+    "Finalv02 restores all63 provisionalv01 differences within the nearRIGHT protectionROI, including6 visible AA pixels. Independent wholeRGBA recomputation confirms outside-refined-mask0diff, protectedoppositeROI0diff, supportbootROI unchanged and zero oldextendedboot alpha>16. Thus finalv02 verdict transfers from the directly viewed v01 support/seam images through exact original-only restoration, with no additional view.",
+    "Upperbody/skull/pauldrons/rigidcore/arms/weapon retain originalRGBA. Actual strongalpha outsole heel is approximately636.94,1019.19; initial635,1007 was interior. Authored projected core97.7568world is within the prior QA band, but whole6ground/orderedcycle and actualruntime remain pending."
+  ],
+  "direct_view_basis": {
+    "v01_grid_sha256": "a7da3d5c946d8ec128873dcfdd3034d70ea5da16e6fb77e014387e21ce31fb6e",
+    "v01_whole_seam_sha256": "c9e9aeece2c8b905a3c4be64cf1799896891c5c3cf0091c44f89406189aba762",
+    "v02_transfer": "Only63originalpixels restored in protectedoppositeROI; inspectedsupport/cloth/upperbody unchanged."
+  },
+  "preserved_physical_HOLD_sha256": "6af534377b3855b351bce9ae4926ea5bdeee8ac0acb82f736f947b27d366f0be",
+  "preserved_Cstage_PASS_sha256": "98d5a94893dc0cc343c12a14db0f413213d5d31dc204f541fab75f0588719edc",
+  "remaining_scope": [
+    "Source3 finalsemanticmask/sourceverdict",
+    "New selectedsix exactRGBAatlas/manifest",
+    "Single actualnewwhole6physical and ordered5to0/idleentry review at existingfps",
+    "Root latestcompiledNE and finalproduction/defaultMainbinding"
+  ],
+  "private_image_ledger": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view15.json",
+    "sha256": "401e58e99e5c6e95b107bbfe945b06ca9b4f82f0f332c6eae323a96ace90a2f3",
+    "viewed_encoded_bytes": 1313645,
+    "new_views_on_resume": 0
+  },
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "counts_changed": false,
+  "repository_mutations": false,
+  "images_attached_to_main_or_parent": 0
+}

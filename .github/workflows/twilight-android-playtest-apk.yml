@@ -10,6 +10,11 @@ on:
 permissions:
   contents: read
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-android-apk:
     runs-on: ubuntu-latest
@@ -17,6 +22,11 @@ jobs:
     steps:
       - name: Checkout isolated validated playtest
         uses: actions/checkout@v4
+      - name: Prove archived drafts are detached from exported gameplay
+        run: |
+          set -euo pipefail
+          python3 tests/android_animation_export_scope_test.py
+          python3 tools/android_animation_export_scope.py --output build/android-validation/export-scope.json
       - name: Install Godot 4.7.2 and export templates
         shell: bash
         run: |

@@ -1,0 +1,51 @@
+{
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "walk",
+  "version": "v02",
+  "request_path": "/workspace/scratch/girtas-SW-walk-repair/request-single-idle.json",
+  "request_sha256": "9b72038547daf4f969ef3f67920055df914de5b7a1a1c5eeb3e5458e29d6c5af",
+  "original_generated_file": "/workspace/generated_images/exec-8a3e8f44-baf0-4bb4-90ad-41b82a77c05b.png",
+  "raw_png": "/workspace/scratch/girtas-SW-walk-repair/girtas-SW-walk-v02.png",
+  "raw_sha256": "b248f3f67ff9ea01f9acbdb49255dafd6b8a4898a04f7e271d35be6c55102cd8",
+  "raw_bytes": 2426463,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "created_at": "2026-10-19T11:01:07.156750+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "reviewed_at": "2026-10-19T11:01:31.810417+00:00",
+  "private_preview": "/workspace/scratch/girtas-SW-walk-repair/generated-preview.jpg",
+  "private_preview_bytes": 214960,
+  "visual_findings": [
+    "All6 now correctly preserve SOUTHWEST/front-left: pale nose/face points LEFT, torso/pelvis/boots face down-left, same far/original right weapon hand imageLEFT and empty near-left hand imageRIGHT.",
+    "Original pale face/long hair, thin hard gold rays, long dark gold-trim skirt and long sinuous blade are retained without old SE/right-facing model contamination.",
+    "HOLD actual gait: every frame retains the screen-left/forward leg extended toward down-left and opposite right boot bent/lifted behind. No opposing forward/support leg appears across3-5.",
+    "Frame2 has stronger extension and other knee/ankle shapes change, but2->3 and5->0 return the same lead. This is not a full complementary right/left support loop."
+  ],
+  "visual_limitations": [
+    "Do not integrate as complete SW walk. Correct single-heading identity/contact poses may be retained as keys for later deliberate opposing-leg authoring, but no completed six-frame gait claim.",
+    "One new SWv02 attempt, no retry; correct SWidle v03 was used, never failedSWidle v02.",
+    "No geometry/runtime or actor approval claimed."
+  ],
+  "outer_alpha_gt100": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "intended_opposite_support_frames": [
+    0,
+    3
+  ],
+  "all_actor_approvals": "HOLD_UNTIL_INTEGRATION_AND_FINAL_QUALITY",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "production_receipt": "/workspace/scratch/girtas-SW-walk-repair/production-receipt.json",
+  "production_receipt_sha256": "5a56cb6ca9552a666f96fcb574994d043ada136ab46945ffe0beb6967506dcce"
+}

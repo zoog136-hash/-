@@ -1,0 +1,108 @@
+{
+  "key": "transform:413",
+  "direction": "S",
+  "role": "idle",
+  "version": "SidleSixActualRig01",
+  "request_sha256": "906758e1d8335ad23858f456e9431f2d7fb664bbe7168acaaf45152d881db416",
+  "raw_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+  "raw_bytes": 3637789,
+  "source_visual_status": "PASS",
+  "status": "EXACT_R001_REQUEST_RAW_SIX_REVIEWED_SOURCE_AND_ROLE_FLOW_PASS",
+  "request": {
+    "path": "/workspace/scratch/mythic413-S-idle-actual-packed-r001-20261020/request-SidleSixActualRig01.json",
+    "sha256": "906758e1d8335ad23858f456e9431f2d7fb664bbe7168acaaf45152d881db416",
+    "bytes": 3011
+  },
+  "raw": {
+    "path": "/workspace/scratch/mythic413-S-idle-actual-packed-r001-20261020/thunder_female-S-idle-six-actual-poses-r001.png",
+    "sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "bytes": 3637789
+  },
+  "packing_proof": {
+    "path": "/workspace/scratch/mythic413-S-idle-actual-packed-r001-20261020/thunder_female-S-idle-six-actual-poses-r001.packing.json",
+    "sha256": "82337292a054b1bb0898da3db5e2111d5ca3704c000ccaa65a4fdccffc65148f",
+    "bytes": 5739
+  },
+  "independent_source_role_PASS": {
+    "path": "/workspace/scratch/mythic413-S-idle-independent-qc-20261020-v01/S-IDLE-v01-exact-six-actual-source-breathing-and-visible-loop-PASS-v01.json",
+    "sha256": "de3b7c6bace6085934c2176c14c4a6f53858eb8a925451c61bcfb48b0d75bb19",
+    "bytes": 6661
+  },
+  "C": 2560,
+  "bodyunit": 2.5,
+  "common_unpadded_root": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "independent_lossless_checks": [
+    {
+      "phase": 0,
+      "full1536_stored_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 358619,
+      "alpha_positive_outside_region": 0,
+      "exact_C_virtualfoot_storage_root_and_shared_rounding": true
+    },
+    {
+      "phase": 1,
+      "full1536_stored_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 358294,
+      "alpha_positive_outside_region": 0,
+      "exact_C_virtualfoot_storage_root_and_shared_rounding": true
+    },
+    {
+      "phase": 2,
+      "full1536_stored_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 359291,
+      "alpha_positive_outside_region": 0,
+      "exact_C_virtualfoot_storage_root_and_shared_rounding": true
+    },
+    {
+      "phase": 3,
+      "full1536_stored_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 359234,
+      "alpha_positive_outside_region": 0,
+      "exact_C_virtualfoot_storage_root_and_shared_rounding": true
+    },
+    {
+      "phase": 4,
+      "full1536_stored_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 358151,
+      "alpha_positive_outside_region": 0,
+      "exact_C_virtualfoot_storage_root_and_shared_rounding": true
+    },
+    {
+      "phase": 5,
+      "full1536_stored_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 358703,
+      "alpha_positive_outside_region": 0,
+      "exact_C_virtualfoot_storage_root_and_shared_rounding": true
+    }
+  ],
+  "six_distinct_source_SHA256": true,
+  "loop": true,
+  "role_seconds": 1.2,
+  "visual_findings": [
+    "The actual front-facing fixed-root six poses show restrained corset/rib expansion, relaxed complete LEFT arm/cuff/hand motion, head and neck lag and cloth follow-through.",
+    "Native0/3/5 collar, shoulder and cuff contours remain natural; no blocking old-arm remnant, detached cap or narrow joint bridge was observed.",
+    "Complete original RIGHT grip/staff and full fixed lowerbody/boots retain actual original RGBA. Front identity remains consistent through the5-to0 breathing seam.",
+    "The actual renderer uses unit-scaled2pi-periodic breath and lag nodes. Six equal samples at5fps form a1.2-second loop."
+  ],
+  "visual_limitations": [
+    "The6.0 amplitude is a control parameter; source-point x-span expands4.840847native and is not reported as measured full chest width.",
+    "This source/loop PASS requires separate actual Godot/game validation. Original stationary boots are unchanged; hidden depth/sole models are separate declared compatible constructions.",
+    "No actor approvals, gameplay/profile changes or old-clip changes are included.",
+    "No additional image viewing: every full1536px stored frame, including alpha0 RGB and all alpha-positive pixels, equals the already-reviewed exact source.",
+    "Nominal compiler canvas and per-pose physical body canvas remain separate; actual authored physicalC2560/unit2.5 and unpadded commonroot are retained."
+  ],
+  "additional_images": 0,
+  "actor_approvals_added": 0,
+  "game_validation": "PENDING_ACTUAL_GODOT_RESOURCE_AND_MAIN_RUNTIME_CHECKS"
+}

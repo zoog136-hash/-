@@ -1,0 +1,116 @@
+{
+	"actor": "transform:413",
+	"actor_approvals_added": 0,
+	"cycle_wraps": 3,
+	"direction": "S",
+	"failures": 0,
+	"fixture_override": false,
+	"gameplay_and_save_unchanged": true,
+	"poses_reached": 6,
+	"production_connected": false,
+	"profile_path": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r048/NativeMotionProfile.tres",
+	"resource_fps": 12.5,
+	"returned_to_preserved_W_idle": true,
+	"role": "run",
+	"runtime_status": "PASS",
+	"source_texture_sha256": "80a0555dc226b4b97a73c7b1061b51aae245b2a7eec1abc08f3aa59bdcbe1ab2",
+	"source_visual_status": "HOLD_NOT_REVIEWED",
+	"used_actual_new_candidate_atlas": true,
+	"used_actual_staged_profile": true,
+	"world_foot_contact": "NOT_RUN_HOLD",
+	"world_foot_contact_probe": {
+		"collision_physics_tested": false,
+		"contact_pairs": [
+			{
+				"elapsed": 0.08,
+				"phases": [
+					0.0,
+					1.0
+				],
+				"side": "L",
+				"world_dx": 0.0,
+				"world_dy": -0.00390625
+			},
+			{
+				"elapsed": 0.08,
+				"phases": [
+					3.0,
+					4.0
+				],
+				"side": "R",
+				"world_dx": 0.0,
+				"world_dy": -0.001953125
+			}
+		],
+		"frame_rendering_performed": false,
+		"samples": {
+			"0": {
+				"native_original_texel": [
+					783.0,
+					1187.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.0,
+				"world": [
+					22186.91796875,
+					31356.0859375
+				]
+			},
+			"1": {
+				"native_original_texel": [
+					783.0,
+					1187.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.08,
+				"world": [
+					22186.91796875,
+					31356.08203125
+				]
+			},
+			"3": {
+				"native_original_texel": [
+					503.0,
+					1187.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.2408,
+				"world": [
+					22163.01953125,
+					31406.927734375
+				]
+			},
+			"4": {
+				"native_original_texel": [
+					503.0,
+					1187.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.3208,
+				"world": [
+					22163.01953125,
+					31406.92578125
+				]
+			}
+		},
+		"scope": "ACTUAL_MAIN_PLAYER_SPRITE_TRANSFORM_WITH_PRESCRIBED_WORLD_TRANSLATION_NO_COLLISION_PHYSICS",
+		"status": "MEASURED_ONLY_NOT_VISUAL_APPROVAL",
+		"world_translation_speed": 210.0
+	}
+}

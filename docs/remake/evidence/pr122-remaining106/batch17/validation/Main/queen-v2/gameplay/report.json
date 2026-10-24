@@ -1,0 +1,43 @@
+{
+	"cases": [
+		{
+			"checks": 2464,
+			"failures": [],
+			"folder": "ice_queen_batch17_candidate_v2",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "얼음 여왕",
+			"physics_ticks": 1638,
+			"pose_samples": 128,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/queen-candidate-v2/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/report-cases/queen-candidate-v2.json",
+			"screenshots": 230,
+			"slug": "queen-candidate-v2"
+		},
+		{
+			"checks": 1468,
+			"failures": [],
+			"folder": "albino_iguana_monster_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "알비노 이구아나",
+			"physics_ticks": 1206,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/preserved-iguana-baseline/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/report-cases/preserved-iguana-baseline.json",
+			"screenshots": 190,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 3932,
+	"config": "res://tests/fixtures/pr122_batch17_queen_v2.json",
+	"engine_processes": 1,
+	"failures": [],
+	"process_id": 8320,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

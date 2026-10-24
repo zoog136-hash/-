@@ -1,0 +1,70 @@
+{
+  "schema": "pr122-413-NW-Rload4-independent-source-and-unit-heel-pair-v1",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "walk",
+  "source_visual_status": "PASS",
+  "source4": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rload4-author-20261020-v03/thunder_female-NW-walk-Rload4-finished-native-body-v04.png",
+    "sha256": "227b81a7e4add82f4df3ec12d54d7c14938aeafbf80ae1cd15a75a8aa0aeab2a",
+    "bytes": 519087
+  },
+  "source3": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rcontact3-author-20261020-v01/thunder_female-NW-walk-Rcontact3-finished-hip-join-v05.png",
+    "sha256": "561d462462f6f02e1bb45ac0dc554b8dbd54f45073a584e915471b38bb618957",
+    "bytes": 546701
+  },
+  "author_proof": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rload4-author-20261020-v03/Rload4-finished-native-body-proof-v04.json",
+    "sha256": "cd4a742e3a1507e4ebf077cf20720323b05c656ec731385363472f70dd0b334a",
+    "bytes": 2392
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NW-Rload4-view39-frozen.json",
+    "sha256": "84464bc89a651833b21eea59e36b9b0fbbd90702374b85fe9a3d001572f2391f",
+    "bytes": 18913
+  },
+  "constant_C": 2048,
+  "body_unit": 2,
+  "common_root": [
+    641,
+    1058.3
+  ],
+  "visual_findings": [
+    "True rearNW identity, same head/torso/equipment scale, anatomicalRIGHT staff with completeends and goldbluewhite costume retained at constantC.",
+    "Fresh completebody hip/skirt and retouched supportingRIGHTcalf naturallyjoin; completeRIGHTshoe and raisedLEFTshoe remain intact.",
+    "FreeLEFTarm progresses forward for RIGHTsupport; declared4pxbodybob is actual art motion, not commonroot shift."
+  ],
+  "independent_checks": {
+    "strong_alpha100_4conn_ge200": [
+      173739
+    ],
+    "actual_Rheel_alpha16_bottom_y": 1015,
+    "actual_Rheel_alpha16_bottom_xrange": [
+      703,
+      708
+    ],
+    "heel_delta3to4": [
+      111.35431880224218,
+      100.21888692201796
+    ],
+    "new_Rfoot_yaw_axis": [
+      -40,
+      -15
+    ],
+    "same_foot_possible_3D_length": 47.69696007084728,
+    "phase3_forefoot_possible_height": 25.207799101111803,
+    "phase4_forefoot_possible_height": 0,
+    "LEFT_AIR_same_LEFT_lane_min_nativegap": 30,
+    "LEFT_AIR_conditional_min_Playerworldgap": 3.556034482755
+  },
+  "visual_limitations": [
+    "Unit source/heelpair only; whole6/5to0/realstaging remain pending.",
+    "Foot yaw/roll is a finite same-length construction consistent with actual landmarks, not unique recovered3D; bodyNW .9line is not imposed on allsolepixels."
+  ],
+  "whole_cycle_APPROVED": false,
+  "actual_staging_APPROVED": false,
+  "actor_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

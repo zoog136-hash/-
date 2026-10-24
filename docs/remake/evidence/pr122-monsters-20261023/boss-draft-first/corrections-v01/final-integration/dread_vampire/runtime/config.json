@@ -1,0 +1,56 @@
+{
+  "cases": [
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_idle",
+      "directions": [
+        "NW"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_attack",
+      "directions": [
+        "SE",
+        "SW",
+        "W"
+      ],
+      "roles": [
+        "attack"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_run",
+      "directions": [
+        "W"
+      ],
+      "roles": [
+        "run"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    }
+  ],
+  "output": "/workspace/runtime/boss-final-integration-dread_vampire",
+  "capture": true
+}

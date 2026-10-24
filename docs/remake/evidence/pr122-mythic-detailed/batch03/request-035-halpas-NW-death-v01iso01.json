@@ -1,0 +1,116 @@
+{
+  "key": "transform:393",
+  "direction": "NW",
+  "role": "death",
+  "name": "해방된 할파스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-death-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png": "90f3918feaef084f63e3eeffa3301245069ff662bb5a3ca901d3f849f4fc5345",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-death-v01iso01.png": "00f4159fcf8f44899bda41f149645f4519bed5162b869c5baec788936ad90141"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG DEATH animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved NW native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for NW.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces NORTHWEST / screen up-left, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: fatal hit / unstable; 1: loss of balance; 2: body falling / knees collapsing; 3: ground impact; 4: settling; 5: fully fallen motionless corpse.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is a genuine irreversible fall, not a bow or hit recoil. Phase5 must be fully fallen, resting on the ground with folded/spread original wings and recognizable anatomy; no standing final pose. Keep equipment attached, no gore.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "fatal hit / unstable",
+    "loss of balance",
+    "body falling / knees collapsing",
+    "ground impact",
+    "settling",
+    "fully fallen motionless corpse"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-034-halpas-NW-death-v01.json",
+  "processing_proof": {
+    "source_sha256": "803b0abd2a355b5bfcf0a64af063b36166d0d65fac32b0c4da7d64fdbe8a069d",
+    "output_sha256": "5215ed8605d97b59f5b5620955a1f86579bda05051caf54dfa2ef8e9edb38093",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01.png",
+    "output": "/workspace/scratch/halpas-NW-death-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 61604,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 463815,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -23
+        ],
+        "pixels": 104289,
+        "foreground_pixels": 98138,
+        "rgba_sha256": "c2d4deab9e73a20433b0ef537036625caf4b843a4c9cb5a1dc6e495ea7a3bce7"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -75
+        ],
+        "pixels": 87844,
+        "foreground_pixels": 82979,
+        "rgba_sha256": "0f2598b080af75fa9832642eaaf5e33459478cdd3f8e23b9d69cf667abbb4e52"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          -33
+        ],
+        "pixels": 88873,
+        "foreground_pixels": 84801,
+        "rgba_sha256": "d2851930fc410382e7b167846bdc64bb29a441d648d74444bb246713e2486b6e"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          -87
+        ],
+        "pixels": 76772,
+        "foreground_pixels": 72975,
+        "rgba_sha256": "b047eea1ab4c46c385c3bdc0638a91d86d329bd9eac1ee6ea1293d8b1da6aaf2"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          -22
+        ],
+        "pixels": 70749,
+        "foreground_pixels": 67603,
+        "rgba_sha256": "cb6986e3d6555a7ef0d52ad9ad662983810275b328097bf29d3978f94c5b084a"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          -50
+        ],
+        "pixels": 59954,
+        "foreground_pixels": 57319,
+        "rgba_sha256": "74fc8e0c1644be457e860be9ffc3e1eee7eb42a8d50eb2d14e06b3b438b6fa26"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
+  "output_sha256": "5215ed8605d97b59f5b5620955a1f86579bda05051caf54dfa2ef8e9edb38093",
+  "output_bytes": 1402007,
+  "original_generated_file": "/workspace/scratch/halpas-NW-death-v01iso01.png"
+}

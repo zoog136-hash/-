@@ -1,0 +1,30 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "W",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "opposite-contact-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "requested_poses": 1,
+  "requested_game_phase": 3,
+  "newly_authored_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/source-contact0-padded.png",
+    "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/opposite-leg-ownership-guide.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/source-contact0-padded.png": "df92f1e272f6ffeb86a6e96172439ee18ff94aac5b6f9c163aabd5ae8cf94849",
+    "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/opposite-leg-ownership-guide.png": "9dbef879eb2b847800f0d593db299ea19662afdff9fc0a4ffa72327ec2211739",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85"
+  },
+  "transparent_background": true,
+  "corrective_reason": "W walk has different passing1/4 but same apparent lead contact0/3. Produce one opposite contact with explicit nearLEFT hip-to-leading-left-boot chain and farRIGHT trailing rightward chain; no whole-six retry.",
+  "source_contact_proof": "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/source-crop-proof.json",
+  "guide_not_production": "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/opposite-leg-ownership-guide.png",
+  "user_authorization": "Production image tools allowed, no images or binary in main chat. One localized missingpose edit only.",
+  "prompt": "Create ONE new missing WEST/LEFT WALK OPPOSITE-CONTACT pose by EDITING image1. Not a six-frame sheet. Keep the exact same faithful Girtas character, camera, head, upper torso, equipment, hair, arms and WEST orientation from image1; make a real localized leg-phase change below pelvis. Image2 is a SIMPLIFIED LEG DEPTH/OWNERSHIP GUIDE ONLY, never reproduce its colors/lines/text. Image3 is same character's approved faithful WEST idle identity/occlusion authority.\n\nCharacter faces screen STRAIGHT LEFT/WEST in ALL anatomy: pale face/nose toLEFT, torso and hips toLEFT, boot toes toLEFT. Keep exactly two arms: near anatomicalLEFT is the UNARMED hanging hand on the near/right side of torso; far anatomicalRIGHT hand holds the one long thin SINUOUS yellow-orange weapon extending down-left. No mirroring or hand swap. Exact pale face, long pale hair, tall gold horn crown, black/gold armor, thin HARD gold radial spikes, long DARK gold-trim skirt and long wavy weapon. No red mask, feather-fire fan, new broad sword, short pants or simplified equipment. Same elevated orthographic camera and physical body proportions.\n\nKEY EDIT: REVERSE WHICH PHYSICAL LEG LEADS relative to old image1 rather than copying its same front shin/boot. Follow image2 ownership, not only silhouette. NEAR anatomicalLEFT thigh attaches to the near pelvis directly underneath hanging freeLEFT hand. That nearLEFT thigh visibly angles FORWARD toward screenLEFT and slightly down, crossing in FRONT of the farther thigh/skirt at the overlap. Show enough of its armor-knee and upper-shin connection to trace it continuously to the LEADING LEFTMOST boot. Its knee is forward/LEFT of pelvis; shin ends at a heel planted ahead on screenLEFT, boot toes lightly up and pointing LEFT. FAR anatomicalRIGHT leg attaches to the far hip behind the near-left pelvis: its thigh travels BACK toward screenRIGHT, partly OCCLUDED behind nearLEFT thigh and established skirt; its knee/upper shin is back/RIGHT of pelvis and emerges behind, ending at TRAILING RIGHTMOST boot with heel raised and toe pushing off. Near leading thigh should clearly overlap in FRONT of far trailing thigh where paths cross. Exactly two connected thighs, knees, shins, ankles and boots, no doubled shins/feet. Do not merely slide the same original leading boot while leaving leg ownership unchanged. Reveal a narrow legitimate opening in EXISTING long dark skirt to show nearLEFT leading knee chain, preserve long skirt/goldtrim instead of inventing cloth that hides leg ownership. Skirt follows local swapped gait motion, not a new costume. Natural moderate walking stride, same upperbody weight, no jump, sprint, high knee or fall.\n\nKeep upperbody/top gear near-identical to image1, genuine anatomical RIGHT weapon hand/far-arm occlusion and LEFT free near hand. One complete full-body CONTACT key only. Crisp detailed game sprite, opaque solid materials with transparent alpha0 gaps/background and1-2px edge antialiasing.1024x1024 transparent PNG, single entire character centered with crown-to-boots height roughly450-490pixels matching padded input, wide transparent margins around full spikes/weapon/robe/boots. No crop or zoom fill. All gold spike and weapon tips visible. No floor, shadow, outer glow, haze, bloom, aura, particles, blur, trails, labels, diagrams, arrows, color-coded limbs, numbers, text or secondfigure.",
+  "requested_at": "2026-10-19T11:35:31.827573+00:00",
+  "imagegen_attempt_limit": 1
+}

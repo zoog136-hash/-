@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "case": "forged-run-and-local-manifest",
+      "returncode": 1,
+      "refused_before_Main": true,
+      "output_created": false,
+      "command": [
+        "python3",
+        "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py",
+        "--source-kit",
+        "/workspace/runtime/native-source-negative-controls/forged-kit",
+        "--source-zip",
+        "/workspace/attachments/3b64e4d1-be65-447e-a949-02cc9bdaff90/TWILIGHT_animation_source_kit_20261013.zip",
+        "--godot",
+        "/workspace/runtime/Godot_v4.7.2-stable_linux.x86_64",
+        "--output",
+        "/workspace/runtime/native-source-negative-controls/forged-run-and-local-manifest-output",
+        "--preflight-only"
+      ]
+    },
+    {
+      "case": "bad-pinned-ZIP",
+      "returncode": 1,
+      "refused_before_Main": true,
+      "output_created": false,
+      "command": [
+        "python3",
+        "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py",
+        "--source-kit",
+        "/workspace/runtime/private-animation-source-kit",
+        "--source-zip",
+        "/workspace/runtime/native-source-negative-controls/bad-kit.zip",
+        "--godot",
+        "/workspace/runtime/Godot_v4.7.2-stable_linux.x86_64",
+        "--output",
+        "/workspace/runtime/native-source-negative-controls/bad-pinned-ZIP-output",
+        "--preflight-only"
+      ]
+    },
+    {
+      "case": "public-output-refused",
+      "returncode": 1,
+      "refused_before_Main": true,
+      "output_created": false,
+      "command": [
+        "python3",
+        "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py",
+        "--source-kit",
+        "/workspace/runtime/private-animation-source-kit",
+        "--source-zip",
+        "/workspace/attachments/3b64e4d1-be65-447e-a949-02cc9bdaff90/TWILIGHT_animation_source_kit_20261013.zip",
+        "--godot",
+        "/workspace/runtime/Godot_v4.7.2-stable_linux.x86_64",
+        "--output",
+        "/workspace/twilight-pr122/.pr122-private-source-output-MUST-NOT-EXIST",
+        "--preflight-only"
+      ]
+    }
+  ],
+  "quality_thresholds_changed": false,
+  "production_applied": false,
+  "completed_added": 0
+}

@@ -1,0 +1,119 @@
+{
+  "status": "MORPHOLOGY_PRESERVING_TARGET_ONLY_NO_SOURCE_PASS",
+  "target": "actualCONTACT0 unioncorrection Lleadingheel+toeclearance+Lfreearmcounterback",
+  "source_d5cc_sha256": "d5cc5599df4a943ba28dcec2e9b8809ba0c6ff89d74b0750f6e77184b23d4752",
+  "native_C": 2560,
+  "unitfactor": 2.5,
+  "rawcanvas": [
+    1254,
+    1254
+  ],
+  "no_resample": true,
+  "target_points_raw": {
+    "head_skull_center": [
+      590,
+      270
+    ],
+    "neck_nape": [
+      614,
+      339
+    ],
+    "waist_belt_center": [
+      668,
+      548
+    ],
+    "pelvis_center": [
+      662,
+      654
+    ],
+    "L_shoulder_near": [
+      551,
+      382
+    ],
+    "L_elbow_near": [
+      650.4159999999999,
+      535.133
+    ],
+    "L_wrist_free": [
+      631.749,
+      687.569
+    ],
+    "R_shoulder_far": [
+      738,
+      403
+    ],
+    "R_elbow_far": [
+      815,
+      498
+    ],
+    "R_wrist_grip": [
+      894,
+      432
+    ],
+    "L_hip_near": [
+      605,
+      695
+    ],
+    "L_knee_support": [
+      484.839,
+      764.354
+    ],
+    "L_ankle_support": [
+      505.865,
+      1035.292
+    ],
+    "L_heel_tip_contact": [
+      521.579,
+      1082.1399999999999
+    ],
+    "L_toe_tip": [
+      470.689,
+      1011.32
+    ],
+    "L_forefoot_sole_low": [
+      515,
+      1170
+    ],
+    "R_hip_far": [
+      690,
+      705
+    ],
+    "R_knee_recovery": [
+      635,
+      795
+    ],
+    "R_ankle_recovery": [
+      768,
+      858
+    ],
+    "R_toe_recovery": [
+      782,
+      983
+    ],
+    "R_heel_tip_recovery": [
+      800,
+      904
+    ],
+    "staff_upper_endpoint": [
+      896,
+      14
+    ],
+    "staff_lower_endpoint": [
+      926,
+      1110
+    ]
+  },
+  "canonical_NW_floor_slope": 0.9,
+  "target_toe_above_heel_floor_native_px": 25.01899999999989,
+  "ankle_morphology": "skeletalintention only, notstrict morphology; actualtarsaljointdistinctfrombootshaftcuff; preserve goldstilettoheight/design and realanklearticulation",
+  "fixed_identity": "rearNW/RIGHTfarstaff/LEFTfree/nohandednessswap",
+  "edit_scope": "LEFTlegwholejointarticulation and LEFTfreearm counter; minimumlocalclothocclusion; preserve Rgear/head/bodyunit",
+  "prioractual_QC_HOLDproof": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v02-independent-actual-phase-HOLD-v01.json",
+  "prior_HOLD_sha256": "ec859d96989489c7e489f53abeb0fce712dc1b2ca18b01a0ca50de5fd612065a",
+  "actualphase": "HOLD untilserviceactualrenderindependentlyreviewed",
+  "toe_morphology": "actualtoeheel[-77.5,-40] rotated~27degrees yields[-50.89,-70.82]; sameprojectedfootlength, nofootstretch",
+  "fresh_QC_morphology_clarification": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v02-independent-actual-phase-HOLD-v02.json",
+    "sha256": "69d3f09ffbeda97db13b52f930b60d534657aa1519349c84c33fa027ed825295"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "schema": "pr122-native-independent-quality-v1",
+  "key": "transform:267",
+  "status": "PASS_SCOPED_SW_RUN_ACTUAL6_ONLY_ACTOR_HOLD",
+  "independent": true,
+  "reviewer": "Codex independent actual compiled quality reviewer /root/girtas_final_actual_quality_v04; not source/layout author; no repository/Git/engine/CI/network changes",
+  "source_selection_sha256": "cfb8bd163be0c0f7a31b957a7cdd48955eda1db9586a55252cafbad69e8edd64",
+  "reviewed_staging_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r099/SpriteFrames.tres",
+    "sha256": "f20ab1be4f54f1bfe954280ed082fc9f2edaf1448feb73c67804979714265836"
+  },
+  "reviewed_staging_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r099/NativeMotionProfile.tres",
+    "sha256": "5132785660a97406c2496f9034c79ad8557a30f1125734f53bd14e6cd041ba49"
+  },
+  "effective_profile_sha256": "2184e9c5ce74555a6687440c3ff34c13cef2bc52fe39d2e18c3f90910d7be2c1",
+  "checks": {
+    "identity_equipment": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "compass8": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "anatomy_continuity": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "motion_specificity": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "loops_transitions": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "runtime_scale_footing": "PASS_WITHIN_THIS_TRACK_SCOPE",
+    "attack_contact": "NOT_APPLICABLE_TO_LOCOMOTION_TRACK",
+    "hit_recovery": "NOT_APPLICABLE_TO_LOCOMOTION_TRACK",
+    "death_irreversibility": "NOT_APPLICABLE_TO_LOCOMOTION_TRACK"
+  },
+  "tracks": [
+    {
+      "direction": "SW",
+      "role": "run",
+      "animation": "run_3",
+      "status": "PASS_SCOPED_CURRENT_ACTUAL_TRES_AND_PROFILE",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "4826388ab571b19a0845d728676242f351ea73994663feb5fa551e530ddb84ba",
+      "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-v03six.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual SW keeps the same front-left/down-diagonal head/core and original black-gold armor, long white hair, ray crown, long robe and single anatomical RIGHT sinuous blade as SW idle. Two arms/legs and gear ownership remain coherent; no new source/Atlas clipping or invented hilt defect is established.",
+        "The actual six poses read as nearLEFT landing0→flexed flat support1→farRIGHT leading flight2→farRIGHT landing3→flexed flat support4→nearLEFT leading flight5. The separate recoveryboots stay raised with connected visible upperleg/knee/shin chains and natural longrobe occlusion.",
+        "Actual C2304 for all6 yields a reasonable shared rigid skull/face/neck, solidpauldron/core and waist scale against idle. Loads1/4 lower/flex, flights2/5 lift the body, and hair/robe spread is excluded from body sizing. No material model-size/root pop at idle entry/exit or5→0.",
+        "Actual native roots equal the independently reviewed physical candidate, including accepted phase1Y1146 only. Support points are compatible with declared sloped near/far/fore-aft projected lanes and conservative full-alpha16 AIR/recovery clearance is positive for all8 relevant boots. A lane centerline is not a universal floor boundary: supportboot pixels at different projected depths need not share flatY or idle separation.",
+        "The actual runtime phases preserve source-specific bend/lean, complete recoveryboots and authored body/head arc; no C/root or source change is needed. Still-phase PIL reconstruction certifies scoped visual continuity; root Godot Player/actions checks are separate evidence."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "3d104480e636e1fd5a26dc1e834d49f41991c5a0f03043158495e51e07c4fb40",
+          "bytes": 97247,
+          "viewed": true
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "fresh_actual_reviewed_tracks": 1,
+    "fresh_actual_reviewed_poses": 6,
+    "prior_review_exact_transfer": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/r098-reviewed46-to-r099-exact-transfer.json",
+      "sha256": "a5924e86152b5c403983db1a231858f3f85500556783126b6d6d9e46709bbfc3"
+    },
+    "aggregate_pass_tracks": 47,
+    "aggregate_pass_poses": 282,
+    "full48certified": false
+  },
+  "current_scoped_quality_evidence": {
+    "actual_numeric_pins": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/actual-r099-all48-numeric-pins.json",
+      "sha256": "9e3bab75fcbb0b33775eda4f4affa4c91dd65cc305318b7effc33b6b7d6fd138"
+    },
+    "private_encoded_image_ledger": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "sha256": "8e9e4e26e62bc0f4c8718906ace0bfa09e5f566ec85a0167c8f6470f1c09bce5",
+      "viewed_encoded_bytes": 518497
+    },
+    "independent_source_physical_candidate": {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+      "sha256": "a33564495e7e16299570120510a59dfab7da96e7cb19593941b19cb6b33b16b8"
+    },
+    "actual_boot_projected_contact_AIR_numeric_proof": {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-v02-authored-projection-independent-numeric-proof.json",
+      "sha256": "d30a6bf6076c33cda1d8640871057686da71c0237f4ee8f5d21084ccf17f83d4"
+    }
+  },
+  "quality_scope": "Independent current compiled TRES/profile reading reconstructed through PIL; not Godot screenshot. Stable physical model/gear/heading, anatomy, genuine role phases, loop/idle transitions and projected-ground footing; actual root engine validation is separate. No flat footY, fixed idle depth, ornamental bbox or exact hidden skeleton metrology imposed. Prior images not reopened.",
+  "actual_default_Main_status": "Separate root default Main / catalog validation required.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

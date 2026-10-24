@@ -1,0 +1,57 @@
+{
+  "schema": "PR122-independent-constructive-footroll-numeric-v1",
+  "status": "PASS_CONSTRUCTIVE_NUMERIC_ONLY",
+  "contract": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/actual-load1-rigid3D-heel-pinned-footroll-contract-v01.json",
+    "sha256": "dae173e85e054de9c5a508ac6549a7381585c99273b79b77d30cf3d1d0bcb07a"
+  },
+  "native_C": 2560,
+  "common_rig_root": [
+    669,
+    1267.95
+  ],
+  "independent_max_errors": {
+    "rotation_orthonormal": 3.615197858476358e-18,
+    "rotation_determinant_error": 0.0,
+    "relative_3D_rotation": 1.1013412404281553e-13,
+    "rigidity": 5.684341886080802e-14,
+    "source_projection": 0.0,
+    "target_projection": 0.0,
+    "affine_landmark_projection": 0.0,
+    "femur_tibia": 8.526512829121202e-14,
+    "world_step_length": 0.0
+  },
+  "rotation_angle_degrees": 17.08691068880697,
+  "pairwise_3D_lengths_before": [
+    47.64790131789645,
+    102.78133342197891,
+    89.92335625409008
+  ],
+  "pairwise_3D_lengths_after": [
+    47.64790131789639,
+    102.78133342197891,
+    89.92335625409007
+  ],
+  "same_leg_lengths": [
+    250.0,
+    250.00000000000009
+  ],
+  "heel_world_delta": [
+    11.879393923934005,
+    11.879393923933995,
+    0.0
+  ],
+  "forefoot_native_height_before_after": [
+    14.0,
+    -6.661338147750939e-16
+  ],
+  "actual_art_reviewed_in_this_step": false,
+  "source_visual_status": "NOT_ASSESSED",
+  "physical_cycle_status": "PENDING_FRESH_ACTUAL_CYCLE_QC",
+  "limitations": [
+    "The heel/forefoot/tarsal depths and common ground are explicit authored assumptions, not a unique recovery from pixels.",
+    "This proves one rigid3D footroll and fixed-bone construction with the actual clock; it does not bind all raster sole perimeter or approve the rendered image.",
+    "Source0 forefoot14 supersedes the historical flat0 assumption; the old immutable proof is retained."
+  ],
+  "actor_approvals_added": 0
+}

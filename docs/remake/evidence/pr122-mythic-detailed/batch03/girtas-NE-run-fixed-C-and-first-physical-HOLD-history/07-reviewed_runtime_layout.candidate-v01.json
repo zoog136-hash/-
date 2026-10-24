@@ -1,0 +1,47 @@
+{
+  "status": "REVIEWED_LAYOUT_PROPOSAL",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "source_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+  "canvas_size": 2048,
+  "authored_pose_canvas_sizes": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "source_anchors": [
+    [
+      846,
+      1363
+    ],
+    [
+      2364,
+      1279
+    ],
+    [
+      841,
+      2953
+    ],
+    [
+      2377,
+      2844
+    ],
+    [
+      889,
+      4342
+    ],
+    [
+      2468,
+      4500
+    ]
+  ],
+  "review_basis": "Accepted exact source6 and accepted fixed rigid Cs. One explicit actual-sole projected-floor root candidate: FAR_LEFT0/1 support, NEAR_RIGHT3/4 support, AIR2/5 actual sole clearances, bounded lateral/foreaft projection and uncertain hidden pelvis. Deep loads and idle/contact uppercore difference exposed for independent QC; author grants no approval.",
+  "anchor_measurement_evidence": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/authored-native-sole-projected-ground-root-candidate-v01.json",
+  "anchor_measurement_evidence_sha256": "9858405a405b7a25c0bbe59dcb3db33785d8ee9f3f3289139fcf00a397ae722a",
+  "runtime_validation": "HOLD_PENDING_INDEPENDENT_PHYSICAL_CANDIDATE_AND_ACTUAL_PLAYER",
+  "actor_approval": false
+}

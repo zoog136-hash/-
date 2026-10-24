@@ -1,0 +1,17 @@
+{
+  "tool": "image_gen.imagegen",
+  "args": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v01/DERIVED-native1254-oldLEFTremoved-newBACKarm-guide.png",
+      "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v01/original-left-gauntlet-puff-material-only.png"
+    ],
+    "prompt": "EDIT reference1 IN PLACE, same native1254x1254 transparent canvas and exact body placement. Replace ONLY the MAGENTA near anatomical LEFT arm scaffold with a real painted LEFT FREE ARM in its NEW BACKSWING posture. This is a narrowly bounded production animation correction, not a whole character redesign. Old forward/left arm was deliberately erased from this DERIVED input. Preserve original complete character, rear NW direction, head/hair/ribbon, torso, skirt, cape, TWO EXISTING LEGS and RIGHTHAND gold/cyanstaff exactly in their current positions.\n\nThe one actual LEFT near shoulder starts at sourcepixel(589,458). New elbow at(632,550), new free wrist at(674,648), relaxed fingers ending around(696,696). The magenta scaffold and white dots show those precise joint positions. Render the genuine arm shoulder→upperarm→elbow→forearm→wrist→OPEN FREE GLOVED HAND continuously; no diagram or magenta remains. This arm swings BACK toward screenLOWER-RIGHT, opposing the near LEFT leg that reaches FORWARD toward upper-left. Do NOT restore the old forward arm/hand on screenleft. Preserve the same physical upperarm and forearm lengths through natural joint articulation and perspective; no stretching or shrinkage. NearLEFT hand must visibly hold NOTHING and stay clearly separate from the staff. The existing anatomical RIGHT far hand and arm carrying the screenrightstaff remain untouched.\n\nSame original costume on moved LEFT arm: gold-trim BLUE puffed upper sleeve/pauldron, WHITE cloth sleeve, intricate GOLD bracer/gauntlet with dark-blue inset and same ornamental design, BLACK glove and fingers. Reference2 contains ONLY the original leftgauntlet and bluepuff material samples; use them for exact materials/design, NOT old pose. New arm is drawn on the NEAR side of back/hip so its natural occlusion may cover small local back/waist/cape pixels. Shoulder connection remains at the same flesh/armor joint. Do not invent armor parts, extra arm or third hand. Empty glove relaxed slightlycurled, not stiff pointing.\n\nRemove residual fragments of the erased old LEFT arm within the leftarm edit area, reconstruct only local blueback/transparent edge as needed. No ghost glove or gold fragments floating on screenleft. Keep every original feature outside the arm's local area; especially full staff BOTH ends and RIGHTgrip, goldbun/blue ribbon, white skirt, leg boots and contact posture unchanged. No recolor, mirror, wholebody rotation, scale, recenter or new pose. Opaque detailed game material with clean1-2pixel alpha edge, all original outsidebackground fully transparent. ONE existing full figure, no labels, pink guide, floor, shadow, glow, aura, particles or text."
+  },
+  "original_source_sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+  "fixed_virtual_C": 2048,
+  "fixed_density_factor": 2,
+  "body_unit_independent_proof_sha256": "a18d90b02183bd33567f2992b7f1079de306e620a601a85168297281076ab013",
+  "composition": "Only allowed-left-arm-only-mask pixels may differ from original; source PNG immutable; no resample/profile/root change.",
+  "approval_added": 0
+}

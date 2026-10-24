@@ -1,0 +1,21 @@
+........................FF............................
+======================================================================
+FAIL: test_guard_first_sheet_normalization_keeps_original_display_height (__main__.OriginalBasedImportTest.test_guard_first_sheet_normalization_keeps_original_display_height)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 1255, in test_guard_first_sheet_normalization_keeps_original_display_height
+    self.assertLess(visible, 110)
+AssertionError: 116.25168979591837 not less than 110
+
+======================================================================
+FAIL: test_guard_variants_keep_their_own_original_and_distinct_artwork (__main__.OriginalBasedImportTest.test_guard_variants_keep_their_own_original_and_distinct_artwork)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 1211, in test_guard_variants_keep_their_own_original_and_distinct_artwork
+    self.assertTrue(profiles[key]["frames_path"].endswith(f"/{actor}/SpriteFrames.tres"))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 54 tests in 12.181s
+
+FAILED (failures=2)

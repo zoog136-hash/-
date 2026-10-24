@@ -1,0 +1,160 @@
+{
+  "status": "PRESERVED_NE_SOURCE_AND_FIXED_C_PASS_FIRST_PHYSICAL_ROOT_HOLD_HISTORY_NO_RUNTIME_APPROVAL",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "actor_approval_added": 0,
+  "source_pose_added": 0,
+  "allowlist_sha256": "2b477a2ecdaaa4181b77f22292bde7cda4e478acdf45ff4d6c14bdedeb67100f",
+  "allowlist_original": "/workspace/scratch/pr122-NE-run-fixed-C-and-first-physical-HOLD-history-explicit-preservation-allowlist.json",
+  "scope": "Preservation of original six-source art PASS and fixed-C-stage PASS, separately from rejected first physical-root candidate HOLD. No NE r100, no actual runtime approval, no actor approval or completion-count increase. Historical candidate READY/PENDING wording is superseded only at the physical-root stage by the authoritative HOLD; original documents remain verbatim.",
+  "historical_only": [
+    "All ten original first-physical-author documents are preserved as rejected candidate history, including READY/PENDING labels and numeric guards that do not establish physical correctness.",
+    "Original atlas18d and original six-source approval are preserved only; no replacement contact0/3 or future candidate is included.",
+    "Fixed-C stage is independent of ground/root/physical approval."
+  ],
+  "authoritative_inputs": {
+    "source6_PASS": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-selected-final-six-independent-source-cycle-bridge-v01.json",
+    "fixed_C_stage_PASS": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-rigid-Cstage-independent-PASS.json",
+    "first_physical_root_HOLD": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-fixedC-root-candidate-v01-independent-physical-HOLD.json"
+  },
+  "quality_stage_semantics": {
+    "original_six_source_art": "PASS_FOR_ARCHIVED_ORIGINAL_SOURCE_SET_ONLY",
+    "fixed_C_stage": "PASS_FOR_ORIGINAL_ATLAS_18d108_AND_EXACT_Cs_ONLY",
+    "fixed_pose_Cs": [
+      1936,
+      2240,
+      1936,
+      1776,
+      2048,
+      1936
+    ],
+    "first_physical_root_candidate": "HOLD_PHYSICAL_CANDIDATE_CONTACT0_3_UPPERCORE_ENTRY_POP",
+    "original_atlas_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+    "original_atlas_selection": "PRESERVED_ORIGINAL_NOT_SELECTED_AS_ACTUAL_NE_RUN",
+    "new_contact_art": "EXCLUDED_PENDING_AND_SEPARATE_NO_AUTOMATIC_PASS_TRANSFER",
+    "actual_runtime": "NOT_INTEGRATED_NO_NE_R100_APPROVAL"
+  },
+  "ledger_path_resolution": "Preserved source/Cstage/HOLD certificates retain original scratch paths verbatim. Resolve JSON/PY paths through this index files[].original -> files[].preserved mapping. Fixed-C certificate working-ledger SHA resolves exactly to immutable through-view07; first-physical HOLD directly pins immutable through-view08. PNG/JPEG references remain provenance only and are never included here.",
+  "files": [
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/authored-native-sole-projected-ground-root-candidate-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/01-authored-native-sole-projected-ground-root-candidate-v01.json",
+      "sha256": "9858405a405b7a25c0bbe59dcb3db33785d8ee9f3f3289139fcf00a397ae722a",
+      "bytes": 56224,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/build_candidate.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/02-build_candidate.py",
+      "sha256": "961abaf7c29fd20674fc680147dcea5f9f7879c5ed2882b377543e71190aa4b1",
+      "bytes": 15853,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/candidate-receipt-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/03-candidate-receipt-v01.json",
+      "sha256": "156724341720f84fbb71e43f1404caeab2ab9f885e803784c9899aed736eb8b2",
+      "bytes": 1972,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/geometry-base2048.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/04-geometry-base2048.json",
+      "sha256": "202389d4260c6345053d57011d23bcfe485115c9c84d4b45715a0d25e5559fb6",
+      "bytes": 2370,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/geometry-with-authored-root-candidate-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/05-geometry-with-authored-root-candidate-v01.json",
+      "sha256": "577774c4ba3e5f903081619fb3bcc7b6d026385917e809dbc782548d899495ba",
+      "bytes": 3027,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/geometry-with-outward-ground-room-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/06-geometry-with-outward-ground-room-v01.json",
+      "sha256": "2b1af3a6c60d2dc92b00207bb4fd8d90318bb2adf354849869376332eec29a7d",
+      "bytes": 2370,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_runtime_layout.candidate-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/07-reviewed_runtime_layout.candidate-v01.json",
+      "sha256": "1bcf014528371fedcc8ab1a857c274cf1a91e78c055d62313b68016bf6dc6dcb",
+      "bytes": 1308,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_runtime_layout.candidate-v01.validation.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/08-reviewed_runtime_layout.candidate-v01.validation.json",
+      "sha256": "e30d157f46f8286fe19d352327cfa9ec3a65761d6050413bfdd1c19b1eeb6792",
+      "bytes": 1878,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_source_regions.candidate-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/09-reviewed_source_regions.candidate-v01.json",
+      "sha256": "f29978751108fa5976a3b89d61770bf7e92c729f4226dc126f6c4f9d84ab8fdb",
+      "bytes": 1061,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_source_regions.candidate-v01.validation.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/10-reviewed_source_regions.candidate-v01.validation.json",
+      "sha256": "b3ba2f22ad86ad1d6d2b9e2e71e61584a8b795f6a917bca8855710e2759c68f7",
+      "bytes": 4972,
+      "role": "historical_first_physical_root_candidate_HOLD_not_runtime_authorization"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-rigid-Cstage-independent-PASS.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/11-NE-run-rigid-Cstage-independent-PASS.json",
+      "sha256": "98d5a94893dc0cc343c12a14db0f413213d5d31dc204f541fab75f0588719edc",
+      "bytes": 3381,
+      "role": "independent_fixed_C_stage_PASS_for_original_atlas_only_not_ground_or_runtime_PASS"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/rigid-C-stage-author-candidate-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/12-rigid-C-stage-author-candidate-v01.json",
+      "sha256": "6bcd4478dc1c76ccada4a9516d356fe28e2bd13db878ac6f28ac4ebc4201655f",
+      "bytes": 3987,
+      "role": "accepted_fixed_C_stage_author_numeric_proof_not_root_or_ground_PASS"
+    },
+    {
+      "original": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-selected-final-six-independent-source-cycle-bridge-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/13-NE-run-selected-final-six-independent-source-cycle-bridge-v01.json",
+      "sha256": "8e99326ebfe236e3d47c9106ddf58f645aed095da1325bf77aa8b9a3c466d307",
+      "bytes": 14638,
+      "role": "independent_original_six_source_art_PASS_only_no_runtime_or_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/girtas-NE-run-reviewed-composite-v01.assembly.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/14-girtas-NE-run-reviewed-composite-v01.assembly.json",
+      "sha256": "e70e34b22facf7a89f631eed8f21d6daf691ab1ceaf2bed02e52ed60e6132b27",
+      "bytes": 12621,
+      "role": "exact_preserved_original_atlas_assembly_provenance_no_actual_game_selection"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view07.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/15-private-image-ledger-through-view07.json",
+      "sha256": "13cb0cc9aeb2e1a3a274be4964ae479fb92b6a940290c7323296d71f348db663",
+      "bytes": 7062,
+      "role": "immutable_private_view_ledger_for_finished_fixed_C_stage_certificate"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-fixedC-root-candidate-v01-independent-physical-HOLD.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/16-NE-run-fixedC-root-candidate-v01-independent-physical-HOLD.json",
+      "sha256": "6af534377b3855b351bce9ae4926ea5bdeee8ac0acb82f736f947b27d366f0be",
+      "bytes": 10324,
+      "role": "authoritative_independent_FIRST_physical_root_HOLD_no_r100_or_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view08.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-fixed-C-and-first-physical-HOLD-history/17-private-image-ledger-through-view08.json",
+      "sha256": "a650325b8c6bc080728b5904d7c0ccd91b4fcf09e7e79fa7cb0cd12b6c9d2d74",
+      "bytes": 8077,
+      "role": "immutable_private_view_ledger_for_finished_FIRST_physical_HOLD_certificate"
+    }
+  ]
+}

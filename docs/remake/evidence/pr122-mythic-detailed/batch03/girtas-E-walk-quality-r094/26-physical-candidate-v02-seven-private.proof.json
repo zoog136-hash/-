@@ -1,0 +1,129 @@
+{
+  "status": "PRIVATE_PHYSICAL_LAYOUT_CANDIDATE_PREVIEW_NO_SOURCE_EDIT",
+  "preview": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/physical-candidate-v02-seven-private.jpg",
+  "bytes": 146948,
+  "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+  "derived_geometry": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/physical-candidate-v01.geometry.json",
+  "derived_geometry_sha256": "7fce3cc5e6294d2585805201b5d10ca3b8103fa611b31fb39ef587918d7e851f",
+  "actual_idle_frame_geometry": {
+    "row": 0,
+    "direction": "E",
+    "region": [
+      46,
+      4,
+      427,
+      495
+    ],
+    "margin": [
+      302,
+      149,
+      597,
+      529
+    ],
+    "source_anchor": [
+      256,
+      495
+    ],
+    "rgba_sha256": "54deab291e7e39110b6dbc084e84eb98472d55acdd394f3258f4d5d058bef264"
+  },
+  "actual_idle_texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r049/E-idle.png",
+  "actual_idle_texture_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+  "groundprojection_hypothesis": {
+    "status": "DRAFT_COMMON_GROUNDPROJECTION_HYPOTHESIS_REQUIRES_ACTUAL_ANATOMY_PHYSICAL_QC",
+    "camera_forward_slope_y_per_x": 0.028659992885037386,
+    "forward_angle_degrees": 1.6416472512124183,
+    "walking_near_minus_far_lane_canonical": 1.5493472447063796,
+    "standing_neutral_near_minus_far_lane_canonical": 23.754459067939898,
+    "actor_root_from_body_midplane_canonical": 12.450429391670696,
+    "fit_source": "Actual strongboottoe/heel last2rows of both SOURCEPASS contact0/3, faceCsinitialDRAFT. Not assuming neutral20 invariant.",
+    "independent_gate": "Narrower walking lane must agree with actual hip/knee/ankle shape/occlusion and commonbody scale; fitting coordinates alone is not source approval. No newart or forced AIR.",
+    "pose_anchors": [
+      {
+        "pose": 0,
+        "canvas_size": 2256,
+        "source_anchor_original": [
+          647,
+          1208
+        ],
+        "source_anchor_atlas": [
+          788,
+          1349
+        ],
+        "basis": "Both actual heel/toe support contacts under common forwardprojection+walkinglane, midpoint model. No AIR relabel."
+      },
+      {
+        "pose": 1,
+        "canvas_size": 2408,
+        "source_anchor_original": [
+          654,
+          1216
+        ],
+        "source_anchor_atlas": [
+          2331,
+          1357
+        ],
+        "basis": "farLEFTsole_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      },
+      {
+        "pose": 2,
+        "canvas_size": 2352,
+        "source_anchor_original": [
+          704,
+          1158
+        ],
+        "source_anchor_atlas": [
+          845,
+          2835
+        ],
+        "basis": "farLEFTrear_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      },
+      {
+        "pose": 3,
+        "canvas_size": 2352,
+        "source_anchor_original": [
+          664,
+          1200
+        ],
+        "source_anchor_atlas": [
+          2341,
+          2877
+        ],
+        "basis": "Both actual heel/toe support contacts under common forwardprojection+walkinglane, midpoint model. No AIR relabel."
+      },
+      {
+        "pose": 4,
+        "canvas_size": 2408,
+        "source_anchor_original": [
+          614,
+          1248
+        ],
+        "source_anchor_atlas": [
+          755,
+          4461
+        ],
+        "basis": "nearRIGHTsole_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      },
+      {
+        "pose": 5,
+        "canvas_size": 2304,
+        "source_anchor_original": [
+          684,
+          1214
+        ],
+        "source_anchor_atlas": [
+          2361,
+          4427
+        ],
+        "basis": "nearRIGHTrear_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      }
+    ]
+  },
+  "near_floor_canonical": 640,
+  "far_floor_canonical": 620,
+  "actor_root_canonical": [
+    512,
+    640
+  ],
+  "preview_pixel_scale": 0.5,
+  "note": "Preview only resampled; all source/game PNG unchanged. Actual C/root and sixphase/idleentry sourcequality external review required."
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-E-idle-author-20261020-v01/author-E-IDLE6-dedicated-native-thorax-relaxed-arm-and-cloth-v01.py", line 83, in <module>
+    assert np.array_equal(final[protected],original[protected]);assert len(comps)==1,(i,comps)
+                                                                       ^^^^^^^^^^^^^
+AssertionError: (0, [{'pixels': 364442, 'bbox': [399, 136, 1126, 1348]}, {'pixels': 322, 'bbox': [963, 635, 1019, 668]}])

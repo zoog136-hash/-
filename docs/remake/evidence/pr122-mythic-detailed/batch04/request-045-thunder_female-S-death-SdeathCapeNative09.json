@@ -1,0 +1,342 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "S",
+  "role": "death",
+  "version": "SdeathCapeNative09",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+      "packing_proof_sha256": "f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c",
+      "direction": "S",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2560,
+        2560,
+        2560,
+        2560,
+        2560,
+        2560
+      ],
+      "root_float": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "root_integer": [
+        655,
+        1018
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          1039,
+          1402
+        ],
+        [
+          3343,
+          1402
+        ],
+        [
+          1039,
+          3706
+        ],
+        [
+          3343,
+          3706
+        ],
+        [
+          1039,
+          6010
+        ],
+        [
+          3343,
+          6010
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "7a2ec5e2f695b024b25a25657fc9bc6e15de5732d70cde010b92019b27af6b72",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+    "base_geometry_sha256": "05b37a366b5a6e8bf1c8f2664192941623de6723c00266dc2859f9ecd2ed4921",
+    "direction": "S",
+    "regions": [
+      [
+        664,
+        146,
+        732,
+        1439
+      ],
+      [
+        2947,
+        175,
+        749,
+        1480
+      ],
+      [
+        487,
+        2788,
+        883,
+        1532
+      ],
+      [
+        2705,
+        3175,
+        1115,
+        1175
+      ],
+      [
+        387,
+        5791,
+        1169,
+        964
+      ],
+      [
+        2690,
+        5794,
+        1177,
+        970
+      ]
+    ],
+    "nearest_owner_sha256": "6d23a5d1500d7203ecf238564fe05a0380af57c56ba84a04af74dff8779d8d86",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+    "direction": "S",
+    "role": "death",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        1039,
+        1402
+      ],
+      [
+        3343,
+        1402
+      ],
+      [
+        1039,
+        3706
+      ],
+      [
+        3343,
+        3706
+      ],
+      [
+        1039,
+        6010
+      ],
+      [
+        3343,
+        6010
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+      "packing_proof_sha256": "f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c",
+      "direction": "S",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2560,
+        2560,
+        2560,
+        2560,
+        2560,
+        2560
+      ],
+      "root_float": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "root_integer": [
+        655,
+        1018
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          384,
+          384
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          1039,
+          1402
+        ],
+        [
+          3343,
+          1402
+        ],
+        [
+          1039,
+          3706
+        ],
+        [
+          3343,
+          3706
+        ],
+        [
+          1039,
+          6010
+        ],
+        [
+          3343,
+          6010
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "7a2ec5e2f695b024b25a25657fc9bc6e15de5732d70cde010b92019b27af6b72",
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "f9570aa4feca9ba3301bc82dc94059ddf9ddfdfb197fcf46b28b5e372bbaa78c",
+  "authored_common_root_float": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "common_root_integer": [
+    655,
+    1018
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "authoring_dependencies": [
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+      "sha256": "fbbbb85ff8f066be19ba328a80930d46e237fe3b557cba90c24c96dc7c82b847"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-six-native-v09-original-cape-root-20261022/own-S-DEATH-six-actual-native-source-contract-v09.json",
+      "sha256": "36eb9df30c4e598ca1a1b44850dbed224ad5a9779ee6de6c6687406d8cf21a71"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png",
+  "output_sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc",
+  "output_bytes": 6664623
+}

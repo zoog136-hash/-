@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "SOURCE_SINGLE_KEY_PASS_NOT_COMPLETE_CLIP",
+  "source_visual_status": "PASS",
+  "raw_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/girtas-SE-run-right-compression-key-v01.png",
+  "raw_sha256": "39264eda3975de9a760c8c0b8a87d9aeaa38f80628dfa99c030b2a14a7293dfa",
+  "raw_bytes": 1459325,
+  "request_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/request-girtas-SE-run-right-compression-key-v01.json",
+  "request_sha256": "ab9f41d3cde42a2ed166f6a669074157ed2aa7b2e9c8f95f062a0277bcaec091",
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "canvas_size": 2048,
+    "distinct": null,
+    "canvas_semantics": "2048 is virtual importer canvas; actual source PNG image_size is separately pinned."
+  },
+  "intended_game_phase": 4,
+  "intended_anatomical_support": "RIGHT",
+  "intended_air_lead": null,
+  "visual_findings": [
+    "Actual nearRIGHT supporting thigh/knee bends with the shin angling back to the near landing boot; more flex and compressed hip-to-sole distance than contact3. FarLEFT raised thigh/knee and separate folded boot remain airborne and preserve opposite ownership.",
+    "Both retain proper SE front/down-right camera, pale human face/hair, hard pointed gold rays, long dark gold-trim robe and long sinuous blade in anatomicalRIGHT weapon hand. Complete fists/boots/rays/blade endpoints are visually retained and boundary strong-alpha counts0.",
+    "No new material head/pauldron/waist-to-leg inconsistency. Pose flex/foreshortening and armor/cloth occlusion are not treated as changed bone lengths.",
+    "Strict singleton virtual2048 geometry and complete-alpha coverage PASS. Actual image header1254square; source original unchanged."
+  ],
+  "visual_limitations": [
+    "Only this distinct actual source key and its identity/stance accepted. Whole-six rigid scale, authored root/sole projection/AIR clearance, actual SpriteFrames/Player/actions and actor remain pending.",
+    "No true hidden skeletal bone lengths certified from robe occlusion or generic guide."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "newly_authored_pose_candidate_count": 1,
+  "approved_actors_delta": 0,
+  "preview_for_fresh_reviewer": {
+    "path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/private-independent-source-review.jpg",
+    "bytes": 92493,
+    "sha256": "4b985bcd4283d84f1be4e7e3fe5bf2f734f9b81bd9f62697a969ea6fb3e1c0e0"
+  },
+  "actual_source_image_size": [
+    1254,
+    1254
+  ],
+  "independent_source_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-compression1-4-independent-source-QC-v01.json",
+    "sha256": "3a8a75dfe8e1e46a3519ae5fa8bf4545ad5877edc090056c58939bf6ed731eac",
+    "status": "SOURCE_COMPRESSION_PAIR_PASS",
+    "inline_proof": {
+      "schema": "PR122_GIRTAS_SE_RUN_NEW_COMPRESSION_1_4_INDEPENDENT_SOURCE_QC_V1",
+      "utc": "2026-10-19T15:48:44.741687+00:00",
+      "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+      "status": "SOURCE_COMPRESSION_PAIR_PASS",
+      "scope": "Only new SE run sources phase1 farLEFT and phase4 nearRIGHT compression, compared to independently passed contact0/3. No whole6/physical integration/actor approval.",
+      "actor_approval_increment": 0,
+      "actor_approval": false,
+      "source_pins": [
+        {
+          "phase": 1,
+          "raw_path": "/workspace/scratch/girtas-SE-run-left-compression-key-v01/girtas-SE-run-left-compression-key-v01.png",
+          "raw_sha256": "b2e11d492a404a52654ddee9881b9c4e475258e4ab79cc0ccd0f9ce53de80bb5",
+          "raw_bytes": 1554048,
+          "actual_image_size": [
+            1254,
+            1254
+          ],
+          "request_path": "/workspace/scratch/girtas-SE-run-left-compression-key-v01/request-girtas-SE-run-left-compression-key-v01.json",
+          "request_sha256": "c5574696d9371b5989053aa9e9d1c8001e39155a842212bcfe07c69a06206e87",
+          "receipt_path": "/workspace/scratch/girtas-SE-run-left-compression-key-v01/generation-receipt.json",
+          "receipt_sha256": "ba04a7696e75863f0356781fac00f18089761d835d26fedea4780dda825ffc6d",
+          "guide_recipe_path": "/workspace/scratch/girtas-SE-run-production-v01/six-solid-guide-recipe.json",
+          "guide_recipe_sha256": "6c067d9f06e71a19a1ba7eaa9392dea2d249e51d69df657e143b09e19ac81b8e",
+          "reference_pins": {
+            "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase1-LEFTsupport.png": "d33feeaea2efe0b238f558ba0beb14f7c82d8893af13cd185e5ea66a5e5c3fe6",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png": "fdaff6bb3da344ea1b01be8a2913572449047f850c937d6ff5f3483de6676a95",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png": "6c2f35a4215e77c06f4c984d695bd0825e0c2a675b8f9ac9a3ad3ee9426d4ad3",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png": "90ef447bd46ba91eedc1d345ce72bceb09a1d7b993d629d0c0ee8cf9fb62746e"
+          },
+          "boundary_gt16_counts": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "phase": 4,
+          "raw_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/girtas-SE-run-right-compression-key-v01.png",
+          "raw_sha256": "39264eda3975de9a760c8c0b8a87d9aeaa38f80628dfa99c030b2a14a7293dfa",
+          "raw_bytes": 1459325,
+          "actual_image_size": [
+            1254,
+            1254
+          ],
+          "request_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/request-girtas-SE-run-right-compression-key-v01.json",
+          "request_sha256": "ab9f41d3cde42a2ed166f6a669074157ed2aa7b2e9c8f95f062a0277bcaec091",
+          "receipt_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/generation-receipt.json",
+          "receipt_sha256": "0d9d03c7f8f23cb73ba63a31ea971db611a4fbdce206ef0b60215a34b76358a6",
+          "guide_recipe_path": "/workspace/scratch/girtas-SE-run-production-v01/six-solid-guide-recipe.json",
+          "guide_recipe_sha256": "6c067d9f06e71a19a1ba7eaa9392dea2d249e51d69df657e143b09e19ac81b8e",
+          "reference_pins": {
+            "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase4-RIGHTsupport.png": "0c1d6d65955c11b705bad20235f17e18aaa1c0bc5ba0887f36e3051e29739258",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png": "fdaff6bb3da344ea1b01be8a2913572449047f850c937d6ff5f3483de6676a95",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png": "6c2f35a4215e77c06f4c984d695bd0825e0c2a675b8f9ac9a3ad3ee9426d4ad3",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png": "90ef447bd46ba91eedc1d345ce72bceb09a1d7b993d629d0c0ee8cf9fb62746e"
+          },
+          "boundary_gt16_counts": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        }
+      ],
+      "contact_comparison_proof": {
+        "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-contact-pair-independent-source-QC-v02.json",
+        "sha256": "bab8afd4dd6ce288ba3c7296d0f4786dd9d985c7d77b0b6c16934e6004505390"
+      },
+      "findings": {
+        "phase1": "Actual farLEFT supporting thigh/knee bends more deeply than contact0; ankle/boot remain on that same far chain. Hip/waist is drawn lower relative to the support-sole line and torso leans forward. NearRIGHT thigh is raised with separate folded recovery boot visible above support; source role is a genuine load/compression, not another straight landing.",
+        "phase4": "Actual nearRIGHT supporting thigh/knee bends with the shin angling back to the near landing boot; more flex and compressed hip-to-sole distance than contact3. FarLEFT raised thigh/knee and separate folded boot remain airborne and preserve opposite ownership.",
+        "identity_camera_gear": "Both retain proper SE front/down-right camera, pale human face/hair, hard pointed gold rays, long dark gold-trim robe and long sinuous blade in anatomicalRIGHT weapon hand. Complete fists/boots/rays/blade endpoints are visually retained and boundary strong-alpha counts0.",
+        "proportions": "No new material head/pauldron/waist-to-leg inconsistency. Pose flex/foreshortening and armor/cloth occlusion are not treated as changed bone lengths.",
+        "dimension_semantics": "Actual raw1254square; virtual2048 is importer coordinate canvas only."
+      },
+      "remaining_HOLD": [
+        "Actual source-to-canonical scale, authored ground roots and floor nonpenetration require physical candidate assembly; source JPEG positions alone do not prove floor Z or exact pelvis world drop.",
+        "AIR2/5 and whole6 source alternation pending.",
+        "Actual SpriteFrames integration, Godot runtime and final actor approval pending; actor267 remains0/catalogOFF."
+      ],
+      "private_review_ledger": {
+        "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+        "sha256": "6f735305286f8b762841f8353096281fc5320d3a0d63f77a592ea27ca13f230d",
+        "cumulative_bytes": 872706,
+        "cap_bytes": 8000000
+      },
+      "repository_mutations": false
+    }
+  },
+  "newly_authored_pose_count": 1
+}

@@ -1,0 +1,34 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "E",
+  "role": "attack",
+  "version": "v01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png"
+  ],
+  "prompt": "Author six independently drawn, high-detail isometric RPG ATTACK sprites of EXACTLY 해방된 할파스 from the original portrait (identity authority) and saved EAST native locomotion references. Preserve the exact face, horns/helmet, black armor, crystalline wings, proportions, colors and actual existing weapon or natural striking anatomy. Do not invent a new weapon, add anatomy, swap weapon hands or turn it into another boss.\n\nTechnical transparent atlas: 1024x1536 pixels, EXACTLY TWO COLUMNS and THREE ROWS, six 512x512 cells in temporal order left-to-right then down. One entire character per cell. Keep the silhouette inside the central320x320 area with at least96 transparent pixels at every cell edge. Preserve head/torso scale relative to the references; fold/re-angle existing wings during the strike rather than shrinking the character or cropping equipment. No character rectangles overlap. More than70 percent of the atlas should remain empty transparent background.\n\nAll six face EAST/screen right, same isometric camera and coherent body scale. Six true attack phases: 0 poised guard; 1 visible backswing/anticipation; 2 loaded compression just before release; 3 unmistakable active forward strike/contact with the referenced weapon or striking limb extended toward the right; 4 controlled follow-through; 5 recovery toward guard. Phase3 is the intended game contact frame. Make the weapon, arm, torso, legs and wing response articulate together; do not merely translate/tilt/recolor one pose, copy locomotion frames, or change to another facing. Preserve floating/airborne anatomy and the actual equipment from the references.\n\nCrisp hard-edged cutout game sprites with detailed material shading INSIDE each character. Black armor/skin must be fully opaque. Existing colored energy stays contained in the original blade/wing shapes. NO long trail, diffuse aura, bloom, halo, fog, floor, shadow, scenery, panels, labels, numbers or grid. No detached ornaments or spare weapons. All anatomy, wing tips and weapon tips visible, no clipping. Outside the exact silhouette alpha0; edge antialiasing only one or two pixels.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "intended_contact_frame": 3,
+  "phase_contract": [
+    "guard",
+    "anticipation",
+    "load",
+    "active_contact",
+    "follow_through",
+    "recovery"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png": "efa8ceadcb848c73293a71b09ab717dfe8a1f95b8aab5adc955316d2a88cb44f"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01.png",
+  "output_sha256": "f071057d34855734829b12ca79f313c9be31d135a9a91ec926c0a3ac7d58be68",
+  "output_bytes": 2315343,
+  "original_generated_file": "/workspace/generated_images/exec-5d953cbb-5453-4056-98e8-6dae6872543c.png"
+}

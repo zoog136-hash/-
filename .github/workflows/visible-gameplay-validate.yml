@@ -12,10 +12,15 @@ on:
       - 'tests/visible_gameplay_smoke_test.gd'
       - '.github/workflows/visible-gameplay-validate.yml'
   workflow_dispatch:
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Godot 4.7.2

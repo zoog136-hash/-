@@ -1,0 +1,39 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "missing-halfcycles-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 4,
+  "requested_poses": 4,
+  "requested_game_phases": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "newly_authored_poses": 4,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png",
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/girtas-E-walk-opposite-contact-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png": "ca12906450ef3eb855196608903f99d031cf7472a4953d2b06ed7d20432bb346",
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/girtas-E-walk-opposite-contact-v01.png": "abf51a674064173ca307e65c124239b99e4a0316b1de857cd8063e86e23c4c57"
+  },
+  "contact0_source_proof": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-crop-proof.json",
+  "opposite_key_source_sha256": "abf51a674064173ca307e65c124239b99e4a0316b1de857cd8063e86e23c4c57",
+  "contact_key_status": "PASS_WITH_FULL_CYCLE_QA_HOLD; author HOLD preserved; no claimed anatomical ownership from concealed thighs alone",
+  "corrective_reason": "Author only four missing opposing half-cycle poses; preserve both existing contact keys and original long skirt/model/RIGHT weapon.",
+  "source_nominal_canvas_for_later_analysis": 2048,
+  "transparent_background": true,
+  "private_before_preview": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/private-normalized-proportion-review.jpg",
+  "user_authorization": "Production image tools allowed; no images/binary in main chat. One missing-four-pose source attempt, private bounded QC only.",
+  "prompt": "Create ONLY FOUR missing genuine EAST/RIGHT WALK phases of this EXACT SAME GIRTAS character, as one spacious 2-by-2 sprite sheet. There must be exactly four complete separate full-body figures, arranged top-left, top-right, bottom-left, bottom-right in that chronological slot order. Transparent alpha-zero background and broad transparent gutters; no text, labels, guides, floor, duplicate ghost figures or contact-key copies. Do not draw the two contact references again.\n\nImage1 is exact preserved contact0: near anatomicalRIGHT leg is forward, far anatomicalLEFT leg behind. Image2 is the opposite-contact candidate to connect to as game phase3. Their character, original elevated strict EAST side camera and equipment are identity authorities, not four poses to duplicate. We now need game phases1,2,4,5 only. ALL four faces, chest, pelvis, knees and boot toes face screenRIGHT/EAST; no frontal, three-quarter-front or mirrored view.\n\nKeep the pale masculine face and very long pale hair, the same gold horn crown and thin rigid gold radial back spines, black/gold torso and armor, original LONG DARK black skirt with gold-edged hanging panels, exactly two arms/hands and two legs/boots. The long thin S-shaped sinuous weapon remains in the anatomicalRIGHT NEAR hand, never a rigid sword, never the far hand. Original dark skirt MUST remain long, naturally covering proximal thighs. Do not shorten it, replace it with pants, expose artificial thighs, or invent hip seams to explain the gait. Let the two shins/boots visibly move below its moving hem. Keep head/torso/hip/boot physical ratios consistent across all four full figures. Hair, skirt and weapon can trail naturally but cannot hide the requested clear support/flight feet. No extra limbs or merged legs.\n\nIMPORTANT WALK CYCLE: Four different support/passing poses form TWO opposite half-cycles; they cannot all use the same physical leading leg. In EAST camera the NEAR anatomicalRIGHT shin passes IN FRONT of the FAR anatomicalLEFT shin when they overlap. Use visible calf/ankle/boot overlap and continuous front/back boot trajectories; hidden thigh exposure is not required.\n\nTOP-LEFT = GAME PHASE1, first half-cycle midstance/passing. Near RIGHT support boot is FLAT directly UNDER THE HIP, not extended in front. Far LEFT boot has left the rear and SWINGS FORWARD IN THE AIR toward screenRIGHT, passing behind the near support shin. Show the far boot toe lifted and clear transparent air under the boot; do not place both boots on the ground. Subtle support-knee flex. This must differ from phase4 in which physical leg is on the ground and which leg passes in front.\n\nTOP-RIGHT = GAME PHASE2, first half-cycle late support. Near RIGHT leg is visibly BEHIND the hip toward screenLEFT, its HEEL HIGH and only TOE pushing down near the rear ground plane. Far LEFT shin/boot advances well FORWARD toward screenRIGHT IN THE AIR, heel preparing to land into reference image2 contact3. Keep the air gap below that forward boot. It must not reuse the old near-RIGHT-forward contact silhouette.\n\nBOTTOM-LEFT = GAME PHASE4, OPPOSITE half-cycle midstance/passing. Far LEFT support boot is FLAT directly UNDER THE HIP. Near RIGHT boot leaves the rear and SWINGS FORWARD IN THE AIR toward screenRIGHT, passing visibly IN FRONT OF the far support shin. Show that near ankle/boot crossing in front, with distinct shin overlap from TOP-LEFT. This is NOT a duplicated phase1 and NOT the same near-leg support again.\n\nBOTTOM-RIGHT = GAME PHASE5, opposite half-cycle late support. Far LEFT leg is visibly BEHIND the hip toward screenLEFT, its HEEL HIGH with only TOE pushing off. Near RIGHT shin/boot advances well FORWARD toward screenRIGHT IN THE AIR, preparing to land into reference image1 contact0. Near advancing shin crosses IN FRONT of the far rear support where they overlap. Different actual support leg and visible boot-depth relationship from TOP-RIGHT.\n\nThe resulting chronological full cycle will be reference contact0 -> your TOP-LEFT -> your TOP-RIGHT -> reference opposite contact3 -> your BOTTOM-LEFT -> your BOTTOM-RIGHT -> contact0. Make each projected heel/toe/flight position and the two opposite shin overlap orders genuinely readable under the original long skirt. Natural slow WALK, not a running jump: one support foot contacts ground at each requested phase. Both half-cycles must physically flow and not repeat a single-leg step. Keep all gear uncropped, with roomy alpha-zero margins and no outer-glow bridge between figures. One high quality four-figure authoring attempt only.",
+  "created_at": "2026-10-19T11:42:30.437430+00:00",
+  "repository_mutated": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

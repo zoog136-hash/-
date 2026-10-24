@@ -1,0 +1,142 @@
+{
+  "schema": "PR122-independent-user-transform-walk-scope-code-audit-v1",
+  "status": "PASS_READONLY_USER_SCOPE_POLICY_12_FILES_NO_CODE_FINDING",
+  "reviewed_proposal": {
+    "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/proposed-changes-pins-v03.json",
+    "sha256": "131032fa64bfade90b0f4c078740186982729ee1c7a33006e53e6e796ea78d5e",
+    "bytes": 4972
+  },
+  "live_repo_hashes_match_exact_proposal": true,
+  "all_six_modified_originals_match_frozen_backups": true,
+  "files": [
+    {
+      "repo_path": "data/pr122_transform_motion_scope.json",
+      "sha256": "770ae33ff628f37b71cef0f071914578d132e00439c1820f931c8e5eb12b2758",
+      "bytes": 430
+    },
+    {
+      "repo_path": "tools/pr122_transform_motion_scope.py",
+      "sha256": "06001b834a7ee0b10c95124a6a9ae6c263bb905026e0f14c497d989b0d58bb42",
+      "bytes": 1986
+    },
+    {
+      "repo_path": "scripts/animation/transformation_movement_scope.gd",
+      "sha256": "bde780fc18bab522c907337fb73a94d3a9f1ff5407ee6dd628241692bf854f56",
+      "bytes": 1413
+    },
+    {
+      "repo_path": "tools/stage_pr122_native_locomotion.py",
+      "sha256": "6cc5c9933015c9a5bf8c17d5daac04bb3ebb585cb5609420bf3f6b90d0623b7b",
+      "bytes": 11785,
+      "frozen_original_sha256": "fd3518e21451668800367b2845d3f8c79c52ff9e6cc65d34eb2c079e10b24849"
+    },
+    {
+      "repo_path": "tools/pr122_native_production_approvals.py",
+      "sha256": "e10c66e9241969c11678f24f056350ed5f1daab2ce1e6136dd117d5b8f6e4234",
+      "bytes": 21580,
+      "frozen_original_sha256": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706"
+    },
+    {
+      "repo_path": "scripts/animation/actor_motion.gd",
+      "sha256": "e9403a24e93b9fadfa266ab8f56178f8e26a5f2cbdc2259635f6e44d43305d65",
+      "bytes": 25168,
+      "frozen_original_sha256": "af1042205de1c10df021f4396f1bd0158ae0a35f1449d080e2bec68c1919ed98"
+    },
+    {
+      "repo_path": "tests/pr122_native_player_connection_test.gd",
+      "sha256": "ff03a36d5046efc53ba74633109b04ecde1ae12adb4836b31e7db027c74f4b5c",
+      "bytes": 6138,
+      "frozen_original_sha256": "6b3f959b540265e5f6bc914ad53f837bf0f3617afa2d7461578076bee8abd86e"
+    },
+    {
+      "repo_path": "tests/pr122_native_motion_smoke.gd",
+      "sha256": "bf13e021e8a26737914994f8fc47cefc4ae4e655f4138bda47c24e05bfed8c6c",
+      "bytes": 3129,
+      "frozen_original_sha256": "879d41e56a532d0bde3215278145c128bfdc1b64398c80c710c9795272484f35"
+    },
+    {
+      "repo_path": "tests/test_pr122_transform_motion_scope.py",
+      "sha256": "b1e9985a692bd2ea19a9cb23ff951b6d05b79b3491527688c591d4fb68d37f55",
+      "bytes": 5643
+    },
+    {
+      "repo_path": "tests/pr122_transform_run_only_scope_test.gd",
+      "sha256": "4c01f9c2a8208f6e312b353ffaea4fc72a42121e40bbee8ee2f9e709340d888a",
+      "bytes": 1091
+    },
+    {
+      "repo_path": "tools/checkpoint_pr122_native_clip.py",
+      "sha256": "23f0f7b75b90b7af4368214e11feea43fa8c5899a08cb1a2797fd2dc489559ca",
+      "bytes": 8886,
+      "frozen_original_sha256": "72306d749937f9c5fefc0ef7d4cbcc7ac14210da2ec7c7dd161e99f841ce30ef"
+    },
+    {
+      "repo_path": "tests/test_pr122_transform_motion_queue.py",
+      "sha256": "83075f78a339ff6b8af24551763fb42d0b400a0dbe491f7f630f4920cec7474e",
+      "bytes": 1880
+    }
+  ],
+  "independent_findings": [
+    "Only canonical 변신 identities with exact 신화/전설/영웅/희귀/고급/일반 grades omit WALK. 유일, missing/unknown identities and every non-transform kind retain the previous requirement.",
+    "Runtime low-speed movement selects RUN only for those forms. Actual monster/boss construction uses for_record(monster,...), transformed players use for_record(transform,...), so reused art does not change kind.",
+    "Five required roles produce40 mandatory identities. Every actually authored track, including retained WALK extras, remains selected, SHA/geometry/RGBA-distinct and quality-reviewed with actual40..48 track and6poses-per-track counts.",
+    "Omission never grants completion. Existing nine quality checks and actual defaultMain/no-candidate evidence remain mandatory; only coverage name/count adapts to actual scope.",
+    "Lower-form certificates pin exact policySHA, required40 and actual authored counts. Verification re-reads canonical catalog/grade and expected policy pins, preventing stale changed-scope/catalog/log-count evidence from transferring.",
+    "Unique approvals retain prior48/288 evidence and defaultMain marker. None of these12 files changes old raw pixels, profiles, certificates or source approvals.",
+    "Queue/staging omit only excluded WALK and its prerequisite; RUN/CORE remain selectable while Unique/HOLD/selected-source behavior remains strict."
+  ],
+  "canonical_observations": {
+    "transform267": "유일",
+    "transform393": "유일",
+    "transform413": "신화",
+    "boss_actual_profile_kind": "monster",
+    "player_transform_profile_kind": "transform"
+  },
+  "queue_two_file_independent_review": {
+    "path": "/workspace/scratch/pr122-transform-walk-scope-two-file-queue-independent-RO-audit-v01.json",
+    "sha256": "308505b15880cf429933a75783f478d879550c3fdba963889d28bb0a7fd23d0e",
+    "bytes": 1685
+  },
+  "existing_validation_evidence_read_not_rerun": [
+    {
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/pure-scope-and-original-freeze-fixtures-v03.log",
+      "sha256": "660663ab62f34fc61719ee472820bc0bdc4f18c91a3cbc1c308ef30f673b132f",
+      "bytes": 120,
+      "environment_errors_present": false
+    },
+    {
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/isolated-godot-real-motion-scope-v01.log",
+      "sha256": "29be93c88e7b1e2cedbc89ff56a7f071a080f6dda8d8f82132fa4f79cb900c15",
+      "bytes": 753,
+      "environment_errors_present": true
+    },
+    {
+      "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/pure-transform-only-next-action-queue-v01.log",
+      "sha256": "46df4f0edcf4a6f9a32504da3478dd3a1a7db82b7890d0c616cbb1a0a9b16b2a",
+      "bytes": 98,
+      "environment_errors_present": false
+    }
+  ],
+  "actual_root_scoped_Player_log": {
+    "path": "/workspace/scratch/pr122-transform-walk-scope-proposal-v01/actual-root-scoped-player-after-user-walk-scope-v01.log",
+    "sha256": "c4e13bda42ddc9af903676a8188ad49a4dc126eb34e72cc66118676779d07da8",
+    "bytes": 278
+  },
+  "actual_root_scoped_Player_log_contains_no_ERROR_or_Traceback": true,
+  "fixture_counts_reported_and_evidence_read": {
+    "original_approval_freeze": 13,
+    "new_scope_boundaries": 8,
+    "queue": 1,
+    "isolated_motion_kind_cases": 7
+  },
+  "limits": [
+    "This is static/integrity audit plus read-only evidence review; root owns all actual test executions and clip/defaultMain gates.",
+    "The first isolated7scope log retains data-dir/log-dir permission errors despite its PASS marker. It is not called clean; the later actual-root scopedPlayer log is clean.",
+    "Runtime classification is cached per process; certificate validation re-reads canonical catalog/policy.",
+    "No source/cycle or actor approval follows from this policy audit."
+  ],
+  "new_tests_Godot_or_CI_runs": 0,
+  "reviewer_repo_Git_or_source_mutations": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

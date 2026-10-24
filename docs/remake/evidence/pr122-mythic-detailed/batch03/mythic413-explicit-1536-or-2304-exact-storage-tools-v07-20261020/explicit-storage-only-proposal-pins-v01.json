@@ -1,0 +1,43 @@
+{
+  "status": "UNEXECUTED_STORAGE_ONLY_PROPOSAL_NOT_QUALITY_OR_PIXEL_CHANGE",
+  "files": [
+    {
+      "source": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/pr122-author-six-pose-atlas-v03.py",
+      "source_sha256": "bb54dbc139f7d48cdb629eb895f44ed5b8b3a01b063f42c569bd062492921a54",
+      "proposal": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-author-six-pose-atlas-v04.py",
+      "proposal_sha256": "297cf390779e3e60e65b242335dfab307c106dc421df3bb46250bc929ddc3938",
+      "changes": "Only transparent storage tile upper bound2048 to2304; physicalC/root/logicalC/alpha/unique/fullRGBA guards unchanged"
+    },
+    {
+      "source": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/pr122-build-authored-clip-request-v04.py",
+      "source_sha256": "1a3d7f96af190bd4fa6f52066830f724f44b2d90e408926b6cf77c606391e26a",
+      "proposal": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py",
+      "proposal_sha256": "d20c10d0c11978a16e70e5a68600b174e7cfe47c9f3b39095701647cd319b66d",
+      "changes": "Only explicit1536/2304 storage+same2x3 grid arithmetic;1536 inverse replacement byteexact; allpixels/regions/C/root/validators preserved",
+      "replacement_counts": [
+        1,
+        1,
+        2,
+        2,
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "source": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/integrate_new_413_clip_retaining_profile_v06.py",
+      "source_sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+      "proposal": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/integrate_new_413_clip_retaining_profile_v06.py",
+      "proposal_sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+      "changes": "BYTE_IDENTICAL"
+    },
+    {
+      "source": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/canonical-input-pins.json",
+      "source_sha256": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+      "proposal": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/canonical-input-pins.json",
+      "proposal_sha256": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+      "changes": "BYTE_IDENTICAL"
+    }
+  ],
+  "actor_approvals_added": 0
+}

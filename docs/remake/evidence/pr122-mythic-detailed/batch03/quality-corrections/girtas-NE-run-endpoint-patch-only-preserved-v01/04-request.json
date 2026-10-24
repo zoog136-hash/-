@@ -1,0 +1,33 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "NEW_BOUNDED_BLADE_ENDPOINT_PATCH_ONLY_NOT_WHOLE_ACTOR",
+  "artifact_kind": "WEAPON_ENDPOINT_PATCH",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    1
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/original-weapon-endpoint-only-native-crop384.png",
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/endpoint-only-completion-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/original-weapon-endpoint-only-native-crop384.png": "85f63f6f19851bfb1e3b03ee6a9cc5995060ecc45706a00bf82d6396d179e8f3",
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/endpoint-only-completion-guide.png": "a898132d5f7a500e765664e8988c4249c00719d38123887bb2f2287a21f2a30e"
+  },
+  "transparent_background": true,
+  "prompt": "Edit ONLY this CROPPED TERMINAL SECTION of an existing long SINUOUS orange-gold Girtas blade. It is NOT a full sword, not a hand/body/frame. FIRST exact original384square endpoint tile is PRIMARY. Original diagonal curved orangegold blade enters from upper/left and tapers toward DOWNRIGHT, but its terminalpoint originally touched the larger source boundary. Author a physically COMPLETE CLOSED SHARP ENDPOINT 6–20nativepixels beyond the existing visible tip, smoothly continuing the SAME curvature/thickness/glowing-core/hardgold-edge/material, then tapering cleanly to a single closedpoint WELL INSIDE transparenttile. SECOND guide greenline/yellowcircle just marks original end and tinyextension direction; NO guide/colors/text in final.\n\nPreserve original entering blade segment's camera, curve, scale and layout AS EXACTLY AS POSSIBLE. This is a tiny bounded endpoint-completion edit, not redesign or wholeblade regeneration. No newcurve/hook/secondaryprong/serratedspikes/hilt/grip/pommel/hand/body/figure. Do not shorten existingcurve, widenblade or turn into broadsword. Original hotlight stays INSIDE opaque gold/orange blade edges; no outwardaura/glowcloud/particles/shadow/floor/blur.\n\nOutput ONLY this same square384crop composition as transparentRGBA requested1024square, with original relative placement: existing endpoint around64%width/55%height, complete newendpoint around69%width/59%height, enteringsegment cropped naturally upperleft exactlyassource. Newpoint must have generous alpha0 space toRIGHT/BOTTOM, no point touchingimageboundary. Keep source line thickness and gold contours, rich originalgameartquality. Finalintegration will use ONLY a narrow registered tipROI; restofwholeactor/legs/arms/robe/weaponbase remain EXACT originalpixels. No fullweapon/duplicate/text/grid/diagram. The goal is actual completed point, not padding claimed as restoration.",
+  "corrective_reason": "OriginalNELEFTload1singleoriginalweapon-tip touchesrightimageedge4AApoints(max102), strictboundaryHOLD preserved. Root explicitlyrequires actualtinyendpoint completion/reframing, nevertransparentpaddingalonePASS. Generateonlyendpointpatch; sourceactorRGBAoutsideexplicitROI mustremainbyteidentical. No other successfulNErun key redo.",
+  "root_authorization": "2026-10-19 root: smallestactualproduction is blade-tip-only boundedendpointrestoration/reframing imageedit, existingwholebody/legs/gearbody unchanged andoutsideROIexactRGBA.",
+  "composition_plan_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/endpoint-reference-and-composition-plan.json",
+  "composition_plan_sha256": "6eb78799b02ca7ef20e241f71c3bbd284f66ecdca7c560312098ccecc0f24965",
+  "requested_at": "2026-10-19T16:50:48.196396+00:00",
+  "generation_budget": "ONE actualendpoint-onlyrepair; inspectregisteredpatchbeforecomposition, HOLDifwrongregistration/gearchange; no repeatedblindwholebodygeneration.",
+  "new_motion_poses_created_by_endpoint_step": 0,
+  "actor_approval": false
+}

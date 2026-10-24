@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "observed_UTC": "2026-10-18T14:20:29.212715+00:00",
+  "main_snapshot_commit": "3866981b06e184625dbf3452d299098d1b333038",
+  "supplement_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch14/log-delivery-supplement.json",
+  "files": [
+    {
+      "original_path": "docs/remake/evidence/pr122-remaining106/batch13/parts-E02-HOLD/authoring.log",
+      "preserved_path": "docs/remake/evidence/pr122-remaining106/batch13/parts-E02-HOLD/authoring-log.txt",
+      "bytes": 448,
+      "sha256": "fed4c0292412ae9e9509d4126725f48e292e511416f16cd79fc9b31052851218",
+      "byte_identity": "PASS",
+      "reason": "Original .log extension is ignored by existing Git policy; exact byte copy saved as .txt without changing .gitignore."
+    },
+    {
+      "original_path": "docs/remake/evidence/pr122-remaining106/batch14/family-main01/Main.log",
+      "preserved_path": "docs/remake/evidence/pr122-remaining106/batch14/family-main01/Main-log.txt",
+      "bytes": 13897,
+      "sha256": "c73365c1685261518ce7ca4d021476bcf82e21ce6554057776959ef1ae3ff0e2",
+      "byte_identity": "PASS",
+      "reason": "Original .log extension is ignored by existing Git policy; exact byte copy saved as .txt without changing .gitignore."
+    },
+    {
+      "original_path": "docs/remake/evidence/pr122-remaining106/batch14/resource-integrity-before.log",
+      "preserved_path": "docs/remake/evidence/pr122-remaining106/batch14/resource-integrity-before.txt",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+      "byte_identity": "PASS",
+      "reason": "Original .log extension is ignored by existing Git policy; exact byte copy saved as .txt without changing .gitignore."
+    }
+  ],
+  "Main_log_also_in_full_archive": true,
+  "all_current_raw_PNGs_tracked": true,
+  "excluded_caches": "Godot import/shader cache, temporary isolated test saves and display-server output are not production deliverables. Private native-source originals remain in owner-only Drive with committed final receipt."
+}

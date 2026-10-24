@@ -1,0 +1,27 @@
+{
+  "actor": "monster:질투의 공주 이자벨",
+  "slug": "isabelle",
+  "clip": "NE-hit-v02",
+  "role": "hit",
+  "direction": "NE",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/NE-hit-v02.png",
+  "source_sha256": "f232abe94d2b9ebcba8687c50b7a1b3913ed97611a7dd94d931e2ac3ecbef8ff",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 7,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      97529,
+      96821,
+      94758,
+      92607,
+      88976,
+      86824,
+      405
+    ]
+  },
+  "status": "HOLD",
+  "cause": "physical_component_count",
+  "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots"
+}

@@ -1,0 +1,654 @@
+﻿2026-10-18T16:06:54.3889404Z Current runner version: '2.337.0'
+2026-10-18T16:06:54.3915097Z ##[group]Runner Image Provisioner
+2026-10-18T16:06:54.3916057Z Hosted Compute Agent
+2026-10-18T16:06:54.3916669Z Version: 20261012.601
+2026-10-18T16:06:54.3917463Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-18T16:06:54.3918252Z Build Date: 2026-10-12T17:48:21Z
+2026-10-18T16:06:54.3919009Z Worker ID: {f6fb3d16-7c11-4656-a71a-7640e081269f}
+2026-10-18T16:06:54.3919741Z Region: westus3
+2026-10-18T16:06:54.3920293Z Cloud: Azure
+2026-10-18T16:06:54.3920911Z ##[endgroup]
+2026-10-18T16:06:54.3922844Z ##[group]Operating System
+2026-10-18T16:06:54.3923574Z Ubuntu
+2026-10-18T16:06:54.3924115Z 24.04.5
+2026-10-18T16:06:54.3924628Z LTS
+2026-10-18T16:06:54.3925234Z ##[endgroup]
+2026-10-18T16:06:54.3925799Z ##[group]Runner Image
+2026-10-18T16:06:54.3926389Z Image: ubuntu-24.04
+2026-10-18T16:06:54.3927032Z Version: 20261012.334.1
+2026-10-18T16:06:54.3928314Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-18T16:06:54.3929975Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-18T16:06:54.3930989Z ##[endgroup]
+2026-10-18T16:06:54.3932501Z ##[group]GITHUB_TOKEN Permissions
+2026-10-18T16:06:54.3935068Z Contents: read
+2026-10-18T16:06:54.3935782Z Metadata: read
+2026-10-18T16:06:54.3936392Z Packages: read
+2026-10-18T16:06:54.3937012Z ##[endgroup]
+2026-10-18T16:06:54.3939144Z Secret source: Actions
+2026-10-18T16:06:54.3940200Z Cache mode: write
+2026-10-18T16:06:54.3940986Z Prepare workflow directory
+2026-10-18T16:06:54.4337485Z Prepare all required actions
+2026-10-18T16:06:54.4385088Z Getting action download info
+2026-10-18T16:06:54.7663974Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-18T16:06:54.8537563Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-18T16:06:55.0740359Z Complete job name: validate
+2026-10-18T16:06:55.1535406Z ##[group]Run actions/checkout@v4
+2026-10-18T16:06:55.1536278Z with:
+2026-10-18T16:06:55.1536729Z   repository: zoog136-hash/-
+2026-10-18T16:06:55.1540458Z   token: ***
+2026-10-18T16:06:55.1540932Z   ssh-strict: true
+2026-10-18T16:06:55.1541369Z   ssh-user: git
+2026-10-18T16:06:55.1541819Z   persist-credentials: true
+2026-10-18T16:06:55.1542536Z   clean: true
+2026-10-18T16:06:55.1542998Z   sparse-checkout-cone-mode: true
+2026-10-18T16:06:55.1543537Z   fetch-depth: 1
+2026-10-18T16:06:55.1543967Z   fetch-tags: false
+2026-10-18T16:06:55.1544413Z   show-progress: true
+2026-10-18T16:06:55.1544888Z   lfs: false
+2026-10-18T16:06:55.1545299Z   submodules: false
+2026-10-18T16:06:55.1545746Z   set-safe-directory: true
+2026-10-18T16:06:55.1546246Z   allow-unsafe-pr-checkout: false
+2026-10-18T16:06:55.1547038Z ##[endgroup]
+2026-10-18T16:06:55.2535447Z Syncing repository: zoog136-hash/-
+2026-10-18T16:06:55.2537889Z ##[group]Getting Git version info
+2026-10-18T16:06:55.2538998Z Working directory is '/home/runner/work/-/-'
+2026-10-18T16:06:55.2540477Z [command]/usr/bin/git version
+2026-10-18T16:06:55.2599319Z git version 2.55.0
+2026-10-18T16:06:55.2621284Z ##[endgroup]
+2026-10-18T16:06:55.2636100Z Temporarily overriding HOME='/home/runner/work/_temp/6b45058b-ff8d-4955-ae6f-e9a1d55e975d' before making global git config changes
+2026-10-18T16:06:55.2638574Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-18T16:06:55.2641041Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+2026-10-18T16:06:55.2694182Z Deleting the contents of '/home/runner/work/-/-'
+2026-10-18T16:06:55.2702960Z ##[group]Initializing the repository
+2026-10-18T16:06:55.2710780Z [command]/usr/bin/git init /home/runner/work/-/-
+2026-10-18T16:06:55.2823986Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-18T16:06:55.2825740Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-18T16:06:55.2827518Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-18T16:06:55.2829313Z hint: call:
+2026-10-18T16:06:55.2830097Z hint:
+2026-10-18T16:06:55.2831064Z hint: 	git config --global init.defaultBranch <name>
+2026-10-18T16:06:55.2832177Z hint:
+2026-10-18T16:06:55.2833529Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-18T16:06:55.2835214Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-18T16:06:55.2836464Z hint:
+2026-10-18T16:06:55.2837181Z hint: 	git branch -m <name>
+2026-10-18T16:06:55.2838028Z hint:
+2026-10-18T16:06:55.2839218Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-18T16:06:55.2841017Z Initialized empty Git repository in /home/runner/work/-/-/.git/
+2026-10-18T16:06:55.2843916Z [command]/usr/bin/git remote add origin https://github.com/zoog136-hash/-
+2026-10-18T16:06:55.2897327Z ##[endgroup]
+2026-10-18T16:06:55.2898359Z ##[group]Disabling automatic garbage collection
+2026-10-18T16:06:55.2899192Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-18T16:06:55.2933751Z ##[endgroup]
+2026-10-18T16:06:55.2935331Z ##[group]Setting up auth
+2026-10-18T16:06:55.2943145Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T16:06:55.2980106Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T16:06:55.3355175Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T16:06:55.3397996Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T16:06:55.3631686Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T16:06:55.3680280Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T16:06:55.3905586Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-18T16:06:55.3946528Z ##[endgroup]
+2026-10-18T16:06:55.3947591Z ##[group]Fetching the repository
+2026-10-18T16:06:55.3956911Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +755360cea8428dd71140da80590ca209767e1a7c:refs/remotes/origin/feature/twilight-remaining106-20261016
+2026-10-18T16:08:59.0166866Z From https://github.com/zoog136-hash/-
+2026-10-18T16:08:59.0184734Z  * [new ref]         755360cea8428dd71140da80590ca209767e1a7c -> origin/feature/twilight-remaining106-20261016
+2026-10-18T16:08:59.0186537Z ##[endgroup]
+2026-10-18T16:08:59.0187004Z ##[group]Determining the checkout info
+2026-10-18T16:08:59.0187515Z ##[endgroup]
+2026-10-18T16:08:59.0187832Z [command]/usr/bin/git sparse-checkout disable
+2026-10-18T16:08:59.0244219Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-18T16:08:59.0277517Z ##[group]Checking out the ref
+2026-10-18T16:08:59.0283085Z [command]/usr/bin/git checkout --progress --force -B feature/twilight-remaining106-20261016 refs/remotes/origin/feature/twilight-remaining106-20261016
+2026-10-18T16:09:00.2201002Z Updating files:   4% (697/15091)
+2026-10-18T16:09:00.5969902Z Updating files:   5% (755/15091)
+2026-10-18T16:09:00.8507648Z Updating files:   6% (906/15091)
+2026-10-18T16:09:00.8586153Z Updating files:   7% (1057/15091)
+2026-10-18T16:09:00.8670216Z Updating files:   8% (1208/15091)
+2026-10-18T16:09:00.8749916Z Updating files:   9% (1359/15091)
+2026-10-18T16:09:00.8832589Z Updating files:  10% (1510/15091)
+2026-10-18T16:09:00.8914722Z Updating files:  11% (1661/15091)
+2026-10-18T16:09:00.9001218Z Updating files:  12% (1811/15091)
+2026-10-18T16:09:00.9087215Z Updating files:  13% (1962/15091)
+2026-10-18T16:09:00.9167995Z Updating files:  14% (2113/15091)
+2026-10-18T16:09:00.9250319Z Updating files:  15% (2264/15091)
+2026-10-18T16:09:00.9337170Z Updating files:  16% (2415/15091)
+2026-10-18T16:09:00.9421745Z Updating files:  17% (2566/15091)
+2026-10-18T16:09:00.9502927Z Updating files:  18% (2717/15091)
+2026-10-18T16:09:00.9586275Z Updating files:  19% (2868/15091)
+2026-10-18T16:09:00.9687205Z Updating files:  20% (3019/15091)
+2026-10-18T16:09:01.0487712Z Updating files:  21% (3170/15091)
+2026-10-18T16:09:01.1286369Z Updating files:  21% (3229/15091)
+2026-10-18T16:09:01.2073683Z Updating files:  22% (3321/15091)
+2026-10-18T16:09:01.4892914Z Updating files:  23% (3471/15091)
+2026-10-18T16:09:01.7012711Z Updating files:  24% (3622/15091)
+2026-10-18T16:09:01.8685849Z Updating files:  25% (3773/15091)
+2026-10-18T16:09:01.9228031Z Updating files:  26% (3924/15091)
+2026-10-18T16:09:01.9372814Z Updating files:  27% (4075/15091)
+2026-10-18T16:09:01.9538436Z Updating files:  28% (4226/15091)
+2026-10-18T16:09:02.0109309Z Updating files:  29% (4377/15091)
+2026-10-18T16:09:02.0585801Z Updating files:  30% (4528/15091)
+2026-10-18T16:09:02.1310005Z Updating files:  30% (4664/15091)
+2026-10-18T16:09:02.3082029Z Updating files:  31% (4679/15091)
+2026-10-18T16:09:02.3151704Z Updating files:  32% (4830/15091)
+2026-10-18T16:09:02.3301342Z Updating files:  33% (4981/15091)
+2026-10-18T16:09:02.3370605Z Updating files:  34% (5131/15091)
+2026-10-18T16:09:02.3443133Z Updating files:  35% (5282/15091)
+2026-10-18T16:09:02.3513274Z Updating files:  36% (5433/15091)
+2026-10-18T16:09:02.3593742Z Updating files:  37% (5584/15091)
+2026-10-18T16:09:02.3670813Z Updating files:  38% (5735/15091)
+2026-10-18T16:09:02.3742484Z Updating files:  39% (5886/15091)
+2026-10-18T16:09:02.3812292Z Updating files:  40% (6037/15091)
+2026-10-18T16:09:02.3884650Z Updating files:  41% (6188/15091)
+2026-10-18T16:09:02.3960478Z Updating files:  42% (6339/15091)
+2026-10-18T16:09:02.4035890Z Updating files:  43% (6490/15091)
+2026-10-18T16:09:02.4108521Z Updating files:  44% (6641/15091)
+2026-10-18T16:09:02.4178666Z Updating files:  45% (6791/15091)
+2026-10-18T16:09:02.4696183Z Updating files:  46% (6942/15091)
+2026-10-18T16:09:02.5210068Z Updating files:  47% (7093/15091)
+2026-10-18T16:09:02.6068554Z Updating files:  48% (7244/15091)
+2026-10-18T16:09:02.6796380Z Updating files:  49% (7395/15091)
+2026-10-18T16:09:02.8056964Z Updating files:  50% (7546/15091)
+2026-10-18T16:09:02.9433398Z Updating files:  51% (7697/15091)
+2026-10-18T16:09:02.9551965Z Updating files:  52% (7848/15091)
+2026-10-18T16:09:03.0176885Z Updating files:  53% (7999/15091)
+2026-10-18T16:09:03.0245900Z Updating files:  54% (8150/15091)
+2026-10-18T16:09:03.0494734Z Updating files:  55% (8301/15091)
+2026-10-18T16:09:03.4080854Z Updating files:  55% (8350/15091)
+2026-10-18T16:09:03.5802071Z Updating files:  56% (8451/15091)
+2026-10-18T16:09:03.7455901Z Updating files:  57% (8602/15091)
+2026-10-18T16:09:04.0165908Z Updating files:  58% (8753/15091)
+2026-10-18T16:09:04.0234141Z Updating files:  59% (8904/15091)
+2026-10-18T16:09:04.0498914Z Updating files:  60% (9055/15091)
+2026-10-18T16:09:04.2594720Z Updating files:  60% (9079/15091)
+2026-10-18T16:09:04.4210410Z Updating files:  61% (9206/15091)
+2026-10-18T16:09:04.4951581Z Updating files:  62% (9357/15091)
+2026-10-18T16:09:04.5893572Z Updating files:  63% (9508/15091)
+2026-10-18T16:09:04.6246779Z Updating files:  64% (9659/15091)
+2026-10-18T16:09:04.6726275Z Updating files:  65% (9810/15091)
+2026-10-18T16:09:04.7828820Z Updating files:  66% (9961/15091)
+2026-10-18T16:09:04.8394553Z Updating files:  67% (10111/15091)
+2026-10-18T16:09:04.8959339Z Updating files:  68% (10262/15091)
+2026-10-18T16:09:04.9667323Z Updating files:  69% (10413/15091)
+2026-10-18T16:09:05.0404191Z Updating files:  70% (10564/15091)
+2026-10-18T16:09:05.0631668Z Updating files:  71% (10715/15091)
+2026-10-18T16:09:05.2484884Z Updating files:  71% (10751/15091)
+2026-10-18T16:09:05.4459914Z Updating files:  72% (10866/15091)
+2026-10-18T16:09:05.6206108Z Updating files:  73% (11017/15091)
+2026-10-18T16:09:05.7373571Z Updating files:  74% (11168/15091)
+2026-10-18T16:09:06.0565414Z Updating files:  75% (11319/15091)
+2026-10-18T16:09:06.1404575Z Updating files:  75% (11430/15091)
+2026-10-18T16:09:06.5514958Z Updating files:  76% (11470/15091)
+2026-10-18T16:09:07.2033951Z Updating files:  77% (11621/15091)
+2026-10-18T16:09:07.2034687Z Updating files:  77% (11766/15091)
+2026-10-18T16:09:08.0987484Z Updating files:  78% (11771/15091)
+2026-10-18T16:09:08.0996341Z Updating files:  78% (11913/15091)
+2026-10-18T16:09:09.3470171Z Updating files:  79% (11922/15091)
+2026-10-18T16:09:10.9419864Z Updating files:  79% (12036/15091)
+2026-10-18T16:09:11.0890684Z Updating files:  79% (12046/15091)
+2026-10-18T16:09:12.4278755Z Updating files:  79% (12051/15091)
+2026-10-18T16:09:12.5100728Z Updating files:  79% (12052/15091)
+2026-10-18T16:09:12.8709419Z Updating files:  80% (12073/15091)
+2026-10-18T16:09:12.9720115Z Updating files:  81% (12224/15091)
+2026-10-18T16:09:13.0489901Z Updating files:  82% (12375/15091)
+2026-10-18T16:09:13.0678540Z Updating files:  82% (12496/15091)
+2026-10-18T16:09:14.6638192Z Updating files:  83% (12526/15091)
+2026-10-18T16:09:15.3597857Z Updating files:  83% (12575/15091)
+2026-10-18T16:09:16.2042893Z Updating files:  83% (12577/15091)
+2026-10-18T16:09:18.9066998Z Updating files:  83% (12587/15091)
+2026-10-18T16:09:19.2569590Z Updating files:  83% (12599/15091)
+2026-10-18T16:09:20.1274781Z Updating files:  83% (12605/15091)
+2026-10-18T16:09:20.8823066Z Updating files:  83% (12622/15091)
+2026-10-18T16:09:20.9517119Z Updating files:  84% (12677/15091)
+2026-10-18T16:09:21.0518585Z Updating files:  85% (12828/15091)
+2026-10-18T16:09:22.0871719Z Updating files:  85% (12932/15091)
+2026-10-18T16:09:23.7740761Z Updating files:  85% (12957/15091)
+2026-10-18T16:09:25.2215927Z Updating files:  85% (12977/15091)
+2026-10-18T16:09:25.2835087Z Updating files:  85% (12978/15091)
+2026-10-18T16:09:26.0836855Z Updating files:  86% (12979/15091)
+2026-10-18T16:09:27.0762856Z Updating files:  86% (12989/15091)
+2026-10-18T16:09:28.0695375Z Updating files:  86% (13045/15091)
+2026-10-18T16:09:29.3731092Z Updating files:  86% (13065/15091)
+2026-10-18T16:09:30.2288813Z Updating files:  86% (13074/15091)
+2026-10-18T16:09:31.2976644Z Updating files:  86% (13079/15091)
+2026-10-18T16:09:32.0501273Z Updating files:  86% (13100/15091)
+2026-10-18T16:09:32.3634959Z Updating files:  86% (13107/15091)
+2026-10-18T16:09:33.1388991Z Updating files:  87% (13130/15091)
+2026-10-18T16:09:33.3315997Z Updating files:  87% (13215/15091)
+2026-10-18T16:09:33.6866748Z Updating files:  88% (13281/15091)
+2026-10-18T16:09:34.0516108Z Updating files:  89% (13431/15091)
+2026-10-18T16:09:35.0510170Z Updating files:  89% (13453/15091)
+2026-10-18T16:09:35.1519389Z Updating files:  89% (13527/15091)
+2026-10-18T16:09:35.2815069Z Updating files:  90% (13582/15091)
+2026-10-18T16:09:36.2333353Z Updating files:  91% (13733/15091)
+2026-10-18T16:09:37.0799556Z Updating files:  91% (13762/15091)
+2026-10-18T16:09:38.1441814Z Updating files:  91% (13768/15091)
+2026-10-18T16:09:39.0987554Z Updating files:  91% (13774/15091)
+2026-10-18T16:09:41.2731131Z Updating files:  91% (13782/15091)
+2026-10-18T16:09:42.0570469Z Updating files:  91% (13783/15091)
+2026-10-18T16:09:42.5149655Z Updating files:  91% (13793/15091)
+2026-10-18T16:09:42.5219079Z Updating files:  92% (13884/15091)
+2026-10-18T16:09:42.6329360Z Updating files:  93% (14035/15091)
+2026-10-18T16:09:42.7338921Z Updating files:  94% (14186/15091)
+2026-10-18T16:09:42.7445654Z Updating files:  95% (14337/15091)
+2026-10-18T16:09:42.7562622Z Updating files:  96% (14488/15091)
+2026-10-18T16:09:42.7659348Z Updating files:  97% (14639/15091)
+2026-10-18T16:09:42.7755092Z Updating files:  98% (14790/15091)
+2026-10-18T16:09:42.7861046Z Updating files:  99% (14941/15091)
+2026-10-18T16:09:42.7867285Z Updating files: 100% (15091/15091)
+2026-10-18T16:09:42.7867687Z Updating files: 100% (15091/15091), done.
+2026-10-18T16:09:42.8017519Z Switched to a new branch 'feature/twilight-remaining106-20261016'
+2026-10-18T16:09:42.8021264Z branch 'feature/twilight-remaining106-20261016' set up to track 'origin/feature/twilight-remaining106-20261016'.
+2026-10-18T16:09:42.8762991Z ##[endgroup]
+2026-10-18T16:09:42.8902829Z [command]/usr/bin/git log -1 --format=%H
+2026-10-18T16:09:42.8934986Z 755360cea8428dd71140da80590ca209767e1a7c
+2026-10-18T16:09:42.9420800Z ##[group]Run curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+2026-10-18T16:09:42.9422094Z [36;1mcurl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip[0m
+2026-10-18T16:09:42.9423089Z [36;1munzip -q /tmp/godot.zip -d /tmp[0m
+2026-10-18T16:09:42.9423421Z [36;1mchmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64[0m
+2026-10-18T16:09:42.9423747Z [36;1msudo apt-get update -qq[0m
+2026-10-18T16:09:42.9424076Z [36;1msudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri[0m
+2026-10-18T16:09:42.9897030Z shell: /usr/bin/bash -e {0}
+2026-10-18T16:09:42.9897351Z ##[endgroup]
+2026-10-18T16:09:43.0088965Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-10-18T16:09:43.0089856Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-10-18T16:09:43.0090300Z 
+2026-10-18T16:09:43.1705206Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-18T16:09:43.1705897Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-18T16:09:43.5689736Z 
+2026-10-18T16:09:43.6825127Z  67 74.2M   67 50.4M    0     0  90.1M      0 --:--:-- --:--:-- --:--:-- 90.1M
+2026-10-18T16:09:43.6826057Z 100 74.2M  100 74.2M    0     0   110M      0 --:--:-- --:--:-- --:--:--  210M
+2026-10-18T16:09:49.7039535Z ##[group]Run python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+2026-10-18T16:09:49.7040308Z [36;1mpython3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results[0m
+2026-10-18T16:09:49.7105349Z shell: /usr/bin/bash -e {0}
+2026-10-18T16:09:49.7105611Z ##[endgroup]
+2026-10-18T16:09:49.8122545Z synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 tile_grid=4x3 third_party_assets=0
+2026-10-18T16:09:49.8163190Z CI_SYNTHETIC_L1J_FIXTURES_OK
+2026-10-18T16:14:13.3318927Z PASS import
+2026-10-18T16:14:20.0105142Z PASS bake_navigation
+2026-10-18T16:14:27.0852432Z PASS boot
+2026-10-18T16:14:28.3683624Z PASS actor_motion_test
+2026-10-18T16:14:35.6373099Z PASS aden_boss_special_test
+2026-10-18T16:15:04.7248399Z PASS aden_building_test
+2026-10-18T16:15:16.1061783Z PASS aden_courtyard_test
+2026-10-18T16:15:30.0322673Z PASS aden_giran_review_test
+2026-10-18T16:15:31.7115814Z PASS aden_ground_continuity_test
+2026-10-18T16:15:40.6092152Z PASS aden_remake_runtime_test
+2026-10-18T16:15:52.0916857Z PASS aden_shoreline_test
+2026-10-18T16:15:59.5471204Z PASS aden_source_routes_test
+2026-10-18T16:16:17.8542094Z PASS aden_terrain_polish_test
+2026-10-18T16:16:30.4964333Z PASS aden_world_systems_test
+2026-10-18T16:17:13.2699092Z PASS aden_world_visuals_test
+2026-10-18T16:17:19.4303341Z PASS ain_exp_progression_test
+2026-10-18T16:17:25.8563623Z PASS ainhasad_smoke_test
+2026-10-18T16:17:32.0692086Z PASS animation_catalog_test
+2026-10-18T16:17:52.9791309Z PASS animation_presentation_test
+2026-10-18T16:18:01.0818024Z PASS animation_restore_test
+2026-10-18T16:18:02.3671511Z PASS authored_frames_test
+2026-10-18T16:18:03.6498897Z PASS authored_state_motion_test
+2026-10-18T16:18:08.0054592Z PASS boss_presentation_test
+2026-10-18T16:18:14.2475482Z PASS card_special_policy_test
+2026-10-18T16:18:20.3940776Z PASS catalog_effects_smoke_test
+2026-10-18T16:18:28.4048694Z PASS catalog_full_browser_smoke_test
+2026-10-18T16:18:36.3199337Z PASS combat_hud_test
+2026-10-18T16:18:36.4795029Z PASS combat_resolution_equivalence_test
+2026-10-18T16:18:37.7644258Z PASS combat_timeline_lifecycle_test
+2026-10-18T16:18:46.9838253Z PASS combat_timing_test
+2026-10-18T16:18:47.3297645Z PASS combat_vfx_test
+2026-10-18T16:18:56.9227947Z PASS consumable_auto_safety_test
+2026-10-18T16:19:05.3084944Z PASS consumable_smoke_test
+2026-10-18T16:19:05.5624371Z PASS crafting_atomic_test
+2026-10-18T16:19:06.0025054Z PASS crafting_material_drop_test
+2026-10-18T16:19:06.2550818Z PASS crafting_scroll_grade_test
+2026-10-18T16:19:12.3061023Z PASS critical_damage_bonus_test
+2026-10-18T16:19:12.8416277Z PASS eight_direction_animation_test
+2026-10-18T16:19:36.5698321Z PASS eight_interactions_test
+2026-10-18T16:19:44.3936592Z PASS equipment_blessing_smoke_test
+2026-10-18T16:19:51.7521762Z PASS equipment_slot_smoke_test
+2026-10-18T16:19:52.0073045Z PASS external_a2_bridge_smoke_test
+2026-10-18T16:19:53.2898180Z PASS external_spx_actor_runtime_test
+2026-10-18T16:20:16.4700663Z PASS field_world_test
+2026-10-18T16:20:17.6625663Z PASS flight_lifecycle_test
+2026-10-18T16:20:20.2501154Z PASS follower_motion_test
+2026-10-18T16:20:26.3972629Z PASS full_inven_catalog_smoke_test
+2026-10-18T16:20:35.7801753Z PASS full_visual_manifest_test
+2026-10-18T16:20:42.8647087Z PASS ground_alpha_test
+2026-10-18T16:20:49.2977312Z PASS ground_drop_smoke_test
+2026-10-18T16:21:17.7758173Z PASS ground_loot_system_test
+2026-10-18T16:21:19.4483206Z PASS hit_feedback_render_test
+2026-10-18T16:21:19.8060943Z PASS hit_feedback_test
+2026-10-18T16:21:25.9540063Z PASS hp_mp_unique_effects_smoke_test
+2026-10-18T16:21:39.5197964Z PASS hunting_navigation_cache_test
+2026-10-18T16:22:39.7854542Z PASS hunting_paths_test
+2026-10-18T16:23:12.0403849Z PASS hunting_world_capture_test
+2026-10-18T16:23:18.7585047Z PASS input_routing_test
+2026-10-18T16:23:27.0473132Z PASS inven_inventory_icons_test
+2026-10-18T16:23:33.6582974Z PASS inventory_db_smoke_test
+2026-10-18T16:23:40.0851412Z PASS item_buff_description_smoke_test
+2026-10-18T16:23:40.3420491Z PASS item_db_slot_smoke_test
+2026-10-18T16:23:40.5023406Z PASS item_icon_art_smoke_test
+2026-10-18T16:23:40.8527624Z PASS item_optional_icons_test
+2026-10-18T16:23:47.0005630Z PASS item_options_runtime_smoke_test
+2026-10-18T16:23:48.0161733Z PASS item_rarity_render_test
+2026-10-18T16:23:48.5544232Z PASS item_visual_repair_test
+2026-10-18T16:23:49.6470393Z PASS item_visual_test
+2026-10-18T16:23:49.8047104Z PASS item_weight_smoke_test
+2026-10-18T16:23:57.1608941Z PASS job_smoke_test
+2026-10-18T16:23:57.3202223Z PASS l1j_full_source_data_test
+2026-10-18T16:23:57.4792671Z PASS l1j_map_grid_test
+2026-10-18T16:23:57.6380613Z PASS l1j_map_recovery_test
+2026-10-18T16:23:57.8912511Z PASS l1j_optional_bridge_test
+2026-10-18T16:23:58.0486529Z PASS l1j_packed_assets_test
+2026-10-18T16:23:58.3015045Z PASS l1j_png_load_test
+2026-10-18T16:24:07.8046206Z PASS l1j_reviewed_shop_test
+2026-10-18T16:24:18.9790437Z PASS l1j_runtime_game_test
+2026-10-18T16:24:19.1389823Z PASS l1j_source_map_catalog_test
+2026-10-18T16:24:19.2986255Z PASS l1j_source_navigation_test
+2026-10-18T16:24:19.4570609Z PASS l1j_spx_frames_test
+2026-10-18T16:24:19.6150688Z PASS l1j_visual_link_test
+2026-10-18T16:24:20.0555884Z PASS lineage_inventory_ui_smoke_test
+2026-10-18T16:24:20.4014529Z PASS lineage_side_ui_smoke_test
+2026-10-18T16:24:20.7488857Z PASS lineagem_ui_visual_smoke_test
+2026-10-18T16:24:21.0025537Z PASS local_crafting_test
+2026-10-18T16:24:21.9063543Z PASS loot_balance_smoke_test
+2026-10-18T16:24:22.0658238Z PASS main_debug_crafting_blessing_test
+2026-10-18T16:24:23.2552100Z PASS main_debug_failed_load_test
+2026-10-18T16:24:23.4133461Z PASS main_debug_input_bindings_test
+2026-10-18T16:24:23.6665297Z PASS map_visual_toggle_test
+2026-10-18T16:24:29.8117537Z PASS mobile_scroll_smoke_test
+2026-10-18T16:24:31.0014955Z PASS monster_ai_leash_path_test
+2026-10-18T16:24:38.5450254Z PASS monster_attack_profiles_test
+2026-10-18T16:24:46.5244255Z PASS monster_motion_test
+2026-10-18T16:25:24.8526507Z PASS monster_world_test
+2026-10-18T16:25:32.8379281Z PASS native_animation_expansion_test
+2026-10-18T16:25:38.9841897Z PASS non_skill_options_smoke_test
+2026-10-18T16:25:39.2392146Z PASS npc_dialogue_branching_test
+2026-10-18T16:25:39.4932357Z PASS npc_teleport_test
+2026-10-18T16:25:45.7327835Z PASS option_finalize_smoke_test
+2026-10-18T16:26:14.0153723Z PASS original_based_albino_frog_gameplay_test
+2026-10-18T16:26:39.6025826Z PASS original_based_albino_giant_crab_gameplay_test
+2026-10-18T16:27:05.2773119Z PASS original_based_ancient_penguin_gameplay_test
+2026-10-18T16:27:47.0403986Z PASS original_based_asitagio_gameplay_test
+2026-10-18T16:28:16.6201148Z PASS original_based_basilisk_gameplay_test
+2026-10-18T16:28:58.2888273Z PASS original_based_bone_dragon_gameplay_test
+2026-10-18T16:29:21.3614769Z PASS original_based_bugbear_gameplay_test
+2026-10-18T16:29:21.6144935Z PASS original_based_canvas_test
+2026-10-18T16:29:52.9619019Z PASS original_based_cockatrice_gameplay_test
+2026-10-18T16:30:20.6850829Z PASS original_based_crabman_gameplay_test
+2026-10-18T16:30:54.8232950Z PASS original_based_cyclops_gameplay_test
+2026-10-18T16:31:20.5925377Z PASS original_based_dire_wolf_gameplay_test
+2026-10-18T16:31:58.4500838Z PASS original_based_ettin_gameplay_test
+2026-10-18T16:32:45.6017701Z PASS original_based_fire_egg_gameplay_test
+2026-10-18T16:33:09.7911286Z PASS original_based_ghost_gameplay_test
+2026-10-18T16:33:35.2799332Z PASS original_based_ghoul_gameplay_test
+2026-10-18T16:34:12.7635135Z PASS original_based_harpy_gameplay_test
+2026-10-18T16:34:59.0816270Z PASS original_based_horn_cerberus_gameplay_test
+2026-10-18T16:35:36.1010089Z PASS original_based_ice_golem_gameplay_test
+2026-10-18T16:36:11.7255608Z PASS original_based_ice_man_gameplay_test
+2026-10-18T16:36:47.0696895Z PASS original_based_iron_golem_gameplay_test
+2026-10-18T16:37:14.5144542Z PASS original_based_king_bugbear_gameplay_test
+2026-10-18T16:37:40.0965874Z PASS original_based_kraken_transform_gameplay_test
+2026-10-18T16:38:08.1903509Z PASS original_based_lava_golem_gameplay_test
+2026-10-18T16:38:37.7737871Z PASS original_based_lizard_gameplay_test
+2026-10-18T16:39:06.0546204Z PASS original_based_lycanthrope_gameplay_test
+2026-10-18T16:39:28.3845435Z PASS original_based_monster_gameplay_test
+2026-10-18T16:40:12.0979561Z PASS original_based_mummy_lord_gameplay_test
+2026-10-18T16:40:39.7273142Z PASS original_based_ogre_gameplay_test
+2026-10-18T16:41:05.3100113Z PASS original_based_pan_gameplay_test
+2026-10-18T16:41:58.2284716Z PASS original_based_raziel_watcher_gameplay_test
+2026-10-18T16:42:23.0683598Z PASS original_based_reaper_gameplay_test
+2026-10-18T16:42:48.0010607Z PASS original_based_reaper_male_gameplay_test
+2026-10-18T16:43:24.1846650Z PASS original_based_saber_tiger_gameplay_test
+2026-10-18T16:44:11.0607235Z PASS original_based_salah_gameplay_test
+2026-10-18T16:45:14.8594233Z PASS original_based_sand_worm_gameplay_test
+2026-10-18T16:45:42.8599263Z PASS original_based_scorpion_gameplay_test
+2026-10-18T16:46:32.8948808Z PASS original_based_seer_boss_gameplay_test
+2026-10-18T16:47:07.7766809Z PASS original_based_snowman_gameplay_test
+2026-10-18T16:47:32.8927683Z PASS original_based_spear_captain_gameplay_test
+2026-10-18T16:47:58.3840759Z PASS original_based_spear_guard_gameplay_test
+2026-10-18T16:48:23.7805361Z PASS original_based_spear_guard_green_gameplay_test
+2026-10-18T16:48:49.2722880Z PASS original_based_spear_guard_red_gameplay_test
+2026-10-18T16:49:25.3598535Z PASS original_based_succubus_gameplay_test
+2026-10-18T16:50:11.7724691Z PASS original_based_temporal_main_test
+2026-10-18T16:50:13.0563387Z PASS original_based_transform_batch_test
+2026-10-18T16:58:52.5589787Z PASS original_based_transform_temporal_main_test
+2026-10-18T16:59:27.9038301Z PASS original_based_yeti_gameplay_test
+2026-10-18T16:59:29.2796618Z PASS original_counter_probability_test
+2026-10-18T16:59:35.4248829Z PASS original_lineagem_effects_smoke_test
+2026-10-18T16:59:35.6767919Z SKIP original_map_catalog_test
+2026-10-18T16:59:41.7283754Z PASS original_skill_audio_test
+2026-10-18T16:59:57.3642750Z PASS original_skill_catalog_runtime_test
+2026-10-18T17:02:07.7894930Z PASS original_skill_learning_conditions_test
+2026-10-18T17:02:14.0307783Z PASS original_skill_provenance_test
+2026-10-18T17:02:20.8311449Z PASS original_skill_reduction_test
+2026-10-18T17:02:27.1649676Z PASS original_skill_restore_guard_test
+2026-10-18T17:02:33.7754551Z PASS original_skill_status_coexistence_test
+2026-10-18T17:02:41.2254332Z PASS original_skill_summon_test
+2026-10-18T17:02:50.6273188Z PASS original_skill_system_test
+2026-10-18T17:02:57.0525292Z PASS original_skill_target_state_test
+2026-10-18T17:03:06.5529784Z PASS original_skill_warehouse_migration_test
+2026-10-18T17:03:14.3766992Z PASS original_turn_undead_rewards_test
+2026-10-18T17:03:22.7591316Z PASS original_turn_undead_test
+2026-10-18T17:03:23.0124703Z PASS original_world_coordinates_test
+2026-10-18T17:03:24.2009153Z SKIP original_world_runtime_test
+2026-10-18T17:03:30.7202795Z PASS passive_skill_smoke_test
+2026-10-18T17:03:37.9878251Z PASS per_instance_enchantments_smoke_test
+2026-10-18T17:03:45.8131403Z PASS playtest_catalog_drag_test
+2026-10-18T17:05:26.1545666Z PASS pr100_direction_gameplay_test
+2026-10-18T17:05:27.1559353Z PASS pr80_original_resources_test
+2026-10-18T17:05:27.5046063Z PASS pr80_resource_assets_test
+2026-10-18T17:05:28.6938037Z PASS pr93_landing_bounds_test
+2026-10-18T17:05:30.5329881Z PASS pr99_ci_contract_test
+2026-10-18T17:05:30.6915914Z PASS qa_isolated_user_path_test
+2026-10-18T17:05:31.6889496Z PASS qa_original_source_frame_test
+2026-10-18T17:05:31.8474376Z PASS qa_rendered_prop_clearance_test
+2026-10-18T17:05:38.3666157Z PASS quickslot_smoke_test
+2026-10-18T17:06:10.2331910Z PASS reference_expansion_test
+2026-10-18T17:06:38.5201989Z PASS reference_object_capture_test
+2026-10-18T17:06:50.7374783Z PASS reference_object_placement_test
+2026-10-18T17:06:52.7647807Z PASS relic_motion_test
+2026-10-18T17:06:53.9539762Z PASS remake_coordinates_and_state_test
+2026-10-18T17:06:55.1441062Z SKIP remake_door_runtime_test
+2026-10-18T17:06:56.4280674Z PASS remake_map_inventory_test
+2026-10-18T17:07:03.7912748Z PASS remake_map_population_test
+2026-10-18T17:07:07.4393362Z PASS remake_map_readability_test
+2026-10-18T17:07:09.2244519Z SKIP remake_source_runtime_test
+2026-10-18T17:07:17.4595495Z PASS remake_ui_local_item_icons_test
+2026-10-18T17:07:24.0799170Z PASS remake_ui_presentation_test
+2026-10-18T17:07:30.4145285Z PASS remake_world_lifecycle_test
+2026-10-18T17:07:33.4657312Z PASS renewed_map_spawn_test
+2026-10-18T17:07:37.6275072Z PASS road_surface_mesh_test
+2026-10-18T17:08:14.9049961Z PASS road_surface_render_test
+2026-10-18T17:08:21.8092054Z PASS shield_rules_smoke_test
+2026-10-18T17:08:21.9687086Z PASS shop_authority_test
+2026-10-18T17:08:22.2230217Z PASS shop_buyback_test
+2026-10-18T17:08:29.4896134Z PASS skill_element_integration_smoke_test
+2026-10-18T17:08:37.2200539Z PASS skill_mechanism_smoke_test
+2026-10-18T17:08:37.3810777Z PASS source_actor_timing_test
+2026-10-18T17:08:39.1659137Z SKIP source_first_map_test
+2026-10-18T17:08:39.4237190Z PASS source_pack_guard_test
+2026-10-18T17:08:39.5822830Z PASS source_spx_timing_test
+2026-10-18T17:08:45.7273474Z PASS speed_option_smoke_test
+2026-10-18T17:08:53.7383952Z PASS stage5_save_compatibility_test
+2026-10-18T17:08:54.2720470Z PASS terrain_surface_geometry_test
+2026-10-18T17:09:42.6513263Z PASS terrain_surface_render_test
+2026-10-18T17:09:42.9218980Z PASS terrain_variation_texture_test
+2026-10-18T17:09:50.8424997Z PASS ui_fidelity_regression_test
+2026-10-18T17:09:58.3870319Z PASS ui_navigation_preservation_test
+2026-10-18T17:10:12.1669938Z PASS ui_pointer_transfer_test
+2026-10-18T17:10:19.4333721Z PASS ui_renewal_integration_test
+2026-10-18T17:10:25.8637336Z PASS ui_stage4_item_instance_test
+2026-10-18T17:10:27.3488319Z PASS visible_gameplay_smoke_test
+2026-10-18T17:10:33.7754611Z PASS volley_motion_test
+2026-10-18T17:10:34.0303001Z PASS warehouse_persistence_test
+2026-10-18T17:10:40.4559594Z PASS weapon_rules_smoke_test
+2026-10-18T17:11:15.7200303Z PASS world_region_portals_test
+2026-10-18T17:15:48.2451965Z PASS world_regions_test
+2026-10-18T17:16:15.4161172Z PASS world_structure_capture_test
+2026-10-18T17:16:48.1822788Z PASS world_structure_test
+2026-10-18T17:17:29.1052090Z PASS world_terrain_coverage_test
+2026-10-18T17:17:29.1177993Z 218/223 checks passed; 5 skipped; 0 not run
+2026-10-18T17:17:29.1277762Z ##[group]Run set -o pipefail
+2026-10-18T17:17:29.1278103Z [36;1mset -o pipefail[0m
+2026-10-18T17:17:29.1278411Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/combat-render"[0m
+2026-10-18T17:17:29.1278774Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+2026-10-18T17:17:29.1279580Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat.gd 2>&1 | tee test-results/combat-render.log[0m
+2026-10-18T17:17:29.1280507Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/combat-render.log; then exit 1; fi[0m
+2026-10-18T17:17:29.1281006Z [36;1mgrep -q COMBAT_RENDER test-results/combat-render.log[0m
+2026-10-18T17:17:29.1858218Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-18T17:17:29.1858582Z ##[endgroup]
+2026-10-18T17:17:29.2431670Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-18T17:17:29.4358641Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-18T17:17:29.4359343Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-18T17:17:29.7309319Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-18T17:17:29.7310332Z 
+2026-10-18T17:17:38.6742308Z COMBAT_CAPTURE 01-base-companions
+2026-10-18T17:17:38.9919628Z COMBAT_CAPTURE 02-slash-hit
+2026-10-18T17:17:39.1917648Z COMBAT_CAPTURE 03-heavy-critical
+2026-10-18T17:17:39.3894417Z COMBAT_CAPTURE 04-magic-hit
+2026-10-18T17:17:39.6214554Z COMBAT_CAPTURE 05-transform-43
+2026-10-18T17:17:39.8598964Z COMBAT_CAPTURE 05-transform-393
+2026-10-18T17:17:40.0563304Z COMBAT_CAPTURE 06-monster-death
+2026-10-18T17:17:44.1720000Z COMBAT_CAPTURE 07-auto-120
+2026-10-18T17:17:48.1901790Z COMBAT_CAPTURE 07-auto-240
+2026-10-18T17:17:52.1694521Z COMBAT_CAPTURE 07-auto-359
+2026-10-18T17:17:52.1697166Z COMBAT_RENDER {"adapter":"llvmpipe (LLVM 20.1.2, 256 bits)","captures":10,"frames":300,"median_ms":32.087,"movement":0.0,"note":"Linux software GL diagnostic poses and live AUTO; not a hardware FPS guarantee.","p95_ms":33.672,"peak_nodes":3833,"peak_orphans":0,"vfx_high_water":2,"xp_delta":0}
+2026-10-18T17:17:52.5507021Z ##[group]Run set -o pipefail
+2026-10-18T17:17:52.5507571Z [36;1mset -o pipefail[0m
+2026-10-18T17:17:52.5508137Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/region-render"[0m
+2026-10-18T17:17:52.5508781Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+2026-10-18T17:17:52.5510221Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee test-results/region-render.log[0m
+2026-10-18T17:17:52.5511947Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/region-render.log; then exit 1; fi[0m
+2026-10-18T17:17:52.5589985Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-18T17:17:52.5590556Z ##[endgroup]
+2026-10-18T17:17:52.6153872Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-18T17:17:52.7864280Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-18T17:17:52.7865747Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-18T17:17:52.8710545Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-18T17:17:52.8711524Z 
+2026-10-18T17:17:59.3419013Z LANDMARK_CACHE oman_01 cells=3 size=(1152, 384)
+2026-10-18T17:18:01.7461065Z REGION_CAPTURE oman_01 entrance calls=551.0 props=138
+2026-10-18T17:18:02.7019036Z REGION_CAPTURE oman_01 central calls=421.0 props=151
+2026-10-18T17:18:04.0276389Z LANDMARK_CACHE oman_10 cells=5 size=(1536, 768)
+2026-10-18T17:18:05.1085776Z REGION_CAPTURE oman_10 entrance calls=563.0 props=72
+2026-10-18T17:18:06.3552882Z REGION_CAPTURE oman_10 central calls=599.0 props=122
+2026-10-18T17:18:06.5246888Z LANDMARK_CACHE domination_summit cells=7 size=(1536, 768)
+2026-10-18T17:18:07.5228699Z REGION_CAPTURE domination_summit entrance calls=383.0 props=63
+2026-10-18T17:18:08.6573490Z REGION_CAPTURE domination_summit central calls=372.0 props=115
+2026-10-18T17:18:10.2135358Z LANDMARK_CACHE escaros_01 cells=3 size=(1152, 384)
+2026-10-18T17:18:11.3613678Z REGION_CAPTURE escaros_01 entrance calls=598.0 props=246
+2026-10-18T17:18:12.9143097Z REGION_CAPTURE escaros_01 central calls=656.0 props=148
+2026-10-18T17:18:13.9393402Z LANDMARK_CACHE escaros_02 cells=3 size=(1152, 384)
+2026-10-18T17:18:15.0924347Z REGION_CAPTURE escaros_02 entrance calls=616.0 props=263
+2026-10-18T17:18:16.3818228Z REGION_CAPTURE escaros_02 central calls=608.0 props=120
+2026-10-18T17:18:16.5610654Z LANDMARK_CACHE escaros_03 cells=3 size=(1152, 384)
+2026-10-18T17:18:17.7266124Z REGION_CAPTURE escaros_03 entrance calls=613.0 props=210
+2026-10-18T17:18:19.0440136Z REGION_CAPTURE escaros_03 central calls=596.0 props=250
+2026-10-18T17:18:19.3012039Z LANDMARK_CACHE escaros_04 cells=3 size=(1152, 384)
+2026-10-18T17:18:20.4690196Z REGION_CAPTURE escaros_04 entrance calls=598.0 props=239
+2026-10-18T17:18:21.8474666Z REGION_CAPTURE escaros_04 central calls=618.0 props=150
+2026-10-18T17:18:22.1395844Z LANDMARK_CACHE escaros_05 cells=3 size=(1152, 384)
+2026-10-18T17:18:23.2592068Z REGION_CAPTURE escaros_05 entrance calls=581.0 props=249
+2026-10-18T17:18:24.5492007Z REGION_CAPTURE escaros_05 central calls=561.0 props=84
+2026-10-18T17:18:26.3182394Z LANDMARK_CACHE albino_01 cells=4 size=(1536, 384)
+2026-10-18T17:18:27.8891089Z REGION_CAPTURE albino_01 entrance calls=1162.0 props=155
+2026-10-18T17:18:29.5078839Z REGION_CAPTURE albino_01 central calls=1083.0 props=206
+2026-10-18T17:18:32.1012615Z LANDMARK_CACHE albino_02 cells=4 size=(1536, 384)
+2026-10-18T17:18:33.6037310Z REGION_CAPTURE albino_02 entrance calls=1157.0 props=148
+2026-10-18T17:18:35.1057852Z REGION_CAPTURE albino_02 central calls=1078.0 props=212
+2026-10-18T17:18:35.8734718Z LANDMARK_CACHE albino_03 cells=4 size=(1536, 384)
+2026-10-18T17:18:37.4661557Z REGION_CAPTURE albino_03 entrance calls=1184.0 props=159
+2026-10-18T17:18:39.2009644Z REGION_CAPTURE albino_03 central calls=1100.0 props=218
+2026-10-18T17:18:39.8984047Z LANDMARK_CACHE albino_04 cells=4 size=(1536, 384)
+2026-10-18T17:18:41.3844873Z REGION_CAPTURE albino_04 entrance calls=1174.0 props=157
+2026-10-18T17:18:42.8132983Z REGION_CAPTURE albino_04 central calls=1078.0 props=244
+2026-10-18T17:18:43.1318746Z LANDMARK_CACHE faith_01 cells=6 size=(1536, 768)
+2026-10-18T17:18:44.5373284Z REGION_CAPTURE faith_01 entrance calls=583.0 props=70
+2026-10-18T17:18:46.2837905Z REGION_CAPTURE faith_01 central calls=614.0 props=106
+2026-10-18T17:18:46.5984845Z LANDMARK_CACHE faith_04 cells=6 size=(1536, 768)
+2026-10-18T17:18:48.0325001Z REGION_CAPTURE faith_04 entrance calls=583.0 props=72
+2026-10-18T17:18:49.8205415Z REGION_CAPTURE faith_04 central calls=621.0 props=106
+2026-10-18T17:18:51.5847715Z REGION_RENDER median_ms=45.48 p95_ms=62.648
+2026-10-18T17:18:54.0423163Z REGION_ACTIVE_ANCHOR aden_world region=forest position=(17824.0, 23436.0) monster=(17664.0, 23436.0)
+2026-10-18T17:18:54.0445885Z REGION_COMBAT_START 오크 마법사 point=(17544.0, 23568.0) monster=(17664.0, 23436.0)
+2026-10-18T17:19:04.5804998Z ACTIVE_PLAY {"active_monsters":13,"aden_setup":"existing_spawn_approach","auto_target_frames":159,"distance_world_pixels":697.1,"frames":180,"initial_position":"(17544.0, 23568.0)","map":"aden_world","median_ms":40.051,"mode":"active_auto_hunt","p95_ms":43.949,"peak_draw_calls":280,"physics_p95_ms":42.142,"player_landed_hits":5,"process_p95_ms":674.286,"xp_gained":432}
+2026-10-18T17:19:14.9945918Z ACTIVE_PLAY {"active_monsters":38,"aden_setup":"existing_review_point","auto_target_frames":179,"distance_world_pixels":4049.7,"frames":180,"initial_position":"(3456.0, 3328.0)","map":"oman_10","median_ms":40.19,"mode":"active_auto_hunt","p95_ms":61.594,"peak_draw_calls":1023,"physics_p95_ms":109.881,"player_landed_hits":7,"process_p95_ms":56.227,"xp_gained":0}
+2026-10-18T17:19:27.7858005Z REGION_AUTO_STATIONARY albino_04 target_frames=180 damage_hits=10 active_monsters=16
+2026-10-18T17:19:27.7884331Z ACTIVE_PLAY {"active_monsters":16,"aden_setup":"existing_review_point","auto_target_frames":180,"distance_world_pixels":0.0,"frames":180,"initial_position":"(3456.0, 3456.0)","map":"albino_04","median_ms":50.967,"mode":"active_auto_hunt","p95_ms":61.61,"peak_draw_calls":1270,"physics_p95_ms":4.233,"player_landed_hits":10,"process_p95_ms":60.311,"xp_gained":0}
+2026-10-18T17:19:42.2656531Z REGION_AUTO_STATIONARY faith_04 target_frames=180 damage_hits=22 active_monsters=12
+2026-10-18T17:19:42.2658977Z ACTIVE_PLAY {"active_monsters":12,"aden_setup":"existing_review_point","auto_target_frames":180,"distance_world_pixels":0.0,"frames":180,"initial_position":"(3456.0, 3328.0)","map":"faith_04","median_ms":66.464,"mode":"active_auto_hunt","p95_ms":71.106,"peak_draw_calls":777,"physics_p95_ms":5.725,"player_landed_hits":22,"process_p95_ms":72.178,"xp_gained":0}
+2026-10-18T17:19:42.2661146Z REGION_CAPTURE_COUNT 37
+2026-10-18T17:19:42.2664644Z REGION_CAPTURE_DIRECTORY /home/runner/work/_temp/region-render/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/world-regions-review
+2026-10-18T17:19:42.6444975Z ##[group]Run set -o pipefail
+2026-10-18T17:19:42.6445312Z [36;1mset -o pipefail[0m
+2026-10-18T17:19:42.6445619Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/crowd-render"[0m
+2026-10-18T17:19:42.6445974Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+2026-10-18T17:19:42.6446813Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/crowd-render.log[0m
+2026-10-18T17:19:42.6447777Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/crowd-render.log; then exit 1; fi[0m
+2026-10-18T17:19:42.6448327Z [36;1mgrep -q COMBAT_CROWD_RENDER_OK test-results/crowd-render.log[0m
+2026-10-18T17:19:42.6510041Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-18T17:19:42.6510391Z ##[endgroup]
+2026-10-18T17:19:42.7071462Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-18T17:19:42.8727253Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-18T17:19:42.8727889Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-18T17:19:42.9587417Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-18T17:19:42.9588062Z 
+2026-10-18T17:20:13.1751535Z CROWD_SAMPLE {"ammo_after":0,"ammo_before":0,"ammo_name":"","ammo_spent":0,"flights_returned":true,"frames":240,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":56.715,"monster_released_hits":259,"orphans":0,"p95_ms":62.406,"peak_flights":6,"peak_nodes":1416,"physics_p95_ms":8.174,"player_landed_hits":71,"population":32,"process_p95_ms":51.104,"vfx_high_water":21,"vfx_returned":true}
+2026-10-18T17:21:03.1339271Z CROWD_SAMPLE {"ammo_after":0,"ammo_before":0,"ammo_name":"","ammo_spent":0,"flights_returned":true,"frames":240,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":116.514,"monster_released_hits":968,"orphans":0,"p95_ms":124.76,"peak_flights":9,"peak_nodes":1896,"physics_p95_ms":16.157,"player_landed_hits":113,"population":96,"process_p95_ms":67.033,"vfx_high_water":36,"vfx_returned":true}
+2026-10-18T17:22:06.3378176Z ##[error]The operation was canceled.
+2026-10-18T17:22:06.3569840Z ##[group]Run actions/upload-artifact@v4
+2026-10-18T17:22:06.3570295Z with:
+2026-10-18T17:22:06.3570787Z   name: combat-animation-review-755360cea8428dd71140da80590ca209767e1a7c
+2026-10-18T17:22:06.3573350Z   path: test-results/
+/home/runner/work/_temp/combat-render/**/combat-review/
+/home/runner/work/_temp/region-render/**/world-regions-review/
+/home/runner/work/_temp/baseline-render/**/world-regions-review/
+/home/runner/work/_temp/crowd-render/**/combat-crowd-review/
+/home/runner/work/_temp/baseline-crowd-render/**/combat-crowd-review/
+
+2026-10-18T17:22:06.3575989Z   if-no-files-found: error
+2026-10-18T17:22:06.3576395Z   compression-level: 6
+2026-10-18T17:22:06.3576735Z   overwrite: false
+2026-10-18T17:22:06.3577060Z   include-hidden-files: false
+2026-10-18T17:22:06.3577465Z ##[endgroup]
+2026-10-18T17:22:06.6358275Z (node:6976) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-18T17:22:06.6359850Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-18T17:22:06.8008165Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-18T17:22:06.8011765Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+2026-10-18T17:22:06.8012972Z With the provided path, there will be 370 files uploaded
+2026-10-18T17:22:06.8020570Z Artifact name is valid!
+2026-10-18T17:22:06.8021450Z Root directory input is valid!
+2026-10-18T17:22:07.1999135Z Beginning upload of artifact content to blob storage
+2026-10-18T17:22:08.2711608Z (node:6976) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-18T17:22:09.0097190Z Uploaded bytes 8388608
+2026-10-18T17:22:09.2933109Z Uploaded bytes 16777216
+2026-10-18T17:22:09.5456784Z Uploaded bytes 25165824
+2026-10-18T17:22:09.6536941Z Uploaded bytes 33554432
+2026-10-18T17:22:09.9377034Z Uploaded bytes 40959570
+2026-10-18T17:22:09.9983413Z Finished uploading artifact content to blob storage!
+2026-10-18T17:22:10.0013214Z SHA256 digest of uploaded artifact zip is 157669ab94084d7a11922dc2f0c745518e09d6c978542509bf977d6c3fe3b8f7
+2026-10-18T17:22:10.0014402Z Finalizing artifact upload
+2026-10-18T17:22:10.2970572Z Artifact combat-animation-review-755360cea8428dd71140da80590ca209767e1a7c.zip successfully finalized. Artifact ID 12144119306
+2026-10-18T17:22:10.2972884Z Artifact combat-animation-review-755360cea8428dd71140da80590ca209767e1a7c has been successfully uploaded! Final size is 40959570 bytes. Artifact ID is 12144119306
+2026-10-18T17:22:10.2979153Z Artifact download URL: https://github.com/zoog136-hash/-/actions/runs/39142875145/artifacts/12144119306
+2026-10-18T17:22:10.3328066Z Post job cleanup.
+2026-10-18T17:22:10.4374170Z [command]/usr/bin/git version
+2026-10-18T17:22:10.4438348Z git version 2.55.0
+2026-10-18T17:22:10.4483954Z Temporarily overriding HOME='/home/runner/work/_temp/1a1d7090-cc66-417a-85e2-c9ceebcdafd8' before making global git config changes
+2026-10-18T17:22:10.4485552Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-18T17:22:10.4490530Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+2026-10-18T17:22:10.4537052Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T17:22:10.4589064Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T17:22:10.5263327Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T17:22:10.5336775Z http.https://github.com/.extraheader
+2026-10-18T17:22:10.5363012Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-18T17:22:10.5513987Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T17:22:10.6044858Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T17:22:10.6112952Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T17:22:10.6711445Z Cleaning up orphan processes
+2026-10-18T17:22:10.6999282Z Terminate orphan process: pid (6900) (xvfb-run)
+2026-10-18T17:22:10.7020438Z Terminate orphan process: pid (6901) (tee)
+2026-10-18T17:22:10.7041279Z Terminate orphan process: pid (6911) (Xvfb)
+2026-10-18T17:22:10.7082537Z Terminate orphan process: pid (6914) (Godot_v4.7.2-stable_linux.x86_64)
+2026-10-18T17:22:10.7101148Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

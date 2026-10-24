@@ -1,0 +1,67 @@
+{
+  "target_key": "monster:알비노 피쉬맨",
+  "source_claim": "Existing TWILIGHT generated project atlas, not verified original external game art or recovered game animation",
+  "source_reference_unmodified": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      318,
+      617,
+      319,
+      308
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 9,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+  },
+  "authoring_reference": {
+    "path": "/workspace/twilight-artwork/batch22/fishman/authoring-reference-context.png",
+    "bytes": 141531,
+    "sha256": "c799b99abe338b1d7c43e1056f6abe6554682d6793e53c61560526bd0cba6da9",
+    "size": [
+      299,
+      256
+    ],
+    "method": "Exact RGBA pixel crop, no masking/painting/recoloring/resizing; all main-body pixels retained"
+  },
+  "focus_bbox_atlas_xywh": [
+    334,
+    628,
+    299,
+    256
+  ],
+  "focus_bbox_relative_xywh": [
+    16,
+    11,
+    299,
+    256
+  ],
+  "semantic_exclusion": {
+    "kind": "Neighboring crab claw on RIGHT EDGE is context only, not part of fishman; generation must omit it. Source/reference pixels remain untouched.",
+    "bbox_relative_to_original_region_xywh": [
+      285,
+      98,
+      34,
+      126
+    ],
+    "bbox_relative_to_authoring_crop_xywh": [
+      269,
+      87,
+      30,
+      126
+    ],
+    "fishman_primary_pixels_alpha_gt10_inside_exclusion": 0,
+    "fishman_primary_pixels_alpha_gt100_inside_exclusion": 0
+  },
+  "primary_body_loss": "No crop loss: full head/fins/hands/spear point/net/clothing/both feet retained. Possible low-alpha atlas dust below alpha10 is not claimed as original-body detail.",
+  "source_sha_before": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+  "source_sha_after": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+  "source_unchanged": true,
+  "production_changes": false
+}

@@ -1,0 +1,156 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "walk",
+  "version": "NWwalkSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "3981138467ea173e80bcecb99a12d28780f943f4cdc12624aae9ddbfae1228ff",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "3981138467ea173e80bcecb99a12d28780f943f4cdc12624aae9ddbfae1228ff",
+    "base_geometry_sha256": "ac7326ad5adaf0140fc54fa14883158884567dff4710c988ae39e614fe9ab04f",
+    "direction": "NW",
+    "regions": [
+      [
+        0,
+        0,
+        1536,
+        1536
+      ],
+      [
+        1536,
+        0,
+        1536,
+        1536
+      ],
+      [
+        0,
+        1536,
+        1536,
+        1536
+      ],
+      [
+        1536,
+        1536,
+        1536,
+        1536
+      ],
+      [
+        0,
+        3072,
+        1536,
+        1536
+      ],
+      [
+        1536,
+        3072,
+        1536,
+        1536
+      ]
+    ],
+    "nearest_owner_sha256": "8caceb6055738e6f99af5f54b7fdac5320a034cc110adea3178d722fb835c013",
+    "review_basis": "Full disjoint authored tiles retain exact RGBA and empty ground; immutable packing proof 9c5e037d0ab17049d1e8d37e5c9ed3ec59a3d6d71038093b46a7ca58a75b10e0"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "3981138467ea173e80bcecb99a12d28780f943f4cdc12624aae9ddbfae1228ff",
+    "direction": "NW",
+    "role": "walk",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        641,
+        1058
+      ],
+      [
+        2177,
+        1058
+      ],
+      [
+        641,
+        2594
+      ],
+      [
+        2177,
+        2594
+      ],
+      [
+        641,
+        4130
+      ],
+      [
+        2177,
+        4130
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "9c5e037d0ab17049d1e8d37e5c9ed3ec59a3d6d71038093b46a7ca58a75b10e0",
+  "authored_common_root_float": [
+    641,
+    1058.3
+  ],
+  "common_root_integer": [
+    641,
+    1058
+  ],
+  "common_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Genuine rear NW, anatomical RIGHT far-hand double-ended staff, LEFT free counterarm, bun/ribbon, blue-gold coat, white pleated skirt and complete high-heeled boots remain coherent.",
+      "Actual six distinct plant/load/pass/toeoff poses alternate LEFT0–2 and RIGHT3–5 with articulated knee/hip motion and free-arm counterphase.",
+      "Final5 restores approved body and full equipment at bob−6 with a natural localized thigh/hip join; the earlier enlarged-body/missing-end variant is superseded.",
+      "5→0 closes with the LEFT late-air boot approaching the next heel strike; visible body/gear scale and silhouette remain continuous.",
+      "All six reviewed native RGBA sources, fixed C2048 and one common root are exact in this request-bound atlas; common −0.3 nativeY quantization adds zero relative planted-foot drift."
+    ],
+    "visual_limitations": [
+      "This source/visible-cycle receipt does not replace the pending actual Godot resource/Player checks for the new NW clip.",
+      "Four visible stance-pivot unit pairs match the actual Player clock; occluded depths and finite shoe yaw remain declared rig/model assumptions rather than unique measured3D recovery.",
+      "Only this actual six-source NW walk is approved by this receipt; the actor’s other tracks and total detailed approvals remain unchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "3981138467ea173e80bcecb99a12d28780f943f4cdc12624aae9ddbfae1228ff",
+    "raw_bytes": 2790648,
+    "request_sha256": "5257496900d2e83b2a0de7588de2589a2312f9d661b020fca2c681f8aeb5f846",
+    "review_sha256": "c0da13b2d2af6b9f3e4b404c290f7cf3a90b293451e650db100d55a1597a8560"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NW-walk-actual-packed-r001-20261020/thunder_female-NW-walk-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-6iolcj4d/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NW-walk-actual-packed-r001-20261020/request-NWwalkSixActualRig01.json": "5257496900d2e83b2a0de7588de2589a2312f9d661b020fca2c681f8aeb5f846",
+      "/workspace/scratch/mythic413-NW-walk-actual-packed-r001-20261020/thunder_female-NW-walk-six-actual-poses-r001.png": "3981138467ea173e80bcecb99a12d28780f943f4cdc12624aae9ddbfae1228ff",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NWwalkSixActualRig01-525749-independent-final-source-cycle-PASS-v01.json": "c0da13b2d2af6b9f3e4b404c290f7cf3a90b293451e650db100d55a1597a8560",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-walk-NWwalkSixActualRig01.png",
+  "output_sha256": "3981138467ea173e80bcecb99a12d28780f943f4cdc12624aae9ddbfae1228ff",
+  "output_bytes": 2790648,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-6iolcj4d/reviewed-source.png"
+}

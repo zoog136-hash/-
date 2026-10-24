@@ -1,0 +1,53 @@
+{
+  "status": "HOLD_ACTUAL_RIGHT_ELBOW_SLEEVE_JOIN_IN_ADDITION_TO_KNEE_FINISH",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "death",
+  "prior_knee_HOLD": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v05-5b29e6-independent-actual-native-knee-join-HOLD-v01.json",
+    "sha256": "cb86874eafcccca9dcf7c998ca1150690abe41e89a65343b72c67e7b341c5f9b",
+    "bytes": 4371
+  },
+  "native_upper_crop_metadata": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v05-native-upperarm-crop-metadata-v01.json",
+    "sha256": "5d34641d6c3555fdc478f15153971e9e5d47d819c357481260ca939fddfa368a",
+    "bytes": 1578
+  },
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NEdeath-v05-upper-source-HOLD-view85-frozen.json",
+    "sha256": "12d9ca0dfb958d8da1e99e56bbea7e3e92fed1a8a996044cb348ee8828076381",
+    "bytes": 42097
+  },
+  "findings": [
+    {
+      "phase": 3,
+      "side": "R",
+      "stored_ROI": [
+        1147,
+        1268,
+        1347,
+        1468
+      ],
+      "finding": "Grey wedge and card-like sleeve termination between blue upper puff/gold cuff and moving white forearm at elbow."
+    },
+    {
+      "phase": 5,
+      "side": "R",
+      "stored_ROI": [
+        1209,
+        1536,
+        1409,
+        1736
+      ],
+      "finding": "Same moving white sleeve/bluecuff hinge separation at heldterminal; natural internal negative space alone is permitted, actual sleeve continuity requires local verification/finish."
+    }
+  ],
+  "positive_observations": [
+    "Native R/L shoulder and fullwidth puff surfaces0/3/5 remain identifiable and connected.",
+    "Native LEFT elbow and hand through collapse/terminal have no additional observed joint-cut finding."
+  ],
+  "authorized_correction_scope": "Keep complete bracer/grip/fullstaff and body/275.2625bones/root/C2432/storage2304 unchanged. Finish proximal original white/gold cuff material using continuous native UV or original rounded crosssection surface; no wholebody pose matching.",
+  "actor_approvals_added": 0,
+  "new_image_views": 0,
+  "images_forwarded": 0
+}

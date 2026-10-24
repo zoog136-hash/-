@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-windup-recovery-source.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-contact1-left-hand-v01.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("1")
+region = Rect2(61, 18, 672, 664)
+margin = Rect2(263, 45, 456, 464)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("2")
+region = Rect2(79, 153, 1118, 1002)
+margin = Rect2(328, 97, 634, 750)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("1")
+region = Rect2(1496, 56, 636, 637)
+margin = Rect2(250, 72, 492, 491)
+filter_clip = true
+
+[resource]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("pose_0")}, {"duration": 1.0, "texture": SubResource("pose_1")}, {"duration": 1.0, "texture": SubResource("pose_2")}], "loop": false, "name": &"attack_3", "speed": 8.0}]
+metadata/twilight_canvas_size = Vector2(256, 256)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false

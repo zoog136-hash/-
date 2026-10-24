@@ -1,0 +1,53 @@
+{
+  "schema": "pr122-independent-native-quality-findings-v1",
+  "actor": "transform:393",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+  "selected_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+  "status": "HOLD",
+  "actor_approved": false,
+  "counts_changed": false,
+  "findings": [
+    {
+      "direction": "N",
+      "role": "hit",
+      "status": "HOLD_SOURCE_ANATOMY_AND_FRONT_BACK_MORPH",
+      "phases": [
+        1,
+        2,
+        3
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v01.png",
+      "source_sha256": "422340775b39fbb6c46b01a1f53132e6f61184a8cfe582ff0e6579a5236d0a82",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r027/N-hit.png",
+      "phase2_region": [
+        56,
+        538,
+        475,
+        435
+      ],
+      "phase2_rgba_sha256": "9232ea1e180d37cdd6ffe7238a97789cd71f3beb81199be347ae80cc433be872",
+      "basis": "Phase0 is rear N dorsal armor. Phase1 changes to a frontal pink chestplate while retaining a rear-looking helmet. Phase2 presents two separately clenched empty fists (image-left near shoulder and image-right raised), plus the still-present lower-right weapon grip/arm. The torso visibly has frontal pink chest/waist ornament and frontal face features rather than N rear dorsal seam. Phase3 returns through mixed front/rear features. This is a source anatomy/view morph, not a rigid body recoil or metadata scale issue.",
+      "phase2_hand_locations_in_region_approx": {
+        "left_empty_fist": [
+          223,
+          190
+        ],
+        "right_empty_fist": [
+          384,
+          171
+        ],
+        "lower_right_weapon_grip": [
+          363,
+          246
+        ]
+      },
+      "fix_type": "new_source_art_required",
+      "metadata_only_fix_possible": false
+    }
+  ],
+  "private_evidence_panels": [
+    "r062-N-hit-death-six.jpg",
+    "r062-N-hit-phase2-source-detail.jpg"
+  ],
+  "reviewer": "halpas_final_native_quality"
+}

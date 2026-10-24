@@ -1,0 +1,82 @@
+{
+  "tool": "image_gen__imagegen",
+  "actual_service_calls_for_S": 1,
+  "elapsed_ms": 54817,
+  "result_keys": [
+    "image_url",
+    "output_hint"
+  ],
+  "image_url_characters": 1328686,
+  "payload_characters": 1328664,
+  "actual_chunks": 28,
+  "actual_writer_session": 41363,
+  "mask_used": false,
+  "source_original": {
+    "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+    "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+    "bytes": 996497,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "native_untouched": true
+  },
+  "image_url_sha256": "3ef7e9f553d4e1e0a67f58a53b44e6fef787d6ee549f3b12e7b8a9da4f93ad82",
+  "writer_sha256": "b53df21208a35f6cae806c12bf95076dffce336d858ad96ca67abe5deb3ea0c6",
+  "request_sha256": "d8c34dae7e525c6bb437fbf58b966677dbaad86630727f382d51b2802689253c",
+  "output_hint_sha256": "30100d6a4394f7d51b4561301299a9fa5d1b2e14882dd5ad4c8e7c240b9eb298",
+  "source_alpha_stats": {
+    "1": {
+      "bbox": [
+        0,
+        9,
+        1236,
+        1254
+      ],
+      "foreground_pixels": 382146,
+      "border_pixels": 20,
+      "component_count": 1014,
+      "components_at_least_100px": 3,
+      "largest_component_pixels": 379429
+    },
+    "8": {
+      "bbox": [
+        263,
+        11,
+        991,
+        1199
+      ],
+      "foreground_pixels": 345366,
+      "border_pixels": 0,
+      "component_count": 122,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 345181
+    },
+    "100": {
+      "bbox": [
+        264,
+        13,
+        989,
+        1197
+      ],
+      "foreground_pixels": 336545,
+      "border_pixels": 0,
+      "component_count": 12,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 336523
+    }
+  },
+  "preview": {
+    "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/private-produced-S-base-quality-v01.jpg",
+    "sha256": "89e6c949b54a389e4ccd2cecebe050a0e8f7b7d0070a69c5a3d093fdffc0b06e",
+    "bytes": 74431,
+    "size": [
+      760,
+      760
+    ]
+  },
+  "image_forwarded": false,
+  "base64_forwarded": false,
+  "raw_resampled": false
+}

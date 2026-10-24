@@ -1,0 +1,179 @@
+{
+  "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+  "source_sha256": "bf41fdb88ba3177fb57d67b9fe86f1af1ca58b7d4eb9eb6b3c6e66c1c71f7d42",
+  "source_RGBA_sha256": "801011e36b8f2e635a4f861867447acae3a86f66a60a7ac847b5d9c9263658cd",
+  "base_geometry_sha256": "14fae66b18d80405d8d49fca23703a930eb4200ddc0ac827c415e7bca3626a7c",
+  "derived_geometry_sha256": "ec8ff567fc78f8ae63e0fe5ee1e38be271fe80ee127c3bc310ee7edbb2b7e5e7",
+  "review_sha256": "ce4978d15e23849e73a88903977e38394ad972f670818c4fc7044c02c067e805",
+  "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+  "source_unchanged": true,
+  "canonical_canvas_foot_anchors_unchanged": true,
+  "all_alpha_gt16_covered_exactly_once": true,
+  "foreign_foreground_pixels": 0,
+  "alpha_gt16_pixels": 558599,
+  "added_alpha_gt16_pixels": 0,
+  "all_alpha_positive_covered": true,
+  "expanded_regions": [
+    [
+      413,
+      397,
+      453,
+      485
+    ],
+    [
+      1678,
+      393,
+      483,
+      493
+    ],
+    [
+      407,
+      1679,
+      465,
+      482
+    ],
+    [
+      1686,
+      1676,
+      468,
+      488
+    ],
+    [
+      397,
+      2957,
+      486,
+      486
+    ],
+    [
+      1691,
+      2964,
+      457,
+      473
+    ]
+  ],
+  "default_importer_repacker_unchanged": true,
+  "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+  "nearest_owner_sha256": "6bdaa4800b4a95cee78fa52a2fd957edd9c680a26857294e0e81f8d2b6fd72d3",
+  "foreground_owner_sha256": "28c4eac47b6abda4996c972dc4f63d15148e275d65804be150b9cc0ef92017b8",
+  "detached_pixels": 9,
+  "detached_fragments": [
+    {
+      "row": 1,
+      "pixels": 1,
+      "bbox": [
+        1786,
+        559,
+        1787,
+        560
+      ],
+      "nearest_max": 3.605551275463989,
+      "second_nearest_min": 940.6731632187665,
+      "owner_margin_min": 937.0676119433025
+    },
+    {
+      "row": 1,
+      "pixels": 1,
+      "bbox": [
+        1766,
+        601,
+        1767,
+        602
+      ],
+      "nearest_max": 4.242640687119285,
+      "second_nearest_min": 914.1476904745754,
+      "owner_margin_min": 909.905049787456
+    },
+    {
+      "row": 0,
+      "pixels": 1,
+      "bbox": [
+        677,
+        637,
+        678,
+        638
+      ],
+      "nearest_max": 2.23606797749979,
+      "second_nearest_min": 1018.0176815753251,
+      "owner_margin_min": 1015.7816135978253
+    },
+    {
+      "row": 1,
+      "pixels": 1,
+      "bbox": [
+        2118,
+        791,
+        2119,
+        792
+      ],
+      "nearest_max": 6.324555320336759,
+      "second_nearest_min": 953.4280256002547,
+      "owner_margin_min": 947.1034702799179
+    },
+    {
+      "row": 2,
+      "pixels": 1,
+      "bbox": [
+        511,
+        1777,
+        512,
+        1778
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 909.8857071083158,
+      "owner_margin_min": 907.0572799835696
+    },
+    {
+      "row": 2,
+      "pixels": 1,
+      "bbox": [
+        468,
+        1800,
+        469,
+        1801
+      ],
+      "nearest_max": 6.324555320336759,
+      "second_nearest_min": 937.6406561151239,
+      "owner_margin_min": 931.3161007947871
+    },
+    {
+      "row": 2,
+      "pixels": 1,
+      "bbox": [
+        542,
+        1964,
+        543,
+        1965
+      ],
+      "nearest_max": 3.0,
+      "second_nearest_min": 1004.7188661511238,
+      "owner_margin_min": 1001.7188661511238
+    },
+    {
+      "row": 3,
+      "pixels": 1,
+      "bbox": [
+        1780,
+        1976,
+        1781,
+        1977
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 915.7079228662379,
+      "owner_margin_min": 912.8794957414917
+    },
+    {
+      "row": 4,
+      "pixels": 1,
+      "bbox": [
+        524,
+        3192,
+        525,
+        3193
+      ],
+      "nearest_max": 2.8284271247461903,
+      "second_nearest_min": 1043.0651945108705,
+      "owner_margin_min": 1040.2367673861243
+    }
+  ],
+  "minimum_required_owner_margin": 32.0
+}

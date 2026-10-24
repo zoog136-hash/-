@@ -1,0 +1,87 @@
+{
+  "status": "REQUESTED_LOCAL_ACTUAL_JOIN_RETOUCH_NOT_APPROVED",
+  "target_actor": "transform:413",
+  "direction": "NW",
+  "role": "run",
+  "phase": 0,
+  "native_C": 2560,
+  "no_resample": true,
+  "prompt": "PRIVATE GAME ANIMATION PRODUCTION EDIT. Use the FIRST image as the exact target frame, 1254 x 1254 transparent RGBA, same native pixel density, same framing, same body size and pose. The SECOND image is only a close native detail of the defect, not a separate character. Repair ONLY the tiny upper-thigh junction immediately below the short white/gold skirt hem, roughly original full-frame coordinates x596..739, y704..768. There is an artificial clipped black triangular patch and a small background notch between the exposed upper thighs and the far folded black boot. Replace this broken junction with one anatomically coherent continuous thigh/hip-to-far-leg transition. Draw natural exposed upper-thigh skin where the shortened skirt reveals it, and a smooth real top contour of the FAR black thigh-high boot joining the folded recovery leg. The near LEFT boot cuff, new empty LEFT hand, white/gold skirt hem, detailed original crossed-back royal-blue bodice, waist jewel and both gold/black boots must stay intact. Keep the visible far-leg boot silhouette and all lower leg/heel locations. Do not add a third leg, triangular garment flap, black hole or straight rectangular skin cut. Preserve natural painterly game-sprite shading, actual skin tone and black/gold boot design. No whole-body redesign, no new skirt panels, no camera change, no resizing, no added ground/shadow, keep transparency. The entire rest of the image remains unchanged; the final compositor will take only this tiny repaired actual-art junction.",
+  "referenced_image_paths": [
+    "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v06-original-hem-restored.png",
+    "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-underhem-actual-retouch-v01/actual-underhem-crop-native-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v06-original-hem-restored.png": "8ee2ca11c418ca717abf45a219bb1d06c18e8f014d3af19f17ee6e67c3ef4160",
+    "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-underhem-actual-retouch-v01/actual-underhem-crop-native-detail.png": "6f2ab5b6e67dcc7e7ebd5fed2addf0502b4d0d136206ea3f53e88b9e75630319"
+  },
+  "editable_mask": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-underhem-actual-retouch-v01/actual-underhem-joint-editable-mask.png",
+  "editable_mask_sha256": "2a3d6cc6e2a3b47910570afa45c015875e434104d93651b3517dbaa74b4ef265",
+  "mask_polygon": [
+    [
+      596,
+      706
+    ],
+    [
+      625,
+      705
+    ],
+    [
+      649,
+      708
+    ],
+    [
+      680,
+      708
+    ],
+    [
+      711,
+      704
+    ],
+    [
+      730,
+      710
+    ],
+    [
+      737,
+      725
+    ],
+    [
+      734,
+      743
+    ],
+    [
+      739,
+      757
+    ],
+    [
+      725,
+      768
+    ],
+    [
+      700,
+      765
+    ],
+    [
+      677,
+      757
+    ],
+    [
+      652,
+      751
+    ],
+    [
+      627,
+      750
+    ],
+    [
+      611,
+      746
+    ],
+    [
+      601,
+      735
+    ]
+  ],
+  "composition": "unchangedv06 outside semanticmask; only actualserviceRGBA inside; no oldposepaste"
+}

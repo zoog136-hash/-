@@ -1,0 +1,61 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "NE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "two_same_support_walk_halfcycle_poses",
+  "expected_poses": 2,
+  "requested_poses": 2,
+  "intended_game_phases": [
+    1,
+    2
+  ],
+  "intended_anatomical_support": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/girtas-NE-walk-left-contact-key-v01.png",
+    "/workspace/scratch/girtas-NE-walk-left-halfcycles-v01/two-grounded-walk-halfcycle-joint-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/girtas-NE-walk-left-contact-key-v01.png": "b11b2ca41e3532169a1900d9deadfcd374dbebed880b91b31531958e6148dc76",
+    "/workspace/scratch/girtas-NE-walk-left-halfcycles-v01/two-grounded-walk-halfcycle-joint-guide.png": "1d2d8a74e721e4f3a4b79d59f7df9d7ee4296d33efbfe904580ec98fca973837"
+  },
+  "transparent_background": true,
+  "corrective_reason": "BothoppositecontactsactualvalidfromcorrectNEguard. Authoronly2missingLEFTwalkintermediates withgenuinekneeload/pass\u2192toeoff/reach, noRUN/no6samelegloop.",
+  "prompt": "Create TWO actual newly authored NORTHEAST GROUNDED WALK intermediateposes from FIRST correct GIRTAS LEFT-SUPPORT CONTACT key. Exactly2 completeisolatedfigures LEFT thenRIGHT. Not6sheet, notcontactcopiedwithclothchange. FIRST isexactcorrect LEFT support-chain/model/camera authority; changeactualknees/ankles/pelvisforgames[1, 2]. SECONDimage maskedlegtargets showtwoNEWactualphases only, MAGENTA anatomicalLEFT FAR/imageLEFT emptyhand-side, GREEN anatomicalRIGHT NEAR/imageRIGHT weapon-side. No guidemarks/colors/text.\n\nABSOLUTE SAME NErear-right3/4camera: lookUP-RIGHT away, mostlyBACK/silverhairwith clearlyvisibleRIGHTSIDE nearshoulder/weaponarm at IMAGERIGHT, farLEFTshoulder foreshortenedIMAGELEFT. HipsandbootsobliqueUPRIGHT, notpureN symmetricback/notfrontface/notEside. RIGHTNEAR handholdsSAMEoriginalLONG SINUOUSblade atIMAGERIGHT, LEFTFAR handEMPTYIMAGELEFT. Exactly2connectedarms/2connectedlegs and2boots. Originalbodyvolume/proportions, horncrown, longPALE/SILVERhair, thinHARDgoldradialspines, blackgoldarmor andLONGDARK goldtrimrobe. Part/foldexistingcloth toreadknees/ankles; preserveLONGskirt, no pants/shorthem/newlimbs.\n\nLEFT FIGURE GAME1 LEFTFAR MIDSTANCE/LOAD + RIGHTNEAR PASSING: LEFT far boot IMAGELEFT stays FLATonitsgroundplane andweightbearing, LEFT knee bends SOFTLY as pelvis movesoverankle (walkload, notdeep70degreeRUNcrouch). RIGHT near leg IMAGERIGHT now leaves trailingtoe, RIGHTknee swings modestlyFORWARD UP-RIGHT and RIGHTboot passes UNDERhipraisedaboveground. RIGHTknee/bootmustNOTbehighatbelly/hipheight; WALKpassingaboutlowerknee/midshinheightonly, ONELEFTfootstillgrounded. ShownewbentpassingRIGHTchain distinctfromcontact0toetrailing. EmptyLEFTarmcountermoves, RIGHTweaponstable.\nRIGHT FIGURE GAME2 LEFTFAR TOEOFF + RIGHTNEAR FORWARD REACH: LEFTfarHEE L risesclearly, LEFTTOESsupportground atlowerLEFT, ankleplantarflexed, LEFTkneenowunloads. RIGHTnear thigh/knee extends ahead AWAYUP-RIGHT, RIGHTbootreaches towardnextheelcontact toRIGHTofbodybutstillslightlyUP/raised, toespointUPRIGHTasNEdirection. ItisLONGERFORWARDreach thanbentpassing1; LEFTtoestillgroundedsoNOtwofeetflight. DoNOTkeepRIGHTtrailing/flatbehind. Actualknees/ankleschange,pelvisadvancesforwardmodestly, notattack/runlunge.\n\nGroundedWALKthroughbothfigures: supportheel/forefootandoppositepass/reacharecoherent, no airborneRUN/allhighknees/no standingcopy. Sourcealreadyhascorrecthiplegidentity: nevermirror, swapwhicharmholdsweapon, inventthirdleg, removelongrobeorhards p ine. Keepfulloriginalgear/spines/blade/hair/bootsinsidecanvas. No frontredVmask/flamefeatherfan/wings/broadsword/substituteequipment. Hair/robe havegentlewalkinglag, notviolentRUNwind.\n\nOUTPUT transparentrequested2048x1024PNG, TWO COLUMNS ONE ROW. EachFULLGEARfigure<=650x700insideown1024square, >=150pxalpha0alloutergapsand>=220pxclearalpha0BETWEENclosestgear/cloth/blades. Samephysicalhead/shoulder/hipscale bothfigures. Uniformlyshrinktofitwholegearifneeded, neverclip/spin/blade/robe. Hardopaquebladeinternalshine, background/gapsalpha0,nooutwardglow/haze/shadow/floor/aura/particles/blur/trails/grid/text/labels/coloredguides/duplicates. ActualLEFTfigureloadedflatstance/oppositepassing, RIGHTfiguretoe-off/oppositeforwardreach, correctNErear-rightcamera.",
+  "requested_at": "2026-10-19T14:35:46.737177+00:00",
+  "source_contact_receipt": {
+    "key": "transform:267",
+    "direction": "NE",
+    "role": "walk",
+    "source_kind": "single_faithful_locomotion_contact_keypose",
+    "expected_poses": 1,
+    "intended_game_phase": 0,
+    "intended_anatomical_support": "LEFT",
+    "original_generated_file": "/workspace/generated_images/exec-7f43a454-c8e4-4a79-ba8a-b766566c43c3.png",
+    "raw_path": "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/girtas-NE-walk-left-contact-key-v01.png",
+    "raw_png": "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/girtas-NE-walk-left-contact-key-v01.png",
+    "raw_sha256": "b11b2ca41e3532169a1900d9deadfcd374dbebed880b91b31531958e6148dc76",
+    "raw_bytes": 1277656,
+    "image_size": [
+      1254,
+      1254
+    ],
+    "request_path": "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/request.json",
+    "request_sha256": "911706b722fcb018b62d63db16835f8d7228bbf211cc897ac9132e5a90d566d9",
+    "imagegen_attempts": 1,
+    "source_visual_status": "PENDING_PRIVATE_REVIEW",
+    "created_at": "2026-10-19T14:32:14.709465+00:00",
+    "complete_clip": false,
+    "actor_approval": false
+  },
+  "source_contact_review_sha256": "442b88115a43410037247c807dc9ea958018994392516f15b9366befbfde8147",
+  "newly_authored_pose_target": 2,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true,
+  "generation_budget": "Onepairpercorrectsupport, failedrowsHOLDnoidenticalretry."
+}

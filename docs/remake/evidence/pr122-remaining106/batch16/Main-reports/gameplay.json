@@ -1,0 +1,43 @@
+{
+	"cases": [
+		{
+			"checks": 1884,
+			"failures": [],
+			"folder": "albino_mutated_golem_batch16_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "알비노 변이된 골렘",
+			"physics_ticks": 1362,
+			"pose_samples": 144,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/albino-mutated-golem/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Main-QA-v02/gameplay-cases/albino-mutated-golem.json",
+			"screenshots": 254,
+			"slug": "albino-mutated-golem"
+		},
+		{
+			"checks": 1484,
+			"failures": [],
+			"folder": "albino_iguana_monster_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "알비노 이구아나",
+			"physics_ticks": 1227,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/preserved-iguana-baseline/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Main-QA-v02/gameplay-cases/preserved-iguana-baseline.json",
+			"screenshots": 190,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 3368,
+	"config": "res://tests/fixtures/pr122_batch16.json",
+	"engine_processes": 1,
+	"failures": [],
+	"process_id": 15249,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/runtime/batch16/Main-QA-v02/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

@@ -1,0 +1,305 @@
+{
+  "schema": "PR122_NW_RUN_FINAL_SOURCE_BODY_C_ROOT_CONTACT_AIR_INDEPENDENT_CANDIDATE_QC_V1",
+  "utc": "2026-10-19T16:40:39.083686+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "PASS_SCOPED_SOURCE_WHOLE6_BODY_SCALE_AUTHORED_ROOT_CONTACT_AIR_CANDIDATE",
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "raw_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+  "source_visual_status": "PASS",
+  "authored_pose_canvas_sizes": [
+    848,
+    2096,
+    2392,
+    2376,
+    2280,
+    872
+  ],
+  "source_native_root_anchors": [
+    [
+      239,
+      403
+    ],
+    [
+      530,
+      981
+    ],
+    [
+      623,
+      1274
+    ],
+    [
+      623,
+      1120
+    ],
+    [
+      625,
+      1021
+    ],
+    [
+      747,
+      1461
+    ]
+  ],
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "actual_runtime_status": "HOLD_NOT_ACTUAL_COMPILED_REVIEWED",
+  "candidate_pins": [
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/authored-ground-root-config.json",
+      "sha256": "6ece860407b2afefcb29c65263cdd66e5bf02182f0966c42c55fbee9c2d37274"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/geometry-derived.json",
+      "sha256": "abe4b4afdf4aa4a4506a0328b763788edde07facdc3c8411e50ad3fe1eef83d8"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_runtime_layout.proposal.json",
+      "sha256": "435185dbdedbcb0ba5d81eabe194ec77e3e70fd3829246fca2c15b02f43e4755"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_runtime_layout.validation.json",
+      "sha256": "a1e7942a08c707e365084f8d83874c692aa279940350a5f350b1c21bbc7688c5"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_source_regions.proposal.json",
+      "sha256": "2bcab97d226b1d8d04b0babdf083630d0df772621d4832861ad1a0dcdd4a8917"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_source_regions.validation.json",
+      "sha256": "8f11f2c025abe2a030e24763d7c06ee92f7f6dfc284da37835d77fe8f3dadc26"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/trueleg-closeup-native-ROI-proof-v01.json",
+      "sha256": "6b51fbb0f2121df40c595c8fd47f88811744559c6fecfa3d5baa91a8e2b54bfa"
+    }
+  ],
+  "baseline_profile_pin": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NativeMotionProfile.tres",
+    "sha256": "e5d796d2b07fc5b803c3fa2e2dc93f1208e690c5fdbaf3464569e97c027f8f7a",
+    "pixel_scale": 0.219105011732
+  },
+  "visual_findings": [
+    "Visible skull/neck/silverhairroot, nearpauldron/cuirass and posteriorwaist have a reasonable common character scale at Cs[848,2096,2392,2376,2280,872]. Narrower rear-facing2/3 core and upright0 versus relaxed/bentidle are plausible pose/yaw/flex differences, not confirmed sourcebodyratio defects. No body/art or C/root retune needed.",
+    "Enlarged trueleg/slit closeups show credible hip-origin intervals\u2192knee/shin/ankle/boots, including longrobe occlusion. Hiddenhip exactpoints are neither established nor required; garmentV/hem is not treated as pelvis.",
+    "0nearLEFTcontact\u21921nearLEFTdeepflatload\u21922farRIGHTleadAIR\u21923farRIGHTcontact\u21924farRIGHTload\u21925nearLEFTleadAIR\u21920 is genuine readableopposite-chainrun with completeboots and retainedfaithfulNWmodel/gear.",
+    "Commonroot visualcadence drops from contact to load and rises into two explicitAIR phases, with plausible5\u21920 settling. Actualsupport points move in projectedfore/aft/nearfar space; no neutralflatY invariant is imposed.",
+    "Source2/5 actualcompleteboot alpha>16 lowestpoints clear the declared conservative fore/aftplanes by at least4.331world, not merely the prior last4rowscentroid estimate. Genuine recoveryboots0/1/3/4 also clear the explicitboundedprojectedplanes recordedbelow by at least4.26world. No boot is relabelledAIR to conceal penetration.",
+    "Contact supportplanes are authored at the actualsemanticallytraced bootcontact points; recoveryplanedepth accounts for nearLEFT/farRIGHT perspective and front/rearstep. These are explicit2D projectedground candidate assumptions, not hidden3D bones/floor extracted fromPNG."
+  ],
+  "supplemental_projected_ground_and_actual_boot_numeric": [
+    {
+      "phase": 0,
+      "feet": [
+        {
+          "side": "LEFT",
+          "boot_ROI_xyxy": [
+            105,
+            380,
+            205,
+            460
+          ],
+          "actual_alpha_gt16_last_nativeY": 455,
+          "actual_lowest_boot_localY_canonical": 62.79245283018868,
+          "authored_projected_floor_localY_canonical": 62.79245283018868,
+          "clearance_world": 0.0,
+          "role": "actual_support_contact"
+        },
+        {
+          "side": "RIGHT",
+          "boot_ROI_xyxy": [
+            295,
+            350,
+            385,
+            450
+          ],
+          "actual_alpha_gt16_last_nativeY": 432,
+          "actual_lowest_boot_localY_canonical": 35.0188679245283,
+          "authored_projected_floor_localY_canonical": 60,
+          "clearance_world": 5.473491236474868,
+          "role": "AIR_or_recovery"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "feet": [
+        {
+          "side": "LEFT",
+          "boot_ROI_xyxy": [
+            200,
+            950,
+            450,
+            1120
+          ],
+          "actual_alpha_gt16_last_nativeY": 1102,
+          "actual_lowest_boot_localY_canonical": 59.11450381679389,
+          "authored_projected_floor_localY_canonical": 59.11450381679389,
+          "clearance_world": 0.0,
+          "role": "actual_support_contact"
+        },
+        {
+          "side": "RIGHT",
+          "boot_ROI_xyxy": [
+            680,
+            850,
+            900,
+            1080
+          ],
+          "actual_alpha_gt16_last_nativeY": 1064,
+          "actual_lowest_boot_localY_canonical": 40.54961832061068,
+          "authored_projected_floor_localY_canonical": 60,
+          "clearance_world": 4.261676106054474,
+          "role": "AIR_or_recovery"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "feet": [
+        {
+          "side": "LEFT",
+          "boot_ROI_xyxy": [
+            610,
+            820,
+            790,
+            1050
+          ],
+          "actual_alpha_gt16_last_nativeY": 1045,
+          "actual_lowest_boot_localY_canonical": -98.03344481605352,
+          "authored_projected_floor_localY_canonical": 55,
+          "clearance_world": 33.530394721809785,
+          "role": "AIR_or_recovery"
+        },
+        {
+          "side": "RIGHT",
+          "boot_ROI_xyxy": [
+            235,
+            820,
+            400,
+            930
+          ],
+          "actual_alpha_gt16_last_nativeY": 919,
+          "actual_lowest_boot_localY_canonical": -151.9732441471572,
+          "authored_projected_floor_localY_canonical": -55,
+          "clearance_world": 21.24732379655298,
+          "role": "AIR_or_recovery"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "feet": [
+        {
+          "side": "LEFT",
+          "boot_ROI_xyxy": [
+            610,
+            840,
+            790,
+            1050
+          ],
+          "actual_alpha_gt16_last_nativeY": 1034,
+          "actual_lowest_boot_localY_canonical": -37.063973063973066,
+          "authored_projected_floor_localY_canonical": 55,
+          "clearance_world": 20.17167789827635,
+          "role": "AIR_or_recovery"
+        },
+        {
+          "side": "RIGHT",
+          "boot_ROI_xyxy": [
+            300,
+            840,
+            470,
+            1010
+          ],
+          "actual_alpha_gt16_last_nativeY": 1006,
+          "actual_lowest_boot_localY_canonical": -49.13131313131313,
+          "authored_projected_floor_localY_canonical": -49.13131313131313,
+          "clearance_world": 0.0,
+          "role": "actual_support_contact"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "feet": [
+        {
+          "side": "LEFT",
+          "boot_ROI_xyxy": [
+            240,
+            670,
+            470,
+            930
+          ],
+          "actual_alpha_gt16_last_nativeY": 909,
+          "actual_lowest_boot_localY_canonical": -50.30175438596491,
+          "authored_projected_floor_localY_canonical": -25,
+          "clearance_world": 5.543741191577024,
+          "role": "AIR_or_recovery"
+        },
+        {
+          "side": "RIGHT",
+          "boot_ROI_xyxy": [
+            620,
+            1000,
+            830,
+            1170
+          ],
+          "actual_alpha_gt16_last_nativeY": 1146,
+          "actual_lowest_boot_localY_canonical": 56.14035087719298,
+          "authored_projected_floor_localY_canonical": 56.14035087719298,
+          "clearance_world": 0.0,
+          "role": "actual_support_contact"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "feet": [
+        {
+          "side": "LEFT",
+          "boot_ROI_xyxy": [
+            590,
+            1270,
+            735,
+            1400
+          ],
+          "actual_alpha_gt16_last_nativeY": 1384,
+          "actual_lowest_boot_localY_canonical": -90.42201834862385,
+          "authored_projected_floor_localY_canonical": -55,
+          "clearance_world": 7.7611417458463485,
+          "role": "AIR_or_recovery"
+        },
+        {
+          "side": "RIGHT",
+          "boot_ROI_xyxy": [
+            800,
+            1370,
+            950,
+            1495
+          ],
+          "actual_alpha_gt16_last_nativeY": 1491,
+          "actual_lowest_boot_localY_canonical": 35.22935779816514,
+          "authored_projected_floor_localY_canonical": 55,
+          "clearance_world": 4.331846791582201,
+          "role": "AIR_or_recovery"
+        }
+      ]
+    }
+  ],
+  "projection_basis": "Actorroot is authoredshared2D motionreference. SupportplaneY is perfoot actualcontact projection, not actorrootY. Recovery0/1farRIGHTrear+60,3nearLEFTrear+55,4nearLEFTfront\u221225 account for near-side depth and fore/aft step. Flight2/5 preserve producerconservative\u00b155 planes. No sourcepixels/C/root changed to obtain these bounds.",
+  "minimum_any_AIR_or_recovery_clearance_world": 4.261676106054474,
+  "whole6_source_proof_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+    "sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9"
+  },
+  "remaining_HOLD": [
+    "Officiallatestfixture/prepare/canonical andactualcompiledSpriteFrames/profile/Player/Godot scopedchecks required.",
+    "Finalindependentwholeactor48rolequality/Main/defaultcatalog activation pending;actor2670/detailedCOMPLETE1of31Halpas393only."
+  ],
+  "private_preview_classification": "PIL source/C/root/projection candidate reconstruction, NOT a Godot-render screenshot.",
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "ae7b32a19bbad8b9527cf35620e95254ffedbf792b24cd1173905ebff909f8d0",
+  "repository_mutations": false
+}

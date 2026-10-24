@@ -15,6 +15,9 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    # PR122 run 39142875145 passed all applicable regressions, then reached
+    # the 75m cap during region rendering. Preserve every render, frozen
+    # baseline and combat benchmark; allow the same 120m as integration.
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
@@ -25,8 +28,11 @@ jobs:
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
-      - name: All headless regressions
-        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+      - name: Combat animation and timing regressions
+        # Integration keeps the full suite on these PR bases; other events remain full.
+        env:
+          TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'integration/twilight-complete-20261009') && 'import,bake_navigation,boot,actor_motion_test,animation_catalog_test,animation_presentation_test,animation_restore_test,authored_state_motion_test,boss_presentation_test,combat_hud_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,combat_timing_test,combat_vfx_test,eight_direction_animation_test,hit_feedback_render_test,hit_feedback_test,monster_motion_test,native_animation_expansion_test' || '' }}
+        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --only "$TWILIGHT_CI_TESTS"
       - name: Actual combat rendering and live AUTO
         shell: bash
         run: |

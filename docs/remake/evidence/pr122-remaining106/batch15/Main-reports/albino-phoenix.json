@@ -1,0 +1,4092 @@
+{
+	"boss": [
+		{
+			"compass": "E",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(1.0, 0.0)",
+			"facing": 0,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(1.0, 0.0)"
+		},
+		{
+			"compass": "SE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707107, 0.707107)",
+			"facing": 1,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.707107, 0.707107)"
+		},
+		{
+			"compass": "S",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, 1.0)",
+			"facing": 2,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.0, 1.0)"
+		},
+		{
+			"compass": "SW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707107, 0.707107)",
+			"facing": 3,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-0.707107, 0.707107)"
+		},
+		{
+			"compass": "W",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-1.0, 0.0)",
+			"facing": 4,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-1.0, 0.0)"
+		},
+		{
+			"compass": "NW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707107, -0.707107)",
+			"facing": 5,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-0.707107, -0.707107)"
+		},
+		{
+			"compass": "N",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, -1.0)",
+			"facing": 6,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.0, -1.0)"
+		},
+		{
+			"compass": "NE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707107, -0.707107)",
+			"facing": 7,
+			"kind": "nova",
+			"name": "알비노 피닉스",
+			"player_hp_after": 1735,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.707107, -0.707107)"
+		}
+	],
+	"checks": 3726,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 768,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792336641.66392,
+				"expires_at": 1792337241.66392,
+				"grade": "고급",
+				"hunt_batch": "ea68763c869c3f61b61077730443346f",
+				"id": "e943258796b2dc7c960966b078dd634f",
+				"item_name": "강력 HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25521.705078125,
+					22773.705078125
+				],
+				"quantity": 1,
+				"state": "ground"
+			},
+			{
+				"created_at": 1792336641.66983,
+				"expires_at": 1792337241.66983,
+				"grade": "희귀",
+				"hunt_batch": "ea68763c869c3f61b61077730443346f",
+				"id": "71711ac23d03a37c83b7c99d59f787ad",
+				"item_name": "미스릴 원석",
+				"map_id": "aden_world",
+				"position": [
+					25559.705078125,
+					22773.705078125
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 300,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 13
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(81.86719, 0.0)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(57.91406, 57.91406)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 81.86719)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-57.91406, 57.91406)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-81.86719, 0.0)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-57.91406, -57.91406)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -81.86719)",
+			"name": "알비노 피닉스",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(57.91406, -57.91406)",
+			"name": "알비노 피닉스",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 63,
+			"facing": 0,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 1,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 2,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 3,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 4,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 5,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 6,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 63,
+			"facing": 7,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 0,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 1,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 2,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 3,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 4,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 5,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 6,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		},
+		{
+			"damage": 100,
+			"facing": 7,
+			"kind": "magic",
+			"name": "알비노 피닉스"
+		}
+	],
+	"monster_projectiles": [
+		{
+			"compass": "E",
+			"delta": "(13.3125, 0.736328)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "SE",
+			"delta": "(9.066406, 9.775391)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "S",
+			"delta": "(0.0, 13.33398)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "SW",
+			"delta": "(-9.066406, 9.775391)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "W",
+			"delta": "(-13.3125, 0.736328)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "NW",
+			"delta": "(-9.804688, -9.037109)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "N",
+			"delta": "(0.0, -13.33398)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "NE",
+			"delta": "(9.804688, -9.037109)",
+			"kind": "magic",
+			"toward_player": true
+		}
+	],
+	"physics_ticks": 2648,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25083.94921875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "ca96e40bd270e9a0595d4588a73328399efb2b67ea95b1ce0a669c2db9c7db04",
+			"visible_body_viewport": [
+				361.360382080078,
+				161.868301391602,
+				397.015960693359,
+				283.101867675781
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25083.94921875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "ca96e40bd270e9a0595d4588a73328399efb2b67ea95b1ce0a669c2db9c7db04",
+			"visible_body_viewport": [
+				361.360382080078,
+				161.868301391602,
+				397.015960693359,
+				283.101867675781
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25095.64453125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-walk-native-1.png",
+			"physics_tick": 25,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "e54ab9c03a4804f0cc6cfa1d9ca0b35247c027eb1372e6b92179b1b80c6d985f",
+			"visible_body_viewport": [
+				333.132171630859,
+				246.177627563477,
+				427.065338134766,
+				228.078903198242
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25107.33984375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-walk-native-2.png",
+			"physics_tick": 32,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "80611e02aa446859dbf04dda0643f6543aad634bbad0979408930a2276bdd527",
+			"visible_body_viewport": [
+				375.933685302734,
+				271.914154052734,
+				427.975860595703,
+				207.667205810547
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25163.8671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-attack-0.png",
+			"physics_tick": 63,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "1aa45a27e19d858fe2075fadf88da8e941b2a1f5d7cb9d62320e6fd754590b83",
+			"visible_body_viewport": [
+				456.581787109375,
+				179.490844726562,
+				245.208068847656,
+				296.033508300781
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25163.8671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-attack-1.png",
+			"physics_tick": 85,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "ee81516d1fde910d5ff7234364ee849c3db9a25263379d1a9ebad0f0f4f41182",
+			"visible_body_viewport": [
+				376.580200195312,
+				187.731597900391,
+				354.478515625,
+				275.748565673828
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25163.8671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-attack-2.png",
+			"physics_tick": 96,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "7f020bf60e0d99e9364371e37859a8df45211044eeb8acd7f663d9720fcf8705",
+			"visible_body_viewport": [
+				429.26416015625,
+				188.999404907227,
+				271.875244140625,
+				294.1318359375
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25163.8671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-E-contact.png",
+			"physics_tick": 109,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_0",
+			"sha256": "656167746a4402383f08e270352acb3e7d12b69e3670dbbe05a2e726eb66d8c2",
+			"visible_body_viewport": [
+				393.230926513672,
+				200.029357910156,
+				329.632476806641,
+				244.940795898438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25197.607421875,
+				22729.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-walk.png",
+			"physics_tick": 146,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "5dea18607347bb2a8919742e1650b69563485864fed625a90328e471fb624d3a",
+			"visible_body_viewport": [
+				414.174438476562,
+				227.544738769531,
+				372.430053710938,
+				217.429321289062
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25197.607421875,
+				22729.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-walk-native-1.png",
+			"physics_tick": 146,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "5dea18607347bb2a8919742e1650b69563485864fed625a90328e471fb624d3a",
+			"visible_body_viewport": [
+				414.174438476562,
+				227.544738769531,
+				372.430053710938,
+				217.429321289062
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25205.880859375,
+				22737.880859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-walk-native-2.png",
+			"physics_tick": 153,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "30699e66f5e601e7658ba649121e701b2e3a8a3368b74045923b5755dd8ef535",
+			"visible_body_viewport": [
+				433.300659179688,
+				243.515228271484,
+				337.827758789062,
+				201.454925537109
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25214.154296875,
+				22746.154296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-walk-native-0.png",
+			"physics_tick": 160,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "59a8edd0f45aa0bb1b38c712ab138f3d32094f32f6a06ebde9376f86174c2c2d",
+			"visible_body_viewport": [
+				421.459106445312,
+				148.556304931641,
+				309.599609375,
+				296.413848876953
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25254.142578125,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-attack-0.png",
+			"physics_tick": 191,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "94e10516a3c7cb983175182a4fe8509211cf84afb6a05f41d0ed4cb711690409",
+			"visible_body_viewport": [
+				471.541412353516,
+				182.026458740234,
+				235.451751708984,
+				283.355438232422
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25254.142578125,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-attack-1.png",
+			"physics_tick": 213,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b48b7d740ea05f58902fd95b656c5e21459ebd83fa1809dd8d1486a8edbb6b12",
+			"visible_body_viewport": [
+				436.418762207031,
+				169.982269287109,
+				266.671875,
+				290.328369140625
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25254.142578125,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-attack-2.png",
+			"physics_tick": 224,
+			"player_hp": 1772,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "e1c9160e14ac17a8b5a2dc74db993a888b5b56ef8767c69843ee81a44207ab57",
+			"visible_body_viewport": [
+				478.045593261719,
+				193.436737060547,
+				216.589599609375,
+				294.131805419922
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25254.142578125,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SE-contact.png",
+			"physics_tick": 238,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_1",
+			"sha256": "67ba55c931f6b69b124b0374e6a8e40d826cf8f243375070bdf4e646874b5f28",
+			"visible_body_viewport": [
+				441.492034912109,
+				183.167495727539,
+				260.427886962891,
+				261.802673339844
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22615.94921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-walk.png",
+			"physics_tick": 276,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "922e1b5e02269540a67f56067245f10fdebe18effc3dc77a554f66fdb8e78159",
+			"visible_body_viewport": [
+				487.801879882812,
+				281.553405761719,
+				301.469360351562,
+				232.009155273438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22615.94921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-walk-native-2.png",
+			"physics_tick": 276,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "922e1b5e02269540a67f56067245f10fdebe18effc3dc77a554f66fdb8e78159",
+			"visible_body_viewport": [
+				487.801879882812,
+				281.553405761719,
+				301.469360351562,
+				232.009155273438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22627.64453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-walk-native-0.png",
+			"physics_tick": 283,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "c650b378f50a90cbd7dc84085ec9e71b972ae1ed9035e1e1add0a3039ecbaff5",
+			"visible_body_viewport": [
+				515.119506835938,
+				197.874084472656,
+				240.004699707031,
+				300.470855712891
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22639.33984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-walk-native-1.png",
+			"physics_tick": 290,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "8c6ab1f511e13b48258c3ac11010f1848b74cf3ba15a900196edbc71ef500566",
+			"visible_body_viewport": [
+				415.605346679688,
+				284.402069091797,
+				426.349853515625,
+				209.188568115234
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22695.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-attack-0.png",
+			"physics_tick": 321,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "c63254dcf5538605102f825f23d24c1c4c546baa68bf4350f9d97baa62d29453",
+			"visible_body_viewport": [
+				508.87548828125,
+				177.842697143555,
+				257.696166992188,
+				332.799987792969
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22695.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-attack-1.png",
+			"physics_tick": 343,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "9865372080300e8e34fd55d1cddb30d7da4f64b162d917e3233fc108df035d8f",
+			"visible_body_viewport": [
+				448.776733398438,
+				203.579223632812,
+				317.794860839844,
+				288.426635742188
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22695.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-attack-2.png",
+			"physics_tick": 354,
+			"player_hp": 1712,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "a60e9b3593a47cf2bb2ce3645a7cb671d4e9d0c014c7ca47fe9e9eccc63275e8",
+			"visible_body_viewport": [
+				485.2001953125,
+				217.778686523438,
+				292.298461914062,
+				302.626098632812
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25472.0,
+				22695.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-S-contact.png",
+			"physics_tick": 368,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_2",
+			"sha256": "aa9218eb3804ab57e4b6873d27c0ab951d363642346bec44a2648211d5cd683e",
+			"visible_body_viewport": [
+				522.924560546875,
+				236.859222412109,
+				253.663513183594,
+				251.977142333984
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25746.392578125,
+				22729.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-walk.png",
+			"physics_tick": 406,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "f4cea97aeb71477b3b061eca9b2de45a3ff66506f1fefcf48fb2c850e57ee67e",
+			"visible_body_viewport": [
+				571.705993652344,
+				196.927124023438,
+				311.225646972656,
+				292.863983154297
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25746.392578125,
+				22729.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-walk-native-0.png",
+			"physics_tick": 406,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "f4cea97aeb71477b3b061eca9b2de45a3ff66506f1fefcf48fb2c850e57ee67e",
+			"visible_body_viewport": [
+				571.705993652344,
+				196.927124023438,
+				311.225646972656,
+				292.863983154297
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25739.498046875,
+				22736.501953125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-walk-native-1.png",
+			"physics_tick": 412,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "970c8483fc53282028451f17b1d575708c6be2c02adf4d74feca581bda96cb5c",
+			"visible_body_viewport": [
+				474.15087890625,
+				281.553405761719,
+				412.691040039062,
+				203.4833984375
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25731.224609375,
+				22744.775390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-walk-native-2.png",
+			"physics_tick": 419,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "4cd77677fd7ddc8af46bc3e0cf492b023eef3727a93e0bec2324b3f33a8b38ca",
+			"visible_body_viewport": [
+				505.363220214844,
+				283.451232910156,
+				368.787719726562,
+				220.598846435547
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25689.857421875,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-attack-0.png",
+			"physics_tick": 451,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "4306f6eaafcfeaf3190f0baaf6581d185209a24ef9277929a355d3eadb2fe46c",
+			"visible_body_viewport": [
+				543.477783203125,
+				179.617630004883,
+				271.354919433594,
+				306.176025390625
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25689.857421875,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-attack-1.png",
+			"physics_tick": 473,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "147745dea94e04f0b34792117048ce37528dad068d2d5e8fa6b75f68d078c9d4",
+			"visible_body_viewport": [
+				516.16015625,
+				192.04216003418,
+				332.3642578125,
+				275.114624023438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25689.857421875,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-attack-2.png",
+			"physics_tick": 484,
+			"player_hp": 1652,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "dbf0e51cb5f796a2b854a1f933077ddc90e3f82576bbbfb0f874e14bbf89cde3",
+			"visible_body_viewport": [
+				537.103637695312,
+				202.691757202148,
+				295.030151367188,
+				290.201538085938
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25689.857421875,
+				22786.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-SW-contact.png",
+			"physics_tick": 498,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_3",
+			"sha256": "c2f6ee8fbe0fb08b7409920201585c68a3ed0d01c952a957715df60f08d55b17",
+			"visible_body_viewport": [
+				586.340393066406,
+				210.235229492188,
+				272.200500488281,
+				240.566833496094
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25700.05078125,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-walk.png",
+			"physics_tick": 536,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "ee2d6f62b1e43d0ab8b5911d93b35d37c272df7b7db3fe6746a9fb0440226d70",
+			"visible_body_viewport": [
+				548.493835449219,
+				268.808013916016,
+				366.055969238281,
+				218.316802978516
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25700.05078125,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-walk-native-1.png",
+			"physics_tick": 536,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "ee2d6f62b1e43d0ab8b5911d93b35d37c272df7b7db3fe6746a9fb0440226d70",
+			"visible_body_viewport": [
+				548.493835449219,
+				268.808013916016,
+				366.055969238281,
+				218.316802978516
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25690.3046875,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-walk-native-2.png",
+			"physics_tick": 542,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "91de9d5cf6083b666798ca846434d91ea7ddbb95e4b98f3526384fa5d10812eb",
+			"visible_body_viewport": [
+				555.3154296875,
+				283.451232910156,
+				374.251220703125,
+				199.679992675781
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25678.609375,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-walk-native-0.png",
+			"physics_tick": 549,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "3d08db73b4338cc87d812507e05ab1ea427fbf2e3af17923014e80098aec35be",
+			"visible_body_viewport": [
+				547.1201171875,
+				166.305618286133,
+				337.372436523438,
+				304.844787597656
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25620.1328125,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-attack-0.png",
+			"physics_tick": 581,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "1c0adabbe77058193c2e90dbbeb18c0d1dbcb158410859b84da1a67cd04611f9",
+			"visible_body_viewport": [
+				565.331848144531,
+				180.505096435547,
+				285.013732910156,
+				310.613311767578
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25620.1328125,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-attack-1.png",
+			"physics_tick": 603,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "78e5672ccf40ca1085ec8abd0a2e54df0d46e49796d14575349a40401034e299",
+			"visible_body_viewport": [
+				549.851867675781,
+				185.829895019531,
+				350.575988769531,
+				296.413848876953
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25620.1328125,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-attack-2.png",
+			"physics_tick": 614,
+			"player_hp": 1592,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "2bc9ccbd19644ee4d94c70cb9272473db86df93cddc3adaf10b54d6a2c85ba8f",
+			"visible_body_viewport": [
+				568.063598632812,
+				193.817092895508,
+				291.387817382812,
+				299.963745117188
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25620.1328125,
+				23004.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-W-contact.png",
+			"physics_tick": 627,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_4",
+			"sha256": "0d0f10f353fa253added82f33e326193fc4abd210b123c30e6feb52d6a99379d",
+			"visible_body_viewport": [
+				567.608337402344,
+				214.228820800781,
+				300.493713378906,
+				236.95361328125
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25586.392578125,
+				23198.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-walk.png",
+			"physics_tick": 664,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "85cf0a90058f38026cea4bace31dcb77c46ce9e22037dbe9ebb4fdbfb0bcc3cc",
+			"visible_body_viewport": [
+				518.436645507812,
+				267.476806640625,
+				336.006591796875,
+				215.654418945312
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25586.392578125,
+				23198.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-walk-native-2.png",
+			"physics_tick": 664,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "85cf0a90058f38026cea4bace31dcb77c46ce9e22037dbe9ebb4fdbfb0bcc3cc",
+			"visible_body_viewport": [
+				518.436645507812,
+				267.476806640625,
+				336.006591796875,
+				215.654418945312
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25578.119140625,
+				23190.119140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-walk-native-0.png",
+			"physics_tick": 671,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "f298ebe3644e842ec54ca7648a38d31c953fe7e76b8b29ab617259da14b12682",
+			"visible_body_viewport": [
+				530.729553222656,
+				200.91682434082,
+				331.908996582031,
+				299.52001953125
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25569.845703125,
+				23181.845703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-walk-native-1.png",
+			"physics_tick": 678,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "8c25110aac1756861c424f08126169ce9d1eedc3a707cb22218985d4dea6b3fb",
+			"visible_body_viewport": [
+				463.801422119141,
+				271.470428466797,
+				397.471221923828,
+				201.011199951172
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25529.857421875,
+				23141.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-attack-0.png",
+			"physics_tick": 709,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "a6dacf9410feb1c488d84e1b3cf54f32d6d842ba7057f21e1b965cfd7a0cd2bd",
+			"visible_body_viewport": [
+				594.470642089844,
+				194.704559326172,
+				258.606750488281,
+				307.063446044922
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25529.857421875,
+				23141.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-attack-1.png",
+			"physics_tick": 731,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "b0a0b2f3db8c837feaea148fce6c65833923ec6420f089219a9ca8582d14c53e",
+			"visible_body_viewport": [
+				505.233123779297,
+				254.164825439453,
+				339.648956298828,
+				242.278381347656
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25529.857421875,
+				23141.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-attack-2.png",
+			"physics_tick": 742,
+			"player_hp": 1532,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "5b351c76f66d363736d52230450a458c27088d23eaf8d5f74999e4e114e2e1f6",
+			"visible_body_viewport": [
+				589.917724609375,
+				208.904022216797,
+				270.4443359375,
+				298.188781738281
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25529.857421875,
+				23141.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NW-contact.png",
+			"physics_tick": 754,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_5",
+			"sha256": "352d5ac6cce266431a872555ac1650886803e311bc95e0e58afb3832363f76b9",
+			"visible_body_viewport": [
+				564.876586914062,
+				222.216018676758,
+				281.371337890625,
+				235.622421264648
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				23072.05078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-walk.png",
+			"physics_tick": 792,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "6d60c775988b177b09d6f2840b9c5b2759b0aa1325788fb40b63488e96b39b06",
+			"visible_body_viewport": [
+				496.734313964844,
+				225.470062255859,
+				246.465515136719,
+				287.539215087891
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				23072.05078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-walk-native-0.png",
+			"physics_tick": 792,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "6d60c775988b177b09d6f2840b9c5b2759b0aa1325788fb40b63488e96b39b06",
+			"visible_body_viewport": [
+				496.734313964844,
+				225.470062255859,
+				246.465515136719,
+				287.539215087891
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				23062.3046875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-walk-native-1.png",
+			"physics_tick": 798,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "cd87d944fdff5ec04ace7db3742fecbb0cc2ad3a83b5405d02e93abb566b90bf",
+			"visible_body_viewport": [
+				459.096740722656,
+				289.36767578125,
+				383.66064453125,
+				235.474487304688
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				23050.609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-walk-native-2.png",
+			"physics_tick": 805,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "59a96071bab76445e0b80f8d50fe89f043d92ca8567c5bb15c1204f569c75b2c",
+			"visible_body_viewport": [
+				523.444885253906,
+				291.734252929688,
+				275.604309082031,
+				239.024353027344
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				22992.1328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-attack-0.png",
+			"physics_tick": 837,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "7fb88a25077a2439c12a370166ef422210c75881301c1505fbd70af1350b0085",
+			"visible_body_viewport": [
+				558.604675292969,
+				253.567138671875,
+				194.568298339844,
+				274.933532714844
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				22992.1328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-attack-1.png",
+			"physics_tick": 859,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "1257f3c3a3e5df0a3da4aa2f6cbeaaa9c494f89fbdd7fb41f50da870f810e5d7",
+			"visible_body_viewport": [
+				520.137023925781,
+				273.670989990234,
+				283.768615722656,
+				252.112945556641
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				22992.1328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-attack-2.png",
+			"physics_tick": 870,
+			"player_hp": 1472,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "461dae05b520e3c4d3ba32e9cbd7b985f8135f35db75dacc2d8b3c352a7aaf2b",
+			"visible_body_viewport": [
+				536.304565429688,
+				294.861511230469,
+				249.760986328125,
+				238.529296875
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25312.0,
+				22992.1328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-N-contact.png",
+			"physics_tick": 882,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_6",
+			"sha256": "d9ad878b6448a329b10b3e7a505dcec565c26cf948b19f2c10e0831e29a367e2",
+			"visible_body_viewport": [
+				465.167297363281,
+				281.084655761719,
+				307.171325683594,
+				231.924621582031
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25037.607421875,
+				22878.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-walk.png",
+			"physics_tick": 920,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "8b7d94b08a072bc7ae8b5fdc0b740432cc923b13062ba0aca7652d3cede56cb4",
+			"visible_body_viewport": [
+				461.524963378906,
+				271.618347167969,
+				349.665405273438,
+				244.940795898438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25037.607421875,
+				22878.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-walk-native-1.png",
+			"physics_tick": 920,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "8b7d94b08a072bc7ae8b5fdc0b740432cc923b13062ba0aca7652d3cede56cb4",
+			"visible_body_viewport": [
+				461.524963378906,
+				271.618347167969,
+				349.665405273438,
+				244.940795898438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25044.501953125,
+				22871.498046875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-walk-native-2.png",
+			"physics_tick": 926,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "127d2037ea07e8342d2ed060a4dc701a68cf8dbe75249fdfe71f0ea0ffb8da2b",
+			"visible_body_viewport": [
+				494.306091308594,
+				278.718078613281,
+				267.105529785156,
+				235.474487304688
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25052.775390625,
+				22863.224609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-walk-native-0.png",
+			"physics_tick": 933,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "f6c45a692c60cb03db2fd5a4730d5cad17bcbc70f39675dbb1fa6d6fab4536d6",
+			"visible_body_viewport": [
+				461.528869628906,
+				220.736907958984,
+				268.319641113281,
+				282.806030273438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25094.142578125,
+				22821.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-attack-0.png",
+			"physics_tick": 965,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "08659e70dece2b49e023aa054f830784e0cc40c44fa1c2afe9e2342f04c43eaa",
+			"visible_body_viewport": [
+				488.363311767578,
+				237.810089111328,
+				214.080841064453,
+				252.656280517578
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25094.142578125,
+				22821.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-attack-1.png",
+			"physics_tick": 987,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "4162a4bdaa6b7b599c8151158238a4f649867ea9510238a26a98f13f9f671251",
+			"visible_body_viewport": [
+				457.70068359375,
+				246.503631591797,
+				238.053466796875,
+				249.396209716797
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25094.142578125,
+				22821.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-attack-2.png",
+			"physics_tick": 998,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "31410278479d2f97b2177e16c141e215880d8da6d649c604d0c8727ddfea644f",
+			"visible_body_viewport": [
+				496.168334960938,
+				282.364532470703,
+				233.593444824219,
+				223.315582275391
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25094.142578125,
+				22821.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/ai-NE-contact.png",
+			"physics_tick": 1010,
+			"player_hp": 1352,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "726c925cdfd81fb66cb8248320775a38336bb79a976483d5f2972d993c8c8319",
+			"visible_body_viewport": [
+				511.3076171875,
+				264.518615722656,
+				264.67724609375,
+				242.57421875
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-NE-idle_7-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NE-idle_7-0.png",
+			"physics_tick": 1047,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "a79038b7c46ef3ca4d149fbc75a18138da13e6c116cb4d219a3c98102ea86306",
+			"visible_body_viewport": [
+				511.3037109375,
+				264.518615722656,
+				264.67724609375,
+				242.57421875
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-E-attack_0-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-E-attack_0-0.png",
+			"physics_tick": 1049,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "db8aa262e7b0445a0290e9f383841bcc720ad3006108ea94853807b817d5e46f",
+			"visible_body_viewport": [
+				456.581787109375,
+				179.490844726562,
+				245.208068847656,
+				296.033508300781
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 9,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-E-attack_0-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-E-attack_0-1.png",
+			"physics_tick": 1108,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "0dd2c4631af9e8d879420d61f67f964d89d387513ec369c71230d028002b9225",
+			"visible_body_viewport": [
+				376.580200195312,
+				187.731597900391,
+				354.478515625,
+				275.748565673828
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 9,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-E-attack_0-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-E-attack_0-2.png",
+			"physics_tick": 1109,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "d8391873c975bf63f1a118bce7fb8c7d6dadfc6f85f702d721b34682eac612e9",
+			"visible_body_viewport": [
+				429.26416015625,
+				188.999404907227,
+				271.875244140625,
+				294.1318359375
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 9,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-E-idle_0-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-E-idle_0-0.png",
+			"physics_tick": 1112,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_0",
+			"sha256": "9ed6163c2b45827fda68b0d5f29dba776f4fd2527fd1eea3c0036f9203019cab",
+			"visible_body_viewport": [
+				393.230926513672,
+				200.029357910156,
+				329.632476806641,
+				244.940795898438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 9,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-E-idle_0-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-E-idle_0-1.png",
+			"physics_tick": 1149,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_0",
+			"sha256": "d31e4c0aa7eadbad30d73c4151f2e1271beef097182882e1edc59903e0909047",
+			"visible_body_viewport": [
+				359.539215087891,
+				226.653350830078,
+				365.145355224609,
+				218.316802978516
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 9,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-SE-attack_1-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SE-attack_1-0.png",
+			"physics_tick": 1210,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "7b4ea2edfd9d89f81f5b4956501c69a15f243d6c430772c6901125b64a523094",
+			"visible_body_viewport": [
+				471.541412353516,
+				182.026458740234,
+				235.451751708984,
+				283.355438232422
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 10,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-SE-attack_1-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SE-attack_1-1.png",
+			"physics_tick": 1269,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "3c82293f6473d6db081872927d5339a261bb7eb60d0073cd61d8fb9f02bc6c96",
+			"visible_body_viewport": [
+				436.418762207031,
+				169.982269287109,
+				266.671875,
+				290.328369140625
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 10,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-SE-attack_1-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SE-attack_1-2.png",
+			"physics_tick": 1270,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "2f37e7c749d1de68103f7811a9cfe6f526ae1c5e865c886fb803389c9974c8eb",
+			"visible_body_viewport": [
+				478.045593261719,
+				193.436737060547,
+				216.589599609375,
+				294.131805419922
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 10,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-SE-idle_1-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SE-idle_1-0.png",
+			"physics_tick": 1273,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_1",
+			"sha256": "63523df08d73dd5c5f4434bc67e440a5073a19557ded674fc3475e87cba5fc1e",
+			"visible_body_viewport": [
+				441.492034912109,
+				183.167495727539,
+				260.427886962891,
+				261.802673339844
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 10,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-SE-idle_1-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SE-idle_1-1.png",
+			"physics_tick": 1310,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_1",
+			"sha256": "da9c7f3c8523a7b338156d78b09dced1774cc59d892e1f6cd7184534e4bd148a",
+			"visible_body_viewport": [
+				438.76025390625,
+				223.990966796875,
+				298.672546386719,
+				220.979187011719
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 10,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-S-attack_2-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-S-attack_2-0.png",
+			"physics_tick": 1371,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "85f71d3c87ac38b4ece7f2f3f1dc95433f046aff48d6eab40197fd0a2be71847",
+			"visible_body_viewport": [
+				508.87548828125,
+				177.842697143555,
+				257.696166992188,
+				332.799987792969
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 11,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-S-attack_2-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-S-attack_2-1.png",
+			"physics_tick": 1430,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "27fcc4e30d81e424431d335c0e5c72e858c80c7f64fb798d0dd1e320e58d8a8f",
+			"visible_body_viewport": [
+				448.776733398438,
+				203.579223632812,
+				317.794860839844,
+				288.426635742188
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 11,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-S-attack_2-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-S-attack_2-2.png",
+			"physics_tick": 1431,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "3674aa3814f43f209ae9ad48ac9ef7de987c93e1ebce6e9dcea7b75e7aebfc56",
+			"visible_body_viewport": [
+				485.2001953125,
+				217.778686523438,
+				292.298461914062,
+				302.626098632812
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 11,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-S-idle_2-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-S-idle_2-0.png",
+			"physics_tick": 1434,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_2",
+			"sha256": "4fb505794102f0cc8146dcd2bffde8b43e0db80a4a3625f5affa9ccb80b3d388",
+			"visible_body_viewport": [
+				522.924560546875,
+				236.859222412109,
+				253.663513183594,
+				251.977142333984
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 11,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-S-idle_2-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-S-idle_2-1.png",
+			"physics_tick": 1471,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_2",
+			"sha256": "ff31ef66168315b8244584f998501f7ce4d91cddb5c4999c23a672502fe67286",
+			"visible_body_viewport": [
+				440.9716796875,
+				260.630645751953,
+				414.642272949219,
+				229.156555175781
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 11,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-SW-attack_3-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SW-attack_3-0.png",
+			"physics_tick": 1532,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "2c30907f767272351d929d2678b208d2d50463c71391c3d7563c298947f0802d",
+			"visible_body_viewport": [
+				543.477783203125,
+				179.617630004883,
+				271.354919433594,
+				306.176025390625
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 12,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-SW-attack_3-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SW-attack_3-1.png",
+			"physics_tick": 1591,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "fcfbdb52885ea261c5c36b9d649205df1237c3ed8a2d42397260193cc9e0e16c",
+			"visible_body_viewport": [
+				516.16015625,
+				192.04216003418,
+				332.3642578125,
+				275.114624023438
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 12,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-SW-attack_3-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SW-attack_3-2.png",
+			"physics_tick": 1592,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "ab9cf9505e14544aa09d177d0f7374ec84e9d0a395c9330c35acb92cc681de54",
+			"visible_body_viewport": [
+				537.103637695312,
+				202.691757202148,
+				295.030151367188,
+				290.201538085938
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 12,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-SW-idle_3-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SW-idle_3-0.png",
+			"physics_tick": 1595,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_3",
+			"sha256": "06fc160144c65d2a776618be39bfc27a8489dd19ce7997c27f86a7317e1e05bc",
+			"visible_body_viewport": [
+				586.340393066406,
+				210.235229492188,
+				272.200500488281,
+				240.566833496094
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 12,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-SW-idle_3-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-SW-idle_3-1.png",
+			"physics_tick": 1632,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_3",
+			"sha256": "6ca2fd657f3467aa29002f6dddf122b07ef80aa86038b58b14844c6f4ca0de4c",
+			"visible_body_viewport": [
+				501.460693359375,
+				247.318649291992,
+				378.544006347656,
+				231.05827331543
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 12,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-W-attack_4-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-W-attack_4-0.png",
+			"physics_tick": 1693,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "ce8799baadcbd3a2d8b38f2c2d99e5ce5a47b887676fa709e6000b98ea2b831b",
+			"visible_body_viewport": [
+				565.331848144531,
+				180.505096435547,
+				285.013732910156,
+				310.613311767578
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 13,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-W-attack_4-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-W-attack_4-1.png",
+			"physics_tick": 1752,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "45045d1e2112ba4a78392406f3ec66ba00301068f8630bde3a0fbc41d9a73a9e",
+			"visible_body_viewport": [
+				549.851867675781,
+				185.829895019531,
+				350.575988769531,
+				296.413848876953
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 13,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-W-attack_4-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-W-attack_4-2.png",
+			"physics_tick": 1753,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "271269b261937eccbd6d291c07b70128aebfaaa614bf400adc2b891f051bf0e2",
+			"visible_body_viewport": [
+				568.063598632812,
+				193.817092895508,
+				291.387817382812,
+				299.963745117188
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 13,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-W-idle_4-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-W-idle_4-0.png",
+			"physics_tick": 1756,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_4",
+			"sha256": "7c259e45e28bb5fcb001285a90fc511f62802f3f2aa8106fe9b3f36d419815cb",
+			"visible_body_viewport": [
+				567.608337402344,
+				214.228820800781,
+				300.493713378906,
+				236.95361328125
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 13,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-W-idle_4-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-W-idle_4-1.png",
+			"physics_tick": 1793,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_4",
+			"sha256": "fd5938415625b8a293e7c0a4377f2eaa23c128a6edb418813e046c4a41138e42",
+			"visible_body_viewport": [
+				555.3154296875,
+				236.859222412109,
+				334.640747070312,
+				228.966400146484
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 13,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-NW-attack_5-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NW-attack_5-0.png",
+			"physics_tick": 1854,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "cf4b179ef378d0335bacc180b3e0ecd6a5ec0535636d00c7e069bff6b90c073c",
+			"visible_body_viewport": [
+				594.470642089844,
+				194.704559326172,
+				258.606750488281,
+				307.063446044922
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 14,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-NW-attack_5-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NW-attack_5-1.png",
+			"physics_tick": 1913,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "e7f42fd39b9b21dfd8aafdc557c93227fcf421b51b95dafc8284ee1e1cf3a4a1",
+			"visible_body_viewport": [
+				505.233123779297,
+				254.164825439453,
+				339.648956298828,
+				242.278381347656
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 14,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-NW-attack_5-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NW-attack_5-2.png",
+			"physics_tick": 1914,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "b0d8920232333fd29839e67dc4684b0bbd9f195eb700f46eb7fd9dec8545e27a",
+			"visible_body_viewport": [
+				589.917724609375,
+				208.904022216797,
+				270.4443359375,
+				298.188781738281
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 14,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-NW-idle_5-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NW-idle_5-0.png",
+			"physics_tick": 1917,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_5",
+			"sha256": "a52048b57e620ec4ebf851a58fb05ac77b829a555a5072f58a656f0a4a85d5f2",
+			"visible_body_viewport": [
+				564.876586914062,
+				222.216018676758,
+				281.371337890625,
+				235.622421264648
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 14,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-NW-idle_5-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NW-idle_5-1.png",
+			"physics_tick": 1954,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_5",
+			"sha256": "42e92e9e5538f95e790cd0b0bababf519d453901ea860b9ac79834dce98391a0",
+			"visible_body_viewport": [
+				540.290710449219,
+				251.502410888672,
+				333.274841308594,
+				219.647979736328
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 14,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-N-attack_6-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-N-attack_6-0.png",
+			"physics_tick": 2015,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "a9af5c724a25513163bc1a29b99428bcc50faf84a6b9644a55a5d127d44fca5c",
+			"visible_body_viewport": [
+				558.604675292969,
+				253.567138671875,
+				194.568298339844,
+				274.933532714844
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 15,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-N-attack_6-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-N-attack_6-1.png",
+			"physics_tick": 2074,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "c3083f9e26a4bc3af62ed1bac340485a07834715b37c8c4e1d2ad72ee80f1511",
+			"visible_body_viewport": [
+				520.137023925781,
+				273.670989990234,
+				283.768615722656,
+				252.112945556641
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 15,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-N-attack_6-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-N-attack_6-2.png",
+			"physics_tick": 2075,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "9b9698b84e4a4ec3410d180f656b4abc227f16503f6ddc102455e37ba36cbf78",
+			"visible_body_viewport": [
+				536.304565429688,
+				294.861511230469,
+				249.760986328125,
+				238.529296875
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 15,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-N-idle_6-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-N-idle_6-0.png",
+			"physics_tick": 2078,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_6",
+			"sha256": "c6e939cf293c6dce06cfe80cb502b77cc11d368ac1f2262666a444d24cfd8e4a",
+			"visible_body_viewport": [
+				465.167297363281,
+				281.084655761719,
+				307.171325683594,
+				231.924621582031
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 15,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-N-idle_6-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-N-idle_6-1.png",
+			"physics_tick": 2115,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_6",
+			"sha256": "4d46ffb0c18719df556465ef19c147ce8064c6517c244e778a1dddbcd31bbd52",
+			"visible_body_viewport": [
+				477.308471679688,
+				283.451232910156,
+				299.886657714844,
+				233.10791015625
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 15,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "special-NE-attack_7-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NE-attack_7-0.png",
+			"physics_tick": 2176,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "a2a1de9441ab844e9af1d9d00ba730b3d646a3569d8faf71d18a64c1f11e5be7",
+			"visible_body_viewport": [
+				488.359405517578,
+				237.810089111328,
+				214.080841064453,
+				252.656280517578
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.983333333333335,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-NE-attack_7-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NE-attack_7-1.png",
+			"physics_tick": 2235,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "c1e06ad940520dd32766ce912a738df95d9c4c189f7b0d33f71fb2e910412f26",
+			"visible_body_viewport": [
+				457.69677734375,
+				246.503631591797,
+				238.053466796875,
+				249.396209716797
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.11666666666667,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "special-NE-attack_7-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NE-attack_7-2.png",
+			"physics_tick": 2236,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "20fc83be00c6720a06086966331991749e4a7a92e2d4ea109266d8ccc90ec5c2",
+			"visible_body_viewport": [
+				496.164428710938,
+				282.364532470703,
+				233.593444824219,
+				223.315582275391
+			]
+		},
+		{
+			"actor_hp": 26100,
+			"actor_world": [
+				25481.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 1.15,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "special-NE-idle_7-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/special-NE-idle_7-1.png",
+			"physics_tick": 2275,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "bd8005abfa06a5dcdfe2754849083dadb1265b51ad24982574360569cf7ad252",
+			"visible_body_viewport": [
+				494.306091308594,
+				264.518615722656,
+				263.463195800781,
+				239.024353027344
+			]
+		},
+		{
+			"actor_hp": 106,
+			"actor_world": [
+				25521.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/lifecycle-hit.png",
+			"physics_tick": 2346,
+			"player_hp": 1735,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "283530390560e95fc78f7a15f2ebc3228729ee062ff06186214ae6b57ce4b3bf",
+			"visible_body_viewport": [
+				495.034545898438,
+				277.771423339844,
+				173.375732421875,
+				206.602233886719
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25521.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 0,
+			"ground_drop_count": 2,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/lifecycle-ground-drop.png",
+			"physics_tick": 2545,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "ca0c256e9bfb54ba9df1366bcc73a0c17a37d1ffb9fe7ffe0570e444148d89c6",
+			"visible_body_viewport": [
+				511.3037109375,
+				264.518615722656,
+				264.67724609375,
+				242.57421875
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25521.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 0,
+			"ground_drop_count": 2,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/lifecycle-death-0.png",
+			"physics_tick": 2547,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "1a0f4bccfcd4fc6c79af72b226d5f888d1e02c3fadcf718174dc0fd02a9395af",
+			"visible_body_viewport": [
+				503.047729492188,
+				270.671691894531,
+				204.699951171875,
+				205.182312011719
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25521.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/lifecycle-manual-pickup.png",
+			"physics_tick": 2558,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "07470af3531225fee76ce9a7fdf41e5b4eab4844de6fea1bf4636276db974378",
+			"visible_body_viewport": [
+				503.047729492188,
+				270.671691894531,
+				204.699951171875,
+				205.182312011719
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25521.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 1,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/lifecycle-death-1.png",
+			"physics_tick": 2561,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "194d7c8d0669d32f40f16bcd890b3864af9275aa830fe2217459230bfd1735f5",
+			"visible_body_viewport": [
+				455.697204589844,
+				324.629669189453,
+				287.745483398438,
+				141.284698486328
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25521.705078125,
+				22773.705078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 16,
+			"frame": 2,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/qa/family-retry03/captures/albino-phoenix/lifecycle-death-2.png",
+			"physics_tick": 2575,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "cf65de91ee3b1b88db3291c160dfbc769ae061eb19b671442a640616de07e7bc",
+			"visible_body_viewport": [
+				450.597900390625,
+				360.128326416016,
+				303.771850585938,
+				100.816223144531
+			]
+		}
+	],
+	"scope": "original-based albino_phoenix_project_source, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-attack-2.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-attack-2.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-attack-2.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-attack-2.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-attack-2.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-attack-2.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-attack-2.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-attack-2.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"special-NE-idle_7-0.png",
+		"special-E-attack_0-0.png",
+		"special-E-attack_0-1.png",
+		"boss-nova-E.png",
+		"special-E-attack_0-2.png",
+		"special-E-idle_0-0.png",
+		"special-E-idle_0-1.png",
+		"special-SE-attack_1-0.png",
+		"special-SE-attack_1-1.png",
+		"boss-nova-SE.png",
+		"special-SE-attack_1-2.png",
+		"special-SE-idle_1-0.png",
+		"special-SE-idle_1-1.png",
+		"special-S-attack_2-0.png",
+		"special-S-attack_2-1.png",
+		"boss-nova-S.png",
+		"special-S-attack_2-2.png",
+		"special-S-idle_2-0.png",
+		"special-S-idle_2-1.png",
+		"special-SW-attack_3-0.png",
+		"special-SW-attack_3-1.png",
+		"boss-nova-SW.png",
+		"special-SW-attack_3-2.png",
+		"special-SW-idle_3-0.png",
+		"special-SW-idle_3-1.png",
+		"special-W-attack_4-0.png",
+		"special-W-attack_4-1.png",
+		"boss-nova-W.png",
+		"special-W-attack_4-2.png",
+		"special-W-idle_4-0.png",
+		"special-W-idle_4-1.png",
+		"special-NW-attack_5-0.png",
+		"special-NW-attack_5-1.png",
+		"boss-nova-NW.png",
+		"special-NW-attack_5-2.png",
+		"special-NW-idle_5-0.png",
+		"special-NW-idle_5-1.png",
+		"special-N-attack_6-0.png",
+		"special-N-attack_6-1.png",
+		"boss-nova-N.png",
+		"special-N-attack_6-2.png",
+		"special-N-idle_6-0.png",
+		"special-N-idle_6-1.png",
+		"special-NE-attack_7-0.png",
+		"special-NE-attack_7-1.png",
+		"boss-nova-NE.png",
+		"special-NE-attack_7-2.png",
+		"special-NE-idle_7-1.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_battle_scope": {
+			"finishing_hits": "actual equipped weapon and native physics/death/drop",
+			"original_max_hp": 26100,
+			"phase": "original-HP boss finisher, not entire fight",
+			"prior_battle_damage": 25800,
+			"prior_damage_pipeline": "TwilightMonster.take_damage"
+		},
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "알비노 피닉스",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25505.705078125,
+				22773.705078125
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_1.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"special_probe": "Real production AI special in eight directions; positions and full player healing are QA inputs; boss stats and skill configuration unchanged",
+		"special_visual_origin": {
+			"all8_player_positions_clear": true,
+			"map_modified": false,
+			"point": [
+				25481.705078125,
+				22773.705078125
+			]
+		},
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25082.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25312.0,
+					23074.0
+				],
+				"target": [
+					25312.0,
+					22684.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25036.228515625,
+					22879.771484375
+				],
+				"target": [
+					25312.0,
+					22604.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25587.771484375,
+					23199.771484375
+				],
+				"target": [
+					25312.0,
+					22924.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22614.0
+				],
+				"target": [
+					25472.0,
+					23004.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25196.228515625,
+					22728.228515625
+				],
+				"target": [
+					25472.0,
+					23004.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25747.771484375,
+					22728.228515625
+				],
+				"target": [
+					25472.0,
+					23004.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25702.0,
+					23004.0
+				],
+				"target": [
+					25312.0,
+					23004.0
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25521.705078125,
+				22773.705078125
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25481.705078125,
+				22773.705078125
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

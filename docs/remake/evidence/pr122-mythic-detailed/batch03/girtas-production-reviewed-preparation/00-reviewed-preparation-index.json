@@ -1,0 +1,80 @@
+{
+  "key": "transform:267",
+  "status": "REVIEWED_PREPARATION_ONLY_NOT_APPLIED_NOT_APPROVED",
+  "isolated_negative_cases": 33,
+  "additive_test_parse": "PASS_OFFICIAL_4_7_2_CHECK_ONLY",
+  "source_pins_sha256": "75758f69b64abffda0dce1b793bdb69d293742c8d5d53d5433c7fb4e43822c35",
+  "protected_data_unchanged": {
+    "data/pr122_native_locomotion_staging.json": "c8353ab8f32942fbcdc427b8c51ce150f56956a405523a5f1f70d1e5d7de3d34",
+    "data/pr122_native_production_approvals.json": "ef4cf576f7ac3c3c1aaf992d3fb69b13d24fffa8b97a8c8d9f9f8550d6ccc1ec",
+    "data/combat_animation_profiles.json": "22550e0dfc48a07bfb0b69793560ae1c0a9f5719e5aa786fc16e2ea4d2867910",
+    "data/catalog_v19.json": "b0f09604f1583ac691e2de587bc5e51a3ec152b726e36294b66ef75d1edf4c57",
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json": "30c3b9ca02937cb84ff4e76a76d50f486d531cf78dc61c5b8477262460e7aa48",
+    "tests/pr122_native_default_main_connection_test.gd": "7a87758f959adb8d205fb0f32294ce1423524b4eec11e084c180b407fc5f3b7b"
+  },
+  "actual_Main_test_run": false,
+  "production_applied": false,
+  "approvals_added": 0,
+  "files": [
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/prepare-girtas-production-connection.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/prepare-girtas-production-connection.py",
+      "sha256": "438bc0ae7de0860944335cce59e508c173db19b46fdeb06dc33de8be1a9c516a",
+      "bytes": 31716
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/approve-girtas-production-r001.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/approve-girtas-production-r001.py",
+      "sha256": "0bbf5326fd1e79fbacc0e8f632c1df8b1c5b28d8962c2d9c96e16e82952b943c",
+      "bytes": 12967
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/commit-girtas-production-r001.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/commit-girtas-production-r001.py",
+      "sha256": "5fb04a9923ce8b18d9b210953ac31fa6e9ce6aef205c146a4ee4ae7aac578461",
+      "bytes": 10540
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/girtas_review_guard.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/girtas_review_guard.py",
+      "sha256": "c45becf1e68e927bf6eb908c5f8304fc1ffeaa64b2be5daaf2fefb187465655f",
+      "bytes": 3685
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/pr122_girtas_native_default_main_connection_test.gd",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/pr122_girtas_native_default_main_connection_test.gd",
+      "sha256": "ededa259eddbbfbea7eb6c8223a849639479b8c2d3ef188bf10704ba8aa61e1b",
+      "bytes": 20028
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/final48-quality-REQUIRED-template.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/final48-quality-REQUIRED-template.json",
+      "sha256": "436bd541adc9330633562342c54b1ff0087efda6d3fe03ffc58bb9df78475120",
+      "bytes": 1719
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/negative-checks.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/negative-checks.py",
+      "sha256": "1fc5dee855370682253e65495da49c414fa7eaf4e61257456bec7c3d165c9f08",
+      "bytes": 6705
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/negative-checks.log",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/negative-checks.log",
+      "sha256": "1d1f84c5815f07116a0b9dcefb42869353bda050b0a41d6a404e9c0667ea021c",
+      "bytes": 204
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/static-review-not-execution.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/static-review-not-execution.json",
+      "sha256": "693bef69addd614877d64dae5e971d630c8cd41d184b2b94b073f7f2420a1e22",
+      "bytes": 2293
+    },
+    {
+      "original": "/workspace/scratch/pr122-girtas-production-reviewed/HANDOFF.txt",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-reviewed-preparation/HANDOFF.txt",
+      "sha256": "56d5eafe0f40c960861186e1502eeeef5a9e6b6563477f2604e6c7324014d4a5",
+      "bytes": 4929
+    }
+  ]
+}

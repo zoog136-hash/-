@@ -1,0 +1,106 @@
+{
+  "schema": "PR122-independent-three-tool-explicit-direction-only-readonly-audit-v1",
+  "status": "PASS_READONLY_DIRECTION_WHITELIST_ONLY_PROPOSAL",
+  "proposal_pin": {
+    "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/three-tool-direction-only-proposal-pins-v01.json",
+    "sha256": "dc787f187cbeb6c885c49e04432f279c21cfd3003a586f7f55f9e724dbbacbb6",
+    "bytes": 1863
+  },
+  "files": [
+    {
+      "source": {
+        "path": "/workspace/scratch/mythic413-new-clip-integration-proposal-20261020-v05/integrate_new_413_clip_retaining_profile_v05.py",
+        "sha256": "f93a25b0a63a8e8c084652944c9340fdc3872f298491d6a7f9b7e7a9f7d272cc",
+        "bytes": 42692
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/integrate_new_413_clip_retaining_profile_v06.py",
+        "sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+        "bytes": 42709
+      },
+      "AST_parse": true,
+      "exact_original_bytes_after_restoring_only_direction_tuple_and_error_label": true,
+      "allowed_direction_set": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "other_byte_changes": 0
+    },
+    {
+      "source": {
+        "path": "/workspace/scratch/pr122-author-six-pose-atlas-v02.py",
+        "sha256": "596c51fb20eb04d9df49babc373e72a65264eb1bf852b4d46f6134699527ac0c",
+        "bytes": 7117
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/pr122-author-six-pose-atlas-v03.py",
+        "sha256": "bb54dbc139f7d48cdb629eb895f44ed5b8b3a01b063f42c569bd062492921a54",
+        "bytes": 7139
+      },
+      "AST_parse": true,
+      "exact_original_bytes_after_restoring_only_direction_tuple_and_error_label": true,
+      "allowed_direction_set": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "other_byte_changes": 0
+    },
+    {
+      "source": {
+        "path": "/workspace/scratch/pr122-build-authored-clip-request-v03.py",
+        "sha256": "bf14344460fafc78e3a1e261d5d1052558bc6f037a80f1cec706ebbcdc44d727",
+        "bytes": 9572
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/pr122-build-authored-clip-request-v04.py",
+        "sha256": "1a3d7f96af190bd4fa6f52066830f724f44b2d90e408926b6cf77c606391e26a",
+        "bytes": 9594
+      },
+      "AST_parse": true,
+      "exact_original_bytes_after_restoring_only_direction_tuple_and_error_label": true,
+      "allowed_direction_set": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "other_byte_changes": 0
+    }
+  ],
+  "canonical_input_pins": {
+    "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/canonical-input-pins.json",
+    "sha256": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+    "bytes": 2710
+  },
+  "canonical_pins_exact_old_copy": true,
+  "findings": [],
+  "reviewed_scope": [
+    "Only transform:413 missing-clip direction membership expands from NW/N/NE to the eight explicit existing direction labels. Membership tuple order does not change the canonical direction/index mapping.",
+    "Every other original source byte is preserved after restoring the one tuple and its two affected labels across the3 files. Existing slot rejection, caller-pinned exact source review, retained r010 profile literals, user WALK exclusion and scoped actual Godot checks remain unchanged.",
+    "No profile/policy/quality/assets/game behavior or existing selected clip is changed by this read-only proposal."
+  ],
+  "limits": [
+    "This is a static read-only proposal audit; no tool execution, game tests, repository writes or Git actions were performed.",
+    "Future adoption still requires the existing exact request/source review and all unchanged preflight/game checks."
+  ],
+  "images_viewed": 0,
+  "tests_run": 0,
+  "repo_writes": 0,
+  "actor_approvals_added": 0
+}

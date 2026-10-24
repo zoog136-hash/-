@@ -1,0 +1,160 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 100.0,
+			"capture_count": 19,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/resume210-min026/SpriteFrames.tres",
+			"key": "monster:왜곡의 제니스 퀸",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/resume210-min026/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/resume210-min026/zenith_queen_run/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 100.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"run_0:0",
+						"run_0:1",
+						"run_0:2",
+						"run_0:3",
+						"run_0:4",
+						"run_0:5"
+					],
+					"simulated_seconds": 1.05,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.460483
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 100.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"run_1:0",
+						"run_1:1",
+						"run_1:2",
+						"run_1:3",
+						"run_1:4",
+						"run_1:5"
+					],
+					"simulated_seconds": 1.25,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.253944
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 100.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"run_3:0",
+						"run_3:1",
+						"run_3:2",
+						"run_3:3",
+						"run_3:4",
+						"run_3:5"
+					],
+					"simulated_seconds": 1.05,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.058988
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 100.0,
+			"capture_count": 14,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/resume210-min026/SpriteFrames.tres",
+			"key": "monster:왜곡의 제니스 퀸",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/resume210-min026/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/resume210-min026/zenith_queen_idle/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 100.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"idle_5:1",
+						"idle_5:2",
+						"idle_5:3",
+						"idle_5:4",
+						"idle_5:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.466221
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 100.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"idle_1:1",
+						"idle_1:2",
+						"idle_1:3",
+						"idle_1:4",
+						"idle_1:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.474277
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

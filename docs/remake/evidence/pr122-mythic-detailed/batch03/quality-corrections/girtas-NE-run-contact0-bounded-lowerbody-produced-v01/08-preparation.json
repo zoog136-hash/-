@@ -1,0 +1,36 @@
+{
+  "schema": "pr122-bounded-source-repair-preparation-v1",
+  "key": "transform:267",
+  "role": "run",
+  "direction": "NE",
+  "phase": 0,
+  "source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+  "source_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+  "fixed_runtime_canvas": 1936,
+  "status": "WAITING_INDEPENDENTLY_AGREED_PHYSICAL_CONSTRAINTS_NO_GENERATION_YET",
+  "preservation": [
+    "head",
+    "crown",
+    "face",
+    "hair",
+    "near pauldron",
+    "uppercore",
+    "arms",
+    "hands",
+    "entire weapon",
+    "all original RGBA outside explicit lowerbody edit mask"
+  ],
+  "allowed_scope": "one genuine farLEFT support thigh/knee/shin/boot articulation plus directly associated local cloth folds only",
+  "forbidden": [
+    "scale/C retuning",
+    "root-to-fake-foot shift",
+    "padding-only fix",
+    "wholebody regeneration",
+    "six-pose regeneration",
+    "mirror",
+    "load1 copy",
+    "new completion credit"
+  ],
+  "generated_image_calls": 0,
+  "created_utc": "2026-10-19T17:32:15.616495+00:00"
+}

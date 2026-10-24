@@ -1,0 +1,420 @@
+{
+  "schema": "pr122-independent-two-new-413-walk-source-hold-v1",
+  "status": "HOLD_SOURCE_AND_PHYSICAL_NOT_APPROVED",
+  "actor": "transform:413",
+  "source_approval": false,
+  "actor_approval_added": 0,
+  "counts_changed": false,
+  "production_binding": "NOT_COMPILED; retained r01010tracks60poses unchanged",
+  "clock_contract": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/retained-r010-clock-and-old10-contract-v01.json",
+    "sha256": "b786e7c1166cc4dacff0796b3e3ad25385790e4559713425d74c8ea0d3d854c7",
+    "phase_Player_translation_world": 16.8,
+    "C_intent": 1024,
+    "pixel_scale": 0.237068965517,
+    "Player_scale_xy": [
+      0.2133620689653,
+      0.237068965517
+    ]
+  },
+  "private_review_ledger_immutable_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-view04-frozen.json",
+    "sha256": "a104db65e14d043248cd42264a622da92cbcdcfb3cee302c24264d474368c82d",
+    "bytes": 2391
+  },
+  "NW_walk_v02": {
+    "source": {
+      "path": "/workspace/scratch/mythic413-NW-walk-author-20261020-v02/thunder_female-NW-walk-v02-raw.png",
+      "sha256": "e0d06e3f9bccd0b16972b97b089c58acdabe6d6840b558ccff0d64b0afcabbc9",
+      "bytes": 2061175
+    },
+    "request": {
+      "path": "/workspace/scratch/mythic413-NW-walk-author-20261020-v02/exact-image-service-request-v02.json",
+      "sha256": "a0a6b49bad80d0a84d50170768559ba6f5bc43eacc9d5a2d6d179b987a3aeba9",
+      "bytes": 4520
+    },
+    "appearance_findings": [
+      "Correct true NW rear three-quarter, rear bun/ribbon and blue/gold backbodice are visible; high material detail.",
+      "Staff-gripping arm traces to anatomical LEFT near shoulder on screen-left; anatomical RIGHT far arm is free to screen-right. Wrong hand is a source identity defect, not merely weapon leaning across body."
+    ],
+    "appearance_status": "HOLD_WRONG_ANATOMICAL_WEAPON_HAND",
+    "actual_whole6_findings": [
+      "NearLEFT boot is lifted in intended LEFT-support0/1/2 and4 while farRIGHT leg stays extended; intended alternating LLL/RRR gait is not present.",
+      "No actual compilation roots exist; author annotations are approximate \u00b112native and not a ground-contact proof. Required55.6771594/50.10944346native per phase cannot be inferred from abstract guide18."
+    ],
+    "physical_status": "HOLD_ACTUAL_SUPPORT_AND_CLOCK_NOT_MET",
+    "author_approx_contact_annotations": {
+      "path": "/workspace/scratch/mythic413-NW-walk-author-20261020-v02/actual-v02-author-approx-contact-annotations-HOLD.json",
+      "sha256": "2d3e7787eae794f2efb398877700f6b286d2453e3b9054efae0d5fae9ac071ae",
+      "bytes": 5012
+    },
+    "geometry": {
+      "image_size": [
+        1024,
+        1536
+      ],
+      "alpha16_cell_bounds": [
+        {
+          "pose": 0,
+          "alpha16_cell_bbox": [
+            136,
+            3,
+            471,
+            512
+          ],
+          "cell_edge_touch": true
+        },
+        {
+          "pose": 1,
+          "alpha16_cell_bbox": [
+            150,
+            2,
+            451,
+            512
+          ],
+          "cell_edge_touch": true
+        },
+        {
+          "pose": 2,
+          "alpha16_cell_bbox": [
+            135,
+            0,
+            460,
+            512
+          ],
+          "cell_edge_touch": true
+        },
+        {
+          "pose": 3,
+          "alpha16_cell_bbox": [
+            146,
+            0,
+            473,
+            512
+          ],
+          "cell_edge_touch": true
+        },
+        {
+          "pose": 4,
+          "alpha16_cell_bbox": [
+            130,
+            0,
+            453,
+            460
+          ],
+          "cell_edge_touch": true
+        },
+        {
+          "pose": 5,
+          "alpha16_cell_bbox": [
+            133,
+            0,
+            472,
+            469
+          ],
+          "cell_edge_touch": true
+        }
+      ],
+      "six_largest_global_components": [
+        {
+          "bbox": [
+            136,
+            3,
+            471,
+            488
+          ],
+          "alpha16_pixels": 55799
+        },
+        {
+          "bbox": [
+            662,
+            2,
+            963,
+            488
+          ],
+          "alpha16_pixels": 55367
+        },
+        {
+          "bbox": [
+            135,
+            505,
+            460,
+            986
+          ],
+          "alpha16_pixels": 57754
+        },
+        {
+          "bbox": [
+            659,
+            505,
+            985,
+            985
+          ],
+          "alpha16_pixels": 56314
+        },
+        {
+          "bbox": [
+            130,
+            992,
+            453,
+            1484
+          ],
+          "alpha16_pixels": 57123
+        },
+        {
+          "bbox": [
+            645,
+            988,
+            984,
+            1493
+          ],
+          "alpha16_pixels": 62387
+        }
+      ],
+      "geometry_interpretation": "Cell-edge touch alone does not prove missing pixels. NW major staff components cross nominal row boundaries; preserve global source alpha and separate actor components. Npose4 zero top margin requires actual tip completeness check."
+    }
+  },
+  "N_walk_v01": {
+    "source": {
+      "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/thunder_female-N-walk-v01-service.png",
+      "sha256": "cfd051b8b3589dddca9e74af68162fc2f9fe1f5dbcaf5de5cdf3086f3772e1f8",
+      "bytes": 1830230
+    },
+    "request": {
+      "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/request-v03.json",
+      "sha256": "e6b0b7674f8e7dda327d26acfed3dcae86cbb3bf4f19ddf8848db3af4fc25078",
+      "bytes": 8178
+    },
+    "appearance_findings": [
+      "Pure N back with anatomical RIGHT screen-right shoulder\u2192forearm\u2192staff grip verified; LEFT hand free.",
+      "Bun/ribbon, blue/gold back, white pleated skirt, dark thigh boots and gold heels remain readable."
+    ],
+    "appearance_status": "LIMITED_IDENTITY_ORIENTATION_FINDINGS_POSITIVE_NOT_FULL_SOURCE_PASS",
+    "actual_whole6_findings": [
+      "Actual apparent support order L,R,R,R,L,L differs from requested L,L,L,R,R,R.",
+      "Grouping-only reorder4,5,0,1,2,3 can group support legs but stance heel source travel remains only14 then8nativeY versus70.8654545 required perphase.",
+      "Foot toes are occluded/ambiguous; no fabricated toe-ground contact coordinates.",
+      "C/root shifts moving the whole body cannot replace genuine source stride."
+    ],
+    "physical_status": "HOLD_SHORT_ACTUAL_STANCE_TRAVEL",
+    "author_actual_landmarks": {
+      "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/actual-source-foot-landmarks-v01.json",
+      "sha256": "3a7b24dbaa49cc803d086c180332933b5bce5ffcaa62e699e99d884e7afff2e6",
+      "bytes": 6158
+    },
+    "visible_gold_heel_core_points_native": [
+      [
+        257.5,
+        484
+      ],
+      [
+        248.5,
+        486
+      ],
+      [
+        255,
+        454
+      ],
+      [
+        248.5,
+        476
+      ],
+      [
+        256,
+        462
+      ],
+      [
+        248.5,
+        476
+      ]
+    ],
+    "heel_marker_uncertainty_native": 3,
+    "uniform_root_counterfactual": [
+      256,
+      480
+    ],
+    "group_only_reorder_not_approved": [
+      4,
+      5,
+      0,
+      1,
+      2,
+      3
+    ],
+    "same_heel_stance_drift_checks": [
+      {
+        "phases": [
+          4,
+          5
+        ],
+        "same_visible_left_heel_delta_native": [
+          -7.5,
+          14
+        ],
+        "required_native_delta": [
+          0,
+          70.8654545455267
+        ],
+        "counterfactual_uniform_root_Player_world_drift": [
+          -1.6002155172397499,
+          -13.481034482762
+        ],
+        "annotation_delta_uncertainty_world": [
+          1.2801724137918,
+          1.422413793102
+        ],
+        "minimum_absolute_Y_drift_after_uncertainty": 12.05862068966
+      },
+      {
+        "phases": [
+          5,
+          0
+        ],
+        "same_visible_left_heel_delta_native": [
+          9.0,
+          8
+        ],
+        "required_native_delta": [
+          0,
+          70.8654545455267
+        ],
+        "counterfactual_uniform_root_Player_world_drift": [
+          1.9202586206877,
+          -14.903448275864001
+        ],
+        "annotation_delta_uncertainty_world": [
+          1.2801724137918,
+          1.422413793102
+        ],
+        "minimum_absolute_Y_drift_after_uncertainty": 13.481034482762
+      }
+    ],
+    "geometry": {
+      "image_size": [
+        1024,
+        1536
+      ],
+      "alpha16_cell_bounds": [
+        {
+          "pose": 0,
+          "alpha16_cell_bbox": [
+            129,
+            12,
+            374,
+            488
+          ],
+          "cell_edge_touch": false
+        },
+        {
+          "pose": 1,
+          "alpha16_cell_bbox": [
+            128,
+            12,
+            351,
+            490
+          ],
+          "cell_edge_touch": false
+        },
+        {
+          "pose": 2,
+          "alpha16_cell_bbox": [
+            137,
+            8,
+            377,
+            475
+          ],
+          "cell_edge_touch": false
+        },
+        {
+          "pose": 3,
+          "alpha16_cell_bbox": [
+            130,
+            14,
+            373,
+            482
+          ],
+          "cell_edge_touch": false
+        },
+        {
+          "pose": 4,
+          "alpha16_cell_bbox": [
+            134,
+            0,
+            380,
+            465
+          ],
+          "cell_edge_touch": true
+        },
+        {
+          "pose": 5,
+          "alpha16_cell_bbox": [
+            126,
+            6,
+            368,
+            479
+          ],
+          "cell_edge_touch": false
+        }
+      ],
+      "six_largest_global_components": [
+        {
+          "bbox": [
+            129,
+            12,
+            374,
+            488
+          ],
+          "alpha16_pixels": 43994
+        },
+        {
+          "bbox": [
+            640,
+            12,
+            863,
+            490
+          ],
+          "alpha16_pixels": 45068
+        },
+        {
+          "bbox": [
+            137,
+            520,
+            377,
+            987
+          ],
+          "alpha16_pixels": 44087
+        },
+        {
+          "bbox": [
+            642,
+            526,
+            885,
+            994
+          ],
+          "alpha16_pixels": 43431
+        },
+        {
+          "bbox": [
+            134,
+            1024,
+            380,
+            1489
+          ],
+          "alpha16_pixels": 44401
+        },
+        {
+          "bbox": [
+            638,
+            1030,
+            880,
+            1503
+          ],
+          "alpha16_pixels": 44840
+        }
+      ],
+      "geometry_interpretation": "Cell-edge touch alone does not prove missing pixels. NW major staff components cross nominal row boundaries; preserve global source alpha and separate actor components. Npose4 zero top margin requires actual tip completeness check."
+    }
+  },
+  "guide_status": "Finite guide arithmetic PASS does not approve actual generated pixels; guide proofs remain separate and immutable.",
+  "next_action": "Controlled individual correct contact0 sources then genuine load/pass/flight poses; preserve all generated raw evidence. No repeated full6 generation solely from this report."
+}

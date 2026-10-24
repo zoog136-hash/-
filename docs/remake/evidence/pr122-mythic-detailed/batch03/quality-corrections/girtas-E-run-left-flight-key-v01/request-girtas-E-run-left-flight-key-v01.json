@@ -1,0 +1,88 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_flight_legart_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 2,
+  "intended_anatomical_support": "NONE_AIR_RIGHTlead_LEFTtrail",
+  "references": [
+    "/workspace/scratch/girtas-E-run-left-flight-key-v01/reference-only-LEFTcompression-exactRGBA-spacious-padding.png",
+    "/workspace/scratch/girtas-E-run-left-flight-key-v01/E-run-AIR2-RIGHTlead-LEFTtrail-spacious-material-guide.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-left-flight-key-v01/reference-only-LEFTcompression-exactRGBA-spacious-padding.png": "60dc37b876039f64dcb362350d534cf594379b86618d5f3c7a825ebac7db2d05",
+    "/workspace/scratch/girtas-E-run-left-flight-key-v01/E-run-AIR2-RIGHTlead-LEFTtrail-spacious-material-guide.png": "d5a9a6084c02286a87692008b112ebffb21419e7ef3463fd14dbf5511284e7f0",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Author missing first flight2 from correct LEFT compressed support277db3fc: nearRIGHT leads and farLEFT folds back/up, both genuine articulated boot chains. Spacious exact-pixel padded reference protects complete hands/rays/weapon; separate six-pose authored roots required.",
+  "prompt": "Create exactly ONE new full-body GIRTAS E RUN phase2 FLIGHT leg-art key, transparent RGBA. Reference1 is the independently correct LEFT compressed-support character, padded without changing one source pixel so all equipment has much MORE EMPTY SPACE. Preserve its rigid helmet/head/shoulder/waist proportions and all model/hand identity, but replace grounded legs with reference2's material FLIGHT skeleton. NEAR anatomical RIGHT is LEADING toward image RIGHT: nearRIGHT hip885,665 -> knee1080,730 -> folded shin/ankle1060,1000 -> complete boot reachingRIGHT1150,1040. FAR anatomical LEFT is TRAILING toward image LEFT: hip970,665 -> knee740,930 -> shin folds BACK UP to ankle600,800 -> full folded LEFT boot620,740, visibly flexed knee and complete ankle/sole. These coordinates are source-image coordinates BEFORE reference padding(+340,+200). Two coherent different leg chains, both knees articulated. BOTH entire boots must be clearly free above both guide support planes; do not retain source flat planted farLEFT boot or leave an old third foot. Pelvis/core rise naturally about75 sourcepixels from LEFT compression while rigid skull/chest/shoulder sizes remain coherent, no bodystretch. E camera same slight front-chest view, face/nose/pelvis/travel RIGHT, not SE/back. Permanent anatomical RIGHT/near hand keeps original LONG SINUOUS gold-orange weapon streaming LEFT, LEFT/far EMPTY hand complete with all fingers/gauntlet on frontRIGHT must have at least80native pixels of alpha beyond it. COMPLETE front empty fist is especially critical: never touch or cross right canvas edge. Keep all thin HARD GOLD rays, pale visible human face/long pale hair, ornate black-gold armor and LONG DARK goldtrim ROBE with flowing split panels revealing both flexed legs. No mask/flamefeatherfan/pants/shortblade/hand swap. Preserve FULL equipment lengths; the ENTIRE figure+blade+spines+both hands must fit within roughly1000x1000 centered in1254-equivalent canvas with>=90px alpha gutters EVERY SIDE. Scale whole figure uniformly at generation to preserve sparse padding, never crop/shorten gear; final source pixels will not be resized. Exactly one figure/no text/skeleton/ground/shadows/glow haze. The transparent PNG does not establish world floor: six-pose ground/root arc will be authored separately. Essential actual art: NEAR RIGHT forward-leading flexed leg, FAR LEFT backward-trailing flexed leg, both complete boots raised; opposite of flight5.",
+  "requested_at": "2026-10-19T14:37:22.337124+00:00",
+  "user_authorization": "Private production image tools allowed, no main-chat images; one distinct missing first flight request.",
+  "pose_guide_proof": {
+    "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+    "source": "/workspace/scratch/girtas-E-run-left-compression-key-v01/girtas-E-run-left-compression-key-v01.png",
+    "source_sha256": "277db3fc7f71611af6290a72926e8ecd2d782c1f38e86f22a61feefa63c6f34f",
+    "source_independent_review": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-left-compression-v01-independent-review.json",
+    "source_independent_review_sha256": "12865a1bbfead9d7f4d7e0a2ff0c465303fc10de9db047ecbd117c129d15198a",
+    "padded_reference": "/workspace/scratch/girtas-E-run-left-flight-key-v01/reference-only-LEFTcompression-exactRGBA-spacious-padding.png",
+    "padded_reference_sha256": "60dc37b876039f64dcb362350d534cf594379b86618d5f3c7a825ebac7db2d05",
+    "padding_canvas": [
+      1850,
+      1850
+    ],
+    "source_translation": [
+      340,
+      200
+    ],
+    "source_RGBA_preserved_no_resize": true,
+    "guide_sha256": "d5a9a6084c02286a87692008b112ebffb21419e7ef3463fd14dbf5511284e7f0",
+    "target_joint_source_coordinates": {
+      "near_RIGHT_hip": [
+        885,
+        665
+      ],
+      "RIGHT_lead_knee": [
+        1080,
+        730
+      ],
+      "RIGHT_lead_ankle": [
+        1060,
+        1000
+      ],
+      "RIGHT_lead_boottoe": [
+        1150,
+        1040
+      ],
+      "far_LEFT_hip": [
+        970,
+        665
+      ],
+      "LEFT_trail_knee": [
+        740,
+        930
+      ],
+      "LEFT_trail_ankle": [
+        600,
+        800
+      ],
+      "LEFT_trail_boot": [
+        620,
+        740
+      ]
+    },
+    "guide_floor_not_final_output_proof": true
+  },
+  "pose_guide_proof_sha256": "5709282df3182a4952347632b4fd25f85a719a6d786b3a7759d8731dd9a55cb1",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}

@@ -1,0 +1,117 @@
+{
+  "status": "PASS_READONLY_CODE_REVIEW_UNEXECUTED_OPTIONAL_DECLARED_CANONICAL_SEED_BRIDGE",
+  "scope": "Bounded five-file source diff and exact frozen dependency/pin review only; no proposal pipeline or helper code executed",
+  "proposal_allowlist": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/v09r02-declared-canonical-bridge-unexecuted-proposal-frozen-allowlist-v01.json",
+    "sha256": "db238a794e44c10ffcdd278e3df5323c04c7773a1717484f5c4e21da6afdffa6",
+    "bytes": 4140
+  },
+  "producer_static_only_report": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/v09-declared-root-canonical-bridge-static-proposal-and-pin-audit-v01.json",
+    "sha256": "0441af7f1c084bceaf79b621f45776993e8d3609a01181675344d7f62b940b85",
+    "bytes": 15972
+  },
+  "unchanged_dependency_pins": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/v09r02-unchanged-importer-region-packer-dependency-pins-v01.json",
+    "sha256": "ec4df3be6a1f1dc145cd8c8b59b321471f1389be26b7d53bb86b9cb97ce65a76",
+    "bytes": 1453
+  },
+  "canonical_input_pins": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/canonical-input-pins.json",
+    "sha256": "b80d47c7d34e43df2718e2709d05e7dd6c5e5669b4dd6e5244f1aebe3ec78d08",
+    "bytes": 2710
+  },
+  "reviewed_files": [
+    {
+      "name": "pr122_reviewed_runtime_layout.py",
+      "original": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/originals/pr122_reviewed_runtime_layout.py",
+        "sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+        "bytes": 10462
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122_reviewed_runtime_layout.py",
+        "sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2",
+        "bytes": 14709
+      },
+      "unified_diff_lines": 85
+    },
+    {
+      "name": "pr122-build-authored-clip-request-v07.py",
+      "original": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/originals/pr122-build-authored-clip-request-v07.py",
+        "sha256": "d20c10d0c11978a16e70e5a68600b174e7cfe47c9f3b39095701647cd319b66d",
+        "bytes": 9752
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122-build-authored-clip-request-v07.py",
+        "sha256": "40ec010741afcc5d442793292943188af89f28a72fa04b5785c63b1095e5e938",
+        "bytes": 10849
+      },
+      "unified_diff_lines": 51
+    },
+    {
+      "name": "advance_pr122_native_locomotion.py",
+      "original": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/originals/advance_pr122_native_locomotion.py",
+        "sha256": "972f2492a653ea948d7d15cee0c0a5888f7e64bcdc646f89dbebd12a9db274eb",
+        "bytes": 10276
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/advance_pr122_native_locomotion.py",
+        "sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e",
+        "bytes": 10690
+      },
+      "unified_diff_lines": 24
+    },
+    {
+      "name": "stage_pr122_native_locomotion.py",
+      "original": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/originals/stage_pr122_native_locomotion.py",
+        "sha256": "6cc5c9933015c9a5bf8c17d5daac04bb3ebb585cb5609420bf3f6b90d0623b7b",
+        "bytes": 11785
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/stage_pr122_native_locomotion.py",
+        "sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701",
+        "bytes": 12040
+      },
+      "unified_diff_lines": 16
+    },
+    {
+      "name": "integrate_new_413_clip_retaining_profile_v07.py",
+      "original": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/originals/integrate_new_413_clip_retaining_profile_v07.py",
+        "sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+        "bytes": 42709
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/integrate_new_413_clip_retaining_profile_v07.py",
+        "sha256": "1de7ddb84a69582cd2e91434126b84ead57524d98ead53e259b288d9e418c60c",
+        "bytes": 43108
+      },
+      "unified_diff_lines": 32
+    }
+  ],
+  "findings": [],
+  "reviewed_preservation": [
+    "Absent canonical_preflight descriptors on both reviews return exactly empty kwargs. Existing canonical analyze calls therefore retain their prior automatic anchor behavior for legacy requests and saved records. New builder requests explicitly opt into the descriptor.",
+    "The descriptor is the exact same object and digest in source-canvas and runtime-layout reviews. It binds raw SHA, direction, nominal2048, one fixed physicalC, common finite root and one rounding, explicit storage/tile origins and derived anchors. Mismatched reviews, hashes, roots, authoredC or source anchors raise before use.",
+    "The same canonical seed passes through request construction, integrator frozen raw analysis, advance preservation, stage compilation and runtime reviewed-region canonical regeneration. Runtime checks the supplied exact base frame anchors and recomputes the original reviewed-region geometry/digest before deriving actualC layout.",
+    "Raw packing SHA remains bound to the request in builder and integrator/advance; final independent request/source review remains required. The bridge changes canonical seed metadata, not actual RGBA, source regions, their ownership validator or nominal2048 constants.",
+    "Frozen importer, reviewed_source_regions and packer are byte-identical to their originals. Complete foreground, six distinct poses, SHA identity, valid directions, source/region ownership, unchanged pixels, anchor fit and actual authored-C overflow rejection remain on the same validation path.",
+    "The integrator canonical-input-pins digest and three changed core-tool hashes move together. Existing profile basis, scope/quality/test pins and approved2 identity are retained; adoption requires the matching builder/integrator/core-tool set rather than a mixed old/new pipeline."
+  ],
+  "known_bounded_limits": [
+    "This is a read-only code review, not an executed request, runtime test, integration or game approval. Producer AST/reversible/static arithmetic evidence is cited as producer evidence only.",
+    "The Edeath phase2 negative59 top margin is already independently documented in b4ce170d. The proposal declared-root seed matches that diagnostic remedy and the supplied pure arithmetic example reports top298; no actual importer/request/runtime execution was repeated by this review.",
+    "The storage offsets in the descriptor are explicit per pose and cryptographically pinned. Source-world equivalence and genuine common body/root semantics still require the existing packing and independent exact source/request receipts; a self-hash alone is not physical source evidence.",
+    "Before adoption the parent must keep the existing unchanged legacy and actual scoped request/runtime checks. No threshold relaxation or automatic source approval is covered."
+  ],
+  "files_or_proposal_code_executed": 0,
+  "pipeline_or_importer_retried": 0,
+  "tests_run": 0,
+  "images_viewed": 0,
+  "source_or_repository_writes": 0,
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,237 @@
+{
+  "status": "PASS_EXACT_ORIGINAL_SOURCE_OWNER_CORRECTION_ONLY",
+  "old_contract": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/actual-NE-DEATH-six-source-contract-v11.json",
+    "sha256": "9dd7dbdcd8565643fc541fe9ae60bf09749dfc77cb890a93f70981d7505f77e2",
+    "bytes": 111743
+  },
+  "new_contract": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-NE-DEATH-six-source-contract-v13.json",
+    "sha256": "f48f6769e20de2f3bf12171ff59d2e27fceed66e5c57801632707854a5ef8a43",
+    "bytes": 114666
+  },
+  "ownership": [
+    {
+      "name": "actual-blue-hair-ribbon-distal-tip",
+      "original_source_seed": [
+        455,
+        473
+      ],
+      "original_strong_source_pixels": 91,
+      "source_RGBA": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-blue-hair-ribbon-distal-tip-original-native-RGBA-preserved-v13.png",
+        "sha256": "4536349d9b4c554b14824c997de690265808ee54314c138c4bd814b41a014522",
+        "bytes": 7059
+      },
+      "semantic_matte": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-blue-hair-ribbon-distal-tip-actual-semantic-owner-transfer-matte-v13.png",
+        "sha256": "4381b3ec8b6ea19616b8a41552de8473a3915b37b9fd07f23f84caf6f8aa79a4",
+        "bytes": 1769
+      },
+      "original_native_bbox": [
+        448,
+        461,
+        466,
+        486
+      ],
+      "original_wrong_owner": "torso-native-bluegold-bodice",
+      "actual_owner": "head-face-bun-and-original-hair",
+      "source_RGBA_recolored": false
+    },
+    {
+      "name": "actual-white-LEFT-cuff-outer-fringe",
+      "original_source_seed": [
+        580,
+        575
+      ],
+      "original_strong_source_pixels": 33,
+      "source_RGBA": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-white-LEFT-cuff-outer-fringe-original-native-RGBA-preserved-v13.png",
+        "sha256": "c8186f704a914c8d37f1de7a799c30d0ba03e73c826b7e5f0a7e45fe8a8b1845",
+        "bytes": 6740
+      },
+      "semantic_matte": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-white-LEFT-cuff-outer-fringe-actual-semantic-owner-transfer-matte-v13.png",
+        "sha256": "3ee50a4a14323020c9d7f44fd46c2ebef942dc8ce312a8fef444dc5d95260b36",
+        "bytes": 1729
+      },
+      "original_native_bbox": [
+        575,
+        566,
+        588,
+        585
+      ],
+      "original_wrong_owner": "torso-native-bluegold-bodice",
+      "actual_owner": "LEFT-complete-cuff-forearm-hand-native",
+      "source_RGBA_recolored": false
+    }
+  ],
+  "rows": [
+    {
+      "phase": 0,
+      "changed_RGBA_pixels": 113,
+      "changed_RGBA_outside_actual_ribbon_and_LEFTcuff_owner_bounds": 0,
+      "allowed_regions": [
+        {
+          "name": "actual-blue-hair-ribbon-distal-tip",
+          "stored_bbox": [
+            700,
+            713,
+            726,
+            746
+          ]
+        },
+        {
+          "name": "actual-white-LEFT-cuff-outer-fringe",
+          "stored_bbox": [
+            827,
+            818,
+            848,
+            845
+          ]
+        }
+      ],
+      "all_other16_of19_original_raster_parts_each_pose_reused": true,
+      "all_original_state_bones_parent_SO3_and_staff_nodes_bitexact": true
+    },
+    {
+      "phase": 1,
+      "changed_RGBA_pixels": 478,
+      "changed_RGBA_outside_actual_ribbon_and_LEFTcuff_owner_bounds": 0,
+      "allowed_regions": [
+        {
+          "name": "actual-blue-hair-ribbon-distal-tip",
+          "stored_bbox": [
+            725,
+            732,
+            756,
+            773
+          ]
+        },
+        {
+          "name": "actual-white-LEFT-cuff-outer-fringe",
+          "stored_bbox": [
+            836,
+            867,
+            861,
+            903
+          ]
+        }
+      ],
+      "all_other16_of19_original_raster_parts_each_pose_reused": true,
+      "all_original_state_bones_parent_SO3_and_staff_nodes_bitexact": true
+    },
+    {
+      "phase": 2,
+      "changed_RGBA_pixels": 549,
+      "changed_RGBA_outside_actual_ribbon_and_LEFTcuff_owner_bounds": 0,
+      "allowed_regions": [
+        {
+          "name": "actual-blue-hair-ribbon-distal-tip",
+          "stored_bbox": [
+            839,
+            846,
+            880,
+            893
+          ]
+        },
+        {
+          "name": "actual-white-LEFT-cuff-outer-fringe",
+          "stored_bbox": [
+            906,
+            1025,
+            943,
+            1066
+          ]
+        }
+      ],
+      "all_other16_of19_original_raster_parts_each_pose_reused": true,
+      "all_original_state_bones_parent_SO3_and_staff_nodes_bitexact": true
+    },
+    {
+      "phase": 3,
+      "changed_RGBA_pixels": 642,
+      "changed_RGBA_outside_actual_ribbon_and_LEFTcuff_owner_bounds": 0,
+      "allowed_regions": [
+        {
+          "name": "actual-blue-hair-ribbon-distal-tip",
+          "stored_bbox": [
+            1053,
+            985,
+            1099,
+            1030
+          ]
+        },
+        {
+          "name": "actual-white-LEFT-cuff-outer-fringe",
+          "stored_bbox": [
+            1045,
+            1168,
+            1086,
+            1211
+          ]
+        }
+      ],
+      "all_other16_of19_original_raster_parts_each_pose_reused": true,
+      "all_original_state_bones_parent_SO3_and_staff_nodes_bitexact": true
+    },
+    {
+      "phase": 4,
+      "changed_RGBA_pixels": 474,
+      "changed_RGBA_outside_actual_ribbon_and_LEFTcuff_owner_bounds": 0,
+      "allowed_regions": [
+        {
+          "name": "actual-blue-hair-ribbon-distal-tip",
+          "stored_bbox": [
+            1193,
+            1238,
+            1237,
+            1270
+          ]
+        },
+        {
+          "name": "actual-white-LEFT-cuff-outer-fringe",
+          "stored_bbox": [
+            1146,
+            1373,
+            1183,
+            1418
+          ]
+        }
+      ],
+      "all_other16_of19_original_raster_parts_each_pose_reused": true,
+      "all_original_state_bones_parent_SO3_and_staff_nodes_bitexact": true
+    },
+    {
+      "phase": 5,
+      "changed_RGBA_pixels": 308,
+      "changed_RGBA_outside_actual_ribbon_and_LEFTcuff_owner_bounds": 0,
+      "allowed_regions": [
+        {
+          "name": "actual-blue-hair-ribbon-distal-tip",
+          "stored_bbox": [
+            1199,
+            1265,
+            1243,
+            1294
+          ]
+        },
+        {
+          "name": "actual-white-LEFT-cuff-outer-fringe",
+          "stored_bbox": [
+            1152,
+            1397,
+            1189,
+            1442
+          ]
+        }
+      ],
+      "all_other16_of19_original_raster_parts_each_pose_reused": true,
+      "all_original_state_bones_parent_SO3_and_staff_nodes_bitexact": true
+    }
+  ],
+  "changed_RGBA_outside_declared_original_owner_bounds_all6": 0,
+  "all_original12_bones_and_all_parent_SO3_and_entire_RIGHTgrip_staff_source_node_exact": true,
+  "source_deleted_or_recolored": false,
+  "actor_approvals_added": 0
+}

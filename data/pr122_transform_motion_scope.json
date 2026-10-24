@@ -1,0 +1,511 @@
+{
+  "schema": "pr122-transform-motion-scope-v1",
+  "user_instruction_date": "2026-10-22",
+  "actor_kind": "transform",
+  "walk_excluded_grades": [
+    "신화",
+    "전설",
+    "영웅",
+    "희귀",
+    "고급",
+    "일반"
+  ],
+  "unique_transform_walk_required": true,
+  "boss_walk_required": true,
+  "required_roles_without_walk": [
+    "idle",
+    "run",
+    "attack",
+    "hit",
+    "death"
+  ],
+  "existing_assets_preserved": true,
+  "omission_grants_approval": false,
+  "death_direction_policy": {
+    "유일": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "preserve_previous_approval": true,
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    },
+    "신화": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    },
+    "전설": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    },
+    "영웅": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    },
+    "희귀": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    },
+    "고급": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    },
+    "일반": {
+      "unique_authored_directions": 1,
+      "direction_names": [
+        "S"
+      ],
+      "other_view_directions_reuse_same_death": true,
+      "new_sources_only": true,
+      "preserve_existing_directions": true
+    }
+  },
+  "death_runtime_contract": "Preserve every existing directional death. Resolve an existing requested direction first, otherwise S, otherwise a reviewed existing death source. One shot, terminal-frame hold, no attack or movement after death. Combat, drops, experience and save processing are unchanged.",
+  "death_existing_native_sources_preserved": true,
+  "death_actor_completion_requires_game_validation": true,
+  "death_preserved_approved_actor_keys": [
+    "transform:267",
+    "transform:393"
+  ],
+  "death_source_ledger_scope": "Current PR122 dedicated-native authoring queue; counts are directional source motions, not individual pose PNGs. Existing catalog art and gender-duplicate exclusions are unchanged.",
+  "death_source_ledger": {
+    "transform:393": {
+      "name": "해방된 할파스",
+      "grade": "유일",
+      "existing_connected_source_count": 8,
+      "existing_connected_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "additional_new_source_directions": [],
+      "additional_new_source_count": 0,
+      "existing_approval_preserved": true
+    },
+    "transform:267": {
+      "name": "지배자 기르타스",
+      "grade": "유일",
+      "existing_connected_source_count": 8,
+      "existing_connected_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "additional_new_source_directions": [],
+      "additional_new_source_count": 0,
+      "existing_approval_preserved": true
+    },
+    "transform:413": {
+      "name": "신화-뇌신(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 6,
+      "existing_connected_directions": [
+        "E",
+        "SE",
+        "S",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "additional_new_source_directions": [],
+      "additional_new_source_count": 0,
+      "existing_approval_preserved": false,
+      "existing_unconnected_authored_directions": [],
+      "existing_unconnected_source_count": 0,
+      "preserved_S_source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/mythic413-S-death-actual-six-native-v02-v03-and-final-boot-source-20261020/own-S-DEATH-six-actual-native-source-contract-v03.json",
+        "sha256": "4d458a60b2f0739afb0e679d5ce781de1e29fa19253cbbb595be0fbc944fb49f",
+        "status": "HOLD_NOT_APPROVED"
+      },
+      "remaining_source_completion_directions": [
+        "S"
+      ],
+      "source_completion_note": "Existing six-pose S source is now staged and passes actual Main/Player direction/terminal-hold checks; source visual approval remains HOLD, no final approval added.",
+      "latest_unapproved_S_candidate": {
+        "direction": "S",
+        "poses": 6,
+        "source_contract": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-six-native-v09-original-cape-root-20261022/own-S-DEATH-six-actual-native-source-contract-v09.json",
+          "sha256": "36eb9df30c4e598ca1a1b44850dbed224ad5a9779ee6de6c6687406d8cf21a71"
+        },
+        "raw_png": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/pr122-death-s-only-20261022-v01/S-death-original-cape-v09-exact-packed-candidate-v01/thunder_female-S-death-original-cape-real-six-v09.png",
+          "sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc"
+        },
+        "runtime_fixture_proof": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/pr122-death-s-only-20261022-v01/three-new-actual-source-candidates-main-player-runtime-proof.json",
+          "sha256": "cfc9259ebea957aaa0184fffef79da82d8ccf43df69e13b5f3c1e67b37ad80c8",
+          "status": "PASS",
+          "fixture_override": true,
+          "production_connected": false
+        },
+        "source_visual_status": "HOLD_NOT_REVIEWED",
+        "full_animation_approved": false,
+        "actor_approvals_added": 0,
+        "preserved_source_index": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+        "staged_source": {
+          "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-death-SdeathCapeNative09.png",
+          "sha256": "a75da5e737c2f3824b85f5015140af9bda9900d274e3d941c48e61265980b6bc"
+        },
+        "staged_frames": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r045/SpriteFrames.tres",
+        "staged_runtime_status": "PASS_SOURCE_VISUAL_HOLD"
+      },
+      "prior_connected_snapshot": {
+        "count": 5,
+        "directions": [
+          "E",
+          "SE",
+          "NW",
+          "N",
+          "NE"
+        ]
+      },
+      "connection_scope": "UNAPPROVED_NATIVE_STAGING_ONLY"
+    },
+    "transform:412": {
+      "name": "신화-사신(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:411": {
+      "name": "신화-투사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:410": {
+      "name": "신화-광전사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:399": {
+      "name": "진 드래곤 슬레이어",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:367": {
+      "name": "신화-마검사",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:346": {
+      "name": "신화-암흑기사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:345": {
+      "name": "신화-신성검사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:283": {
+      "name": "신화-뇌신(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:258": {
+      "name": "신화-사신(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:242": {
+      "name": "플래티넘 바포메트",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:224": {
+      "name": "플래티넘 데스나이트",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:212": {
+      "name": "신화-광전사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:189": {
+      "name": "도펠겡어",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:174": {
+      "name": "신화-신성검사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:161": {
+      "name": "신화-암흑기사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:142": {
+      "name": "신화-투사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:141": {
+      "name": "신화-총사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:140": {
+      "name": "신화-총사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:139": {
+      "name": "신화-다크엘프(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:138": {
+      "name": "신화-다크엘프(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:137": {
+      "name": "신화-마법사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:136": {
+      "name": "신화-마법사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:135": {
+      "name": "신화-요정(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:134": {
+      "name": "신화-요정(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:133": {
+      "name": "신화-군주(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:132": {
+      "name": "신화-군주(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:131": {
+      "name": "신화-기사(여)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    },
+    "transform:130": {
+      "name": "신화-기사(남)",
+      "grade": "신화",
+      "existing_connected_source_count": 0,
+      "existing_connected_directions": [],
+      "additional_new_source_directions": [
+        "S"
+      ],
+      "additional_new_source_count": 1,
+      "existing_approval_preserved": false
+    }
+  }
+}

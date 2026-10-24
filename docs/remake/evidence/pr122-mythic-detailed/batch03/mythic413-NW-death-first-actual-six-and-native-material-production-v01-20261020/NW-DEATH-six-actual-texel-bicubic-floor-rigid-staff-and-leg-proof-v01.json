@@ -1,0 +1,728 @@
+{
+  "status": "SCOPED_NUMERIC_TRUE_MATERIAL_SURFACE_CHECK_PENDING_INDEPENDENT_ACTUAL_SOURCE_QC",
+  "contract_sha256": "d6e71ddd7bcb1b7150480a5134f26a4bbfebd5d6e701c166cc8dc8e667b0df77",
+  "source_alpha_rule": "Every actual nonzero source texel used by each explicit plane; no silhouette normalization",
+  "bicubic_support_guard_source_pixels": 2.5,
+  "physical_canvas_fixed": 2048,
+  "common_root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "records": [
+    {
+      "phase": 0,
+      "source_sha256": "c7d950d1634fac98f62cf3ab1f55627539b6f23ec65d4b792b67e3e30941de35",
+      "materials": [
+        {
+          "part": "pelvis_skirt",
+          "source_texel_min_Z": 330.51826222967793,
+          "bicubic_2_5_source_pixel_guard_min_Z": 327.89084850218416
+        },
+        {
+          "part": "torso_corset",
+          "source_texel_min_Z": 446.87277552878146,
+          "bicubic_2_5_source_pixel_guard_min_Z": 444.2453618012877
+        },
+        {
+          "part": "head_bun_ribbon",
+          "source_texel_min_Z": 621.4716898759644,
+          "bicubic_2_5_source_pixel_guard_min_Z": 618.8442761484706
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "source_texel_min_Z": 4.218886922017873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 1.718886922017873
+        },
+        {
+          "part": "LEFT_thigh",
+          "source_texel_min_Z": 158.6532257874485,
+          "bicubic_2_5_source_pixel_guard_min_Z": 153.36186302504473
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "source_texel_min_Z": 72.60925566208425,
+          "bicubic_2_5_source_pixel_guard_min_Z": 70.30719000352659
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "source_texel_min_Z": 158.48953498869088,
+          "bicubic_2_5_source_pixel_guard_min_Z": 156.1874693301332
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "source_texel_min_Z": 63.10463514997029,
+          "bicubic_2_5_source_pixel_guard_min_Z": 60.80256949141262
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "source_texel_min_Z": 4.218886922017873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 1.718886922017873
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "source_texel_min_Z": 4.538886922018037,
+          "bicubic_2_5_source_pixel_guard_min_Z": 2.038886922018037
+        },
+        {
+          "part": "RIGHT_thigh",
+          "source_texel_min_Z": 137.78970775886017,
+          "bicubic_2_5_source_pixel_guard_min_Z": 133.5419945261379
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "source_texel_min_Z": 47.85091113941269,
+          "bicubic_2_5_source_pixel_guard_min_Z": 46.554672999206105
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "source_texel_min_Z": 140.68346151925144,
+          "bicubic_2_5_source_pixel_guard_min_Z": 139.38722337904485
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "source_texel_min_Z": 41.41918906879238,
+          "bicubic_2_5_source_pixel_guard_min_Z": 40.122950928585794
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "source_texel_min_Z": 4.538886922018037,
+          "bicubic_2_5_source_pixel_guard_min_Z": 2.038886922018037
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "source_texel_min_Z": 537.4387364150464,
+          "bicubic_2_5_source_pixel_guard_min_Z": 534.960326045088
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "source_texel_min_Z": 271.7889106833761,
+          "bicubic_2_5_source_pixel_guard_min_Z": 270.14478723653684
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "source_texel_min_Z": 565.7662724869574,
+          "bicubic_2_5_source_pixel_guard_min_Z": 563.1388587594636
+        },
+        {
+          "part": "LEFT_upper_arm",
+          "source_texel_min_Z": 515.286623746896,
+          "bicubic_2_5_source_pixel_guard_min_Z": 512.2106005392208
+        },
+        {
+          "part": "LEFT_complete_forearm_glove",
+          "source_texel_min_Z": 399.90244648390325,
+          "bicubic_2_5_source_pixel_guard_min_Z": 398.15845084031184
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "source_texel_min_Z": 135.23627208281061,
+          "bicubic_2_5_source_pixel_guard_min_Z": 132.73627208281061
+        }
+      ],
+      "minimum_floor_guard_Z": 1.718886922017873,
+      "maximum_bone_length_error": 2.842170943040401e-14,
+      "RIGHT_rigid_staff_basis_unit_orthogonal": true,
+      "alpha100_4conn_gte200_bodies": 1
+    },
+    {
+      "phase": 1,
+      "source_sha256": "9bd349e569db5b77a1763e43944c2ca9c82149df219dc5f3faad88dce85b4134",
+      "materials": [
+        {
+          "part": "pelvis_skirt",
+          "source_texel_min_Z": 255.975312156438,
+          "bicubic_2_5_source_pixel_guard_min_Z": 253.2820179836896
+        },
+        {
+          "part": "torso_corset",
+          "source_texel_min_Z": 368.90054230235313,
+          "bicubic_2_5_source_pixel_guard_min_Z": 366.33395953318745
+        },
+        {
+          "part": "head_bun_ribbon",
+          "source_texel_min_Z": 530.461675664232,
+          "bicubic_2_5_source_pixel_guard_min_Z": 527.7683814914835
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "source_texel_min_Z": 4.218886922017873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 1.7188869220178726
+        },
+        {
+          "part": "LEFT_thigh",
+          "source_texel_min_Z": 71.38431398704984,
+          "bicubic_2_5_source_pixel_guard_min_Z": 65.72238241060963
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "source_texel_min_Z": 77.8154463373118,
+          "bicubic_2_5_source_pixel_guard_min_Z": 77.64988345585222
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "source_texel_min_Z": 83.99189332656695,
+          "bicubic_2_5_source_pixel_guard_min_Z": 83.82633044510737
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "source_texel_min_Z": 77.13188096926261,
+          "bicubic_2_5_source_pixel_guard_min_Z": 76.96631808780303
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "source_texel_min_Z": 4.218886922017873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 1.7188869220178726
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "source_texel_min_Z": 4.538886922018037,
+          "bicubic_2_5_source_pixel_guard_min_Z": 2.0388869220180363
+        },
+        {
+          "part": "RIGHT_thigh",
+          "source_texel_min_Z": 69.35508261201389,
+          "bicubic_2_5_source_pixel_guard_min_Z": 65.15052624439546
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "source_texel_min_Z": 50.44535719543295,
+          "bicubic_2_5_source_pixel_guard_min_Z": 50.061006803075465
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "source_texel_min_Z": 77.97133876881152,
+          "bicubic_2_5_source_pixel_guard_min_Z": 77.58698837645403
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "source_texel_min_Z": 48.53827328492308,
+          "bicubic_2_5_source_pixel_guard_min_Z": 48.153922892565596
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "source_texel_min_Z": 4.538886922018037,
+          "bicubic_2_5_source_pixel_guard_min_Z": 2.0388869220180363
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "source_texel_min_Z": 462.7758560388288,
+          "bicubic_2_5_source_pixel_guard_min_Z": 460.62131361345206
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "source_texel_min_Z": 230.50246803314138,
+          "bicubic_2_5_source_pixel_guard_min_Z": 229.0130868965815
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "source_texel_min_Z": 477.6715872913702,
+          "bicubic_2_5_source_pixel_guard_min_Z": 475.1050045222045
+        },
+        {
+          "part": "LEFT_upper_arm",
+          "source_texel_min_Z": 431.54069333305824,
+          "bicubic_2_5_source_pixel_guard_min_Z": 428.61716263670274
+        },
+        {
+          "part": "LEFT_complete_forearm_glove",
+          "source_texel_min_Z": 286.26019417766645,
+          "bicubic_2_5_source_pixel_guard_min_Z": 283.8316665085729
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "source_texel_min_Z": 69.16507553169066,
+          "bicubic_2_5_source_pixel_guard_min_Z": 66.6711654060411
+        }
+      ],
+      "minimum_floor_guard_Z": 1.7188869220178726,
+      "maximum_bone_length_error": 5.684341886080802e-14,
+      "RIGHT_rigid_staff_basis_unit_orthogonal": true,
+      "alpha100_4conn_gte200_bodies": 1
+    },
+    {
+      "phase": 2,
+      "source_sha256": "739e8ad4ed85035eea06f38f89f4af5dca8a01d1f3650dd09850711af00a135f",
+      "materials": [
+        {
+          "part": "pelvis_skirt",
+          "source_texel_min_Z": 157.64822391913728,
+          "bicubic_2_5_source_pixel_guard_min_Z": 155.118729771594
+        },
+        {
+          "part": "torso_corset",
+          "source_texel_min_Z": 266.3261560724776,
+          "bicubic_2_5_source_pixel_guard_min_Z": 264.28283866428706
+        },
+        {
+          "part": "head_bun_ribbon",
+          "source_texel_min_Z": 381.88054030156746,
+          "bicubic_2_5_source_pixel_guard_min_Z": 379.39543609687286
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "source_texel_min_Z": 4.218886922017873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 1.7188869220178726
+        },
+        {
+          "part": "LEFT_thigh",
+          "source_texel_min_Z": 12.626318839244192,
+          "bicubic_2_5_source_pixel_guard_min_Z": 7.866269351233877
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "source_texel_min_Z": 21.13923544100338,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.798252053973712
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "source_texel_min_Z": 16.53981655951312,
+          "bicubic_2_5_source_pixel_guard_min_Z": 15.198833172483454
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "source_texel_min_Z": 69.41463737407138,
+          "bicubic_2_5_source_pixel_guard_min_Z": 68.07365398704171
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "source_texel_min_Z": 4.218886922017873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 1.7188869220178726
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "source_texel_min_Z": 4.538886922018037,
+          "bicubic_2_5_source_pixel_guard_min_Z": 2.0388869220180363
+        },
+        {
+          "part": "RIGHT_thigh",
+          "source_texel_min_Z": 14.69774300195354,
+          "bicubic_2_5_source_pixel_guard_min_Z": 11.166562784815506
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "source_texel_min_Z": 23.084917954385162,
+          "bicubic_2_5_source_pixel_guard_min_Z": 22.7185723498837
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "source_texel_min_Z": 21.645751854202086,
+          "bicubic_2_5_source_pixel_guard_min_Z": 21.279406249700624
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "source_texel_min_Z": 48.6788362010747,
+          "bicubic_2_5_source_pixel_guard_min_Z": 48.31249059657324
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "source_texel_min_Z": 4.538886922018037,
+          "bicubic_2_5_source_pixel_guard_min_Z": 2.0388869220180363
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "source_texel_min_Z": 332.273876438392,
+          "bicubic_2_5_source_pixel_guard_min_Z": 329.890594979966
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "source_texel_min_Z": 168.72425986281416,
+          "bicubic_2_5_source_pixel_guard_min_Z": 167.5993629018654
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "source_texel_min_Z": 342.8174354900733,
+          "bicubic_2_5_source_pixel_guard_min_Z": 340.77411808188276
+        },
+        {
+          "part": "LEFT_upper_arm",
+          "source_texel_min_Z": 298.2619835816031,
+          "bicubic_2_5_source_pixel_guard_min_Z": 295.5883986759427
+        },
+        {
+          "part": "LEFT_complete_forearm_glove",
+          "source_texel_min_Z": 142.73573407283737,
+          "bicubic_2_5_source_pixel_guard_min_Z": 139.91221069411807
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "source_texel_min_Z": 10.619619821817253,
+          "bicubic_2_5_source_pixel_guard_min_Z": 8.204805256094582
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "source_texel_min_Z": 10.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 10.0
+        }
+      ],
+      "minimum_floor_guard_Z": 1.7188869220178726,
+      "maximum_bone_length_error": 2.842170943040401e-14,
+      "RIGHT_rigid_staff_basis_unit_orthogonal": true,
+      "alpha100_4conn_gte200_bodies": 1
+    },
+    {
+      "phase": 3,
+      "source_sha256": "aff9a031244e2355be9ce1a50899277b1c2c149c03ddf315a1f6f6b05c87b1ab",
+      "materials": [
+        {
+          "part": "pelvis_skirt",
+          "source_texel_min_Z": 134.6906031232871,
+          "bicubic_2_5_source_pixel_guard_min_Z": 133.19464092007883
+        },
+        {
+          "part": "torso_corset",
+          "source_texel_min_Z": 202.8342976496743,
+          "bicubic_2_5_source_pixel_guard_min_Z": 202.01443502802186
+        },
+        {
+          "part": "head_bun_ribbon",
+          "source_texel_min_Z": 246.22868531276873,
+          "bicubic_2_5_source_pixel_guard_min_Z": 244.80733906558365
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "source_texel_min_Z": 28.97839550799277,
+          "bicubic_2_5_source_pixel_guard_min_Z": 27.544454417115155
+        },
+        {
+          "part": "LEFT_thigh",
+          "source_texel_min_Z": 15.266902759874966,
+          "bicubic_2_5_source_pixel_guard_min_Z": 11.611975699844807
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "source_texel_min_Z": 21.497805772770278,
+          "bicubic_2_5_source_pixel_guard_min_Z": 20.324902228756347
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "source_texel_min_Z": 17.474881433301807,
+          "bicubic_2_5_source_pixel_guard_min_Z": 16.301977889287876
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "source_texel_min_Z": 63.72233335727181,
+          "bicubic_2_5_source_pixel_guard_min_Z": 62.54942981325787
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "source_texel_min_Z": 28.97839550799277,
+          "bicubic_2_5_source_pixel_guard_min_Z": 27.544454417115155
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "source_texel_min_Z": 34.161939967625194,
+          "bicubic_2_5_source_pixel_guard_min_Z": 32.72799887674758
+        },
+        {
+          "part": "RIGHT_thigh",
+          "source_texel_min_Z": 16.951555878069826,
+          "bicubic_2_5_source_pixel_guard_min_Z": 14.275933558648905
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "source_texel_min_Z": 22.76654872262165,
+          "bicubic_2_5_source_pixel_guard_min_Z": 22.27274660291045
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "source_texel_min_Z": 20.826677567748614,
+          "bicubic_2_5_source_pixel_guard_min_Z": 20.332875448037413
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "source_texel_min_Z": 57.26493201598564,
+          "bicubic_2_5_source_pixel_guard_min_Z": 56.77112989627444
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "source_texel_min_Z": 34.161939967625194,
+          "bicubic_2_5_source_pixel_guard_min_Z": 32.72799887674758
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "source_texel_min_Z": 207.08383063271737,
+          "bicubic_2_5_source_pixel_guard_min_Z": 204.7005491742914
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "source_texel_min_Z": 129.6544253582243,
+          "bicubic_2_5_source_pixel_guard_min_Z": 129.06788578779992
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "source_texel_min_Z": 232.5613101123022,
+          "bicubic_2_5_source_pixel_guard_min_Z": 231.74144749064976
+        },
+        {
+          "part": "LEFT_upper_arm",
+          "source_texel_min_Z": 172.1669008453636,
+          "bicubic_2_5_source_pixel_guard_min_Z": 169.49331593970322
+        },
+        {
+          "part": "LEFT_complete_forearm_glove",
+          "source_texel_min_Z": 78.05236988361293,
+          "bicubic_2_5_source_pixel_guard_min_Z": 76.19906645129304
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "source_texel_min_Z": 10.072117235181054,
+          "bicubic_2_5_source_pixel_guard_min_Z": 8.102090351164248
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "source_texel_min_Z": 10.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 10.0
+        }
+      ],
+      "minimum_floor_guard_Z": 8.102090351164248,
+      "maximum_bone_length_error": 2.842170943040401e-14,
+      "RIGHT_rigid_staff_basis_unit_orthogonal": true,
+      "alpha100_4conn_gte200_bodies": 1
+    },
+    {
+      "phase": 4,
+      "source_sha256": "d2db4d38af10dd75c29b62107bddf25fc8d17e7ae21a51cff3d3067773c64330",
+      "materials": [
+        {
+          "part": "pelvis_skirt",
+          "source_texel_min_Z": 34.05771358903247,
+          "bicubic_2_5_source_pixel_guard_min_Z": 33.97046484727621
+        },
+        {
+          "part": "torso_corset",
+          "source_texel_min_Z": 38.45505017354762,
+          "bicubic_2_5_source_pixel_guard_min_Z": 38.367801431791364
+        },
+        {
+          "part": "head_bun_ribbon",
+          "source_texel_min_Z": 43.38055295294961,
+          "bicubic_2_5_source_pixel_guard_min_Z": 43.032620200549445
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "source_texel_min_Z": 23.8447657667709,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.626876409901758
+        },
+        {
+          "part": "LEFT_thigh",
+          "source_texel_min_Z": 23.225146427176888,
+          "bicubic_2_5_source_pixel_guard_min_Z": 22.900859039437723
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "source_texel_min_Z": 23.66789277930802,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.512217519608654
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "source_texel_min_Z": 23.133944532247202,
+          "bicubic_2_5_source_pixel_guard_min_Z": 22.978269272547838
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "source_texel_min_Z": 29.27220212848521,
+          "bicubic_2_5_source_pixel_guard_min_Z": 29.116526868785844
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "source_texel_min_Z": 23.8447657667709,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.626876409901758
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "source_texel_min_Z": 23.872655604450166,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.654766247581023
+        },
+        {
+          "part": "RIGHT_thigh",
+          "source_texel_min_Z": 23.3883407150456,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.156151992769562
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "source_texel_min_Z": 23.868116012014003,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.81531733725656
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "source_texel_min_Z": 23.66069967642316,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.607901001665716
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "source_texel_min_Z": 27.556777616442186,
+          "bicubic_2_5_source_pixel_guard_min_Z": 27.503978941684743
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "source_texel_min_Z": 23.872655604450166,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.654766247581023
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "source_texel_min_Z": 16.192653905396934,
+          "bicubic_2_5_source_pixel_guard_min_Z": 14.501061144532178
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "source_texel_min_Z": 19.99999999999998,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.99999999999998
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "source_texel_min_Z": 42.64298977784775,
+          "bicubic_2_5_source_pixel_guard_min_Z": 42.5557410360915
+        },
+        {
+          "part": "LEFT_upper_arm",
+          "source_texel_min_Z": 17.732683359892846,
+          "bicubic_2_5_source_pixel_guard_min_Z": 16.759701022209068
+        },
+        {
+          "part": "LEFT_complete_forearm_glove",
+          "source_texel_min_Z": 19.999999999999996,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.999999999999996
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "source_texel_min_Z": 10.357303682810311,
+          "bicubic_2_5_source_pixel_guard_min_Z": 9.420787199270531
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "source_texel_min_Z": 10.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 10.0
+        }
+      ],
+      "minimum_floor_guard_Z": 9.420787199270531,
+      "maximum_bone_length_error": 5.684341886080802e-14,
+      "RIGHT_rigid_staff_basis_unit_orthogonal": true,
+      "alpha100_4conn_gte200_bodies": 1
+    },
+    {
+      "phase": 5,
+      "source_sha256": "f17887b626641a2399b77a5f729531800ab3e70e29efcd798443605ec6f189bf",
+      "materials": [
+        {
+          "part": "pelvis_skirt",
+          "source_texel_min_Z": 29.999999999999993,
+          "bicubic_2_5_source_pixel_guard_min_Z": 29.999999999999993
+        },
+        {
+          "part": "torso_corset",
+          "source_texel_min_Z": 30.000000000000025,
+          "bicubic_2_5_source_pixel_guard_min_Z": 30.000000000000025
+        },
+        {
+          "part": "head_bun_ribbon",
+          "source_texel_min_Z": 30.00000000000006,
+          "bicubic_2_5_source_pixel_guard_min_Z": 30.00000000000006
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "source_texel_min_Z": 20.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 20.0
+        },
+        {
+          "part": "LEFT_thigh",
+          "source_texel_min_Z": 23.577352596641937,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.40046856696603
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "source_texel_min_Z": 19.758926540823307,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.659995451444185
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "source_texel_min_Z": 23.449624744143737,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.350693654764616
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "source_texel_min_Z": 19.350466226972955,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.251535137593834
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "source_texel_min_Z": 20.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 20.0
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "source_texel_min_Z": 20.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 20.0
+        },
+        {
+          "part": "RIGHT_thigh",
+          "source_texel_min_Z": 23.65543573603013,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.524637531603116
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "source_texel_min_Z": 19.84860628073187,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.795394891972574
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "source_texel_min_Z": 23.65944070579472,
+          "bicubic_2_5_source_pixel_guard_min_Z": 23.60622931703542
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "source_texel_min_Z": 19.584580055244487,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.53136866648519
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "source_texel_min_Z": 20.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 20.0
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "source_texel_min_Z": 18.32369942196531,
+          "bicubic_2_5_source_pixel_guard_min_Z": 17.57892396620719
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "source_texel_min_Z": 19.99999999999998,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.99999999999998
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "source_texel_min_Z": 30.00000000000005,
+          "bicubic_2_5_source_pixel_guard_min_Z": 30.00000000000005
+        },
+        {
+          "part": "LEFT_upper_arm",
+          "source_texel_min_Z": 19.041509433962254,
+          "bicubic_2_5_source_pixel_guard_min_Z": 18.630188679245272
+        },
+        {
+          "part": "LEFT_complete_forearm_glove",
+          "source_texel_min_Z": 19.999999999999996,
+          "bicubic_2_5_source_pixel_guard_min_Z": 19.999999999999996
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "source_texel_min_Z": 10.162831687111229,
+          "bicubic_2_5_source_pixel_guard_min_Z": 9.307781328797057
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "source_texel_min_Z": 10.0,
+          "bicubic_2_5_source_pixel_guard_min_Z": 10.0
+        }
+      ],
+      "minimum_floor_guard_Z": 9.307781328797057,
+      "maximum_bone_length_error": 5.684341886080802e-14,
+      "RIGHT_rigid_staff_basis_unit_orthogonal": true,
+      "alpha100_4conn_gte200_bodies": 1
+    }
+  ],
+  "actor_approval_added": 0
+}

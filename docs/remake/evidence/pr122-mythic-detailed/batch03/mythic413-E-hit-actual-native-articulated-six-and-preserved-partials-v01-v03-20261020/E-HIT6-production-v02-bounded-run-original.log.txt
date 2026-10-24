@@ -1,0 +1,7 @@
+{"phase": 0, "source": {"path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/actual-E-HIT6-own-native-articulated-v02/phase0-actual-E-hit-stable_guard-v01/thunder_female-E-hit-phase0-stable_guard-actual-native-v01.png", "sha256": "8095b18dca069ff0e162e402f0fdb732f063534757907e4353a58cb0eb6cd82e", "bytes": 980941}, "inverse_residual": 1.4210854715202004e-14, "strong": [365053]}
+{"phase": 1, "source": {"path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/actual-E-HIT6-own-native-articulated-v02/phase1-actual-E-hit-impact_response-v01/thunder_female-E-hit-phase1-impact_response-actual-native-v01.png", "sha256": "0823b925664f62a992814bfd1ddd00fbc7d3de1cc0f44f9ecaed9387315c64b1", "bytes": 950107}, "inverse_residual": 2.2737367544323206e-13, "strong": [356858]}
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-E-hit-author-20261020-v01/author-E-HIT6-own-native-complete-curved-LEFTguard-and-safe-head-field-v02.py", line 81, in <module>
+    sx,sy,error=inverse(p);assert error<.0001,error
+                                  ^^^^^^^^^^^
+AssertionError: 32.70326169114537

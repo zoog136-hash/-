@@ -1,0 +1,206 @@
+{
+  "schema": "pr122-boss-correction-session-summary-v1",
+  "date": "2026-10-23",
+  "baseline_commit": "edf9b86be5cab9cafd60d382b767c2c42e2d1ae4",
+  "scope": "Boss corrections only; normal frame availability carried forward by exact-byte preservation.",
+  "normal": {
+    "total": 258,
+    "previously_approved": 221,
+    "remaining": 37,
+    "runtime_required_requests": 8514,
+    "runtime_missing_frames": 0,
+    "WALK_as_RUN_reuse_requests": 2064,
+    "art_quality_review_performed": false,
+    "separate_new_staging_unmade_slots": {
+      "monster:놀": 31,
+      "monster:알비노 몽크": 32
+    }
+  },
+  "boss": {
+    "total": 60,
+    "historical_approved_preserved": 43,
+    "remaining": 17,
+    "corrected_candidates": 4,
+    "selected_clips": 116,
+    "selected_unique_RGBA_poses": 389,
+    "newly_generated_selected_poses": 30,
+    "newly_selected_RGBA_vs_prior_selection": 33,
+    "raw_generated_PNGs_including_failed_trials": 20,
+    "missing_required_selected_slots": 16,
+    "actors": {
+      "monster:얼음 여왕": {
+        "clips": 33,
+        "poses": 108,
+        "newly_generated_selected_poses": 9,
+        "missing_required_tracks": [],
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
+        "quality_review": "HOLD: complete technical33-track candidate; preserved source QA limits, full timed gait/contact/mythic acceptance not promoted by composition",
+        "confirmed_remaining_defects": [
+          "기존 N IDLE 0/1의 pale slit 좌우 변화. 새 N RUN 회귀와 구분한다."
+        ],
+        "production_connected": false,
+        "new_approval": false
+      },
+      "monster:죽음의 좀비 로드": {
+        "clips": 33,
+        "poses": 116,
+        "newly_generated_selected_poses": 3,
+        "missing_required_tracks": [],
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres",
+        "quality_review": "HOLD: mixed E selected nearRIGHT3/farLEFT3 fixes visible phase0/3 support repetition; incomplete swing arcs, source-plane pivot, cross-source continuity, weight/contact/Main still need review.",
+        "confirmed_remaining_defects": [
+          "E 보행의 약한 전방 swing arc와 3/5 유사 지지 자세."
+        ],
+        "production_connected": false,
+        "new_approval": false
+      },
+      "monster:알비노 데몬": {
+        "clips": 33,
+        "poses": 107,
+        "newly_generated_selected_poses": 6,
+        "missing_required_tracks": [],
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
+        "quality_review": "TARGETED E RUN batch QA PASS: side camera and opposite support repaired. Confirmed unchanged SE RUN phase0/3 same-support repetition and NW overhead contact pose remain specific motion followups. Unreviewed details are not additional batch approval gates; see review.json.",
+        "confirmed_remaining_defects": [
+          "기존 SE RUN 0/3 같은 지지발 반복.",
+          "기존 NW ATTACK의 overhead contact. fix11 수정본은 잘림/영역혼입/도끼 손 반전으로 미채택."
+        ],
+        "production_connected": false,
+        "new_approval": false
+      },
+      "monster:커츠": {
+        "clips": 17,
+        "poses": 58,
+        "newly_generated_selected_poses": 12,
+        "missing_required_tracks": [
+          "attack_0",
+          "attack_1",
+          "attack_2",
+          "attack_4",
+          "attack_5",
+          "attack_6",
+          "attack_7",
+          "hit_3",
+          "hit_4",
+          "hit_5",
+          "idle_3",
+          "idle_4",
+          "idle_5",
+          "run_3",
+          "run_4",
+          "run_5"
+        ],
+        "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres",
+        "quality_review": "HOLD: 17 native clips / 58 source poses only. Known bad W/NW cameras, SW RUN left sword hand and S attack hand/contact are excluded. New E/SE/S IDLE/HIT improve identity/camera/hand in static source review; 16 required slots, timed support/contact and full mythic QA remain incomplete.",
+        "confirmed_remaining_defects": [
+          "필수16슬롯 미제작/오류 선택 제외. 상세 목록은 missing_required_tracks를 따른다."
+        ],
+        "production_connected": false,
+        "new_approval": false
+      }
+    },
+    "new_approvals": 0,
+    "default_catalog_switches": 0
+  },
+  "verification": {
+    "normal_profiles_and_scope_rows_preserved": 258,
+    "prior_delivered_files_preserved": 1551,
+    "root_real_speed_viewport_captures": 604,
+    "root_arena_cases": [
+      {
+        "key": "monster:알비노 데몬",
+        "profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
+        "requested_segments": 33,
+        "played_segments": 33,
+        "not_authored_segments": 0,
+        "tick_samples": 3093,
+        "viewport_captures": 164,
+        "actual_Monster_reference_speed": 75.0,
+        "pixel_scale": 1.33333333333333,
+        "max_virtual_canvas_foot_error": 3.814697265625e-06,
+        "virtual_canvas_anchor_is_not_anatomical_contact_approval": true
+      },
+      {
+        "key": "monster:얼음 여왕",
+        "profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
+        "requested_segments": 33,
+        "played_segments": 33,
+        "not_authored_segments": 0,
+        "tick_samples": 3185,
+        "viewport_captures": 186,
+        "actual_Monster_reference_speed": 66.0,
+        "pixel_scale": 0.614285714286,
+        "max_virtual_canvas_foot_error": 1.9073486328125e-06,
+        "virtual_canvas_anchor_is_not_anatomical_contact_approval": true
+      },
+      {
+        "key": "monster:죽음의 좀비 로드",
+        "profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres",
+        "requested_segments": 33,
+        "played_segments": 33,
+        "not_authored_segments": 0,
+        "tick_samples": 3264,
+        "viewport_captures": 173,
+        "actual_Monster_reference_speed": 107.0,
+        "pixel_scale": 1.333333333333,
+        "max_virtual_canvas_foot_error": 3.814697265625e-06,
+        "virtual_canvas_anchor_is_not_anatomical_contact_approval": true
+      },
+      {
+        "key": "monster:커츠",
+        "profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres",
+        "requested_segments": 33,
+        "played_segments": 17,
+        "not_authored_segments": 16,
+        "tick_samples": 1488,
+        "viewport_captures": 81,
+        "actual_Monster_reference_speed": 70.0,
+        "pixel_scale": 1.166666666667,
+        "max_virtual_canvas_foot_error": 3.814697265625e-06,
+        "virtual_canvas_anchor_is_not_anatomical_contact_approval": true
+      }
+    ],
+    "speed_scale": 1,
+    "camera_zoom": 1,
+    "actual_Main": false,
+    "original_ActorMotion": true,
+    "full_CI_repeated": false
+  },
+  "raw_source_files": [
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/raw/phase1-RIGHT-midstance-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/raw/phase4-LEFT-midstance-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/raw/phase5-RIGHT-forward-flight-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-far-left-plant-single-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-far-left-support3-guide-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-run6-structural-final-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-left-half3-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-right-half3-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v02.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-S-idle-hit4-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-SW-idle-hit4-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SE-attack3-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SW-attack3-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SW-attack3-v02.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/raw/queen-SW-contact1-left-hand-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/raw/NW-contact-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/raw/SE-opposite-half3-v01.png",
+    "docs/remake/evidence/pr122-monsters-20261023/boss-fix11-demon-se-nw/raw/SE-opposite-half3-v02.png"
+  ],
+  "concurrent_history": {
+    "schema": "pr122-boss-correction-concurrent-merge-v1",
+    "local_before_merge": "712a1c402793a7c50700fa89f3bf8bcd3c282bee",
+    "incoming_head": "6a76037a",
+    "merge_commit": "7719671ee937657fafc9e17547dc5bf60d4e75f1",
+    "incoming_commits_preserved": 115,
+    "strategy": "normal merge, no rebase/reset/force push",
+    "incoming_scope": "transform draft assets/evidence plus resume notice; normal/boss catalogs unchanged",
+    "first_incoming_head": "6a76037a2548eb05a6009ff8c323ea9d98415eaf",
+    "latest_incoming_head": "565984ca68fab78b6cb0542eaf8bc4b5c53a3e6d",
+    "same_PR_delivery_commit": "9b253644bf7e4edb985d158098dc3a89fed49a8b",
+    "backup_branch": "backup/pr122-boss-corrections-20261023-6b49107e",
+    "backup_saved_commit": "77baa4e9244c1c0c956614392fca86fca450f284",
+    "push_pack_note": "Disable push.useBitmaps for the partial clone; normal non-force pushes preserve parallel production."
+  }
+}
