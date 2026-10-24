@@ -24,6 +24,10 @@ def main():
         paths.update(resume.glob('queue.json'))
         paths.update(resume.glob('requests/*/*.json'))
         paths.update(resume.glob('attempts/*.json'))
+    corrections=HERE/'corrections-v01'
+    if corrections.exists():
+        for pattern in ('*.py','*.js','*.json','requests/*/*.json','attempts/*.json'):
+            paths.update(corrections.glob(pattern))
     rows=[]
     for actor in plan['actors']:
         folder=HERE/actor['slug']
@@ -37,7 +41,8 @@ def main():
             assert sha(source)==d['sha256'] and source.stat().st_size==d['bytes']
             records.append(receipt.stem.removesuffix('-receipt'))
             paths.update([source,receipt])
-        rows.append(dict(id=actor['id'],canonical_saved='canonical-v01' in records,draft_clips_saved=sum(v!='canonical-v01' for v in records),required_clips=33))
+        slots={tuple(v.split('-')[:2]) for v in records if v!='canonical-v01'}
+        rows.append(dict(id=actor['id'],canonical_saved='canonical-v01' in records,draft_clips_saved=len(slots),source_versions_saved=sum(v!='canonical-v01' for v in records),required_clips=33))
     if a.corrections:
         folder=HERE.parent/'boss-production-r003/kurtz-motion'
         paths.update(v for v in folder.rglob('*') if v.is_file() and '__pycache__' not in v.parts and v.suffix not in ('.pyc','.import'))

@@ -52,6 +52,7 @@ def main():
             pattern=f'{role}-{row["direction"]}-action-*.png'
             for capture in (HERE/'minimum-batches').glob('*/runtime/*/captures/'+pattern):
                 if capture.parent.parent.name not in (slug,slug+'_'+role):continue
+                if not capture.stem.rsplit('-',1)[-1].isdigit():continue
                 native.append(capture)
             native.sort(key=lambda p:int(p.stem.rsplit('-',1)[-1]))
             # Existing normal-speed viewport captures are reused, not replayed.
@@ -62,7 +63,14 @@ def main():
                 image.paste(scene,(tilew*(index%2)+128*phase,y+560))
             draw.text((tilew*(index%2)+12,y+539),f'Godot normal speed: {len(native[:6])}/6 existing frame captures' if native else 'Native playback pending grouped source-geometry repair',fill=(210,220,225))
             sources.append(dict(source=row['source'],sha256=row['source_sha256'],clip=row['clip'],direction=row['direction'],display_texture=shown.relative_to(ROOT).as_posix(),display_texture_sha256=sha(shown),status=status,native_previews=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p)) for p in native[:6]]))
-        path=out/(slug+'-'+role+'.jpg');assert not path.exists();image.save(path,quality=94)
+        path=out/(slug+'-'+role+'.jpg')
+        if path.exists():
+            # Resume the same preparation after a failed page, preserving all
+            # completed previews and native playback rather than repeating them.
+            with Image.open(path) as saved:
+                assert saved.size==image.size
+                saved.verify()
+        else:image.save(path,quality=94)
         pages.append(dict(slug=slug,role=role,path=path.relative_to(ROOT).as_posix(),sha256=sha(path),sources=sources))
     manifest=dict(source_sheets=sum(len(p['sources']) for p in pages),source_poses=6*sum(len(p['sources']) for p in pages),whole_visual_review='AWAITING_INSPECTION',pages=pages)
     (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')

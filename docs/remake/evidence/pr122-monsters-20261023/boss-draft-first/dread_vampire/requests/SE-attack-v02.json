@@ -1,0 +1,24 @@
+{
+  "slug": "dread_vampire",
+  "actor": "monster:공포의 뱀파이어",
+  "clip": "SE-attack-v02",
+  "direction": "SE",
+  "role": "attack",
+  "layout": "phase_grid2",
+  "phase_count": 6,
+  "reference_sha256": "03950603de3db88da9d2e45f269443ea239e50cdae0f46f62587baa73e87806e",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique tall pale aristocratic male vampire lord, swept-back silver-black hair, sharp long ears and visible small fangs, crimson high standing collar, black embroidered frock armor with silver bat clasps, burgundy silk-lined long cape, fitted black trousers and pointed armored boots. One elegant dark silver sword in anatomical RIGHT hand, LEFT clawed hand empty. No wings or crown, preserve aristocratic predatory silhouette.\nFixed camera throughout this sheet: SOUTHEAST front three-quarter facing DOWN-RIGHT. Anatomical RIGHT weapon hand is screenLEFT, LEFT empty hand screenRIGHT.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nCORRECTION: The FIRST reference establishes identity ONLY and may face the wrong side. The SECOND reference establishes a reviewed same-character camera direction. Adopt the required camera below consistently for ALL SIX poses; never copy the first reference camera automatically.\nExactly ONE anatomical RIGHT-held weapon throughout if the character uses one; never hand swap or duplicate. Left hand stays free. Natural head recoil is fine without changing the overall facing.\nLayout EXACTLY SIX COMPLETE distinct animation poses in TWO COLUMNS and THREE ROWS (2x3), read row-major 0,1 / 2,3 / 4,5, WIDE LANDSCAPE transparent canvas. Keep each figure body about200px high with identical scale. Each full silhouette including extended wings, scythe, axe, staff, sword, tail and cape must fit comfortably inside its own large cell with generous empty alpha gutters and outside margins. No pose or weapon intersects another; no anatomy reaches canvas edge. No floor/shadow/effects/text. Preserve character identity and action sequence. Not flipped, no mirrored anatomy.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/canonical-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SE-run-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "corrects": "SE-attack-v01",
+  "confirmed_causes": [
+    "physical_component_count"
+  ],
+  "secondary_camera_reference": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SE-run-v01.png",
+  "secondary_reference_sha256": "1c2fe2eb94805e3795d3ba9fd20ce569cbe13af44fc56ac3b5d01b8ca3d72d56"
+}
