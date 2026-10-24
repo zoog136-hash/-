@@ -60,6 +60,11 @@ jobs:
       PYTHONUTF8: '1'
       TWILIGHT_CI_RETRY_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.retry_scope || 'full' }}
     steps:
+      # Preserve all PR122 source evidence; Windows Git needs long paths before checkout.
+      - name: Enable Git long paths for Windows checkout
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
