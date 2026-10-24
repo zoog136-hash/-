@@ -1,0 +1,189 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 118.0,
+			"capture_count": 7,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+			"key": "monster:오만한 우그누스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-final-integration-ugnus/ugnus_run/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "N",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 118.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_6:0",
+						"run_6:0",
+						"run_6:1",
+						"run_6:2",
+						"run_6:3",
+						"run_6:4",
+						"run_6:5"
+					],
+					"simulated_seconds": 1.25,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.721558
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 118.0,
+			"capture_count": 10,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+			"key": "monster:오만한 우그누스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-final-integration-ugnus/ugnus_attack/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 118.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"attack_3:0",
+						"attack_3:1",
+						"attack_3:2",
+						"attack_3:3",
+						"attack_3:4",
+						"attack_3:5",
+						"idle_3:1"
+					],
+					"simulated_seconds": 1.82,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.583333333333333,
+							"sequence": 1,
+							"tick": 46
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.961616
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 118.0,
+			"capture_count": 9,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+			"key": "monster:오만한 우그누스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-final-integration-ugnus/ugnus_hit/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 118.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"hit_3:1",
+						"hit_3:2",
+						"hit_3:3",
+						"hit_3:4",
+						"hit_3:5",
+						"idle_3:1",
+						"idle_3:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.833428
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 118.0,
+			"capture_count": 7,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+			"key": "monster:오만한 우그누스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-final-integration-ugnus/ugnus_idle/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 118.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"idle_3:1",
+						"idle_3:2",
+						"idle_3:3",
+						"idle_3:4",
+						"idle_3:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.485517
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

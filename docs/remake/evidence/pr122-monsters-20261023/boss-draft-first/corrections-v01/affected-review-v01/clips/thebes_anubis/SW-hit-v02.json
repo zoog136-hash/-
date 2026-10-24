@@ -1,0 +1,26 @@
+{
+  "actor": "monster:테베 아누비스",
+  "slug": "thebes_anubis",
+  "clip": "SW-hit-v02",
+  "role": "hit",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-hit-v02.png",
+  "source_sha256": "f35ef85031c431695ff901327a8dd7710d2f142d277fe6755322286597ab2a4d",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      76511,
+      71439,
+      69361,
+      68187,
+      68175,
+      66372
+    ]
+  },
+  "status": "HOLD",
+  "cause": "phase_grid_assignment",
+  "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+}

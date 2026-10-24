@@ -1,0 +1,220 @@
+{
+  "actor": "monster:제로스",
+  "slug": "zeros",
+  "clip": "W-hit-v02",
+  "role": "hit",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/W-hit-v02.png",
+  "source_sha256": "df82c99f33f3ac96db540449405f00217a785b9aa8956ab39127e31c984738dc",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      71719,
+      66726,
+      61803,
+      59977,
+      56320,
+      52769
+    ]
+  },
+  "reused_pinned_minimum_check": true,
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "W",
+        "region": [
+          69,
+          7,
+          567,
+          333
+        ],
+        "margin": [
+          93,
+          181,
+          249,
+          483
+        ],
+        "source_anchor": [
+          384,
+          336
+        ],
+        "rgba_sha256": "e0a977a9e7163c275557a0453e8ed7d99347d3da64aabe67166aad9e840e15e1",
+        "canvas_size": [
+          816,
+          816
+        ],
+        "foot": [
+          408,
+          510
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "W",
+        "region": [
+          850,
+          8,
+          637,
+          336
+        ],
+        "margin": [
+          106,
+          178,
+          179,
+          480
+        ],
+        "source_anchor": [
+          1152,
+          340
+        ],
+        "rgba_sha256": "a3facb7b8123dcc36ddda1abe02c9c9ff2cb374a1f01e4d57f0785b2dfcdfd55",
+        "canvas_size": [
+          816,
+          816
+        ],
+        "foot": [
+          408,
+          510
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "W",
+        "region": [
+          62,
+          348,
+          714,
+          319
+        ],
+        "margin": [
+          86,
+          195,
+          102,
+          497
+        ],
+        "source_anchor": [
+          384,
+          663
+        ],
+        "rgba_sha256": "388e401d8aea9dd28df2a1172eacc9a613d2eae2fdc03e7aa57dc0e0045b5a17",
+        "canvas_size": [
+          816,
+          816
+        ],
+        "foot": [
+          408,
+          510
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "W",
+        "region": [
+          824,
+          378,
+          614,
+          289
+        ],
+        "margin": [
+          80,
+          225,
+          202,
+          527
+        ],
+        "source_anchor": [
+          1152,
+          663
+        ],
+        "rgba_sha256": "2b0dd2f554d49540e0be0de4475f0323a4d8ed009365f5659fd62202b86cafc3",
+        "canvas_size": [
+          816,
+          816
+        ],
+        "foot": [
+          408,
+          510
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "W",
+        "region": [
+          74,
+          675,
+          642,
+          323
+        ],
+        "margin": [
+          98,
+          191,
+          174,
+          493
+        ],
+        "source_anchor": [
+          384,
+          994
+        ],
+        "rgba_sha256": "6d13f4074438cfee4a762a35c45900e6ad5eda177d0e61c27e5be654b65857ea",
+        "canvas_size": [
+          816,
+          816
+        ],
+        "foot": [
+          408,
+          510
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "W",
+        "region": [
+          823,
+          666,
+          642,
+          335
+        ],
+        "margin": [
+          79,
+          179,
+          174,
+          481
+        ],
+        "source_anchor": [
+          1152,
+          997
+        ],
+        "rgba_sha256": "6c85548a76b8ee52867e09384885fa5556950a16294564b1f0000c7a5c278072",
+        "canvas_size": [
+          816,
+          816
+        ],
+        "foot": [
+          408,
+          510
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 305.0,
+    "canvas_size": [
+      816,
+      816
+    ],
+    "foot": [
+      408,
+      510
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "status": "HOLD",
+  "cause": "foreground_ownership",
+  "reason": "Detached foreground has ambiguous physical-body ownership"
+}
