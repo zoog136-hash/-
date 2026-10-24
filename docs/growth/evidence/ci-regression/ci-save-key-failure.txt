@@ -1,0 +1,5 @@
+native-collections	Verify tracked resources and exact collection bindings	2026-10-24T06:21:59.3432461Z Traceback (most recent call last):
+native-collections	Verify tracked resources and exact collection bindings	2026-10-24T06:21:59.3433545Z   File "/home/runner/work/-/-/tools/check_equipment_collection_data.py", line 58, in <module>
+native-collections	Verify tracked resources and exact collection bindings	2026-10-24T06:21:59.3435614Z   File "/home/runner/work/-/-/tools/check_equipment_collection_data.py", line 41, in audit
+native-collections	Verify tracked resources and exact collection bindings	2026-10-24T06:21:59.3443867Z     assert keys==known,{'missing_known_keys':list(keys-known),'stale_keys':list(known-keys)}
+native-collections	Verify tracked resources and exact collection bindings	2026-10-24T06:21:59.3454506Z AssertionError: {'missing_known_keys': ['growth'], 'stale_keys': []}
