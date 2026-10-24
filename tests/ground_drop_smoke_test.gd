@@ -52,7 +52,14 @@ func _run() -> void:
 			if not bool(world.call("_is_walkable_world", trial)):
 				continue
 			var path: PackedVector2Array = world.call("find_world_path", player.global_position, trial) as PackedVector2Array
-			if path.size() < 2:
+			# A clear direct path may contain only its destination. A projected
+			# path must not turn an unsafe raw trial into our arrival position.
+			if path.is_empty() or path[-1].distance_to(trial) > 60.0:
+				continue
+			var auto_point: Vector2 = trial + Vector2(13, 0)
+			if not bool(world.call("_is_walkable_world", auto_point)):
+				continue
+			if not bool(world.call("_has_line_of_sight_world", trial, auto_point)):
 				continue
 			far_point = trial
 			break

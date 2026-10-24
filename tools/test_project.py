@@ -94,6 +94,9 @@ for name,extra in tests:
         # the PCK probe child, must inherit its own empty save/config directory.
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
+        if name == 'option_awakening_ui_test':
+            # This native-input test deliberately confirms real card consumption.
+            env['TWILIGHT_UI_TEST_ISOLATED']='1'
         if name.startswith('original_based_') or name == 'pr100_direction_gameplay_test':
             # Keep the real directional/lifecycle report after isolated saves
             # are cleaned up, including diagnostics from a failed CI case.

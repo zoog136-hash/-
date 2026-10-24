@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "policy_id": "twilight-option-awakening-v1",
+  "provenance": {
+    "kind": "twilight_local_balance",
+    "note": "재료 허용 등급·카드당 경험치·시도 비용·실패 경험치 환급은 원작 일반 규칙의 수치를 확인하지 못해 TWILIGHT용으로 정한 설정값. 원작 확정 수치로 표기하지 않음. 성공 확률과 카드별 추가 옵션은 별도 공식 공시 자료 사용."
+  },
+  "experience_required": 100,
+  "feed_cost": 0,
+  "overflow": "discard",
+  "pity_enabled": false,
+  "target_requires_owned": true,
+  "consume_duplicates_only": true,
+  "grades": {
+    "영웅": {
+      "material_experience": {
+        "희귀": 25,
+        "영웅": 100
+      },
+      "attempt_cost": 100000,
+      "failure_refund_experience": 20
+    },
+    "전설": {
+      "material_experience": {
+        "영웅": 25,
+        "전설": 100
+      },
+      "attempt_cost": 500000,
+      "failure_refund_experience": 20
+    },
+    "신화": {
+      "material_experience": {
+        "전설": 25,
+        "신화": 100
+      },
+      "attempt_cost": 1000000,
+      "failure_refund_experience": 20
+    },
+    "유일": {
+      "material_experience": {
+        "전설": 10,
+        "신화": 100
+      },
+      "attempt_cost": 5000000,
+      "failure_refund_experience": 0
+    }
+  }
+}

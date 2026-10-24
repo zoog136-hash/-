@@ -136,6 +136,8 @@ func _run() -> void:
 					check(not slot.monster.dead and slot.monster.hp==slot.monster.max_hp and slot.monster.motion.death_clock==0.,"pooled actor fully reset")
 			check(alive==int(region.max_count) and population.available.size()<=64,"continuous bounded dense respawn "+id)
 		await process_frame
+	if boss_keys.size()!=27:
+		printerr("MONSTER_WORLD_BOSS_IDENTITY_DIAGNOSTIC ",JSON.stringify(boss_keys.keys()))
 	check(map_count==world.maps.size() and dense_count==4 and boss_keys.size()==27,"every registered field/four dense areas/twenty-seven active persisted boss lives covered")
 	world._set_map("oman_10",false)
 	pause_actors()

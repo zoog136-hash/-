@@ -2,6 +2,8 @@ name: Consumable Validate
 
 on:
   push:
+    # Feature revisions are validated by pull_request, without a second push run.
+    branches: [main]
     paths:
       - 'scripts/consumable_rules.gd'
       - 'scripts/consumable_service.gd'
