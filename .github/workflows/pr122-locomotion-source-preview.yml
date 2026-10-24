@@ -13,6 +13,11 @@ on:
       - 'tests/pr122_reaper_locomotion_source_preview.gd'
       - '.github/workflows/pr122-locomotion-source-preview.yml'
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

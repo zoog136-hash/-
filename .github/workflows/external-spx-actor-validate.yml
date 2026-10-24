@@ -15,6 +15,11 @@ on:
       - 'tests/external_spx_actor_runtime_test.gd'
       - '.github/workflows/external-spx-actor-validate.yml'
   workflow_dispatch:
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   synthetic-actor:
     runs-on: ubuntu-latest

@@ -12,6 +12,11 @@ on:
       - 'tools/pr122_pinned_gait_source_review.py'
       - '.github/workflows/pr122-gait-source-review.yml'
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

@@ -13,6 +13,8 @@ on:
       - 'scripts/loot_drop.gd'
       - 'tests/*spawn*'
       - 'tests/monster_world_test.gd'
+      - 'tools/test_project.py'
+      - 'tools/test_project_support.py'
       - '.github/workflows/renewed-map-spawns.yml'
   workflow_dispatch:
 
@@ -72,8 +74,11 @@ jobs:
               text = (root / name).read_text()
               assert 'SCRIPT ERROR:' not in text and 'Parse Error:' not in text, name
           PY
-      - name: Full project regression including boss persistence
-        run: python3 tools/test_project.py --godot "$GODOT" --logs /tmp/spawn-validation/test-results/project
+      - name: Map population, routes and boss persistence regressions
+        # Integration keeps the full suite on these PR bases; other events remain full.
+        env:
+          TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'integration/twilight-complete-20261009') && 'import,bake_navigation,boot,native_png_route_recovery_test,renewed_map_spawn_test,remake_map_population_test,monster_world_test,aden_faith_png_monster_spawns_test,native_png_monster_spawns_test,aden_faith_png_save_migration_test,hunting_paths_test,hunting_navigation_cache_test,stage5_save_compatibility_test,remake_world_lifecycle_test,aden_boss_special_test,remake_source_runtime_test' || '' }}
+        run: python3 tools/test_project.py --godot "$GODOT" --logs /tmp/spawn-validation/test-results/project --only "$TWILIGHT_CI_TESTS"
       - name: Publish validation evidence, not an untested game build
         if: always()
         uses: actions/upload-artifact@v4

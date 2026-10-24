@@ -11,8 +11,15 @@ on:
       - 'scripts/ui/renewal_hud.gd'
       - 'data/item_icon_art_profiles_v1.json'
       - 'tests/item_icon_art_smoke_test.gd'
+      - 'tools/test_project.py'
+      - 'tools/test_project_support.py'
       - '.github/workflows/item-icon-art-validate.yml'
   workflow_dispatch:
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   item-icon-art:
@@ -40,10 +47,13 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_icon_art_smoke_test.gd 2>&1 | tee item-icon-test.log
           ! grep -E "SCRIPT ERROR:|ERROR:|ITEM_ICON_ART_FAILED|ITEM_ICON_FAIL" item-icon-test.log
           grep -q "ITEM_ICON_ART_OK" item-icon-test.log
-      - name: Existing project tests
+      - name: Item icons, inventory and visual regressions
+        # Every PR also runs Integration's unfiltered suite; other events keep it here.
+        env:
+          TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && 'import,bake_navigation,boot,item_icon_art_smoke_test,inven_inventory_icons_test,inventory_db_smoke_test,item_visual_test,item_visual_repair_test,remake_ui_local_item_icons_test,blessed_scroll_item_visual_test,lineage_inventory_ui_smoke_test' || '' }}
         run: |
           set -euo pipefail
-          python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 2>&1 | tee item-icon-regression.log
+          python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --only "$TWILIGHT_CI_TESTS" 2>&1 | tee item-icon-regression.log
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4

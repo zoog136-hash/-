@@ -12,6 +12,11 @@ on:
       - '.github/workflows/item-options-validate.yml'
   workflow_dispatch:
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   item-options:
     runs-on: ubuntu-latest

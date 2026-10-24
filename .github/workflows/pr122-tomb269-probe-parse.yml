@@ -12,6 +12,11 @@ on:
       - 'tests/pr122_tomb269_small_native_sw_probe.gd'
       - '.github/workflows/pr122-tomb269-probe-parse.yml'
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
