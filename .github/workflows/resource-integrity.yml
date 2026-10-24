@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   resource-integrity:
     name: Verify committed assets, manifest SHA, and delivery status

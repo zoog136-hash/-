@@ -10,6 +10,11 @@ on:
       - feature/twilight-shop-authoritative-transactions-20261010
   workflow_dispatch:
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   local-warehouse:
     runs-on: ubuntu-latest
