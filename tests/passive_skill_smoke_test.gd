@@ -47,7 +47,8 @@ func _run() -> void:
 		var base_attack: int = int(world.get("attack_power"))
 		var equipment_bonus: int = 0
 		for rec: Dictionary in world.call("_all_equipped_records"):
-			equipment_bonus += int(rec.get("atk", 0))
+			if str(rec.get("slot", "")) != "weapon":
+				equipment_bonus += int(rec.get("atk", 0))
 		var enhance: int = int(world.call("_equipment_enhancement_level", "weapon"))
 		var active_bonus: int = int(world.call("_active_skill_buff_total", "atk"))
 		var passive_bonus: int = int(world.call("_passive_skill_total", "atk"))

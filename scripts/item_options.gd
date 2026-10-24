@@ -70,35 +70,34 @@ static func additional_damage(record: Dictionary, attack_kind: String) -> int:
 		return shared + _option(record, ["rangedDamage", "ranged_damage"], "원거리 대미지")
 	return shared + _option(record, ["meleeDamage", "melee_damage"], "근거리 대미지")
 
-static func weapon_size_adjustment(record: Dictionary, is_large: bool) -> int:
-	if not is_large or str(record.get("slot", "")) != "weapon":
+# The weapon's size damage is a separate 1..N roll, never a fixed part
+# of the melee/ranged character sheet. Typed fields win over source-stat and
+# legacy descriptions. "atk" is only a fallback for weapons with no size data;
+# old catalog entries sometimes store small damage + flat bonus together in it.
+static func weapon_size_damage(record: Dictionary, is_large: bool) -> int:
+	if str(record.get("slot", "")) != "weapon":
 		return 0
-	if record.has("large_damage") and record.has("small_damage"):
-		return int(record.get("large_damage", 0)) - int(record.get("small_damage", 0))
-	# Inven's 2,129-item source records encode the actual 54 / 35 in
-	# 'stat', or in named desc options rather than the first desc fragment.
+	if record.has("small_damage") and record.has("large_damage"):
+		return maxi(0, int(record.get("large_damage" if is_large else "small_damage", 0)))
 	var small_named: int = _description_bonus(record, "작은 대상 대미지")
 	var large_named: int = _description_bonus(record, "큰 대상 대미지")
 	if small_named > 0 and large_named > 0:
-		return large_named - small_named
-	var stat_value: String = str(record.get("stat", "")).strip_edges()
-	if stat_value.contains("/"):
-		var stat_parts: PackedStringArray = stat_value.split("/")
-		if stat_parts.size() == 2:
-			var stat_small: String = stat_parts[0].strip_edges()
-			var stat_large: String = stat_parts[1].strip_edges()
-			if stat_small.is_valid_int() and stat_large.is_valid_int():
-				return int(stat_large) - int(stat_small)
-	# Legacy simplified descriptions encode base weapon damage as 21/13.
-	var head: String = str(record.get("desc", "")).split("·")[0].strip_edges()
-	var pieces: PackedStringArray = head.split("/")
-	if pieces.size() < 2:
+		return maxi(0, large_named if is_large else small_named)
+	# Inven source "stat": "54 / 35"; earlier game DB "desc": "21/13 · ...".
+	for pair: String in [str(record.get("stat", "")).strip_edges(), str(record.get("desc", "")).split("·")[0].strip_edges()]:
+		var parts: PackedStringArray = pair.split("/")
+		if parts.size() == 2:
+			var small: String = parts[0].strip_edges()
+			var large: String = parts[1].strip_edges()
+			if small.is_valid_int() and large.is_valid_int():
+				return maxi(0, int(large if is_large else small))
+	return maxi(0, int(record.get("atk", 0)))
+
+# Backward-compatible audit helper; live attacks use weapon_size_damage rolls.
+static func weapon_size_adjustment(record: Dictionary, is_large: bool) -> int:
+	if not is_large:
 		return 0
-	var small: String = pieces[0].strip_edges()
-	var large: String = pieces[1].strip_edges()
-	if not small.is_valid_int() or not large.is_valid_int():
-		return 0
-	return int(large) - int(small)
+	return weapon_size_damage(record, true) - weapon_size_damage(record, false)
 
 static func item_weight(record: Dictionary, type_defaults: Dictionary = {}) -> int:
 	if record.has("weight"):

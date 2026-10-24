@@ -28,7 +28,8 @@ func _run() -> void:
 	print("FIELD load_ms=",Time.get_ticks_msec()-started)
 	var field: PlayableField = world.field_map
 	check(field != null and field.bounds.size == Vector2(12288,8192),"map load and actual field extent")
-	check(world.maps.size()==25,"preserve 25 existing map IDs")
+	for assertion: Dictionary in preload("res://tests/map_catalog_assertions.gd").checks(world):
+		check(bool(assertion.ok),str(assertion.label))
 	check(field.walkable(world.player.global_position) and field.point_clear(world.player.global_position),"player spawn has body clearance")
 	check(world.player.global_position.distance_to(Vector2(2420,4100))<40,"authored player spawn")
 	check(field.is_safe(Vector2(1600,4100)),"town safe zone")

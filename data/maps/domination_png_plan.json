@@ -1,0 +1,695 @@
+{
+  "schema": 1,
+  "revision": 2026102302,
+  "sources": {
+    "111.png": {
+      "sha256": "f5c4549298e586d3839246d736b61b6106851af07cde8c5a21522d046ff38f87",
+      "bytes": 42449419,
+      "size": [
+        17694,
+        7372
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "decoded": true,
+      "server_map_id": null,
+      "collision_data_id": null,
+      "source_identity_authority": "USER_SELECTED_111_AS_DOMINATION_REFERENCE_GRID_REGISTRATION_HELD"
+    }
+  },
+  "maps": {
+    "domination_summit": {
+      "name": "지배의 탑 정상 · 검은 왕의 성채",
+      "file": "111.png",
+      "layout_revision": 2026102302,
+      "spawn": [
+        7920,
+        3456
+      ],
+      "walk_polygons": [
+        [
+          [
+            7565,
+            3370
+          ],
+          [
+            8084,
+            3120
+          ],
+          [
+            8770,
+            3485
+          ],
+          [
+            8235,
+            3750
+          ]
+        ]
+      ],
+      "collision_scope": "MANUALLY_REVIEWED_111_COURTYARD_ONLY_SOURCE_GRID_REGISTRATION_HELD",
+      "population_status": "CURRENT_CATALOG_LIVES_AND_SPECIES_RELOCATED_TO_REVIEWED_COURTYARD",
+      "collision": [
+        {
+          "id": "southeast_crystal_foot",
+          "shape": "polygon",
+          "points": [
+            [
+              8342,
+              3622
+            ],
+            [
+              8394,
+              3648
+            ],
+            [
+              8342,
+              3674
+            ],
+            [
+              8290,
+              3648
+            ]
+          ]
+        },
+        {
+          "id": "west_crystal_foot",
+          "shape": "polygon",
+          "points": [
+            [
+              7740,
+              3328
+            ],
+            [
+              7792,
+              3354
+            ],
+            [
+              7740,
+              3380
+            ],
+            [
+              7688,
+              3354
+            ]
+          ]
+        },
+        {
+          "id": "courtyard_rift",
+          "shape": "polygon",
+          "points": [
+            [
+              7998,
+              3303
+            ],
+            [
+              8052,
+              3272
+            ],
+            [
+              8140,
+              3304
+            ],
+            [
+              8118,
+              3342
+            ],
+            [
+              8043,
+              3354
+            ]
+          ]
+        }
+      ],
+      "visual_void_mask": {
+        "file": "111-void-mask-v2.png",
+        "sha256": "57495df0ca4995b7184e45e0d686f7155641854620edb6417c09c12f50675e41"
+      },
+      "foreground": [
+        {
+          "id": "central_crystal_column",
+          "kind": "structure",
+          "foot_image": [
+            8342,
+            3650
+          ],
+          "collision_correspondence": "MANUAL_SAMPLE_ORIGINAL_GRID_EDITION_MISMATCH_HELD",
+          "polygon_image": [
+            [
+              8336,
+              3378
+            ],
+            [
+              8351,
+              3383
+            ],
+            [
+              8351,
+              3389
+            ],
+            [
+              8366,
+              3394
+            ],
+            [
+              8363,
+              3412
+            ],
+            [
+              8358,
+              3416
+            ],
+            [
+              8365,
+              3428
+            ],
+            [
+              8357,
+              3440
+            ],
+            [
+              8362,
+              3450
+            ],
+            [
+              8352,
+              3469
+            ],
+            [
+              8362,
+              3478
+            ],
+            [
+              8354,
+              3490
+            ],
+            [
+              8365,
+              3500
+            ],
+            [
+              8358,
+              3517
+            ],
+            [
+              8365,
+              3526
+            ],
+            [
+              8356,
+              3540
+            ],
+            [
+              8367,
+              3553
+            ],
+            [
+              8358,
+              3575
+            ],
+            [
+              8364,
+              3589
+            ],
+            [
+              8378,
+              3605
+            ],
+            [
+              8384,
+              3638
+            ],
+            [
+              8391,
+              3651
+            ],
+            [
+              8375,
+              3662
+            ],
+            [
+              8340,
+              3673
+            ],
+            [
+              8280,
+              3645
+            ],
+            [
+              8289,
+              3617
+            ],
+            [
+              8300,
+              3601
+            ],
+            [
+              8305,
+              3577
+            ],
+            [
+              8307,
+              3541
+            ],
+            [
+              8303,
+              3517
+            ],
+            [
+              8309,
+              3477
+            ],
+            [
+              8305,
+              3432
+            ],
+            [
+              8313,
+              3406
+            ],
+            [
+              8303,
+              3392
+            ],
+            [
+              8318,
+              3383
+            ]
+          ]
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "name": "이전 지역",
+          "position": [
+            7900,
+            3250
+          ],
+          "target_map": "oman_10",
+          "radius": 56
+        },
+        {
+          "id": "next",
+          "name": "다음 지역",
+          "position": [
+            8190,
+            3210
+          ],
+          "target_map": "escaros_01",
+          "radius": 56
+        },
+        {
+          "id": "aden_return",
+          "name": "아덴 귀환",
+          "position": [
+            7770,
+            3405
+          ],
+          "target_map": "aden_world",
+          "radius": 56
+        },
+        {
+          "id": "advance_waystone",
+          "name": "중앙 이동석",
+          "position": [
+            8440,
+            3560
+          ],
+          "target_map": "domination_summit",
+          "target_position": [
+            8110,
+            3510
+          ],
+          "radius": 56,
+          "target_layout_revision": 2026102302
+        },
+        {
+          "id": "entry_waystone",
+          "name": "입구 이동석",
+          "position": [
+            8120,
+            3665
+          ],
+          "target_map": "domination_summit",
+          "target_position": [
+            7920,
+            3456
+          ],
+          "radius": 56,
+          "target_layout_revision": 2026102302
+        }
+      ],
+      "npc_spawn": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position": [
+            8030,
+            3470
+          ],
+          "role": "guide"
+        }
+      ],
+      "encounter_polygons": {
+        "bastion_0": [
+          [
+            7750,
+            3360
+          ],
+          [
+            7900,
+            3280
+          ],
+          [
+            8000,
+            3370
+          ],
+          [
+            7950,
+            3500
+          ],
+          [
+            7800,
+            3450
+          ]
+        ],
+        "bastion_1": [
+          [
+            7990,
+            3190
+          ],
+          [
+            8090,
+            3150
+          ],
+          [
+            8250,
+            3260
+          ],
+          [
+            8200,
+            3300
+          ],
+          [
+            8100,
+            3250
+          ],
+          [
+            8000,
+            3280
+          ]
+        ],
+        "bastion_2": [
+          [
+            8390,
+            3340
+          ],
+          [
+            8690,
+            3490
+          ],
+          [
+            8500,
+            3590
+          ],
+          [
+            8410,
+            3540
+          ]
+        ],
+        "bastion_3": [
+          [
+            8010,
+            3550
+          ],
+          [
+            8180,
+            3460
+          ],
+          [
+            8330,
+            3570
+          ],
+          [
+            8240,
+            3710
+          ],
+          [
+            8100,
+            3650
+          ]
+        ],
+        "boss": [
+          [
+            8190,
+            3325
+          ],
+          [
+            8410,
+            3325
+          ],
+          [
+            8410,
+            3485
+          ],
+          [
+            8190,
+            3485
+          ]
+        ]
+      },
+      "safe_zone": [
+        "entry"
+      ],
+      "combat_zone": [
+        "bastion_0",
+        "bastion_1",
+        "bastion_2",
+        "bastion_3"
+      ],
+      "boss_zone": [
+        "boss"
+      ],
+      "regions": [
+        {
+          "id": "entry",
+          "center": [
+            7920,
+            3456
+          ],
+          "radius": 48,
+          "color": "73cba8",
+          "type": "safe",
+          "name": "입구 안전 구역"
+        },
+        {
+          "id": "bastion_0",
+          "polygon": [
+            [
+              7750,
+              3360
+            ],
+            [
+              7900,
+              3280
+            ],
+            [
+              8000,
+              3370
+            ],
+            [
+              7950,
+              3500
+            ],
+            [
+              7800,
+              3450
+            ]
+          ],
+          "color": "a98ac9",
+          "type": "combat",
+          "center": [
+            7880.0,
+            3392.0
+          ],
+          "radius": 48,
+          "name": "성채 경비 구역"
+        },
+        {
+          "id": "bastion_1",
+          "polygon": [
+            [
+              7990,
+              3190
+            ],
+            [
+              8090,
+              3150
+            ],
+            [
+              8250,
+              3260
+            ],
+            [
+              8200,
+              3300
+            ],
+            [
+              8100,
+              3250
+            ],
+            [
+              8000,
+              3280
+            ]
+          ],
+          "color": "a98ac9",
+          "type": "combat",
+          "center": [
+            8105.0,
+            3238.3333333333335
+          ],
+          "radius": 48,
+          "name": "성채 경비 구역"
+        },
+        {
+          "id": "bastion_2",
+          "polygon": [
+            [
+              8390,
+              3340
+            ],
+            [
+              8690,
+              3490
+            ],
+            [
+              8500,
+              3590
+            ],
+            [
+              8410,
+              3540
+            ]
+          ],
+          "color": "a98ac9",
+          "type": "combat",
+          "center": [
+            8497.5,
+            3490.0
+          ],
+          "radius": 48,
+          "name": "성채 경비 구역"
+        },
+        {
+          "id": "bastion_3",
+          "polygon": [
+            [
+              8010,
+              3550
+            ],
+            [
+              8180,
+              3460
+            ],
+            [
+              8330,
+              3570
+            ],
+            [
+              8240,
+              3710
+            ],
+            [
+              8100,
+              3650
+            ]
+          ],
+          "color": "a98ac9",
+          "type": "combat",
+          "center": [
+            8172.0,
+            3588.0
+          ],
+          "radius": 48,
+          "name": "성채 경비 구역"
+        },
+        {
+          "id": "boss",
+          "polygon": [
+            [
+              8190,
+              3325
+            ],
+            [
+              8410,
+              3325
+            ],
+            [
+              8410,
+              3485
+            ],
+            [
+              8190,
+              3485
+            ]
+          ],
+          "color": "bc6595",
+          "type": "boss",
+          "center": [
+            8300.0,
+            3405.0
+          ],
+          "radius": 48,
+          "name": "그림 리퍼 성채"
+        }
+      ],
+      "route_checks": [
+        [
+          7920,
+          3456
+        ],
+        [
+          8150,
+          3430
+        ],
+        [
+          8420,
+          3500
+        ],
+        [
+          8270,
+          3660
+        ],
+        [
+          7900,
+          3400
+        ]
+      ],
+      "blocked_probes": [
+        [
+          8342,
+          3648
+        ],
+        [
+          7740,
+          3354
+        ],
+        [
+          8060,
+          3315
+        ],
+        [
+          8200,
+          3900
+        ]
+      ],
+      "original_111_registration": {
+        "status": "HELD_NOT_GLOBAL_AFFINE",
+        "verified_control_points": 0,
+        "previous_fit_median_error_png_px": 144.76,
+        "unreviewed_terrain": "CLOSED"
+      }
+    }
+  }
+}

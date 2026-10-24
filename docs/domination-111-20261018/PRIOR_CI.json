@@ -1,0 +1,107 @@
+{
+  "head": "3b9004e968494f2960c615c7483befb2173b1beb",
+  "source_physics": {
+    "status": "success",
+    "url": "https://github.com/zoog136-hash/-/actions/runs/39097375848"
+  },
+  "observed_failures": [
+    {
+      "run": 39097375944,
+      "name": "Combat Animation Validate",
+      "conclusion": "failure",
+      "log_bytes": 44976,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375944"
+    },
+    {
+      "run": 39097375913,
+      "name": "TWILIGHT renewed-map spawn validation",
+      "conclusion": "failure",
+      "log_bytes": 0,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375913"
+    },
+    {
+      "run": 39097375946,
+      "name": "Monster World Validate",
+      "conclusion": "failure",
+      "log_bytes": 0,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375946"
+    },
+    {
+      "run": 39097375920,
+      "name": "TWILIGHT Integration Validate",
+      "conclusion": "failure",
+      "log_bytes": 58125,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375920"
+    },
+    {
+      "run": 39097375914,
+      "name": "L1J Runtime and Recovery Validation",
+      "conclusion": "failure",
+      "log_bytes": 78627,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375914"
+    },
+    {
+      "run": 39097375810,
+      "name": "TWILIGHT Monster AI Leash and Path",
+      "conclusion": "failure",
+      "log_bytes": 0,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375810"
+    },
+    {
+      "run": 39097375814,
+      "name": "Original Skill Migration Validation",
+      "conclusion": "failure",
+      "log_bytes": 50879,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375814"
+    },
+    {
+      "run": 39097375802,
+      "name": "TWILIGHT 25 Map Visual Styles",
+      "conclusion": "failure",
+      "log_bytes": 0,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375802"
+    },
+    {
+      "run": 39097375793,
+      "name": "TWILIGHT Combat Resolution Equivalence",
+      "conclusion": "failure",
+      "log_bytes": 0,
+      "fetch_exit": 0,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375793"
+    },
+    {
+      "run": 39097375925,
+      "name": "Animation Presentation Validate",
+      "conclusion": null,
+      "log_bytes": 0,
+      "fetch_exit": 1,
+      "url": "https://github.com/zoog136-hash/-/actions/runs/39097375925"
+    }
+  ],
+  "new_regressions_fixed": [
+    {
+      "test": "png_world_runtime_test",
+      "cause": "Skip marker lacked the colon required by the existing fail-closed test parser; real-run result marker also normalized."
+    },
+    {
+      "test": "road_surface_mesh_test",
+      "cause": "Our new survey metadata exposed top-level map_id under data/maps and was enumerated as playable geometry; use game_map_id instead, preserving original game map files."
+    },
+    {
+      "test": "original_based_transform_temporal_main_test",
+      "cause": "Our foot-clearance motion guard deadlocked glancing terrain contacts.",
+      "baseline": "60067 checks 0 failure at exact main",
+      "before_fix": "59995 checks 2 East AI failures",
+      "after_fix": "60061 checks 0 failure; original assertions unchanged"
+    }
+  ],
+  "remaining": "New HEAD remote full CI pending; ten-case transform batch not claimed complete."
+}

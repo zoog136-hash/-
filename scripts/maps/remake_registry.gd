@@ -2,11 +2,20 @@ extends RefCounted
 ## Existing 25 IDs only. An absent private pack keeps the existing project;
 ## a present, damaged install is rejected before changing maps or saved state.
 const ROOT: String = "res://data/map_remake/private/"
+const BUNDLED_ROOT: String = "res://external_map_packs/oman_v2/data/map_remake/private/"
 const FIELD = preload("res://scripts/maps/remake_field.gd")
 const READ = preload("res://scripts/maps/source_travel.gd")
 const ARCHIVE_SHA: String = "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20"
 const ADEN = preload("res://scripts/maps/aden_remake_registry.gd")
 const AUTHORED = preload("res://scripts/maps/authored_remake_field.gd")
+
+static func pack_root() -> String:
+	# A GitHub main ZIP / Termux update is now a complete runtime source:
+	# use the same packed Oman topology directly, with hash verification at load.
+	var local: String = OS.get_environment("TWILIGHT_REMAKE_PACK")
+	if not local.is_empty(): return local.trim_suffix("/")+"/"
+	if FileAccess.file_exists(BUNDLED_ROOT+"index.json"): return BUNDLED_ROOT
+	return ROOT
 
 static func display_names() -> Dictionary:
 	var names: Dictionary={}
@@ -28,28 +37,35 @@ static func authored_field(definition: Dictionary) -> PlayableField:
 static func installed(map_id: String) -> bool:
 	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return false
 	if map_id == "aden_world": return ADEN.installed()
+	# 111.png is explicitly selected by the user as our Domination reference.
+	# Candidate source/PNG registration stays in the isolated review session.
+	if map_id == "domination_summit": return "--png-review" in OS.get_cmdline_user_args() and FileAccess.file_exists(pack_root()+"definitions/domination_summit.json")
 	# A corrupt or partial installed index must not silently load an old layout.
-	return map_id in ["oman_01","oman_02","oman_03","oman_04","oman_05","oman_06","oman_07","oman_08","oman_09","oman_10"] and FileAccess.file_exists(ROOT+"index.json")
+	return map_id in ["oman_01","oman_02","oman_03","oman_04","oman_05","oman_06","oman_07","oman_08","oman_09","oman_10"] and FileAccess.file_exists(pack_root()+"index.json")
 
 static func load_field(map_id: String) -> RemakePlayableField:
 	if map_id == "aden_world": return ADEN.load_field()
-	var index: Dictionary = READ.read_object(ROOT+"index.json")
+	var local_root: String = pack_root()
+	var index: Dictionary = READ.read_object(local_root+"index.json")
 	if int(index.get("schema",0))!=1 or index.get("source_archive_sha256")!=ARCHIVE_SHA or not index.get("maps") is Dictionary: return null
 	if not index.maps.get(map_id) is Dictionary: return null
 	var entry: Dictionary = index.get("maps",{}).get(map_id,{})
 	if entry.is_empty() or str(entry.get("path","")) != ROOT+"definitions/"+map_id+".json": return null
-	if FileAccess.get_sha256(entry.path) != str(entry.get("sha256","")): return null
-	var definition: Dictionary = READ.read_object(entry.path)
+	var local_definition: String = local_root+"definitions/"+map_id+".json"
+	if FileAccess.get_sha256(local_definition) != str(entry.get("sha256","")): return null
+	var definition: Dictionary = READ.read_object(local_definition)
 	if not valid_definition(definition): return null
 	if definition.get("map_id") != map_id or definition.get("source_sha256") != entry.get("grid_sha256"): return null
 	if str(definition.get("pack_root",""))+"/" != ROOT or definition.get("source_archive_sha256") != index.get("source_archive_sha256"): return null
-	var expected: Dictionary = READ.read_object("res://data/maps/remake_calibrations.json").get("maps",{}).get(map_id,{})
+	var expected: Dictionary = READ.read_object("res://data/maps/domination_111_calibration.json") if map_id == "domination_summit" else READ.read_object("res://data/maps/remake_calibrations.json").get("maps",{}).get(map_id,{})
 	if expected.is_empty(): return null
 	for key: String in ["origin","dimensions","source_map_id"]:
 		if definition.get(key)!=expected.get(key): return null
 	if definition.source_sha256!=expected.grid_sha256: return null
 	for key: String in ["basis_x","basis_y","translation"]:
 		if definition.coordinate_mapping.get(key)!=expected.get(key): return null
+	# The unmodified file hash was checked above. Only the disk location changes.
+	definition.pack_root = local_root.trim_suffix("/")
 	var field: RemakePlayableField = FIELD.new()
 	if not field.configure_source(definition): field.close(); return null
 	# A floor has nine small navigation chunks. Verify all of them before

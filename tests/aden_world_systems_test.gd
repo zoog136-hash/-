@@ -25,6 +25,7 @@ func capture_boss(id: String, boss: TwilightMonster) -> void:
 		await RenderingServer.frame_post_draw
 		check(root.get_texture().get_image().save_png(output+"/boss-"+id+".png")==OK,"actual boss PNG "+id)
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_world_systems_test.gd"): return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="):output=arg.trim_prefix("--output=")
 		if arg=="--capture":capture=true

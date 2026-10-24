@@ -8,6 +8,15 @@ var last_cell := Vector2i(-999,-999)
 var last_doors: Dictionary = {}
 var clock: float = 0.0
 
+func add_png_review_footprints(footprints: RefCounted) -> void:
+	# A small, explicitly reviewed set reuses this real terrain body. It never
+	# overwrites streamed original segments or installs in an ordinary game.
+	for polygon: PackedVector2Array in footprints.polygons:
+		var shape := CollisionPolygon2D.new()
+		shape.name = "ManualPngFootprint"
+		shape.polygon = polygon
+		add_child(shape)
+
 func _ready() -> void:
 	name = "SourceCollisionStream"
 	collision_layer = 4
@@ -42,7 +51,7 @@ func refresh() -> void:
 					var cell := Vector2i(x,y)
 					if source.value_at(cell,true)==0: continue
 					for heading: int in [0,2,4,6]:
-						if source.can_step(cell,heading): continue
+						if source.source_can_step(cell,heading): continue
 						var next: Vector2i = cell+source.DIRECTIONS[heading]
 						if source.value_at(next,true)!=0 and (next.y<y or (next.y==y and next.x<x)): continue
 						segments.append_array(source.coordinates.edge_points(cell,heading))

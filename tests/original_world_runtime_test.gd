@@ -24,7 +24,8 @@ func _run() -> void:
 	world.max_hp = 1000000
 	world.hp = 1000000
 	world.rng.seed = 10112862
-	check(world.maps.size()==25,"legacy map IDs preserved")
+	for assertion: Dictionary in preload("res://tests/map_catalog_assertions.gd").checks(world):
+		check(bool(assertion.ok),str(assertion.label))
 	check(world.original_maps.size()==998,"all verified nonempty source maps registered")
 	var priority: Array[int] = [4]
 	for id: int in range(101,112): priority.append(id)

@@ -145,9 +145,10 @@ func line_clear(from: Vector2, to: Vector2) -> bool:
 		if absf(tx-ty)<0.0000001: offset=Vector2i(sx,sy);tx+=dx;ty+=dy
 		elif tx<ty: offset=Vector2i(sx,0);tx+=dx
 		else: offset=Vector2i(0,sy);ty+=dy
-		if not can_step(cell,DIRECTIONS.find(offset)): return false
+		if not _line_can_step(cell,DIRECTIONS.find(offset)): return false
 		cell+=offset
 	return false
+func _line_can_step(cell: Vector2i, heading: int) -> bool: return can_step(cell,heading)
 func path(from: Vector2,to: Vector2) -> PackedVector2Array:
 	var start: Vector2i=nearest_cell(from)
 	var goal: Vector2i=nearest_cell(to)

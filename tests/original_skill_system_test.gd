@@ -29,6 +29,7 @@ func reset_cast() -> void:
 	world.hp = world._effective_max_hp()
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_skill_system_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	await process_frame

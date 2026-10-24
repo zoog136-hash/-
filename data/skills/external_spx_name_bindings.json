@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "description": "스킬명 일치만으로 임시 연결. 원작 시각 일치와 소스 버전 검증은 수행하지 않음.",
+  "bindings": {
+    "lm_45d35daedfc527c9": {
+      "name": "포우 슬레이어",
+      "family": "foe_slayer",
+      "phases": {
+        "cast": "cast",
+        "impact": "impact"
+      },
+      "runtime_status": "CONNECTED_PARTIAL"
+    },
+    "lm_42262935d6f53b07": {
+      "name": "포우 슬레이어(임팩트)",
+      "family": "foe_slayer",
+      "phases": {
+        "cast": "cast",
+        "impact": "impact"
+      },
+      "runtime_status": "BLOCKED_VISUAL_ONLY"
+    },
+    "lm_816e9fd2e2e8a4e8": {
+      "name": "아우라키아",
+      "family": "aurakiya",
+      "phases": {
+        "cast": "cast",
+        "impact": "impact"
+      },
+      "runtime_status": "BLOCKED_VISUAL_ONLY"
+    }
+  },
+  "families": {
+    "foe_slayer": {
+      "source_name": "Foe Slayer Force Active",
+      "source_by_animation": {
+        "cast": [
+          21930,
+          21931
+        ],
+        "impact": [
+          21928,
+          21929
+        ]
+      }
+    },
+    "aurakiya": {
+      "source_name": "Transcendence of Aurakiya",
+      "source_by_animation": {
+        "cast": [
+          19521,
+          19522
+        ],
+        "impact": [
+          21970,
+          21971
+        ],
+        "pvp_impact": [
+          21968,
+          21969
+        ]
+      }
+    }
+  },
+  "notes": [
+    "내부 lm_ ID는 원작 공식 스킬 ID가 아님",
+    "BLOCKED_VISUAL_ONLY는 스킬 해금이나 피해/쿨타임 변경 없음",
+    "pvp_impact는 팩에 보관하되 현재 PvE 시전에서는 호출하지 않음",
+    "이름 매칭 우선이며 시각 고증 및 배포 권한은 별개임"
+  ]
+}

@@ -13,6 +13,10 @@ import os
 import re
 import subprocess
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from test_project_support import run_isolated, timeout_budget
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -50,11 +54,12 @@ def main() -> int:
         else:
             command += ['--headless', '--script', 'res://tests/'+str(script)+'.gd']
         try:
-            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                env=env, timeout=240, text=True)
-            text, code = result.stdout, result.returncode
+            budget = timeout_budget('import' if importing else (script or ''), 240, 900)
+            result = run_isolated(command, env=env, timeout=budget, cwd=str(ROOT))
+            text, code = result.stdout + result.stderr, result.returncode
         except subprocess.TimeoutExpired as exc:
             text = exc.stdout.decode('utf-8', 'replace') if isinstance(exc.stdout, bytes) else exc.stdout or ''
+            text += exc.stderr.decode('utf-8', 'replace') if isinstance(exc.stderr, bytes) else exc.stderr or ''
             text += '\nTIMEOUT\n'
             code = 124
         (output/(label+'.log')).write_text(text, encoding='utf-8')

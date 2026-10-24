@@ -1,4 +1,5 @@
 extends SceneTree
+const LAYOUT = preload("res://tests/ground_capture_layout.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 var world: Node
 var failures: Array[String] = []
@@ -7,6 +8,7 @@ func _initialize() -> void: call_deferred("_run")
 func settle() -> void:
 	for i: int in range(12):await process_frame
 func _run() -> void:
+	root.size=Vector2i(1280,720);DisplayServer.window_set_size(root.size)
 	folder=OS.get_environment("GROUND_CAPTURES")
 	DirAccess.make_dir_recursive_absolute(folder)
 	world=load("res://Main.tscn").instantiate()
@@ -19,7 +21,13 @@ func _run() -> void:
 	world.player.set_physics_process(false)
 	world._clear_monsters()
 	world._clear_drops()
-	world.player.global_position=world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
+	var capture_layout: Dictionary = LAYOUT.find_layout(world)
+	if capture_layout.is_empty():
+		print("GROUND_CAPTURE_RESULT ",JSON.stringify({"failures":["no valid 12-sample floor on installed map"]}))
+		world.queue_free()
+		quit(1)
+		return
+	world.player.global_position=capture_layout.anchor
 	world.player.camera.zoom=Vector2.ONE
 	world.player.camera.position=Vector2(0,-110)
 	world.player.camera.position_smoothing_enabled=false
@@ -39,13 +47,14 @@ func _run() -> void:
 			for candidate: Dictionary in world.catalog_db.get("아이템",[]):
 				if candidate.get("name","")==names[i]:item=candidate;break
 			if item.is_empty(): failures.append("sample missing: "+str(names[i]));continue
-			var point: Vector2=world.player.global_position+Vector2(float(i%4-1.5)*150,-155+float(i/4)*120)
+			var point: Vector2=world.player.global_position+capture_layout.offsets[i]
 			var view: Button=world.ground_loot.spawn(str(names[i]),point,1,"",{"item_record":item})
 			if view==null:failures.append("drop failed: "+str(names[i]));continue
 			view.visual.set_process(false)
 			view.visual.clock=0.75
 			view.visual.queue_redraw()
 			views.append(view)
+		if views.size()!=names.size():failures.append("incomplete page: "+page)
 		await settle()
 		for view: Button in views:
 			# QA-only captions identify the test samples; production name UI is
@@ -65,7 +74,7 @@ func _run() -> void:
 		if root.get_texture().get_image().save_png(folder+"/"+page+".png")!=OK:failures.append("capture failed: "+page)
 		captions.queue_free()
 		await process_frame
-	print("GROUND_CAPTURE_RESULT ",JSON.stringify({"failures":failures}))
+	print("GROUND_CAPTURE_RESULT ",JSON.stringify({"failures":failures,"fixture":"ACTIVE_INSTALLED_MAPS","anchor":[world.player.global_position.x,world.player.global_position.y]}))
 	world.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)

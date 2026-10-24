@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "sources": {
+    "99777.png": {
+      "bytes": 60285049,
+      "sha256": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+      "size": [
+        19353,
+        6566
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        1,
+        0,
+        11750,
+        6220
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    },
+    "99111.png": {
+      "bytes": 76808234,
+      "sha256": "4733602c00225a447182cdc7bd07733fa4b43ac7b6875ed2520ff3dba46fc355",
+      "size": [
+        16035,
+        8017
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        2962,
+        1432,
+        13034,
+        6744
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    },
+    "13474.png": {
+      "bytes": 70743016,
+      "sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+      "size": [
+        19998,
+        6428
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        0,
+        0,
+        12854,
+        6427
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    },
+    "99112.png": {
+      "bytes": 59567305,
+      "sha256": "5f0b8eae1a651430127116cb12b5ecbf79f5c17cf8cc78b918228b833bc46528",
+      "size": [
+        12288,
+        6144
+      ],
+      "mode": "RGBA",
+      "alpha": true,
+      "bbox": [
+        0,
+        0,
+        12288,
+        6143
+      ],
+      "server_map_id": null,
+      "collision_data_id": null,
+      "acquired": true,
+      "decoded": true
+    }
+  },
+  "maps": {
+    "albino_01": {
+      "manifest": "albino_01/manifest.json",
+      "sha256": "2ce37ac70a10d32bfa7f21b21743899fdcf50555e83876b9329938c8fbca19bb",
+      "chunks": 20,
+      "bounds": [
+        0,
+        2800,
+        6508,
+        3627
+      ],
+      "split": {
+        "file": "albino_01_source.png",
+        "sha256": "c06b3842660f99d73e11d75bca5b4cda80884b747f76bb831bb6141e9ae410e1",
+        "bytes": 22516878
+      }
+    },
+    "albino_02": {
+      "manifest": "albino_02/manifest.json",
+      "sha256": "c1ec831c13ad378b3821c183ec0d43579bae7813f5e0f34bea094166b45fd9f2",
+      "chunks": 17,
+      "bounds": [
+        4399,
+        1229,
+        5473,
+        3373
+      ],
+      "split": {
+        "file": "albino_02_source.png",
+        "sha256": "ddb5a0126ae5db0224d8eacea4f149f172bd9187b9f84e90ac195dccaf2cf270",
+        "bytes": 18647498
+      }
+    },
+    "albino_03": {
+      "manifest": "albino_03/manifest.json",
+      "sha256": "b07fcc8e423ab091b5c46cb088f2df14847797392d02c11ed3274c50f5a5ac02",
+      "chunks": 15,
+      "bounds": [
+        7540,
+        0,
+        5314,
+        2920
+      ],
+      "split": {
+        "file": "albino_03_source.png",
+        "sha256": "de6561f4faa39acf2d8f058d96ed059fef7fc5cb64e5548f0295e10687949221",
+        "bytes": 15885346
+      }
+    },
+    "escaros_world": {
+      "manifest": "escaros_world/manifest.json",
+      "sha256": "edd8dce549d8defeefe06e601105cfb7d0097a130b958c1ad8f7f12590f1f352",
+      "chunks": 44,
+      "bounds": [
+        1,
+        0,
+        11749,
+        6220
+      ]
+    },
+    "yahee_temple": {
+      "manifest": "yahee_temple/manifest.json",
+      "sha256": "527de4bbdcc1a6584cdf5c73c14210fda4889cc47c0ae63e153529f5147da7f4",
+      "chunks": 48,
+      "bounds": [
+        0,
+        0,
+        12288,
+        6143
+      ]
+    },
+    "balrog_temple": {
+      "manifest": "balrog_temple/manifest.json",
+      "sha256": "1beca5da882b6e985f5e383e87ae014f01243658d51cd0eb1543e88bf4572f1a",
+      "chunks": 49,
+      "bounds": [
+        2962,
+        1432,
+        10072,
+        5312
+      ]
+    }
+  },
+  "albino_partition": {
+    "visible_pixels": 28549496,
+    "region_pixels": [
+      11358743,
+      9100022,
+      8090731
+    ],
+    "omitted_pixels": 0,
+    "duplicated_pixels": 0,
+    "rgba_roundtrip": true
+  },
+  "plan_sha256": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+  "source_map_ids_inferred": false,
+  "collision_from_image_colors": false,
+  "production_complete": false
+}

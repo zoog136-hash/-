@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "main_base": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
+  "pr147_reference": "abc8f4398c2b9133be44e1a77c14a08cf00ca9da",
+  "actor": {
+    "scale": 1,
+    "opaque_height_world_px": 80,
+    "speed_world_px_s": 210,
+    "legacy_capsule_radius_px": 15,
+    "native_foot_radius_world_px": 4,
+    "camera_zoom": 1,
+    "base_manual_speed": 210,
+    "base_click_speed": 225,
+    "equipment_speed_multiplier_in_measured_starter": 1.1,
+    "measured_effective_click_speed": 247.5,
+    "speed_note": "Keep existing equipment/skill multipliers. Base property is not the effective movement rate."
+  },
+  "regions": [
+    {
+      "id": "aden_png_display",
+      "png_to_world": [
+        6,
+        0,
+        0,
+        0,
+        6,
+        0
+      ],
+      "status": "LOCAL_DISPLAY_RULER_NOT_SERVER_GEOMETRY",
+      "pairwise_median_world_per_png_pixel": 5.970574799098841,
+      "rounding_error_fraction": 0.004928369862412518,
+      "original_map4_projection": "48x24; X=(24,-12), Y=(24,12); 2048x1536 cells; no topology regeneration"
+    },
+    {
+      "id": "giran_six_candidate_beds",
+      "world_to_png": [
+        0.17207855149317858,
+        -0.008686130570616839,
+        914.7862626919713,
+        0.0005599140460513454,
+        0.1566058464216859,
+        -74.4322375826446
+      ],
+      "residual_png_px": [
+        2.751781154355851,
+        2.1386484093555764,
+        0.4246514657682976,
+        4.335658575422637,
+        2.8573708793745176,
+        0.5533371798580077
+      ],
+      "median_residual_png_px": 2.4452147818557135,
+      "max_residual_png_px": 4.335658575422637,
+      "verified_unique_server_anchors": 0,
+      "status": "CANDIDATE_ONLY_NOT_APPLIED_TO_COLLISION",
+      "uncertainty_png_px": 3,
+      "extrapolation": "FORBIDDEN"
+    },
+    {
+      "id": "oman_01_to_10",
+      "world_to_png": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "PINNED_NATIVE_CANVAS_PARTIAL_VISUAL_CORRESPONDENCE",
+      "verified_unique_server_anchors": 0,
+      "source_collision": "UNCHANGED_A3_DIRECTIONAL_RULES",
+      "full_obstacle_correspondence": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "domination_summit_111_courtyard",
+      "png_to_world": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "MANUALLY_REVIEWED_PNG_FLOOR_ONLY",
+      "server_to_png": null,
+      "source111_registration": "HELD",
+      "previous_candidate_fit_median_png_px": 144.76,
+      "previous_candidate_fit_p90_png_px": 358.73,
+      "verified_unique_server_anchors": 0,
+      "unreviewed_terrain": "CLOSED"
+    }
+  ]
+}

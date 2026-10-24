@@ -71,6 +71,9 @@ func run() -> void:
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
 		world.field_renderer.refresh_visible()
+		if world.field_renderer is NativePngRenderer:
+			if not await world.field_renderer.settle_visible():
+				push_error("HUNTING_CAPTURE_FAILED: visible original PNGs did not finish loading");quit(1);return
 		for i: int in range(3): await process_frame
 		await RenderingServer.frame_post_draw
 		var filename: String = active+"-"+str(view.label)+".jpg"

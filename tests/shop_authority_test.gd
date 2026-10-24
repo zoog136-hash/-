@@ -12,7 +12,9 @@ func _check(ok: bool, label: String) -> void:
 		printerr("SHOP_AUTHORITY_FAIL: " + label)
 
 func _run() -> void:
-	_check(SHOP.GOODS.size() == 20, "legacy shop stock and prices must remain")
+	_check(SHOP.LEGACY_GOODS.size() == 20 and SHOP.GOODS.size() > 20, "legacy stock retained and consumables expanded")
+	for index: int in range(SHOP.LEGACY_GOODS.size()):
+		_check(SHOP.GOODS[index] == SHOP.LEGACY_GOODS[index], "legacy order and prices remain: " + str(index))
 	_check(SHOP.price_for("HP 물약") == 50, "existing HP price")
 	_check(SHOP.price_for("드래곤의 용옥") == 1000000, "orb price")
 	_check(SHOP.price_for("진명황의 집행검") == -1, "unlisted premium item cannot be purchased")

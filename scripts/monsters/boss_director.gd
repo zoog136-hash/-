@@ -10,7 +10,9 @@ func tick(delta: float) -> void:
 	game_seconds += maxf(0.0, delta)
 
 func key(map_id: String, region: Dictionary) -> String:
-	return map_id + ":" + str(region.get("boss_id", region.id))
+	# Explicit native-PNG layout migration may preserve an existing map's boss
+	# life/cooldown without treating the new visual field as a second boss.
+	return str(region.get("boss_state_map_id",map_id)) + ":" + str(region.get("boss_id", region.id))
 
 func state_for(map_id: String, region: Dictionary) -> Dictionary:
 	var id: String = key(map_id, region)

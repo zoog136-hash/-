@@ -1,0 +1,43 @@
+name: General Shop Consumables Validate
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/shop/**'
+      - 'scripts/ui/renewal_shop.gd'
+      - 'scripts/world.gd'
+      - 'scripts/consumable_rules.gd'
+      - 'scripts/card_pack_items.gd'
+      - 'data/game_db_v17.json'
+      - 'data/catalog_v19.json'
+      - 'tests/shop_*'
+      - '.github/workflows/shop-consumables-validate.yml'
+permissions:
+  contents: read
+concurrency:
+  group: general-shop-consumables-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  shop-consumables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resource integrity
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned engine
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import, boot, catalog coverage and real shop transactions
+        run: |
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results/shop-consumables --only import,bake_navigation,boot,shop_authority_test,shop_consumables_test,shop_consumables_gameplay_test,shop_buyback_test,inventory_db_smoke_test
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: general-shop-consumables-${{ github.sha }}
+          path: test-results/shop-consumables/
+          if-no-files-found: warn

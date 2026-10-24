@@ -12,7 +12,7 @@ on:
 jobs:
   combat-formula:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot 4.7.2

@@ -6,6 +6,9 @@ var collision_stream: StaticBody2D
 var reservations: Array[Dictionary] = []
 var aden_routes: RefCounted
 var aden_routes_attempted: bool = false
+var png_review_footprints: RefCounted
+var png_game_pack: RefCounted
+const BODY_PROFILE = preload("res://scripts/maps/source_body_profile.gd")
 
 func uses_original_gameplay_rules() -> bool:
 	# Only the terrain comes from A3. Current TWILIGHT travel/NPC services
@@ -32,6 +35,11 @@ func configure_source(value: Dictionary) -> bool:
 	return true
 
 func can_step(c: Vector2i, heading: int) -> bool:
+	if not source_can_step(c,heading): return false
+	if png_review_footprints != null and not png_review_footprints.line_clear(cell_to_world(c),cell_to_world(c+DIRECTIONS[heading]),BODY_PROFILE.FOOT_RADIUS): return false
+	return true
+
+func source_can_step(c: Vector2i, heading: int) -> bool:
 	if not super.can_step(c,heading): return false
 	if heading % 2 == 0: return true
 	var offset: Vector2i = DIRECTIONS[heading]
@@ -82,7 +90,26 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 	for cell: Vector2i in cells:result.append(cell_to_world(cell))
 	if result.size()>1 and line_clear(from,result[1]):result.remove_at(0)
 	if not result.is_empty() and walkable(to) and line_clear(result[-1],to):result.append(to)
+	if png_review_footprints != null:
+		var last: Vector2 = from
+		for next: Vector2 in result:
+			if not png_review_footprints.line_clear(last,next,BODY_PROFILE.FOOT_RADIUS): return super.path(from,to)
+			last = next
 	return result
+
+func walkable(p: Vector2) -> bool:
+	return super.walkable(p) and (png_review_footprints == null or png_review_footprints.point_clear(p,0.0))
+
+func line_clear(a: Vector2, b: Vector2) -> bool:
+	return source_line_clear(a,b) and (png_review_footprints == null or png_review_footprints.line_clear(a,b,BODY_PROFILE.FOOT_RADIUS))
+
+func source_line_clear(a: Vector2, b: Vector2) -> bool:
+	return super.line_clear(a,b)
+
+func _line_can_step(c: Vector2i, heading: int) -> bool:
+	# Real motion tests its actual segment against the manual polygon below;
+	# grid-center navigation padding must not become an extra physical wall.
+	return source_can_step(c,heading)
 
 func is_safe(p: Vector2) -> bool:
 	if super.is_safe(p): return true
@@ -95,14 +122,15 @@ func point_clear(p: Vector2, padding: float = 4.0) -> bool:
 	if not walkable(p): return false
 	# The feet use a small circle in this 48x24 source grid; character art and
 	# animation anchors are unchanged. Match the exact physical radius.
-	var radius: float = minf(padding,4.0)
+	var radius: float = minf(padding,BODY_PROFILE.FOOT_RADIUS)
+	if png_review_footprints != null and not png_review_footprints.point_clear(p,radius): return false
 	var cell: Vector2i = world_to_cell(p)
 	for dy: int in range(-1,2):
 		for dx: int in range(-1,2):
 			var c: Vector2i = cell+Vector2i(dx,dy)
 			if value_at(c,true)==0: continue
 			for heading: int in [0,2,4,6]:
-				if can_step(c,heading): continue
+				if source_can_step(c,heading): continue
 				var edge: PackedVector2Array = coordinates.edge_points(c,heading)
 				if Geometry2D.get_closest_point_to_segment(p,edge[0],edge[1]).distance_to(p) < radius: return false
 	return true
@@ -116,6 +144,8 @@ func build_physics(parent: Node2D) -> StaticBody2D:
 	return body
 
 func close() -> void:
+	png_game_pack=null
+	png_review_footprints = null
 	region_cells.clear()
 	aden_routes=null
 	aden_routes_attempted=false

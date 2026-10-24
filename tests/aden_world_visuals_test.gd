@@ -115,6 +115,7 @@ func inspect_site(site: Dictionary) -> void:
 	print("ADEN_WORLD_REGION ",JSON.stringify(row))
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_world_visuals_test.gd"): return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="):output=arg.trim_prefix("--output=")
 		if arg=="--capture":capture=true

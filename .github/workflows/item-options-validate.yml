@@ -37,6 +37,13 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_options_runtime_smoke_test.gd 2>&1 | tee item-options.log
           if grep -E "SCRIPT ERROR:|ERROR:|ITEM_OPTIONS_FAIL:|ITEM_OPTIONS_SMOKE_FAILED" item-options.log; then exit 1; fi
           grep -q "ITEM_OPTIONS_SMOKE_OK" item-options.log
+      - name: Weapon size roll and character sheet regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/weapon_size_damage_test.gd 2>&1 | tee weapon-size-damage.log
+          if grep -E "SCRIPT ERROR:|ERROR:|WEAPON_SIZE_DAMAGE_FAIL:|WEAPON_SIZE_DAMAGE_FAILED" weapon-size-damage.log; then exit 1; fi
+          grep -q "WEAPON_SIZE_DAMAGE_OK" weapon-size-damage.log
       - name: Existing equipment regression
         shell: bash
         run: |

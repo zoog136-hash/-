@@ -18,6 +18,7 @@ import tempfile
 from test_project_support import classify_result, run_isolated
 
 FAMILIES = ("oman_", "domination_", "escaros_", "albino_", "faith_")
+RETIRED_MAPS = frozenset({"albino_03", "albino_04"})
 CHECKED = re.compile(r"^REGION CHECKED (\S+)\s*$", re.MULTILINE)
 SUMMARY = re.compile(r"^REGION maps=(\d+) checks=(\d+) families=(\d+)(?: authored_variant_probes=(\d+))?[ \t]*$", re.MULTILINE)
 
@@ -29,8 +30,9 @@ def expected_shards(index_path: Path) -> dict[str, list[str]]:
     ids = [row["map_id"] for row in entries]
     if len(set(ids)) != len(ids) or not all(isinstance(i, str) for i in ids):
         raise ValueError("Duplicate or invalid region IDs")
-    mapping = {prefix: [i for i in ids if i.startswith(prefix)] for prefix in FAMILIES}
-    if not all(mapping.values()) or sorted(sum(mapping.values(), [])) != sorted(ids):
+    mapping = {prefix: [i for i in ids if i.startswith(prefix) and i not in RETIRED_MAPS] for prefix in FAMILIES}
+    active = [i for i in ids if i not in RETIRED_MAPS]
+    if not all(mapping.values()) or sorted(sum(mapping.values(), [])) != sorted(active):
         raise ValueError("Regions are missing from family shard coverage")
     return mapping
 
@@ -111,12 +113,20 @@ def main() -> int:
                          "checks": checks, "passed": ok, "reason": reason, "timed_out": timed_out,
                          "exit_code": code})
         print(f"WORLD_SHARD_{'OK' if ok else 'FAILED'} {label} {len(ids)} maps {checks} checks: {reason}", flush=True)
+        if not ok:
+            # Print actual test failures in the Actions log, not only the
+            # artifact, so failures can be diagnosed without a download.
+            diagnostics = [line for line in output.splitlines()
+                           if ("REGION FAIL:" in line or "SCRIPT ERROR:" in line or "ERROR:" in line or
+                               "WORLD_REGIONS_FAILED" in line or "REGION CHECKED" in line)]
+            for line in diagnostics[:30]:
+                print(f"WORLD_SHARD_DIAGNOSTIC {label}: {line[:280]}", flush=True)
         # Continue all shards: a failed family must not conceal regressions in other families.
-    summary = {"expected_regions": 24, "completed_regions": sum(len(x["completed_maps"]) for x in findings),
+    summary = {"expected_regions": 22, "completed_regions": sum(len(x["completed_maps"]) for x in findings),
                "total_checks": total_checks, "families": findings, "passed": all_ok}
     (args.logs / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if all_ok:
-        print(f"WORLD_REGIONS_OK maps=24 families=5 checks={total_checks}", flush=True)
+        print(f"WORLD_REGIONS_OK maps=22 families=5 checks={total_checks}", flush=True)
     else:
         print("WORLD_REGIONS_FAILED: at least one full regional shard failed", flush=True)
     return 0 if all_ok else 1

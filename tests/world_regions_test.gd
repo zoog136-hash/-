@@ -83,11 +83,13 @@ func _run() -> void:
 	var catalog_before: Dictionary = {}
 	for record: Dictionary in database_before: catalog_before[str(record.name)] = record
 	var index: Array = JSON.parse_string(FileAccess.get_file_as_string(world.FIELD_INDEX_PATH))
+	index=index.filter(func(record: Dictionary) -> bool: return str(record.map_id) not in ["albino_03","albino_04"])
 	var prefix: String = ""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--prefix="):
 			prefix = argument.trim_prefix("--prefix=")
-	check(world.maps.filter(func(m: Dictionary) -> bool: return not str(m.get("id",m.get("map_id",""))).begins_with("l1_")).size()==25,"all 25 TWILIGHT map IDs are preserved alongside optional source regions")
+	for assertion: Dictionary in preload("res://tests/map_catalog_assertions.gd").checks(world):
+		check(bool(assertion.ok),str(assertion.label))
 	var tested: int = 0
 	var authored_variant_probes: int = 0
 	var families: Dictionary = {}
@@ -263,8 +265,8 @@ func _run() -> void:
 		print("REGION TIMING ",id," full_ms=",Time.get_ticks_msec()-started_ms)
 		print("REGION CHECKED ",id)
 	if prefix.is_empty():
-		check(tested==24 and families.size()==5,"all 24 new maps and all five families tested")
-		check(authored_variant_probes==23,"all 23 maps with original authored level variants exercise real population overrides")
+		check(tested==22 and families.size()==5,"all 22 live maps and all five families tested")
+		check(authored_variant_probes==21,"all 21 active maps with authored level variants exercise real population overrides")
 	print("REGION maps=",tested," checks=",checks," families=",families.size()," authored_variant_probes=",authored_variant_probes)
 	world.queue_free()
 	await process_frame

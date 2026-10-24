@@ -1,34 +1,209 @@
 {
   "schema_version": 1,
-  "revision": "renewed-maps-20261012-v1",
+  "revision": "renewed-maps-20261018-area-preserving-v2",
   "baseline": "f759112bca672ef909cc695a98fa99b1b123e1d3",
   "coordinate_policy": "Derive positions from the current map definition and existing habitat polygons; never restore pre-renewal coordinates.",
-  "map_ids": ["aden_world", "oman_01", "oman_02", "oman_03", "oman_04", "oman_05", "oman_06", "oman_07", "oman_08", "oman_09", "oman_10", "faith_01", "faith_02", "faith_03", "faith_04", "escaros_01", "escaros_02", "escaros_03", "escaros_04", "escaros_05", "albino_01", "albino_02", "albino_03", "albino_04", "domination_summit"],
-  "exclusion_distances": {"entry": 320, "portal": 240, "npc": 200, "safe_margin": 96, "road_half_width": 70, "boss_margin": 96, "dense_margin": 48},
-  "progression_weights": [0.75, 1.25],
+  "map_ids": [
+    "aden_world",
+    "oman_01",
+    "oman_02",
+    "oman_03",
+    "oman_04",
+    "oman_05",
+    "oman_06",
+    "oman_07",
+    "oman_08",
+    "oman_09",
+    "oman_10",
+    "faith_01",
+    "faith_02",
+    "faith_03",
+    "faith_04",
+    "escaros_01",
+    "escaros_02",
+    "escaros_03",
+    "escaros_04",
+    "escaros_05",
+    "albino_01",
+    "albino_02",
+    "albino_03",
+    "albino_04",
+    "domination_summit"
+  ],
+  "exclusion_distances": {
+    "entry": 320,
+    "portal": 240,
+    "npc": 200,
+    "safe_margin": 96,
+    "road_half_width": 70,
+    "boss_margin": 96,
+    "dense_margin": 48
+  },
+  "progression_weights": [
+    0.75,
+    1.25
+  ],
   "preserve_normal_total": true,
   "preserve_respawn_times": false,
   "boss_respawn_policy": "device_wall_clock",
-  "boss_respawn_seconds": {"aden_world": 28800, "other_maps": 86400},
+  "boss_respawn_seconds": {
+    "aden_world": 28800,
+    "other_maps": 86400
+  },
   "preserve_monster_stats_and_drops": true,
   "maps": {
     "aden_world": {
       "preserve_habitat_rosters": true,
-      "normal_counts": {"meadow": 27, "forest": 30, "riverbank": 27, "ruins": 30, "east": 27, "desert": 33, "bandits": 30, "dragon_valley": 33, "oren": 30, "fire_land": 33, "wind_land": 30, "western_approach": 24},
+      "normal_counts": {
+        "meadow": 27,
+        "forest": 30,
+        "riverbank": 27,
+        "ruins": 30,
+        "east": 27,
+        "desert": 33,
+        "bandits": 30,
+        "dragon_valley": 33,
+        "oren": 30,
+        "fire_land": 33,
+        "wind_land": 30,
+        "western_approach": 24
+      },
       "additional_bosses": [
-        {"id": "dark_elder_encounter", "name": "흑장로", "habitat": "dragon_valley", "fraction": [0.82, 0.85], "half_size": [220, 220], "respawn_time": 28800},
-        {"id": "death_knight_encounter", "name": "데스나이트", "habitat": "ruins", "fraction": [0.78, 0.78], "half_size": [260, 260], "respawn_time": 28800}
+        {
+          "id": "dark_elder_encounter",
+          "name": "흑장로",
+          "habitat": "dragon_valley",
+          "fraction": [
+            0.82,
+            0.85
+          ],
+          "half_size": [
+            220,
+            220
+          ],
+          "respawn_time": 28800
+        },
+        {
+          "id": "death_knight_encounter",
+          "name": "데스나이트",
+          "habitat": "ruins",
+          "fraction": [
+            0.78,
+            0.78
+          ],
+          "half_size": [
+            260,
+            260
+          ],
+          "respawn_time": 28800
+        }
       ]
     },
-    "oman_01": {"boss_review_anchor": "boss", "boss_half_size": [480, 360]},
-    "albino_04": {"boss_to_hunting": true, "roster_sources": ["albino_01", "albino_02", "albino_03"]},
-    "domination_summit": {"use_map_normal_pool": true}
+    "oman_01": {
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        480,
+        360
+      ],
+      "preserve_habitat_rosters": true
+    },
+    "albino_04": {
+      "boss_to_hunting": true,
+      "roster_sources": [
+        "albino_01",
+        "albino_02",
+        "albino_03"
+      ]
+    },
+    "domination_summit": {
+      "use_map_normal_pool": true,
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_02": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_03": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_04": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_05": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_06": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_07": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_08": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_09": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    },
+    "oman_10": {
+      "preserve_habitat_rosters": true,
+      "boss_review_anchor": "boss",
+      "boss_half_size": [
+        320,
+        320
+      ]
+    }
   },
   "notes": [
     "This is local PvE placement, not a claim of original server spawn coordinates or schedules.",
     "Existing map IDs, terrain, NPC/portal positions and existing boss save keys remain unchanged.",
     "Normal and dense pools exclude every record classified as a boss by the combat/loot policy.",
     "Albino 4 reuses verified-in-project normal records; no invented boss or new stats are added.",
-    "FieldPopulation still enforces reachable terrain, collision clearance and slot spacing."
+    "FieldPopulation still enforces reachable terrain, collision clearance and slot spacing.",
+    "Aden's twelve existing habitats keep their names; Oman floors 1-10 and Domination summit now retain room-specific non-boss rosters rather than global level-ranked redistribution.",
+    "Existing tower bosses snap to each current map's boss review anchor; their IDs, species, respawn policy and 1-per-zone budget are retained."
   ]
 }

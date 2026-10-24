@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-23",
+  "runtime": "Linux Chromium, standalone static HTTP; touch emulation",
+  "state_tests": {
+    "passed": 17,
+    "failed": 0
+  },
+  "desktop_journeys": 12,
+  "mobile_journeys": 12,
+  "menu_clicks": 143,
+  "viewports": [
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      2400,
+      1080
+    ],
+    [
+      844,
+      390
+    ],
+    [
+      915,
+      412
+    ]
+  ],
+  "portrait": [
+    390,
+    844
+  ],
+  "original_sample_commit": "e3e97c99fb65db7d16920ef9c07866f49b112676",
+  "game_reference_commit": "a6fc6dec49f4f9a05c1e82df9a4e021b4cbe44ec",
+  "note": "Partially shown scroll rows are intentionally clipped. 48 CSS px means browser display coordinates, not physical mm, Android dp or Godot units. Physical devices unverified."
+}

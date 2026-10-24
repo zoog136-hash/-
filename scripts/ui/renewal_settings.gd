@@ -46,6 +46,7 @@ func configure(controller: Node) -> void:
 	stack.add_theme_constant_override("separation",12)
 	scroller.add_child(stack)
 	stack.add_child(UI.section("환경 설정",17))
+	stack.add_child(UI.section("스킬 아이콘: Lorc · Delapouite / Game-icons.net (CC BY 3.0)", 10))
 	stack.add_child(UI.section("게임 화면 · 오디오 · 저장",12))
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("오디오",18,UI.GOLD))

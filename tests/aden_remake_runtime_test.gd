@@ -18,6 +18,7 @@ func check(value: bool, label: String) -> void:
 		printerr("ADEN_FAIL ",label)
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_remake_runtime_test.gd"): return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		if arg == "--capture": capture = true

@@ -91,7 +91,9 @@ jobs:
           export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
           export LIBGL_ALWAYS_SOFTWARE=1
           for name in capture_presentation_gallery capture_presentation_sequences capture_combat benchmark_presentation_battles; do
-            xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            args=()
+            if [ "$name" = benchmark_presentation_battles ]; then args=(-- --legacy-aden-faith-layouts); fi
+            xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" "${args[@]}" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|FAILED' "test-results/${name}.txt"; then exit 1; fi
           done
           export TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/pr100-main-directions"

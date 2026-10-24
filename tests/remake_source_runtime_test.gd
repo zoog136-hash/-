@@ -154,6 +154,9 @@ func services_and_travel(id: String) -> void:
 	service_reports.append({"map":id,"portals":arrivals,"npc_action":"EXISTING_GUIDE_DIALOGUE"})
 
 func run() -> void:
+	# Preserve the A3 source-to-source return/foot and original-grid contracts.
+	# Native PNG portal landings remain covered on the active installed maps.
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/remake_source_runtime_test.gd"): return
 	if not REGISTRY.installed("oman_01"):
 		print("REMAKE_SOURCE_RUNTIME_SKIP: private A3 pack absent; no source play claim")
 		quit(); return
@@ -256,7 +259,16 @@ func run() -> void:
 	print("REMAKE_STAGE legacy_return_set")
 	await frames(2)
 	print("REMAKE_STAGE legacy_return_frames")
-	check(world.player.get_node("CollisionShape2D").shape is CapsuleShape2D,"legacy foot collider restored")
+	# Latest main already uses the source field for Aden. Returning from Oman
+	# to Aden must retain the source foot; exercise restoration on an actually
+	# authored map as well, instead of treating a stale Aden expectation as a
+	# production regression.
+	check(world.field_map is RemakePlayableField and world.player.get_node("CollisionShape2D").shape is CircleShape2D and world.player.get_node("CollisionShape2D").shape.radius == 4.0,"Aden source foot retained on source-to-source return")
+	# Retired Albino 3/4 must not resurrect an authored region or capsule.
+	world._set_map("albino_04",false)
+	await frames(2)
+	check(world.active_map_id=="albino_02" and world.field_map is NativePngField,"retired Albino zone redirects to native area 2")
+	check(world.player.get_node("CollisionShape2D").shape is CircleShape2D and world.player.get_node("CollisionShape2D").shape.radius==4.0,"native 4px foot retained after retirement")
 	var report: Dictionary = {"checks":checks,"failures":failures,"maps":reports,"display":DisplayServer.get_name(),
 		"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN","boss_combat":combat_reports,"services_and_travel":service_reports}
 	var file := FileAccess.open(output+"/runtime.json",FileAccess.WRITE)

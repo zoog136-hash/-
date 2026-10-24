@@ -1,0 +1,267 @@
+{
+  "base_main": "fc6cf088e90a273bfde38ce4807fb7b5c2a51afb",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Compatibility OpenGL / Mesa llvmpipe",
+  "native_main": {
+    "android_device": "NOT_RUN",
+    "checks": 500,
+    "failures": [],
+    "maps": [
+      {
+        "collision_sides": 4,
+        "full_map_verified": false,
+        "loaded_chunks": 7,
+        "map_id": "albino_01",
+        "monster_spawn": "NOT_MAPPED",
+        "peak_rgba_bytes": 46182312,
+        "playable_scope": "MANUALLY_TRACED_FLOORS_AND_ROUTES",
+        "png_sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+        "route_targets": 7,
+        "walked_path_pixels": 3388.60401153564
+      },
+      {
+        "collision_sides": 4,
+        "full_map_verified": false,
+        "loaded_chunks": 5,
+        "map_id": "albino_02",
+        "monster_spawn": "NOT_MAPPED",
+        "peak_rgba_bytes": 46178824,
+        "playable_scope": "MANUALLY_TRACED_FLOORS_AND_ROUTES",
+        "png_sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+        "route_targets": 9,
+        "walked_path_pixels": 3449.69838547707
+      },
+      {
+        "collision_sides": 4,
+        "full_map_verified": false,
+        "loaded_chunks": 4,
+        "map_id": "albino_03",
+        "monster_spawn": "NOT_MAPPED",
+        "peak_rgba_bytes": 25438956,
+        "playable_scope": "MANUALLY_TRACED_FLOORS_AND_ROUTES",
+        "png_sha256": "fd2fa4a7e4f2fb4e93759a79c6e0a547e4908ec23cb82beac254e97c834c1cca",
+        "route_targets": 10,
+        "walked_path_pixels": 4388.11309313774
+      },
+      {
+        "collision_sides": 4,
+        "full_map_verified": false,
+        "loaded_chunks": 4,
+        "map_id": "escaros_world",
+        "monster_spawn": "NOT_MAPPED",
+        "peak_rgba_bytes": 25179108,
+        "playable_scope": "MANUALLY_TRACED_FLOORS_AND_ROUTES",
+        "png_sha256": "e2b92083253338ce22d628019012929857c71d3ab560c70addfd363eed154f3f",
+        "route_targets": 27,
+        "walked_path_pixels": 27928.5477423668
+      },
+      {
+        "collision_sides": 4,
+        "full_map_verified": false,
+        "loaded_chunks": 5,
+        "map_id": "yahee_temple",
+        "monster_spawn": "NOT_MAPPED",
+        "peak_rgba_bytes": 25267016,
+        "playable_scope": "MANUALLY_TRACED_FLOORS_AND_ROUTES",
+        "png_sha256": "5f0b8eae1a651430127116cb12b5ecbf79f5c17cf8cc78b918228b833bc46528",
+        "route_targets": 25,
+        "walked_path_pixels": 17408.4287867546
+      },
+      {
+        "collision_sides": 4,
+        "full_map_verified": false,
+        "loaded_chunks": 4,
+        "map_id": "balrog_temple",
+        "monster_spawn": "NOT_MAPPED",
+        "peak_rgba_bytes": 25232904,
+        "playable_scope": "MANUALLY_TRACED_FLOORS_AND_ROUTES",
+        "png_sha256": "4733602c00225a447182cdc7bd07733fa4b43ac7b6875ed2520ff3dba46fc355",
+        "route_targets": 23,
+        "walked_path_pixels": 44929.987562418
+      }
+    ],
+    "original_png_rendered": true,
+    "production_complete": false,
+    "walked_path_pixels": 101493.37958169
+  },
+  "normal_game": {
+    "checks": 41,
+    "failures": [],
+    "legacy_replacements": false,
+    "ordinary_temple_travel": true
+  },
+  "code_regression": {
+    "total": 12,
+    "passed": 9,
+    "failed": [],
+    "skipped": [
+      "native_png_normal_travel_test",
+      "native_png_review_runtime_test",
+      "native_png_runtime_test"
+    ],
+    "not_run": [],
+    "checks": [
+      "import",
+      "boot",
+      "animation_restore_test",
+      "combat_resolution_equivalence_test",
+      "field_world_test",
+      "main_debug_failed_load_test",
+      "native_png_catalog_test",
+      "native_png_normal_travel_test",
+      "native_png_review_runtime_test",
+      "native_png_runtime_test",
+      "renewed_map_spawn_test",
+      "stage5_save_compatibility_test"
+    ],
+    "validation_scopes": {
+      "import": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "boot": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "animation_restore_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "combat_resolution_equivalence_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "field_world_test": "EXISTING_TWILIGHT_GEOMETRY",
+      "main_debug_failed_load_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "native_png_catalog_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "native_png_normal_travel_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "native_png_review_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "native_png_runtime_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "renewed_map_spawn_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "stage5_save_compatibility_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+    },
+    "selection": "import,boot,native_png_catalog_test,native_png_runtime_test,native_png_normal_travel_test,native_png_review_runtime_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test,field_world_test,renewed_map_spawn_test"
+  },
+  "python_tests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "archive": {
+    "schema": 1,
+    "name": "TWILIGHT-native-PNG-maps-20261019-private-v5.zip",
+    "bytes": 274172103,
+    "sha256": "2bc0a2463ef7448a8b16b890911175d3da03f2d992dcbcaa18cfd7563c310122",
+    "crc": "PASS",
+    "pack_index_sha256": "009b980a2dffb695d578086dd1acb63b27093ab67968f402e0d9cf0422cb3711",
+    "parts": [
+      {
+        "file": "TWILIGHT-native-PNG-maps-20261019-private-v5.zip.part001",
+        "bytes": 94371840,
+        "sha256": "2dc2460e84612e93a0da746a817ccaf3f908059a0ae520631dafeda68605cd49"
+      },
+      {
+        "file": "TWILIGHT-native-PNG-maps-20261019-private-v5.zip.part002",
+        "bytes": 94371840,
+        "sha256": "539b50073c708f2108b7fc638fd627eb0344041fdbcd25442cedc1709cdcda16"
+      },
+      {
+        "file": "TWILIGHT-native-PNG-maps-20261019-private-v5.zip.part003",
+        "bytes": 85428423,
+        "sha256": "9738cef4fb6963d7e9f25f7cfa6455a31989af13b60e0f0fcf75e639078a5983"
+      }
+    ],
+    "originals": "Existing authorized private source storage; ZIP contains 6 runtime chunk sets, 1 foreground cut and 3 Albino source splits",
+    "production_complete": false
+  },
+  "delivery": {
+    "derived_v5": "DELIVERED_PRIVATE_DRIVE_REMOTE_BYTES_REASSEMBLED_DECODED_AND_MAIN_REENTRY_PASS",
+    "originals": "ACQUIRED_FROM_EXISTING_AUTHORIZED_PRIVATE_SOURCES",
+    "archive_changed_by_followup": false
+  },
+  "earlier_full_regression": {
+    "total": 225,
+    "passed_after_recheck": 213,
+    "skipped": 12,
+    "unresolved_failures": 0,
+    "initial_failure": "hunting_world_capture_test lacked existing cameras.json in sparse checkout; restored exact main fixture and rechecked PASS",
+    "applies_to": "7eb4e87ddc52f4c01a163dab960f6bf22da6bec5; not rerun in full after this change"
+  },
+  "screenshots": {
+    "albino_01.png": "0ebe09abcf9fe7c2d95039a1b14cb9d7cabfcef67d4795e44c268b0d6061eb9b",
+    "yahee_temple.png": "f34095cd4fea5375dff9ae53e5b2751a4a1815c1c8d03942d5a662040e6da3ca",
+    "albino_02.png": "c5bfa15e1d59d2cc6e811976f2c4b4efa1a3f8d620a9aeabde3d743772ce7f51",
+    "escaros_world.png": "f01c88618e7a136c761228a32c1fc7070773d398f0206db0a7e4682964b2a0ca",
+    "albino_03.png": "14ad09e2e612744b572d61f7706d0d0637810626e72bdab62b0c374a164ab871",
+    "balrog_temple.png": "1eb6afedd9e035cbadadee5613f7dc8f10a4b73f81488d56659b55856faa845d"
+  },
+  "production_complete": false,
+  "followup_review": {
+    "archive": "immutable v5; actual PNGs",
+    "checks": 3858,
+    "failures": [],
+    "maps": [
+      {
+        "exclusive_foreground_pixels": 8134,
+        "foreground_pieces": 1,
+        "map": "albino_01",
+        "peak_rgba_bytes": 75464616,
+        "physics": {
+          "grid_cells_checked": 92389,
+          "merged_shapes": 119,
+          "mismatches": 0,
+          "previous_row_shapes": 332
+        }
+      },
+      {
+        "exclusive_foreground_pixels": 5821,
+        "foreground_pieces": 2,
+        "map": "albino_02",
+        "peak_rgba_bytes": 62673416,
+        "physics": {
+          "grid_cells_checked": 72373,
+          "merged_shapes": 146,
+          "mismatches": 0,
+          "previous_row_shapes": 329
+        }
+      },
+      {
+        "exclusive_foreground_pixels": 34307,
+        "foreground_pieces": 1,
+        "map": "albino_03",
+        "peak_rgba_bytes": 57297644,
+        "physics": {
+          "grid_cells_checked": 60939,
+          "merged_shapes": 145,
+          "mismatches": 0,
+          "previous_row_shapes": 295
+        }
+      },
+      {
+        "exclusive_foreground_pixels": 1492,
+        "foreground_pieces": 1,
+        "map": "escaros_world",
+        "peak_rgba_bytes": 92287972,
+        "physics": {
+          "grid_cells_checked": 285915,
+          "merged_shapes": 919,
+          "mismatches": 0,
+          "previous_row_shapes": 1058
+        }
+      },
+      {
+        "exclusive_foreground_pixels": 14802,
+        "foreground_pieces": 1,
+        "map": "yahee_temple",
+        "peak_rgba_bytes": 63015752,
+        "physics": {
+          "grid_cells_checked": 294912,
+          "merged_shapes": 805,
+          "mismatches": 0,
+          "previous_row_shapes": 1087
+        }
+      },
+      {
+        "exclusive_foreground_pixels": 7595,
+        "foreground_pieces": 1,
+        "map": "balrog_temple",
+        "peak_rgba_bytes": 83953160,
+        "physics": {
+          "grid_cells_checked": 209160,
+          "merged_shapes": 1540,
+          "mismatches": 0,
+          "previous_row_shapes": 1637
+        }
+      }
+    ],
+    "source_to_server_mapping": "NOT_FOUND_IN_ACCESSIBLE_ANALYSIS_AND_667_MAPPING_XLSX",
+    "android_device": "NOT_RUN"
+  }
+}

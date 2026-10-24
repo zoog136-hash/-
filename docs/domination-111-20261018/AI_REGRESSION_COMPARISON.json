@@ -1,0 +1,98 @@
+{
+  "source_main": "56f552c800dc031030a05b6e4125ed29a04aba62",
+  "test": "original_based_transform_temporal_main_test",
+  "subject": "reaper-female / transform:412",
+  "assertions_changed": false,
+  "results": [
+    {
+      "scope": "BASE_MAIN",
+      "checks": 60067,
+      "failures": [],
+      "clearing": {
+        "initial": [
+          25472.0,
+          19644.0
+        ],
+        "other_actors_hidden": false,
+        "position": [
+          25245.7265625,
+          19870.2734375
+        ],
+        "search_radius": 320.0,
+        "terrain_hidden_or_modified": false,
+        "walkable_radius": 150.0
+      },
+      "east_monster": {
+        "attack": true,
+        "compass": "E",
+        "contacts": 1,
+        "facing": 0,
+        "movement": "(90.3457, -0.099609)",
+        "name": "해골 근위병",
+        "walk": true
+      }
+    },
+    {
+      "scope": "BEFORE_FIX",
+      "checks": 59995,
+      "failures": [
+        "reaper-female: actual AI pursuit and windup E",
+        "reaper-female: actual AI contact marker E"
+      ],
+      "clearing": {
+        "initial": [
+          25472.0,
+          19644.0
+        ],
+        "other_actors_hidden": false,
+        "position": [
+          25245.7265625,
+          19870.2734375
+        ],
+        "search_radius": 320.0,
+        "terrain_hidden_or_modified": false,
+        "walkable_radius": 150.0
+      },
+      "east_monster": {
+        "attack": false,
+        "compass": "E",
+        "contacts": 0,
+        "facing": 0,
+        "movement": "(40.0, 0.0)",
+        "name": "해골 근위병",
+        "walk": true
+      }
+    },
+    {
+      "scope": "AFTER_FIX",
+      "checks": 60061,
+      "failures": [],
+      "clearing": {
+        "initial": [
+          25472.0,
+          19644.0
+        ],
+        "other_actors_hidden": false,
+        "position": [
+          25245.7265625,
+          19870.2734375
+        ],
+        "search_radius": 320.0,
+        "terrain_hidden_or_modified": false,
+        "walkable_radius": 150.0
+      },
+      "east_monster": {
+        "attack": true,
+        "compass": "E",
+        "contacts": 1,
+        "facing": 0,
+        "movement": "(89.04883, 0.349609)",
+        "name": "해골 근위병",
+        "walk": true
+      }
+    }
+  ],
+  "cause": "Premature zero velocity on foot clearance prevented native physics tangential sliding.",
+  "fix": "Allow real move_and_slide where test_move confirms streamed physics; retain source-grid stop outside collision stream.",
+  "whole_ten_case_batch": "PENDING_REMOTE_CI"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "twilight-ui-sample",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-isolation=none tests/model.test.mjs",
+    "test:browser": "node evidence/interactions.mjs && node evidence/mobile-interactions.mjs && node evidence/input-geometry.mjs && node evidence/final-states.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

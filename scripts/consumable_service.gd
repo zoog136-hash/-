@@ -238,6 +238,10 @@ func _use_return(item_name: String) -> void:
 		return
 	if str(world.get("active_map_id")) != "aden_world":
 		world.call("_set_map", "aden_world", false)
+		# A missing/corrupt native PNG pack deliberately leaves the old field
+		# active. Do not spend the scroll or move within that dungeon on failure.
+		if str(world.get("active_map_id")) != "aden_world":
+			return
 	var place: Vector2 = _safe_region_position()
 	if place != Vector2.INF:
 		_teleport_player(place)
@@ -253,6 +257,10 @@ func _random_destination() -> Vector2:
 	if field is OriginalPlayableField:
 		if field.uses_original_gameplay_rules() and not bool(field.definition.rules.get("teleportable",0)): return Vector2.INF
 		return field.random_landing(rng,start)
+	if field is NativePngField:
+		# A PNG canvas can be almost entirely closed terrain. Sample the cached,
+		# reachable floor instead of repeatedly guessing across the whole image.
+		return field.random_landing(rng,start,160.0)
 	if field != null:
 		for attempt: int in range(1500):
 			var x: int = rng.randi_range(0, field.width - 1)

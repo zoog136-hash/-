@@ -1,0 +1,87 @@
+{
+	"android_device": "NOT_RUN",
+	"checks": 281,
+	"failures": [],
+	"global_registration": "REVIEW_REQUIRED",
+	"occlusion": [
+		{
+			"cut": "giran_tree_939_822",
+			"map_id": "aden_world",
+			"states": [
+				{
+					"correct": 556,
+					"overlap": 556,
+					"source_foot": [
+						42312.0,
+						23112.0
+					],
+					"state": "behind",
+					"wrong": 0
+				},
+				{
+					"correct": 295,
+					"overlap": 382,
+					"source_foot": [
+						42312.0,
+						23256.0
+					],
+					"state": "front",
+					"wrong": 1
+				}
+			]
+		},
+		{
+			"cut": "blue_torch_4872_2256",
+			"map_id": "oman_10",
+			"states": [
+				{
+					"correct": 65,
+					"overlap": 65,
+					"source_foot": [
+						4872.0,
+						2232.0
+					],
+					"state": "behind",
+					"wrong": 0
+				},
+				{
+					"correct": 185,
+					"overlap": 203,
+					"source_foot": [
+						4872.0,
+						2280.0
+					],
+					"state": "front",
+					"wrong": 0
+				}
+			]
+		},
+		{
+			"cut": "central_crystal_column",
+			"map_id": "domination_summit",
+			"states": [
+				{
+					"correct": 487,
+					"overlap": 487,
+					"source_foot": [
+						6936.0,
+						2976.0
+					],
+					"state": "behind",
+					"wrong": 0
+				},
+				{
+					"correct": 453,
+					"overlap": 566,
+					"source_foot": [
+						6936.0,
+						3072.0
+					],
+					"state": "front",
+					"wrong": 1
+				}
+			]
+		}
+	],
+	"source_grids_preserved": true
+}

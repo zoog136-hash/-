@@ -19,6 +19,17 @@ const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
 const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
 const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
+const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
+const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
+const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
+# PR #137's shipped entry-only PNG plan (594438d). Only this reviewed layout
+# upgrade may cross a plan hash; unknown plans still fail before state changes.
+const NATIVE_PNG_SAVE_MIGRATIONS: Dictionary = {
+	"6dddc9772b9b1605a0aeaaa1b3a52e6ae88aa99ecb7d3e9b4ddd9946fdb83da4": {
+		"from_revision":2026102001,"to_revision":2026102002,
+		"map_ids":["aden_world","faith_01","faith_02","faith_03","faith_04"]
+	}
+}
 const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
@@ -36,6 +47,10 @@ const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
+const EQUIPMENT_COLLECTION_RUNTIME = preload("res://scripts/collections/equipment_collection_runtime.gd")
+var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
+const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
+const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -143,6 +158,7 @@ var catalog_item_variant_count: Dictionary = {} # name -> count; never dedupe ro
 var verified_catalog_options: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
+var card_draw_fusion: TwilightCardDrawFusion = CARD_DRAW_FUSION.new()
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
 var equipped_items: Dictionary = {
 	"weapon": {}, "offhand": {}, "helmet": {}, "tshirt": {}, "body": {}, "pants": {}, "cloak": {},
@@ -300,6 +316,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	card_draw_fusion.configure(catalog_db)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -310,12 +327,24 @@ func _ready() -> void:
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
 	_setup_collision_tileset()
 	_setup_field_services()
-	hud.refresh_maps(maps)
+	hud.refresh_maps(NATIVE_PNG.menu_entries(maps))
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
+	var requested_png_map: String = ""
+	if "--png-review" in OS.get_cmdline_user_args():
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--png-map="):
+				var candidate_png_map: String = argument.trim_prefix("--png-map=")
+				if maps_by_id.has(candidate_png_map) and REMAKE_REGISTRY.installed(candidate_png_map): requested_png_map = candidate_png_map;active_map_id = candidate_png_map
 	_set_map(active_map_id, false)
-	var creating_character: bool = not FileAccess.file_exists(SAVE_PATH)
+	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	if NATIVE_PNG.enabled():
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--native-png-map="): _set_map(argument.trim_prefix("--native-png-map="),false)
+	# Restore character progress first; an explicit review destination wins over
+	# a different map in the isolated legacy save without reusing its pixels.
+	if not requested_png_map.is_empty() and requested_png_map != active_map_id: _set_map(requested_png_map, false)
 	_normalize_equipment_slots()
 	_ensure_job_class_visual()
 	_ensure_quickslots_seeded()
@@ -403,6 +432,8 @@ func _load_data() -> void:
 	var maps_value: Variant = JSON.parse_string(maps_text)
 	if maps_value is Array:
 		maps = maps_value as Array
+	maps=maps.filter(func(record: Dictionary) -> bool:
+		return str(record.get("id","")) not in ["albino_03","albino_04"])
 	# Replace only the Aden entry; preserve every existing map ID and data path.
 	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_PATH))
 	if field_value is Dictionary:
@@ -427,6 +458,9 @@ func _load_data() -> void:
 			var map_data: Dictionary = map_value as Dictionary
 			if remake_names.has(str(map_data.get("id", ""))): map_data["name"] = remake_names[str(map_data.id)]
 			maps_by_id[str(map_data.get("id", ""))] = map_data
+	for record: Dictionary in NATIVE_PNG.catalog_entries():
+		maps.append(record)
+		maps_by_id[str(record.id)] = record
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
 		maps_by_id[str(record.id)] = record
@@ -483,6 +517,7 @@ func _load_data() -> void:
 			image_records[name] = "res://assets/ui/rune.png"
 	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
+	equipment_collections.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -748,7 +783,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result
+	return result + equipment_collections.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -845,7 +880,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
-	return result
+	return result + int(equipment_collections.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
 	var base: int = 0
@@ -866,7 +901,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
-	return result
+	return result + int(equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
@@ -895,13 +930,21 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result
+	return result + int(equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
+	# Kept for older source audit callers; not used in the live damage path.
 	if target == null:
 		return 0
 	var label: String = str(target.get_meta("size_class", "small")).to_lower()
 	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
+
+func _roll_weapon_damage(target: TwilightMonster) -> int:
+	if target == null:
+		return 0
+	var is_large: bool = str(target.get_meta("size_class", "small")).to_lower() == "large"
+	var maximum: int = ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), is_large)
+	return rng.randi_range(1, maximum) if maximum > 0 else 0
 
 func _load_monster_sizes() -> void:
 	monster_size_index.clear()
@@ -1096,6 +1139,10 @@ func _connect_signals() -> void:
 	hud.save_pressed.connect(func() -> void: _save_game(false))
 	hud.load_pressed.connect(func() -> void: _load_game(false))
 	hud.catalog_equip_requested.connect(_equip_catalog)
+	if hud.has_signal("card_pack_draw_requested"):
+		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
+	if hud.has_signal("card_fusion_requested"):
+		hud.connect("card_fusion_requested", _on_card_fusion_requested)
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
@@ -1136,9 +1183,15 @@ func _connect_signals() -> void:
 		hud.connect("playtest_aden_grant_requested",_grant_playtest_aden)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
-	_clear_combat_actions()
+	map_id = NATIVE_PNG.canonical(map_id)
 	if not maps_by_id.has(map_id):
 		return
+	var requested_native: PlayableField = null
+	if NATIVE_PNG.supports(map_id):
+		requested_native = NATIVE_PNG.load_field(map_id)
+		if requested_native == null:
+			hud.show_message("PNG 원본 팩 누락·손상: 현재 지역을 유지합니다")
+			return
 	# Validate before releasing the current playable world.
 	var requested_map: Dictionary = maps_by_id[map_id] as Dictionary
 	var requested_field: Dictionary = requested_map.get("field_definition", {})
@@ -1149,7 +1202,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			return
 		requested_field = loaded_field as Dictionary
 	var requested_original: OriginalPlayableField = null
-	if REMAKE_REGISTRY.installed(map_id):
+	if requested_native != null:
+		pass
+	elif REMAKE_REGISTRY.installed(map_id):
 		requested_original = REMAKE_REGISTRY.load_field(map_id)
 		if requested_original == null:
 			hud.show_message("리메이크 지도 데이터가 손상되어 현재 맵을 유지합니다")
@@ -1159,6 +1214,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
+	if requested_original is RemakePlayableField and SOURCE_PNG_GAME.requested(map_id) and not SOURCE_PNG_GAME.attach(requested_original):
+		requested_original.close()
+		hud.show_message("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
+		return
+	_clear_combat_actions()
 	if is_instance_valid(world_interactions):
 		world_interactions.cancel_gesture()
 		world_interactions.clear_selection()
@@ -1181,6 +1241,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	ground_loot.hide_map()
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
+	if requested_native != null:
+		active_map = active_map.duplicate()
+		active_map["name"] = requested_native.data.map_name
 	tile_size = int(active_map.get("tile_size_world", 32))
 	world_size = Vector2(float(int(active_map.get("width", 1)) * tile_size), float(int(active_map.get("height", 1)) * tile_size))
 	player.camera.limit_left = 0
@@ -1192,9 +1255,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
 		shape.queue_free()
-	if requested_original != null or not requested_field.is_empty():
-		if requested_original != null:
-			field_map = requested_original
+	if requested_native != null or requested_original != null or not requested_field.is_empty():
+		if requested_native != null or requested_original != null:
+			field_map = requested_native if requested_native != null else requested_original
 			world_size = field_map.bounds.size
 			player.camera.limit_left = floori(field_map.bounds.position.x)
 			player.camera.limit_top = floori(field_map.bounds.position.y)
@@ -1228,7 +1291,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	if not keep_position or not _is_walkable_world(player.global_position):
 		player.global_position = _spawn_position()
 	player.velocity = Vector2.ZERO
-	preload("res://scripts/maps/source_body_profile.gd").apply(player,field_map is RemakePlayableField)
+	preload("res://scripts/maps/source_body_profile.gd").apply(player,field_map is RemakePlayableField or field_map is NativePngField)
 	player.set_touch_vector(Vector2.ZERO)
 	player.camera.reset_smoothing()
 	player.camera.force_update_scroll()
@@ -1238,12 +1301,18 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
+		if field_map is NativePngField: field_renderer = NATIVE_PNG_RENDERER.new()
+		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
+		if field_renderer is RemakeSourceRenderer and field_renderer.png_review_active:
+			hud.set_map_name(str(active_map.get("name",active_map_id))+" · PNG 검수")
+			player.global_position = field_renderer.png_review_spawn
+			player.camera.reset_smoothing();player.camera.force_update_scroll()
+			field_renderer.refresh_visible()
 		_apply_saved_visual_mode()
 		field_population.configure(self, field_map)
 	else:
@@ -1509,6 +1578,7 @@ func _monster_texture(record: Dictionary) -> Texture2D:
 
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
 	if field_map is OriginalPlayableField: return (field_map as OriginalPlayableField).random_landing(rng,near,min_distance,max_distance)
+	if field_map is NativePngField: return (field_map as NativePngField).random_landing(rng,near,min_distance,max_distance)
 	# Display tiles and navigation cells can have different dimensions.
 	if astar == null or not astar.region.has_area(): return _spawn_position_fallback()
 	var region: Rect2i = astar.region
@@ -2027,7 +2097,8 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		_update_target_hud()
 		return
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
-	var damage: int = maxi(1, damage_stat + _weapon_size_adjustment(target) + rng.randi_range(-6, 9))
+	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
+	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -2687,7 +2758,7 @@ func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	if item_name.is_empty() or CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("테스트 지급 불가 아이템")
 		return
-	var permitted: bool = not _find_catalog_item_record(item_name).is_empty()
+	var permitted: bool = CARD_PACK_ITEMS.is_pack(item_name) or not _find_catalog_item_record(item_name).is_empty()
 	if not permitted:
 		permitted = item_name in ["무기 마법 주문서 (각인)", "갑옷 마법 주문서 (각인)", "장신구 마법 주문서 (각인)"]
 	if not permitted:
@@ -2736,6 +2807,44 @@ func _grant_playtest_aden() -> void:
 	hud.show_message("테스트 아데나 · 현재 %d" % gold)
 	_save_game(true)
 
+func _use_card_pack_item(item_name: String) -> void:
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
+	var spec: Dictionary = CARD_PACK_ITEMS.definition(item_name)
+	if spec.is_empty() or int(inventory.get(item_name, 0)) < 1:
+		hud.show_message("뽑기권이 없습니다")
+		return
+	var category: String = str(spec.get("category", ""))
+	var count: int = int(spec.get("count", 0))
+	if not card_draw_fusion.can_draw(category):
+		hud.show_message("해당 종류의 뽑기 카드 목록이 부족합니다")
+		return
+	# The draw service validates before granting; spend only on success.
+	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
+	if not bool(outcome.get("ok", false)):
+		hud.show_message(str(outcome.get("error", "뽑기 실패")))
+		return
+	var remaining: int = int(inventory.get(item_name, 0)) - 1
+	if remaining == 0:
+		inventory.erase(item_name)
+	else:
+		inventory[item_name] = remaining
+	var grades: Dictionary = {}
+	for raw: Variant in outcome.get("results", []) as Array:
+		if raw is Dictionary:
+			var grade: String = str((raw as Dictionary).get("grade", ""))
+			grades[grade] = int(grades.get(grade, 0)) + 1
+	var message: String = "%s %d회 완료 · 고급 %d · 희귀 %d · 영웅 %d · 전설 %d" % [
+		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
+		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
+	hud.refresh_inventory(inventory)
+	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	hud.call("set_card_draw_fusion_result", category, message)
+	hud.show_message(message)
+	hud.append_log(message)
+	_save_game(true)
+	hud.call("present_card_reveal", category, outcome, false)
+
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
@@ -2744,6 +2853,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
+		return
+	if CARD_PACK_ITEMS.is_pack(item_name):
+		_use_card_pack_item(item_name)
 		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
@@ -3242,6 +3354,8 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")):
+		return
 	var selected: Dictionary = _parse_enhancement_target(target_name)
 	var item_id: String = str(selected.get("id", ""))
 	target_name = str(selected.get("name", target_name))
@@ -3289,36 +3403,39 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 
 	var result_type: String = "maintain"
 	var result_level: int = current_level
+	var result_message: String = "강화 실패 · 장비 변화 없음"
 	var roll: float = rng.randf_range(0.0, 100.0)
 	if roll < success_chance:
 		var gain: int = _roll_enhancement_gain(mode, current_level)
 		result_level = mini(21, current_level + gain)
 		item_instances[item_id]["level"] = result_level
 		result_type = "success"
-		hud.show_message("강화 성공! +%d %s" % [result_level, target_name])
+		result_message = "강화 성공! +%d %s" % [result_level, target_name]
 		hud.append_log("강화 성공 · +%d %s" % [result_level, target_name])
 	elif roll < success_chance + no_change_chance:
-		hud.show_message("강화 실패 · 장비 변화 없음")
 		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
 	elif roll < success_chance + no_change_chance + decrease_chance:
 		result_level = maxi(0, current_level - 1)
 		item_instances[item_id]["level"] = result_level
 		result_type = "decrease"
-		hud.show_message("강화 실패 · +%d → +%d 하락" % [current_level, result_level])
+		result_message = "강화 실패 · +%d → +%d 하락" % [current_level, result_level]
 		hud.append_log("강화 실패(하락) · %s +%d → +%d" % [target_name, current_level, result_level])
 	else:
 		_destroy_enhancement_target(target_name, item_id)
 		result_type = "destroy"
 		result_level = 0
-		hud.show_message("강화 실패 · %s 소실" % target_name)
+		result_message = "강화 실패 · %s 소실" % target_name
 		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
 
-	if hud.has_method("show_enhancement_result"):
-		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	hp = mini(hp, _effective_max_hp())
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	_save_game(true)
+	# Persist first. Presentation/skip/close must never commit or reroll a result.
+	if hud.has_method("show_enhancement_result"):
+		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
+	else:
+		hud.show_message(result_message)
 
 	if int(inventory.get(scroll_name, 0)) > 0:
 		var remaining_candidates: Array = _enhancement_candidates(kind, mode)
@@ -3567,6 +3684,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 		hud.call("open_crafting")
 
 func _npc_teleport_requested(map_id: String) -> void:
+	map_id = NATIVE_PNG.canonical(map_id)
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
 		return
@@ -3716,8 +3834,11 @@ func _update_hud() -> void:
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
+	character_state["equipment_collection_bonuses"] = equipment_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	hud.set_character_state(character_state)
+	if hud.has_method("set_card_collection_state"):
+		hud.call("set_card_collection_state", card_draw_fusion.export_state())
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
@@ -3733,11 +3854,23 @@ func _refresh_combat_hud() -> void:
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
-func _save_game(quiet: bool) -> void:
+func save_path() -> String:
+	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
+
+func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if equipment_collections.save_blocked:
+		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
+		return ERR_UNAVAILABLE
+	for key: String in collection_override:
+		if key not in ["inventory","item_instances","equipment_collections"]: return ERR_INVALID_PARAMETER
+	if "--png-review" in OS.get_cmdline_user_args():
+		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
+		return ERR_UNAVAILABLE
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
-		return
-	_sync_item_instances()
+		return ERR_UNAVAILABLE
+	# The collection transaction already validated a staged inventory; do not mutate live gear before disk commit.
+	if not collection_override.has("inventory"): _sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -3763,6 +3896,7 @@ func _save_game(quiet: bool) -> void:
 		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
+		"equipment_collections": equipment_collections.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
@@ -3784,21 +3918,30 @@ func _save_game(quiet: bool) -> void:
 		"consumable_state": consumable_service.call("export_state"),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
+		"card_draw_fusion": card_draw_fusion.export_state(),
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
 		"next_item_instance_id":next_item_instance_id
 	}
-	var result: Error = preload("res://scripts/skills/save_writer.gd").write(SAVE_PATH, data)
+	if field_map is NativePngField:
+		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
+		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
+	if field_map is RemakePlayableField and field_map.png_game_pack!=null:
+		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
+	data.merge(equipment_collections.extra_save_fields, false)
+	data.merge(collection_override, true)
+	var result: Error = equipment_collections.write_save(save_path(), data)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
-		return
+		return result
 	if not quiet:
 		hud.show_message("저장 완료")
+	return OK
 
 func _load_game(quiet: bool) -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
+	if not FileAccess.file_exists(save_path()):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
 		return
@@ -3806,33 +3949,125 @@ func _load_game(quiet: bool) -> void:
 	# The explicit parser returns an error code, so damaged local saves can be
 	# rejected without corrupting the current session or failing a smoke test.
 	var save_parser: JSON = JSON.new()
-	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(SAVE_PATH))
+	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(save_path()))
 	if parse_error != OK:
+		equipment_collections.save_blocked = true
 		if not quiet:
 			hud.show_message("저장 데이터가 손상되었습니다")
 			hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var value: Variant = save_parser.data
 	if not (value is Dictionary):
+		equipment_collections.save_blocked = true
 		if not quiet:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var collection_error: String = equipment_collections.check_load(data)
+	if not collection_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(collection_error)
+		return
 	var saved_map_id: String = str(data.get("map_id", ""))
+	if saved_map_id in ["albino_03","albino_04"]:
+		var retirement_sha: String=FileAccess.get_sha256(save_path())
+		var retirement_backup: String=save_path()+".pre-albino-retirement-"+retirement_sha
+		if (not FileAccess.file_exists(retirement_backup) and DirAccess.copy_absolute(save_path(),retirement_backup)!=OK) or FileAccess.get_sha256(retirement_backup)!=retirement_sha:
+			source_save_blocked=true
+			hud.show_message("알비노 구역 이전 백업 실패: 기존 저장을 보존합니다")
+			return
+		data=data.duplicate(true)
+		data["map_id"]="albino_02"
+		data["position"]=[]
+		data["map_layout_revision"]=-1
+		data.erase("native_png_plan_sha256")
+		data.erase("native_png_review_sha256")
+		data.erase("original_position")
+		saved_map_id="albino_02"
+	var has_native_position: bool=data.has("native_png_plan_sha256")
+	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
+	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args() or (NATIVE_PNG.extra_map(saved_map_id) and "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args())
+	if has_native_position and explicit_legacy and not requested_native and maps_by_id.has(saved_map_id):
+		# Explicitly returning to an existing layout retains progression while
+		# discarding pixel coordinates that belong to the PNG canvas.
+		data=data.duplicate(true)
+		data.erase("native_png_plan_sha256");data.erase("native_png_review_sha256")
+		data["position"]=[];data["map_layout_revision"]=-1
+	elif has_native_position or requested_native:
+		# Validate prospective PNG migrations too, before mutating character
+		# state. A corrupt default pack must not overwrite an old ordinary save.
+		var native_saved_field: PlayableField=NATIVE_PNG.load_field(NATIVE_PNG.canonical(saved_map_id)) if requested_native else null
+		var saved_plan: String=str(data.get("native_png_plan_sha256",""))
+		var plan_changed: bool=has_native_position and saved_plan!=NATIVE_PNG.plan_hash(NATIVE_PNG.canonical(saved_map_id))
+		var migration: Dictionary=NATIVE_PNG_SAVE_MIGRATIONS.get(saved_plan,{})
+		var known_native_upgrade: bool=(native_saved_field!=null and plan_changed and not migration.is_empty()
+			and saved_map_id in migration.map_ids
+			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
+			and (int(native_saved_field.data.layout_revision)==int(migration.to_revision)
+				or (saved_map_id=="aden_world" and int(migration.to_revision)==2026102002 and int(native_saved_field.data.layout_revision)==preload("res://scripts/maps/png_world_scale.gd").ADEN_REVISION))
+			and str(data.get("native_png_review_sha256",""))==saved_plan)
+		if native_saved_field==null or (plan_changed and not known_native_upgrade):
+			source_save_blocked=true
+			hud.show_message("PNG 팩 누락·변경: 저장 파일을 보존합니다")
+			return
+		if known_native_upgrade:
+			# Keep every distinct original byte-for-byte, including later imports
+			# of another old character. Loading alone never rewrites the save.
+			var original_hash: String=FileAccess.get_sha256(save_path())
+			var backup_path: String=save_path()+".pre-aden-faith-population-"+original_hash
+			if (not FileAccess.file_exists(backup_path) and DirAccess.copy_absolute(save_path(),backup_path)!=OK) or FileAccess.get_sha256(backup_path)!=original_hash:
+				source_save_blocked=true
+				hud.show_message("이전 PNG 저장 백업 실패: 저장 파일을 보존합니다")
+				return
+			data=data.duplicate(true)
+			data["position"]=[];data["map_layout_revision"]=-1
+		elif has_native_position and saved_map_id=="aden_world" and not plan_changed and int(data.get("map_layout_revision",-1))!=int(native_saved_field.data.layout_revision):
+			# Same authenticated PNG/plan, explicit old world units. Never guess
+			# a ratio from arbitrary saved pixels or overwrite the original save.
+			var old_scales: Dictionary={2026102002:1.0,2026102003:2.0}
+			var old_revision: int=int(data.get("map_layout_revision",-1))
+			if not old_scales.has(old_revision):
+				source_save_blocked=true;hud.show_message("아덴 저장 좌표 버전을 확인할 수 없습니다");return
+			var original_hash: String=FileAccess.get_sha256(save_path())
+			var backup_path: String=save_path()+".pre-aden-scale-"+original_hash
+			if (not FileAccess.file_exists(backup_path) and DirAccess.copy_absolute(save_path(),backup_path)!=OK) or FileAccess.get_sha256(backup_path)!=original_hash:
+				source_save_blocked=true;hud.show_message("아덴 좌표 이전 백업 실패: 저장 파일을 보존합니다");return
+			data=data.duplicate(true)
+			var raw: Variant=data.get("position",[])
+			var position: Vector2=Vector2.INF
+			if raw is Array and raw.size()==2 and (raw[0] is int or raw[0] is float) and (raw[1] is int or raw[1] is float):
+				position=Vector2(raw[0],raw[1])*(native_saved_field as NativePngField).artwork_scale/float(old_scales[old_revision])
+			if position.is_finite() and native_saved_field.point_clear(position) and native_saved_field.line_clear(position,position):
+				data["position"]=[position.x,position.y];data["map_layout_revision"]=native_saved_field.data.layout_revision
+				# The historical review was the authenticated immutable PNG plan.
+				# Having checked the new exact foot, retain this valid location.
+				if str(data.get("native_png_review_sha256",""))==saved_plan:data["native_png_review_sha256"]=NATIVE_PNG.review_hash(saved_map_id)
+			else:data["position"]=[];data["map_layout_revision"]=-1
+		if not has_native_position and not FileAccess.file_exists(save_path()+".pre-native-png"):
+			if DirAccess.copy_absolute(save_path(),save_path()+".pre-native-png")!=OK:
+				source_save_blocked=true
+				hud.show_message("이전 지도 저장 백업 실패: 저장 파일을 보존합니다")
+				return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
 		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+		if saved_field is RemakePlayableField and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not "--legacy-map-layouts" in OS.get_cmdline_user_args():
+			if not SOURCE_PNG_GAME.attach(saved_field) or (data.has("oman_png_index_sha256") and data.oman_png_index_sha256!=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")):
+				saved_field.close();source_save_blocked=true
+				hud.show_message("오만 PNG 리소스를 확인할 수 없어 저장 데이터를 보존합니다")
+				return
 		if saved_field == null:
 			source_save_blocked = true
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
 			return
 		saved_field.close()
-	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(SAVE_PATH + ".pre-original-skills"):
-		var backup_error := DirAccess.copy_absolute(SAVE_PATH, SAVE_PATH + ".pre-original-skills")
+	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(save_path() + ".pre-original-skills"):
+		var backup_error := DirAccess.copy_absolute(save_path(), save_path() + ".pre-original-skills")
 		if backup_error != OK:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
+	if not equipment_collections.accept_load(data): return
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
@@ -3903,6 +4138,7 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
 	if equipped_value is Dictionary:
 		equipped_catalog = equipped_value as Dictionary
@@ -3918,6 +4154,7 @@ func _load_game(quiet: bool) -> void:
 	for raw_id: Variant in item_instances.keys():
 		if str(raw_id).is_valid_int():
 			next_item_instance_id = maxi(next_item_instance_id, int(str(raw_id)) + 1)
+	next_item_instance_id = maxi(next_item_instance_id, equipment_collections.next_safe_id())
 	_sync_item_instances()
 	_normalize_equipment_slots()
 	_attach_missing_equipment_instance_ids()
@@ -3941,6 +4178,10 @@ func _load_game(quiet: bool) -> void:
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
+	if field_map is NativePngField and str(data.get("native_png_review_sha256",""))!=NATIVE_PNG.review_hash(active_map_id):
+		# Keep character progress, inventory and boss state; a revised obstacle
+		# must not restore the actor inside its old, now blocked pixel position.
+		compatible_layout=false
 	if field_map is OriginalPlayableField:
 		position_value = SOURCE_TRAVEL.restore_position(self,data.get("original_position",{}))
 	if position_value is Array and compatible_layout:
@@ -5148,6 +5389,9 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			var chain_factor: float = pow(clampf(float(skill.get("chain_falloff", 1.0)), 0.2, 1.0), chain_index) if chain_limit > 1 else 1.0
 			var execute_factor: float = maxf(1.0, float(skill.get("execute_multiplier", 1.0))) if float(victim.hp) / maxf(1.0, float(victim.max_hp)) <= float(skill.get("execute_threshold", 0.0)) else 1.0
 			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor * execute_factor)))
+			if style != "magic":
+				# A fresh size roll per successful physical skill hit; never on spells.
+				damage += _roll_weapon_damage(victim)
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
 				damage = _player_critical_damage(damage, style)
@@ -5290,6 +5534,56 @@ func _on_class_selected(value: int) -> void:
 	player.set_class_index(class_index)
 	hud.show_message("캐릭터 외형: %s" % ["전사", "마법사", "궁수", "암살자"][class_index])
 	_update_hud()
+
+# Card acquisition is the only debug-only action. Real pack ownership/cost is
+# not modelled yet; fusion is available whenever saved duplicate cards exist.
+func _on_card_pack_draw_requested(category: String) -> void:
+	if not OS.is_debug_build():
+		return
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
+	var result: Dictionary = card_draw_fusion.draw_pack(category)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "뽑기 실패")))
+		return
+	var grades: Dictionary = {"고급": 0, "희귀": 0, "영웅": 0, "전설": 0}
+	for raw: Variant in result.get("results", []) as Array:
+		if raw is Dictionary:
+			var grade: String = str((raw as Dictionary).get("grade", ""))
+			if grades.has(grade):
+				grades[grade] = int(grades[grade]) + 1
+	var message: String = "%s 최상급팩 11장 · 고급 %d / 희귀 %d / 영웅 %d / 전설 %d" % [
+		category, int(grades["고급"]), int(grades["희귀"]),
+		int(grades["영웅"]), int(grades["전설"])
+	]
+	hud.show_message(message)
+	hud.append_log(message)
+	hud.call("set_card_draw_fusion_result", category, message)
+	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_save_game(true)
+	hud.call("present_card_reveal", category, result, false)
+
+func _on_card_fusion_requested(category: String, grade: String) -> void:
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
+	var result: Dictionary = card_draw_fusion.fuse(category, grade)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "합성 실패")))
+		return
+	var card: Dictionary = result.get("result", {}) as Dictionary
+	var outcome: String = "성공" if bool(result.get("success", false)) else "실패"
+	var message: String = "%s %s 합성 %s · %s(%s)" % [
+		category, grade, outcome, str(card.get("name", "")), str(card.get("grade", ""))
+	]
+	var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
+	if not pity_card.is_empty():
+		message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	hud.show_message(message)
+	hud.append_log(message)
+	hud.call("set_card_draw_fusion_result", category, message)
+	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_save_game(true)
+	hud.call("present_card_reveal", category, result, true)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
 	if category == "아이템":
@@ -5488,6 +5782,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(_source_catalog_record("아이템", item_value as Dictionary))
+	var collection_record: Dictionary = equipment_collections.stat_record()
+	if not collection_record.is_empty(): records.append(collection_record)
 	return records
 
 func _normalized_weapon_type(raw_type: String) -> String:
@@ -5893,6 +6189,8 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 	return clampf(value, 0.5, 2.0)
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
+	if bool(record.get("_equipment_collection_bonus",false)):
+		return maxf(0.0,float(record.get("collection_attack_speed",0.0)))
 	var value: float = CATALOG_EFFECTS.attack_speed_percent(record)
 	if str(record.get("slot", "")) == "weapon":
 		value += _weapon_intrinsic_attack_speed_percent(record)
@@ -6220,7 +6518,7 @@ func _critical_damage(raw_damage: int) -> int:
 # Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
 # Keep monster critical hits on _critical_damage so player gear never buffs enemies.
 func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
-	var final_damage: int = _critical_damage(raw_damage)
+	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat"))
 	var option_key: String = ""
 	match attack_type:
 		"ranged":
@@ -6233,7 +6531,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus)
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -6334,6 +6632,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"melee_accuracy": _melee_accuracy_stat(),
 		"ranged_damage": _ranged_damage_stat(),
 		"ranged_accuracy": _ranged_accuracy_stat(),
+		"weapon_small_damage": ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), false),
+		"weapon_large_damage": ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), true),
 		"magic_damage": _magic_damage_stat(),
 		"magic_accuracy": _magic_accuracy_stat(),
 		"melee_critical": _player_critical_rate("melee"),
@@ -6376,6 +6676,11 @@ func _effective_attack() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("atk", 0.0))
+	# Weapon 'atk' is a legacy aggregate (often size base + extra damage).
+	# Remove it from both displayed melee/ranged stats and their common base;
+	# the weapon's explicit flat options are counted once by additional_damage(),
+	# and its size base is separately rolled on each successful physical hit.
+	bonus -= float(_equipped_weapon_record().get("atk", 0.0))
 	return attack_power + int(round(bonus)) + _enhancement_weapon_stat("damage") + _active_skill_buff_total("atk") + _passive_skill_total("atk")
 
 func _effective_defense() -> int:
@@ -6469,7 +6774,7 @@ func use_field_portal(portal_id: String) -> bool:
 		if portal.has("target_source"):
 			if level < int(portal.get("min_level",0)) or (int(portal.get("max_level",0)) > 0 and level > int(portal.max_level)): return false
 			return SOURCE_TRAVEL.enter(self,str(portal.target_map),COORD.array_vector(portal.target_source))
-		var target_map: String = str(portal["target_map"])
+		var target_map: String = NATIVE_PNG.canonical(str(portal["target_map"]))
 		if not maps_by_id.has(target_map):
 			return false
 		player.clear_click_path()
@@ -6482,17 +6787,29 @@ func use_field_portal(portal_id: String) -> bool:
 			if active_map_id != target_map: return false
 			if field_map == null:
 				_place_return_gate()
-			elif portal.has("target_position") and (not field_map is RemakePlayableField or int(portal.get("target_layout_revision",-1))==int(field_map.data.layout_revision)):
+			elif portal.has("target_position") and (not (field_map is RemakePlayableField or field_map is NativePngField) or int(portal.get("target_layout_revision",-1))==int(field_map.data.layout_revision)):
 				# Old pixel destinations belong to the old layout. A source remake
 				# uses its validated entry unless a calibrated target revision matches.
 				var landing: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
 				if landing.x >= 0:
 					player.global_position = field_map.cell_to_world(landing)
 		elif portal.has("target_position"):
-			var cell: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
-			if cell.x < 0:
-				return false
-			player.global_position = field_map.cell_to_world(cell)
+			if field_map is NativePngField:
+				# Reviewed PNG pockets can share one map through explicit travel
+				# gates. Never project stale coordinates onto a different floor.
+				if int(portal.get("target_layout_revision", -1)) != int(field_map.data.layout_revision): return false
+				var destination: Vector2 = COORD.array_vector(portal["target_position"])
+				if not field_map.walkable(destination) or not field_map.point_clear(destination, 4.0): return false
+				var cell: Vector2i = field_map.world_to_cell(destination)
+				if field_map.reachable[cell.y * field_map.width + cell.x] == 0: return false
+				for offset: Vector2 in NativePngField.LANDING_BODY_OFFSETS:
+					if not field_map.walkable(destination + offset): return false
+				player.global_position = destination
+			else:
+				var cell: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
+				if cell.x < 0:
+					return false
+				player.global_position = field_map.cell_to_world(cell)
 		player.camera.reset_smoothing()
 		player.camera.force_update_scroll()
 		if field_renderer != null:
@@ -6683,9 +7000,26 @@ func _notification(what: int) -> void:
 		_save_game(true)
 
 func constrain_original_motion(actor: CharacterBody2D) -> void:
+	if field_map is NativePngField and actor.velocity!=Vector2.ZERO:
+		var delta: float=actor.get_physics_process_delta_time()
+		var motion: Vector2=actor.velocity*delta
+		if not field_map.line_clear(actor.global_position,actor.global_position+motion):
+			# Godot's circle/convex vertex solver can settle inside the precise
+			# foot margin at low FPS. Resolve the real physics contact's tangent
+			# before moving, using the same reviewed geometry as navigation.
+			var contact:=KinematicCollision2D.new()
+			var tangent: Vector2=Vector2.ZERO
+			if actor.test_move(actor.global_transform,motion,contact):tangent=motion.slide(contact.get_normal())
+			actor.velocity=tangent/delta if field_map.line_clear(actor.global_position,actor.global_position+tangent) else Vector2.ZERO
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
 		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
-		if not field_map.line_clear(actor.global_position,target): actor.velocity = Vector2.ZERO
+		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)
+		if not source_clear: actor.velocity = Vector2.ZERO
+		elif field_map is RemakePlayableField and not field_map.point_clear(target):
+			# A streamed wall lets move_and_slide resolve the real circular foot
+			# and keep its tangent motion. Zeroing first deadlocks glancing paths.
+			# Off-screen actors still stop at source edges absent from physics.
+			if not actor.test_move(actor.global_transform,target-actor.global_position): actor.velocity = Vector2.ZERO
 
 func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)

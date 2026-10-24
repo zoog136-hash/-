@@ -54,6 +54,7 @@ func picture(name: String, cell: Vector2i, zoom_value: float = 1.0) -> void:
 		"engine":Engine.get_version_info().string,"display":DisplayServer.get_name()})
 
 func run() -> void:
+	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/aden_giran_review_test.gd"): return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		if arg == "--capture": capture = true

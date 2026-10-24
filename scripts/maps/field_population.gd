@@ -46,6 +46,13 @@ func configure(controller: Node, value: PlayableField) -> void:
 			if _zone_active(region): _spawn_slot(slot)
 
 func _zone_active(region: Dictionary) -> bool:
+	# One Escaros PNG includes five former fields (165 slots). Creating every
+	# distant normal monster on entry freezes the map; activate nearby habitats
+	# while keeping every slot, boss identity and respawn timer intact.
+	if field is NativePngField and str(field.data.map_id)=="escaros_world" and str(region.get("mode","normal"))!="boss":
+		var extents: Array=region.rect
+		var area:=Rect2(float(extents[0]),float(extents[1]),float(extents[2]),float(extents[3]))
+		return area.grow(1650.0).has_point(world.player.global_position)
 	if str(region.get("mode","normal")) != "dense": return true
 	var a: Array = region.rect
 	var center := Vector2(float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5)
@@ -133,8 +140,13 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p
-	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField)
+	# A pooled actor may carry the last map's source override. Restore that
+	# before setup writes this life/record's normal animation collision shape.
+	preload("res://scripts/maps/source_body_profile.gd").apply(monster,false)
 	monster.setup(record,world.player,world,world._monster_texture(record))
+	# setup/_setup_animation writes collision_radius and collision_offset.
+	# Apply the source foot LAST so monsters and the player really use 4px.
+	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField or field is NativePngField)
 	monster.attack_cooldown = world.rng.randf_range(0.,monster.attack_interval*.7)
 	if not monster.died.is_connected(world._on_monster_died): monster.died.connect(world._on_monster_died)
 	if not monster.player_hit.is_connected(world._on_player_hit): monster.player_hit.connect(world._on_player_hit)
@@ -294,8 +306,17 @@ func _process(delta: float) -> void:
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
 		if not is_instance_valid(monster):
 			slot.remaining = maxf(0.,float(slot.remaining)-delta)
-			if float(slot.remaining)<=0. and (refresh or str(slot.region.get("mode",""))=="boss") and _zone_active(slot.region): _spawn_slot(slot)
+			if float(slot.remaining)<=0. and (refresh or str(slot.region.get("mode",""))=="boss") and _zone_active(slot.region):
+				_spawn_slot(slot)
+				# Full/blocked regions can fail all 64–160 candidate probes. Do not
+				# repeat that costly search at every 0.4s wake until a later retry.
+				# Successful spawns and boss cooldown semantics remain unchanged.
+				if not is_instance_valid(slot.monster) and str(slot.region.get("mode","normal"))!="boss":
+					slot.remaining = 2.0
 		elif refresh:
 			var distance: float = monster.global_position.distance_to(world.player.global_position)
 			monster.set_physics_process(distance<float(field.data.streaming.monster_sleep_distance))
+			if field is NativePngField and str(field.data.map_id)=="escaros_world":
+				# Sleeping old habitats must also stop submitting draw calls.
+				monster.visible=distance<float(field.data.streaming.monster_sleep_distance)+240.0
 			if not monster.is_physics_processing(): monster.velocity = Vector2.ZERO
