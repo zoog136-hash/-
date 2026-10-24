@@ -10,6 +10,11 @@ on:
 permissions:
   contents: read
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   godot-integration:
     runs-on: ubuntu-latest

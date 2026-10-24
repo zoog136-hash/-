@@ -8,8 +8,13 @@ const PREFIX := "res://assets/external_spx/skills/"
 var bindings: Dictionary = {}
 var families: Dictionary = {}
 var cache: Dictionary = {}
+var installed_layouts: Dictionary = {}
 
 func _init() -> void:
+	var manifest_path := "res://data/external_spx/skills_manifest.json"
+	if FileAccess.file_exists(manifest_path):
+		var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+		if manifest is Dictionary: installed_layouts = manifest.get("families", {})
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(BINDINGS_PATH))
 	if not (parsed is Dictionary):
 		return
@@ -28,6 +33,10 @@ func clip_for(id: String, phase: String) -> String:
 	if not (phases is Dictionary):
 		return ""
 	return str(phases.get(phase, ""))
+
+func layout_for(id: String, phase: String) -> Dictionary:
+	var family := str(binding_for(id).get("family", ""))
+	return installed_layouts.get(family, {}).get("layout", {}).get(clip_for(id, phase), {})
 
 func frames_for(id: String, phase: String) -> SpriteFrames:
 	var binding: Dictionary = binding_for(id)
