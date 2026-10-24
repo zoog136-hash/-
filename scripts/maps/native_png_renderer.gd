@@ -30,10 +30,33 @@ var shutting_down: bool=false
 # Generated plaza is optional art only. It shares the original stream/cache budget.
 const LIVE_PLAZA="res://assets/maps/aden_live_plaza/"
 var generated_rows: Array=[]
+const MOBILE=preload("res://scripts/maps/aden_mobile_pack.gd")
+var generated_full_world: bool=false
+var generated_grid: Dictionary={}
+var max_decode_usec: int=0
+var decode_errors: int=0
+func index_generated(row: Dictionary) -> void:
+	var p:=Vector2(row.position[0],row.position[1]);var end:=p+Vector2(row.size[0],row.size[1])
+	for y: int in range(floori(p.y/1024),floori(end.y/1024)+1):
+		for x: int in range(floori(p.x/1024),floori(end.x/1024)+1):
+			var key:=Vector2i(x,y)
+			if not generated_grid.has(key):generated_grid[key]=[]
+			generated_grid[key].append(row)
+func load_generated_world() -> bool:
+	if str(field.data.map_id)!="aden_world":return false
+	var value: Dictionary=MOBILE.pack()
+	if value.is_empty():return false
+	for source: Dictionary in value.ground:
+		var row: Dictionary=source.duplicate(true);row.file=MOBILE.ROOT+source.file;row.generated=true;row.codec="webp";generated_rows.append(row);index_generated(row)
+	for placement: Dictionary in value.placements:
+		var row: Dictionary=value.assets[placement.asset].duplicate(true)
+		row.file=MOBILE.ROOT+row.file+"#"+str(placement.id);row.position=placement.position;row.foot_image=placement.foot;row.id=placement.id;row.generated=true;row.codec="webp";generated_rows.append(row);index_generated(row)
+	generated_full_world=true;return true
+
 func row_scale(row: Dictionary) -> float:
 	return 1.0 if row.get("generated",false) else native_field.artwork_scale
 func row_path(filename: String) -> String:
-	return filename if filename.begins_with("res://") else native_field.png_root+"/"+filename
+	return filename.get_slice("#",0) if filename.begins_with("res://") else native_field.png_root+"/"+filename
 func load_generated_plaza() -> void:
 	if str(field.data.map_id)!="aden_world":return
 	var file:=FileAccess.open(LIVE_PLAZA+"manifest.json",FileAccess.READ)
@@ -54,7 +77,15 @@ func rows_in_view(camera: Camera2D, margin: float) -> Dictionary:
 	var extent: Vector2=get_viewport_rect().size/camera.zoom
 	var view:=Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(margin)
 	var wanted: Dictionary={}
-	for row: Dictionary in native_field.png_manifest.chunks+native_field.png_manifest.get("foreground",[])+generated_rows:
+	var candidates: Array=[]
+	if generated_full_world:
+		var seen: Dictionary={}
+		for y: int in range(floori(view.position.y/1024),floori(view.end.y/1024)+1):
+			for x: int in range(floori(view.position.x/1024),floori(view.end.x/1024)+1):
+				for row: Dictionary in generated_grid.get(Vector2i(x,y),[]):
+					if not seen.has(row.file):seen[row.file]=true;candidates.append(row)
+	else:candidates=native_field.png_manifest.chunks+native_field.png_manifest.get("foreground",[])+generated_rows
+	for row: Dictionary in candidates:
 		var box:=Rect2(Vector2(row.position[0],row.position[1])*row_scale(row),Vector2(row.size[0],row.size[1])*row_scale(row))
 		if box.intersects(view): wanted[str(row.file)]=row
 	return wanted
@@ -63,13 +94,18 @@ func visible_rows(camera: Camera2D) -> Dictionary:
 	return rows_in_view(camera,96)
 
 static func decode_chunk(path: String, row: Dictionary, cuts: Array) -> Dictionary:
+	var started: int=Time.get_ticks_usec()
 	var image:=Image.new()
-	var error: Error=image.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) if row.get("generated",false) else image.load(path)
+	if row.get("generated",false) and FileAccess.get_sha256(path)!=row.sha256:return {"error":"SHA mismatch "+path}
+	var error: Error
+	if row.get("codec","")=="webp":error=image.load_webp_from_buffer(FileAccess.get_file_as_bytes(path))
+	elif row.get("generated",false):error=image.load_png_from_buffer(FileAccess.get_file_as_bytes(path))
+	else:error=image.load(path)
 	if error!=OK: return {"error":path}
 	var pieces: Array[Dictionary]=[]
 	if not row.has("foot_image") and not row.get("generated",false):
 		pieces=LAYERS.split(image,Vector2(row.position[0],row.position[1]),cuts)
-	return {"row":row,"image":image,"pieces":pieces}
+	return {"row":row,"image":image,"pieces":pieces,"decode_usec":Time.get_ticks_usec()-started}
 
 func _exit_tree() -> void:
 	shutting_down=true
@@ -110,7 +146,7 @@ func add_image(key: String, source_file: String, row: Dictionary, image: Image) 
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field=value;native_field=value as NativePngField;player=actor
-	load_generated_plaza()
+	if not load_generated_world():load_generated_plaza()
 	z_index=0
 	y_sort_enabled=true
 	texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR if native_field.artwork_scale>1 else CanvasItem.TEXTURE_FILTER_NEAREST
@@ -127,11 +163,11 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		label.add_theme_font_size_override("font_size",14);markers.add_child(label)
 	refresh_visible()
 	# Decode only the entry tile synchronously; other visible chunks stream.
-	var source_position: Vector2=player.global_position/native_field.artwork_scale
+	var source_position: Vector2=player.global_position
 	for filename: String in visible_files:
 		var row: Dictionary=visible_files[filename]
 		var source_rect:=Rect2(Vector2(row.position[0],row.position[1]),Vector2(row.size[0],row.size[1]))
-		if not source_rect.has_point(source_position) or row.has("foot_image"): continue
+		if not source_rect.has_point(source_position/row_scale(row)) or row.has("foot_image"): continue
 		synchronous_decodes+=1
 		commit_chunk(filename,decode_chunk(row_path(filename),row,field.data.get("runtime_foreground",[])))
 		break
@@ -169,8 +205,9 @@ func reserve_pixels(pixels: int) -> bool:
 
 func commit_chunk(filename: String, result: Dictionary) -> void:
 	if result.has("error"):
-		push_error("Native PNG chunk decode failed: "+str(result.error));return
+		decode_errors+=1;push_error("Native PNG chunk decode failed: "+str(result.error));return
 	if chunks.has(filename): return
+	max_decode_usec=maxi(max_decode_usec,int(result.get("decode_usec",0)))
 	var row: Dictionary=result.row
 	var count: int=int(row.size[0])*int(row.size[1])
 	for piece: Dictionary in result.pieces: count+=piece.image.get_width()*piece.image.get_height()

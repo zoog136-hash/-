@@ -328,5 +328,10 @@ func build_physics(parent: Node2D) -> StaticBody2D:
 
 func overview_texture() -> Texture2D:
 	var image := Image.new()
+	if str(data.map_id)=="aden_world":
+		var mobile=preload("res://scripts/maps/aden_mobile_pack.gd")
+		var pack: Dictionary=mobile.pack()
+		if not pack.is_empty():
+			if image.load_webp_from_buffer(FileAccess.get_file_as_bytes(mobile.ROOT+pack.overview.file))==OK:return ImageTexture.create_from_image(image)
 	if image.load(png_root+"/overview.png") != OK: return null
 	return ImageTexture.create_from_image(image)

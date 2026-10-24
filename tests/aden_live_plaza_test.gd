@@ -9,7 +9,10 @@ func run() -> void:
 	world._set_map("aden_world",false);world.field_population.configure(world,null);world._clear_monsters();world.player.set_auto_enabled(false);world.player.camera.position_smoothing_enabled=false
 	var renderer: NativePngRenderer=world.field_renderer;var field: NativePngField=world.field_map;var failures: Array=[]
 	var snapshot: Dictionary=field.navigation_snapshot();var portals: Array=field.data.portal.duplicate(true)
-	if renderer.generated_rows.size()!=3:failures.append("live rows absent")
+	var pack: Dictionary=preload("res://scripts/maps/aden_mobile_pack.gd").pack()
+	var expected_rows: int=3 if pack.is_empty() else pack.ground.size()+pack.placements.size()
+	if renderer.generated_rows.size()!=expected_rows:failures.append("live rows absent")
+	if not pack.is_empty() and not renderer.generated_full_world:failures.append("full world stream inactive")
 	if not await renderer.settle_visible():failures.append("initial stream timeout")
 	if field.walkable(Vector2(70572,17526)):failures.append("fountain collision")
 	var destination:=Vector2(11700,2915)*6;world._set_click_destination(destination)
@@ -23,7 +26,7 @@ func run() -> void:
 		if not out.is_empty():root.get_texture().get_image().save_png(out+"/live_"+str(int(offset.x))+".png")
 	var live_count: int=0
 	for key: String in renderer.chunks:
-		if key.begins_with(renderer.LIVE_PLAZA):live_count+=1
+		if key.begins_with(renderer.LIVE_PLAZA if pack.is_empty() else renderer.MOBILE.ROOT):live_count+=1
 	if live_count==0:failures.append("live texture absent")
 	world.player.camera.offset=Vector2(6000,6000);world.player.camera.force_update_scroll();await renderer.settle_visible()
 	for row: Dictionary in renderer.generated_rows:renderer.release_source(row.file)

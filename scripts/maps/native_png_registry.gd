@@ -280,6 +280,7 @@ static func load_field(mid: String) -> PlayableField:
 	var rows: Variant = manifest.get("chunks")
 	if not rows is Array or rows.is_empty(): return null
 	var positions: Dictionary = {}
+	var generated_aden: bool=mid=="aden_world" and not preload("res://scripts/maps/aden_mobile_pack.gd").pack().is_empty()
 	for chunk: Dictionary in rows+manifest.get("foreground",[]):
 		var filename: String = str(chunk.get("file",""))
 		if filename.get_file() != filename or not filename.ends_with(".png"): return null
@@ -291,6 +292,8 @@ static func load_field(mid: String) -> PlayableField:
 		if positions.has(key): return null
 		positions[key] = true
 		var path: String = local_root+"/"+mid+"/"+filename
+		# Generated deployment retains original metadata/navigation, not original art bytes.
+		if generated_aden:continue
 		if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != chunk.get("sha256",""): return null
 		var handle := FileAccess.open(path,FileAccess.READ)
 		if handle == null: return null
