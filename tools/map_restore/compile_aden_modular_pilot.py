@@ -84,7 +84,7 @@ def compile_pilot(base=BASE):
         composite.alpha_composite(sprite,tuple(position))
         records.append(dict(id=row['id'],file=name,position=position,foot=foot,size=list(sprite.size),sha256=digest(out/name)))
     full_name=layout.get('full_png','palace_gardens_3072x2048.png')
-    composite.save(out/full_name)
+    if layout.get('export_full_png',True):composite.save(out/full_name)
     for panel in layout.get('panels',[]):
         composite.crop(tuple(panel['rect'])).save(out/panel['file'])
     # Reconstruct all written ground chunks before accepting the compilation.
@@ -95,7 +95,7 @@ def compile_pilot(base=BASE):
     assert restored.tobytes()==composite.tobytes(), 'Ground/foreground reconstruction mismatch'
     report=dict(schema=1,world_bounds=layout['world_bounds'],source_origin=origin,source_scale=6,
                 image_pixels_per_world_unit=1,ground_chunks=chunks,foreground=records,
-                full_png=full_name,full_png_sha256=digest(out/full_name),
+                full_png=full_name if layout.get('export_full_png',True) else None,full_png_sha256=digest(out/full_name) if layout.get('export_full_png',True) else None,
                 layout_sha256=digest(BASE/'layout.json'),source_assets={p.name:digest(p) for p in sorted(source_root.glob('*.png'))},
                 additional_source_assets={spec['file']:digest(ROOT/spec['file']) for spec in layout.get('additional_sprites',{}).values()},
                 panels=layout.get('panels',[]),
